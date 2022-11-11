@@ -3,10 +3,10 @@
 export ARCH=arm64
 mkdir out
 
-BUILD_CROSS_COMPILE=aarch64-linux-gnu-
+BUILD_CROSS_COMPILE=/home/chanz/kernel-s20fe/clang/Clang-16.0.0-20221102/bin/aarch64-linux-gnu-
 CLANG_TRIPLE=aarch64-unknown-none-eabi
 #CLANG_TRIPLE=aarch64-linux-gnu-
-export CLANG_DIR="/usr/lib/llvm-16/bin/"
+export CLANG_DIR="/home/chanz/kernel-s20fe/clang/Clang-16.0.0-20221102/bin/"
 KERNEL_MAKE_ENV="DTC_EXT=$(pwd)/tools/dtc CONFIG_BUILD_ARM64_DT_OVERLAY=y"
 
 echo "**********************************"
