@@ -26,10 +26,13 @@
 
 #include "internal.h"
 
+<<<<<<< HEAD
 #ifdef CONFIG_CRYPTO_FIPS /* FIPS_140_2 */
 #include "fips140.h"
 #endif
 
+=======
+>>>>>>> rebase
 struct ablkcipher_buffer {
 	struct list_head	entry;
 	struct scatter_walk	dst;
@@ -50,11 +53,14 @@ void __ablkcipher_walk_complete(struct ablkcipher_walk *walk)
 {
 	struct ablkcipher_buffer *p, *tmp;
 
+<<<<<<< HEAD
 #ifdef CONFIG_CRYPTO_FIPS /* FIPS_140_2 */
 	if (unlikely(in_fips_err()))
 		return;
 #endif
 
+=======
+>>>>>>> rebase
 	list_for_each_entry_safe(p, tmp, &walk->buffers, entry) {
 		ablkcipher_buffer_write(p);
 		list_del(&p->entry);
@@ -113,11 +119,14 @@ int ablkcipher_walk_done(struct ablkcipher_request *req,
 	unsigned int n; /* bytes processed */
 	bool more;
 
+<<<<<<< HEAD
 #ifdef CONFIG_CRYPTO_FIPS /* FIPS_140_2 */
 	if (unlikely(in_fips_err()))
 		return -EACCES;
 #endif
 
+=======
+>>>>>>> rebase
 	if (unlikely(err < 0))
 		goto finish;
 

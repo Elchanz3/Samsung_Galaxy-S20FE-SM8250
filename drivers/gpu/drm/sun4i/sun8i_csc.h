@@ -14,7 +14,11 @@ struct sun8i_mixer;
 
 /* VI channel CSC units offsets */
 #define CCSC00_OFFSET 0xAA050
+<<<<<<< HEAD
 #define CCSC01_OFFSET 0xFA000
+=======
+#define CCSC01_OFFSET 0xFA050
+>>>>>>> rebase
 #define CCSC10_OFFSET 0xA0000
 #define CCSC11_OFFSET 0xF0000
 

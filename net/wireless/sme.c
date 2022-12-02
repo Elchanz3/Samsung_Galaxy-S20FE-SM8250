@@ -530,7 +530,11 @@ static int cfg80211_sme_connect(struct wireless_dev *wdev,
 		cfg80211_sme_free(wdev);
 	}
 
+<<<<<<< HEAD
 	if (WARN_ON(wdev->conn))
+=======
+	if (wdev->conn)
+>>>>>>> rebase
 		return -EINPROGRESS;
 
 	wdev->conn = kzalloc(sizeof(*wdev->conn), GFP_KERNEL);
@@ -1087,6 +1091,7 @@ void __cfg80211_disconnected(struct net_device *dev, const u8 *ie,
 	 * Delete all the keys ... pairwise keys can't really
 	 * exist any more anyway, but default keys might.
 	 */
+<<<<<<< HEAD
 	if (rdev->ops->del_key) {
 		int max_key_idx = 5;
 
@@ -1097,6 +1102,11 @@ void __cfg80211_disconnected(struct net_device *dev, const u8 *ie,
 		for (i = 0; i <= max_key_idx; i++)
 			rdev_del_key(rdev, dev, i, false, NULL);
 	}
+=======
+	if (rdev->ops->del_key)
+		for (i = 0; i < 6; i++)
+			rdev_del_key(rdev, dev, i, false, NULL);
+>>>>>>> rebase
 
 	rdev_set_qos_map(rdev, dev, NULL);
 

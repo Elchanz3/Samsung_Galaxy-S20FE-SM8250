@@ -374,6 +374,10 @@
 	pinctrl-names = "default";
 	cap-sd-highspeed;
 	cap-mmc-highspeed;
+<<<<<<< HEAD
+=======
+	keep-power-in-suspend;
+>>>>>>> rebase
 
 	mmc-pwrseq = <&wifi_pwrseq>;
 	non-removable;

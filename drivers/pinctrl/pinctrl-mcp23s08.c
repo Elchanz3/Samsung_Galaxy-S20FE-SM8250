@@ -120,7 +120,11 @@ static const struct regmap_config mcp23x08_regmap = {
 	.max_register = MCP_OLAT,
 };
 
+<<<<<<< HEAD
 static const struct reg_default mcp23x16_defaults[] = {
+=======
+static const struct reg_default mcp23x17_defaults[] = {
+>>>>>>> rebase
 	{.reg = MCP_IODIR << 1,		.def = 0xffff},
 	{.reg = MCP_IPOL << 1,		.def = 0x0000},
 	{.reg = MCP_GPINTEN << 1,	.def = 0x0000},
@@ -131,11 +135,16 @@ static const struct reg_default mcp23x16_defaults[] = {
 	{.reg = MCP_OLAT << 1,		.def = 0x0000},
 };
 
+<<<<<<< HEAD
 static const struct regmap_range mcp23x16_volatile_range = {
+=======
+static const struct regmap_range mcp23x17_volatile_range = {
+>>>>>>> rebase
 	.range_min = MCP_INTF << 1,
 	.range_max = MCP_GPIO << 1,
 };
 
+<<<<<<< HEAD
 static const struct regmap_access_table mcp23x16_volatile_table = {
 	.yes_ranges = &mcp23x16_volatile_range,
 	.n_yes_ranges = 1,
@@ -148,6 +157,20 @@ static const struct regmap_range mcp23x16_precious_range = {
 
 static const struct regmap_access_table mcp23x16_precious_table = {
 	.yes_ranges = &mcp23x16_precious_range,
+=======
+static const struct regmap_access_table mcp23x17_volatile_table = {
+	.yes_ranges = &mcp23x17_volatile_range,
+	.n_yes_ranges = 1,
+};
+
+static const struct regmap_range mcp23x17_precious_range = {
+	.range_min = MCP_INTCAP << 1,
+	.range_max = MCP_GPIO << 1,
+};
+
+static const struct regmap_access_table mcp23x17_precious_table = {
+	.yes_ranges = &mcp23x17_precious_range,
+>>>>>>> rebase
 	.n_yes_ranges = 1,
 };
 
@@ -157,10 +180,17 @@ static const struct regmap_config mcp23x17_regmap = {
 
 	.reg_stride = 2,
 	.max_register = MCP_OLAT << 1,
+<<<<<<< HEAD
 	.volatile_table = &mcp23x16_volatile_table,
 	.precious_table = &mcp23x16_precious_table,
 	.reg_defaults = mcp23x16_defaults,
 	.num_reg_defaults = ARRAY_SIZE(mcp23x16_defaults),
+=======
+	.volatile_table = &mcp23x17_volatile_table,
+	.precious_table = &mcp23x17_precious_table,
+	.reg_defaults = mcp23x17_defaults,
+	.num_reg_defaults = ARRAY_SIZE(mcp23x17_defaults),
+>>>>>>> rebase
 	.cache_type = REGCACHE_FLAT,
 	.val_format_endian = REGMAP_ENDIAN_LITTLE,
 };
@@ -458,6 +488,14 @@ static irqreturn_t mcp23s08_irq(int irq, void *data)
 	if (mcp_read(mcp, MCP_INTF, &intf))
 		goto unlock;
 
+<<<<<<< HEAD
+=======
+	if (intf == 0) {
+		/* There is no interrupt pending */
+		goto unlock;
+	}
+
+>>>>>>> rebase
 	if (mcp_read(mcp, MCP_INTCAP, &intcap))
 		goto unlock;
 
@@ -475,11 +513,14 @@ static irqreturn_t mcp23s08_irq(int irq, void *data)
 	mcp->cached_gpio = gpio;
 	mutex_unlock(&mcp->lock);
 
+<<<<<<< HEAD
 	if (intf == 0) {
 		/* There is no interrupt pending */
 		return IRQ_HANDLED;
 	}
 
+=======
+>>>>>>> rebase
 	dev_dbg(mcp->chip.parent,
 		"intcap 0x%04X intf 0x%04X gpio_orig 0x%04X gpio 0x%04X\n",
 		intcap, intf, gpio_orig, gpio);

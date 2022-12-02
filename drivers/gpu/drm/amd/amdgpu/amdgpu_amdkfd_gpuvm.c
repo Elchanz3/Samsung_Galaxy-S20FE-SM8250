@@ -1044,11 +1044,23 @@ int amdgpu_amdkfd_gpuvm_acquire_process_vm(struct kgd_dev *kgd,
 					   struct dma_fence **ef)
 {
 	struct amdgpu_device *adev = get_amdgpu_device(kgd);
+<<<<<<< HEAD
 	struct drm_file *drm_priv = filp->private_data;
 	struct amdgpu_fpriv *drv_priv = drm_priv->driver_priv;
 	struct amdgpu_vm *avm = &drv_priv->vm;
 	int ret;
 
+=======
+	struct amdgpu_fpriv *drv_priv;
+	struct amdgpu_vm *avm;
+	int ret;
+
+	ret = amdgpu_file_to_fpriv(filp, &drv_priv);
+	if (ret)
+		return ret;
+	avm = &drv_priv->vm;
+
+>>>>>>> rebase
 	/* Already a compute VM? */
 	if (avm->process_info)
 		return -EINVAL;
@@ -1158,7 +1170,11 @@ int amdgpu_amdkfd_gpuvm_alloc_memory_of_gpu(
 		alloc_flags = 0;
 		if (!offset || !*offset)
 			return -EINVAL;
+<<<<<<< HEAD
 		user_addr = untagged_addr(*offset);
+=======
+		user_addr = *offset;
+>>>>>>> rebase
 	} else {
 		return -EINVAL;
 	}

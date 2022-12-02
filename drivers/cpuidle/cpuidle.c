@@ -13,7 +13,10 @@
 #include <linux/mutex.h>
 #include <linux/sched.h>
 #include <linux/sched/clock.h>
+<<<<<<< HEAD
 #include <linux/sched/idle.h>
+=======
+>>>>>>> rebase
 #include <linux/notifier.h>
 #include <linux/pm_qos.h>
 #include <linux/cpu.h>
@@ -149,7 +152,12 @@ static void enter_s2idle_proper(struct cpuidle_driver *drv,
 	 */
 	stop_critical_timings();
 	drv->states[index].enter_s2idle(dev, drv, index);
+<<<<<<< HEAD
 	WARN_ON(!irqs_disabled());
+=======
+	if (WARN_ON_ONCE(!irqs_disabled()))
+		local_irq_disable();
+>>>>>>> rebase
 	/*
 	 * timekeeping_resume() that will be called by tick_unfreeze() for the
 	 * first CPU executing it calls functions containing RCU read-side
@@ -222,7 +230,11 @@ int cpuidle_enter_state(struct cpuidle_device *dev, struct cpuidle_driver *drv,
 	}
 
 	/* Take note of the planned idle state. */
+<<<<<<< HEAD
 	sched_idle_set_state(target_state, index);
+=======
+	sched_idle_set_state(target_state);
+>>>>>>> rebase
 
 	trace_cpu_idle_rcuidle(index, dev->cpu);
 	time_start = ns_to_ktime(local_clock());
@@ -236,7 +248,11 @@ int cpuidle_enter_state(struct cpuidle_device *dev, struct cpuidle_driver *drv,
 	trace_cpu_idle_rcuidle(PWR_EVENT_EXIT, dev->cpu);
 
 	/* The cpu is no longer idle or about to enter idle. */
+<<<<<<< HEAD
 	sched_idle_set_state(NULL, -1);
+=======
+	sched_idle_set_state(NULL);
+>>>>>>> rebase
 
 	if (broadcast) {
 		if (WARN_ON_ONCE(!irqs_disabled()))
@@ -655,6 +671,7 @@ EXPORT_SYMBOL_GPL(cpuidle_register);
 
 #ifdef CONFIG_SMP
 
+<<<<<<< HEAD
 static void wake_up_idle_cpus(void *v)
 {
 	int cpu;
@@ -680,11 +697,22 @@ static void wake_up_idle_cpus(void *v)
  * requirement.  This means we need to get only those processors out of their
  * C-state for which qos requirement is changed, and then recalculate a new
  * suitable C-state. Just do a cross-cpu IPI; that wakes them all right up.
+=======
+/*
+ * This function gets called when a part of the kernel has a new latency
+ * requirement.  This means we need to get all processors out of their C-state,
+ * and then recalculate a new suitable C-state. Just do a cross-cpu IPI; that
+ * wakes them all right up.
+>>>>>>> rebase
  */
 static int cpuidle_latency_notify(struct notifier_block *b,
 		unsigned long l, void *v)
 {
+<<<<<<< HEAD
 	wake_up_idle_cpus(v);
+=======
+	wake_up_all_idle_cpus();
+>>>>>>> rebase
 	return NOTIFY_OK;
 }
 

@@ -615,8 +615,12 @@ try_again:
 		card->type = MMC_TYPE_SD_COMBO;
 
 		if (oldcard && (oldcard->type != MMC_TYPE_SD_COMBO ||
+<<<<<<< HEAD
 		    memcmp(card->raw_cid, oldcard->raw_cid,
 					sizeof(card->raw_cid)) != 0)) {
+=======
+		    memcmp(card->raw_cid, oldcard->raw_cid, sizeof(card->raw_cid)) != 0)) {
+>>>>>>> rebase
 			mmc_remove_card(card);
 			return -ENOENT;
 		}
@@ -635,6 +639,11 @@ try_again:
 	if (host->ops->init_card)
 		host->ops->init_card(host, card);
 
+<<<<<<< HEAD
+=======
+	card->ocr = ocr_card;
+
+>>>>>>> rebase
 	/*
 	 * If the host and card support UHS-I mode request the card
 	 * to switch to 1.8V signaling level.  No 1.8v signalling if
@@ -721,9 +730,14 @@ try_again:
 			/* Retry init sequence, but without R4_18V_PRESENT. */
 			retries = 0;
 			goto try_again;
+<<<<<<< HEAD
 		} else {
 			goto remove;
 		}
+=======
+		}
+		return err;
+>>>>>>> rebase
 	}
 
 	/*
@@ -742,7 +756,11 @@ try_again:
 
 		card = oldcard;
 	}
+<<<<<<< HEAD
 	card->ocr = ocr_card;
+=======
+
+>>>>>>> rebase
 	mmc_fixup_device(card, sdio_fixup_methods);
 
 	if (card->type == MMC_TYPE_SD_COMBO) {
@@ -940,7 +958,10 @@ static int mmc_sdio_suspend(struct mmc_host *host)
 	cancel_delayed_work_sync(&host->sdio_irq_work);
 
 	mmc_claim_host(host);
+<<<<<<< HEAD
 	mmc_log_string(host, "Enter\n");
+=======
+>>>>>>> rebase
 
 	if (mmc_card_keep_power(host) && mmc_card_wake_sdio_irq(host))
 		sdio_disable_wide(host->card);
@@ -952,7 +973,10 @@ static int mmc_sdio_suspend(struct mmc_host *host)
 		mmc_retune_needed(host);
 	}
 
+<<<<<<< HEAD
 	mmc_log_string(host, "Exit\n");
+=======
+>>>>>>> rebase
 	mmc_release_host(host);
 
 	return 0;
@@ -964,7 +988,10 @@ static int mmc_sdio_resume(struct mmc_host *host)
 
 	/* Basic card reinitialization. */
 	mmc_claim_host(host);
+<<<<<<< HEAD
 	mmc_log_string(host, "Enter\n");
+=======
+>>>>>>> rebase
 
 	/* Restore power if needed */
 	if (!mmc_card_keep_power(host)) {
@@ -1004,7 +1031,10 @@ static int mmc_sdio_resume(struct mmc_host *host)
 	}
 
 out:
+<<<<<<< HEAD
 	mmc_log_string(host, "Exit err: %d\n", err);
+=======
+>>>>>>> rebase
 	mmc_release_host(host);
 
 	host->pm_flags &= ~MMC_PM_KEEP_POWER;

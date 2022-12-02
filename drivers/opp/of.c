@@ -20,7 +20,10 @@
 #include <linux/pm_domain.h>
 #include <linux/slab.h>
 #include <linux/export.h>
+<<<<<<< HEAD
 #include <linux/energy_model.h>
+=======
+>>>>>>> rebase
 
 #include "opp.h"
 
@@ -424,8 +427,14 @@ static int _of_add_opp_table_v2(struct device *dev, struct device_node *opp_np)
 		}
 	}
 
+<<<<<<< HEAD
 	/* There should be one of more OPP defined */
 	if (WARN_ON(!count)) {
+=======
+	/* There should be one or more OPPs defined */
+	if (!count) {
+		dev_err(dev, "%s: no supported OPPs", __func__);
+>>>>>>> rebase
 		ret = -ENOENT;
 		goto put_opp_table;
 	}
@@ -791,6 +800,7 @@ struct device_node *dev_pm_opp_get_of_node(struct dev_pm_opp *opp)
 	return of_node_get(opp->np);
 }
 EXPORT_SYMBOL_GPL(dev_pm_opp_get_of_node);
+<<<<<<< HEAD
 
 /**
  * of_dev_pm_opp_get_cpu_power() - Estimates the power of a CPU
@@ -949,3 +959,5 @@ void dev_pm_opp_of_register_em(struct cpumask *cpus)
 	em_register_perf_domain(cpus, nr_opp, &em_cb);
 }
 EXPORT_SYMBOL_GPL(dev_pm_opp_of_register_em);
+=======
+>>>>>>> rebase

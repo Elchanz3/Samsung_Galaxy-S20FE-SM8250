@@ -9,12 +9,18 @@
 #include <linux/uaccess.h>
 
 #include "ion.h"
+<<<<<<< HEAD
 #include "ion_system_secure_heap.h"
+=======
+>>>>>>> rebase
 
 union ion_ioctl_arg {
 	struct ion_allocation_data allocation;
 	struct ion_heap_query query;
+<<<<<<< HEAD
 	struct ion_prefetch_data prefetch_data;
+=======
+>>>>>>> rebase
 };
 
 static int validate_ioctl_arg(unsigned int cmd, union ion_ioctl_arg *arg)
@@ -75,9 +81,15 @@ long ion_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
 	{
 		int fd;
 
+<<<<<<< HEAD
 		fd = ion_alloc_fd(data.allocation.len,
 				  data.allocation.heap_id_mask,
 				  data.allocation.flags);
+=======
+		fd = ion_alloc(data.allocation.len,
+			       data.allocation.heap_id_mask,
+			       data.allocation.flags);
+>>>>>>> rebase
 		if (fd < 0)
 			return fd;
 
@@ -88,6 +100,7 @@ long ion_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
 	case ION_IOC_HEAP_QUERY:
 		ret = ion_query_heaps(&data.query);
 		break;
+<<<<<<< HEAD
 	case ION_IOC_PREFETCH:
 	{
 		int ret;
@@ -115,6 +128,8 @@ long ion_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
 			return ret;
 		break;
 	}
+=======
+>>>>>>> rebase
 	default:
 		return -ENOTTY;
 	}

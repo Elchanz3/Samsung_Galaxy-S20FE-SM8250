@@ -172,6 +172,10 @@ int test__pmu(struct test *test __maybe_unused, int subtest __maybe_unused)
 		ret = 0;
 	} while (0);
 
+<<<<<<< HEAD
+=======
+	perf_pmu__del_formats(&formats);
+>>>>>>> rebase
 	test_format_dir_put(format);
 	return ret;
 }

@@ -1,5 +1,9 @@
 /*
+<<<<<<< HEAD
  * Copyright (c) 2014-2015, 2017, The Linux Foundation. All rights reserved.
+=======
+ * Copyright (c) 2014-2015, The Linux Foundation. All rights reserved.
+>>>>>>> rebase
  *
  * This software is licensed under the terms of the GNU General Public
  * License version 2, as published by the Free Software Foundation, and
@@ -228,6 +232,7 @@ DEFINE_EVENT(clk_duty_cycle, clk_set_duty_cycle_complete,
 	TP_ARGS(core, duty)
 );
 
+<<<<<<< HEAD
 DECLARE_EVENT_CLASS(clk_state_dump,
 
 	TP_PROTO(const char *name, unsigned int prepare_count,
@@ -264,6 +269,8 @@ DEFINE_EVENT(clk_state_dump, clk_state,
 	TP_ARGS(name, prepare_count, enable_count, rate, vdd_level)
 );
 
+=======
+>>>>>>> rebase
 #endif /* _TRACE_CLK_H */
 
 /* This part must be outside protection */

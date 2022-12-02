@@ -55,8 +55,11 @@ ssize_t nvmem_device_cell_read(struct nvmem_device *nvmem,
 int nvmem_device_cell_write(struct nvmem_device *nvmem,
 			    struct nvmem_cell_info *info, void *buf);
 
+<<<<<<< HEAD
 const char *nvmem_dev_name(struct nvmem_device *nvmem);
 
+=======
+>>>>>>> rebase
 #else
 
 static inline struct nvmem_cell *nvmem_cell_get(struct device *dev,
@@ -145,12 +148,15 @@ static inline int nvmem_device_write(struct nvmem_device *nvmem,
 {
 	return -ENOSYS;
 }
+<<<<<<< HEAD
 
 static inline const char *nvmem_dev_name(struct nvmem_device *nvmem)
 {
 	return NULL;
 }
 
+=======
+>>>>>>> rebase
 #endif /* CONFIG_NVMEM */
 
 #if IS_ENABLED(CONFIG_NVMEM) && IS_ENABLED(CONFIG_OF)

@@ -294,6 +294,7 @@ config DM_CRYPT
 
 	  If unsure, say N.
 
+<<<<<<< HEAD
 config DM_DEFAULT_KEY
 	tristate "Default-key target support"
 	depends on BLK_DEV_DM
@@ -315,6 +316,8 @@ config DM_DEFAULT_KEY
 	  such that all fscrypt keys are at least as hard to compromise
 	  as the default key.
 
+=======
+>>>>>>> rebase
 config DM_SNAPSHOT
        tristate "Snapshot target"
        depends on BLK_DEV_DM
@@ -500,6 +503,7 @@ config DM_VERITY
 
 	  If unsure, say N.
 
+<<<<<<< HEAD
 config DM_VERITY_HASH_PREFETCH_MIN_SIZE_128
 	bool "Prefetch size 128"
 
@@ -524,6 +528,8 @@ config DM_VERITY_AVB
 	  specified on the kernel command-line when non-transient error
 	  occurs (followed by a panic).
 
+=======
+>>>>>>> rebase
 config DM_VERITY_FEC
 	bool "Verity forward error correction support"
 	depends on DM_VERITY
@@ -604,6 +610,7 @@ config DM_ZONED
 
 	  If unsure, say N.
 
+<<<<<<< HEAD
 config DM_ANDROID_VERITY
 	bool "Android verity target support"
 	depends on BLK_DEV_DM=y
@@ -655,4 +662,6 @@ config DM_BOW
 
 	  If unsure, say N.
 
+=======
+>>>>>>> rebase
 endif # MD

@@ -1207,6 +1207,7 @@ dtb-$(CONFIG_ARCH_ASPEED) += \
 	aspeed-bmc-opp-zaius.dtb \
 	aspeed-bmc-portwell-neptune.dtb \
 	aspeed-bmc-quanta-q71l.dtb
+<<<<<<< HEAD
 
 DTB_NAMES := $(subst $\",,$(CONFIG_BUILD_ARM_APPENDED_DTB_IMAGE_NAMES))
 ifneq ($(DTB_NAMES),)
@@ -1220,3 +1221,5 @@ targets += $(DTB_LIST)
 
 always		:= $(DTB_LIST)
 clean-files	:= *.dtb
+=======
+>>>>>>> rebase

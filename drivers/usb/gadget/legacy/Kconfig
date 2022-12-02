@@ -13,6 +13,7 @@
 # both kinds of controller can also support "USB On-the-Go" (CONFIG_USB_OTG).
 #
 
+<<<<<<< HEAD
 choice
 	tristate "USB Gadget precomposed configurations"
 	default USB_ETH
@@ -39,6 +40,8 @@ choice
 	  controller, and the relevant drivers for each function declared
 	  by the device.
 
+=======
+>>>>>>> rebase
 config USB_ZERO
 	tristate "Gadget Zero (DEVELOPMENT)"
 	select USB_LIBCOMPOSITE
@@ -516,6 +519,7 @@ config USB_G_WEBCAM
 
 	  Say "y" to link the driver statically, or "m" to build a
 	  dynamically linked module called "g_webcam".
+<<<<<<< HEAD
 
 config USB_RAW_GADGET
 	tristate "USB Raw Gadget"
@@ -529,3 +533,5 @@ config USB_RAW_GADGET
 	  dynamically linked module called "raw_gadget".
 
 endchoice
+=======
+>>>>>>> rebase

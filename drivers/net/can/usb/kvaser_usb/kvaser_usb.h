@@ -35,9 +35,16 @@
 #define KVASER_USB_RX_BUFFER_SIZE		3072
 #define KVASER_USB_MAX_NET_DEVICES		5
 
+<<<<<<< HEAD
 /* USB devices features */
 #define KVASER_USB_HAS_SILENT_MODE		BIT(0)
 #define KVASER_USB_HAS_TXRX_ERRORS		BIT(1)
+=======
+/* Kvaser USB device quirks */
+#define KVASER_USB_QUIRK_HAS_SILENT_MODE	BIT(0)
+#define KVASER_USB_QUIRK_HAS_TXRX_ERRORS	BIT(1)
+#define KVASER_USB_QUIRK_IGNORE_CLK_FREQ	BIT(2)
+>>>>>>> rebase
 
 /* Device capabilities */
 #define KVASER_USB_CAP_BERR_CAP			0x01
@@ -65,12 +72,16 @@ struct kvaser_usb_dev_card_data_hydra {
 struct kvaser_usb_dev_card_data {
 	u32 ctrlmode_supported;
 	u32 capabilities;
+<<<<<<< HEAD
 	union {
 		struct {
 			enum kvaser_usb_leaf_family family;
 		} leaf;
 		struct kvaser_usb_dev_card_data_hydra hydra;
 	};
+=======
+	struct kvaser_usb_dev_card_data_hydra hydra;
+>>>>>>> rebase
 };
 
 /* Context for an outstanding, not yet ACKed, transmission */
@@ -84,7 +95,11 @@ struct kvaser_usb {
 	struct usb_device *udev;
 	struct usb_interface *intf;
 	struct kvaser_usb_net_priv *nets[KVASER_USB_MAX_NET_DEVICES];
+<<<<<<< HEAD
 	const struct kvaser_usb_dev_ops *ops;
+=======
+	const struct kvaser_usb_driver_info *driver_info;
+>>>>>>> rebase
 	const struct kvaser_usb_dev_cfg *cfg;
 
 	struct usb_endpoint_descriptor *bulk_in, *bulk_out;
@@ -166,6 +181,15 @@ struct kvaser_usb_dev_ops {
 				  int *cmd_len, u16 transid);
 };
 
+<<<<<<< HEAD
+=======
+struct kvaser_usb_driver_info {
+	u32 quirks;
+	enum kvaser_usb_leaf_family family;
+	const struct kvaser_usb_dev_ops *ops;
+};
+
+>>>>>>> rebase
 struct kvaser_usb_dev_cfg {
 	const struct can_clock clock;
 	const unsigned int timestamp_freq;
@@ -176,6 +200,11 @@ struct kvaser_usb_dev_cfg {
 extern const struct kvaser_usb_dev_ops kvaser_usb_hydra_dev_ops;
 extern const struct kvaser_usb_dev_ops kvaser_usb_leaf_dev_ops;
 
+<<<<<<< HEAD
+=======
+void kvaser_usb_unlink_tx_urbs(struct kvaser_usb_net_priv *priv);
+
+>>>>>>> rebase
 int kvaser_usb_recv_cmd(const struct kvaser_usb *dev, void *cmd, int len,
 			int *actual_len);
 
@@ -185,4 +214,10 @@ int kvaser_usb_send_cmd_async(struct kvaser_usb_net_priv *priv, void *cmd,
 			      int len);
 
 int kvaser_usb_can_rx_over_error(struct net_device *netdev);
+<<<<<<< HEAD
+=======
+
+extern const struct can_bittiming_const kvaser_usb_flexc_bittiming_const;
+
+>>>>>>> rebase
 #endif /* KVASER_USB_H */

@@ -33,6 +33,10 @@
 #include <asm/hw_irq.h>
 #include <asm/io_apic.h>
 #include <asm/intel-mid.h>
+<<<<<<< HEAD
+=======
+#include <asm/acpi.h>
+>>>>>>> rebase
 
 #define PCIE_CAP_OFFSET	0x100
 

@@ -163,4 +163,10 @@
 
 #define KVM_INST_FETCH_FAILED	-1
 
+<<<<<<< HEAD
+=======
+/* Extract PO and XOP opcode fields */
+#define PO_XOP_OPCODE_MASK 0xfc0007fe
+
+>>>>>>> rebase
 #endif /* __POWERPC_KVM_ASM_H__ */

@@ -597,6 +597,10 @@ static int __init dell_smbios_init(void)
 	if (wmi && smm) {
 		pr_err("No SMBIOS backends available (wmi: %d, smm: %d)\n",
 			wmi, smm);
+<<<<<<< HEAD
+=======
+		ret = -ENODEV;
+>>>>>>> rebase
 		goto fail_create_group;
 	}
 

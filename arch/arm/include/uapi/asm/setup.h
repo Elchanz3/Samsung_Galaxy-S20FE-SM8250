@@ -17,7 +17,11 @@
 
 #include <linux/types.h>
 
+<<<<<<< HEAD
 #define COMMAND_LINE_SIZE 2048
+=======
+#define COMMAND_LINE_SIZE 1024
+>>>>>>> rebase
 
 /* The list ends with an ATAG_NONE node. */
 #define ATAG_NONE	0x00000000

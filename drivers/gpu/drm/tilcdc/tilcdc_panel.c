@@ -150,12 +150,23 @@ static int panel_connector_get_modes(struct drm_connector *connector)
 	int i;
 
 	for (i = 0; i < timings->num_timings; i++) {
+<<<<<<< HEAD
 		struct drm_display_mode *mode = drm_mode_create(dev);
+=======
+		struct drm_display_mode *mode;
+>>>>>>> rebase
 		struct videomode vm;
 
 		if (videomode_from_timings(timings, &vm, i))
 			break;
 
+<<<<<<< HEAD
+=======
+		mode = drm_mode_create(dev);
+		if (!mode)
+			break;
+
+>>>>>>> rebase
 		drm_display_mode_from_videomode(&vm, mode);
 
 		mode->type = DRM_MODE_TYPE_DRIVER;
@@ -170,6 +181,7 @@ static int panel_connector_get_modes(struct drm_connector *connector)
 	return i;
 }
 
+<<<<<<< HEAD
 static int panel_connector_mode_valid(struct drm_connector *connector,
 		  struct drm_display_mode *mode)
 {
@@ -178,6 +190,8 @@ static int panel_connector_mode_valid(struct drm_connector *connector,
 	return tilcdc_crtc_mode_valid(priv->crtc, mode);
 }
 
+=======
+>>>>>>> rebase
 static struct drm_encoder *panel_connector_best_encoder(
 		struct drm_connector *connector)
 {
@@ -195,7 +209,10 @@ static const struct drm_connector_funcs panel_connector_funcs = {
 
 static const struct drm_connector_helper_funcs panel_connector_helper_funcs = {
 	.get_modes          = panel_connector_get_modes,
+<<<<<<< HEAD
 	.mode_valid         = panel_connector_mode_valid,
+=======
+>>>>>>> rebase
 	.best_encoder       = panel_connector_best_encoder,
 };
 

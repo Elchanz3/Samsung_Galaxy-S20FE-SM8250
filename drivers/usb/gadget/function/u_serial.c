@@ -551,11 +551,14 @@ static int gs_start_io(struct gs_port *port)
 	 * configurations may use different endpoints with a given port;
 	 * and high speed vs full speed changes packet sizes too.
 	 */
+<<<<<<< HEAD
 	if (!ep->enabled || !port->port_usb->in->enabled) {
 		pr_err("%s: ep is disabled.\n", __func__);
 		return -ENODEV;
 	}
 
+=======
+>>>>>>> rebase
 	status = gs_alloc_requests(ep, head, gs_read_complete,
 		&port->read_allocated);
 	if (status)
@@ -572,7 +575,11 @@ static int gs_start_io(struct gs_port *port)
 	port->n_read = 0;
 	started = gs_start_rx(port);
 
+<<<<<<< HEAD
 	if (started && port->port.tty) {
+=======
+	if (started) {
+>>>>>>> rebase
 		gs_start_tx(port);
 		/* Unblock any pending writes into our circular buffer, in case
 		 * we didn't in gs_start_tx() */

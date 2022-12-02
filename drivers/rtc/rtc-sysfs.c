@@ -129,6 +129,7 @@ hctosys_show(struct device *dev, struct device_attribute *attr, char *buf)
 }
 static DEVICE_ATTR_RO(hctosys);
 
+<<<<<<< HEAD
 #ifdef CONFIG_RTC_AUTO_PWRON
 extern int rtc_get_bootalarm(struct rtc_device *rtc, struct rtc_wkalrm *alarm);
 static ssize_t
@@ -150,6 +151,8 @@ alarm_boot_show(struct device *dev, struct device_attribute *attr,
 static DEVICE_ATTR_RO(alarm_boot);
 #endif
 
+=======
+>>>>>>> rebase
 static ssize_t
 wakealarm_show(struct device *dev, struct device_attribute *attr, char *buf)
 {
@@ -287,9 +290,12 @@ static struct attribute *rtc_attrs[] = {
 	&dev_attr_wakealarm.attr,
 	&dev_attr_offset.attr,
 	&dev_attr_range.attr,
+<<<<<<< HEAD
 #ifdef CONFIG_RTC_AUTO_PWRON
 	&dev_attr_alarm_boot.attr,
 #endif
+=======
+>>>>>>> rebase
 	NULL,
 };
 

@@ -831,7 +831,11 @@ static int fib_check_nh(struct fib_config *cfg, struct fib_nh *nh,
 			if (fl4.flowi4_scope < RT_SCOPE_LINK)
 				fl4.flowi4_scope = RT_SCOPE_LINK;
 
+<<<<<<< HEAD
 			if (cfg->fc_table)
+=======
+			if (cfg->fc_table && cfg->fc_table != RT_TABLE_MAIN)
+>>>>>>> rebase
 				tbl = fib_get_table(net, cfg->fc_table);
 
 			if (tbl)

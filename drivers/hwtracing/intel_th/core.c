@@ -215,6 +215,25 @@ static ssize_t port_show(struct device *dev, struct device_attribute *attr,
 
 static DEVICE_ATTR_RO(port);
 
+<<<<<<< HEAD
+=======
+static void intel_th_trace_prepare(struct intel_th_device *thdev)
+{
+	struct intel_th_device *hub = to_intel_th_hub(thdev);
+	struct intel_th_driver *hubdrv = to_intel_th_driver(hub->dev.driver);
+
+	if (hub->type != INTEL_TH_SWITCH)
+		return;
+
+	if (thdev->type != INTEL_TH_OUTPUT)
+		return;
+
+	pm_runtime_get_sync(&thdev->dev);
+	hubdrv->prepare(hub, &thdev->output);
+	pm_runtime_put(&thdev->dev);
+}
+
+>>>>>>> rebase
 static int intel_th_output_activate(struct intel_th_device *thdev)
 {
 	struct intel_th_driver *thdrv =
@@ -235,6 +254,10 @@ static int intel_th_output_activate(struct intel_th_device *thdev)
 	if (ret)
 		goto fail_put;
 
+<<<<<<< HEAD
+=======
+	intel_th_trace_prepare(thdev);
+>>>>>>> rebase
 	if (thdrv->activate)
 		ret = thdrv->activate(thdev);
 	else
@@ -944,15 +967,40 @@ int intel_th_set_output(struct intel_th_device *thdev,
 {
 	struct intel_th_device *hub = to_intel_th_hub(thdev);
 	struct intel_th_driver *hubdrv = to_intel_th_driver(hub->dev.driver);
+<<<<<<< HEAD
+=======
+	int ret;
+>>>>>>> rebase
 
 	/* In host mode, this is up to the external debugger, do nothing. */
 	if (hub->host_mode)
 		return 0;
 
+<<<<<<< HEAD
 	if (!hubdrv->set_output)
 		return -ENOTSUPP;
 
 	return hubdrv->set_output(hub, master);
+=======
+	/*
+	 * hub is instantiated together with the source device that
+	 * calls here, so guaranteed to be present.
+	 */
+	hubdrv = to_intel_th_driver(hub->dev.driver);
+	if (!hubdrv || !try_module_get(hubdrv->driver.owner))
+		return -EINVAL;
+
+	if (!hubdrv->set_output) {
+		ret = -ENOTSUPP;
+		goto out;
+	}
+
+	ret = hubdrv->set_output(hub, master);
+
+out:
+	module_put(hubdrv->driver.owner);
+	return ret;
+>>>>>>> rebase
 }
 EXPORT_SYMBOL_GPL(intel_th_set_output);
 

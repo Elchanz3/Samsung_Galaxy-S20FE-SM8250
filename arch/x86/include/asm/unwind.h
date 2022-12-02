@@ -19,7 +19,11 @@ struct unwind_state {
 #if defined(CONFIG_UNWINDER_ORC)
 	bool signal, full_regs;
 	unsigned long sp, bp, ip;
+<<<<<<< HEAD
 	struct pt_regs *regs;
+=======
+	struct pt_regs *regs, *prev_regs;
+>>>>>>> rebase
 #elif defined(CONFIG_UNWINDER_FRAME_POINTER)
 	bool got_irq;
 	unsigned long *bp, *orig_sp, ip;

@@ -1,6 +1,10 @@
 /* SPDX-License-Identifier: GPL-2.0 */
 /*
+<<<<<<< HEAD
  * Copyright (c) 2014-2016, 2018 The Linux Foundation. All rights reserved.
+=======
+ * Copyright (c) 2014-2015, The Linux Foundation. All rights reserved.
+>>>>>>> rebase
  */
 
 #ifndef _CORESIGHT_CORESIGHT_ETM_H
@@ -136,7 +140,11 @@
 #define ETM_MAX_RES_SEL			16
 #define ETM_MAX_SS_CMP			8
 
+<<<<<<< HEAD
 #define ETM_ARCH_MAJOR_V4		0x4
+=======
+#define ETM_ARCH_V4			0x40
+>>>>>>> rebase
 #define ETMv4_SYNC_MASK			0x1F
 #define ETM_CYC_THRESHOLD_MASK		0xFFF
 #define ETM_CYC_THRESHOLD_DEFAULT       0x100
@@ -175,7 +183,10 @@
 					 ETM_MODE_EXCL_USER)
 
 #define TRCSTATR_IDLE_BIT		0
+<<<<<<< HEAD
 #define TRCSTATR_PMSTABLE_BIT		1
+=======
+>>>>>>> rebase
 #define ETM_DEFAULT_ADDR_COMP		0
 
 /* PowerDown Control Register bits */
@@ -283,6 +294,7 @@ struct etmv4_config {
 };
 
 /**
+<<<<<<< HEAD
  * struct etm4_save_state - state to be preserved when ETM is without power
  */
 struct etmv4_save_state {
@@ -342,6 +354,8 @@ struct etmv4_save_state {
 };
 
 /**
+=======
+>>>>>>> rebase
  * struct etm4_drvdata - specifics associated to an ETM component
  * @base:       Memory mapped base address for this component.
  * @dev:        The device entity associated to this component.
@@ -396,10 +410,14 @@ struct etmv4_save_state {
  * @nooverflow:	Indicate if overflow prevention is supported.
  * @atbtrig:	If the implementation can support ATB triggers
  * @lpoverride:	If the implementation can support low-power state over.
+<<<<<<< HEAD
  * @tupwr_disable:	If disable the support of keeping trace unit powered.
  * @config:	structure holding configuration parameters.
  * @save_state:	State to be preserved across power loss
  * @state_needs_restore: True when there is context to restore after PM exit
+=======
+ * @config:	structure holding configuration parameters.
+>>>>>>> rebase
  */
 struct etmv4_drvdata {
 	void __iomem			*base;
@@ -445,10 +463,14 @@ struct etmv4_drvdata {
 	bool				nooverflow;
 	bool				atbtrig;
 	bool				lpoverride;
+<<<<<<< HEAD
 	bool				tupwr_disable;
 	struct etmv4_config		config;
 	struct etmv4_save_state		*save_state;
 	bool				state_needs_restore;
+=======
+	struct etmv4_config		config;
+>>>>>>> rebase
 };
 
 /* Address comparator access types */

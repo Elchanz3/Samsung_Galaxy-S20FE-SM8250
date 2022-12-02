@@ -17,6 +17,10 @@
 #include <linux/types.h>
 #include <linux/netfilter.h>
 #include <linux/module.h>
+<<<<<<< HEAD
+=======
+#include <linux/sched.h>
+>>>>>>> rebase
 #include <linux/skbuff.h>
 #include <linux/proc_fs.h>
 #include <linux/vmalloc.h>
@@ -54,6 +58,7 @@
 #include <net/netfilter/nf_nat_core.h>
 #include <net/netfilter/nf_nat_helper.h>
 #include <net/netns/hash.h>
+<<<<<<< HEAD
 #ifdef CONFIG_KNOX_NCM
 // SEC_PRODUCT_FEATURE_KNOX_SUPPORT_NPA {
 
@@ -62,6 +67,8 @@
 // SEC_PRODUCT_FEATURE_KNOX_SUPPORT_NPA }
 #endif
 
+=======
+>>>>>>> rebase
 #include <net/ip.h>
 
 #include "nf_internals.h"
@@ -464,7 +471,11 @@ EXPORT_SYMBOL_GPL(nf_ct_get_id);
 static void
 clean_from_lists(struct nf_conn *ct)
 {
+<<<<<<< HEAD
 	pr_debug("clean_from_lists(%pK)\n", ct);
+=======
+	pr_debug("clean_from_lists(%p)\n", ct);
+>>>>>>> rebase
 	hlist_nulls_del_rcu(&ct->tuplehash[IP_CT_DIR_ORIGINAL].hnnode);
 	hlist_nulls_del_rcu(&ct->tuplehash[IP_CT_DIR_REPLY].hnnode);
 
@@ -477,6 +488,7 @@ static void nf_ct_add_to_dying_list(struct nf_conn *ct)
 {
 	struct ct_pcpu *pcpu;
 
+<<<<<<< HEAD
 	#ifdef CONFIG_KNOX_NCM
 	// SEC_PRODUCT_FEATURE_KNOX_SUPPORT_NPA {
 	/* Add 'del_timer(&ct->npa_timeout)' if struct nf_conn->timeout is of type struct timer_list; */
@@ -487,6 +499,8 @@ static void nf_ct_add_to_dying_list(struct nf_conn *ct)
 	// SEC_PRODUCT_FEATURE_KNOX_SUPPORT_NPA }
 	#endif
 
+=======
+>>>>>>> rebase
 	/* add this conntrack to the (per cpu) dying list */
 	ct->cpu = smp_processor_id();
 	pcpu = per_cpu_ptr(nf_ct_net(ct)->ct.pcpu_lists, ct->cpu);
@@ -579,7 +593,11 @@ destroy_conntrack(struct nf_conntrack *nfct)
 	struct nf_conn *ct = (struct nf_conn *)nfct;
 	const struct nf_conntrack_l4proto *l4proto;
 
+<<<<<<< HEAD
 	pr_debug("destroy_conntrack(%pK)\n", ct);
+=======
+	pr_debug("destroy_conntrack(%p)\n", ct);
+>>>>>>> rebase
 	WARN_ON(atomic_read(&nfct->use) != 0);
 
 	if (unlikely(nf_ct_is_template(ct))) {
@@ -605,7 +623,11 @@ destroy_conntrack(struct nf_conntrack *nfct)
 	if (ct->master)
 		nf_ct_put(ct->master);
 
+<<<<<<< HEAD
 	pr_debug("destroy_conntrack: returning ct=%pK to slab\n", ct);
+=======
+	pr_debug("destroy_conntrack: returning ct=%p to slab\n", ct);
+>>>>>>> rebase
 	nf_conntrack_free(ct);
 }
 
@@ -642,8 +664,18 @@ bool nf_ct_delete(struct nf_conn *ct, u32 portid, int report)
 		return false;
 
 	tstamp = nf_conn_tstamp_find(ct);
+<<<<<<< HEAD
 	if (tstamp && tstamp->stop == 0)
 		tstamp->stop = ktime_get_real_ns();
+=======
+	if (tstamp) {
+		s32 timeout = ct->timeout - nfct_time_stamp;
+
+		tstamp->stop = ktime_get_real_ns();
+		if (timeout < 0)
+			tstamp->stop -= jiffies_to_nsecs(-timeout);
+	}
+>>>>>>> rebase
 
 	if (nf_conntrack_event_report(IPCT_DESTROY, ct,
 				    portid, report) < 0) {
@@ -960,7 +992,11 @@ __nf_conntrack_confirm(struct sk_buff *skb)
 		return NF_DROP;
 	}
 
+<<<<<<< HEAD
 	pr_debug("Confirming conntrack %pK\n", ct);
+=======
+	pr_debug("Confirming conntrack %p\n", ct);
+>>>>>>> rebase
 	/* We have to check the DYING flag after unlink to prevent
 	 * a race against nf_ct_get_next_corpse() possibly called from
 	 * user context, else we insert an already 'dead' hash, blocking
@@ -1075,7 +1111,12 @@ nf_conntrack_tuple_taken(const struct nf_conntrack_tuple *tuple,
 			 * Let nf_ct_resolve_clash() deal with this later.
 			 */
 			if (nf_ct_tuple_equal(&ignored_conntrack->tuplehash[IP_CT_DIR_ORIGINAL].tuple,
+<<<<<<< HEAD
 					      &ct->tuplehash[IP_CT_DIR_ORIGINAL].tuple))
+=======
+					      &ct->tuplehash[IP_CT_DIR_ORIGINAL].tuple) &&
+					      nf_ct_zone_equal(ct, zone, IP_CT_DIR_ORIGINAL))
+>>>>>>> rebase
 				continue;
 
 			NF_CT_STAT_INC_ATOMIC(net, found);
@@ -1208,7 +1249,10 @@ static void gc_worker(struct work_struct *work)
 	unsigned int i, hashsz, nf_conntrack_max95 = 0;
 	unsigned long next_run = GC_SCAN_INTERVAL;
 	struct conntrack_gc_work *gc_work;
+<<<<<<< HEAD
 
+=======
+>>>>>>> rebase
 	gc_work = container_of(work, struct conntrack_gc_work, dwork.work);
 
 	i = gc_work->next_bucket;
@@ -1242,6 +1286,7 @@ static void gc_worker(struct work_struct *work)
 			if (nf_ct_is_expired(tmp)) {
 				nf_ct_gc_expired(tmp);
 				continue;
+<<<<<<< HEAD
 			} 
 			#ifdef CONFIG_KNOX_NCM
 			// SEC_PRODUCT_FEATURE_KNOX_SUPPORT_NPA {
@@ -1254,6 +1299,9 @@ static void gc_worker(struct work_struct *work)
 			}
 			// SEC_PRODUCT_FEATURE_KNOX_SUPPORT_NPA }
 			#endif
+=======
+			}
+>>>>>>> rebase
 
 			if (nf_conntrack_max95 == 0 || gc_worker_skip_ct(tmp))
 				continue;
@@ -1323,11 +1371,14 @@ __nf_conntrack_alloc(struct net *net,
 		     gfp_t gfp, u32 hash)
 {
 	struct nf_conn *ct;
+<<<<<<< HEAD
 	#ifdef CONFIG_KNOX_NCM
 	// SEC_PRODUCT_FEATURE_KNOX_SUPPORT_NPA {
 	struct timespec open_timespec;
 	// SEC_PRODUCT_FEATURE_KNOX_SUPPORT_NPA }
 	#endif
+=======
+>>>>>>> rebase
 
 	/* We don't want any race condition at early drop stage */
 	atomic_inc(&net->ct.count);
@@ -1352,6 +1403,7 @@ __nf_conntrack_alloc(struct net *net,
 		goto out;
 
 	spin_lock_init(&ct->lock);
+<<<<<<< HEAD
 
 	#ifdef CONFIG_KNOX_NCM
 	// SEC_PRODUCT_FEATURE_KNOX_SUPPORT_NPA {
@@ -1378,6 +1430,8 @@ __nf_conntrack_alloc(struct net *net,
 	// SEC_PRODUCT_FEATURE_KNOX_SUPPORT_NPA }
 	#endif
 
+=======
+>>>>>>> rebase
 	ct->tuplehash[IP_CT_DIR_ORIGINAL].tuple = *orig;
 	ct->tuplehash[IP_CT_DIR_ORIGINAL].hnnode.pprev = NULL;
 	ct->tuplehash[IP_CT_DIR_REPLY].tuple = *repl;
@@ -1385,9 +1439,15 @@ __nf_conntrack_alloc(struct net *net,
 	*(unsigned long *)(&ct->tuplehash[IP_CT_DIR_REPLY].hnnode.pprev) = hash;
 	ct->status = 0;
 	write_pnet(&ct->ct_net, net);
+<<<<<<< HEAD
 	memset(&ct->__nfct_init_offset[0], 0,
 	       offsetof(struct nf_conn, proto) -
 	       offsetof(struct nf_conn, __nfct_init_offset[0]));
+=======
+	memset(&ct->__nfct_init_offset, 0,
+	       offsetof(struct nf_conn, proto) -
+	       offsetof(struct nf_conn, __nfct_init_offset));
+>>>>>>> rebase
 
 	nf_ct_zone_add(ct, zone);
 
@@ -1489,7 +1549,11 @@ init_conntrack(struct net *net, struct nf_conn *tmpl,
 		spin_lock(&nf_conntrack_expect_lock);
 		exp = nf_ct_find_expectation(net, zone, tuple);
 		if (exp) {
+<<<<<<< HEAD
 			pr_debug("expectation arrives ct=%pK exp=%pK\n",
+=======
+			pr_debug("expectation arrives ct=%p exp=%p\n",
+>>>>>>> rebase
 				 ct, exp);
 			/* Welcome, Mr. Bond.  We've been expecting you... */
 			__set_bit(IPS_EXPECTED_BIT, &ct->status);
@@ -1572,6 +1636,7 @@ resolve_normal_ct(struct net *net, struct nf_conn *tmpl,
 	} else {
 		/* Once we've had two way comms, always ESTABLISHED. */
 		if (test_bit(IPS_SEEN_REPLY_BIT, &ct->status)) {
+<<<<<<< HEAD
 			pr_debug("normal packet for %pK\n", ct);
 			ctinfo = IP_CT_ESTABLISHED;
 		} else if (test_bit(IPS_EXPECTED_BIT, &ct->status)) {
@@ -1579,6 +1644,15 @@ resolve_normal_ct(struct net *net, struct nf_conn *tmpl,
 			ctinfo = IP_CT_RELATED;
 		} else {
 			pr_debug("new packet for %pK\n", ct);
+=======
+			pr_debug("normal packet for %p\n", ct);
+			ctinfo = IP_CT_ESTABLISHED;
+		} else if (test_bit(IPS_EXPECTED_BIT, &ct->status)) {
+			pr_debug("related packet for %p\n", ct);
+			ctinfo = IP_CT_RELATED;
+		} else {
+			pr_debug("new packet for %p\n", ct);
+>>>>>>> rebase
 			ctinfo = IP_CT_NEW;
 		}
 	}
@@ -1706,7 +1780,11 @@ void nf_conntrack_alter_reply(struct nf_conn *ct,
 	/* Should be unconfirmed, so not in hash table yet */
 	WARN_ON(nf_ct_is_confirmed(ct));
 
+<<<<<<< HEAD
 	pr_debug("Altering reply tuple of %pK to ", ct);
+=======
+	pr_debug("Altering reply tuple of %p to ", ct);
+>>>>>>> rebase
 	nf_ct_dump_tuple(newreply);
 
 	ct->tuplehash[IP_CT_DIR_REPLY].tuple = *newreply;

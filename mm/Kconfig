@@ -160,7 +160,10 @@ config MEMORY_HOTPLUG
 	bool "Allow for memory hot-add"
 	depends on SPARSEMEM || X86_64_ACPI_NUMA
 	depends on ARCH_ENABLE_MEMORY_HOTPLUG
+<<<<<<< HEAD
 	depends on ARM64
+=======
+>>>>>>> rebase
 
 config MEMORY_HOTPLUG_SPARSE
 	def_bool y
@@ -182,6 +185,7 @@ config MEMORY_HOTPLUG_DEFAULT_ONLINE
 	  Say N here if you want the default policy to keep all hot-plugged
 	  memory blocks in 'offline' state.
 
+<<<<<<< HEAD
 config MEMORY_HOTPLUG_MOVABLE_NODE
         bool "Add hot-added memory blocks to ZONE_MOVABLE type"
         default n
@@ -201,6 +205,8 @@ config MEMORY_HOTPLUG_MOVABLE_NODE
 	  Say N here if you want the default policy to add all hot-added
 	  memory blocks in 'ZONE_NORMAL' type.
 
+=======
+>>>>>>> rebase
 config MEMORY_HOTREMOVE
 	bool "Allow for memory hot remove"
 	select MEMORY_ISOLATION
@@ -448,7 +454,11 @@ config THP_SWAP
 	  For selection by architectures with reasonable THP sizes.
 
 config	TRANSPARENT_HUGE_PAGECACHE
+<<<<<<< HEAD
 	def_bool n
+=======
+	def_bool y
+>>>>>>> rebase
 	depends on TRANSPARENT_HUGEPAGE
 
 #
@@ -529,6 +539,7 @@ config CMA_DEBUGFS
 	help
 	  Turns on the DebugFS interface for CMA.
 
+<<<<<<< HEAD
 config  CMA_ALLOW_WRITE_DEBUGFS
 	depends on CMA_DEBUGFS
 	bool "Allow CMA debugfs write"
@@ -538,6 +549,8 @@ config  CMA_ALLOW_WRITE_DEBUGFS
 	  cma allocation, so it is not recommended to
 	  enable this option on any production device.
 
+=======
+>>>>>>> rebase
 config CMA_AREAS
 	int "Maximum count of the CMA areas"
 	depends on CMA
@@ -643,6 +656,7 @@ config ZSMALLOC_STAT
 	  information to userspace via debugfs.
 	  If unsure, say N.
 
+<<<<<<< HEAD
 config VMAP_LAZY_PURGING_FACTOR
 	int "multiplier to the size of purged vmap areas"
 	default "8" if ARM
@@ -653,6 +667,8 @@ config VMAP_LAZY_PURGING_FACTOR
 	  of vmalloc space, we decrease the default value to "8".
 
 
+=======
+>>>>>>> rebase
 config GENERIC_EARLY_IOREMAP
 	bool
 
@@ -670,6 +686,7 @@ config MAX_STACK_SIZE_MB
 
 	  A sane initial value is 80 MB.
 
+<<<<<<< HEAD
 config BALANCE_ANON_FILE_RECLAIM
 	bool "During reclaim treat anon and file backed pages equally"
 	depends on SWAP
@@ -679,6 +696,8 @@ config BALANCE_ANON_FILE_RECLAIM
 	  Swapping anonymous pages out to memory can be efficient enough to justify
 	  treating anonymous and file backed pages equally.
 
+=======
+>>>>>>> rebase
 config DEFERRED_STRUCT_PAGE_INIT
 	bool "Defer initialisation of struct pages to kthreads"
 	default n
@@ -800,6 +819,7 @@ config PERCPU_STATS
 	  information includes global and per chunk statistics, which can
 	  be used to help understand percpu memory usage.
 
+<<<<<<< HEAD
 config ARCH_SUPPORTS_SPECULATIVE_PAGE_FAULT
        def_bool n
 
@@ -831,6 +851,8 @@ config HAVE_USERSPACE_LOW_MEMORY_KILLER
 	  Therefore, add a timeout mechanism to give the userspace
 	  low memory killer a chance to run.
 
+=======
+>>>>>>> rebase
 config GUP_BENCHMARK
 	bool "Enable infrastructure for get_user_pages_fast() benchmarking"
 	default n
@@ -843,6 +865,7 @@ config GUP_BENCHMARK
 config ARCH_HAS_PTE_SPECIAL
 	bool
 
+<<<<<<< HEAD
 config LARGE_DIRTY_BUFFER
 	bool "Use large dirty_threshold value by enabling dirty_ratio"
 	default n
@@ -980,3 +1003,6 @@ config HIGHATOMIC_PAGEBLOCKS
 	  This value limits max number of highatomic pageblocks.
 
 source "mm/sec_mm/Kconfig"
+=======
+endmenu
+>>>>>>> rebase

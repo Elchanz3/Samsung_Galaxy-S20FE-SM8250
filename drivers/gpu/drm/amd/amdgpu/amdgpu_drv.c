@@ -1085,11 +1085,19 @@ long amdgpu_drm_ioctl(struct file *filp,
 	dev = file_priv->minor->dev;
 	ret = pm_runtime_get_sync(dev->dev);
 	if (ret < 0)
+<<<<<<< HEAD
 		return ret;
+=======
+		goto out;
+>>>>>>> rebase
 
 	ret = drm_ioctl(filp, cmd, arg);
 
 	pm_runtime_mark_last_busy(dev->dev);
+<<<<<<< HEAD
+=======
+out:
+>>>>>>> rebase
 	pm_runtime_put_autosuspend(dev->dev);
 	return ret;
 }
@@ -1131,6 +1139,25 @@ static const struct file_operations amdgpu_driver_kms_fops = {
 #endif
 };
 
+<<<<<<< HEAD
+=======
+int amdgpu_file_to_fpriv(struct file *filp, struct amdgpu_fpriv **fpriv)
+{
+        struct drm_file *file;
+
+	if (!filp)
+		return -EINVAL;
+
+	if (filp->f_op != &amdgpu_driver_kms_fops) {
+		return -EINVAL;
+	}
+
+	file = filp->private_data;
+	*fpriv = file->driver_priv;
+	return 0;
+}
+
+>>>>>>> rebase
 static bool
 amdgpu_get_crtc_scanout_position(struct drm_device *dev, unsigned int pipe,
 				 bool in_vblank_irq, int *vpos, int *hpos,

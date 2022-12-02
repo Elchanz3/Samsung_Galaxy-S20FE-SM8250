@@ -171,7 +171,11 @@ static struct irq_chip iproc_msi_irq_chip = {
 
 static struct msi_domain_info iproc_msi_domain_info = {
 	.flags = MSI_FLAG_USE_DEF_DOM_OPS | MSI_FLAG_USE_DEF_CHIP_OPS |
+<<<<<<< HEAD
 		MSI_FLAG_MULTI_PCI_MSI | MSI_FLAG_PCI_MSIX,
+=======
+		MSI_FLAG_PCI_MSIX,
+>>>>>>> rebase
 	.chip = &iproc_msi_irq_chip,
 };
 
@@ -209,6 +213,7 @@ static int iproc_msi_irq_set_affinity(struct irq_data *data,
 	struct iproc_msi *msi = irq_data_get_irq_chip_data(data);
 	int target_cpu = cpumask_first(mask);
 	int curr_cpu;
+<<<<<<< HEAD
 
 	curr_cpu = hwirq_to_cpu(msi, data->hwirq);
 	if (curr_cpu == target_cpu)
@@ -218,6 +223,22 @@ static int iproc_msi_irq_set_affinity(struct irq_data *data,
 	data->hwirq = hwirq_to_canonical_hwirq(msi, data->hwirq) + target_cpu;
 
 	return IRQ_SET_MASK_OK;
+=======
+	int ret;
+
+	curr_cpu = hwirq_to_cpu(msi, data->hwirq);
+	if (curr_cpu == target_cpu)
+		ret = IRQ_SET_MASK_OK_DONE;
+	else {
+		/* steer MSI to the target CPU */
+		data->hwirq = hwirq_to_canonical_hwirq(msi, data->hwirq) + target_cpu;
+		ret = IRQ_SET_MASK_OK;
+	}
+
+	irq_data_update_effective_affinity(data, cpumask_of(target_cpu));
+
+	return ret;
+>>>>>>> rebase
 }
 
 static void iproc_msi_irq_compose_msi_msg(struct irq_data *data,
@@ -245,6 +266,7 @@ static int iproc_msi_irq_domain_alloc(struct irq_domain *domain,
 	struct iproc_msi *msi = domain->host_data;
 	int hwirq, i;
 
+<<<<<<< HEAD
 	mutex_lock(&msi->bitmap_lock);
 
 	/* Allocate 'nr_cpus' number of MSI vectors each time */
@@ -259,6 +281,25 @@ static int iproc_msi_irq_domain_alloc(struct irq_domain *domain,
 
 	mutex_unlock(&msi->bitmap_lock);
 
+=======
+	if (msi->nr_cpus > 1 && nr_irqs > 1)
+		return -EINVAL;
+
+	mutex_lock(&msi->bitmap_lock);
+
+	/*
+	 * Allocate 'nr_irqs' multiplied by 'nr_cpus' number of MSI vectors
+	 * each time
+	 */
+	hwirq = bitmap_find_free_region(msi->bitmap, msi->nr_msi_vecs,
+					order_base_2(msi->nr_cpus * nr_irqs));
+
+	mutex_unlock(&msi->bitmap_lock);
+
+	if (hwirq < 0)
+		return -ENOSPC;
+
+>>>>>>> rebase
 	for (i = 0; i < nr_irqs; i++) {
 		irq_domain_set_info(domain, virq + i, hwirq + i,
 				    &iproc_msi_bottom_irq_chip,
@@ -266,7 +307,11 @@ static int iproc_msi_irq_domain_alloc(struct irq_domain *domain,
 				    NULL, NULL);
 	}
 
+<<<<<<< HEAD
 	return hwirq;
+=======
+	return 0;
+>>>>>>> rebase
 }
 
 static void iproc_msi_irq_domain_free(struct irq_domain *domain,
@@ -279,7 +324,12 @@ static void iproc_msi_irq_domain_free(struct irq_domain *domain,
 	mutex_lock(&msi->bitmap_lock);
 
 	hwirq = hwirq_to_canonical_hwirq(msi, data->hwirq);
+<<<<<<< HEAD
 	bitmap_clear(msi->bitmap, hwirq, msi->nr_cpus);
+=======
+	bitmap_release_region(msi->bitmap, hwirq,
+			      order_base_2(msi->nr_cpus * nr_irqs));
+>>>>>>> rebase
 
 	mutex_unlock(&msi->bitmap_lock);
 
@@ -533,6 +583,12 @@ int iproc_msi_init(struct iproc_pcie *pcie, struct device_node *node)
 	mutex_init(&msi->bitmap_lock);
 	msi->nr_cpus = num_possible_cpus();
 
+<<<<<<< HEAD
+=======
+	if (msi->nr_cpus == 1)
+		iproc_msi_domain_info.flags |=  MSI_FLAG_MULTI_PCI_MSI;
+
+>>>>>>> rebase
 	msi->nr_irqs = of_irq_count(node);
 	if (!msi->nr_irqs) {
 		dev_err(pcie->dev, "found no MSI GIC interrupt\n");

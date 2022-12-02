@@ -9,9 +9,13 @@
 #include <linux/init.h>
 #include <linux/fs.h>
 #include <linux/mm.h>
+<<<<<<< HEAD
 #include <linux/task_integrity.h>
 #include <linux/audit.h>
 #include <linux/scs.h>
+=======
+#include <linux/audit.h>
+>>>>>>> rebase
 
 #include <asm/pgtable.h>
 #include <linux/uaccess.h>
@@ -52,11 +56,14 @@ static struct sighand_struct init_sighand = {
 	.signalfd_wqh	= __WAIT_QUEUE_HEAD_INITIALIZER(init_sighand.signalfd_wqh),
 };
 
+<<<<<<< HEAD
 #ifdef CONFIG_FIVE
 static struct task_integrity init_integrity =
 					INIT_TASK_INTEGRITY(init_integrity);
 #endif
 
+=======
+>>>>>>> rebase
 /*
  * Set up the first task table, touch at your own risk!. Base=0,
  * limit=0x1fffff (=2MB)
@@ -80,7 +87,10 @@ struct task_struct init_task
 	.policy		= SCHED_NORMAL,
 	.cpus_allowed	= CPU_MASK_ALL,
 	.nr_cpus_allowed= NR_CPUS,
+<<<<<<< HEAD
 	.cpus_requested	= CPU_MASK_ALL,
+=======
+>>>>>>> rebase
 	.mm		= NULL,
 	.active_mm	= &init_mm,
 	.restart_block	= {
@@ -100,9 +110,12 @@ struct task_struct init_task
 #ifdef CONFIG_CGROUP_SCHED
 	.sched_task_group = &root_task_group,
 #endif
+<<<<<<< HEAD
 #ifdef CONFIG_SCHED_TUNE
 	.stune_idx	= 0,
 #endif
+=======
+>>>>>>> rebase
 	.ptraced	= LIST_HEAD_INIT(init_task.ptraced),
 	.ptrace_entry	= LIST_HEAD_INIT(init_task.ptrace_entry),
 	.real_parent	= &init_task,
@@ -179,7 +192,12 @@ struct task_struct init_task
 	.lockdep_recursion = 0,
 #endif
 #ifdef CONFIG_FUNCTION_GRAPH_TRACER
+<<<<<<< HEAD
 	.ret_stack	= NULL,
+=======
+	.ret_stack		= NULL,
+	.tracing_graph_pause	= ATOMIC_INIT(0),
+>>>>>>> rebase
 #endif
 #if defined(CONFIG_TRACING) && defined(CONFIG_PREEMPT)
 	.trace_recursion = 0,
@@ -190,6 +208,7 @@ struct task_struct init_task
 #ifdef CONFIG_SECURITY
 	.security	= NULL,
 #endif
+<<<<<<< HEAD
 #ifdef CONFIG_FIVE
 	INIT_INTEGRITY(init_task)
 #endif
@@ -203,6 +222,11 @@ unsigned long init_shadow_call_stack[SCS_SIZE / sizeof(long)] __init_task_data
 };
 #endif
 
+=======
+};
+EXPORT_SYMBOL(init_task);
+
+>>>>>>> rebase
 /*
  * Initial thread structure. Alignment of this is handled by a special
  * linker map entry.

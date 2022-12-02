@@ -33,7 +33,11 @@ KBUILD_AFLAGS := $(KBUILD_AFLAGS) -D__ASSEMBLY__ \
 KCOV_INSTRUMENT		:= n
 
 # decompressor objects (linked with vmlinuz)
+<<<<<<< HEAD
 vmlinuzobjs-y := $(obj)/head.o $(obj)/decompress.o $(obj)/string.o
+=======
+vmlinuzobjs-y := $(obj)/head.o $(obj)/decompress.o $(obj)/string.o $(obj)/bswapsi.o
+>>>>>>> rebase
 
 ifdef CONFIG_DEBUG_ZBOOT
 vmlinuzobjs-$(CONFIG_DEBUG_ZBOOT)		   += $(obj)/dbg.o
@@ -47,7 +51,11 @@ extra-y += uart-ath79.c
 $(obj)/uart-ath79.c: $(srctree)/arch/mips/ath79/early_printk.c
 	$(call cmd,shipped)
 
+<<<<<<< HEAD
 vmlinuzobjs-$(CONFIG_KERNEL_XZ) += $(obj)/ashldi3.o $(obj)/bswapsi.o
+=======
+vmlinuzobjs-$(CONFIG_KERNEL_XZ) += $(obj)/ashldi3.o
+>>>>>>> rebase
 
 extra-y += ashldi3.c
 $(obj)/ashldi3.c: $(obj)/%.c: $(srctree)/lib/%.c FORCE
@@ -90,7 +98,11 @@ ifneq ($(zload-y),)
 VMLINUZ_LOAD_ADDRESS := $(zload-y)
 else
 VMLINUZ_LOAD_ADDRESS = $(shell $(obj)/calc_vmlinuz_load_addr \
+<<<<<<< HEAD
 		$(obj)/vmlinux.bin $(VMLINUX_LOAD_ADDRESS))
+=======
+		$(obj)/vmlinux.bin $(LINKER_LOAD_ADDRESS))
+>>>>>>> rebase
 endif
 UIMAGE_LOADADDR = $(VMLINUZ_LOAD_ADDRESS)
 

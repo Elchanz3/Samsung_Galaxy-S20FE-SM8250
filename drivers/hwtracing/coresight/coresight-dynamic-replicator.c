@@ -1,6 +1,10 @@
 // SPDX-License-Identifier: GPL-2.0
 /*
+<<<<<<< HEAD
  * Copyright (c) 2011-2015, 2020 The Linux Foundation. All rights reserved.
+=======
+ * Copyright (c) 2011-2015, The Linux Foundation. All rights reserved.
+>>>>>>> rebase
  */
 
 #include <linux/amba/bus.h>
@@ -26,14 +30,20 @@
  * @dev:	the device entity associated with this component
  * @atclk:	optional clock for the core parts of the replicator.
  * @csdev:	component vitals needed by the framework
+<<<<<<< HEAD
  * @spinlock:	serialize enable/disable operations.
+=======
+>>>>>>> rebase
  */
 struct replicator_state {
 	void __iomem		*base;
 	struct device		*dev;
 	struct clk		*atclk;
 	struct coresight_device	*csdev;
+<<<<<<< HEAD
 	spinlock_t		spinlock;
+=======
+>>>>>>> rebase
 };
 
 /*
@@ -43,20 +53,33 @@ static void replicator_reset(struct replicator_state *drvdata)
 {
 	CS_UNLOCK(drvdata->base);
 
+<<<<<<< HEAD
 	if (!coresight_claim_device_unlocked(drvdata->base)) {
 		writel_relaxed(0xff, drvdata->base + REPLICATOR_IDFILTER0);
 		writel_relaxed(0xff, drvdata->base + REPLICATOR_IDFILTER1);
 		coresight_disclaim_device_unlocked(drvdata->base);
 	}
+=======
+	writel_relaxed(0xff, drvdata->base + REPLICATOR_IDFILTER0);
+	writel_relaxed(0xff, drvdata->base + REPLICATOR_IDFILTER1);
+>>>>>>> rebase
 
 	CS_LOCK(drvdata->base);
 }
 
+<<<<<<< HEAD
 static int dynamic_replicator_enable(struct replicator_state *drvdata,
 				     int inport, int outport)
 {
 	int rc = 0;
 	u32 reg;
+=======
+static int replicator_enable(struct coresight_device *csdev, int inport,
+			      int outport)
+{
+	u32 reg;
+	struct replicator_state *drvdata = dev_get_drvdata(csdev->dev.parent);
+>>>>>>> rebase
 
 	switch (outport) {
 	case 0:
@@ -72,6 +95,7 @@ static int dynamic_replicator_enable(struct replicator_state *drvdata,
 
 	CS_UNLOCK(drvdata->base);
 
+<<<<<<< HEAD
 	if ((readl_relaxed(drvdata->base + REPLICATOR_IDFILTER0) == 0xff) &&
 	    (readl_relaxed(drvdata->base + REPLICATOR_IDFILTER1) == 0xff))
 		rc = coresight_claim_device_unlocked(drvdata->base);
@@ -127,6 +151,22 @@ static void dynamic_replicator_disable(struct replicator_state *drvdata,
 				       int inport, int outport)
 {
 	u32 reg;
+=======
+
+	/* Ensure that the outport is enabled. */
+	writel_relaxed(0x00, drvdata->base + reg);
+	CS_LOCK(drvdata->base);
+
+	dev_info(drvdata->dev, "REPLICATOR enabled\n");
+	return 0;
+}
+
+static void replicator_disable(struct coresight_device *csdev, int inport,
+				int outport)
+{
+	u32 reg;
+	struct replicator_state *drvdata = dev_get_drvdata(csdev->dev.parent);
+>>>>>>> rebase
 
 	switch (outport) {
 	case 0:
@@ -145,6 +185,7 @@ static void dynamic_replicator_disable(struct replicator_state *drvdata,
 	/* disable the flow of ATB data through port */
 	writel_relaxed(0xff, drvdata->base + reg);
 
+<<<<<<< HEAD
 	if ((readl_relaxed(drvdata->base + REPLICATOR_IDFILTER0) == 0xff) &&
 	    (readl_relaxed(drvdata->base + REPLICATOR_IDFILTER1) == 0xff))
 		coresight_disclaim_device_unlocked(drvdata->base);
@@ -167,6 +208,11 @@ static void replicator_disable(struct coresight_device *csdev, int inport,
 
 	if (last_disable)
 		dev_dbg(drvdata->dev, "REPLICATOR disabled\n");
+=======
+	CS_LOCK(drvdata->base);
+
+	dev_info(drvdata->dev, "REPLICATOR disabled\n");
+>>>>>>> rebase
 }
 
 static const struct coresight_ops_link replicator_link_ops = {
@@ -239,7 +285,10 @@ static int replicator_probe(struct amba_device *adev, const struct amba_id *id)
 	dev_set_drvdata(dev, drvdata);
 	pm_runtime_put(&adev->dev);
 
+<<<<<<< HEAD
 	spin_lock_init(&drvdata->spinlock);
+=======
+>>>>>>> rebase
 	desc.type = CORESIGHT_DEV_TYPE_LINK;
 	desc.subtype.link_subtype = CORESIGHT_DEV_SUBTYPE_LINK_SPLIT;
 	desc.ops = &replicator_cs_ops;

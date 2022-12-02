@@ -81,7 +81,11 @@ again:
  * down, but we are still initializing the system.  Pages are given directly
  * to the page allocator, no bootmem metadata is updated because it is gone.
  */
+<<<<<<< HEAD
 void free_bootmem_late(unsigned long addr, unsigned long size)
+=======
+void __init free_bootmem_late(unsigned long addr, unsigned long size)
+>>>>>>> rebase
 {
 	unsigned long cursor, end;
 

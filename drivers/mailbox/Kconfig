@@ -205,6 +205,7 @@ config MTK_CMDQ_MBOX
 	  mailbox driver. The CMDQ is used to help read/write registers with
 	  critical time limitation, such as updating display configuration
 	  during the vblank.
+<<<<<<< HEAD
 
 config MSM_QMP
 	bool "QTI Mailbox Protocol(QMP)"
@@ -213,4 +214,6 @@ config MSM_QMP
 	  QMP is a lightweight communication protocol for sending messages to
 	  a remote processor. This protocol fits into the Generic Mailbox
 	  Framework. QMP uses a mailbox located in shared memory.
+=======
+>>>>>>> rebase
 endif

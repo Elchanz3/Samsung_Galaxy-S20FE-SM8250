@@ -34,16 +34,26 @@ void virtio_gpu_gem_free_object(struct drm_gem_object *gem_obj)
 		virtio_gpu_object_unref(&obj);
 }
 
+<<<<<<< HEAD
 struct virtio_gpu_object*
 virtio_gpu_alloc_object(struct drm_device *dev,
 			struct virtio_gpu_object_params *params,
 			struct virtio_gpu_fence *fence)
+=======
+struct virtio_gpu_object *virtio_gpu_alloc_object(struct drm_device *dev,
+						  size_t size, bool kernel,
+						  bool pinned)
+>>>>>>> rebase
 {
 	struct virtio_gpu_device *vgdev = dev->dev_private;
 	struct virtio_gpu_object *obj;
 	int ret;
 
+<<<<<<< HEAD
 	ret = virtio_gpu_object_create(vgdev, params, &obj, fence);
+=======
+	ret = virtio_gpu_object_create(vgdev, size, kernel, pinned, &obj);
+>>>>>>> rebase
 	if (ret)
 		return ERR_PTR(ret);
 
@@ -52,7 +62,11 @@ virtio_gpu_alloc_object(struct drm_device *dev,
 
 int virtio_gpu_gem_create(struct drm_file *file,
 			  struct drm_device *dev,
+<<<<<<< HEAD
 			  struct virtio_gpu_object_params *params,
+=======
+			  uint64_t size,
+>>>>>>> rebase
 			  struct drm_gem_object **obj_p,
 			  uint32_t *handle_p)
 {
@@ -60,7 +74,11 @@ int virtio_gpu_gem_create(struct drm_file *file,
 	int ret;
 	u32 handle;
 
+<<<<<<< HEAD
 	obj = virtio_gpu_alloc_object(dev, params, NULL);
+=======
+	obj = virtio_gpu_alloc_object(dev, size, false, false);
+>>>>>>> rebase
 	if (IS_ERR(obj))
 		return PTR_ERR(obj);
 
@@ -83,25 +101,54 @@ int virtio_gpu_mode_dumb_create(struct drm_file *file_priv,
 				struct drm_device *dev,
 				struct drm_mode_create_dumb *args)
 {
+<<<<<<< HEAD
 	struct drm_gem_object *gobj;
 	struct virtio_gpu_object_params params = { 0 };
 	int ret;
 	uint32_t pitch;
+=======
+	struct virtio_gpu_device *vgdev = dev->dev_private;
+	struct drm_gem_object *gobj;
+	struct virtio_gpu_object *obj;
+	int ret;
+	uint32_t pitch;
+	uint32_t resid;
+	uint32_t format;
+>>>>>>> rebase
 
 	pitch = args->width * ((args->bpp + 1) / 8);
 	args->size = pitch * args->height;
 	args->size = ALIGN(args->size, PAGE_SIZE);
 
+<<<<<<< HEAD
 	params.format = virtio_gpu_translate_format(DRM_FORMAT_HOST_XRGB8888);
 	params.width = args->width;
 	params.height = args->height;
 	params.size = args->size;
 	params.dumb = true;
 	ret = virtio_gpu_gem_create(file_priv, dev, &params, &gobj,
+=======
+	ret = virtio_gpu_gem_create(file_priv, dev, args->size, &gobj,
+>>>>>>> rebase
 				    &args->handle);
 	if (ret)
 		goto fail;
 
+<<<<<<< HEAD
+=======
+	format = virtio_gpu_translate_format(DRM_FORMAT_XRGB8888);
+	virtio_gpu_resource_id_get(vgdev, &resid);
+	virtio_gpu_cmd_create_resource(vgdev, resid, format,
+				       args->width, args->height);
+
+	/* attach the object to the resource */
+	obj = gem_to_virtio_gpu_obj(gobj);
+	ret = virtio_gpu_object_attach(vgdev, obj, resid, NULL);
+	if (ret)
+		goto fail;
+
+	obj->dumb = true;
+>>>>>>> rebase
 	args->pitch = pitch;
 	return ret;
 

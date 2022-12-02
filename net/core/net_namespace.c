@@ -112,6 +112,10 @@ static int net_assign_generic(struct net *net, unsigned int id, void *data)
 
 static int ops_init(const struct pernet_operations *ops, struct net *net)
 {
+<<<<<<< HEAD
+=======
+	struct net_generic *ng;
+>>>>>>> rebase
 	int err = -ENOMEM;
 	void *data = NULL;
 
@@ -130,7 +134,17 @@ static int ops_init(const struct pernet_operations *ops, struct net *net)
 	if (!err)
 		return 0;
 
+<<<<<<< HEAD
 cleanup:
+=======
+	if (ops->id && ops->size) {
+cleanup:
+		ng = rcu_dereference_protected(net->gen,
+					       lockdep_is_held(&pernet_ops_rwsem));
+		ng->ptr[*ops->id] = NULL;
+	}
+
+>>>>>>> rebase
 	kfree(data);
 
 out:
@@ -149,8 +163,15 @@ static void ops_exit_list(const struct pernet_operations *ops,
 {
 	struct net *net;
 	if (ops->exit) {
+<<<<<<< HEAD
 		list_for_each_entry(net, net_exit_list, exit_list)
 			ops->exit(net);
+=======
+		list_for_each_entry(net, net_exit_list, exit_list) {
+			ops->exit(net);
+			cond_resched();
+		}
+>>>>>>> rebase
 	}
 	if (ops->exit_batch)
 		ops->exit_batch(net_exit_list);
@@ -192,9 +213,15 @@ static int net_eq_idr(int id, void *net, void *peer)
 	return 0;
 }
 
+<<<<<<< HEAD
 /* Should be called with nsid_lock held. If a new id is assigned, the bool alloc
  * is set to true, thus the caller knows that the new id must be notified via
  * rtnl.
+=======
+/* Must be called from RCU-critical section or with nsid_lock held. If
+ * a new id is assigned, the bool alloc is set to true, thus the
+ * caller knows that the new id must be notified via rtnl.
+>>>>>>> rebase
  */
 static int __peernet2id_alloc(struct net *net, struct net *peer, bool *alloc)
 {
@@ -218,7 +245,11 @@ static int __peernet2id_alloc(struct net *net, struct net *peer, bool *alloc)
 	return NETNSA_NSID_NOT_ASSIGNED;
 }
 
+<<<<<<< HEAD
 /* should be called with nsid_lock held */
+=======
+/* Must be called from RCU-critical section or with nsid_lock held */
+>>>>>>> rebase
 static int __peernet2id(struct net *net, struct net *peer)
 {
 	bool no = false;
@@ -261,9 +292,16 @@ int peernet2id(struct net *net, struct net *peer)
 {
 	int id;
 
+<<<<<<< HEAD
 	spin_lock_bh(&net->nsid_lock);
 	id = __peernet2id(net, peer);
 	spin_unlock_bh(&net->nsid_lock);
+=======
+	rcu_read_lock();
+	id = __peernet2id(net, peer);
+	rcu_read_unlock();
+
+>>>>>>> rebase
 	return id;
 }
 EXPORT_SYMBOL(peernet2id);
@@ -598,6 +636,21 @@ void __put_net(struct net *net)
 }
 EXPORT_SYMBOL_GPL(__put_net);
 
+<<<<<<< HEAD
+=======
+/**
+ * get_net_ns - increment the refcount of the network namespace
+ * @ns: common namespace (net)
+ *
+ * Returns the net's common namespace.
+ */
+struct ns_common *get_net_ns(struct ns_common *ns)
+{
+	return &get_net(container_of(ns, struct net, ns))->ns;
+}
+EXPORT_SYMBOL_GPL(get_net_ns);
+
+>>>>>>> rebase
 struct net *get_net_ns_by_fd(int fd)
 {
 	struct file *file;
@@ -825,6 +878,10 @@ struct rtnl_net_dump_cb {
 	int s_idx;
 };
 
+<<<<<<< HEAD
+=======
+/* Runs in RCU-critical section. */
+>>>>>>> rebase
 static int rtnl_net_dumpid_one(int id, void *peer, void *data)
 {
 	struct rtnl_net_dump_cb *net_cb = (struct rtnl_net_dump_cb *)data;
@@ -855,9 +912,15 @@ static int rtnl_net_dumpid(struct sk_buff *skb, struct netlink_callback *cb)
 		.s_idx = cb->args[0],
 	};
 
+<<<<<<< HEAD
 	spin_lock_bh(&net->nsid_lock);
 	idr_for_each(&net->netns_ids, rtnl_net_dumpid_one, &net_cb);
 	spin_unlock_bh(&net->nsid_lock);
+=======
+	rcu_read_lock();
+	idr_for_each(&net->netns_ids, rtnl_net_dumpid_one, &net_cb);
+	rcu_read_unlock();
+>>>>>>> rebase
 
 	cb->args[0] = net_cb.idx;
 	return skb->len;

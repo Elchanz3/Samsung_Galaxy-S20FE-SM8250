@@ -3,6 +3,10 @@ menu "DMABUF options"
 config SYNC_FILE
 	bool "Explicit Synchronization Framework"
 	default n
+<<<<<<< HEAD
+=======
+	select ANON_INODES
+>>>>>>> rebase
 	select DMA_SHARED_BUFFER
 	---help---
 	  The Sync File Framework adds explicit syncronization via
@@ -29,6 +33,7 @@ config SW_SYNC
 	  WARNING: improper use of this can result in deadlocking kernel
 	  drivers from userspace. Intended for test and debug only.
 
+<<<<<<< HEAD
 config DEBUG_DMA_BUF_REF
 	bool "DEBUG Reference Count"
 	depends on STACKDEPOT
@@ -40,4 +45,6 @@ config DEBUG_DMA_BUF_REF
 	  matching the get/put call stacks.  This feature consumes extra memory
 	  in order to save the stack traces using STACKDEPOT.
 
+=======
+>>>>>>> rebase
 endmenu

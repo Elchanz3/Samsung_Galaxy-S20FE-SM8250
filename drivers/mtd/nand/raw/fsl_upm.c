@@ -191,7 +191,11 @@ static int fun_chip_init(struct fsl_upm_nand *fun,
 		goto err;
 	}
 
+<<<<<<< HEAD
 	ret = nand_scan(mtd, fun->mchip_count);
+=======
+	ret = nand_scan(&fun->chip, fun->mchip_count);
+>>>>>>> rebase
 	if (ret)
 		goto err;
 
@@ -326,7 +330,11 @@ static int fun_remove(struct platform_device *ofdev)
 	struct mtd_info *mtd = nand_to_mtd(&fun->chip);
 	int i;
 
+<<<<<<< HEAD
 	nand_release(mtd);
+=======
+	nand_release(&fun->chip);
+>>>>>>> rebase
 	kfree(mtd->name);
 
 	for (i = 0; i < fun->mchip_count; i++) {

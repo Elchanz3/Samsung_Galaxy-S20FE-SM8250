@@ -16,7 +16,10 @@ thermal_sys-$(CONFIG_THERMAL_GOV_FAIR_SHARE)	+= fair_share.o
 thermal_sys-$(CONFIG_THERMAL_GOV_BANG_BANG)	+= gov_bang_bang.o
 thermal_sys-$(CONFIG_THERMAL_GOV_STEP_WISE)	+= step_wise.o
 thermal_sys-$(CONFIG_THERMAL_GOV_USER_SPACE)	+= user_space.o
+<<<<<<< HEAD
 thermal_sys-$(CONFIG_THERMAL_GOV_LOW_LIMITS) += gov_low_limits.o
+=======
+>>>>>>> rebase
 thermal_sys-$(CONFIG_THERMAL_GOV_POWER_ALLOCATOR)	+= power_allocator.o
 
 # cpufreq cooling
@@ -55,12 +58,19 @@ obj-$(CONFIG_INT340X_THERMAL)  += int340x_thermal/
 obj-$(CONFIG_INTEL_BXT_PMIC_THERMAL) += intel_bxt_pmic_thermal.o
 obj-$(CONFIG_INTEL_PCH_THERMAL)	+= intel_pch_thermal.o
 obj-$(CONFIG_ST_THERMAL)	+= st/
+<<<<<<< HEAD
 obj-$(CONFIG_ARCH_QCOM)		+= qcom/
+=======
+obj-$(CONFIG_QCOM_TSENS)	+= qcom/
+>>>>>>> rebase
 obj-y				+= tegra/
 obj-$(CONFIG_HISI_THERMAL)     += hisi_thermal.o
 obj-$(CONFIG_MTK_THERMAL)	+= mtk_thermal.o
 obj-$(CONFIG_GENERIC_ADC_THERMAL)	+= thermal-generic-adc.o
 obj-$(CONFIG_ZX2967_THERMAL)	+= zx2967_thermal.o
 obj-$(CONFIG_UNIPHIER_THERMAL)	+= uniphier_thermal.o
+<<<<<<< HEAD
 obj-$(CONFIG_THERMAL_TSENS)	+= msm-tsens.o tsens2xxx.o tsens-dbg.o tsens-mtc.o tsens1xxx.o tsens-calib.o
 
+=======
+>>>>>>> rebase

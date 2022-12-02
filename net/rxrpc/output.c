@@ -480,6 +480,7 @@ send_fragmentable:
 	skb->tstamp = ktime_get_real();
 
 	switch (conn->params.local->srx.transport.family) {
+<<<<<<< HEAD
 	case AF_INET:
 		opt = IP_PMTUDISC_DONT;
 		ret = kernel_setsockopt(conn->params.local->socket,
@@ -516,6 +517,24 @@ send_fragmentable:
 		break;
 #endif
 
+=======
+	case AF_INET6:
+	case AF_INET:
+		opt = IP_PMTUDISC_DONT;
+		kernel_setsockopt(conn->params.local->socket,
+				  SOL_IP, IP_MTU_DISCOVER,
+				  (char *)&opt, sizeof(opt));
+		ret = kernel_sendmsg(conn->params.local->socket, &msg,
+				     iov, 2, len);
+		conn->params.peer->last_tx_at = ktime_get_seconds();
+
+		opt = IP_PMTUDISC_DO;
+		kernel_setsockopt(conn->params.local->socket,
+				  SOL_IP, IP_MTU_DISCOVER,
+				  (char *)&opt, sizeof(opt));
+		break;
+
+>>>>>>> rebase
 	default:
 		BUG();
 	}

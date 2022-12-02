@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 // SPDX-License-Identifier: GPL-2.0
+=======
+>>>>>>> rebase
 /*
  * fs/f2fs/hash.c
  *
@@ -8,13 +11,23 @@
  * Portions of this code from linux/fs/ext3/hash.c
  *
  * Copyright (C) 2002 by Theodore Ts'o
+<<<<<<< HEAD
+=======
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2 as
+ * published by the Free Software Foundation.
+>>>>>>> rebase
  */
 #include <linux/types.h>
 #include <linux/fs.h>
 #include <linux/f2fs_fs.h>
 #include <linux/cryptohash.h>
 #include <linux/pagemap.h>
+<<<<<<< HEAD
 #include <linux/unicode.h>
+=======
+>>>>>>> rebase
 
 #include "f2fs.h"
 
@@ -68,9 +81,14 @@ static void str2hashbuf(const unsigned char *msg, size_t len,
 		*buf++ = pad;
 }
 
+<<<<<<< HEAD
 static f2fs_hash_t __f2fs_dentry_hash(const struct inode *dir,
 				const struct qstr *name_info,
 				const struct fscrypt_name *fname)
+=======
+f2fs_hash_t f2fs_dentry_hash(const struct qstr *name_info,
+				struct fscrypt_name *fname)
+>>>>>>> rebase
 {
 	__u32 hash;
 	f2fs_hash_t f2fs_hash;
@@ -80,17 +98,24 @@ static f2fs_hash_t __f2fs_dentry_hash(const struct inode *dir,
 	size_t len = name_info->len;
 
 	/* encrypted bigname case */
+<<<<<<< HEAD
 	if (fname && fname->is_ciphertext_name)
+=======
+	if (fname && !fname->disk_name.name)
+>>>>>>> rebase
 		return cpu_to_le32(fname->hash);
 
 	if (is_dot_dotdot(name_info))
 		return 0;
 
+<<<<<<< HEAD
 	if (IS_CASEFOLDED(dir) && IS_ENCRYPTED(dir)) {
 		f2fs_hash = cpu_to_le32(fscrypt_fname_siphash(dir, name_info));
 		return f2fs_hash;
 	}
 
+=======
+>>>>>>> rebase
 	/* Initialize the default seed for the hash checksum functions */
 	buf[0] = 0x67452301;
 	buf[1] = 0xefcdab89;
@@ -110,6 +135,7 @@ static f2fs_hash_t __f2fs_dentry_hash(const struct inode *dir,
 	f2fs_hash = cpu_to_le32(hash & ~F2FS_HASH_COL_BIT);
 	return f2fs_hash;
 }
+<<<<<<< HEAD
 
 f2fs_hash_t f2fs_dentry_hash(const struct inode *dir,
 		const struct qstr *name_info, const struct fscrypt_name *fname)
@@ -147,3 +173,5 @@ opaque_seq:
 #endif
 	return __f2fs_dentry_hash(dir, name_info, fname);
 }
+=======
+>>>>>>> rebase

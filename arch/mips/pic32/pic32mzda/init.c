@@ -36,7 +36,11 @@ static ulong get_fdtaddr(void)
 	if (fw_passed_dtb && !fw_arg2 && !fw_arg3)
 		return (ulong)fw_passed_dtb;
 
+<<<<<<< HEAD
 	if (__dtb_start < __dtb_end)
+=======
+	if (&__dtb_start < &__dtb_end)
+>>>>>>> rebase
 		ftaddr = (ulong)__dtb_start;
 
 	return ftaddr;

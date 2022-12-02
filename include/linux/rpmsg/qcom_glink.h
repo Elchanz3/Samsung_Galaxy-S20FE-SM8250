@@ -6,7 +6,10 @@
 #include <linux/device.h>
 
 struct qcom_glink;
+<<<<<<< HEAD
 struct glink_spi;
+=======
+>>>>>>> rebase
 
 #if IS_ENABLED(CONFIG_RPMSG_QCOM_GLINK_SMEM)
 
@@ -27,6 +30,7 @@ static inline void qcom_glink_smem_unregister(struct qcom_glink *glink) {}
 
 #endif
 
+<<<<<<< HEAD
 
 #if IS_ENABLED(CONFIG_RPMSG_QCOM_GLINK_SPSS)
 
@@ -67,4 +71,6 @@ static inline void qcom_glink_spi_unregister(struct glink_spi *glink) {}
 #endif
 
 
+=======
+>>>>>>> rebase
 #endif

@@ -14,7 +14,10 @@
 
 struct snd_soc_pcm_runtime;
 
+<<<<<<< HEAD
 #define DPCM_MAX_BE_USERS   8
+=======
+>>>>>>> rebase
 /*
  * Types of runtime_update to perform. e.g. originated from FE PCM ops
  * or audio route changes triggered by muxes/mixers.
@@ -84,7 +87,10 @@ struct snd_soc_dpcm {
 #ifdef CONFIG_DEBUG_FS
 	struct dentry *debugfs_state;
 #endif
+<<<<<<< HEAD
 	int stream;
+=======
+>>>>>>> rebase
 };
 
 /*
@@ -147,6 +153,7 @@ void dpcm_be_disconnect(struct snd_soc_pcm_runtime *fe, int stream);
 void dpcm_clear_pending_state(struct snd_soc_pcm_runtime *fe, int stream);
 int dpcm_be_dai_hw_free(struct snd_soc_pcm_runtime *fe, int stream);
 int dpcm_be_dai_hw_params(struct snd_soc_pcm_runtime *fe, int tream);
+<<<<<<< HEAD
 int dpcm_fe_dai_hw_params_be(struct snd_soc_pcm_runtime *fe,
 	struct snd_soc_pcm_runtime *be, struct snd_pcm_hw_params *hw_params,
 							    int stream);
@@ -154,6 +161,10 @@ int dpcm_be_dai_trigger(struct snd_soc_pcm_runtime *fe, int stream, int cmd);
 int dpcm_be_dai_prepare(struct snd_soc_pcm_runtime *fe, int stream);
 int dpcm_fe_dai_prepare_be(struct snd_soc_pcm_runtime *fe,
 	struct snd_soc_pcm_runtime *be, int stream);
+=======
+int dpcm_be_dai_trigger(struct snd_soc_pcm_runtime *fe, int stream, int cmd);
+int dpcm_be_dai_prepare(struct snd_soc_pcm_runtime *fe, int stream);
+>>>>>>> rebase
 int dpcm_dapm_stream_event(struct snd_soc_pcm_runtime *fe, int dir,
 	int event);
 

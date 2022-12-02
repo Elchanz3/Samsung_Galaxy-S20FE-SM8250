@@ -185,7 +185,11 @@ static int socrates_nand_probe(struct platform_device *ofdev)
 
 	dev_set_drvdata(&ofdev->dev, host);
 
+<<<<<<< HEAD
 	res = nand_scan(mtd, 1);
+=======
+	res = nand_scan(nand_chip, 1);
+>>>>>>> rebase
 	if (res)
 		goto out;
 
@@ -193,7 +197,11 @@ static int socrates_nand_probe(struct platform_device *ofdev)
 	if (!res)
 		return res;
 
+<<<<<<< HEAD
 	nand_release(mtd);
+=======
+	nand_cleanup(nand_chip);
+>>>>>>> rebase
 
 out:
 	iounmap(host->io_base);
@@ -206,9 +214,14 @@ out:
 static int socrates_nand_remove(struct platform_device *ofdev)
 {
 	struct socrates_nand_host *host = dev_get_drvdata(&ofdev->dev);
+<<<<<<< HEAD
 	struct mtd_info *mtd = nand_to_mtd(&host->nand_chip);
 
 	nand_release(mtd);
+=======
+
+	nand_release(&host->nand_chip);
+>>>>>>> rebase
 
 	iounmap(host->io_base);
 

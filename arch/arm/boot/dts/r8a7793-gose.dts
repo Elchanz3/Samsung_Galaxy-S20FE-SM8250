@@ -339,7 +339,11 @@
 			reg = <0x20>;
 			remote = <&vin1>;
 
+<<<<<<< HEAD
 			port {
+=======
+			ports {
+>>>>>>> rebase
 				#address-cells = <1>;
 				#size-cells = <0>;
 
@@ -399,7 +403,11 @@
 			interrupts = <2 IRQ_TYPE_LEVEL_LOW>;
 			default-input = <0>;
 
+<<<<<<< HEAD
 			port {
+=======
+			ports {
+>>>>>>> rebase
 				#address-cells = <1>;
 				#size-cells = <0>;
 

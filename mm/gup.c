@@ -61,6 +61,7 @@ static int follow_pfn_pte(struct vm_area_struct *vma, unsigned long address,
 }
 
 /*
+<<<<<<< HEAD
  * FOLL_FORCE can write to even unwritable pte's, but only
  * after we've gone through a COW cycle and they are dirty.
  */
@@ -68,6 +69,24 @@ static inline bool can_follow_write_pte(pte_t pte, unsigned int flags)
 {
 	return pte_write(pte) ||
 		((flags & FOLL_FORCE) && (flags & FOLL_COW) && pte_dirty(pte));
+=======
+ * FOLL_FORCE or a forced COW break can write even to unwritable pte's,
+ * but only after we've gone through a COW cycle and they are dirty.
+ */
+static inline bool can_follow_write_pte(pte_t pte, unsigned int flags)
+{
+	return pte_write(pte) || ((flags & FOLL_COW) && pte_dirty(pte));
+}
+
+/*
+ * A (separate) COW fault might break the page the other way and
+ * get_user_pages() would return the page from what is now the wrong
+ * VM. So we need to force a COW break at GUP time even for reads.
+ */
+static inline bool should_force_cow_break(struct vm_area_struct *vma, unsigned int flags)
+{
+	return is_cow_mapping(vma->vm_flags) && (flags & FOLL_GET);
+>>>>>>> rebase
 }
 
 static struct page *follow_page_pte(struct vm_area_struct *vma,
@@ -678,8 +697,11 @@ static long __get_user_pages(struct task_struct *tsk, struct mm_struct *mm,
 	if (!nr_pages)
 		return 0;
 
+<<<<<<< HEAD
 	start = untagged_addr(start);
 
+=======
+>>>>>>> rebase
 	VM_BUG_ON(!!pages != !!(gup_flags & FOLL_GET));
 
 	/*
@@ -712,12 +734,27 @@ static long __get_user_pages(struct task_struct *tsk, struct mm_struct *mm,
 			if (!vma || check_vma_flags(vma, gup_flags))
 				return i ? : -EFAULT;
 			if (is_vm_hugetlb_page(vma)) {
+<<<<<<< HEAD
 				i = follow_hugetlb_page(mm, vma, pages, vmas,
 						&start, &nr_pages, i,
 						gup_flags, nonblocking);
 				continue;
 			}
 		}
+=======
+				if (should_force_cow_break(vma, foll_flags))
+					foll_flags |= FOLL_WRITE;
+				i = follow_hugetlb_page(mm, vma, pages, vmas,
+						&start, &nr_pages, i,
+						foll_flags, nonblocking);
+				continue;
+			}
+		}
+
+		if (should_force_cow_break(vma, foll_flags))
+			foll_flags |= FOLL_WRITE;
+
+>>>>>>> rebase
 retry:
 		/*
 		 * If we have a pending SIGKILL, don't keep faulting pages and
@@ -834,8 +871,11 @@ int fixup_user_fault(struct task_struct *tsk, struct mm_struct *mm,
 	struct vm_area_struct *vma;
 	vm_fault_t ret, major = 0;
 
+<<<<<<< HEAD
 	address = untagged_addr(address);
 
+=======
+>>>>>>> rebase
 	if (unlocked)
 		fault_flags |= FAULT_FLAG_ALLOW_RETRY;
 
@@ -1808,6 +1848,13 @@ bool gup_fast_permitted(unsigned long start, int nr_pages, int write)
  * the regular GUP.
  * Note a difference with get_user_pages_fast: this always returns the
  * number of pages pinned, 0 if no pages were pinned.
+<<<<<<< HEAD
+=======
+ *
+ * Careful, careful! COW breaking can go either way, so a non-write
+ * access can get ambiguous page results. If you call this function without
+ * 'write' set, you'd better be sure that you're ok with that ambiguity.
+>>>>>>> rebase
  */
 int __get_user_pages_fast(unsigned long start, int nr_pages, int write,
 			  struct page **pages)
@@ -1835,6 +1882,15 @@ int __get_user_pages_fast(unsigned long start, int nr_pages, int write,
 	 *
 	 * We do not adopt an rcu_read_lock(.) here as we also want to
 	 * block IPIs that come from THPs splitting.
+<<<<<<< HEAD
+=======
+	 *
+	 * NOTE! We allow read-only gup_fast() here, but you'd better be
+	 * careful about possible COW pages. You'll get _a_ COW page, but
+	 * not necessarily the one you intended to get depending on what
+	 * COW event happens after this. COW may break the page copy in a
+	 * random direction.
+>>>>>>> rebase
 	 */
 
 	if (gup_fast_permitted(start, nr_pages, write)) {
@@ -1880,9 +1936,22 @@ int get_user_pages_fast(unsigned long start, int nr_pages, int write,
 					(void __user *)start, len)))
 		return -EFAULT;
 
+<<<<<<< HEAD
 	if (gup_fast_permitted(start, nr_pages, write)) {
 		local_irq_disable();
 		gup_pgd_range(addr, end, write, pages, &nr);
+=======
+	/*
+	 * The FAST_GUP case requires FOLL_WRITE even for pure reads,
+	 * because get_user_pages() may need to cause an early COW in
+	 * order to avoid confusing the normal COW routines. So only
+	 * targets that are already writable are safe to do by just
+	 * looking at the page tables.
+	 */
+	if (gup_fast_permitted(start, nr_pages, write)) {
+		local_irq_disable();
+		gup_pgd_range(addr, end, 1, pages, &nr);
+>>>>>>> rebase
 		local_irq_enable();
 		ret = nr;
 	}

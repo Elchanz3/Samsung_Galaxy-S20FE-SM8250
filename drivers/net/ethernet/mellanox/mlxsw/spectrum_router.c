@@ -5982,7 +5982,11 @@ static int mlxsw_sp_router_fib_event(struct notifier_block *nb,
 	}
 
 	fib_work = kzalloc(sizeof(*fib_work), GFP_ATOMIC);
+<<<<<<< HEAD
 	if (WARN_ON(!fib_work))
+=======
+	if (!fib_work)
+>>>>>>> rebase
 		return NOTIFY_BAD;
 
 	fib_work->mlxsw_sp = router->mlxsw_sp;

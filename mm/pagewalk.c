@@ -15,9 +15,15 @@ static int walk_pte_range(pmd_t *pmd, unsigned long addr, unsigned long end,
 		err = walk->pte_entry(pte, addr, addr + PAGE_SIZE, walk);
 		if (err)
 		       break;
+<<<<<<< HEAD
 		addr += PAGE_SIZE;
 		if (addr == end)
 			break;
+=======
+		if (addr >= end - PAGE_SIZE)
+			break;
+		addr += PAGE_SIZE;
+>>>>>>> rebase
 		pte++;
 	}
 

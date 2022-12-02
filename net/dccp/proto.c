@@ -769,11 +769,14 @@ int dccp_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
 
 	lock_sock(sk);
 
+<<<<<<< HEAD
 	if (dccp_qpolicy_full(sk)) {
 		rc = -EAGAIN;
 		goto out_release;
 	}
 
+=======
+>>>>>>> rebase
 	timeo = sock_sndtimeo(sk, noblock);
 
 	/*
@@ -792,6 +795,14 @@ int dccp_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
 	if (skb == NULL)
 		goto out_release;
 
+<<<<<<< HEAD
+=======
+	if (dccp_qpolicy_full(sk)) {
+		rc = -EAGAIN;
+		goto out_discard;
+	}
+
+>>>>>>> rebase
 	if (sk->sk_state == DCCP_CLOSED) {
 		rc = -ENOTCONN;
 		goto out_discard;

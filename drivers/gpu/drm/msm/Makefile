@@ -4,6 +4,19 @@ ccflags-y += -Idrivers/gpu/drm/msm/disp/dpu1
 ccflags-$(CONFIG_DRM_MSM_DSI) += -Idrivers/gpu/drm/msm/dsi
 
 msm-y := \
+<<<<<<< HEAD
+=======
+	adreno/adreno_device.o \
+	adreno/adreno_gpu.o \
+	adreno/a3xx_gpu.o \
+	adreno/a4xx_gpu.o \
+	adreno/a5xx_gpu.o \
+	adreno/a5xx_power.o \
+	adreno/a5xx_preempt.o \
+	adreno/a6xx_gpu.o \
+	adreno/a6xx_gmu.o \
+	adreno/a6xx_hfi.o \
+>>>>>>> rebase
 	hdmi/hdmi.o \
 	hdmi/hdmi_audio.o \
 	hdmi/hdmi_bridge.o \
@@ -83,6 +96,7 @@ msm-y := \
 	msm_ringbuffer.o \
 	msm_submitqueue.o
 
+<<<<<<< HEAD
 # use drm gpu driver only if qcom_kgsl driver not available
 #ifneq ($(CONFIG_QCOM_KGSL),y)
 msm_drm-y += adreno/adreno_device.o \
@@ -97,6 +111,8 @@ msm_drm-y += adreno/adreno_device.o \
  	adreno/a6xx_hfi.o
 #endif
 
+=======
+>>>>>>> rebase
 msm-$(CONFIG_DEBUG_FS) += adreno/a5xx_debugfs.o \
 			  disp/dpu1/dpu_dbg.o
 

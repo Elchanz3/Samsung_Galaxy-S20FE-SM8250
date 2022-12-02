@@ -618,7 +618,11 @@
 			reg = <0xffcfb100 0x80>;
 		};
 
+<<<<<<< HEAD
 		L2: l2-cache@fffff000 {
+=======
+		L2: cache-controller@fffff000 {
+>>>>>>> rebase
 			compatible = "arm,pl310-cache";
 			reg = <0xfffff000 0x1000>;
 			interrupts = <0 18 IRQ_TYPE_LEVEL_HIGH>;
@@ -791,7 +795,11 @@
 		timer3: timer3@ffd00100 {
 			compatible = "snps,dw-apb-timer";
 			interrupts = <0 118 IRQ_TYPE_LEVEL_HIGH>;
+<<<<<<< HEAD
 			reg = <0xffd01000 0x100>;
+=======
+			reg = <0xffd00100 0x100>;
+>>>>>>> rebase
 			clocks = <&l4_sys_free_clk>;
 			clock-names = "timer";
 		};

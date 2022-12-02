@@ -960,6 +960,7 @@ static void pxad_get_config(struct pxad_chan *chan,
 		*dcmd |= PXA_DCMD_BURST16;
 	else if (maxburst == 32)
 		*dcmd |= PXA_DCMD_BURST32;
+<<<<<<< HEAD
 
 	/* FIXME: drivers should be ported over to use the filter
 	 * function. Once that's done, the following two lines can
@@ -967,6 +968,8 @@ static void pxad_get_config(struct pxad_chan *chan,
 	 */
 	if (chan->cfg.slave_id)
 		chan->drcmr = chan->cfg.slave_id;
+=======
+>>>>>>> rebase
 }
 
 static struct dma_async_tx_descriptor *

@@ -25,6 +25,12 @@ struct rtl8366_mib_counter {
 	const char	*name;
 };
 
+<<<<<<< HEAD
+=======
+/**
+ * struct rtl8366_vlan_mc - Virtual LAN member configuration
+ */
+>>>>>>> rebase
 struct rtl8366_vlan_mc {
 	u16	vid;
 	u16	untag;
@@ -119,7 +125,10 @@ int realtek_smi_setup_mdio(struct realtek_smi *smi);
 int rtl8366_mc_is_used(struct realtek_smi *smi, int mc_index, int *used);
 int rtl8366_set_vlan(struct realtek_smi *smi, int vid, u32 member,
 		     u32 untag, u32 fid);
+<<<<<<< HEAD
 int rtl8366_get_pvid(struct realtek_smi *smi, int port, int *val);
+=======
+>>>>>>> rebase
 int rtl8366_set_pvid(struct realtek_smi *smi, unsigned int port,
 		     unsigned int vid);
 int rtl8366_enable_vlan4k(struct realtek_smi *smi, bool enable);

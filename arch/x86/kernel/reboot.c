@@ -197,6 +197,17 @@ static const struct dmi_system_id reboot_dmi_table[] __initconst = {
 			DMI_MATCH(DMI_PRODUCT_NAME, "MacBook5"),
 		},
 	},
+<<<<<<< HEAD
+=======
+	{	/* Handle problems with rebooting on Apple MacBook6,1 */
+		.callback = set_pci_reboot,
+		.ident = "Apple MacBook6,1",
+		.matches = {
+			DMI_MATCH(DMI_SYS_VENDOR, "Apple Inc."),
+			DMI_MATCH(DMI_PRODUCT_NAME, "MacBook6,1"),
+		},
+	},
+>>>>>>> rebase
 	{	/* Handle problems with rebooting on Apple MacBookPro5 */
 		.callback = set_pci_reboot,
 		.ident = "Apple MacBookPro5",
@@ -380,10 +391,18 @@ static const struct dmi_system_id reboot_dmi_table[] __initconst = {
 	},
 	{	/* Handle problems with rebooting on the OptiPlex 990. */
 		.callback = set_pci_reboot,
+<<<<<<< HEAD
 		.ident = "Dell OptiPlex 990",
 		.matches = {
 			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
 			DMI_MATCH(DMI_PRODUCT_NAME, "OptiPlex 990"),
+=======
+		.ident = "Dell OptiPlex 990 BIOS A0x",
+		.matches = {
+			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
+			DMI_MATCH(DMI_PRODUCT_NAME, "OptiPlex 990"),
+			DMI_MATCH(DMI_BIOS_VERSION, "A0"),
+>>>>>>> rebase
 		},
 	},
 	{	/* Handle problems with rebooting on Dell 300's */
@@ -469,6 +488,18 @@ static const struct dmi_system_id reboot_dmi_table[] __initconst = {
 		},
 	},
 
+<<<<<<< HEAD
+=======
+	{	/* PCIe Wifi card isn't detected after reboot otherwise */
+		.callback = set_pci_reboot,
+		.ident = "Zotac ZBOX CI327 nano",
+		.matches = {
+			DMI_MATCH(DMI_SYS_VENDOR, "NA"),
+			DMI_MATCH(DMI_PRODUCT_NAME, "ZBOX-CI327NANO-GS-01"),
+		},
+	},
+
+>>>>>>> rebase
 	/* Sony */
 	{	/* Handle problems with rebooting on Sony VGN-Z540N */
 		.callback = set_bios_reboot,
@@ -530,6 +561,7 @@ static void emergency_vmx_disable_all(void)
 	local_irq_disable();
 
 	/*
+<<<<<<< HEAD
 	 * We need to disable VMX on all CPUs before rebooting, otherwise
 	 * we risk hanging up the machine, because the CPU ignore INIT
 	 * signals when VMX is enabled.
@@ -553,6 +585,22 @@ static void emergency_vmx_disable_all(void)
 		cpu_vmxoff();
 
 		/* Halt and disable VMX on the other CPUs */
+=======
+	 * Disable VMX on all CPUs before rebooting, otherwise we risk hanging
+	 * the machine, because the CPU blocks INIT when it's in VMX root.
+	 *
+	 * We can't take any locks and we may be on an inconsistent state, so
+	 * use NMIs as IPIs to tell the other CPUs to exit VMX root and halt.
+	 *
+	 * Do the NMI shootdown even if VMX if off on _this_ CPU, as that
+	 * doesn't prevent a different CPU from being in VMX root operation.
+	 */
+	if (cpu_has_vmx()) {
+		/* Safely force _this_ CPU out of VMX root operation. */
+		__cpu_emergency_vmxoff();
+
+		/* Halt and exit VMX root operation on the other CPUs. */
+>>>>>>> rebase
 		nmi_shootdown_cpus(vmxoff_nmi);
 
 	}

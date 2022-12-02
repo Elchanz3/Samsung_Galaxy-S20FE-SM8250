@@ -324,6 +324,11 @@
 				regulator-name = "vddq_lcd";
 				regulator-min-microvolt = <1800000>;
 				regulator-max-microvolt = <1800000>;
+<<<<<<< HEAD
+=======
+				/* Supplies also GPK and GPJ */
+				regulator-always-on;
+>>>>>>> rebase
 			};
 
 			ldo8_reg: LDO8 {
@@ -626,11 +631,19 @@
 };
 
 &usbdrd_dwc3_0 {
+<<<<<<< HEAD
 	dr_mode = "host";
 };
 
 &usbdrd_dwc3_1 {
 	dr_mode = "peripheral";
+=======
+	dr_mode = "peripheral";
+};
+
+&usbdrd_dwc3_1 {
+	dr_mode = "host";
+>>>>>>> rebase
 };
 
 &usbdrd3_0 {

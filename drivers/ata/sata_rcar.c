@@ -124,7 +124,11 @@
 /* Descriptor table word 0 bit (when DTA32M = 1) */
 #define SATA_RCAR_DTEND			BIT(0)
 
+<<<<<<< HEAD
 #define SATA_RCAR_DMA_BOUNDARY		0x1FFFFFFEUL
+=======
+#define SATA_RCAR_DMA_BOUNDARY		0x1FFFFFFFUL
+>>>>>>> rebase
 
 /* Gen2 Physical Layer Control Registers */
 #define RCAR_GEN2_PHY_CTL1_REG		0x1704
@@ -554,12 +558,23 @@ static void sata_rcar_bmdma_fill_sg(struct ata_queued_cmd *qc)
 	prd[si - 1].addr |= cpu_to_le32(SATA_RCAR_DTEND);
 }
 
+<<<<<<< HEAD
 static void sata_rcar_qc_prep(struct ata_queued_cmd *qc)
 {
 	if (!(qc->flags & ATA_QCFLAG_DMAMAP))
 		return;
 
 	sata_rcar_bmdma_fill_sg(qc);
+=======
+static enum ata_completion_errors sata_rcar_qc_prep(struct ata_queued_cmd *qc)
+{
+	if (!(qc->flags & ATA_QCFLAG_DMAMAP))
+		return AC_ERR_OK;
+
+	sata_rcar_bmdma_fill_sg(qc);
+
+	return AC_ERR_OK;
+>>>>>>> rebase
 }
 
 static void sata_rcar_bmdma_setup(struct ata_queued_cmd *qc)
@@ -909,7 +924,11 @@ static int sata_rcar_probe(struct platform_device *pdev)
 	pm_runtime_enable(dev);
 	ret = pm_runtime_get_sync(dev);
 	if (ret < 0)
+<<<<<<< HEAD
 		goto err_pm_disable;
+=======
+		goto err_pm_put;
+>>>>>>> rebase
 
 	host = ata_host_alloc(dev, 1);
 	if (!host) {
@@ -940,7 +959,10 @@ static int sata_rcar_probe(struct platform_device *pdev)
 
 err_pm_put:
 	pm_runtime_put(dev);
+<<<<<<< HEAD
 err_pm_disable:
+=======
+>>>>>>> rebase
 	pm_runtime_disable(dev);
 	return ret;
 }
@@ -994,8 +1016,15 @@ static int sata_rcar_resume(struct device *dev)
 	int ret;
 
 	ret = pm_runtime_get_sync(dev);
+<<<<<<< HEAD
 	if (ret < 0)
 		return ret;
+=======
+	if (ret < 0) {
+		pm_runtime_put(dev);
+		return ret;
+	}
+>>>>>>> rebase
 
 	if (priv->type == RCAR_GEN3_SATA) {
 		sata_rcar_init_module(priv);
@@ -1020,8 +1049,15 @@ static int sata_rcar_restore(struct device *dev)
 	int ret;
 
 	ret = pm_runtime_get_sync(dev);
+<<<<<<< HEAD
 	if (ret < 0)
 		return ret;
+=======
+	if (ret < 0) {
+		pm_runtime_put(dev);
+		return ret;
+	}
+>>>>>>> rebase
 
 	sata_rcar_setup_port(host);
 

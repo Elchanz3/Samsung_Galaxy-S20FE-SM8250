@@ -17,12 +17,22 @@
 	.type  __kernel_clock_getres,@function
 __kernel_clock_getres:
 	CFI_STARTPROC
+<<<<<<< HEAD
 	larl	%r1,4f
+=======
+	larl	%r1,3f
+	lg	%r0,0(%r1)
+>>>>>>> rebase
 	cghi	%r2,__CLOCK_REALTIME_COARSE
 	je	0f
 	cghi	%r2,__CLOCK_MONOTONIC_COARSE
 	je	0f
+<<<<<<< HEAD
 	larl	%r1,3f
+=======
+	larl	%r1,_vdso_data
+	llgf	%r0,__VDSO_CLOCK_REALTIME_RES(%r1)
+>>>>>>> rebase
 	cghi	%r2,__CLOCK_REALTIME
 	je	0f
 	cghi	%r2,__CLOCK_MONOTONIC
@@ -36,7 +46,10 @@ __kernel_clock_getres:
 	jz	2f
 0:	ltgr	%r3,%r3
 	jz	1f				/* res == NULL */
+<<<<<<< HEAD
 	lg	%r0,0(%r1)
+=======
+>>>>>>> rebase
 	xc	0(8,%r3),0(%r3)			/* set tp->tv_sec to zero */
 	stg	%r0,8(%r3)			/* store tp->tv_usec */
 1:	lghi	%r2,0
@@ -45,6 +58,10 @@ __kernel_clock_getres:
 	svc	0
 	br	%r14
 	CFI_ENDPROC
+<<<<<<< HEAD
 3:	.quad	__CLOCK_REALTIME_RES
 4:	.quad	__CLOCK_COARSE_RES
+=======
+3:	.quad	__CLOCK_COARSE_RES
+>>>>>>> rebase
 	.size	__kernel_clock_getres,.-__kernel_clock_getres

@@ -106,10 +106,17 @@ static int afu_dma_pin_pages(struct dfl_feature_platform_data *pdata,
 				     region->pages);
 	if (pinned < 0) {
 		ret = pinned;
+<<<<<<< HEAD
 		goto put_pages;
 	} else if (pinned != npages) {
 		ret = -EFAULT;
 		goto free_pages;
+=======
+		goto free_pages;
+	} else if (pinned != npages) {
+		ret = -EFAULT;
+		goto put_pages;
+>>>>>>> rebase
 	}
 
 	dev_dbg(dev, "%d pages pinned\n", pinned);

@@ -414,6 +414,10 @@ static int wm5110_put_dre(struct snd_kcontrol *kcontrol,
 	unsigned int rnew = (!!ucontrol->value.integer.value[1]) << mc->rshift;
 	unsigned int lold, rold;
 	unsigned int lena, rena;
+<<<<<<< HEAD
+=======
+	bool change = false;
+>>>>>>> rebase
 	int ret;
 
 	snd_soc_dapm_mutex_lock(dapm);
@@ -441,8 +445,13 @@ static int wm5110_put_dre(struct snd_kcontrol *kcontrol,
 		goto err;
 	}
 
+<<<<<<< HEAD
 	ret = regmap_update_bits(arizona->regmap, ARIZONA_DRE_ENABLE,
 				 mask, lnew | rnew);
+=======
+	ret = regmap_update_bits_check(arizona->regmap, ARIZONA_DRE_ENABLE,
+				       mask, lnew | rnew, &change);
+>>>>>>> rebase
 	if (ret) {
 		dev_err(arizona->dev, "Failed to set DRE: %d\n", ret);
 		goto err;
@@ -455,6 +464,12 @@ static int wm5110_put_dre(struct snd_kcontrol *kcontrol,
 	if (!rnew && rold)
 		wm5110_clear_pga_volume(arizona, mc->rshift);
 
+<<<<<<< HEAD
+=======
+	if (change)
+		ret = 1;
+
+>>>>>>> rebase
 err:
 	snd_soc_dapm_mutex_unlock(dapm);
 
@@ -2449,9 +2464,12 @@ static int wm5110_probe(struct platform_device *pdev)
 		regmap_update_bits(arizona->regmap, wm5110_digital_vu[i],
 				   WM5110_DIG_VU, WM5110_DIG_VU);
 
+<<<<<<< HEAD
 	pm_runtime_enable(&pdev->dev);
 	pm_runtime_idle(&pdev->dev);
 
+=======
+>>>>>>> rebase
 	ret = arizona_request_irq(arizona, ARIZONA_IRQ_DSP_IRQ1,
 				  "ADSP2 Compressed IRQ", wm5110_adsp2_irq,
 				  wm5110);
@@ -2484,6 +2502,12 @@ static int wm5110_probe(struct platform_device *pdev)
 		goto err_spk_irqs;
 	}
 
+<<<<<<< HEAD
+=======
+	pm_runtime_enable(&pdev->dev);
+	pm_runtime_idle(&pdev->dev);
+
+>>>>>>> rebase
 	return ret;
 
 err_spk_irqs:

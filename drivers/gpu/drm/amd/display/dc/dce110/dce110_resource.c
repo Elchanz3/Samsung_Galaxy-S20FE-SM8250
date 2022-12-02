@@ -1344,6 +1344,10 @@ struct resource_pool *dce110_create_resource_pool(
 	if (construct(num_virtual_links, dc, pool, asic_id))
 		return &pool->base;
 
+<<<<<<< HEAD
+=======
+	kfree(pool);
+>>>>>>> rebase
 	BREAK_TO_DEBUGGER();
 	return NULL;
 }

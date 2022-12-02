@@ -173,7 +173,11 @@ int ipv6_sock_ac_drop(struct sock *sk, int ifindex, const struct in6_addr *addr)
 	return 0;
 }
 
+<<<<<<< HEAD
 void ipv6_sock_ac_close(struct sock *sk)
+=======
+void __ipv6_sock_ac_close(struct sock *sk)
+>>>>>>> rebase
 {
 	struct ipv6_pinfo *np = inet6_sk(sk);
 	struct net_device *dev = NULL;
@@ -181,10 +185,14 @@ void ipv6_sock_ac_close(struct sock *sk)
 	struct net *net = sock_net(sk);
 	int	prev_index;
 
+<<<<<<< HEAD
 	if (!np->ipv6_ac_list)
 		return;
 
 	rtnl_lock();
+=======
+	ASSERT_RTNL();
+>>>>>>> rebase
 	pac = np->ipv6_ac_list;
 	np->ipv6_ac_list = NULL;
 
@@ -201,6 +209,19 @@ void ipv6_sock_ac_close(struct sock *sk)
 		sock_kfree_s(sk, pac, sizeof(*pac));
 		pac = next;
 	}
+<<<<<<< HEAD
+=======
+}
+
+void ipv6_sock_ac_close(struct sock *sk)
+{
+	struct ipv6_pinfo *np = inet6_sk(sk);
+
+	if (!np->ipv6_ac_list)
+		return;
+	rtnl_lock();
+	__ipv6_sock_ac_close(sk);
+>>>>>>> rebase
 	rtnl_unlock();
 }
 

@@ -1,9 +1,19 @@
+<<<<<<< HEAD
 // SPDX-License-Identifier: GPL-2.0
+=======
+>>>>>>> rebase
 /*
  * fs/f2fs/node.h
  *
  * Copyright (c) 2012 Samsung Electronics Co., Ltd.
  *             http://www.samsung.com/
+<<<<<<< HEAD
+=======
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2 as
+ * published by the Free Software Foundation.
+>>>>>>> rebase
  */
 /* start node id of a node block dedicated to the given node id */
 #define	START_NID(nid) (((nid) / NAT_ENTRY_PER_BLOCK) * NAT_ENTRY_PER_BLOCK)
@@ -361,7 +371,11 @@ static inline int set_nid(struct page *p, int off, nid_t nid, bool i)
 {
 	struct f2fs_node *rn = F2FS_NODE(p);
 
+<<<<<<< HEAD
 	f2fs_wait_on_page_writeback(p, NODE, true, true);
+=======
+	f2fs_wait_on_page_writeback(p, NODE, true);
+>>>>>>> rebase
 
 	if (i)
 		rn->i.i_nid[off - NODE_DIR1_BLOCK] = cpu_to_le32(nid);

@@ -29,7 +29,10 @@
 #include <linux/arm-smccc.h>
 #include <linux/kprobes.h>
 
+<<<<<<< HEAD
 #include <asm/cacheflush.h>
+=======
+>>>>>>> rebase
 #include <asm/checksum.h>
 
 EXPORT_SYMBOL(copy_page);
@@ -87,8 +90,11 @@ extern long long __ashrti3(long long a, int b);
 EXPORT_SYMBOL(__ashrti3);
 extern long long __lshrti3(long long a, int b);
 EXPORT_SYMBOL(__lshrti3);
+<<<<<<< HEAD
 
 	/* caching functions */
 EXPORT_SYMBOL(__dma_inv_area);
 EXPORT_SYMBOL(__dma_clean_area);
 EXPORT_SYMBOL(__dma_flush_area);
+=======
+>>>>>>> rebase

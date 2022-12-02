@@ -43,10 +43,14 @@ static struct device_attribute power_supply_attrs[];
 static const char * const power_supply_type_text[] = {
 	"Unknown", "Battery", "UPS", "Mains", "USB",
 	"USB_DCP", "USB_CDP", "USB_ACA", "USB_C",
+<<<<<<< HEAD
 	"USB_PD", "USB_PD_DRP", "BrickID",
 	"USB_HVDCP", "USB_HVDCP_3", "USB_HVDCP_3P5", "Wireless", "USB_FLOAT",
 	"BMS", "Parallel", "Main", "Wipower", "USB_C_UFP", "USB_C_DFP",
 	"Charge_Pump", "POWER_SHARING", "OTG", "POGO",
+=======
+	"USB_PD", "USB_PD_DRP", "BrickID"
+>>>>>>> rebase
 };
 
 static const char * const power_supply_usb_type_text[] = {
@@ -59,15 +63,23 @@ static const char * const power_supply_status_text[] = {
 };
 
 static const char * const power_supply_charge_type_text[] = {
+<<<<<<< HEAD
 	"Unknown", "N/A", "Trickle", "Fast", "Taper", "Slow"
+=======
+	"Unknown", "N/A", "Trickle", "Fast"
+>>>>>>> rebase
 };
 
 static const char * const power_supply_health_text[] = {
 	"Unknown", "Good", "Overheat", "Dead", "Over voltage",
 	"Unspecified failure", "Cold", "Watchdog timer expire",
+<<<<<<< HEAD
 	"Safety timer expire",
 	"Warm", "Cool", "Hot",
 	"Under voltage", "OverheatLimit"
+=======
+	"Safety timer expire"
+>>>>>>> rebase
 };
 
 static const char * const power_supply_technology_text[] = {
@@ -83,6 +95,7 @@ static const char * const power_supply_scope_text[] = {
 	"Unknown", "System", "Device"
 };
 
+<<<<<<< HEAD
 static const char * const power_supply_usbc_text[] = {
 	"Nothing attached", "Sink attached", "Powered cable w/ sink",
 	"Debug Accessory", "Audio Adapter", "Powered cable w/o sink",
@@ -100,6 +113,8 @@ static const char * const power_supply_typec_src_rp_text[] = {
 	"Rp-Default", "Rp-1.5A", "Rp-3A"
 };
 
+=======
+>>>>>>> rebase
 static ssize_t power_supply_show_usb_type(struct device *dev,
 					  enum power_supply_usb_type *usb_types,
 					  ssize_t num_usb_types,
@@ -182,7 +197,10 @@ static ssize_t power_supply_show_property(struct device *dev,
 			      power_supply_capacity_level_text[value.intval]);
 		break;
 	case POWER_SUPPLY_PROP_TYPE:
+<<<<<<< HEAD
 	case POWER_SUPPLY_PROP_REAL_TYPE:
+=======
+>>>>>>> rebase
 		ret = sprintf(buf, "%s\n",
 			      power_supply_type_text[value.intval]);
 		break;
@@ -195,6 +213,7 @@ static ssize_t power_supply_show_property(struct device *dev,
 		ret = sprintf(buf, "%s\n",
 			      power_supply_scope_text[value.intval]);
 		break;
+<<<<<<< HEAD
 	case POWER_SUPPLY_PROP_TYPEC_MODE:
 		ret = sprintf(buf, "%s\n",
 			      power_supply_usbc_text[value.intval]);
@@ -216,6 +235,8 @@ static ssize_t power_supply_show_property(struct device *dev,
 	case POWER_SUPPLY_PROP_CHARGE_COUNTER_EXT:
 		ret = sprintf(buf, "%lld\n", value.int64val);
 		break;
+=======
+>>>>>>> rebase
 	case POWER_SUPPLY_PROP_MODEL_NAME ... POWER_SUPPLY_PROP_SERIAL_NUMBER:
 		ret = sprintf(buf, "%s\n", value.strval);
 		break;
@@ -303,11 +324,16 @@ static struct device_attribute power_supply_attrs[] = {
 	POWER_SUPPLY_ATTR(current_now),
 	POWER_SUPPLY_ATTR(current_avg),
 	POWER_SUPPLY_ATTR(current_boot),
+<<<<<<< HEAD
 	POWER_SUPPLY_ATTR(current_full),
 	POWER_SUPPLY_ATTR(power_design),
 	POWER_SUPPLY_ATTR(power_now),
 	POWER_SUPPLY_ATTR(power_avg),
 	POWER_SUPPLY_ATTR(filter_cfg),
+=======
+	POWER_SUPPLY_ATTR(power_now),
+	POWER_SUPPLY_ATTR(power_avg),
+>>>>>>> rebase
 	POWER_SUPPLY_ATTR(charge_full_design),
 	POWER_SUPPLY_ATTR(charge_empty_design),
 	POWER_SUPPLY_ATTR(charge_full),
@@ -315,9 +341,12 @@ static struct device_attribute power_supply_attrs[] = {
 	POWER_SUPPLY_ATTR(charge_now),
 	POWER_SUPPLY_ATTR(charge_avg),
 	POWER_SUPPLY_ATTR(charge_counter),
+<<<<<<< HEAD
 	POWER_SUPPLY_ATTR(charge_otg_control),
 	POWER_SUPPLY_ATTR(charge_powered_otg_control),
 	POWER_SUPPLY_ATTR(charge_uno_control),
+=======
+>>>>>>> rebase
 	POWER_SUPPLY_ATTR(constant_charge_current),
 	POWER_SUPPLY_ATTR(constant_charge_current_max),
 	POWER_SUPPLY_ATTR(constant_charge_voltage),
@@ -353,6 +382,7 @@ static struct device_attribute power_supply_attrs[] = {
 	POWER_SUPPLY_ATTR(precharge_current),
 	POWER_SUPPLY_ATTR(charge_term_current),
 	POWER_SUPPLY_ATTR(calibrate),
+<<<<<<< HEAD
 	/* Local extensions */
 	POWER_SUPPLY_ATTR(usb_hc),
 	POWER_SUPPLY_ATTR(usb_otg),
@@ -498,6 +528,11 @@ static struct device_attribute power_supply_attrs[] = {
 	POWER_SUPPLY_ATTR(battery_type),
 	POWER_SUPPLY_ATTR(cycle_counts),
 	POWER_SUPPLY_ATTR(afc_charger_mode),
+=======
+	/* Properties of type `const char *' */
+	POWER_SUPPLY_ATTR(model_name),
+	POWER_SUPPLY_ATTR(manufacturer),
+>>>>>>> rebase
 	POWER_SUPPLY_ATTR(serial_number),
 };
 

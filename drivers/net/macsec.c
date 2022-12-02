@@ -20,6 +20,10 @@
 #include <net/genetlink.h>
 #include <net/sock.h>
 #include <net/gro_cells.h>
+<<<<<<< HEAD
+=======
+#include <linux/if_arp.h>
+>>>>>>> rebase
 
 #include <uapi/linux/if_macsec.h>
 
@@ -1084,6 +1088,10 @@ static rx_handler_result_t macsec_handle_frame(struct sk_buff **pskb)
 	struct macsec_rx_sa *rx_sa;
 	struct macsec_rxh_data *rxd;
 	struct macsec_dev *macsec;
+<<<<<<< HEAD
+=======
+	unsigned int len;
+>>>>>>> rebase
 	sci_t sci;
 	u32 pn;
 	bool cbit;
@@ -1239,9 +1247,16 @@ deliver:
 	macsec_rxsc_put(rx_sc);
 
 	skb_orphan(skb);
+<<<<<<< HEAD
 	ret = gro_cells_receive(&macsec->gro_cells, skb);
 	if (ret == NET_RX_SUCCESS)
 		count_rx(dev, skb->len);
+=======
+	len = skb->len;
+	ret = gro_cells_receive(&macsec->gro_cells, skb);
+	if (ret == NET_RX_SUCCESS)
+		count_rx(dev, len);
+>>>>>>> rebase
 	else
 		macsec->secy.netdev->stats.rx_dropped++;
 
@@ -1312,7 +1327,12 @@ static struct crypto_aead *macsec_alloc_tfm(char *key, int key_len, int icv_len)
 	struct crypto_aead *tfm;
 	int ret;
 
+<<<<<<< HEAD
 	tfm = crypto_alloc_aead("gcm(aes)", 0, 0);
+=======
+	/* Pick a sync gcm(aes) cipher to ensure order is preserved. */
+	tfm = crypto_alloc_aead("gcm(aes)", 0, CRYPTO_ALG_ASYNC);
+>>>>>>> rebase
 
 	if (IS_ERR(tfm))
 		return tfm;
@@ -3237,25 +3257,57 @@ static int macsec_newlink(struct net *net, struct net_device *dev,
 			  struct netlink_ext_ack *extack)
 {
 	struct macsec_dev *macsec = macsec_priv(dev);
+<<<<<<< HEAD
 	struct net_device *real_dev;
 	int err;
 	sci_t sci;
 	u8 icv_len = DEFAULT_ICV_LEN;
 	rx_handler_func_t *rx_handler;
+=======
+	rx_handler_func_t *rx_handler;
+	u8 icv_len = DEFAULT_ICV_LEN;
+	struct net_device *real_dev;
+	int err, mtu;
+	sci_t sci;
+>>>>>>> rebase
 
 	if (!tb[IFLA_LINK])
 		return -EINVAL;
 	real_dev = __dev_get_by_index(net, nla_get_u32(tb[IFLA_LINK]));
 	if (!real_dev)
 		return -ENODEV;
+<<<<<<< HEAD
+=======
+	if (real_dev->type != ARPHRD_ETHER)
+		return -EINVAL;
+>>>>>>> rebase
 
 	dev->priv_flags |= IFF_MACSEC;
 
 	macsec->real_dev = real_dev;
 
+<<<<<<< HEAD
 	if (data && data[IFLA_MACSEC_ICV_LEN])
 		icv_len = nla_get_u8(data[IFLA_MACSEC_ICV_LEN]);
 	dev->mtu = real_dev->mtu - icv_len - macsec_extra_len(true);
+=======
+	/* send_sci must be set to true when transmit sci explicitly is set */
+	if ((data && data[IFLA_MACSEC_SCI]) &&
+	    (data && data[IFLA_MACSEC_INC_SCI])) {
+		u8 send_sci = !!nla_get_u8(data[IFLA_MACSEC_INC_SCI]);
+
+		if (!send_sci)
+			return -EINVAL;
+	}
+
+	if (data && data[IFLA_MACSEC_ICV_LEN])
+		icv_len = nla_get_u8(data[IFLA_MACSEC_ICV_LEN]);
+	mtu = real_dev->mtu - icv_len - macsec_extra_len(true);
+	if (mtu < 0)
+		dev->mtu = 0;
+	else
+		dev->mtu = mtu;
+>>>>>>> rebase
 
 	rx_handler = rtnl_dereference(real_dev->rx_handler);
 	if (rx_handler && rx_handler != macsec_handle_frame)

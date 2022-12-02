@@ -44,7 +44,11 @@ struct shared_info {
 	unsigned long amr2;
 
 	/* AMR value that ptrace should refuse to write to the child. */
+<<<<<<< HEAD
 	unsigned long amr3;
+=======
+	unsigned long invalid_amr;
+>>>>>>> rebase
 
 	/* IAMR value the parent expects to read from the child. */
 	unsigned long expected_iamr;
@@ -57,8 +61,13 @@ struct shared_info {
 	 * (even though they're valid ones) because userspace doesn't have
 	 * access to those registers.
 	 */
+<<<<<<< HEAD
 	unsigned long new_iamr;
 	unsigned long new_uamor;
+=======
+	unsigned long invalid_iamr;
+	unsigned long invalid_uamor;
+>>>>>>> rebase
 };
 
 static int sys_pkey_alloc(unsigned long flags, unsigned long init_access_rights)
@@ -66,11 +75,14 @@ static int sys_pkey_alloc(unsigned long flags, unsigned long init_access_rights)
 	return syscall(__NR_pkey_alloc, flags, init_access_rights);
 }
 
+<<<<<<< HEAD
 static int sys_pkey_free(int pkey)
 {
 	return syscall(__NR_pkey_free, pkey);
 }
 
+=======
+>>>>>>> rebase
 static int child(struct shared_info *info)
 {
 	unsigned long reg;
@@ -100,13 +112,26 @@ static int child(struct shared_info *info)
 
 	info->amr1 |= 3ul << pkeyshift(pkey1);
 	info->amr2 |= 3ul << pkeyshift(pkey2);
+<<<<<<< HEAD
 	info->amr3 |= info->amr2 | 3ul << pkeyshift(pkey3);
 
+=======
+	/*
+	 * invalid amr value where we try to force write
+	 * things which are deined by a uamor setting.
+	 */
+	info->invalid_amr = info->amr2 | (~0x0UL & ~info->expected_uamor);
+
+	/*
+	 * if PKEY_DISABLE_EXECUTE succeeded we should update the expected_iamr
+	 */
+>>>>>>> rebase
 	if (disable_execute)
 		info->expected_iamr |= 1ul << pkeyshift(pkey1);
 	else
 		info->expected_iamr &= ~(1ul << pkeyshift(pkey1));
 
+<<<<<<< HEAD
 	info->expected_iamr &= ~(1ul << pkeyshift(pkey2) | 1ul << pkeyshift(pkey3));
 
 	info->expected_uamor |= 3ul << pkeyshift(pkey1) |
@@ -122,6 +147,20 @@ static int child(struct shared_info *info)
 	 * after a key is freed.
 	 */
 	sys_pkey_free(pkey3);
+=======
+	/*
+	 * We allocated pkey2 and pkey 3 above. Clear the IAMR bits.
+	 */
+	info->expected_iamr &= ~(1ul << pkeyshift(pkey2));
+	info->expected_iamr &= ~(1ul << pkeyshift(pkey3));
+
+	/*
+	 * Create an IAMR value different from expected value.
+	 * Kernel will reject an IAMR and UAMOR change.
+	 */
+	info->invalid_iamr = info->expected_iamr | (1ul << pkeyshift(pkey1) | 1ul << pkeyshift(pkey2));
+	info->invalid_uamor = info->expected_uamor & ~(0x3ul << pkeyshift(pkey1));
+>>>>>>> rebase
 
 	printf("%-30s AMR: %016lx pkey1: %d pkey2: %d pkey3: %d\n",
 	       user_write, info->amr1, pkey1, pkey2, pkey3);
@@ -196,9 +235,15 @@ static int parent(struct shared_info *info, pid_t pid)
 	PARENT_SKIP_IF_UNSUPPORTED(ret, &info->child_sync);
 	PARENT_FAIL_IF(ret, &info->child_sync);
 
+<<<<<<< HEAD
 	info->amr1 = info->amr2 = info->amr3 = regs[0];
 	info->expected_iamr = info->new_iamr = regs[1];
 	info->expected_uamor = info->new_uamor = regs[2];
+=======
+	info->amr1 = info->amr2 = regs[0];
+	info->expected_iamr = regs[1];
+	info->expected_uamor = regs[2];
+>>>>>>> rebase
 
 	/* Wake up child so that it can set itself up. */
 	ret = prod_child(&info->child_sync);
@@ -234,10 +279,17 @@ static int parent(struct shared_info *info, pid_t pid)
 		return ret;
 
 	/* Write invalid AMR value in child. */
+<<<<<<< HEAD
 	ret = ptrace_write_regs(pid, NT_PPC_PKEY, &info->amr3, 1);
 	PARENT_FAIL_IF(ret, &info->child_sync);
 
 	printf("%-30s AMR: %016lx\n", ptrace_write_running, info->amr3);
+=======
+	ret = ptrace_write_regs(pid, NT_PPC_PKEY, &info->invalid_amr, 1);
+	PARENT_FAIL_IF(ret, &info->child_sync);
+
+	printf("%-30s AMR: %016lx\n", ptrace_write_running, info->invalid_amr);
+>>>>>>> rebase
 
 	/* Wake up child so that it can verify it didn't change. */
 	ret = prod_child(&info->child_sync);
@@ -249,7 +301,11 @@ static int parent(struct shared_info *info, pid_t pid)
 
 	/* Try to write to IAMR. */
 	regs[0] = info->amr1;
+<<<<<<< HEAD
 	regs[1] = info->new_iamr;
+=======
+	regs[1] = info->invalid_iamr;
+>>>>>>> rebase
 	ret = ptrace_write_regs(pid, NT_PPC_PKEY, regs, 2);
 	PARENT_FAIL_IF(!ret, &info->child_sync);
 
@@ -257,7 +313,11 @@ static int parent(struct shared_info *info, pid_t pid)
 	       ptrace_write_running, regs[0], regs[1]);
 
 	/* Try to write to IAMR and UAMOR. */
+<<<<<<< HEAD
 	regs[2] = info->new_uamor;
+=======
+	regs[2] = info->invalid_uamor;
+>>>>>>> rebase
 	ret = ptrace_write_regs(pid, NT_PPC_PKEY, regs, 3);
 	PARENT_FAIL_IF(!ret, &info->child_sync);
 

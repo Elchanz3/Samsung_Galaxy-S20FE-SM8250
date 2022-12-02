@@ -47,6 +47,7 @@
 /* PTWs cacheable, inner/outer WBWA */
 #define TCR_CACHE_FLAGS	TCR_IRGN_WBWA | TCR_ORGN_WBWA
 
+<<<<<<< HEAD
 #ifdef CONFIG_KASAN_SW_TAGS
 #define TCR_KASAN_FLAGS TCR_TBI1
 #else
@@ -102,6 +103,11 @@ ENTRY(cpu_soft_restart)
 ENDPROC(cpu_soft_restart)
 
 /*
+=======
+#define MAIR(attr, mt)	((attr) << ((mt) * 8))
+
+/*
+>>>>>>> rebase
  *	cpu_do_idle()
  *
  *	Idle the processor (wait for interrupt).
@@ -117,8 +123,11 @@ ENDPROC(cpu_do_idle)
  * cpu_do_suspend - save CPU registers context
  *
  * x0: virtual address of context pointer
+<<<<<<< HEAD
  *
  * This must be kept in sync with struct cpu_suspend_ctx in <asm/suspend.h>.
+=======
+>>>>>>> rebase
  */
 ENTRY(cpu_do_suspend)
 	mrs	x2, tpidr_el0
@@ -143,11 +152,14 @@ alternative_endif
 	stp	x8, x9, [x0, #48]
 	stp	x10, x11, [x0, #64]
 	stp	x12, x13, [x0, #80]
+<<<<<<< HEAD
 	/*
 	 * Save x18 as it may be used as a platform register, e.g. by shadow
 	 * call stack.
 	 */
 	str	x18, [x0, #96]
+=======
+>>>>>>> rebase
 	ret
 ENDPROC(cpu_do_suspend)
 
@@ -164,6 +176,7 @@ ENTRY(cpu_do_resume)
 	ldp	x9, x10, [x0, #48]
 	ldp	x11, x12, [x0, #64]
 	ldp	x13, x14, [x0, #80]
+<<<<<<< HEAD
 	/*
 	 * Restore x18, as it may be used as a platform register, and clear
 	 * the buffer to minimize the risk of exposure when used for shadow
@@ -171,6 +184,8 @@ ENTRY(cpu_do_resume)
 	 */
 	ldr	x18, [x0, #96]
 	str	xzr, [x0, #96]
+=======
+>>>>>>> rebase
 	msr	tpidr_el0, x2
 	msr	tpidrro_el0, x3
 	msr	contextidr_el1, x4
@@ -257,11 +272,15 @@ ENDPROC(cpu_do_switch_mm)
  * This is the low-level counterpart to cpu_replace_ttbr1, and should not be
  * called by anything else. It can only be executed from a TTBR0 mapping.
  */
+<<<<<<< HEAD
 #ifdef CONFIG_CFP_JOPP
 NOP_ENTRY(idmap_cpu_replace_ttbr1)
 #else
 ENTRY(idmap_cpu_replace_ttbr1)
 #endif
+=======
+ENTRY(idmap_cpu_replace_ttbr1)
+>>>>>>> rebase
 	save_and_disable_daif flags=x2
 
 	__idmap_cpu_set_reserved_ttbr1 x1, x3
@@ -301,11 +320,15 @@ ENDPROC(idmap_cpu_replace_ttbr1)
  */
 __idmap_kpti_flag:
 	.long	1
+<<<<<<< HEAD
 #ifdef CONFIG_CFP_JOPP
 NOP_ENTRY(idmap_kpti_install_ng_mappings)
 #else
 ENTRY(idmap_kpti_install_ng_mappings)
 #endif
+=======
+ENTRY(idmap_kpti_install_ng_mappings)
+>>>>>>> rebase
 	cpu		.req	w0
 	num_cpus	.req	w1
 	swapper_pa	.req	x2
@@ -332,6 +355,7 @@ ENTRY(idmap_kpti_install_ng_mappings)
 	/* We're the boot CPU. Wait for the others to catch up */
 	sevl
 1:	wfe
+<<<<<<< HEAD
 #ifdef CONFIG_CFP_ROPP
 	ldaxr	w19, [flag_ptr]
 	eor	w19, w19, num_cpus
@@ -353,6 +377,17 @@ ENTRY(idmap_kpti_install_ng_mappings)
 	bic	x17, x17, #SCTLR_ELx_M
 	msr	sctlr_el1, x17
 #endif
+=======
+	ldaxr	w18, [flag_ptr]
+	eor	w18, w18, num_cpus
+	cbnz	w18, 1b
+
+	/* We need to walk swapper, so turn off the MMU. */
+	pre_disable_mmu_workaround
+	mrs	x18, sctlr_el1
+	bic	x18, x18, #SCTLR_ELx_M
+	msr	sctlr_el1, x18
+>>>>>>> rebase
 	isb
 
 	/* Everybody is enjoying the idmap, so we can rewrite swapper. */
@@ -375,6 +410,7 @@ skip_pgd:
 	isb
 
 	/* We're done: fire up the MMU again */
+<<<<<<< HEAD
 #ifdef CONFIG_CFP_ROPP
 	mrs	x19, sctlr_el1
 	orr	x19, x19, #SCTLR_ELx_M
@@ -384,6 +420,11 @@ skip_pgd:
 	orr	x17, x17, #SCTLR_ELx_M
 	msr	sctlr_el1, x17
 #endif
+=======
+	mrs	x18, sctlr_el1
+	orr	x18, x18, #SCTLR_ELx_M
+	msr	sctlr_el1, x18
+>>>>>>> rebase
 	isb
 
 	/*
@@ -453,9 +494,39 @@ skip_pte:
 	b.ne	do_pte
 	b	next_pmd
 
+<<<<<<< HEAD
 	.unreq	cpu
 	.unreq	num_cpus
 	.unreq	swapper_pa
+=======
+	/* Secondary CPUs end up here */
+__idmap_kpti_secondary:
+	/* Uninstall swapper before surgery begins */
+	__idmap_cpu_set_reserved_ttbr1 x18, x17
+
+	/* Increment the flag to let the boot CPU we're ready */
+1:	ldxr	w18, [flag_ptr]
+	add	w18, w18, #1
+	stxr	w17, w18, [flag_ptr]
+	cbnz	w17, 1b
+
+	/* Wait for the boot CPU to finish messing around with swapper */
+	sevl
+1:	wfe
+	ldxr	w18, [flag_ptr]
+	cbnz	w18, 1b
+
+	/* All done, act like nothing happened */
+	msr	ttbr1_el1, swapper_ttb
+	isb
+	ret
+
+	.unreq	cpu
+	.unreq	num_cpus
+	.unreq	swapper_pa
+	.unreq	swapper_ttb
+	.unreq	flag_ptr
+>>>>>>> rebase
 	.unreq	cur_pgdp
 	.unreq	end_pgdp
 	.unreq	pgd
@@ -468,6 +539,7 @@ skip_pte:
 	.unreq	cur_ptep
 	.unreq	end_ptep
 	.unreq	pte
+<<<<<<< HEAD
 
 	/* Secondary CPUs end up here */
 __idmap_kpti_secondary:
@@ -502,6 +574,8 @@ __idmap_kpti_secondary:
 
 	.unreq	swapper_ttb
 	.unreq	flag_ptr
+=======
+>>>>>>> rebase
 ENDPROC(idmap_kpti_install_ng_mappings)
 	.popsection
 #endif
@@ -553,7 +627,11 @@ ENTRY(__cpu_setup)
 	 */
 	ldr	x10, =TCR_TxSZ(VA_BITS) | TCR_CACHE_FLAGS | TCR_SMP_FLAGS | \
 			TCR_TG_FLAGS | TCR_KASLR_FLAGS | TCR_ASID16 | \
+<<<<<<< HEAD
 			TCR_TBI0 | TCR_A1 | TCR_KASAN_FLAGS
+=======
+			TCR_TBI0 | TCR_A1
+>>>>>>> rebase
 	tcr_set_idmap_t0sz	x10, x9
 
 	/*

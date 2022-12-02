@@ -348,7 +348,11 @@ static void mpol_rebind_preferred(struct mempolicy *pol,
  */
 static void mpol_rebind_policy(struct mempolicy *pol, const nodemask_t *newmask)
 {
+<<<<<<< HEAD
 	if (!pol)
+=======
+	if (!pol || pol->mode == MPOL_LOCAL)
+>>>>>>> rebase
 		return;
 	if (!mpol_store_user_nodemask(pol) && !(pol->flags & MPOL_F_LOCAL) &&
 	    nodes_equal(pol->w.cpuset_mems_allowed, *newmask))
@@ -380,11 +384,16 @@ void mpol_rebind_mm(struct mm_struct *mm, nodemask_t *new)
 	struct vm_area_struct *vma;
 
 	down_write(&mm->mmap_sem);
+<<<<<<< HEAD
 	for (vma = mm->mmap; vma; vma = vma->vm_next) {
 		vm_write_begin(vma);
 		mpol_rebind_policy(vma->vm_policy, new);
 		vm_write_end(vma);
 	}
+=======
+	for (vma = mm->mmap; vma; vma = vma->vm_next)
+		mpol_rebind_policy(vma->vm_policy, new);
+>>>>>>> rebase
 	up_write(&mm->mmap_sem);
 }
 
@@ -499,7 +508,11 @@ static int queue_pages_pte_range(pmd_t *pmd, unsigned long addr,
 	unsigned long flags = qp->flags;
 	int ret;
 	bool has_unmovable = false;
+<<<<<<< HEAD
 	pte_t *pte;
+=======
+	pte_t *pte, *mapped_pte;
+>>>>>>> rebase
 	spinlock_t *ptl;
 
 	ptl = pmd_trans_huge_lock(pmd, vma);
@@ -513,7 +526,11 @@ static int queue_pages_pte_range(pmd_t *pmd, unsigned long addr,
 	if (pmd_trans_unstable(pmd))
 		return 0;
 
+<<<<<<< HEAD
 	pte = pte_offset_map_lock(walk->mm, pmd, addr, &ptl);
+=======
+	mapped_pte = pte = pte_offset_map_lock(walk->mm, pmd, addr, &ptl);
+>>>>>>> rebase
 	for (; addr != end; pte++, addr += PAGE_SIZE) {
 		if (!pte_present(*pte))
 			continue;
@@ -545,7 +562,11 @@ static int queue_pages_pte_range(pmd_t *pmd, unsigned long addr,
 		} else
 			break;
 	}
+<<<<<<< HEAD
 	pte_unmap_unlock(pte - 1, ptl);
+=======
+	pte_unmap_unlock(mapped_pte, ptl);
+>>>>>>> rebase
 	cond_resched();
 
 	if (has_unmovable)
@@ -599,11 +620,17 @@ unsigned long change_prot_numa(struct vm_area_struct *vma,
 {
 	int nr_updated;
 
+<<<<<<< HEAD
 	vm_write_begin(vma);
 	nr_updated = change_protection(vma, addr, end, PAGE_NONE, 0, 1);
 	if (nr_updated)
 		count_vm_numa_events(NUMA_PTE_UPDATES, nr_updated);
 	vm_write_end(vma);
+=======
+	nr_updated = change_protection(vma, addr, end, PAGE_NONE, 0, 1);
+	if (nr_updated)
+		count_vm_numa_events(NUMA_PTE_UPDATES, nr_updated);
+>>>>>>> rebase
 
 	return nr_updated;
 }
@@ -717,7 +744,10 @@ static int vma_replace_policy(struct vm_area_struct *vma,
 	if (IS_ERR(new))
 		return PTR_ERR(new);
 
+<<<<<<< HEAD
 	vm_write_begin(vma);
+=======
+>>>>>>> rebase
 	if (vma->vm_ops && vma->vm_ops->set_policy) {
 		err = vma->vm_ops->set_policy(vma, new);
 		if (err)
@@ -725,17 +755,24 @@ static int vma_replace_policy(struct vm_area_struct *vma,
 	}
 
 	old = vma->vm_policy;
+<<<<<<< HEAD
 	/*
 	 * The speculative page fault handler accesses this field without
 	 * hodling the mmap_sem.
 	 */
 	WRITE_ONCE(vma->vm_policy,  new);
 	vm_write_end(vma);
+=======
+	vma->vm_policy = new; /* protected by mmap_sem */
+>>>>>>> rebase
 	mpol_put(old);
 
 	return 0;
  err_out:
+<<<<<<< HEAD
 	vm_write_end(vma);
+=======
+>>>>>>> rebase
 	mpol_put(new);
 	return err;
 }
@@ -744,7 +781,10 @@ static int vma_replace_policy(struct vm_area_struct *vma,
 static int mbind_range(struct mm_struct *mm, unsigned long start,
 		       unsigned long end, struct mempolicy *new_pol)
 {
+<<<<<<< HEAD
 	struct vm_area_struct *next;
+=======
+>>>>>>> rebase
 	struct vm_area_struct *prev;
 	struct vm_area_struct *vma;
 	int err = 0;
@@ -760,8 +800,12 @@ static int mbind_range(struct mm_struct *mm, unsigned long start,
 	if (start > vma->vm_start)
 		prev = vma;
 
+<<<<<<< HEAD
 	for (; vma && vma->vm_start < end; prev = vma, vma = next) {
 		next = vma->vm_next;
+=======
+	for (; vma && vma->vm_start < end; prev = vma, vma = vma->vm_next) {
+>>>>>>> rebase
 		vmstart = max(start, vma->vm_start);
 		vmend   = min(end, vma->vm_end);
 
@@ -772,6 +816,7 @@ static int mbind_range(struct mm_struct *mm, unsigned long start,
 			((vmstart - vma->vm_start) >> PAGE_SHIFT);
 		prev = vma_merge(mm, prev, vmstart, vmend, vma->vm_flags,
 				 vma->anon_vma, vma->vm_file, pgoff,
+<<<<<<< HEAD
 				 new_pol, vma->vm_userfaultfd_ctx,
 				 vma_get_anon_name(vma));
 		if (prev) {
@@ -780,6 +825,11 @@ static int mbind_range(struct mm_struct *mm, unsigned long start,
 			if (mpol_equal(vma_policy(vma), new_pol))
 				continue;
 			/* vma_merge() joined vma && vma->next, case 8 */
+=======
+				 new_pol, vma->vm_userfaultfd_ctx);
+		if (prev) {
+			vma = prev;
+>>>>>>> rebase
 			goto replace;
 		}
 		if (vma->vm_start != vmstart) {
@@ -1409,7 +1459,10 @@ static long kernel_mbind(unsigned long start, unsigned long len,
 	int err;
 	unsigned short mode_flags;
 
+<<<<<<< HEAD
 	start = untagged_addr(start);
+=======
+>>>>>>> rebase
 	mode_flags = mode & MPOL_MODE_FLAGS;
 	mode &= ~MPOL_MODE_FLAGS;
 	if (mode >= MPOL_MAX)
@@ -1567,8 +1620,11 @@ static int kernel_get_mempolicy(int __user *policy,
 	int uninitialized_var(pval);
 	nodemask_t nodes;
 
+<<<<<<< HEAD
 	addr = untagged_addr(addr);
 
+=======
+>>>>>>> rebase
 	if (nmask != NULL && maxnode < nr_node_ids)
 		return -EINVAL;
 
@@ -1706,6 +1762,7 @@ COMPAT_SYSCALL_DEFINE4(migrate_pages, compat_pid_t, pid,
 struct mempolicy *__get_vma_policy(struct vm_area_struct *vma,
 						unsigned long addr)
 {
+<<<<<<< HEAD
 	struct mempolicy *pol;
 
 	if (!vma)
@@ -1728,6 +1785,25 @@ struct mempolicy *__get_vma_policy(struct vm_area_struct *vma,
 		 */
 		if (mpol_needs_cond_ref(pol))
 			mpol_get(pol);
+=======
+	struct mempolicy *pol = NULL;
+
+	if (vma) {
+		if (vma->vm_ops && vma->vm_ops->get_policy) {
+			pol = vma->vm_ops->get_policy(vma, addr);
+		} else if (vma->vm_policy) {
+			pol = vma->vm_policy;
+
+			/*
+			 * shmem_alloc_page() passes MPOL_F_SHARED policy with
+			 * a pseudo vma whose vma->vm_ops=NULL. Take a reference
+			 * count on these policies which will be dropped by
+			 * mpol_cond_put() later
+			 */
+			if (mpol_needs_cond_ref(pol))
+				mpol_get(pol);
+		}
+>>>>>>> rebase
 	}
 
 	return pol;
@@ -2590,6 +2666,10 @@ alloc_new:
 	mpol_new = kmem_cache_alloc(policy_cache, GFP_KERNEL);
 	if (!mpol_new)
 		goto err_out;
+<<<<<<< HEAD
+=======
+	atomic_set(&mpol_new->refcnt, 1);
+>>>>>>> rebase
 	goto restart;
 }
 
@@ -2853,7 +2933,13 @@ int mpol_parse_str(char *str, struct mempolicy **mpol)
 	switch (mode) {
 	case MPOL_PREFERRED:
 		/*
+<<<<<<< HEAD
 		 * Insist on a nodelist of one node only
+=======
+		 * Insist on a nodelist of one node only, although later
+		 * we use first_node(nodes) to grab a single node, so here
+		 * nodelist (or nodes) cannot be empty.
+>>>>>>> rebase
 		 */
 		if (nodelist) {
 			char *rest = nodelist;
@@ -2861,6 +2947,11 @@ int mpol_parse_str(char *str, struct mempolicy **mpol)
 				rest++;
 			if (*rest)
 				goto out;
+<<<<<<< HEAD
+=======
+			if (nodes_empty(nodes))
+				goto out;
+>>>>>>> rebase
 		}
 		break;
 	case MPOL_INTERLEAVE:

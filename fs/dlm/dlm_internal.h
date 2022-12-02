@@ -99,7 +99,10 @@ do { \
                __LINE__, __FILE__, #x, jiffies); \
     {do} \
     printk("\n"); \
+<<<<<<< HEAD
     BUG(); \
+=======
+>>>>>>> rebase
     panic("DLM:  Record message above and reboot.\n"); \
   } \
 }

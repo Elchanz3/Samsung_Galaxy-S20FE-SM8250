@@ -157,7 +157,10 @@ struct lockdep_map {
 #ifdef CONFIG_LOCK_STAT
 	int				cpu;
 	unsigned long			ip;
+<<<<<<< HEAD
 	unsigned long			ip_caller;
+=======
+>>>>>>> rebase
 #endif
 };
 
@@ -234,7 +237,10 @@ struct held_lock {
 	 */
 	u64				prev_chain_key;
 	unsigned long			acquire_ip;
+<<<<<<< HEAD
 	unsigned long			acquire_ip_caller;
+=======
+>>>>>>> rebase
 	struct lockdep_map		*instance;
 	struct lockdep_map		*nest_lock;
 #ifdef CONFIG_LOCK_STAT

@@ -1,7 +1,25 @@
+<<<<<<< HEAD
 // SPDX-License-Identifier: ISC
 /*
  * Copyright (c) 2012-2017 Qualcomm Atheros, Inc.
  * Copyright (c) 2018-2019, The Linux Foundation. All rights reserved.
+=======
+/*
+ * Copyright (c) 2012-2017 Qualcomm Atheros, Inc.
+ * Copyright (c) 2018, The Linux Foundation. All rights reserved.
+ *
+ * Permission to use, copy, modify, and/or distribute this software for any
+ * purpose with or without fee is hereby granted, provided that the above
+ * copyright notice and this permission notice appear in all copies.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+ * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+ * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+ * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+ * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+ * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+ * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+>>>>>>> rebase
  */
 
 #include <linux/module.h>
@@ -12,9 +30,14 @@
 #include "wil6210.h"
 #include <linux/rtnetlink.h>
 #include <linux/pm_runtime.h>
+<<<<<<< HEAD
 #include "ipa.h"
 
 int n_msi = 3;
+=======
+
+static int n_msi = 3;
+>>>>>>> rebase
 module_param(n_msi, int, 0444);
 MODULE_PARM_DESC(n_msi, " Use MSI interrupt: 0 - use INTx, 1 - single, or 3 - (default) ");
 
@@ -99,9 +122,12 @@ int wil_set_capabilities(struct wil6210_priv *wil)
 		wil->use_enhanced_dma_hw = true;
 		wil->use_rx_hw_reordering = true;
 		wil->use_compressed_rx_status = true;
+<<<<<<< HEAD
 		if (wil_ipa_offload())
 			/* IPA offload must use single MSI */
 			n_msi = 1;
+=======
+>>>>>>> rebase
 		wil_fw_name = ftm_mode ? WIL_FW_NAME_FTM_TALYN :
 			      WIL_FW_NAME_TALYN;
 		if (wil_fw_verify_file_exists(wil, wil_fw_name))
@@ -135,8 +161,11 @@ int wil_set_capabilities(struct wil6210_priv *wil)
 		       min(sizeof(wil->platform_capa), sizeof(platform_capa)));
 	}
 
+<<<<<<< HEAD
 	wil_info(wil, "platform_capa 0x%lx\n", *wil->platform_capa);
 
+=======
+>>>>>>> rebase
 	/* extract FW capabilities from file without loading the FW */
 	wil_request_firmware(wil, wil->wil_fw_name, false);
 	wil_refresh_fw_capabilities(wil);
@@ -171,7 +200,11 @@ static void wil_remove_all_additional_vifs(struct wil6210_priv *wil)
 	struct wil6210_vif *vif;
 	int i;
 
+<<<<<<< HEAD
 	for (i = 1; i < GET_MAX_VIFS(wil); i++) {
+=======
+	for (i = 1; i < wil->max_vifs; i++) {
+>>>>>>> rebase
 		vif = wil->vifs[i];
 		if (vif) {
 			wil_vif_prepare_stop(vif);
@@ -222,11 +255,14 @@ static int wil_if_pcie_enable(struct wil6210_priv *wil)
 
 	wil->n_msi = n_msi;
 
+<<<<<<< HEAD
 	if (wil->n_msi == 0 && wil_ipa_offload()) {
 		wil_err(wil, "IPA offload cannot use INTx\n");
 		rc = -ENODEV;
 		goto stop_master;
 	}
+=======
+>>>>>>> rebase
 	if (wil->n_msi == 0 && msi_only) {
 		wil_err(wil, "Interrupt pin not routed, unable to use INTx\n");
 		rc = -ENODEV;
@@ -294,6 +330,7 @@ static int wil_platform_rop_fw_recovery(void *wil_handle)
 	return 0;
 }
 
+<<<<<<< HEAD
 void wil_pci_linkdown_recovery_worker(struct work_struct *work)
 {
 	struct wil6210_priv *wil = container_of(work, struct wil6210_priv,
@@ -403,6 +440,8 @@ static int wil_platform_rop_notify(void *wil_handle,
 	return 0;
 }
 
+=======
+>>>>>>> rebase
 static void wil_platform_ops_uninit(struct wil6210_priv *wil)
 {
 	if (wil->platform_ops.uninit)
@@ -418,7 +457,10 @@ static int wil_pcie_probe(struct pci_dev *pdev, const struct pci_device_id *id)
 	const struct wil_platform_rops rops = {
 		.ramdump = wil_platform_rop_ramdump,
 		.fw_recovery = wil_platform_rop_fw_recovery,
+<<<<<<< HEAD
 		.notify = wil_platform_rop_notify,
+=======
+>>>>>>> rebase
 	};
 	u32 bar_size = pci_resource_len(pdev, 0);
 	int dma_addr_size[] = {64, 48, 40, 32}; /* keep descending order */
@@ -528,7 +570,10 @@ static int wil_pcie_probe(struct pci_dev *pdev, const struct pci_device_id *id)
 	}
 	/* rollback to bus_disable */
 
+<<<<<<< HEAD
 	wil_clear_fw_log_addr(wil);
+=======
+>>>>>>> rebase
 	rc = wil_if_add(wil);
 	if (rc) {
 		wil_err(wil, "wil_if_add failed: %d\n", rc);
@@ -543,7 +588,11 @@ static int wil_pcie_probe(struct pci_dev *pdev, const struct pci_device_id *id)
 		mutex_unlock(&wil->mutex);
 		if (rc) {
 			wil_err(wil, "failed to load WMI only FW\n");
+<<<<<<< HEAD
 			/* ignore the error to allow debugging */
+=======
+			goto if_remove;
+>>>>>>> rebase
 		}
 	}
 
@@ -558,12 +607,20 @@ static int wil_pcie_probe(struct pci_dev *pdev, const struct pci_device_id *id)
 		wil_err(wil, "register_pm_notifier failed: %d\n", rc);
 
 	wil6210_debugfs_init(wil);
+<<<<<<< HEAD
 	wil6210_sysfs_init(wil);
+=======
+>>>>>>> rebase
 
 	wil_pm_runtime_allow(wil);
 
 	return 0;
 
+<<<<<<< HEAD
+=======
+if_remove:
+	wil_if_remove(wil);
+>>>>>>> rebase
 bus_disable:
 	wil_if_pcie_disable(wil);
 err_iounmap:
@@ -591,7 +648,10 @@ static void wil_pcie_remove(struct pci_dev *pdev)
 
 	wil_pm_runtime_forbid(wil);
 
+<<<<<<< HEAD
 	wil6210_sysfs_remove(wil);
+=======
+>>>>>>> rebase
 	wil6210_debugfs_remove(wil);
 	rtnl_lock();
 	wil_p2p_wdev_free(wil);
@@ -656,11 +716,14 @@ static int wil6210_resume(struct device *dev, bool is_runtime)
 	struct wil6210_priv *wil = pci_get_drvdata(pdev);
 	bool keep_radio_on, active_ifaces;
 
+<<<<<<< HEAD
 	if (test_bit(wil_status_pci_linkdown, wil->status)) {
 		wil_dbg_pm(wil, "ignore resume during pci linkdown\n");
 		return 0;
 	}
 
+=======
+>>>>>>> rebase
 	wil_dbg_pm(wil, "resume: %s\n", is_runtime ? "runtime" : "system");
 
 	mutex_lock(&wil->vif_mutex);

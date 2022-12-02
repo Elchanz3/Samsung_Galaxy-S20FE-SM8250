@@ -150,7 +150,11 @@ static void atm_tc_put(struct Qdisc *sch, unsigned long cl)
 	pr_debug("atm_tc_put: destroying\n");
 	list_del_init(&flow->list);
 	pr_debug("atm_tc_put: qdisc %p\n", flow->q);
+<<<<<<< HEAD
 	qdisc_destroy(flow->q);
+=======
+	qdisc_put(flow->q);
+>>>>>>> rebase
 	tcf_block_put(flow->block);
 	if (flow->sock) {
 		pr_debug("atm_tc_put: f_count %ld\n",
@@ -551,16 +555,26 @@ static int atm_tc_init(struct Qdisc *sch, struct nlattr *opt,
 	if (!p->link.q)
 		p->link.q = &noop_qdisc;
 	pr_debug("atm_tc_init: link (%p) qdisc %p\n", &p->link, p->link.q);
+<<<<<<< HEAD
+=======
+	p->link.vcc = NULL;
+	p->link.sock = NULL;
+	p->link.common.classid = sch->handle;
+	p->link.ref = 1;
+>>>>>>> rebase
 
 	err = tcf_block_get(&p->link.block, &p->link.filter_list, sch,
 			    extack);
 	if (err)
 		return err;
 
+<<<<<<< HEAD
 	p->link.vcc = NULL;
 	p->link.sock = NULL;
 	p->link.common.classid = sch->handle;
 	p->link.ref = 1;
+=======
+>>>>>>> rebase
 	tasklet_init(&p->task, sch_atm_dequeue, (unsigned long)sch);
 	return 0;
 }

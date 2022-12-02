@@ -45,7 +45,11 @@ cryptoloop_init(struct loop_device *lo, const struct loop_info64 *info)
 	char cms[LO_NAME_SIZE];			/* cipher-mode string */
 	char *mode;
 	char *cmsp = cms;			/* c-m string pointer */
+<<<<<<< HEAD
 	struct crypto_sync_skcipher *tfm;
+=======
+	struct crypto_skcipher *tfm;
+>>>>>>> rebase
 
 	/* encryption breaks for non sector aligned offsets */
 
@@ -80,6 +84,7 @@ cryptoloop_init(struct loop_device *lo, const struct loop_info64 *info)
 	*cmsp++ = ')';
 	*cmsp = 0;
 
+<<<<<<< HEAD
 	tfm = crypto_alloc_sync_skcipher(cms, 0, 0);
 	if (IS_ERR(tfm))
 		return PTR_ERR(tfm);
@@ -87,6 +92,15 @@ cryptoloop_init(struct loop_device *lo, const struct loop_info64 *info)
 	err = crypto_sync_skcipher_setkey(tfm, info->lo_encrypt_key,
 					  info->lo_encrypt_key_size);
 
+=======
+	tfm = crypto_alloc_skcipher(cms, 0, CRYPTO_ALG_ASYNC);
+	if (IS_ERR(tfm))
+		return PTR_ERR(tfm);
+
+	err = crypto_skcipher_setkey(tfm, info->lo_encrypt_key,
+				     info->lo_encrypt_key_size);
+	
+>>>>>>> rebase
 	if (err != 0)
 		goto out_free_tfm;
 
@@ -94,7 +108,11 @@ cryptoloop_init(struct loop_device *lo, const struct loop_info64 *info)
 	return 0;
 
  out_free_tfm:
+<<<<<<< HEAD
 	crypto_free_sync_skcipher(tfm);
+=======
+	crypto_free_skcipher(tfm);
+>>>>>>> rebase
 
  out:
 	return err;
@@ -109,8 +127,13 @@ cryptoloop_transfer(struct loop_device *lo, int cmd,
 		    struct page *loop_page, unsigned loop_off,
 		    int size, sector_t IV)
 {
+<<<<<<< HEAD
 	struct crypto_sync_skcipher *tfm = lo->key_data;
 	SYNC_SKCIPHER_REQUEST_ON_STACK(req, tfm);
+=======
+	struct crypto_skcipher *tfm = lo->key_data;
+	SKCIPHER_REQUEST_ON_STACK(req, tfm);
+>>>>>>> rebase
 	struct scatterlist sg_out;
 	struct scatterlist sg_in;
 
@@ -119,7 +142,11 @@ cryptoloop_transfer(struct loop_device *lo, int cmd,
 	unsigned in_offs, out_offs;
 	int err;
 
+<<<<<<< HEAD
 	skcipher_request_set_sync_tfm(req, tfm);
+=======
+	skcipher_request_set_tfm(req, tfm);
+>>>>>>> rebase
 	skcipher_request_set_callback(req, CRYPTO_TFM_REQ_MAY_SLEEP,
 				      NULL, NULL);
 
@@ -175,9 +202,15 @@ cryptoloop_ioctl(struct loop_device *lo, int cmd, unsigned long arg)
 static int
 cryptoloop_release(struct loop_device *lo)
 {
+<<<<<<< HEAD
 	struct crypto_sync_skcipher *tfm = lo->key_data;
 	if (tfm != NULL) {
 		crypto_free_sync_skcipher(tfm);
+=======
+	struct crypto_skcipher *tfm = lo->key_data;
+	if (tfm != NULL) {
+		crypto_free_skcipher(tfm);
+>>>>>>> rebase
 		lo->key_data = NULL;
 		return 0;
 	}
@@ -201,6 +234,11 @@ init_cryptoloop(void)
 
 	if (rc)
 		printk(KERN_ERR "cryptoloop: loop_register_transfer failed\n");
+<<<<<<< HEAD
+=======
+	else
+		pr_warn("the cryptoloop driver has been deprecated and will be removed in in Linux 5.16\n");
+>>>>>>> rebase
 	return rc;
 }
 

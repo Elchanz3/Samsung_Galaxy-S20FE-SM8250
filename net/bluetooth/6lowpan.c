@@ -57,6 +57,10 @@ static bool enable_6lowpan;
 /* We are listening incoming connections via this channel
  */
 static struct l2cap_chan *listen_chan;
+<<<<<<< HEAD
+=======
+static DEFINE_MUTEX(set_lock);
+>>>>>>> rebase
 
 struct lowpan_peer {
 	struct list_head list;
@@ -1082,12 +1086,20 @@ static void do_enable_set(struct work_struct *work)
 
 	enable_6lowpan = set_enable->flag;
 
+<<<<<<< HEAD
+=======
+	mutex_lock(&set_lock);
+>>>>>>> rebase
 	if (listen_chan) {
 		l2cap_chan_close(listen_chan, 0);
 		l2cap_chan_put(listen_chan);
 	}
 
 	listen_chan = bt_6lowpan_listen();
+<<<<<<< HEAD
+=======
+	mutex_unlock(&set_lock);
+>>>>>>> rebase
 
 	kfree(set_enable);
 }
@@ -1139,11 +1151,19 @@ static ssize_t lowpan_control_write(struct file *fp,
 		if (ret == -EINVAL)
 			return ret;
 
+<<<<<<< HEAD
+=======
+		mutex_lock(&set_lock);
+>>>>>>> rebase
 		if (listen_chan) {
 			l2cap_chan_close(listen_chan, 0);
 			l2cap_chan_put(listen_chan);
 			listen_chan = NULL;
 		}
+<<<<<<< HEAD
+=======
+		mutex_unlock(&set_lock);
+>>>>>>> rebase
 
 		if (conn) {
 			struct lowpan_peer *peer;

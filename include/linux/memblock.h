@@ -140,7 +140,10 @@ void __next_reserved_mem_region(u64 *idx, phys_addr_t *out_start,
 
 void __memblock_free_early(phys_addr_t base, phys_addr_t size);
 void __memblock_free_late(phys_addr_t base, phys_addr_t size);
+<<<<<<< HEAD
 void create_pgtable_mapping(phys_addr_t start, phys_addr_t end);
+=======
+>>>>>>> rebase
 
 /**
  * for_each_mem_range - iterate through memblock areas from type_a and not
@@ -328,7 +331,10 @@ static inline bool memblock_bottom_up(void)
 /* Flags for memblock_alloc_base() amd __memblock_alloc_base() */
 #define MEMBLOCK_ALLOC_ANYWHERE	(~(phys_addr_t)0)
 #define MEMBLOCK_ALLOC_ACCESSIBLE	0
+<<<<<<< HEAD
 #define MEMBLOCK_ALLOC_KASAN		1
+=======
+>>>>>>> rebase
 
 phys_addr_t __init memblock_alloc_range(phys_addr_t size, phys_addr_t align,
 					phys_addr_t start, phys_addr_t end,
@@ -345,7 +351,10 @@ phys_addr_t memblock_reserved_size(void);
 phys_addr_t memblock_mem_size(unsigned long limit_pfn);
 phys_addr_t memblock_start_of_DRAM(void);
 phys_addr_t memblock_end_of_DRAM(void);
+<<<<<<< HEAD
 phys_addr_t memblock_max_addr(phys_addr_t limit);
+=======
+>>>>>>> rebase
 void memblock_enforce_memory_limit(phys_addr_t memory_limit);
 void memblock_cap_memory_range(phys_addr_t base, phys_addr_t size);
 void memblock_mem_limit_remove_map(phys_addr_t limit);
@@ -354,7 +363,10 @@ bool memblock_is_map_memory(phys_addr_t addr);
 bool memblock_is_region_memory(phys_addr_t base, phys_addr_t size);
 bool memblock_is_reserved(phys_addr_t addr);
 bool memblock_is_region_reserved(phys_addr_t base, phys_addr_t size);
+<<<<<<< HEAD
 bool memblock_overlaps_memory(phys_addr_t base, phys_addr_t size);
+=======
+>>>>>>> rebase
 
 extern void __memblock_dump_all(void);
 
@@ -436,11 +448,14 @@ static inline unsigned long memblock_region_reserved_end_pfn(const struct memblo
 	for (i = 0, rgn = &memblock_type->regions[0];			\
 	     i < memblock_type->cnt;					\
 	     i++, rgn = &memblock_type->regions[i])
+<<<<<<< HEAD
 #define for_each_memblock_rev(memblock_type, region)	\
 	for (region = memblock.memblock_type.regions + \
 			memblock.memblock_type.cnt - 1;	\
 	     region >= memblock.memblock_type.regions;	\
 	     region--)
+=======
+>>>>>>> rebase
 
 #ifdef CONFIG_MEMTEST
 extern void early_memtest(phys_addr_t start, phys_addr_t end);

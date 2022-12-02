@@ -28,6 +28,7 @@ config QRTR_TUN
 	  implement endpoints of QRTR, for purpose of tunneling data to other
 	  hosts or testing purposes.
 
+<<<<<<< HEAD
 config QRTR_MHI
 	tristate "MHI IPC Router channels"
 	depends on MHI_BUS || (COMPILE_TEST && MHI_BUS=n)
@@ -55,4 +56,6 @@ config QRTR_FIFO
 	The shared memory between virtual machines will be allocated by the
 	hypervisor and signal other VMs through virtualized interrupts.
 
+=======
+>>>>>>> rebase
 endif # QRTR

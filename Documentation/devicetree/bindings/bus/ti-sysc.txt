@@ -35,6 +35,10 @@ Required standard properties:
 		"ti,sysc-omap3-sham"
 		"ti,sysc-omap-aes"
 		"ti,sysc-mcasp"
+<<<<<<< HEAD
+=======
+		"ti,sysc-dra7-mcasp"
+>>>>>>> rebase
 		"ti,sysc-usb-host-fs"
 		"ti,sysc-dra7-mcan"
 

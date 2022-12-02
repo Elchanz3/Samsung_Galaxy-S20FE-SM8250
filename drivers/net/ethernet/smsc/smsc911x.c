@@ -2446,7 +2446,11 @@ static int smsc911x_drv_probe(struct platform_device *pdev)
 	if (irq == -EPROBE_DEFER) {
 		retval = -EPROBE_DEFER;
 		goto out_0;
+<<<<<<< HEAD
 	} else if (irq <= 0) {
+=======
+	} else if (irq < 0) {
+>>>>>>> rebase
 		pr_warn("Could not allocate irq resource\n");
 		retval = -ENODEV;
 		goto out_0;
@@ -2515,20 +2519,32 @@ static int smsc911x_drv_probe(struct platform_device *pdev)
 
 	retval = smsc911x_init(dev);
 	if (retval < 0)
+<<<<<<< HEAD
 		goto out_disable_resources;
+=======
+		goto out_init_fail;
+>>>>>>> rebase
 
 	netif_carrier_off(dev);
 
 	retval = smsc911x_mii_init(pdev, dev);
 	if (retval) {
 		SMSC_WARN(pdata, probe, "Error %i initialising mii", retval);
+<<<<<<< HEAD
 		goto out_disable_resources;
+=======
+		goto out_init_fail;
+>>>>>>> rebase
 	}
 
 	retval = register_netdev(dev);
 	if (retval) {
 		SMSC_WARN(pdata, probe, "Error %i registering device", retval);
+<<<<<<< HEAD
 		goto out_disable_resources;
+=======
+		goto out_init_fail;
+>>>>>>> rebase
 	} else {
 		SMSC_TRACE(pdata, probe,
 			   "Network interface: \"%s\"", dev->name);
@@ -2569,9 +2585,16 @@ static int smsc911x_drv_probe(struct platform_device *pdev)
 
 	return 0;
 
+<<<<<<< HEAD
 out_disable_resources:
 	pm_runtime_put(&pdev->dev);
 	pm_runtime_disable(&pdev->dev);
+=======
+out_init_fail:
+	pm_runtime_put(&pdev->dev);
+	pm_runtime_disable(&pdev->dev);
+out_disable_resources:
+>>>>>>> rebase
 	(void)smsc911x_disable_resources(pdev);
 out_enable_resources_fail:
 	smsc911x_free_resources(pdev);

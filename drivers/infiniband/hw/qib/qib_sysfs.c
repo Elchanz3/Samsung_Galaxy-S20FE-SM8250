@@ -756,7 +756,11 @@ int qib_create_port_files(struct ib_device *ibdev, u8 port_num,
 		qib_dev_err(dd,
 			"Skipping linkcontrol sysfs info, (err %d) port %u\n",
 			ret, port_num);
+<<<<<<< HEAD
 		goto bail;
+=======
+		goto bail_link;
+>>>>>>> rebase
 	}
 	kobject_uevent(&ppd->pport_kobj, KOBJ_ADD);
 
@@ -766,7 +770,11 @@ int qib_create_port_files(struct ib_device *ibdev, u8 port_num,
 		qib_dev_err(dd,
 			"Skipping sl2vl sysfs info, (err %d) port %u\n",
 			ret, port_num);
+<<<<<<< HEAD
 		goto bail_link;
+=======
+		goto bail_sl;
+>>>>>>> rebase
 	}
 	kobject_uevent(&ppd->sl2vl_kobj, KOBJ_ADD);
 
@@ -776,7 +784,11 @@ int qib_create_port_files(struct ib_device *ibdev, u8 port_num,
 		qib_dev_err(dd,
 			"Skipping diag_counters sysfs info, (err %d) port %u\n",
 			ret, port_num);
+<<<<<<< HEAD
 		goto bail_sl;
+=======
+		goto bail_diagc;
+>>>>>>> rebase
 	}
 	kobject_uevent(&ppd->diagc_kobj, KOBJ_ADD);
 
@@ -789,7 +801,11 @@ int qib_create_port_files(struct ib_device *ibdev, u8 port_num,
 		qib_dev_err(dd,
 		 "Skipping Congestion Control sysfs info, (err %d) port %u\n",
 		 ret, port_num);
+<<<<<<< HEAD
 		goto bail_diagc;
+=======
+		goto bail_cc;
+>>>>>>> rebase
 	}
 
 	kobject_uevent(&ppd->pport_cc_kobj, KOBJ_ADD);
@@ -871,6 +887,10 @@ void qib_verbs_unregister_sysfs(struct qib_devdata *dd)
 				&cc_table_bin_attr);
 			kobject_put(&ppd->pport_cc_kobj);
 		}
+<<<<<<< HEAD
+=======
+		kobject_put(&ppd->diagc_kobj);
+>>>>>>> rebase
 		kobject_put(&ppd->sl2vl_kobj);
 		kobject_put(&ppd->pport_kobj);
 	}

@@ -439,7 +439,12 @@ static void mlxsw_emad_trans_timeout_schedule(struct mlxsw_reg_trans *trans)
 	if (trans->core->fw_flash_in_progress)
 		timeout = msecs_to_jiffies(MLXSW_EMAD_TIMEOUT_DURING_FW_FLASH_MS);
 
+<<<<<<< HEAD
 	queue_delayed_work(trans->core->emad_wq, &trans->timeout_dw, timeout);
+=======
+	queue_delayed_work(trans->core->emad_wq, &trans->timeout_dw,
+			   timeout << trans->retries);
+>>>>>>> rebase
 }
 
 static int mlxsw_emad_transmit(struct mlxsw_core *mlxsw_core,
@@ -488,6 +493,12 @@ static void mlxsw_emad_transmit_retry(struct mlxsw_core *mlxsw_core,
 		err = mlxsw_emad_transmit(trans->core, trans);
 		if (err == 0)
 			return;
+<<<<<<< HEAD
+=======
+
+		if (!atomic_dec_and_test(&trans->active))
+			return;
+>>>>>>> rebase
 	} else {
 		err = -EIO;
 	}
@@ -587,7 +598,11 @@ static int mlxsw_emad_init(struct mlxsw_core *mlxsw_core)
 	err = mlxsw_core_trap_register(mlxsw_core, &mlxsw_emad_rx_listener,
 				       mlxsw_core);
 	if (err)
+<<<<<<< HEAD
 		return err;
+=======
+		goto err_trap_register;
+>>>>>>> rebase
 
 	err = mlxsw_core->driver->basic_trap_groups_set(mlxsw_core);
 	if (err)
@@ -599,6 +614,10 @@ static int mlxsw_emad_init(struct mlxsw_core *mlxsw_core)
 err_emad_trap_set:
 	mlxsw_core_trap_unregister(mlxsw_core, &mlxsw_emad_rx_listener,
 				   mlxsw_core);
+<<<<<<< HEAD
+=======
+err_trap_register:
+>>>>>>> rebase
 	destroy_workqueue(mlxsw_core->emad_wq);
 	return err;
 }
@@ -1110,6 +1129,11 @@ void mlxsw_core_bus_device_unregister(struct mlxsw_core *mlxsw_core,
 	if (!reload)
 		devlink_resources_unregister(devlink, NULL);
 	mlxsw_core->bus->fini(mlxsw_core->bus_priv);
+<<<<<<< HEAD
+=======
+	if (!reload)
+		devlink_free(devlink);
+>>>>>>> rebase
 
 	return;
 
@@ -1383,7 +1407,11 @@ static int mlxsw_core_reg_access_emad(struct mlxsw_core *mlxsw_core,
 	err = mlxsw_emad_reg_access(mlxsw_core, reg, payload, type, trans,
 				    bulk_list, cb, cb_priv, tid);
 	if (err) {
+<<<<<<< HEAD
 		kfree(trans);
+=======
+		kfree_rcu(trans, rcu);
+>>>>>>> rebase
 		return err;
 	}
 	return 0;
@@ -1604,11 +1632,21 @@ void mlxsw_core_skb_receive(struct mlxsw_core *mlxsw_core, struct sk_buff *skb,
 			break;
 		}
 	}
+<<<<<<< HEAD
 	rcu_read_unlock();
 	if (!found)
 		goto drop;
 
 	rxl->func(skb, local_port, rxl_item->priv);
+=======
+	if (!found) {
+		rcu_read_unlock();
+		goto drop;
+	}
+
+	rxl->func(skb, local_port, rxl_item->priv);
+	rcu_read_unlock();
+>>>>>>> rebase
 	return;
 
 drop:

@@ -1703,21 +1703,33 @@ static int mxs_auart_probe(struct platform_device *pdev)
 	irq = platform_get_irq(pdev, 0);
 	if (irq < 0) {
 		ret = irq;
+<<<<<<< HEAD
 		goto out_disable_clks;
+=======
+		goto out_iounmap;
+>>>>>>> rebase
 	}
 
 	s->port.irq = irq;
 	ret = devm_request_irq(&pdev->dev, irq, mxs_auart_irq_handle, 0,
 			       dev_name(&pdev->dev), s);
 	if (ret)
+<<<<<<< HEAD
 		goto out_disable_clks;
+=======
+		goto out_iounmap;
+>>>>>>> rebase
 
 	platform_set_drvdata(pdev, s);
 
 	ret = mxs_auart_init_gpios(s, &pdev->dev);
 	if (ret) {
 		dev_err(&pdev->dev, "Failed to initialize GPIOs.\n");
+<<<<<<< HEAD
 		goto out_disable_clks;
+=======
+		goto out_iounmap;
+>>>>>>> rebase
 	}
 
 	/*
@@ -1725,7 +1737,11 @@ static int mxs_auart_probe(struct platform_device *pdev)
 	 */
 	ret = mxs_auart_request_gpio_irq(s);
 	if (ret)
+<<<<<<< HEAD
 		goto out_disable_clks;
+=======
+		goto out_iounmap;
+>>>>>>> rebase
 
 	auart_port[s->port.line] = s;
 
@@ -1751,6 +1767,12 @@ out_free_qpio_irq:
 	mxs_auart_free_gpio_irq(s);
 	auart_port[pdev->id] = NULL;
 
+<<<<<<< HEAD
+=======
+out_iounmap:
+	iounmap(s->port.membase);
+
+>>>>>>> rebase
 out_disable_clks:
 	if (is_asm9260_auart(s)) {
 		clk_disable_unprepare(s->clk);
@@ -1766,6 +1788,10 @@ static int mxs_auart_remove(struct platform_device *pdev)
 	uart_remove_one_port(&auart_driver, &s->port);
 	auart_port[pdev->id] = NULL;
 	mxs_auart_free_gpio_irq(s);
+<<<<<<< HEAD
+=======
+	iounmap(s->port.membase);
+>>>>>>> rebase
 	if (is_asm9260_auart(s)) {
 		clk_disable_unprepare(s->clk);
 		clk_disable_unprepare(s->clk_ahb);

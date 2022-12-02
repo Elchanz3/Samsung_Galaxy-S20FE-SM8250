@@ -21,6 +21,10 @@
 #include <linux/delay.h>
 #include <linux/log2.h>
 #include <linux/hwspinlock.h>
+<<<<<<< HEAD
+=======
+#include <asm/unaligned.h>
+>>>>>>> rebase
 
 #define CREATE_TRACE_POINTS
 #include "trace.h"
@@ -232,22 +236,36 @@ static void regmap_format_8(void *buf, unsigned int val, unsigned int shift)
 
 static void regmap_format_16_be(void *buf, unsigned int val, unsigned int shift)
 {
+<<<<<<< HEAD
 	__be16 *b = buf;
 
 	b[0] = cpu_to_be16(val << shift);
+=======
+	put_unaligned_be16(val << shift, buf);
+>>>>>>> rebase
 }
 
 static void regmap_format_16_le(void *buf, unsigned int val, unsigned int shift)
 {
+<<<<<<< HEAD
 	__le16 *b = buf;
 
 	b[0] = cpu_to_le16(val << shift);
+=======
+	put_unaligned_le16(val << shift, buf);
+>>>>>>> rebase
 }
 
 static void regmap_format_16_native(void *buf, unsigned int val,
 				    unsigned int shift)
 {
+<<<<<<< HEAD
 	*(u16 *)buf = val << shift;
+=======
+	u16 v = val << shift;
+
+	memcpy(buf, &v, sizeof(v));
+>>>>>>> rebase
 }
 
 static void regmap_format_24(void *buf, unsigned int val, unsigned int shift)
@@ -263,43 +281,71 @@ static void regmap_format_24(void *buf, unsigned int val, unsigned int shift)
 
 static void regmap_format_32_be(void *buf, unsigned int val, unsigned int shift)
 {
+<<<<<<< HEAD
 	__be32 *b = buf;
 
 	b[0] = cpu_to_be32(val << shift);
+=======
+	put_unaligned_be32(val << shift, buf);
+>>>>>>> rebase
 }
 
 static void regmap_format_32_le(void *buf, unsigned int val, unsigned int shift)
 {
+<<<<<<< HEAD
 	__le32 *b = buf;
 
 	b[0] = cpu_to_le32(val << shift);
+=======
+	put_unaligned_le32(val << shift, buf);
+>>>>>>> rebase
 }
 
 static void regmap_format_32_native(void *buf, unsigned int val,
 				    unsigned int shift)
 {
+<<<<<<< HEAD
 	*(u32 *)buf = val << shift;
+=======
+	u32 v = val << shift;
+
+	memcpy(buf, &v, sizeof(v));
+>>>>>>> rebase
 }
 
 #ifdef CONFIG_64BIT
 static void regmap_format_64_be(void *buf, unsigned int val, unsigned int shift)
 {
+<<<<<<< HEAD
 	__be64 *b = buf;
 
 	b[0] = cpu_to_be64((u64)val << shift);
+=======
+	put_unaligned_be64((u64) val << shift, buf);
+>>>>>>> rebase
 }
 
 static void regmap_format_64_le(void *buf, unsigned int val, unsigned int shift)
 {
+<<<<<<< HEAD
 	__le64 *b = buf;
 
 	b[0] = cpu_to_le64((u64)val << shift);
+=======
+	put_unaligned_le64((u64) val << shift, buf);
+>>>>>>> rebase
 }
 
 static void regmap_format_64_native(void *buf, unsigned int val,
 				    unsigned int shift)
 {
+<<<<<<< HEAD
 	*(u64 *)buf = (u64)val << shift;
+=======
+	u64 v = (u64) val << shift;
+
+	memcpy(buf, &v, sizeof(v));
+>>>>>>> rebase
 }
 #endif
 
@@ -316,35 +362,62 @@ static unsigned int regmap_parse_8(const void *buf)
 
 static unsigned int regmap_parse_16_be(const void *buf)
 {
+<<<<<<< HEAD
 	const __be16 *b = buf;
 
 	return be16_to_cpu(b[0]);
+=======
+	return get_unaligned_be16(buf);
+>>>>>>> rebase
 }
 
 static unsigned int regmap_parse_16_le(const void *buf)
 {
+<<<<<<< HEAD
 	const __le16 *b = buf;
 
 	return le16_to_cpu(b[0]);
+=======
+	return get_unaligned_le16(buf);
+>>>>>>> rebase
 }
 
 static void regmap_parse_16_be_inplace(void *buf)
 {
+<<<<<<< HEAD
 	__be16 *b = buf;
 
 	b[0] = be16_to_cpu(b[0]);
+=======
+	u16 v = get_unaligned_be16(buf);
+
+	memcpy(buf, &v, sizeof(v));
+>>>>>>> rebase
 }
 
 static void regmap_parse_16_le_inplace(void *buf)
 {
+<<<<<<< HEAD
 	__le16 *b = buf;
 
 	b[0] = le16_to_cpu(b[0]);
+=======
+	u16 v = get_unaligned_le16(buf);
+
+	memcpy(buf, &v, sizeof(v));
+>>>>>>> rebase
 }
 
 static unsigned int regmap_parse_16_native(const void *buf)
 {
+<<<<<<< HEAD
 	return *(u16 *)buf;
+=======
+	u16 v;
+
+	memcpy(&v, buf, sizeof(v));
+	return v;
+>>>>>>> rebase
 }
 
 static unsigned int regmap_parse_24(const void *buf)
@@ -359,69 +432,123 @@ static unsigned int regmap_parse_24(const void *buf)
 
 static unsigned int regmap_parse_32_be(const void *buf)
 {
+<<<<<<< HEAD
 	const __be32 *b = buf;
 
 	return be32_to_cpu(b[0]);
+=======
+	return get_unaligned_be32(buf);
+>>>>>>> rebase
 }
 
 static unsigned int regmap_parse_32_le(const void *buf)
 {
+<<<<<<< HEAD
 	const __le32 *b = buf;
 
 	return le32_to_cpu(b[0]);
+=======
+	return get_unaligned_le32(buf);
+>>>>>>> rebase
 }
 
 static void regmap_parse_32_be_inplace(void *buf)
 {
+<<<<<<< HEAD
 	__be32 *b = buf;
 
 	b[0] = be32_to_cpu(b[0]);
+=======
+	u32 v = get_unaligned_be32(buf);
+
+	memcpy(buf, &v, sizeof(v));
+>>>>>>> rebase
 }
 
 static void regmap_parse_32_le_inplace(void *buf)
 {
+<<<<<<< HEAD
 	__le32 *b = buf;
 
 	b[0] = le32_to_cpu(b[0]);
+=======
+	u32 v = get_unaligned_le32(buf);
+
+	memcpy(buf, &v, sizeof(v));
+>>>>>>> rebase
 }
 
 static unsigned int regmap_parse_32_native(const void *buf)
 {
+<<<<<<< HEAD
 	return *(u32 *)buf;
+=======
+	u32 v;
+
+	memcpy(&v, buf, sizeof(v));
+	return v;
+>>>>>>> rebase
 }
 
 #ifdef CONFIG_64BIT
 static unsigned int regmap_parse_64_be(const void *buf)
 {
+<<<<<<< HEAD
 	const __be64 *b = buf;
 
 	return be64_to_cpu(b[0]);
+=======
+	return get_unaligned_be64(buf);
+>>>>>>> rebase
 }
 
 static unsigned int regmap_parse_64_le(const void *buf)
 {
+<<<<<<< HEAD
 	const __le64 *b = buf;
 
 	return le64_to_cpu(b[0]);
+=======
+	return get_unaligned_le64(buf);
+>>>>>>> rebase
 }
 
 static void regmap_parse_64_be_inplace(void *buf)
 {
+<<<<<<< HEAD
 	__be64 *b = buf;
 
 	b[0] = be64_to_cpu(b[0]);
+=======
+	u64 v =  get_unaligned_be64(buf);
+
+	memcpy(buf, &v, sizeof(v));
+>>>>>>> rebase
 }
 
 static void regmap_parse_64_le_inplace(void *buf)
 {
+<<<<<<< HEAD
 	__le64 *b = buf;
 
 	b[0] = le64_to_cpu(b[0]);
+=======
+	u64 v = get_unaligned_le64(buf);
+
+	memcpy(buf, &v, sizeof(v));
+>>>>>>> rebase
 }
 
 static unsigned int regmap_parse_64_native(const void *buf)
 {
+<<<<<<< HEAD
 	return *(u64 *)buf;
+=======
+	u64 v;
+
+	memcpy(&v, buf, sizeof(v));
+	return v;
+>>>>>>> rebase
 }
 #endif
 
@@ -1336,6 +1463,10 @@ void regmap_exit(struct regmap *map)
 	if (map->hwlock)
 		hwspin_lock_free(map->hwlock);
 	kfree_const(map->name);
+<<<<<<< HEAD
+=======
+	kfree(map->patch);
+>>>>>>> rebase
 	kfree(map);
 }
 EXPORT_SYMBOL_GPL(regmap_exit);
@@ -1350,7 +1481,11 @@ static int dev_get_regmap_match(struct device *dev, void *res, void *data)
 
 	/* If the user didn't specify a name match any */
 	if (data)
+<<<<<<< HEAD
 		return (*r)->name == data;
+=======
+		return !strcmp((*r)->name, data);
+>>>>>>> rebase
 	else
 		return 1;
 }
@@ -1486,7 +1621,11 @@ static int _regmap_raw_write_impl(struct regmap *map, unsigned int reg,
 			if (ret) {
 				dev_err(map->dev,
 					"Error in caching of register: %x ret: %d\n",
+<<<<<<< HEAD
 					reg + i, ret);
+=======
+					reg + regmap_get_offset(map, i), ret);
+>>>>>>> rebase
 				return ret;
 			}
 		}
@@ -2374,7 +2513,11 @@ int regmap_raw_write_async(struct regmap *map, unsigned int reg,
 EXPORT_SYMBOL_GPL(regmap_raw_write_async);
 
 static int _regmap_raw_read(struct regmap *map, unsigned int reg, void *val,
+<<<<<<< HEAD
 			    unsigned int val_len)
+=======
+			    unsigned int val_len, bool noinc)
+>>>>>>> rebase
 {
 	struct regmap_range_node *range;
 	int ret;
@@ -2387,7 +2530,11 @@ static int _regmap_raw_read(struct regmap *map, unsigned int reg, void *val,
 	range = _regmap_range_lookup(map, reg);
 	if (range) {
 		ret = _regmap_select_page(map, &reg, range,
+<<<<<<< HEAD
 					  val_len / map->format.val_bytes);
+=======
+					  noinc ? 1 : val_len / map->format.val_bytes);
+>>>>>>> rebase
 		if (ret != 0)
 			return ret;
 	}
@@ -2425,7 +2572,11 @@ static int _regmap_bus_read(void *context, unsigned int reg,
 	if (!map->format.parse_val)
 		return -EINVAL;
 
+<<<<<<< HEAD
 	ret = _regmap_raw_read(map, reg, work_val, map->format.val_bytes);
+=======
+	ret = _regmap_raw_read(map, reg, work_val, map->format.val_bytes, false);
+>>>>>>> rebase
 	if (ret == 0)
 		*val = map->format.parse_val(work_val);
 
@@ -2543,7 +2694,11 @@ int regmap_raw_read(struct regmap *map, unsigned int reg, void *val,
 
 		/* Read bytes that fit into whole chunks */
 		for (i = 0; i < chunk_count; i++) {
+<<<<<<< HEAD
 			ret = _regmap_raw_read(map, reg, val, chunk_bytes);
+=======
+			ret = _regmap_raw_read(map, reg, val, chunk_bytes, false);
+>>>>>>> rebase
 			if (ret != 0)
 				goto out;
 
@@ -2554,7 +2709,11 @@ int regmap_raw_read(struct regmap *map, unsigned int reg, void *val,
 
 		/* Read remaining bytes */
 		if (val_len) {
+<<<<<<< HEAD
 			ret = _regmap_raw_read(map, reg, val, val_len);
+=======
+			ret = _regmap_raw_read(map, reg, val, val_len, false);
+>>>>>>> rebase
 			if (ret != 0)
 				goto out;
 		}
@@ -2629,7 +2788,11 @@ int regmap_noinc_read(struct regmap *map, unsigned int reg,
 			read_len = map->max_raw_read;
 		else
 			read_len = val_len;
+<<<<<<< HEAD
 		ret = _regmap_raw_read(map, reg, val, read_len);
+=======
+		ret = _regmap_raw_read(map, reg, val, read_len, true);
+>>>>>>> rebase
 		if (ret)
 			goto out_unlock;
 		val = ((u8 *)val) + read_len;

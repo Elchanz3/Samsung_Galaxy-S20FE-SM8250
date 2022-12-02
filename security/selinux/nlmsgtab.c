@@ -28,7 +28,11 @@ struct nlmsg_perm {
 	u32	perm;
 };
 
+<<<<<<< HEAD
 static struct nlmsg_perm nlmsg_route_perms[] =
+=======
+static const struct nlmsg_perm nlmsg_route_perms[] =
+>>>>>>> rebase
 {
 	{ RTM_NEWLINK,		NETLINK_ROUTE_SOCKET__NLMSG_WRITE },
 	{ RTM_DELLINK,		NETLINK_ROUTE_SOCKET__NLMSG_WRITE },
@@ -206,6 +210,7 @@ int selinux_nlmsg_lookup(u16 sclass, u16 nlmsg_type, u32 *perm)
 
 	return err;
 }
+<<<<<<< HEAD
 
 static void nlmsg_set_getlink_perm(u32 perm)
 {
@@ -230,3 +235,5 @@ void selinux_nlmsg_init(void)
 	else
 		nlmsg_set_getlink_perm(NETLINK_ROUTE_SOCKET__NLMSG_READ);
 }
+=======
+>>>>>>> rebase

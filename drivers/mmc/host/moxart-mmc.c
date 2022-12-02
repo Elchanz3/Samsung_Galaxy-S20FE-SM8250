@@ -111,8 +111,13 @@
 #define CLK_DIV_MASK		0x7f
 
 /* REG_BUS_WIDTH */
+<<<<<<< HEAD
 #define BUS_WIDTH_8		BIT(2)
 #define BUS_WIDTH_4		BIT(1)
+=======
+#define BUS_WIDTH_4_SUPPORT	BIT(3)
+#define BUS_WIDTH_4		BIT(2)
+>>>>>>> rebase
 #define BUS_WIDTH_1		BIT(0)
 
 #define MMC_VDD_360		23
@@ -527,9 +532,12 @@ static void moxart_set_ios(struct mmc_host *mmc, struct mmc_ios *ios)
 	case MMC_BUS_WIDTH_4:
 		writel(BUS_WIDTH_4, host->base + REG_BUS_WIDTH);
 		break;
+<<<<<<< HEAD
 	case MMC_BUS_WIDTH_8:
 		writel(BUS_WIDTH_8, host->base + REG_BUS_WIDTH);
 		break;
+=======
+>>>>>>> rebase
 	default:
 		writel(BUS_WIDTH_1, host->base + REG_BUS_WIDTH);
 		break;
@@ -631,6 +639,10 @@ static int moxart_probe(struct platform_device *pdev)
 			 host->dma_chan_tx, host->dma_chan_rx);
 		host->have_dma = true;
 
+<<<<<<< HEAD
+=======
+		memset(&cfg, 0, sizeof(cfg));
+>>>>>>> rebase
 		cfg.src_addr_width = DMA_SLAVE_BUSWIDTH_4_BYTES;
 		cfg.dst_addr_width = DMA_SLAVE_BUSWIDTH_4_BYTES;
 
@@ -645,6 +657,7 @@ static int moxart_probe(struct platform_device *pdev)
 		dmaengine_slave_config(host->dma_chan_rx, &cfg);
 	}
 
+<<<<<<< HEAD
 	switch ((readl(host->base + REG_BUS_WIDTH) >> 3) & 3) {
 	case 1:
 		mmc->caps |= MMC_CAP_4_BIT_DATA;
@@ -655,6 +668,10 @@ static int moxart_probe(struct platform_device *pdev)
 	default:
 		break;
 	}
+=======
+	if (readl(host->base + REG_BUS_WIDTH) & BUS_WIDTH_4_SUPPORT)
+		mmc->caps |= MMC_CAP_4_BIT_DATA;
+>>>>>>> rebase
 
 	writel(0, host->base + REG_INTERRUPT_MASK);
 
@@ -695,12 +712,19 @@ static int moxart_remove(struct platform_device *pdev)
 		if (!IS_ERR(host->dma_chan_rx))
 			dma_release_channel(host->dma_chan_rx);
 		mmc_remove_host(mmc);
+<<<<<<< HEAD
 		mmc_free_host(mmc);
+=======
+>>>>>>> rebase
 
 		writel(0, host->base + REG_INTERRUPT_MASK);
 		writel(0, host->base + REG_POWER_CONTROL);
 		writel(readl(host->base + REG_CLOCK_CONTROL) | CLK_OFF,
 		       host->base + REG_CLOCK_CONTROL);
+<<<<<<< HEAD
+=======
+		mmc_free_host(mmc);
+>>>>>>> rebase
 	}
 	return 0;
 }

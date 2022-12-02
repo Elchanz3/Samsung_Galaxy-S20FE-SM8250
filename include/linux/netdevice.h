@@ -274,6 +274,10 @@ struct header_ops {
 				const struct net_device *dev,
 				const unsigned char *haddr);
 	bool	(*validate)(const char *ll_header, unsigned int len);
+<<<<<<< HEAD
+=======
+	__be16	(*parse_protocol)(const struct sk_buff *skb);
+>>>>>>> rebase
 };
 
 /* These flag bits are private to the generic network queueing
@@ -2282,10 +2286,20 @@ struct napi_gro_cb {
 	/* Used in GRE, set in fou/gue_gro_receive */
 	u8	is_fou:1;
 
+<<<<<<< HEAD
 	/* Number of gro_receive callbacks this packet already went through */
 	u8 recursion_counter:4;
 
 	/* 2 bit hole */
+=======
+	/* Used to determine if flush_id can be ignored */
+	u8	is_atomic:1;
+
+	/* Number of gro_receive callbacks this packet already went through */
+	u8 recursion_counter:4;
+
+	/* 1 bit hole */
+>>>>>>> rebase
 
 	/* used to support CHECKSUM_COMPLETE for tunneling protocols */
 	__wsum	csum;
@@ -2342,6 +2356,10 @@ struct packet_type {
 					      struct net_device *);
 	bool			(*id_match)(struct packet_type *ptype,
 					    struct sock *sk);
+<<<<<<< HEAD
+=======
+	struct net		*af_packet_net;
+>>>>>>> rebase
 	void			*af_packet_priv;
 	struct list_head	list;
 };
@@ -2617,6 +2635,7 @@ void netdev_freemem(struct net_device *dev);
 void synchronize_net(void);
 int init_dummy_netdev(struct net_device *dev);
 
+<<<<<<< HEAD
 DECLARE_PER_CPU(int, xmit_recursion);
 #define XMIT_RECURSION_LIMIT	10
 
@@ -2625,6 +2644,8 @@ static inline int dev_recursion_level(void)
 	return this_cpu_read(xmit_recursion);
 }
 
+=======
+>>>>>>> rebase
 struct net_device *dev_get_by_index(struct net *net, int ifindex);
 struct net_device *__dev_get_by_index(struct net *net, int ifindex);
 struct net_device *dev_get_by_index_rcu(struct net *net, int ifindex);
@@ -2900,6 +2921,18 @@ static inline int dev_parse_header(const struct sk_buff *skb,
 	return dev->header_ops->parse(skb, haddr);
 }
 
+<<<<<<< HEAD
+=======
+static inline __be16 dev_parse_header_protocol(const struct sk_buff *skb)
+{
+	const struct net_device *dev = skb->dev;
+
+	if (!dev->header_ops || !dev->header_ops->parse_protocol)
+		return 0;
+	return dev->header_ops->parse_protocol(skb);
+}
+
+>>>>>>> rebase
 /* ll_header must have at least hard_header_len allocated */
 static inline bool dev_validate_header(const struct net_device *dev,
 				       char *ll_header, int len)
@@ -2946,15 +2979,21 @@ extern int netdev_flow_limit_table_len;
  */
 struct softnet_data {
 	struct list_head	poll_list;
+<<<<<<< HEAD
 	struct napi_struct	*current_napi;
+=======
+>>>>>>> rebase
 	struct sk_buff_head	process_queue;
 
 	/* stats */
 	unsigned int		processed;
 	unsigned int		time_squeeze;
 	unsigned int		received_rps;
+<<<<<<< HEAD
 	unsigned int            gro_coalesced;
 
+=======
+>>>>>>> rebase
 #ifdef CONFIG_RPS
 	struct softnet_data	*rps_ipi_list;
 #endif
@@ -2967,6 +3006,14 @@ struct softnet_data {
 #ifdef CONFIG_XFRM_OFFLOAD
 	struct sk_buff_head	xfrm_backlog;
 #endif
+<<<<<<< HEAD
+=======
+	/* written and read only by owning cpu: */
+	struct {
+		u16 recursion;
+		u8  more;
+	} xmit;
+>>>>>>> rebase
 #ifdef CONFIG_RPS
 	/* input_queue_head should be written by cpu owning this struct,
 	 * and only read by other cpus. Worth using a cache line.
@@ -3002,6 +3049,31 @@ static inline void input_queue_tail_incr_save(struct softnet_data *sd,
 
 DECLARE_PER_CPU_ALIGNED(struct softnet_data, softnet_data);
 
+<<<<<<< HEAD
+=======
+static inline int dev_recursion_level(void)
+{
+	return this_cpu_read(softnet_data.xmit.recursion);
+}
+
+#define XMIT_RECURSION_LIMIT	8
+static inline bool dev_xmit_recursion(void)
+{
+	return unlikely(__this_cpu_read(softnet_data.xmit.recursion) >
+			XMIT_RECURSION_LIMIT);
+}
+
+static inline void dev_xmit_recursion_inc(void)
+{
+	__this_cpu_inc(softnet_data.xmit.recursion);
+}
+
+static inline void dev_xmit_recursion_dec(void)
+{
+	__this_cpu_dec(softnet_data.xmit.recursion);
+}
+
+>>>>>>> rebase
 void __netif_schedule(struct Qdisc *q);
 void netif_schedule_queue(struct netdev_queue *txq);
 
@@ -3551,7 +3623,10 @@ struct sk_buff *napi_get_frags(struct napi_struct *napi);
 gro_result_t napi_gro_frags(struct napi_struct *napi);
 struct packet_offload *gro_find_receive_by_type(__be16 type);
 struct packet_offload *gro_find_complete_by_type(__be16 type);
+<<<<<<< HEAD
 extern struct napi_struct *get_current_napi_context(void);
+=======
+>>>>>>> rebase
 
 static inline void napi_free_frags(struct napi_struct *napi)
 {
@@ -3566,6 +3641,13 @@ int netdev_rx_handler_register(struct net_device *dev,
 void netdev_rx_handler_unregister(struct net_device *dev);
 
 bool dev_valid_name(const char *name);
+<<<<<<< HEAD
+=======
+static inline bool is_socket_ioctl_cmd(unsigned int cmd)
+{
+	return _IOC_TYPE(cmd) == SOCK_IOC_TYPE;
+}
+>>>>>>> rebase
 int dev_ioctl(struct net *net, unsigned int cmd, struct ifreq *ifr,
 		bool *need_copyout);
 int dev_ifconf(struct net *net, struct ifconf *, int);
@@ -3641,7 +3723,12 @@ void netdev_run_todo(void);
  */
 static inline void dev_put(struct net_device *dev)
 {
+<<<<<<< HEAD
 	this_cpu_dec(*dev->pcpu_refcnt);
+=======
+	if (dev)
+		this_cpu_dec(*dev->pcpu_refcnt);
+>>>>>>> rebase
 }
 
 /**
@@ -3652,7 +3739,12 @@ static inline void dev_put(struct net_device *dev)
  */
 static inline void dev_hold(struct net_device *dev)
 {
+<<<<<<< HEAD
 	this_cpu_inc(*dev->pcpu_refcnt);
+=======
+	if (dev)
+		this_cpu_inc(*dev->pcpu_refcnt);
+>>>>>>> rebase
 }
 
 /* Carrier loss detection, dial on demand. The functions netif_carrier_on
@@ -3808,7 +3900,12 @@ static inline u32 netif_msg_init(int debug_value, int default_msg_enable_bits)
 static inline void __netif_tx_lock(struct netdev_queue *txq, int cpu)
 {
 	spin_lock(&txq->_xmit_lock);
+<<<<<<< HEAD
 	txq->xmit_lock_owner = cpu;
+=======
+	/* Pairs with READ_ONCE() in __dev_queue_xmit() */
+	WRITE_ONCE(txq->xmit_lock_owner, cpu);
+>>>>>>> rebase
 }
 
 static inline bool __netif_tx_acquire(struct netdev_queue *txq)
@@ -3825,26 +3922,49 @@ static inline void __netif_tx_release(struct netdev_queue *txq)
 static inline void __netif_tx_lock_bh(struct netdev_queue *txq)
 {
 	spin_lock_bh(&txq->_xmit_lock);
+<<<<<<< HEAD
 	txq->xmit_lock_owner = smp_processor_id();
+=======
+	/* Pairs with READ_ONCE() in __dev_queue_xmit() */
+	WRITE_ONCE(txq->xmit_lock_owner, smp_processor_id());
+>>>>>>> rebase
 }
 
 static inline bool __netif_tx_trylock(struct netdev_queue *txq)
 {
 	bool ok = spin_trylock(&txq->_xmit_lock);
+<<<<<<< HEAD
 	if (likely(ok))
 		txq->xmit_lock_owner = smp_processor_id();
+=======
+
+	if (likely(ok)) {
+		/* Pairs with READ_ONCE() in __dev_queue_xmit() */
+		WRITE_ONCE(txq->xmit_lock_owner, smp_processor_id());
+	}
+>>>>>>> rebase
 	return ok;
 }
 
 static inline void __netif_tx_unlock(struct netdev_queue *txq)
 {
+<<<<<<< HEAD
 	txq->xmit_lock_owner = -1;
+=======
+	/* Pairs with READ_ONCE() in __dev_queue_xmit() */
+	WRITE_ONCE(txq->xmit_lock_owner, -1);
+>>>>>>> rebase
 	spin_unlock(&txq->_xmit_lock);
 }
 
 static inline void __netif_tx_unlock_bh(struct netdev_queue *txq)
 {
+<<<<<<< HEAD
 	txq->xmit_lock_owner = -1;
+=======
+	/* Pairs with READ_ONCE() in __dev_queue_xmit() */
+	WRITE_ONCE(txq->xmit_lock_owner, -1);
+>>>>>>> rebase
 	spin_unlock_bh(&txq->_xmit_lock);
 }
 
@@ -3948,6 +4068,10 @@ static inline void netif_tx_disable(struct net_device *dev)
 
 	local_bh_disable();
 	cpu = smp_processor_id();
+<<<<<<< HEAD
+=======
+	spin_lock(&dev->tx_global_lock);
+>>>>>>> rebase
 	for (i = 0; i < dev->num_tx_queues; i++) {
 		struct netdev_queue *txq = netdev_get_tx_queue(dev, i);
 
@@ -3955,6 +4079,10 @@ static inline void netif_tx_disable(struct net_device *dev)
 		netif_tx_stop_queue(txq);
 		__netif_tx_unlock(txq);
 	}
+<<<<<<< HEAD
+=======
+	spin_unlock(&dev->tx_global_lock);
+>>>>>>> rebase
 	local_bh_enable();
 }
 
@@ -4315,6 +4443,14 @@ static inline netdev_tx_t __netdev_start_xmit(const struct net_device_ops *ops,
 	return ops->ndo_start_xmit(skb, dev);
 }
 
+<<<<<<< HEAD
+=======
+static inline bool netdev_xmit_more(void)
+{
+	return __this_cpu_read(softnet_data.xmit.more);
+}
+
+>>>>>>> rebase
 static inline netdev_tx_t netdev_start_xmit(struct sk_buff *skb, struct net_device *dev,
 					    struct netdev_queue *txq, bool more)
 {

@@ -224,6 +224,10 @@ struct page *follow_devmap_pud(struct vm_area_struct *vma, unsigned long addr,
 extern vm_fault_t do_huge_pmd_numa_page(struct vm_fault *vmf, pmd_t orig_pmd);
 
 extern struct page *huge_zero_page;
+<<<<<<< HEAD
+=======
+extern unsigned long huge_zero_pfn;
+>>>>>>> rebase
 
 static inline bool is_huge_zero_page(struct page *page)
 {
@@ -232,7 +236,11 @@ static inline bool is_huge_zero_page(struct page *page)
 
 static inline bool is_huge_zero_pmd(pmd_t pmd)
 {
+<<<<<<< HEAD
 	return is_huge_zero_page(pmd_page(pmd));
+=======
+	return READ_ONCE(huge_zero_pfn) == pmd_pfn(pmd) && pmd_present(pmd);
+>>>>>>> rebase
 }
 
 static inline bool is_huge_zero_pud(pud_t pud)
@@ -342,6 +350,14 @@ static inline bool is_huge_zero_page(struct page *page)
 	return false;
 }
 
+<<<<<<< HEAD
+=======
+static inline bool is_huge_zero_pmd(pmd_t pmd)
+{
+	return false;
+}
+
+>>>>>>> rebase
 static inline bool is_huge_zero_pud(pud_t pud)
 {
 	return false;

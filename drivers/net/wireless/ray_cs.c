@@ -394,6 +394,11 @@ static int ray_config(struct pcmcia_device *link)
 		goto failed;
 	local->sram = ioremap(link->resource[2]->start,
 			resource_size(link->resource[2]));
+<<<<<<< HEAD
+=======
+	if (!local->sram)
+		goto failed;
+>>>>>>> rebase
 
 /*** Set up 16k window for shared memory (receive buffer) ***************/
 	link->resource[3]->flags |=
@@ -408,6 +413,11 @@ static int ray_config(struct pcmcia_device *link)
 		goto failed;
 	local->rmem = ioremap(link->resource[3]->start,
 			resource_size(link->resource[3]));
+<<<<<<< HEAD
+=======
+	if (!local->rmem)
+		goto failed;
+>>>>>>> rebase
 
 /*** Set up window for attribute memory ***********************************/
 	link->resource[4]->flags |=
@@ -422,6 +432,11 @@ static int ray_config(struct pcmcia_device *link)
 		goto failed;
 	local->amem = ioremap(link->resource[4]->start,
 			resource_size(link->resource[4]));
+<<<<<<< HEAD
+=======
+	if (!local->amem)
+		goto failed;
+>>>>>>> rebase
 
 	dev_dbg(&link->dev, "ray_config sram=%p\n", local->sram);
 	dev_dbg(&link->dev, "ray_config rmem=%p\n", local->rmem);

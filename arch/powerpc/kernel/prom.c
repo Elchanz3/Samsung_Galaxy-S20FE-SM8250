@@ -266,7 +266,11 @@ static struct feature_property {
 };
 
 #if defined(CONFIG_44x) && defined(CONFIG_PPC_FPU)
+<<<<<<< HEAD
 static inline void identical_pvr_fixup(unsigned long node)
+=======
+static __init void identical_pvr_fixup(unsigned long node)
+>>>>>>> rebase
 {
 	unsigned int pvr;
 	const char *model = of_get_flat_dt_prop(node, "model", NULL);
@@ -685,6 +689,26 @@ static void __init tm_init(void)
 static void tm_init(void) { }
 #endif /* CONFIG_PPC_TRANSACTIONAL_MEM */
 
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_PPC64
+static void __init save_fscr_to_task(void)
+{
+	/*
+	 * Ensure the init_task (pid 0, aka swapper) uses the value of FSCR we
+	 * have configured via the device tree features or via __init_FSCR().
+	 * That value will then be propagated to pid 1 (init) and all future
+	 * processes.
+	 */
+	if (early_cpu_has_feature(CPU_FTR_ARCH_207S))
+		init_task.thread.fscr = mfspr(SPRN_FSCR);
+}
+#else
+static inline void save_fscr_to_task(void) {};
+#endif
+
+
+>>>>>>> rebase
 void __init early_init_devtree(void *params)
 {
 	phys_addr_t limit;
@@ -720,6 +744,16 @@ void __init early_init_devtree(void *params)
 	of_scan_flat_dt(early_init_dt_scan_root, NULL);
 	of_scan_flat_dt(early_init_dt_scan_memory_ppc, NULL);
 
+<<<<<<< HEAD
+=======
+	/*
+	 * As generic code authors expect to be able to use static keys
+	 * in early_param() handlers, we initialize the static keys just
+	 * before parsing early params (it's fine to call jump_label_init()
+	 * more than once).
+	 */
+	jump_label_init();
+>>>>>>> rebase
 	parse_early_param();
 
 	/* make sure we've parsed cmdline for mem= before this */
@@ -770,6 +804,11 @@ void __init early_init_devtree(void *params)
 		BUG();
 	}
 
+<<<<<<< HEAD
+=======
+	save_fscr_to_task();
+
+>>>>>>> rebase
 #if defined(CONFIG_SMP) && defined(CONFIG_PPC64)
 	/* We'll later wait for secondaries to check in; there are
 	 * NCPUS-1 non-boot CPUs  :-)

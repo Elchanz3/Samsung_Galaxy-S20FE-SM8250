@@ -1079,7 +1079,11 @@ static int fsl_ifc_nand_probe(struct platform_device *dev)
 		goto err;
 
 	priv->chip.controller->ops = &fsl_ifc_controller_ops;
+<<<<<<< HEAD
 	ret = nand_scan(mtd, 1);
+=======
+	ret = nand_scan(&priv->chip, 1);
+>>>>>>> rebase
 	if (ret)
 		goto err;
 
@@ -1105,9 +1109,14 @@ err:
 static int fsl_ifc_nand_remove(struct platform_device *dev)
 {
 	struct fsl_ifc_mtd *priv = dev_get_drvdata(&dev->dev);
+<<<<<<< HEAD
 	struct mtd_info *mtd = nand_to_mtd(&priv->chip);
 
 	nand_release(mtd);
+=======
+
+	nand_release(&priv->chip);
+>>>>>>> rebase
 	fsl_ifc_chip_remove(priv);
 
 	mutex_lock(&fsl_ifc_nand_mutex);

@@ -436,10 +436,13 @@
 			embedded devices based on command line input.
 			See Documentation/block/cmdline-partition.txt
 
+<<<<<<< HEAD
 	boot_cpus=	[SMP]
 			Rather than attempting to online all possible CPUs at
 			boot time, only online the specified set of CPUs.
 
+=======
+>>>>>>> rebase
 	boot_delay=	Milliseconds to delay each printk during boot.
 			Values larger than 10 seconds (10000) are changed to
 			no delay (0).
@@ -562,7 +565,17 @@
 			loops can be debugged more effectively on production
 			systems.
 
+<<<<<<< HEAD
 	clearcpuid=BITNUM [X86]
+=======
+	clocksource.max_cswd_read_retries= [KNL]
+			Number of clocksource_watchdog() retries due to
+			external delays before the clock will be marked
+			unstable.  Defaults to three retries, that is,
+			four attempts to read the clock under test.
+
+	clearcpuid=BITNUM[,BITNUM...] [X86]
+>>>>>>> rebase
 			Disable CPUID feature X for the kernel. See
 			arch/x86/include/asm/cpufeatures.h for the valid bit
 			numbers. Note the Linux specific bits are not necessarily
@@ -888,9 +901,12 @@
 
 	dis_ucode_ldr	[X86] Disable the microcode loader.
 
+<<<<<<< HEAD
 	dm=		[DM] Allows early creation of a device-mapper device.
 			See Documentation/device-mapper/boot.txt.
 
+=======
+>>>>>>> rebase
 	dma_debug=off	If the kernel is compiled with DMA_API_DEBUG support,
 			this option disables the debugging code at boot.
 
@@ -1440,6 +1456,11 @@
 			architectures force reset to be always executed
 	i8042.unlock	[HW] Unlock (ignore) the keylock
 	i8042.kbdreset	[HW] Reset device connected to KBD port
+<<<<<<< HEAD
+=======
+	i8042.probe_defer
+			[HW] Allow deferred probing upon i8042 probe errors
+>>>>>>> rebase
 
 	i810=		[HW,DRM]
 
@@ -1642,6 +1663,7 @@
 
 	initrd=		[BOOT] Specify the location of the initial ramdisk
 
+<<<<<<< HEAD
 	init_on_alloc=	[MM] Fill newly allocated pages and heap objects with
 			zeroes.
 			Format: 0 | 1
@@ -1651,6 +1673,8 @@
 			Format: 0 | 1
 			Default set by CONFIG_INIT_ON_FREE_DEFAULT_ON.
 
+=======
+>>>>>>> rebase
 	init_pkru=	[x86] Specify the default memory protection keys rights
 			register contents for all processes.  0x55555554 by
 			default (disallow access to all but pkey 0).  Can
@@ -2029,8 +2053,17 @@
 			Default is 1 (enabled)
 
 	kvm-intel.emulate_invalid_guest_state=
+<<<<<<< HEAD
 			[KVM,Intel] Enable emulation of invalid guest states
 			Default is 0 (disabled)
+=======
+			[KVM,Intel] Disable emulation of invalid guest state.
+			Ignored if kvm-intel.enable_unrestricted_guest=1, as
+			guest state is never invalid for unrestricted guests.
+			This param doesn't apply to nested guests (L2), as KVM
+			never emulates invalid L2 guest state.
+			Default is 1 (enabled)
+>>>>>>> rebase
 
 	kvm-intel.flexpriority=
 			[KVM,Intel] Disable FlexPriority feature (TPR shadow).
@@ -2576,6 +2609,12 @@
 					       mds=off [X86]
 					       tsx_async_abort=off [X86]
 					       kvm.nx_huge_pages=off [X86]
+<<<<<<< HEAD
+=======
+					       no_entry_flush [PPC]
+					       no_uaccess_flush [PPC]
+					       mmio_stale_data=off [X86]
+>>>>>>> rebase
 
 				Exceptions:
 					       This does not have any effect on
@@ -2597,6 +2636,10 @@
 				Equivalent to: l1tf=flush,nosmt [X86]
 					       mds=full,nosmt [X86]
 					       tsx_async_abort=full,nosmt [X86]
+<<<<<<< HEAD
+=======
+					       mmio_stale_data=full,nosmt [X86]
+>>>>>>> rebase
 
 	mminit_loglevel=
 			[KNL] When CONFIG_DEBUG_MEMORY_INIT is set, this
@@ -2606,6 +2649,43 @@
 			log everything. Information is printed at KERN_DEBUG
 			so loglevel=8 may also need to be specified.
 
+<<<<<<< HEAD
+=======
+	mmio_stale_data=
+			[X86,INTEL] Control mitigation for the Processor
+			MMIO Stale Data vulnerabilities.
+
+			Processor MMIO Stale Data is a class of
+			vulnerabilities that may expose data after an MMIO
+			operation. Exposed data could originate or end in
+			the same CPU buffers as affected by MDS and TAA.
+			Therefore, similar to MDS and TAA, the mitigation
+			is to clear the affected CPU buffers.
+
+			This parameter controls the mitigation. The
+			options are:
+
+			full       - Enable mitigation on vulnerable CPUs
+
+			full,nosmt - Enable mitigation and disable SMT on
+				     vulnerable CPUs.
+
+			off        - Unconditionally disable mitigation
+
+			On MDS or TAA affected machines,
+			mmio_stale_data=off can be prevented by an active
+			MDS or TAA mitigation as these vulnerabilities are
+			mitigated with the same mechanism so in order to
+			disable this mitigation, you need to specify
+			mds=off and tsx_async_abort=off too.
+
+			Not specifying this option is equivalent to
+			mmio_stale_data=full.
+
+			For details see:
+			Documentation/admin-guide/hw-vuln/processor_mmio_stale_data.rst
+
+>>>>>>> rebase
 	module.sig_enforce
 			[KNL] When CONFIG_MODULE_SIG is set, this means that
 			modules without (valid) signatures will fail to load.
@@ -2886,6 +2966,11 @@
 
 	noefi		Disable EFI runtime services support.
 
+<<<<<<< HEAD
+=======
+	no_entry_flush  [PPC] Don't flush the L1-D cache when entering the kernel.
+
+>>>>>>> rebase
 	noexec		[IA-64]
 
 	noexec		[X86]
@@ -2935,6 +3020,12 @@
 	nospec_store_bypass_disable
 			[HW] Disable all mitigations for the Speculative Store Bypass vulnerability
 
+<<<<<<< HEAD
+=======
+	no_uaccess_flush
+	                [PPC] Don't flush the L1-D cache after accessing user data.
+
+>>>>>>> rebase
 	noxsave		[BUGS=X86] Disables x86 extended register state save
 			and restore using xsave. The kernel will fallback to
 			enabling legacy floating-point and sse state.
@@ -3128,12 +3219,15 @@
 			This can be set from sysctl after boot.
 			See Documentation/sysctl/vm.txt for details.
 
+<<<<<<< HEAD
 	of_devlink	[OF, KNL] Create device links between consumer and
 			supplier devices by scanning the devictree to infer the
 			consumer/supplier relationships.  A consumer device
 			will not be probed until all the supplier devices have
 			probed successfully.
 
+=======
+>>>>>>> rebase
 	ohci1394_dma=early	[HW] enable debugging via the ohci1394 driver.
 			See Documentation/debugging-via-ohci1394.txt for more
 			info.
@@ -3611,10 +3705,13 @@
 			before loading.
 			See Documentation/blockdev/ramdisk.txt.
 
+<<<<<<< HEAD
 	psi=		[KNL] Enable or disable pressure stall information
 			tracking.
 			Format: <bool>
 
+=======
+>>>>>>> rebase
 	psmouse.proto=	[HW,MOUSE] Highest PS2 mouse protocol extension to
 			probe for; one of (bare|imps|exps|lifebook|any).
 	psmouse.rate=	[HW,MOUSE] Set desired mouse report rate, in reports
@@ -3668,6 +3765,15 @@
 			fully seed the kernel's CRNG. Default is controlled
 			by CONFIG_RANDOM_TRUST_CPU.
 
+<<<<<<< HEAD
+=======
+	random.trust_bootloader={on,off}
+			[KNL] Enable or disable trusting the use of a
+			seed passed by the bootloader (if available) to
+			fully seed the kernel's CRNG. Default is controlled
+			by CONFIG_RANDOM_TRUST_BOOTLOADER.
+
+>>>>>>> rebase
 	ras=option[,option,...]	[KNL] RAS-specific options
 
 		cec_disable	[X86]
@@ -4039,9 +4145,13 @@
 				[[,]s[mp]#### \
 				[[,]b[ios] | a[cpi] | k[bd] | t[riple] | e[fi] | p[ci]] \
 				[[,]f[orce]
+<<<<<<< HEAD
 			Where reboot_mode is one of warm (soft) or cold (hard) or gpio
 					(prefix with 'panic_' to set mode for panic
 					reboot only),
+=======
+			Where reboot_mode is one of warm (soft) or cold (hard) or gpio,
+>>>>>>> rebase
 			      reboot_type is one of bios, acpi, kbd, triple, efi, or pci,
 			      reboot_force is either force or not specified,
 			      reboot_cpu is s[mp]#### with #### being the processor
@@ -4099,6 +4209,21 @@
 
 	retain_initrd	[RAM] Keep initrd memory after extraction
 
+<<<<<<< HEAD
+=======
+	retbleed=	[X86] Control mitigation of RETBleed (Arbitrary
+			Speculative Code Execution with Return Instructions)
+			vulnerability.
+
+			off         - unconditionally disable
+			auto        - automatically select a migitation
+
+			Selecting 'auto' will choose a mitigation method at run
+			time according to the CPU.
+
+			Not specifying this option is equivalent to retbleed=auto.
+
+>>>>>>> rebase
 	rfkill.default_state=
 		0	"airplane mode".  All wifi, bluetooth, wimax, gps, fm,
 			etc. communication is blocked by default.
@@ -4338,8 +4463,18 @@
 			Specific mitigations can also be selected manually:
 
 			retpoline	  - replace indirect branches
+<<<<<<< HEAD
 			retpoline,generic - google's original retpoline
 			retpoline,amd     - AMD-specific minimal thunk
+=======
+			retpoline,generic - Retpolines
+			retpoline,lfence  - LFENCE; indirect branch
+			retpoline,amd     - alias for retpoline,lfence
+			eibrs		  - enhanced IBRS
+			eibrs,retpoline   - enhanced IBRS + Retpolines
+			eibrs,lfence      - enhanced IBRS + LFENCE
+			ibrs		  - use IBRS to protect kernel
+>>>>>>> rebase
 
 			Not specifying this option is equivalent to
 			spectre_v2=auto.
@@ -4443,6 +4578,29 @@
 	spia_pedr=
 	spia_peddr=
 
+<<<<<<< HEAD
+=======
+	srbds=		[X86,INTEL]
+			Control the Special Register Buffer Data Sampling
+			(SRBDS) mitigation.
+
+			Certain CPUs are vulnerable to an MDS-like
+			exploit which can leak bits from the random
+			number generator.
+
+			By default, this issue is mitigated by
+			microcode.  However, the microcode fix can cause
+			the RDRAND and RDSEED instructions to become
+			much slower.  Among other effects, this will
+			result in reduced throughput from /dev/urandom.
+
+			The microcode mitigation can be disabled with
+			the following option:
+
+			off:    Disable mitigation and remove
+				performance impact to RDRAND and RDSEED
+
+>>>>>>> rebase
 	srcutree.counter_wrap_check [KNL]
 			Specifies how frequently to check for
 			grace-period sequence counter wrap for the
@@ -4999,6 +5157,10 @@
 					device);
 				j = NO_REPORT_LUNS (don't use report luns
 					command, uas only);
+<<<<<<< HEAD
+=======
+				k = NO_SAME (do not use WRITE_SAME, uas only)
+>>>>>>> rebase
 				l = NOT_LOCKABLE (don't try to lock and
 					unlock ejectable media, not on uas);
 				m = MAX_SECTORS_64 (don't transfer more
@@ -5278,6 +5440,24 @@
 			with /sys/devices/system/xen_memory/xen_memory0/scrub_pages.
 			Default value controlled with CONFIG_XEN_SCRUB_PAGES_DEFAULT.
 
+<<<<<<< HEAD
+=======
+	xen.balloon_boot_timeout= [XEN]
+			The time (in seconds) to wait before giving up to boot
+			in case initial ballooning fails to free enough memory.
+			Applies only when running as HVM or PVH guest and
+			started with less memory configured than allowed at
+			max. Default is 180.
+
+	xen.event_eoi_delay=	[XEN]
+			How long to delay EOI handling in case of event
+			storms (jiffies). Default is 10.
+
+	xen.event_loop_timeout=	[XEN]
+			After which time (jiffies) the event handling loop
+			should start to delay EOI handling. Default is 2.
+
+>>>>>>> rebase
 	xirc2ps_cs=	[NET,PCMCIA]
 			Format:
 			<irq>,<irq_mask>,<io>,<full_duplex>,<do_sound>,<lockup_hack>[,<irq2>[,<irq3>[,<irq4>]]]

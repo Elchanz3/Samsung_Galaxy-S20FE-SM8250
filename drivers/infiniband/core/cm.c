@@ -1100,14 +1100,30 @@ retest:
 		break;
 	}
 
+<<<<<<< HEAD
 	spin_lock_irq(&cm.lock);
+=======
+	spin_lock_irq(&cm_id_priv->lock);
+	spin_lock(&cm.lock);
+	/* Required for cleanup paths related cm_req_handler() */
+	if (cm_id_priv->timewait_info) {
+		cm_cleanup_timewait(cm_id_priv->timewait_info);
+		kfree(cm_id_priv->timewait_info);
+		cm_id_priv->timewait_info = NULL;
+	}
+>>>>>>> rebase
 	if (!list_empty(&cm_id_priv->altr_list) &&
 	    (!cm_id_priv->altr_send_port_not_ready))
 		list_del(&cm_id_priv->altr_list);
 	if (!list_empty(&cm_id_priv->prim_list) &&
 	    (!cm_id_priv->prim_send_port_not_ready))
 		list_del(&cm_id_priv->prim_list);
+<<<<<<< HEAD
 	spin_unlock_irq(&cm.lock);
+=======
+	spin_unlock(&cm.lock);
+	spin_unlock_irq(&cm_id_priv->lock);
+>>>>>>> rebase
 
 	cm_free_id(cm_id->local_id);
 	cm_deref_id(cm_id_priv);
@@ -1424,7 +1440,11 @@ int ib_send_cm_req(struct ib_cm_id *cm_id,
 	/* Verify that we're not in timewait. */
 	cm_id_priv = container_of(cm_id, struct cm_id_private, id);
 	spin_lock_irqsave(&cm_id_priv->lock, flags);
+<<<<<<< HEAD
 	if (cm_id->state != IB_CM_IDLE) {
+=======
+	if (cm_id->state != IB_CM_IDLE || WARN_ON(cm_id_priv->timewait_info)) {
+>>>>>>> rebase
 		spin_unlock_irqrestore(&cm_id_priv->lock, flags);
 		ret = -EINVAL;
 		goto out;
@@ -1435,6 +1455,10 @@ int ib_send_cm_req(struct ib_cm_id *cm_id,
 							    id.local_id);
 	if (IS_ERR(cm_id_priv->timewait_info)) {
 		ret = PTR_ERR(cm_id_priv->timewait_info);
+<<<<<<< HEAD
+=======
+		cm_id_priv->timewait_info = NULL;
+>>>>>>> rebase
 		goto out;
 	}
 
@@ -1442,12 +1466,20 @@ int ib_send_cm_req(struct ib_cm_id *cm_id,
 				 param->ppath_sgid_attr, &cm_id_priv->av,
 				 cm_id_priv);
 	if (ret)
+<<<<<<< HEAD
 		goto error1;
+=======
+		goto out;
+>>>>>>> rebase
 	if (param->alternate_path) {
 		ret = cm_init_av_by_path(param->alternate_path, NULL,
 					 &cm_id_priv->alt_av, cm_id_priv);
 		if (ret)
+<<<<<<< HEAD
 			goto error1;
+=======
+			goto out;
+>>>>>>> rebase
 	}
 	cm_id->service_id = param->service_id;
 	cm_id->service_mask = ~cpu_to_be64(0);
@@ -1465,7 +1497,11 @@ int ib_send_cm_req(struct ib_cm_id *cm_id,
 
 	ret = cm_alloc_msg(cm_id_priv, &cm_id_priv->msg);
 	if (ret)
+<<<<<<< HEAD
 		goto error1;
+=======
+		goto out;
+>>>>>>> rebase
 
 	req_msg = (struct cm_req_msg *) cm_id_priv->msg->mad;
 	cm_format_req(req_msg, cm_id_priv, param);
@@ -1488,7 +1524,10 @@ int ib_send_cm_req(struct ib_cm_id *cm_id,
 	return 0;
 
 error2:	cm_free_msg(cm_id_priv->msg);
+<<<<<<< HEAD
 error1:	kfree(cm_id_priv->timewait_info);
+=======
+>>>>>>> rebase
 out:	return ret;
 }
 EXPORT_SYMBOL(ib_send_cm_req);
@@ -1962,6 +2001,10 @@ static int cm_req_handler(struct cm_work *work)
 							    id.local_id);
 	if (IS_ERR(cm_id_priv->timewait_info)) {
 		ret = PTR_ERR(cm_id_priv->timewait_info);
+<<<<<<< HEAD
+=======
+		cm_id_priv->timewait_info = NULL;
+>>>>>>> rebase
 		goto destroy;
 	}
 	cm_id_priv->timewait_info->work.remote_id = req_msg->local_comm_id;
@@ -1973,7 +2016,11 @@ static int cm_req_handler(struct cm_work *work)
 		pr_debug("%s: local_id %d, no listen_cm_id_priv\n", __func__,
 			 be32_to_cpu(cm_id->local_id));
 		ret = -EINVAL;
+<<<<<<< HEAD
 		goto free_timeinfo;
+=======
+		goto destroy;
+>>>>>>> rebase
 	}
 
 	cm_id_priv->id.cm_handler = listen_cm_id_priv->id.cm_handler;
@@ -2057,8 +2104,11 @@ static int cm_req_handler(struct cm_work *work)
 rejected:
 	atomic_dec(&cm_id_priv->refcount);
 	cm_deref_id(listen_cm_id_priv);
+<<<<<<< HEAD
 free_timeinfo:
 	kfree(cm_id_priv->timewait_info);
+=======
+>>>>>>> rebase
 destroy:
 	ib_destroy_cm_id(cm_id);
 	return ret;

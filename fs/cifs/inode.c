@@ -2219,6 +2219,18 @@ set_size_out:
 	if (rc == 0) {
 		cifsInode->server_eof = attrs->ia_size;
 		cifs_setsize(inode, attrs->ia_size);
+<<<<<<< HEAD
+=======
+
+		/*
+		 * The man page of truncate says if the size changed,
+		 * then the st_ctime and st_mtime fields for the file
+		 * are updated.
+		 */
+		attrs->ia_ctime = attrs->ia_mtime = current_time(inode);
+		attrs->ia_valid |= ATTR_CTIME | ATTR_MTIME;
+
+>>>>>>> rebase
 		cifs_truncate_page(inode->i_mapping, inode->i_size);
 	}
 
@@ -2541,6 +2553,7 @@ cifs_setattr(struct dentry *direntry, struct iattr *attrs)
 {
 	struct cifs_sb_info *cifs_sb = CIFS_SB(direntry->d_sb);
 	struct cifs_tcon *pTcon = cifs_sb_master_tcon(cifs_sb);
+<<<<<<< HEAD
 
 	if (pTcon->unix_ext)
 		return cifs_setattr_unix(direntry, attrs);
@@ -2548,6 +2561,20 @@ cifs_setattr(struct dentry *direntry, struct iattr *attrs)
 	return cifs_setattr_nounix(direntry, attrs);
 
 	/* BB: add cifs_setattr_legacy for really old servers */
+=======
+	int rc, retries = 0;
+
+	do {
+		if (pTcon->unix_ext)
+			rc = cifs_setattr_unix(direntry, attrs);
+		else
+			rc = cifs_setattr_nounix(direntry, attrs);
+		retries++;
+	} while (is_retryable_error(rc) && retries < 2);
+
+	/* BB: add cifs_setattr_legacy for really old servers */
+	return rc;
+>>>>>>> rebase
 }
 
 #if 0

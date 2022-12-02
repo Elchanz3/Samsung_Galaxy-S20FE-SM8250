@@ -1,5 +1,9 @@
+<<<<<<< HEAD
 /* SPDX-License-Identifier: GPL-2.0 */
 /* Copyright (c) 2015-2018, The Linux Foundation. All rights reserved.
+=======
+/* Copyright (c) 2015, The Linux Foundation. All rights reserved.
+>>>>>>> rebase
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -18,7 +22,11 @@
 #include "ufshcd.h"
 
 int ufshcd_pltfrm_init(struct platform_device *pdev,
+<<<<<<< HEAD
 		       struct ufs_hba_variant *var);
+=======
+		       struct ufs_hba_variant_ops *vops);
+>>>>>>> rebase
 void ufshcd_pltfrm_shutdown(struct platform_device *pdev);
 
 #ifdef CONFIG_PM

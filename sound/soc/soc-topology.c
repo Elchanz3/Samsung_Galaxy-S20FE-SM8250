@@ -364,7 +364,11 @@ static int soc_tplg_add_kcontrol(struct soc_tplg *tplg,
 	struct snd_soc_component *comp = tplg->comp;
 
 	return soc_tplg_add_dcontrol(comp->card->snd_card,
+<<<<<<< HEAD
 				comp->dev, k, NULL, comp, kcontrol);
+=======
+				comp->dev, k, comp->name_prefix, comp, kcontrol);
+>>>>>>> rebase
 }
 
 /* remove a mixer kcontrol */
@@ -547,7 +551,12 @@ static int soc_tplg_kcontrol_bind_io(struct snd_soc_tplg_ctl_hdr *hdr,
 
 	if (hdr->ops.info == SND_SOC_TPLG_CTL_BYTES
 		&& k->iface & SNDRV_CTL_ELEM_IFACE_MIXER
+<<<<<<< HEAD
 		&& k->access & SNDRV_CTL_ELEM_ACCESS_TLV_READWRITE
+=======
+		&& (k->access & SNDRV_CTL_ELEM_ACCESS_TLV_READ
+		    || k->access & SNDRV_CTL_ELEM_ACCESS_TLV_WRITE)
+>>>>>>> rebase
 		&& k->access & SNDRV_CTL_ELEM_ACCESS_TLV_CALLBACK) {
 		struct soc_bytes_ext *sbe;
 		struct snd_soc_tplg_bytes_control *be;
@@ -1923,7 +1932,13 @@ static int soc_tplg_pcm_elems_load(struct soc_tplg *tplg,
 			_pcm = pcm;
 		} else {
 			abi_match = false;
+<<<<<<< HEAD
 			pcm_new_ver(tplg, pcm, &_pcm);
+=======
+			ret = pcm_new_ver(tplg, pcm, &_pcm);
+			if (ret < 0)
+				return ret;
+>>>>>>> rebase
 		}
 
 		/* create the FE DAIs and DAI links */
@@ -2563,6 +2578,10 @@ EXPORT_SYMBOL_GPL(snd_soc_tplg_widget_remove_all);
 /* remove dynamic controls from the component driver */
 int snd_soc_tplg_component_remove(struct snd_soc_component *comp, u32 index)
 {
+<<<<<<< HEAD
+=======
+	struct snd_card *card = comp->card->snd_card;
+>>>>>>> rebase
 	struct snd_soc_dobj *dobj, *next_dobj;
 	int pass = SOC_TPLG_PASS_END;
 
@@ -2570,6 +2589,10 @@ int snd_soc_tplg_component_remove(struct snd_soc_component *comp, u32 index)
 	while (pass >= SOC_TPLG_PASS_START) {
 
 		/* remove mixer controls */
+<<<<<<< HEAD
+=======
+		down_write(&card->controls_rwsem);
+>>>>>>> rebase
 		list_for_each_entry_safe(dobj, next_dobj, &comp->dobj_list,
 			list) {
 
@@ -2603,6 +2626,10 @@ int snd_soc_tplg_component_remove(struct snd_soc_component *comp, u32 index)
 				break;
 			}
 		}
+<<<<<<< HEAD
+=======
+		up_write(&card->controls_rwsem);
+>>>>>>> rebase
 		pass--;
 	}
 

@@ -4,6 +4,11 @@
 
 #include <asm/ldt.h>
 
+<<<<<<< HEAD
+=======
+struct task_struct;
+
+>>>>>>> rebase
 /* misc architecture specific prototypes */
 
 void syscall_init(void);

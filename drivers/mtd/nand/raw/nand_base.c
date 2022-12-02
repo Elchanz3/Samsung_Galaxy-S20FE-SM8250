@@ -5953,7 +5953,11 @@ static int nand_dt_init(struct nand_chip *chip)
 
 /**
  * nand_scan_ident - Scan for the NAND device
+<<<<<<< HEAD
  * @mtd: MTD device structure
+=======
+ * @chip: NAND chip object
+>>>>>>> rebase
  * @maxchips: number of chips to scan for
  * @table: alternative NAND ID table
  *
@@ -5965,11 +5969,19 @@ static int nand_dt_init(struct nand_chip *chip)
  * prevented dynamic allocations during this phase which was unconvenient and
  * as been banned for the benefit of the ->init_ecc()/cleanup_ecc() hooks.
  */
+<<<<<<< HEAD
 static int nand_scan_ident(struct mtd_info *mtd, int maxchips,
 			   struct nand_flash_dev *table)
 {
 	int i, nand_maf_id, nand_dev_id;
 	struct nand_chip *chip = mtd_to_nand(mtd);
+=======
+static int nand_scan_ident(struct nand_chip *chip, int maxchips,
+			   struct nand_flash_dev *table)
+{
+	struct mtd_info *mtd = nand_to_mtd(chip);
+	int i, nand_maf_id, nand_dev_id;
+>>>>>>> rebase
 	int ret;
 
 	/* Enforce the right timings for reset/detection */
@@ -6423,15 +6435,25 @@ static bool nand_ecc_strength_good(struct mtd_info *mtd)
 
 /**
  * nand_scan_tail - Scan for the NAND device
+<<<<<<< HEAD
  * @mtd: MTD device structure
+=======
+ * @chip: NAND chip object
+>>>>>>> rebase
  *
  * This is the second phase of the normal nand_scan() function. It fills out
  * all the uninitialized function pointers with the defaults and scans for a
  * bad block table if appropriate.
  */
+<<<<<<< HEAD
 static int nand_scan_tail(struct mtd_info *mtd)
 {
 	struct nand_chip *chip = mtd_to_nand(mtd);
+=======
+static int nand_scan_tail(struct nand_chip *chip)
+{
+	struct mtd_info *mtd = nand_to_mtd(chip);
+>>>>>>> rebase
 	struct nand_ecc_ctrl *ecc = &chip->ecc;
 	int ret, i;
 
@@ -6770,7 +6792,11 @@ static void nand_detach(struct nand_chip *chip)
 
 /**
  * nand_scan_with_ids - [NAND Interface] Scan for the NAND device
+<<<<<<< HEAD
  * @mtd: MTD device structure
+=======
+ * @chip: NAND chip object
+>>>>>>> rebase
  * @maxchips: number of chips to scan for. @nand_scan_ident() will not be run if
  *	      this parameter is zero (useful for specific drivers that must
  *	      handle this part of the process themselves, e.g docg4).
@@ -6780,6 +6806,7 @@ static void nand_detach(struct nand_chip *chip)
  * The flash ID is read and the mtd/chip structures are filled with the
  * appropriate values.
  */
+<<<<<<< HEAD
 int nand_scan_with_ids(struct mtd_info *mtd, int maxchips,
 		       struct nand_flash_dev *ids)
 {
@@ -6788,6 +6815,15 @@ int nand_scan_with_ids(struct mtd_info *mtd, int maxchips,
 
 	if (maxchips) {
 		ret = nand_scan_ident(mtd, maxchips, ids);
+=======
+int nand_scan_with_ids(struct nand_chip *chip, int maxchips,
+		       struct nand_flash_dev *ids)
+{
+	int ret;
+
+	if (maxchips) {
+		ret = nand_scan_ident(chip, maxchips, ids);
+>>>>>>> rebase
 		if (ret)
 			return ret;
 	}
@@ -6796,7 +6832,11 @@ int nand_scan_with_ids(struct mtd_info *mtd, int maxchips,
 	if (ret)
 		goto cleanup_ident;
 
+<<<<<<< HEAD
 	ret = nand_scan_tail(mtd);
+=======
+	ret = nand_scan_tail(chip);
+>>>>>>> rebase
 	if (ret)
 		goto detach_chip;
 
@@ -6847,12 +6887,21 @@ EXPORT_SYMBOL_GPL(nand_cleanup);
 /**
  * nand_release - [NAND Interface] Unregister the MTD device and free resources
  *		  held by the NAND device
+<<<<<<< HEAD
  * @mtd: MTD device structure
  */
 void nand_release(struct mtd_info *mtd)
 {
 	mtd_device_unregister(mtd);
 	nand_cleanup(mtd_to_nand(mtd));
+=======
+ * @chip: NAND chip object
+ */
+void nand_release(struct nand_chip *chip)
+{
+	mtd_device_unregister(nand_to_mtd(chip));
+	nand_cleanup(chip);
+>>>>>>> rebase
 }
 EXPORT_SYMBOL_GPL(nand_release);
 

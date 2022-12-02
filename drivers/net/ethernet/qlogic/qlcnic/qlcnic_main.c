@@ -2508,6 +2508,10 @@ qlcnic_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
 		qlcnic_sriov_vf_register_map(ahw);
 		break;
 	default:
+<<<<<<< HEAD
+=======
+		err = -EINVAL;
+>>>>>>> rebase
 		goto err_out_free_hw_res;
 	}
 
@@ -2707,6 +2711,10 @@ err_out_free_hw_res:
 	kfree(ahw);
 
 err_out_free_res:
+<<<<<<< HEAD
+=======
+	pci_disable_pcie_error_reporting(pdev);
+>>>>>>> rebase
 	pci_release_regions(pdev);
 
 err_out_disable_pdev:

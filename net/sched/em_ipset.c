@@ -62,7 +62,11 @@ static int em_ipset_match(struct sk_buff *skb, struct tcf_ematch *em,
 	};
 	int ret, network_offset;
 
+<<<<<<< HEAD
 	switch (tc_skb_protocol(skb)) {
+=======
+	switch (skb_protocol(skb, true)) {
+>>>>>>> rebase
 	case htons(ETH_P_IP):
 		state.pf = NFPROTO_IPV4;
 		if (!pskb_network_may_pull(skb, sizeof(struct iphdr)))

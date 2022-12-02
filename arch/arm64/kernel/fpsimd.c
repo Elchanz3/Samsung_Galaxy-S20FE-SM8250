@@ -49,8 +49,11 @@
 #include <asm/sysreg.h>
 #include <asm/traps.h>
 
+<<<<<<< HEAD
 #include <linux/sec_debug.h>
 
+=======
+>>>>>>> rebase
 #define FPEXC_IOF	(1 << 0)
 #define FPEXC_DZF	(1 << 1)
 #define FPEXC_OFF	(1 << 2)
@@ -306,7 +309,11 @@ static unsigned int find_supported_vector_length(unsigned int vl)
 	return sve_vl_from_vq(bit_to_vq(bit));
 }
 
+<<<<<<< HEAD
 #ifdef CONFIG_SYSCTL
+=======
+#if defined(CONFIG_ARM64_SVE) && defined(CONFIG_SYSCTL)
+>>>>>>> rebase
 
 static int sve_proc_do_default_vl(struct ctl_table *table, int write,
 				  void __user *buffer, size_t *lenp,
@@ -352,9 +359,15 @@ static int __init sve_sysctl_init(void)
 	return 0;
 }
 
+<<<<<<< HEAD
 #else /* ! CONFIG_SYSCTL */
 static int __init sve_sysctl_init(void) { return 0; }
 #endif /* ! CONFIG_SYSCTL */
+=======
+#else /* ! (CONFIG_ARM64_SVE && CONFIG_SYSCTL) */
+static int __init sve_sysctl_init(void) { return 0; }
+#endif /* ! (CONFIG_ARM64_SVE && CONFIG_SYSCTL) */
+>>>>>>> rebase
 
 #define ZREG(sve_state, vq, n) ((char *)(sve_state) +		\
 	(SVE_SIG_ZREG_OFFSET(vq, n) - SVE_SIG_REGS_OFFSET))
@@ -436,7 +449,11 @@ size_t sve_state_size(struct task_struct const *task)
 void sve_alloc(struct task_struct *task)
 {
 	if (task->thread.sve_state) {
+<<<<<<< HEAD
 		memset(task->thread.sve_state, 0, sve_state_size(current));
+=======
+		memset(task->thread.sve_state, 0, sve_state_size(task));
+>>>>>>> rebase
 		return;
 	}
 
@@ -889,10 +906,13 @@ void fpsimd_thread_switch(struct task_struct *next)
 					&next->thread.uw.fpsimd_state;
 	wrong_cpu = next->thread.fpsimd_cpu != smp_processor_id();
 
+<<<<<<< HEAD
 	if (IS_ENABLED(CONFIG_KERNEL_MODE_NEON_DEBUG))
 		if (!wrong_task && !wrong_cpu)
 			fpsimd_context_check(next);
 
+=======
+>>>>>>> rebase
 	update_tsk_thread_flag(next, TIF_FOREIGN_FPSTATE,
 			       wrong_task || wrong_cpu);
 }

@@ -23,7 +23,10 @@
 #include <linux/timer.h>
 #include <linux/spinlock.h>
 #include <linux/mutex.h>
+<<<<<<< HEAD
 #include <linux/debugfs.h>
+=======
+>>>>>>> rebase
 
 #include <media/demux.h>
 
@@ -59,8 +62,11 @@ enum dvb_dmx_state {
 
 #define MAX_PID 0x1fff
 
+<<<<<<< HEAD
 #define TIMESTAMP_LEN	4
 
+=======
+>>>>>>> rebase
 #define SPEED_PKTS_INTERVAL 50000
 
 /**
@@ -94,6 +100,7 @@ struct dvb_demux_filter {
 	u16 hw_handle;
 };
 
+<<<<<<< HEAD
 struct dmx_index_entry {
 	struct dmx_index_event_info event;
 	struct list_head next;
@@ -180,6 +187,8 @@ struct dvb_dmx_video_patterns_results {
 };
 
 
+=======
+>>>>>>> rebase
 /**
  * struct dvb_demux_feed - describes a DVB field
  *
@@ -227,21 +236,27 @@ struct dvb_demux_feed {
 		dmx_section_cb sec;
 	} cb;
 
+<<<<<<< HEAD
 	union {
 		dmx_ts_data_ready_cb ts;
 		dmx_section_data_ready_cb sec;
 	} data_ready_cb;
 
+=======
+>>>>>>> rebase
 	struct dvb_demux *demux;
 	void *priv;
 	enum dvb_dmx_filter_type type;
 	enum dvb_dmx_state state;
 	u16 pid;
+<<<<<<< HEAD
 	u8 *buffer;
 	int buffer_size;
 	enum dmx_tsp_format_t tsp_out_format;
 	struct dmx_secure_mode secure_mode;
 	struct dmx_cipher_operations cipher_ops;
+=======
+>>>>>>> rebase
 
 	ktime_t timeout;
 	struct dvb_demux_filter *filter;
@@ -252,6 +267,7 @@ struct dvb_demux_feed {
 	enum dmx_ts_pes pes_type;
 
 	int cc;
+<<<<<<< HEAD
 	int first_cc;
 	bool pusi_seen;
 
@@ -284,6 +300,14 @@ const struct dvb_dmx_video_patterns *patterns[DVB_DMX_MAX_SEARCH_PATTERN_NUM];
 
 	enum dmx_video_codec video_codec;
 	struct dmx_indexing_params idx_params;
+=======
+	bool pusi_seen;
+
+	u16 peslen;
+
+	struct list_head list_head;
+	unsigned int index;
+>>>>>>> rebase
 };
 
 /**
@@ -333,6 +357,7 @@ struct dvb_demux {
 	int (*stop_feed)(struct dvb_demux_feed *feed);
 	int (*write_to_decoder)(struct dvb_demux_feed *feed,
 				 const u8 *buf, size_t len);
+<<<<<<< HEAD
 	int (*decoder_fullness_init)(struct dvb_demux_feed *feed);
 	int (*decoder_fullness_wait)(struct dvb_demux_feed *feed,
 				 size_t required_space);
@@ -343,10 +368,13 @@ struct dvb_demux {
 				int cookie);
 	int (*set_cipher_op)(struct dvb_demux_feed *feed,
 				struct dmx_cipher_operations *cipher_ops);
+=======
+>>>>>>> rebase
 	u32 (*check_crc32)(struct dvb_demux_feed *feed,
 			    const u8 *buf, size_t len);
 	void (*memcopy)(struct dvb_demux_feed *feed, u8 *dst,
 			 const u8 *src, size_t len);
+<<<<<<< HEAD
 	int (*oob_command)(struct dvb_demux_feed *feed,
 		struct dmx_oob_command *cmd);
 	void (*convert_ts)(struct dvb_demux_feed *feed,
@@ -354,6 +382,8 @@ struct dvb_demux {
 			 u64 *timestampIn27Mhz);
 	int (*set_indexing)(struct dvb_demux_feed *feed);
 	int (*flush_decoder_buffer)(struct dvb_demux_feed *feed, size_t length);
+=======
+>>>>>>> rebase
 
 	int users;
 #define MAX_DVB_DEMUX_USERS 10
@@ -381,6 +411,7 @@ struct dvb_demux {
 	/* private: used only on av7110 */
 	int playing;
 	int recording;
+<<<<<<< HEAD
 	enum dmx_tsp_format_t tsp_format;
 	size_t ts_packet_size;
 
@@ -403,6 +434,8 @@ struct dvb_demux {
 
 	u32 total_process_time;
 	u32 total_crc_time;
+=======
+>>>>>>> rebase
 };
 
 /**
@@ -441,8 +474,11 @@ int dvb_dmx_init(struct dvb_demux *demux);
  */
 void dvb_dmx_release(struct dvb_demux *demux);
 
+<<<<<<< HEAD
 int dvb_dmx_swfilter_section_packet(struct dvb_demux_feed *feed, const u8 *buf,
 	int should_lock);
+=======
+>>>>>>> rebase
 /**
  * dvb_dmx_swfilter_packets - use dvb software filter for a buffer with
  *	multiple MPEG-TS packets with 188 bytes each.
@@ -460,6 +496,10 @@ int dvb_dmx_swfilter_section_packet(struct dvb_demux_feed *feed, const u8 *buf,
  */
 void dvb_dmx_swfilter_packets(struct dvb_demux *demux, const u8 *buf,
 			      size_t count);
+<<<<<<< HEAD
+=======
+
+>>>>>>> rebase
 /**
  * dvb_dmx_swfilter -  use dvb software filter for a buffer with
  *	multiple MPEG-TS packets with 188 bytes each.
@@ -477,6 +517,10 @@ void dvb_dmx_swfilter_packets(struct dvb_demux *demux, const u8 *buf,
  * NOTE: The @buf size should have size equal to ``count * 188``.
  */
 void dvb_dmx_swfilter(struct dvb_demux *demux, const u8 *buf, size_t count);
+<<<<<<< HEAD
+=======
+
+>>>>>>> rebase
 /**
  * dvb_dmx_swfilter_204 -  use dvb software filter for a buffer with
  *	multiple MPEG-TS packets with 204 bytes each.
@@ -495,6 +539,10 @@ void dvb_dmx_swfilter(struct dvb_demux *demux, const u8 *buf, size_t count);
  */
 void dvb_dmx_swfilter_204(struct dvb_demux *demux, const u8 *buf,
 			  size_t count);
+<<<<<<< HEAD
+=======
+
+>>>>>>> rebase
 /**
  * dvb_dmx_swfilter_raw -  make the raw data available to userspace without
  *	filtering
@@ -514,6 +562,7 @@ void dvb_dmx_swfilter_204(struct dvb_demux *demux, const u8 *buf,
 void dvb_dmx_swfilter_raw(struct dvb_demux *demux, const u8 *buf,
 			  size_t count);
 
+<<<<<<< HEAD
 void dvb_dmx_swfilter_format(
 			struct dvb_demux *demux, const u8 *buf,
 			size_t count,
@@ -626,4 +675,6 @@ static inline u16 ts_pid(const u8 *buf)
 }
 
 
+=======
+>>>>>>> rebase
 #endif /* _DVB_DEMUX_H_ */

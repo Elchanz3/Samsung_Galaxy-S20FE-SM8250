@@ -10,8 +10,11 @@
  *	Max Cohan: Fixed invalid FSINFO offset when info_sector is 0
  */
 
+<<<<<<< HEAD
 /* @fs.sec -- d2cd60d3eb699151b0b559b61dfe9103 -- */
 
+=======
+>>>>>>> rebase
 #include <linux/module.h>
 #include <linux/pagemap.h>
 #include <linux/mpage.h>
@@ -56,7 +59,10 @@ struct fat_bios_param_block {
 	u32	fat32_vol_id;
 };
 
+<<<<<<< HEAD
 static struct kset *fat_kset;
+=======
+>>>>>>> rebase
 static int fat_default_codepage = CONFIG_FAT_DEFAULT_CODEPAGE;
 static char fat_default_iocharset[] = CONFIG_FAT_DEFAULT_IOCHARSET;
 
@@ -701,7 +707,11 @@ static void fat_set_state(struct super_block *sb,
 			b->fat16.state &= ~FAT_STATE_DIRTY;
 	}
 
+<<<<<<< HEAD
 	mark_buffer_dirty_sync(bh);
+=======
+	mark_buffer_dirty(bh);
+>>>>>>> rebase
 	sync_dirty_buffer(bh);
 	brelse(bh);
 }
@@ -728,18 +738,24 @@ static void fat_put_super(struct super_block *sb)
 {
 	struct msdos_sb_info *sbi = MSDOS_SB(sb);
 
+<<<<<<< HEAD
 	fat_msg(sb, KERN_INFO, "trying to unmount...");
 	ST_LOG("<%s> trying to umount... %d:%d", __func__, MAJOR(sb->s_dev), MINOR(sb->s_dev));
 
+=======
+>>>>>>> rebase
 	fat_set_state(sb, 0, 0);
 
 	iput(sbi->fsinfo_inode);
 	iput(sbi->fat_inode);
 
 	call_rcu(&sbi->rcu, delayed_free);
+<<<<<<< HEAD
 
 	fat_msg(sb, KERN_INFO, "unmounted successfully!");
 	ST_LOG("<%s> unmounted successfully! %d:%d", __func__, MAJOR(sb->s_dev), MINOR(sb->s_dev));
+=======
+>>>>>>> rebase
 }
 
 static struct kmem_cache *fat_inode_cachep;
@@ -798,7 +814,11 @@ static int __init fat_init_inodecache(void)
 	return 0;
 }
 
+<<<<<<< HEAD
 static void fat_destroy_inodecache(void)
+=======
+static void __exit fat_destroy_inodecache(void)
+>>>>>>> rebase
 {
 	/*
 	 * Make sure all delayed rcu free inodes are flushed before we
@@ -902,7 +922,11 @@ retry:
 				  &raw_entry->adate, NULL);
 	}
 	spin_unlock(&sbi->inode_hash_lock);
+<<<<<<< HEAD
 	mark_buffer_dirty_sync(bh);
+=======
+	mark_buffer_dirty(bh);
+>>>>>>> rebase
 	err = 0;
 	if (wait)
 		err = sync_dirty_buffer(bh);
@@ -1417,7 +1441,12 @@ static int fat_read_root(struct inode *inode)
 	MSDOS_I(inode)->mmu_private = inode->i_size;
 
 	fat_save_attrs(inode, ATTR_DIR);
+<<<<<<< HEAD
 	inode->i_mtime = inode->i_atime = inode->i_ctime = current_time(inode);
+=======
+	inode->i_mtime.tv_sec = inode->i_atime.tv_sec = inode->i_ctime.tv_sec = 0;
+	inode->i_mtime.tv_nsec = inode->i_atime.tv_nsec = inode->i_ctime.tv_nsec = 0;
+>>>>>>> rebase
 	set_nlink(inode, fat_subdirs(inode)+2);
 
 	return 0;
@@ -1527,6 +1556,15 @@ static int fat_read_bpb(struct super_block *sb, struct fat_boot_sector *b,
 		goto out;
 	}
 
+<<<<<<< HEAD
+=======
+	if (bpb->fat_fat_length == 0 && bpb->fat32_length == 0) {
+		if (!silent)
+			fat_msg(sb, KERN_ERR, "bogus number of FAT sectors");
+		goto out;
+	}
+
+>>>>>>> rebase
 	error = 0;
 
 out:
@@ -1616,8 +1654,11 @@ int fat_fill_super(struct super_block *sb, void *data, int silent, int isvfat,
 	long error;
 	char buf[50];
 
+<<<<<<< HEAD
 	fat_msg(sb, KERN_INFO, "trying to mount...");
 	ST_LOG("<%s> trying to mount... %d:%d", __func__, MAJOR(sb->s_dev), MINOR(sb->s_dev));
+=======
+>>>>>>> rebase
 	/*
 	 * GFP_KERNEL is ok here, because while we do hold the
 	 * superblock lock, memory pressure can't call back into
@@ -1625,11 +1666,16 @@ int fat_fill_super(struct super_block *sb, void *data, int silent, int isvfat,
 	 * it and have no inodes etc active!
 	 */
 	sbi = kzalloc(sizeof(struct msdos_sb_info), GFP_KERNEL);
+<<<<<<< HEAD
 	if (!sbi) {
 		fat_msg(sb, KERN_ERR, "failed to mount! (ENOMEM)");
 		ST_LOG("<%s> failed to mount! %d:%d (ENOMEM)", __func__, MAJOR(sb->s_dev), MINOR(sb->s_dev));
 		return -ENOMEM;
 	}
+=======
+	if (!sbi)
+		return -ENOMEM;
+>>>>>>> rebase
 	sb->s_fs_info = sbi;
 
 	sb->s_flags |= SB_NODIRATIME;
@@ -1644,8 +1690,11 @@ int fat_fill_super(struct super_block *sb, void *data, int silent, int isvfat,
 	if (error)
 		goto out_fail;
 
+<<<<<<< HEAD
 	setup_fat_xattr_handler(sb);
 
+=======
+>>>>>>> rebase
 	setup(sb); /* flavour-specific stuff that needs options */
 
 	error = -EIO;
@@ -1876,8 +1925,11 @@ int fat_fill_super(struct super_block *sb, void *data, int silent, int isvfat,
 	}
 
 	fat_set_state(sb, 1, 0);
+<<<<<<< HEAD
 	fat_msg(sb, KERN_INFO, "mounted successfully!");
 	ST_LOG("<%s> mounted successfully! %d:%d", __func__, MAJOR(sb->s_dev), MINOR(sb->s_dev));
+=======
+>>>>>>> rebase
 	return 0;
 
 out_invalid:
@@ -1886,8 +1938,11 @@ out_invalid:
 		fat_msg(sb, KERN_INFO, "Can't find a valid FAT filesystem");
 
 out_fail:
+<<<<<<< HEAD
 	fat_msg(sb, KERN_ERR, "failed to mount!");
 	ST_LOG("<%s> failed to mount %d:%d", __func__, MAJOR(sb->s_dev), MINOR(sb->s_dev));
+=======
+>>>>>>> rebase
 	if (fsinfo_inode)
 		iput(fsinfo_inode);
 	if (fat_inode)
@@ -1960,6 +2015,7 @@ static int __init init_fat_fs(void)
 	if (err)
 		goto failed;
 
+<<<<<<< HEAD
 	fat_kset = kset_create_and_add("fat", NULL, fs_kobj);
 	if (!fat_kset) {
 		pr_err("FAT-fs failed to create fat kset\n");
@@ -1981,11 +2037,18 @@ failed:
 	}
 	fat_cache_destroy();
 	fat_destroy_inodecache();
+=======
+	return 0;
+
+failed:
+	fat_cache_destroy();
+>>>>>>> rebase
 	return err;
 }
 
 static void __exit exit_fat_fs(void)
 {
+<<<<<<< HEAD
 	fat_uevent_uninit();
 
 	if (fat_kset) {
@@ -1993,6 +2056,8 @@ static void __exit exit_fat_fs(void)
 		fat_kset = NULL;
 	}
 
+=======
+>>>>>>> rebase
 	fat_cache_destroy();
 	fat_destroy_inodecache();
 }

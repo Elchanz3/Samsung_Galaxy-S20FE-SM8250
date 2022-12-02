@@ -129,7 +129,12 @@ static bool check_locality(struct tpm_chip *chip, int l)
 	if (rc < 0)
 		return false;
 
+<<<<<<< HEAD
 	if ((access & (TPM_ACCESS_ACTIVE_LOCALITY | TPM_ACCESS_VALID)) ==
+=======
+	if ((access & (TPM_ACCESS_ACTIVE_LOCALITY | TPM_ACCESS_VALID
+		       | TPM_ACCESS_REQUEST_USE)) ==
+>>>>>>> rebase
 	    (TPM_ACCESS_ACTIVE_LOCALITY | TPM_ACCESS_VALID)) {
 		priv->locality = l;
 		return true;
@@ -138,6 +143,7 @@ static bool check_locality(struct tpm_chip *chip, int l)
 	return false;
 }
 
+<<<<<<< HEAD
 static bool locality_inactive(struct tpm_chip *chip, int l)
 {
 	struct tpm_tis_data *priv = dev_get_drvdata(&chip->dev);
@@ -190,6 +196,15 @@ again:
 		} while (time_before(jiffies, stop));
 	}
 	return -1;
+=======
+static int release_locality(struct tpm_chip *chip, int l)
+{
+	struct tpm_tis_data *priv = dev_get_drvdata(&chip->dev);
+
+	tpm_tis_write8(priv, TPM_ACCESS(l), TPM_ACCESS_ACTIVE_LOCALITY);
+
+	return 0;
+>>>>>>> rebase
 }
 
 static int request_locality(struct tpm_chip *chip, int l)
@@ -437,6 +452,12 @@ static void disable_interrupts(struct tpm_chip *chip)
 	u32 intmask;
 	int rc;
 
+<<<<<<< HEAD
+=======
+	if (priv->irq == 0)
+		return;
+
+>>>>>>> rebase
 	rc = tpm_tis_read32(priv, TPM_INT_ENABLE(priv->locality), &intmask);
 	if (rc < 0)
 		intmask = 0;
@@ -915,7 +936,19 @@ int tpm_tis_core_init(struct device *dev, struct tpm_tis_data *priv, int irq,
 	intmask |= TPM_INTF_CMD_READY_INT | TPM_INTF_LOCALITY_CHANGE_INT |
 		   TPM_INTF_DATA_AVAIL_INT | TPM_INTF_STS_VALID_INT;
 	intmask &= ~TPM_GLOBAL_INT_ENABLE;
+<<<<<<< HEAD
 	tpm_tis_write32(priv, TPM_INT_ENABLE(priv->locality), intmask);
+=======
+
+	rc = request_locality(chip, 0);
+	if (rc < 0) {
+		rc = -ENODEV;
+		goto out_err;
+	}
+
+	tpm_tis_write32(priv, TPM_INT_ENABLE(priv->locality), intmask);
+	release_locality(chip, 0);
+>>>>>>> rebase
 
 	rc = tpm2_probe(chip);
 	if (rc)
@@ -984,9 +1017,18 @@ int tpm_tis_core_init(struct device *dev, struct tpm_tis_data *priv, int irq,
 		if (irq) {
 			tpm_tis_probe_irq_single(chip, intmask, IRQF_SHARED,
 						 irq);
+<<<<<<< HEAD
 			if (!(chip->flags & TPM_CHIP_FLAG_IRQ))
 				dev_err(&chip->dev, FW_BUG
 					"TPM interrupt not working, polling instead\n");
+=======
+			if (!(chip->flags & TPM_CHIP_FLAG_IRQ)) {
+				dev_err(&chip->dev, FW_BUG
+					"TPM interrupt not working, polling instead\n");
+
+				disable_interrupts(chip);
+			}
+>>>>>>> rebase
 		} else {
 			tpm_tis_probe_irq(chip, intmask);
 		}
@@ -1001,7 +1043,11 @@ int tpm_tis_core_init(struct device *dev, struct tpm_tis_data *priv, int irq,
 
 	return 0;
 out_err:
+<<<<<<< HEAD
 	if ((chip->ops != NULL) && (chip->ops->clk_enable != NULL))
+=======
+	if (chip->ops->clk_enable != NULL)
+>>>>>>> rebase
 		chip->ops->clk_enable(chip, false);
 
 	tpm_tis_remove(chip);

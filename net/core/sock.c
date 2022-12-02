@@ -140,6 +140,7 @@
 
 #include <trace/events/sock.h>
 
+<<<<<<< HEAD
 #ifdef CONFIG_MPTCP
 #include <net/mptcp.h>
 #include <net/inet_common.h>
@@ -154,6 +155,10 @@
 #include <net/ncm.h>
 // SEC_PRODUCT_FEATURE_KNOX_SUPPORT_NPA }
 #endif
+=======
+#include <net/tcp.h>
+#include <net/busy_poll.h>
+>>>>>>> rebase
 
 static DEFINE_MUTEX(proto_list_mutex);
 static LIST_HEAD(proto_list);
@@ -417,6 +422,7 @@ int __sock_queue_rcv_skb(struct sock *sk, struct sk_buff *skb)
 	struct sk_buff_head *list = &sk->sk_receive_queue;
 
 	if (atomic_read(&sk->sk_rmem_alloc) >= sk->sk_rcvbuf) {
+<<<<<<< HEAD
 		if (sk->sk_rcvbuf < sysctl_rmem_max) {
 			/* increase sk_rcvbuf twice */
 			sk->sk_rcvbuf = min(sk->sk_rcvbuf * 2, (int)sysctl_rmem_max);
@@ -426,6 +432,11 @@ int __sock_queue_rcv_skb(struct sock *sk, struct sk_buff *skb)
 			trace_sock_rcvqueue_full(sk, skb);
 			return -ENOMEM;
 		}
+=======
+		atomic_inc(&sk->sk_drops);
+		trace_sock_rcvqueue_full(sk, skb);
+		return -ENOMEM;
+>>>>>>> rebase
 	}
 
 	if (!sk_rmem_schedule(sk, skb, skb->truesize)) {
@@ -636,6 +647,7 @@ out:
 	return ret;
 }
 
+<<<<<<< HEAD
 #ifdef CONFIG_KNOX_NCM
 // SEC_PRODUCT_FEATURE_KNOX_SUPPORT_NPA {
 /** The function sets the domain name associated with the socket. **/
@@ -726,6 +738,8 @@ out:
 
 // SEC_PRODUCT_FEATURE_KNOX_SUPPORT_NPA }
 #endif
+=======
+>>>>>>> rebase
 static inline void sock_valbool_flag(struct sock *sk, int bit, int valbool)
 {
 	if (valbool)
@@ -748,7 +762,11 @@ bool sk_mc_loop(struct sock *sk)
 		return inet6_sk(sk)->mc_loop;
 #endif
 	}
+<<<<<<< HEAD
 	WARN_ON(1);
+=======
+	WARN_ON_ONCE(1);
+>>>>>>> rebase
 	return true;
 }
 EXPORT_SYMBOL(sk_mc_loop);
@@ -775,6 +793,7 @@ int sock_setsockopt(struct socket *sock, int level, int optname,
 	if (optname == SO_BINDTODEVICE)
 		return sock_setbindtodevice(sk, optval, optlen);
 
+<<<<<<< HEAD
 	#ifdef CONFIG_KNOX_NCM
 	// SEC_PRODUCT_FEATURE_KNOX_SUPPORT_NPA {
 	if (optname == SO_SET_DOMAIN_NAME)
@@ -785,6 +804,8 @@ int sock_setsockopt(struct socket *sock, int level, int optname,
 		return sock_set_dns_pid(sk, optval, optlen);
 	// SEC_PRODUCT_FEATURE_KNOX_SUPPORT_NPA }
 	#endif
+=======
+>>>>>>> rebase
 	if (optlen < sizeof(int))
 		return -EINVAL;
 
@@ -1107,7 +1128,11 @@ set_rcvbuf:
 			if (val < 0)
 				ret = -EINVAL;
 			else
+<<<<<<< HEAD
 				sk->sk_ll_usec = val;
+=======
+				WRITE_ONCE(sk->sk_ll_usec, val);
+>>>>>>> rebase
 		}
 		break;
 #endif
@@ -1175,6 +1200,19 @@ set_rcvbuf:
 }
 EXPORT_SYMBOL(sock_setsockopt);
 
+<<<<<<< HEAD
+=======
+static const struct cred *sk_get_peer_cred(struct sock *sk)
+{
+	const struct cred *cred;
+
+	spin_lock(&sk->sk_peer_lock);
+	cred = get_cred(sk->sk_peer_cred);
+	spin_unlock(&sk->sk_peer_lock);
+
+	return cred;
+}
+>>>>>>> rebase
 
 static void cred_to_ucred(struct pid *pid, const struct cred *cred,
 			  struct ucred *ucred)
@@ -1349,7 +1387,15 @@ int sock_getsockopt(struct socket *sock, int level, int optname,
 		struct ucred peercred;
 		if (len > sizeof(peercred))
 			len = sizeof(peercred);
+<<<<<<< HEAD
 		cred_to_ucred(sk->sk_peer_pid, sk->sk_peer_cred, &peercred);
+=======
+
+		spin_lock(&sk->sk_peer_lock);
+		cred_to_ucred(sk->sk_peer_pid, sk->sk_peer_cred, &peercred);
+		spin_unlock(&sk->sk_peer_lock);
+
+>>>>>>> rebase
 		if (copy_to_user(optval, &peercred, len))
 			return -EFAULT;
 		goto lenout;
@@ -1357,6 +1403,7 @@ int sock_getsockopt(struct socket *sock, int level, int optname,
 
 	case SO_PEERGROUPS:
 	{
+<<<<<<< HEAD
 		int ret, n;
 
 		if (!sk->sk_peer_cred)
@@ -1365,12 +1412,30 @@ int sock_getsockopt(struct socket *sock, int level, int optname,
 		n = sk->sk_peer_cred->group_info->ngroups;
 		if (len < n * sizeof(gid_t)) {
 			len = n * sizeof(gid_t);
+=======
+		const struct cred *cred;
+		int ret, n;
+
+		cred = sk_get_peer_cred(sk);
+		if (!cred)
+			return -ENODATA;
+
+		n = cred->group_info->ngroups;
+		if (len < n * sizeof(gid_t)) {
+			len = n * sizeof(gid_t);
+			put_cred(cred);
+>>>>>>> rebase
 			return put_user(len, optlen) ? -EFAULT : -ERANGE;
 		}
 		len = n * sizeof(gid_t);
 
+<<<<<<< HEAD
 		ret = groups_to_user((gid_t __user *)optval,
 				     sk->sk_peer_cred->group_info);
+=======
+		ret = groups_to_user((gid_t __user *)optval, cred->group_info);
+		put_cred(cred);
+>>>>>>> rebase
 		if (ret)
 			return ret;
 		goto lenout;
@@ -1530,6 +1595,7 @@ lenout:
  */
 static inline void sock_lock_init(struct sock *sk)
 {
+<<<<<<< HEAD
 #ifdef CONFIG_MPTCP
 	/* Reclassify the lock-class for subflows */
 	if (sk->sk_type == SOCK_STREAM && sk->sk_protocol == IPPROTO_TCP)
@@ -1547,6 +1613,8 @@ static inline void sock_lock_init(struct sock *sk)
 		}
 #endif
 
+=======
+>>>>>>> rebase
 	if (sk->sk_kern_sock)
 		sock_lock_init_class_and_name(
 			sk,
@@ -1595,6 +1663,7 @@ static struct sock *sk_prot_alloc(struct proto *prot, gfp_t priority,
 		sk = kmem_cache_alloc(slab, priority & ~__GFP_ZERO);
 		if (!sk)
 			return sk;
+<<<<<<< HEAD
 		if (want_init_on_alloc(priority))
 #ifdef CONFIG_MPTCP
 		{
@@ -1606,6 +1675,10 @@ static struct sock *sk_prot_alloc(struct proto *prot, gfp_t priority,
 #ifdef CONFIG_MPTCP
 	}
 #endif
+=======
+		if (priority & __GFP_ZERO)
+			sk_prot_clear_nulls(sk, prot->obj_size);
+>>>>>>> rebase
 	} else
 		sk = kmalloc(prot->obj_size, priority);
 
@@ -1661,6 +1734,7 @@ struct sock *sk_alloc(struct net *net, int family, gfp_t priority,
 {
 	struct sock *sk;
 
+<<<<<<< HEAD
 	#ifdef CONFIG_KNOX_NCM
 	// SEC_PRODUCT_FEATURE_KNOX_SUPPORT_NPA {
 	struct pid *pid_struct = NULL;
@@ -1721,6 +1795,11 @@ struct sock *sk_alloc(struct net *net, int family, gfp_t priority,
 		}
 		// SEC_PRODUCT_FEATURE_KNOX_SUPPORT_NPA }
 		#endif
+=======
+	sk = sk_prot_alloc(prot, priority | __GFP_ZERO, family);
+	if (sk) {
+		sk->sk_family = family;
+>>>>>>> rebase
 		/*
 		 * See comment in struct sock definition to understand
 		 * why we need sk_prot_creator -acme
@@ -1741,6 +1820,10 @@ struct sock *sk_alloc(struct net *net, int family, gfp_t priority,
 		cgroup_sk_alloc(&sk->sk_cgrp_data);
 		sock_update_classid(&sk->sk_cgrp_data);
 		sock_update_netprioidx(&sk->sk_cgrp_data);
+<<<<<<< HEAD
+=======
+		sk_tx_queue_clear(sk);
+>>>>>>> rebase
 	}
 
 	return sk;
@@ -1776,9 +1859,16 @@ static void __sk_destruct(struct rcu_head *head)
 		sk->sk_frag.page = NULL;
 	}
 
+<<<<<<< HEAD
 	if (sk->sk_peer_cred)
 		put_cred(sk->sk_peer_cred);
 	put_pid(sk->sk_peer_pid);
+=======
+	/* We do not need to acquire sk->sk_peer_lock, we are the last user. */
+	put_cred(sk->sk_peer_cred);
+	put_pid(sk->sk_peer_pid);
+
+>>>>>>> rebase
 	if (likely(sk->sk_net_refcnt))
 		put_net(sock_net(sk));
 	sk_prot_free(sk->sk_prot_creator, sk);
@@ -1890,14 +1980,21 @@ struct sock *sk_clone_lock(const struct sock *sk, const gfp_t priority)
 		atomic_set(&newsk->sk_zckey, 0);
 
 		sock_reset_flag(newsk, SOCK_DONE);
+<<<<<<< HEAD
 #ifdef CONFIG_MPTCP
 		sock_reset_flag(newsk, SOCK_MPTCP);
 #endif
+=======
+>>>>>>> rebase
 
 		/* sk->sk_memcg will be populated at accept() time */
 		newsk->sk_memcg = NULL;
 
+<<<<<<< HEAD
 		cgroup_sk_alloc(&newsk->sk_cgrp_data);
+=======
+		cgroup_sk_clone(&newsk->sk_cgrp_data);
+>>>>>>> rebase
 
 		rcu_read_lock();
 		filter = rcu_dereference(sk->sk_filter);
@@ -1951,6 +2048,10 @@ struct sock *sk_clone_lock(const struct sock *sk, const gfp_t priority)
 		 */
 		sk_refcnt_debug_inc(newsk);
 		sk_set_socket(newsk, NULL);
+<<<<<<< HEAD
+=======
+		sk_tx_queue_clear(newsk);
+>>>>>>> rebase
 		newsk->sk_wq = NULL;
 
 		if (newsk->sk_prot->sockets_allocated)
@@ -2391,9 +2492,12 @@ static void sk_leave_memory_pressure(struct sock *sk)
 	}
 }
 
+<<<<<<< HEAD
 /* On 32bit arches, an skb frag is limited to 2^15 */
 #define SKB_FRAG_PAGE_ORDER	get_order(32768)
 
+=======
+>>>>>>> rebase
 /**
  * skb_page_frag_refill - check that a page_frag contains enough room
  * @sz: minimum size of the fragment we want to get
@@ -2838,6 +2942,30 @@ int sock_no_mmap(struct file *file, struct socket *sock, struct vm_area_struct *
 }
 EXPORT_SYMBOL(sock_no_mmap);
 
+<<<<<<< HEAD
+=======
+/*
+ * When a file is received (via SCM_RIGHTS, etc), we must bump the
+ * various sock-based usage counts.
+ */
+void __receive_sock(struct file *file)
+{
+	struct socket *sock;
+	int error;
+
+	/*
+	 * The resulting value of "error" is ignored here since we only
+	 * need to take action when the file is a socket and testing
+	 * "sock" for NULL is sufficient.
+	 */
+	sock = sock_from_file(file, &error);
+	if (sock) {
+		sock_update_netprioidx(&sock->sk->sk_cgrp_data);
+		sock_update_classid(&sock->sk->sk_cgrp_data);
+	}
+}
+
+>>>>>>> rebase
 ssize_t sock_no_sendpage(struct socket *sock, struct page *page, int offset, size_t size, int flags)
 {
 	ssize_t res;
@@ -3007,6 +3135,11 @@ void sock_init_data(struct socket *sock, struct sock *sk)
 
 	sk->sk_peer_pid 	=	NULL;
 	sk->sk_peer_cred	=	NULL;
+<<<<<<< HEAD
+=======
+	spin_lock_init(&sk->sk_peer_lock);
+
+>>>>>>> rebase
 	sk->sk_write_pending	=	0;
 	sk->sk_rcvlowat		=	1;
 	sk->sk_rcvtimeo		=	MAX_SCHEDULE_TIMEOUT;
@@ -3020,7 +3153,11 @@ void sock_init_data(struct socket *sock, struct sock *sk)
 
 #ifdef CONFIG_NET_RX_BUSY_POLL
 	sk->sk_napi_id		=	0;
+<<<<<<< HEAD
 	sk->sk_ll_usec		=	sysctl_net_busy_read;
+=======
+	sk->sk_ll_usec		=	READ_ONCE(sysctl_net_busy_read);
+>>>>>>> rebase
 #endif
 
 	sk->sk_max_pacing_rate = ~0U;

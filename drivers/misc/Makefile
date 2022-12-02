@@ -50,9 +50,12 @@ obj-$(CONFIG_SRAM)		+= sram.o
 obj-$(CONFIG_SRAM_EXEC)		+= sram-exec.o
 obj-y				+= mic/
 obj-$(CONFIG_GENWQE)		+= genwqe/
+<<<<<<< HEAD
 obj-$(CONFIG_HDCP_QSEECOM)	+= hdcp_qseecom.o
 obj-$(CONFIG_HDCP_QSEECOM)	+= msm_hdcp.o
 obj-$(CONFIG_QSEECOM)		+= qseecom.o
+=======
+>>>>>>> rebase
 obj-$(CONFIG_ECHO)		+= echo/
 obj-$(CONFIG_VEXPRESS_SYSCFG)	+= vexpress-syscfg.o
 obj-$(CONFIG_CXL_BASE)		+= cxl/
@@ -61,6 +64,7 @@ obj-$(CONFIG_ASPEED_LPC_SNOOP)	+= aspeed-lpc-snoop.o
 obj-$(CONFIG_PCI_ENDPOINT_TEST)	+= pci_endpoint_test.o
 obj-$(CONFIG_OCXL)		+= ocxl/
 obj-$(CONFIG_MISC_RTSX)		+= cardreader/
+<<<<<<< HEAD
 obj-$(CONFIG_UID_SYS_STATS)	+= uid_sys_stats.o
 obj-$(CONFIG_MEMORY_STATE_TIME)	+= memory_state_time.o
 obj-$(CONFIG_QPNP_MISC)		+= qpnp-misc.o
@@ -79,3 +83,5 @@ obj-$(CONFIG_QTI_XR_SMRTVWR_MISC) += qxr-stdalonevwr.o
 obj-$(CONFIG_FPR_FPC)		+= fpr_FingerprintCard/
 
 obj-$(CONFIG_DEV_RIL_BRIDGE) += dev_ril_bridge.o
+=======
+>>>>>>> rebase

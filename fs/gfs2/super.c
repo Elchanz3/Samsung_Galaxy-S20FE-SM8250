@@ -934,6 +934,10 @@ restart:
 	gfs2_jindex_free(sdp);
 	/*  Take apart glock structures and buffer lists  */
 	gfs2_gl_hash_clear(sdp);
+<<<<<<< HEAD
+=======
+	truncate_inode_pages_final(&sdp->sd_aspace);
+>>>>>>> rebase
 	gfs2_delete_debugfs_file(sdp);
 	/*  Unmount the locking protocol  */
 	gfs2_lm_unmount(sdp);
@@ -999,11 +1003,21 @@ void gfs2_freeze_func(struct work_struct *work)
 static int gfs2_freeze(struct super_block *sb)
 {
 	struct gfs2_sbd *sdp = sb->s_fs_info;
+<<<<<<< HEAD
 	int error = 0;
 
 	mutex_lock(&sdp->sd_freeze_mutex);
 	if (atomic_read(&sdp->sd_freeze_state) != SFS_UNFROZEN)
 		goto out;
+=======
+	int error;
+
+	mutex_lock(&sdp->sd_freeze_mutex);
+	if (atomic_read(&sdp->sd_freeze_state) != SFS_UNFROZEN) {
+		error = -EBUSY;
+		goto out;
+	}
+>>>>>>> rebase
 
 	if (test_bit(SDF_SHUTDOWN, &sdp->sd_flags)) {
 		error = -EINVAL;
@@ -1045,10 +1059,17 @@ static int gfs2_unfreeze(struct super_block *sb)
 	struct gfs2_sbd *sdp = sb->s_fs_info;
 
 	mutex_lock(&sdp->sd_freeze_mutex);
+<<<<<<< HEAD
         if (atomic_read(&sdp->sd_freeze_state) != SFS_FROZEN ||
 	    !gfs2_holder_initialized(&sdp->sd_freeze_gh)) {
 		mutex_unlock(&sdp->sd_freeze_mutex);
                 return 0;
+=======
+	if (atomic_read(&sdp->sd_freeze_state) != SFS_FROZEN ||
+	    !gfs2_holder_initialized(&sdp->sd_freeze_gh)) {
+		mutex_unlock(&sdp->sd_freeze_mutex);
+		return -EINVAL;
+>>>>>>> rebase
 	}
 
 	gfs2_glock_dq_uninit(&sdp->sd_freeze_gh);

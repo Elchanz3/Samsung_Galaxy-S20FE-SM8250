@@ -838,6 +838,11 @@ int pud_free_pmd_page(pud_t *pud, unsigned long addr)
 	}
 
 	free_page((unsigned long)pmd_sv);
+<<<<<<< HEAD
+=======
+
+	pgtable_pmd_page_dtor(virt_to_page(pmd));
+>>>>>>> rebase
 	free_page((unsigned long)pmd);
 
 	return 1;

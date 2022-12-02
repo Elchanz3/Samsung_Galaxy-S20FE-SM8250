@@ -10,11 +10,15 @@
 #
 # Copyright (C) 1995-2001 by Russell King
 
+<<<<<<< HEAD
 ifeq ($(CONFIG_BUILD_ARM64_DT_OVERLAY),y)
 export DTC_FLAGS := -@
 endif
 
 LDFLAGS_vmlinux	:=-p --no-undefined -X --pic-veneer
+=======
+LDFLAGS_vmlinux	:= --no-undefined -X --pic-veneer
+>>>>>>> rebase
 ifeq ($(CONFIG_CPU_ENDIAN_BE8),y)
 LDFLAGS_vmlinux	+= --be8
 KBUILD_LDFLAGS_MODULE	+= --be8
@@ -30,10 +34,13 @@ GZFLAGS		:=-9
 # Never generate .eh_frame
 KBUILD_CFLAGS	+= $(call cc-option,-fno-dwarf2-cfi-asm)
 
+<<<<<<< HEAD
 ifeq ($(cc-name),clang)
 KBUILD_CFLAGS += -Wno-vectorizer-no-neon
 endif
 
+=======
+>>>>>>> rebase
 # This should work on most of the modern platforms
 KBUILD_DEFCONFIG := multi_v7_defconfig
 
@@ -44,10 +51,14 @@ KBUILD_CFLAGS	+= $(call cc-option,-mno-unaligned-access)
 endif
 
 ifeq ($(CONFIG_FRAME_POINTER),y)
+<<<<<<< HEAD
 KBUILD_CFLAGS	+=-fno-omit-frame-pointer
 ifeq ($(CONFIG_CC_IS_GCC),y)
 KBUILD_CFLAGS += $(call cc-option,-mapcs,) $(call cc-option,-mno-sched-prolog,)
 endif
+=======
+KBUILD_CFLAGS	+=-fno-omit-frame-pointer -mapcs -mno-sched-prolog
+>>>>>>> rebase
 endif
 
 ifeq ($(CONFIG_CPU_BIG_ENDIAN),y)
@@ -74,6 +85,7 @@ KBUILD_CFLAGS	+= $(call cc-option,-fno-ipa-sra)
 # Note that GCC does not numerically define an architecture version
 # macro, but instead defines a whole series of macros which makes
 # testing for a specific architecture or later rather impossible.
+<<<<<<< HEAD
 arch-$(CONFIG_CPU_32v7M)	=-D__LINUX_ARM_ARCH__=7 -march=armv7-m -Wa,-march=armv7-m
 arch-$(CONFIG_CPU_32v7)		=-D__LINUX_ARM_ARCH__=7 $(call cc-option,-march=armv7-a,-march=armv5t -Wa$(comma)-march=armv7-a)
 arch-$(CONFIG_CPU_32v6)		=-D__LINUX_ARM_ARCH__=6 $(call cc-option,-march=armv6,-march=armv5t -Wa$(comma)-march=armv6)
@@ -83,6 +95,17 @@ ifeq ($(CONFIG_CPU_32v6),y)
 arch-$(CONFIG_CPU_32v6K)	=-D__LINUX_ARM_ARCH__=6 $(call cc-option,-march=armv6k,-march=armv5t -Wa$(comma)-march=armv6k)
 endif
 arch-$(CONFIG_CPU_32v5)		=-D__LINUX_ARM_ARCH__=5 $(call cc-option,-march=armv5te,-march=armv4t)
+=======
+arch-$(CONFIG_CPU_32v7M)	=-D__LINUX_ARM_ARCH__=7 -march=armv7-m
+arch-$(CONFIG_CPU_32v7)		=-D__LINUX_ARM_ARCH__=7 -march=armv7-a
+arch-$(CONFIG_CPU_32v6)		=-D__LINUX_ARM_ARCH__=6 -march=armv6
+# Only override the compiler option if ARMv6. The ARMv6K extensions are
+# always available in ARMv7
+ifeq ($(CONFIG_CPU_32v6),y)
+arch-$(CONFIG_CPU_32v6K)	=-D__LINUX_ARM_ARCH__=6 -march=armv6k
+endif
+arch-$(CONFIG_CPU_32v5)		=-D__LINUX_ARM_ARCH__=5 -march=armv5te
+>>>>>>> rebase
 arch-$(CONFIG_CPU_32v4T)	=-D__LINUX_ARM_ARCH__=4 -march=armv4t
 arch-$(CONFIG_CPU_32v4)		=-D__LINUX_ARM_ARCH__=4 -march=armv4
 arch-$(CONFIG_CPU_32v3)		=-D__LINUX_ARM_ARCH__=3 -march=armv3
@@ -96,7 +119,11 @@ tune-$(CONFIG_CPU_ARM720T)	=-mtune=arm7tdmi
 tune-$(CONFIG_CPU_ARM740T)	=-mtune=arm7tdmi
 tune-$(CONFIG_CPU_ARM9TDMI)	=-mtune=arm9tdmi
 tune-$(CONFIG_CPU_ARM940T)	=-mtune=arm9tdmi
+<<<<<<< HEAD
 tune-$(CONFIG_CPU_ARM946E)	=$(call cc-option,-mtune=arm9e,-mtune=arm9tdmi)
+=======
+tune-$(CONFIG_CPU_ARM946E)	=-mtune=arm9e
+>>>>>>> rebase
 tune-$(CONFIG_CPU_ARM920T)	=-mtune=arm9tdmi
 tune-$(CONFIG_CPU_ARM922T)	=-mtune=arm9tdmi
 tune-$(CONFIG_CPU_ARM925T)	=-mtune=arm9tdmi
@@ -104,11 +131,19 @@ tune-$(CONFIG_CPU_ARM926T)	=-mtune=arm9tdmi
 tune-$(CONFIG_CPU_FA526)	=-mtune=arm9tdmi
 tune-$(CONFIG_CPU_SA110)	=-mtune=strongarm110
 tune-$(CONFIG_CPU_SA1100)	=-mtune=strongarm1100
+<<<<<<< HEAD
 tune-$(CONFIG_CPU_XSCALE)	=$(call cc-option,-mtune=xscale,-mtune=strongarm110) -Wa,-mcpu=xscale
 tune-$(CONFIG_CPU_XSC3)		=$(call cc-option,-mtune=xscale,-mtune=strongarm110) -Wa,-mcpu=xscale
 tune-$(CONFIG_CPU_FEROCEON)	=$(call cc-option,-mtune=marvell-f,-mtune=xscale)
 tune-$(CONFIG_CPU_V6)		=$(call cc-option,-mtune=arm1136j-s,-mtune=strongarm)
 tune-$(CONFIG_CPU_V6K)		=$(call cc-option,-mtune=arm1136j-s,-mtune=strongarm)
+=======
+tune-$(CONFIG_CPU_XSCALE)	=-mtune=xscale
+tune-$(CONFIG_CPU_XSC3)		=-mtune=xscale
+tune-$(CONFIG_CPU_FEROCEON)	=-mtune=xscale
+tune-$(CONFIG_CPU_V6)		=-mtune=arm1136j-s
+tune-$(CONFIG_CPU_V6K)		=-mtune=arm1136j-s
+>>>>>>> rebase
 
 # Evaluate tune cc-option calls now
 tune-y := $(tune-y)
@@ -123,10 +158,13 @@ ifeq ($(CONFIG_ARM_UNWIND),y)
 CFLAGS_ABI	+=-funwind-tables
 endif
 
+<<<<<<< HEAD
 ifeq ($(CONFIG_CC_IS_CLANG),y)
 CFLAGS_ABI	+= -meabi gnu
 endif
 
+=======
+>>>>>>> rebase
 # Accept old syntax despite ".syntax unified"
 AFLAGS_NOWARN	:=$(call as-option,-Wa$(comma)-mno-warn-deprecated,-Wa$(comma)-W)
 
@@ -318,8 +356,11 @@ libs-y				:= arch/arm/lib/ $(libs-y)
 boot := arch/arm/boot
 ifeq ($(CONFIG_XIP_KERNEL),y)
 KBUILD_IMAGE := $(boot)/xipImage
+<<<<<<< HEAD
 else ifeq ($(CONFIG_BUILD_ARM_APPENDED_DTB_IMAGE),y)
 KBUILD_IMAGE := $(boot)/zImage-dtb
+=======
+>>>>>>> rebase
 else
 KBUILD_IMAGE := $(boot)/zImage
 endif
@@ -329,8 +370,11 @@ ifeq ($(CONFIG_USE_OF),y)
 KBUILD_DTBS := dtbs
 endif
 
+<<<<<<< HEAD
 DTSSUBDIR       := vendor/qcom
 
+=======
+>>>>>>> rebase
 all:	$(notdir $(KBUILD_IMAGE)) $(KBUILD_DTBS)
 
 
@@ -365,7 +409,10 @@ PHONY += dtbs dtbs_install
 
 dtbs: prepare scripts
 	$(Q)$(MAKE) $(build)=$(boot)/dts
+<<<<<<< HEAD
 	$(foreach DIR, $(DTSSUBDIR), $(Q)$(MAKE) $(build)=$(boot)/dts/$(DIR) MACHINE=$(MACHINE) dtbs)
+=======
+>>>>>>> rebase
 
 dtbs_install:
 	$(Q)$(MAKE) $(dtbinst)=$(boot)/dts
@@ -376,12 +423,15 @@ ifeq ($(CONFIG_VDSO),y)
 	$(Q)$(MAKE) $(build)=arch/arm/vdso $@
 endif
 
+<<<<<<< HEAD
 zImage-dtb: vmlinux scripts dtbs
 	$(Q)$(MAKE) $(build)=$(boot) MACHINE=$(MACHINE) DTSSUBDIR=$(DTSSUBDIR) $(boot)/$@
 
 Image-dtb: vmlinux scripts dtbs
 	$(Q)$(MAKE) $(build)=$(boot) MACHINE=$(MACHINE) DTSSUBDIR=$(DTSSUBDIR) $(boot)/$@
 
+=======
+>>>>>>> rebase
 # We use MRPROPER_FILES and CLEAN_FILES now
 archclean:
 	$(Q)$(MAKE) $(clean)=$(boot)

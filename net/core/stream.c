@@ -159,7 +159,12 @@ int sk_stream_wait_memory(struct sock *sk, long *timeo_p)
 		*timeo_p = current_timeo;
 	}
 out:
+<<<<<<< HEAD
 	remove_wait_queue(sk_sleep(sk), &wait);
+=======
+	if (!sock_flag(sk, SOCK_DEAD))
+		remove_wait_queue(sk_sleep(sk), &wait);
+>>>>>>> rebase
 	return err;
 
 do_error:
@@ -195,9 +200,12 @@ void sk_stream_kill_queues(struct sock *sk)
 	/* First the read buffer. */
 	__skb_queue_purge(&sk->sk_receive_queue);
 
+<<<<<<< HEAD
 	/* Next, the error queue. */
 	__skb_queue_purge(&sk->sk_error_queue);
 
+=======
+>>>>>>> rebase
 	/* Next, the write queue. */
 	WARN_ON(!skb_queue_empty(&sk->sk_write_queue));
 

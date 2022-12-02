@@ -925,7 +925,11 @@ static int lpc32xx_nand_probe(struct platform_device *pdev)
 
 	/* Find NAND device */
 	chip->dummy_controller.ops = &lpc32xx_nand_controller_ops;
+<<<<<<< HEAD
 	res = nand_scan(mtd, 1);
+=======
+	res = nand_scan(chip, 1);
+>>>>>>> rebase
 	if (res)
 		goto release_dma;
 
@@ -956,9 +960,14 @@ static int lpc32xx_nand_remove(struct platform_device *pdev)
 {
 	uint32_t tmp;
 	struct lpc32xx_nand_host *host = platform_get_drvdata(pdev);
+<<<<<<< HEAD
 	struct mtd_info *mtd = nand_to_mtd(&host->nand_chip);
 
 	nand_release(mtd);
+=======
+
+	nand_release(&host->nand_chip);
+>>>>>>> rebase
 	dma_release_channel(host->dma_chan);
 
 	/* Force CE high */

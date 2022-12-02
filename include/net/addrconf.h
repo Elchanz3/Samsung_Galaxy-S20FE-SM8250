@@ -25,7 +25,10 @@
 
 #include <linux/in.h>
 #include <linux/in6.h>
+<<<<<<< HEAD
 #include <linux/netlog.h>
+=======
+>>>>>>> rebase
 
 struct prefix_info {
 	__u8			type;
@@ -236,8 +239,15 @@ struct ipv6_stub {
 				 const struct in6_addr *addr);
 	int (*ipv6_sock_mc_drop)(struct sock *sk, int ifindex,
 				 const struct in6_addr *addr);
+<<<<<<< HEAD
 	int (*ipv6_dst_lookup)(struct net *net, struct sock *sk,
 			       struct dst_entry **dst, struct flowi6 *fl6);
+=======
+	struct dst_entry *(*ipv6_dst_lookup_flow)(struct net *net,
+						  const struct sock *sk,
+						  struct flowi6 *fl6,
+						  const struct in6_addr *final_dst);
+>>>>>>> rebase
 
 	struct fib6_table *(*fib6_get_table)(struct net *net, u32 id);
 	struct fib6_info *(*fib6_lookup)(struct net *net, int oif,
@@ -297,6 +307,7 @@ static inline bool ipv6_is_mld(struct sk_buff *skb, int nexthdr, int offset)
 void addrconf_prefix_rcv(struct net_device *dev,
 			 u8 *opt, int len, bool sllao);
 
+<<<<<<< HEAD
 /* Determines into what table to put autoconf PIO/RIO/default routes
  * learned on this device.
  *
@@ -309,6 +320,8 @@ void addrconf_prefix_rcv(struct net_device *dev,
  */
 u32 addrconf_rt_table(const struct net_device *dev, u32 default_table);
 
+=======
+>>>>>>> rebase
 /*
  *	anycast prototypes (anycast.c)
  */
@@ -316,6 +329,10 @@ int ipv6_sock_ac_join(struct sock *sk, int ifindex,
 		      const struct in6_addr *addr);
 int ipv6_sock_ac_drop(struct sock *sk, int ifindex,
 		      const struct in6_addr *addr);
+<<<<<<< HEAD
+=======
+void __ipv6_sock_ac_close(struct sock *sk);
+>>>>>>> rebase
 void ipv6_sock_ac_close(struct sock *sk);
 
 int __ipv6_dev_ac_inc(struct inet6_dev *idev, const struct in6_addr *addr);
@@ -378,6 +395,7 @@ static inline struct inet6_dev *in6_dev_get(const struct net_device *dev)
 
 	rcu_read_lock();
 	idev = rcu_dereference(dev->ip6_ptr);
+<<<<<<< HEAD
 	if (idev) {
 		refcount_inc(&idev->refcnt);
 		net_log("%s(): dev: %s, inet refcnt: %u, %pS -> %pS -> %pS\n",
@@ -387,6 +405,11 @@ static inline struct inet6_dev *in6_dev_get(const struct net_device *dev)
 			__builtin_return_address(0));
 	}
 rcu_read_unlock();
+=======
+	if (idev)
+		refcount_inc(&idev->refcnt);
+	rcu_read_unlock();
+>>>>>>> rebase
 	return idev;
 }
 
@@ -401,6 +424,7 @@ void in6_dev_finish_destroy(struct inet6_dev *idev);
 
 static inline void in6_dev_put(struct inet6_dev *idev)
 {
+<<<<<<< HEAD
 	if (!refcount_read(&idev->refcnt)) {
 		net_log("%s(): dev: %s, refcnt is already 0(%u) force return, %pS() -> %pS() -> %pS()\n",
 			__func__, idev->dev->name, refcount_read(&idev->refcnt),
@@ -419,6 +443,10 @@ static inline void in6_dev_put(struct inet6_dev *idev)
 		net_log("%s(): freeing inet dev for %s\n", __func__, idev->dev->name);
 		in6_dev_finish_destroy(idev);
 	}
+=======
+	if (refcount_dec_and_test(&idev->refcnt))
+		in6_dev_finish_destroy(idev);
+>>>>>>> rebase
 }
 
 static inline void in6_dev_put_clear(struct inet6_dev **pidev)
@@ -434,21 +462,27 @@ static inline void in6_dev_put_clear(struct inet6_dev **pidev)
 static inline void __in6_dev_put(struct inet6_dev *idev)
 {
 	refcount_dec(&idev->refcnt);
+<<<<<<< HEAD
 	net_log("%s(): dev: %s, inet refcnt: %u, %pS() -> %pS -> %pS()\n",
 		__func__, idev->dev->name, refcount_read(&idev->refcnt),
 		__builtin_return_address(2),
 		__builtin_return_address(1),
 		__builtin_return_address(0));
+=======
+>>>>>>> rebase
 }
 
 static inline void in6_dev_hold(struct inet6_dev *idev)
 {
 	refcount_inc(&idev->refcnt);
+<<<<<<< HEAD
 	net_log("%s(): dev: %s, inet refcnt: %u, %pS() -> %pS -> %pS()\n",
 		__func__, idev->dev->name, refcount_read(&idev->refcnt),
 		__builtin_return_address(2),
 		__builtin_return_address(1),
 		__builtin_return_address(0));
+=======
+>>>>>>> rebase
 }
 
 void inet6_ifa_finish_destroy(struct inet6_ifaddr *ifp);

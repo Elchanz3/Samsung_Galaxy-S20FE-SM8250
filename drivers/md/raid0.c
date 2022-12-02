@@ -70,8 +70,13 @@ static void dump_zones(struct mddev *mddev)
 		int len = 0;
 
 		for (k = 0; k < conf->strip_zone[j].nb_dev; k++)
+<<<<<<< HEAD
 			len += snprintf(line+len, 200-len, "%s%s", k?"/":"",
 					bdevname(conf->devlist[j*raid_disks
+=======
+			len += scnprintf(line+len, 200-len, "%s%s", k?"/":"",
+					 bdevname(conf->devlist[j*raid_disks
+>>>>>>> rebase
 							       + k]->bdev, b));
 		pr_debug("md: zone%d=[%s]\n", j, line);
 
@@ -150,6 +155,7 @@ static int create_strip_zones(struct mddev *mddev, struct r0conf **private_conf)
 	pr_debug("md/raid0:%s: FINAL %d zones\n",
 		 mdname(mddev), conf->nr_strip_zones);
 
+<<<<<<< HEAD
 	if (conf->nr_strip_zones == 1) {
 		conf->layout = RAID0_ORIG_LAYOUT;
 	} else if (default_layout == RAID0_ORIG_LAYOUT ||
@@ -162,6 +168,8 @@ static int create_strip_zones(struct mddev *mddev, struct r0conf **private_conf)
 		err = -ENOTSUPP;
 		goto abort;
 	}
+=======
+>>>>>>> rebase
 	/*
 	 * now since we have the hard sector sizes, we can make sure
 	 * chunk size is a multiple of that sector size
@@ -292,6 +300,25 @@ static int create_strip_zones(struct mddev *mddev, struct r0conf **private_conf)
 			 (unsigned long long)smallest->sectors);
 	}
 
+<<<<<<< HEAD
+=======
+	if (conf->nr_strip_zones == 1 || conf->strip_zone[1].nb_dev == 1) {
+		conf->layout = RAID0_ORIG_LAYOUT;
+	} else if (mddev->layout == RAID0_ORIG_LAYOUT ||
+		   mddev->layout == RAID0_ALT_MULTIZONE_LAYOUT) {
+		conf->layout = mddev->layout;
+	} else if (default_layout == RAID0_ORIG_LAYOUT ||
+		   default_layout == RAID0_ALT_MULTIZONE_LAYOUT) {
+		conf->layout = default_layout;
+	} else {
+		pr_err("md/raid0:%s: cannot assemble multi-zone RAID0 with default_layout setting\n",
+		       mdname(mddev));
+		pr_err("md/raid0: please set raid0.default_layout to 1 or 2\n");
+		err = -EOPNOTSUPP;
+		goto abort;
+	}
+
+>>>>>>> rebase
 	pr_debug("md/raid0:%s: done.\n", mdname(mddev));
 	*private_conf = conf;
 

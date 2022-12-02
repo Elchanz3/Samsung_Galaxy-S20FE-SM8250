@@ -187,6 +187,11 @@ static const struct i2c_hid_quirks {
 		 I2C_HID_QUIRK_BOGUS_IRQ },
 	{ USB_VENDOR_ID_ALPS_JP, HID_ANY_ID,
 		 I2C_HID_QUIRK_RESET_ON_RESUME },
+<<<<<<< HEAD
+=======
+	{ I2C_VENDOR_ID_SYNAPTICS, I2C_PRODUCT_ID_SYNAPTICS_SYNA2393,
+		 I2C_HID_QUIRK_RESET_ON_RESUME },
+>>>>>>> rebase
 	{ USB_VENDOR_ID_ITE, I2C_DEVICE_ID_ITE_LENOVO_LEGION_Y720,
 		I2C_HID_QUIRK_BAD_INPUT_SIZE },
 	{ 0, 0 }
@@ -442,6 +447,22 @@ static int i2c_hid_set_power(struct i2c_client *client, int power_state)
 		dev_err(&client->dev, "failed to change power setting.\n");
 
 set_pwr_exit:
+<<<<<<< HEAD
+=======
+
+	/*
+	 * The HID over I2C specification states that if a DEVICE needs time
+	 * after the PWR_ON request, it should utilise CLOCK stretching.
+	 * However, it has been observered that the Windows driver provides a
+	 * 1ms sleep between the PWR_ON and RESET requests.
+	 * According to Goodix Windows even waits 60 ms after (other?)
+	 * PWR_ON requests. Testing has confirmed that several devices
+	 * will not work properly without a delay after a PWR_ON request.
+	 */
+	if (!ret && power_state == I2C_HID_PWR_ON)
+		msleep(60);
+
+>>>>>>> rebase
 	return ret;
 }
 
@@ -463,6 +484,7 @@ static int i2c_hid_hwreset(struct i2c_client *client)
 	if (ret)
 		goto out_unlock;
 
+<<<<<<< HEAD
 	/*
 	 * The HID over I2C specification states that if a DEVICE needs time
 	 * after the PWR_ON request, it should utilise CLOCK stretching.
@@ -472,6 +494,8 @@ static int i2c_hid_hwreset(struct i2c_client *client)
 	 */
 	usleep_range(1000, 5000);
 
+=======
+>>>>>>> rebase
 	i2c_hid_dbg(ihid, "resetting...\n");
 
 	ret = i2c_hid_command(client, &hid_reset_cmd, NULL, 0);
@@ -626,6 +650,20 @@ static int i2c_hid_get_raw_report(struct hid_device *hid,
 	if (report_type == HID_OUTPUT_REPORT)
 		return -EINVAL;
 
+<<<<<<< HEAD
+=======
+	/*
+	 * In case of unnumbered reports the response from the device will
+	 * not have the report ID that the upper layers expect, so we need
+	 * to stash it the buffer ourselves and adjust the data size.
+	 */
+	if (!report_number) {
+		buf[0] = 0;
+		buf++;
+		count--;
+	}
+
+>>>>>>> rebase
 	/* +2 bytes to include the size of the reply in the query buffer */
 	ask_count = min(count + 2, (size_t)ihid->bufsize);
 
@@ -647,6 +685,12 @@ static int i2c_hid_get_raw_report(struct hid_device *hid,
 	count = min(count, ret_count - 2);
 	memcpy(buf, ihid->rawbuf + 2, count);
 
+<<<<<<< HEAD
+=======
+	if (!report_number)
+		count++;
+
+>>>>>>> rebase
 	return count;
 }
 
@@ -663,6 +707,7 @@ static int i2c_hid_output_raw_report(struct hid_device *hid, __u8 *buf,
 
 	mutex_lock(&ihid->reset_lock);
 
+<<<<<<< HEAD
 	if (report_id) {
 		buf++;
 		count--;
@@ -674,6 +719,21 @@ static int i2c_hid_output_raw_report(struct hid_device *hid, __u8 *buf,
 
 	if (report_id && ret >= 0)
 		ret++; /* add report_id to the number of transfered bytes */
+=======
+	/*
+	 * Note that both numbered and unnumbered reports passed here
+	 * are supposed to have report ID stored in the 1st byte of the
+	 * buffer, so we strip it off unconditionally before passing payload
+	 * to i2c_hid_set_or_send_report which takes care of encoding
+	 * everything properly.
+	 */
+	ret = i2c_hid_set_or_send_report(client,
+				report_type == HID_FEATURE_REPORT ? 0x03 : 0x02,
+				report_id, buf + 1, count - 1, use_data);
+
+	if (ret >= 0)
+		ret++; /* add report_id to the number of transferred bytes */
+>>>>>>> rebase
 
 	mutex_unlock(&ihid->reset_lock);
 
@@ -1154,8 +1214,13 @@ static int i2c_hid_probe(struct i2c_client *client,
 	hid->vendor = le16_to_cpu(ihid->hdesc.wVendorID);
 	hid->product = le16_to_cpu(ihid->hdesc.wProductID);
 
+<<<<<<< HEAD
 	snprintf(hid->name, sizeof(hid->name), "%s %04hX:%04hX",
 		 client->name, hid->vendor, hid->product);
+=======
+	snprintf(hid->name, sizeof(hid->name), "%s %04X:%04X",
+		 client->name, (u16)hid->vendor, (u16)hid->product);
+>>>>>>> rebase
 	strlcpy(hid->phys, dev_name(&client->dev), sizeof(hid->phys));
 
 	ihid->quirks = i2c_hid_lookup_quirk(hid->vendor, hid->product);

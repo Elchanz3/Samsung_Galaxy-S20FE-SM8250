@@ -1,8 +1,22 @@
+<<<<<<< HEAD
 // SPDX-License-Identifier: GPL-2.0-only
 /*
  * Copyright (c) 2010-2011, 2020, The Linux Foundation. All rights reserved.
  */
 
+=======
+/* Copyright (c) 2010-2011, Code Aurora Forum. All rights reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2 and
+ * only version 2 as published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ */
+>>>>>>> rebase
 #include <linux/of.h>
 #include <linux/module.h>
 #include <linux/init.h>
@@ -12,6 +26,7 @@
 #include <linux/regmap.h>
 #include <linux/slab.h>
 #include <linux/spinlock.h>
+<<<<<<< HEAD
 #ifdef CONFIG_RTC_AUTO_PWRON
 #include <linux/reboot.h>
 #include <linux/wakelock.h>
@@ -39,6 +54,8 @@ enum {
 
 extern unsigned int lpcharge;
 #endif
+=======
+>>>>>>> rebase
 
 /* RTC Register offsets from RTC CTRL REG */
 #define PM8XXX_ALARM_CTRL_OFFSET	0x01
@@ -49,7 +66,10 @@ extern unsigned int lpcharge;
 /* RTC_CTRL register bit fields */
 #define PM8xxx_RTC_ENABLE		BIT(7)
 #define PM8xxx_RTC_ALARM_CLEAR		BIT(0)
+<<<<<<< HEAD
 #define PM8xxx_RTC_ALARM_ENABLE		BIT(7)
+=======
+>>>>>>> rebase
 
 #define NUM_8_BIT_RTC_REGS		0x4
 
@@ -91,6 +111,7 @@ struct pm8xxx_rtc {
 	const struct pm8xxx_rtc_regs *regs;
 	struct device *rtc_dev;
 	spinlock_t ctrl_reg_lock;
+<<<<<<< HEAD
 #ifdef CONFIG_RTC_AUTO_PWRON
 	struct rtc_wkalrm   sapa;
 	struct alarm        check_poll;
@@ -99,6 +120,8 @@ struct pm8xxx_rtc {
 	int                 lpm_mode;
 	unsigned char       triggered;
 #endif
+=======
+>>>>>>> rebase
 };
 
 /*
@@ -203,12 +226,15 @@ static int pm8xxx_rtc_set_time(struct device *dev, struct rtc_time *tm)
 		}
 	}
 
+<<<<<<< HEAD
 #ifdef CONFIG_RTC_AUTO_PWRON
 	pr_info("%s : secs = %lu, h:m:s == %d:%d:%d, d/m/y = %d/%d/%d\n", __func__,
 			secs, tm->tm_hour, tm->tm_min, tm->tm_sec,
 			tm->tm_mday, tm->tm_mon, tm->tm_year);
 #endif
 	
+=======
+>>>>>>> rebase
 rtc_rw_fail:
 	spin_unlock_irqrestore(&rtc_dd->ctrl_reg_lock, irq_flags);
 
@@ -341,6 +367,7 @@ static int pm8xxx_rtc_read_alarm(struct device *dev, struct rtc_wkalrm *alarm)
 		alarm->time.tm_sec, alarm->time.tm_mday,
 		alarm->time.tm_mon, alarm->time.tm_year);
 
+<<<<<<< HEAD
 	rc = regmap_bulk_read(rtc_dd->regmap, regs->alarm_ctrl, value, 1);
 	if (rc) {
 		dev_err(dev, "Read from ALARM CTRL1 failed\n");
@@ -349,6 +376,8 @@ static int pm8xxx_rtc_read_alarm(struct device *dev, struct rtc_wkalrm *alarm)
 
 	alarm->enabled = !!(value[0] & PM8xxx_RTC_ALARM_ENABLE);
 
+=======
+>>>>>>> rebase
 	return 0;
 }
 
@@ -359,12 +388,16 @@ static int pm8xxx_rtc_alarm_irq_enable(struct device *dev, unsigned int enable)
 	struct pm8xxx_rtc *rtc_dd = dev_get_drvdata(dev);
 	const struct pm8xxx_rtc_regs *regs = rtc_dd->regs;
 	unsigned int ctrl_reg;
+<<<<<<< HEAD
 	u8 value[NUM_8_BIT_RTC_REGS] = {0};
 
 #ifdef CONFIG_RTC_AUTO_PWRON
 	pr_info("[SAPA] Alarm irq=%d\n", enable);
 #endif
 	
+=======
+
+>>>>>>> rebase
 	spin_lock_irqsave(&rtc_dd->ctrl_reg_lock, irq_flags);
 
 	rc = regmap_read(rtc_dd->regmap, regs->alarm_ctrl, &ctrl_reg);
@@ -382,6 +415,7 @@ static int pm8xxx_rtc_alarm_irq_enable(struct device *dev, unsigned int enable)
 		goto rtc_rw_fail;
 	}
 
+<<<<<<< HEAD
 	/* Clear Alarm register */
 	if (!enable) {
 		rc = regmap_bulk_write(rtc_dd->regmap, regs->alarm_rw, value,
@@ -392,11 +426,14 @@ static int pm8xxx_rtc_alarm_irq_enable(struct device *dev, unsigned int enable)
 		}
 	}
 
+=======
+>>>>>>> rebase
 rtc_rw_fail:
 	spin_unlock_irqrestore(&rtc_dd->ctrl_reg_lock, irq_flags);
 	return rc;
 }
 
+<<<<<<< HEAD
 #ifdef CONFIG_RTC_AUTO_PWRON
 static void
 sapa_normalize_alarm(struct rtc_wkalrm *alarm)
@@ -622,15 +659,20 @@ sapa_exit(struct pm8xxx_rtc *rtc_dd)
 }
 #endif /*CONFIG_RTC_AUTO_PWRON*/
 
+=======
+>>>>>>> rebase
 static const struct rtc_class_ops pm8xxx_rtc_ops = {
 	.read_time	= pm8xxx_rtc_read_time,
 	.set_time	= pm8xxx_rtc_set_time,
 	.set_alarm	= pm8xxx_rtc_set_alarm,
 	.read_alarm	= pm8xxx_rtc_read_alarm,
+<<<<<<< HEAD
 #ifdef CONFIG_RTC_AUTO_PWRON
 	.read_bootalarm = sapa_rtc_getalarm,
 	.set_bootalarm  = sapa_rtc_setalarm,
 #endif /*CONFIG_RTC_AUTO_PWRON*/
+=======
+>>>>>>> rebase
 	.alarm_irq_enable = pm8xxx_rtc_alarm_irq_enable,
 };
 
@@ -734,6 +776,7 @@ static const struct pm8xxx_rtc_regs pm8941_regs = {
 	.alarm_en	= BIT(7),
 };
 
+<<<<<<< HEAD
 static const struct pm8xxx_rtc_regs pmk8350_regs = {
 	.ctrl		= 0x6146,
 	.write		= 0x6140,
@@ -744,6 +787,8 @@ static const struct pm8xxx_rtc_regs pmk8350_regs = {
 	.alarm_en	= BIT(7),
 };
 
+=======
+>>>>>>> rebase
 /*
  * Hardcoded RTC bases until IORESOURCE_REG mapping is figured out
  */
@@ -752,7 +797,10 @@ static const struct of_device_id pm8xxx_id_table[] = {
 	{ .compatible = "qcom,pm8018-rtc", .data = &pm8921_regs },
 	{ .compatible = "qcom,pm8058-rtc", .data = &pm8058_regs },
 	{ .compatible = "qcom,pm8941-rtc", .data = &pm8941_regs },
+<<<<<<< HEAD
 	{ .compatible = "qcom,pmk8350-rtc", .data = &pmk8350_regs },
+=======
+>>>>>>> rebase
 	{ },
 };
 MODULE_DEVICE_TABLE(of, pm8xxx_id_table);
@@ -800,10 +848,13 @@ static int pm8xxx_rtc_probe(struct platform_device *pdev)
 
 	device_init_wakeup(&pdev->dev, 1);
 
+<<<<<<< HEAD
 #ifdef CONFIG_RTC_AUTO_PWRON
 	sapa_load_alarm(rtc_dd, rtc_dd->regs->alarm_ctrl);
 #endif
 	
+=======
+>>>>>>> rebase
 	/* Register the RTC device */
 	rtc_dd->rtc = devm_rtc_device_register(&pdev->dev, "pm8xxx_rtc",
 					       &pm8xxx_rtc_ops, THIS_MODULE);
@@ -823,15 +874,19 @@ static int pm8xxx_rtc_probe(struct platform_device *pdev)
 		return rc;
 	}
 
+<<<<<<< HEAD
 #ifdef CONFIG_RTC_AUTO_PWRON
 	sapa_init(rtc_dd);
 #endif
 	
+=======
+>>>>>>> rebase
 	dev_dbg(&pdev->dev, "Probe success !!\n");
 
 	return 0;
 }
 
+<<<<<<< HEAD
 #ifdef CONFIG_RTC_AUTO_PWRON
 static void pm8xxx_rtc_shutdown(struct platform_device *pdev)
 {
@@ -853,6 +908,8 @@ static void pm8xxx_rtc_shutdown(struct platform_device *pdev)
 }
 #endif
 
+=======
+>>>>>>> rebase
 #ifdef CONFIG_PM_SLEEP
 static int pm8xxx_rtc_resume(struct device *dev)
 {
@@ -881,9 +938,12 @@ static SIMPLE_DEV_PM_OPS(pm8xxx_rtc_pm_ops,
 
 static struct platform_driver pm8xxx_rtc_driver = {
 	.probe		= pm8xxx_rtc_probe,
+<<<<<<< HEAD
 #ifdef CONFIG_RTC_AUTO_PWRON
 	.shutdown	= pm8xxx_rtc_shutdown,
 #endif
+=======
+>>>>>>> rebase
 	.driver	= {
 		.name		= "rtc-pm8xxx",
 		.pm		= &pm8xxx_rtc_pm_ops,

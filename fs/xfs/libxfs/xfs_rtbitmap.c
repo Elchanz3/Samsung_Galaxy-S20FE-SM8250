@@ -1020,7 +1020,10 @@ xfs_rtalloc_query_range(
 	struct xfs_mount		*mp = tp->t_mountp;
 	xfs_rtblock_t			rtstart;
 	xfs_rtblock_t			rtend;
+<<<<<<< HEAD
 	xfs_rtblock_t			rem;
+=======
+>>>>>>> rebase
 	int				is_free;
 	int				error = 0;
 
@@ -1029,6 +1032,7 @@ xfs_rtalloc_query_range(
 	if (low_rec->ar_startext >= mp->m_sb.sb_rextents ||
 	    low_rec->ar_startext == high_rec->ar_startext)
 		return 0;
+<<<<<<< HEAD
 	if (high_rec->ar_startext > mp->m_sb.sb_rextents)
 		high_rec->ar_startext = mp->m_sb.sb_rextents;
 
@@ -1036,6 +1040,14 @@ xfs_rtalloc_query_range(
 	rtstart = low_rec->ar_startext;
 	rem = high_rec->ar_startext - rtstart;
 	while (rem) {
+=======
+	high_rec->ar_startext = min(high_rec->ar_startext,
+			mp->m_sb.sb_rextents - 1);
+
+	/* Iterate the bitmap, looking for discrepancies. */
+	rtstart = low_rec->ar_startext;
+	while (rtstart <= high_rec->ar_startext) {
+>>>>>>> rebase
 		/* Is the first block free? */
 		error = xfs_rtcheck_range(mp, tp, rtstart, 1, 1, &rtend,
 				&is_free);
@@ -1044,7 +1056,11 @@ xfs_rtalloc_query_range(
 
 		/* How long does the extent go for? */
 		error = xfs_rtfind_forw(mp, tp, rtstart,
+<<<<<<< HEAD
 				high_rec->ar_startext - 1, &rtend);
+=======
+				high_rec->ar_startext, &rtend);
+>>>>>>> rebase
 		if (error)
 			break;
 
@@ -1057,7 +1073,10 @@ xfs_rtalloc_query_range(
 				break;
 		}
 
+<<<<<<< HEAD
 		rem -= rtend - rtstart + 1;
+=======
+>>>>>>> rebase
 		rtstart = rtend + 1;
 	}
 

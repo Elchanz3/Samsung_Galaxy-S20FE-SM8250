@@ -11,7 +11,10 @@
  * management can be a bitch. See 'mm/memory.c': 'copy_page_range()'
  */
 
+<<<<<<< HEAD
 #include <linux/anon_inodes.h>
+=======
+>>>>>>> rebase
 #include <linux/slab.h>
 #include <linux/sched/autogroup.h>
 #include <linux/sched/mm.h>
@@ -22,7 +25,10 @@
 #include <linux/sched/task.h>
 #include <linux/sched/task_stack.h>
 #include <linux/sched/cputime.h>
+<<<<<<< HEAD
 #include <linux/seq_file.h>
+=======
+>>>>>>> rebase
 #include <linux/rtmutex.h>
 #include <linux/init.h>
 #include <linux/unistd.h>
@@ -93,8 +99,11 @@
 #include <linux/kcov.h>
 #include <linux/livepatch.h>
 #include <linux/thread_info.h>
+<<<<<<< HEAD
 #include <linux/cpufreq_times.h>
 #include <linux/scs.h>
+=======
+>>>>>>> rebase
 
 #include <asm/pgtable.h>
 #include <asm/pgalloc.h>
@@ -104,11 +113,15 @@
 #include <asm/tlbflush.h>
 
 #include <trace/events/sched.h>
+<<<<<<< HEAD
 #include <linux/task_integrity.h>
+=======
+>>>>>>> rebase
 
 #define CREATE_TRACE_POINTS
 #include <trace/events/task.h>
 
+<<<<<<< HEAD
 #ifdef CONFIG_SECURITY_DEFEX
 #include <linux/defex.h>
 #endif
@@ -117,6 +130,8 @@
 #include <cpu/ftt/ftt.h>
 #endif
 
+=======
+>>>>>>> rebase
 /*
  * Minimum number of threads to boot the kernel
  */
@@ -343,7 +358,11 @@ struct vm_area_struct *vm_area_dup(struct vm_area_struct *orig)
 
 	if (new) {
 		*new = *orig;
+<<<<<<< HEAD
 		INIT_VMA(new);
+=======
+		INIT_LIST_HEAD(&new->anon_vma_chain);
+>>>>>>> rebase
 	}
 	return new;
 }
@@ -412,9 +431,12 @@ void put_task_stack(struct task_struct *tsk)
 
 void free_task(struct task_struct *tsk)
 {
+<<<<<<< HEAD
 	cpufreq_task_times_exit(tsk);
 	scs_release(tsk);
 
+=======
+>>>>>>> rebase
 #ifndef CONFIG_THREAD_INFO_IN_TASK
 	/*
 	 * The task is finally done with both the stack and thread_info,
@@ -442,7 +464,11 @@ EXPORT_SYMBOL(free_task);
 static __latent_entropy int dup_mmap(struct mm_struct *mm,
 					struct mm_struct *oldmm)
 {
+<<<<<<< HEAD
 	struct vm_area_struct *mpnt, *tmp, *prev, **pprev, *last = NULL;
+=======
+	struct vm_area_struct *mpnt, *tmp, *prev, **pprev;
+>>>>>>> rebase
 	struct rb_node **rb_link, *rb_parent;
 	int retval;
 	unsigned long charge;
@@ -561,6 +587,7 @@ static __latent_entropy int dup_mmap(struct mm_struct *mm,
 		rb_parent = &tmp->vm_rb;
 
 		mm->map_count++;
+<<<<<<< HEAD
 		if (!(tmp->vm_flags & VM_WIPEONFORK)) {
 			if (IS_ENABLED(CONFIG_SPECULATIVE_PAGE_FAULT)) {
 				/*
@@ -573,6 +600,10 @@ static __latent_entropy int dup_mmap(struct mm_struct *mm,
 			}
 			retval = copy_page_range(mm, oldmm, mpnt);
 		}
+=======
+		if (!(tmp->vm_flags & VM_WIPEONFORK))
+			retval = copy_page_range(mm, oldmm, mpnt);
+>>>>>>> rebase
 
 		if (tmp->vm_ops && tmp->vm_ops->open)
 			tmp->vm_ops->open(tmp);
@@ -585,6 +616,7 @@ static __latent_entropy int dup_mmap(struct mm_struct *mm,
 out:
 	up_write(&mm->mmap_sem);
 	flush_tlb_mm(oldmm);
+<<<<<<< HEAD
 
 	if (IS_ENABLED(CONFIG_SPECULATIVE_PAGE_FAULT)) {
 		/*
@@ -601,6 +633,8 @@ out:
 		}
 	}
 
+=======
+>>>>>>> rebase
 	up_write(&oldmm->mmap_sem);
 	dup_userfaultfd_complete(&uf);
 fail_uprobe_end:
@@ -645,6 +679,7 @@ static void check_mm(struct mm_struct *mm)
 	int i;
 
 	for (i = 0; i < NR_MM_COUNTERS; i++) {
+<<<<<<< HEAD
 		long x;
 
 		/* MM_UNRECLAIMABLE could be freed later in exit_files */
@@ -652,6 +687,9 @@ static void check_mm(struct mm_struct *mm)
 			continue;
 
 		x = atomic_long_read(&mm->rss_stat.count[i]);
+=======
+		long x = atomic_long_read(&mm->rss_stat.count[i]);
+>>>>>>> rebase
 
 		if (unlikely(x))
 			printk(KERN_ALERT "BUG: Bad rss-counter state "
@@ -731,11 +769,14 @@ void __put_task_struct(struct task_struct *tsk)
 	WARN_ON(atomic_read(&tsk->usage));
 	WARN_ON(tsk == current);
 
+<<<<<<< HEAD
 #ifdef CONFIG_FAST_TRACK
 	if (tsk->se.ftt_mark)
 		fttstat.ftt_cnt--;
 #endif
 
+=======
+>>>>>>> rebase
 	cgroup_free(tsk);
 	task_numa_free(tsk, true);
 	security_task_free(tsk);
@@ -830,8 +871,11 @@ void __init fork_init(void)
 			  NULL, free_vm_stack_cache);
 #endif
 
+<<<<<<< HEAD
 	scs_init();
 
+=======
+>>>>>>> rebase
 	lockdep_init_task(&init_task);
 }
 
@@ -887,10 +931,13 @@ static struct task_struct *dup_task_struct(struct task_struct *orig, int node)
 	if (err)
 		goto free_stack;
 
+<<<<<<< HEAD
 	err = scs_prepare(tsk, node);
 	if (err)
 		goto free_stack;
 
+=======
+>>>>>>> rebase
 #ifdef CONFIG_SECCOMP
 	/*
 	 * We must handle setting up seccomp filters once we're under
@@ -1000,9 +1047,12 @@ static struct mm_struct *mm_init(struct mm_struct *mm, struct task_struct *p,
 	mm->mmap = NULL;
 	mm->mm_rb = RB_ROOT;
 	mm->vmacache_seqnum = 0;
+<<<<<<< HEAD
 #ifdef CONFIG_SPECULATIVE_PAGE_FAULT
 	rwlock_init(&mm->mm_rb_lock);
 #endif
+=======
+>>>>>>> rebase
 	atomic_set(&mm->mm_users, 1);
 	atomic_set(&mm->mm_count, 1);
 	init_rwsem(&mm->mmap_sem);
@@ -1026,6 +1076,10 @@ static struct mm_struct *mm_init(struct mm_struct *mm, struct task_struct *p,
 	mm->pmd_huge_pte = NULL;
 #endif
 	mm_init_uprobes_state(mm);
+<<<<<<< HEAD
+=======
+	hugetlb_count_init(mm);
+>>>>>>> rebase
 
 	if (current->mm) {
 		mm->flags = current->mm->flags & MMF_INIT_MASK;
@@ -1279,6 +1333,7 @@ static int wait_for_vfork_done(struct task_struct *child,
  * restoring the old one. . .
  * Eric Biederman 10 January 1998
  */
+<<<<<<< HEAD
 void mm_release(struct task_struct *tsk, struct mm_struct *mm)
 {
 	/* Get rid of any futexes when releasing the mm */
@@ -1297,6 +1352,10 @@ void mm_release(struct task_struct *tsk, struct mm_struct *mm)
 		exit_pi_state_list(tsk);
 #endif
 
+=======
+static void mm_release(struct task_struct *tsk, struct mm_struct *mm)
+{
+>>>>>>> rebase
 	uprobe_free_utask(tsk);
 
 	/* Get rid of any cached register state */
@@ -1329,6 +1388,21 @@ void mm_release(struct task_struct *tsk, struct mm_struct *mm)
 		complete_vfork_done(tsk);
 }
 
+<<<<<<< HEAD
+=======
+void exit_mm_release(struct task_struct *tsk, struct mm_struct *mm)
+{
+	futex_exit_release(tsk);
+	mm_release(tsk, mm);
+}
+
+void exec_mm_release(struct task_struct *tsk, struct mm_struct *mm)
+{
+	futex_exec_release(tsk);
+	mm_release(tsk, mm);
+}
+
+>>>>>>> rebase
 /*
  * Allocate a new mm structure and copy contents from the
  * mm structure of the passed in task structure.
@@ -1661,6 +1735,7 @@ static void posix_cpu_timers_init(struct task_struct *tsk)
 static inline void posix_cpu_timers_init(struct task_struct *tsk) { }
 #endif
 
+<<<<<<< HEAD
 #ifdef CONFIG_KDP_CRED
 void rkp_assign_pgd(struct task_struct *p)
 {
@@ -1671,6 +1746,8 @@ void rkp_assign_pgd(struct task_struct *p)
 }
 #endif
 
+=======
+>>>>>>> rebase
 static inline void init_task_pid_links(struct task_struct *task)
 {
 	enum pid_type type;
@@ -1689,6 +1766,7 @@ init_task_pid(struct task_struct *task, enum pid_type type, struct pid *pid)
 		task->signal->pids[type] = pid;
 }
 
+<<<<<<< HEAD
 #ifdef CONFIG_FIVE
 static int dup_task_integrity(unsigned long clone_flags,
 					struct task_struct *tsk)
@@ -1742,6 +1820,8 @@ static inline int task_integrity_apply(unsigned long clone_flags,
 
 #endif
 
+=======
+>>>>>>> rebase
 static inline void rcu_copy_process(struct task_struct *p)
 {
 #ifdef CONFIG_PREEMPT_RCU
@@ -1772,6 +1852,7 @@ static __always_inline void delayed_free_task(struct task_struct *tsk)
 		free_task(tsk);
 }
 
+<<<<<<< HEAD
 static int pidfd_release(struct inode *inode, struct file *file)
 {
 	struct pid *pid = file->private_data;
@@ -1848,6 +1929,25 @@ static int pidfd_create(struct pid *pid)
 		put_pid(pid);
 
 	return fd;
+=======
+static void copy_oom_score_adj(u64 clone_flags, struct task_struct *tsk)
+{
+	/* Skip if kernel thread */
+	if (!tsk->mm)
+		return;
+
+	/* Skip if spawning a thread or using vfork */
+	if ((clone_flags & (CLONE_VM | CLONE_THREAD | CLONE_VFORK)) != CLONE_VM)
+		return;
+
+	/* We need to synchronize with __set_oom_adj */
+	mutex_lock(&oom_adj_mutex);
+	set_bit(MMF_MULTIPROCESS, &tsk->mm->flags);
+	/* Update the values in case they were changed after copy_signal */
+	tsk->signal->oom_score_adj = current->signal->oom_score_adj;
+	tsk->signal->oom_score_adj_min = current->signal->oom_score_adj_min;
+	mutex_unlock(&oom_adj_mutex);
+>>>>>>> rebase
 }
 
 /*
@@ -1862,14 +1962,21 @@ static __latent_entropy struct task_struct *copy_process(
 					unsigned long clone_flags,
 					unsigned long stack_start,
 					unsigned long stack_size,
+<<<<<<< HEAD
 					int __user *parent_tidptr,
+=======
+>>>>>>> rebase
 					int __user *child_tidptr,
 					struct pid *pid,
 					int trace,
 					unsigned long tls,
 					int node)
 {
+<<<<<<< HEAD
 	int pidfd = -1, retval;
+=======
+	int retval;
+>>>>>>> rebase
 	struct task_struct *p;
 	struct multiprocess_signals delayed;
 
@@ -1919,6 +2026,7 @@ static __latent_entropy struct task_struct *copy_process(
 			return ERR_PTR(-EINVAL);
 	}
 
+<<<<<<< HEAD
 	if (clone_flags & CLONE_PIDFD) {
 		int reserved;
 
@@ -1944,6 +2052,8 @@ static __latent_entropy struct task_struct *copy_process(
 			return ERR_PTR(-EINVAL);
 	}
 
+=======
+>>>>>>> rebase
 	/*
 	 * Force any signals received before this point to be delivered
 	 * before the fork happens.  Collect up signals sent to multiple
@@ -1967,8 +2077,11 @@ static __latent_entropy struct task_struct *copy_process(
 	if (!p)
 		goto fork_out;
 
+<<<<<<< HEAD
 	cpufreq_task_times_init(p);
 
+=======
+>>>>>>> rebase
 	/*
 	 * This _must_ happen before we call free_task(), i.e. before we jump
 	 * to any of the bad_fork_* labels. This is to avoid freeing
@@ -2040,10 +2153,13 @@ static __latent_entropy struct task_struct *copy_process(
 
 	p->default_timer_slack_ns = current->timer_slack_ns;
 
+<<<<<<< HEAD
 #ifdef CONFIG_PSI
 	p->psi_flags = 0;
 #endif
 
+=======
+>>>>>>> rebase
 	task_io_accounting_init(&p->ioac);
 	acct_clear_integrals(p);
 
@@ -2111,6 +2227,7 @@ static __latent_entropy struct task_struct *copy_process(
 		goto bad_fork_cleanup_perf;
 	/* copy all the process information */
 	shm_init_task(p);
+<<<<<<< HEAD
 	retval = dup_task_integrity(clone_flags, p);
 	if (retval)
 		goto bad_fork_cleanup_audit;
@@ -2119,6 +2236,11 @@ static __latent_entropy struct task_struct *copy_process(
 		task_integrity_cleanup(p);
 		goto bad_fork_cleanup_audit;
 	}
+=======
+	retval = security_task_alloc(p, clone_flags);
+	if (retval)
+		goto bad_fork_cleanup_audit;
+>>>>>>> rebase
 	retval = copy_semundo(clone_flags, p);
 	if (retval)
 		goto bad_fork_cleanup_security;
@@ -2155,6 +2277,7 @@ static __latent_entropy struct task_struct *copy_process(
 		}
 	}
 
+<<<<<<< HEAD
 	/*
 	 * This has to happen after we've potentially unshared the file
 	 * descriptor table (so that the pidfd doesn't leak into the child
@@ -2182,6 +2305,13 @@ static __latent_entropy struct task_struct *copy_process(
 	INIT_LIST_HEAD(&p->pi_state_list);
 	p->pi_state_cache = NULL;
 #endif
+=======
+#ifdef CONFIG_BLOCK
+	p->plug = NULL;
+#endif
+	futex_init_task(p);
+
+>>>>>>> rebase
 	/*
 	 * sigaltstack should be cleared when sharing the same VM
 	 */
@@ -2202,6 +2332,7 @@ static __latent_entropy struct task_struct *copy_process(
 	/* ok, now we should be set up.. */
 	p->pid = pid_nr(pid);
 	if (clone_flags & CLONE_THREAD) {
+<<<<<<< HEAD
 		p->exit_signal = -1;
 		p->group_leader = current->group_leader;
 		p->tgid = current->tgid;
@@ -2210,6 +2341,11 @@ static __latent_entropy struct task_struct *copy_process(
 			p->exit_signal = current->group_leader->exit_signal;
 		else
 			p->exit_signal = (clone_flags & CSIGNAL);
+=======
+		p->group_leader = current->group_leader;
+		p->tgid = current->tgid;
+	} else {
+>>>>>>> rebase
 		p->group_leader = p;
 		p->tgid = p->pid;
 	}
@@ -2231,7 +2367,11 @@ static __latent_entropy struct task_struct *copy_process(
 	 */
 	retval = cgroup_can_fork(p);
 	if (retval)
+<<<<<<< HEAD
 		goto bad_fork_cgroup_threadgroup_change_end;
+=======
+		goto bad_fork_free_pid;
+>>>>>>> rebase
 
 	/*
 	 * From this point on we must avoid any synchronous user-space
@@ -2254,9 +2394,20 @@ static __latent_entropy struct task_struct *copy_process(
 	if (clone_flags & (CLONE_PARENT|CLONE_THREAD)) {
 		p->real_parent = current->real_parent;
 		p->parent_exec_id = current->parent_exec_id;
+<<<<<<< HEAD
 	} else {
 		p->real_parent = current;
 		p->parent_exec_id = current->self_exec_id;
+=======
+		if (clone_flags & CLONE_THREAD)
+			p->exit_signal = -1;
+		else
+			p->exit_signal = current->group_leader->exit_signal;
+	} else {
+		p->real_parent = current;
+		p->parent_exec_id = current->self_exec_id;
+		p->exit_signal = (clone_flags & CSIGNAL);
+>>>>>>> rebase
 	}
 
 	klp_copy_process(p);
@@ -2283,9 +2434,12 @@ static __latent_entropy struct task_struct *copy_process(
 		goto bad_fork_cancel_cgroup;
 	}
 
+<<<<<<< HEAD
 	retval = task_integrity_apply(clone_flags, p);
 	if (retval)
 		goto bad_fork_cancel_cgroup;
+=======
+>>>>>>> rebase
 
 	init_task_pid_links(p);
 	if (likely(p->pid)) {
@@ -2342,22 +2496,33 @@ static __latent_entropy struct task_struct *copy_process(
 
 	trace_task_newtask(p, clone_flags);
 	uprobe_copy_process(p, clone_flags);
+<<<<<<< HEAD
 #ifdef CONFIG_KDP_CRED
 	if(rkp_cred_enable)
 		rkp_assign_pgd(p);
 #endif
+=======
+
+	copy_oom_score_adj(clone_flags, p);
+
+>>>>>>> rebase
 	return p;
 
 bad_fork_cancel_cgroup:
 	spin_unlock(&current->sighand->siglock);
 	write_unlock_irq(&tasklist_lock);
 	cgroup_cancel_fork(p);
+<<<<<<< HEAD
 bad_fork_cgroup_threadgroup_change_end:
 	cgroup_threadgroup_change_end(current);
 bad_fork_put_pidfd:
 	if (clone_flags & CLONE_PIDFD)
 		ksys_close(pidfd);
 bad_fork_free_pid:
+=======
+bad_fork_free_pid:
+	cgroup_threadgroup_change_end(current);
+>>>>>>> rebase
 	if (pid != &init_struct_pid)
 		free_pid(pid);
 bad_fork_cleanup_thread:
@@ -2391,7 +2556,10 @@ bad_fork_cleanup_perf:
 	perf_event_free_task(p);
 bad_fork_cleanup_policy:
 	lockdep_free_task(p);
+<<<<<<< HEAD
 	free_task_load_ptrs(p);
+=======
+>>>>>>> rebase
 #ifdef CONFIG_NUMA
 	mpol_put(p->mempolicy);
 bad_fork_cleanup_threadgroup_lock:
@@ -2424,7 +2592,11 @@ static inline void init_idle_pids(struct task_struct *idle)
 struct task_struct *fork_idle(int cpu)
 {
 	struct task_struct *task;
+<<<<<<< HEAD
 	task = copy_process(CLONE_VM, 0, 0, NULL, NULL, &init_struct_pid, 0, 0,
+=======
+	task = copy_process(CLONE_VM, 0, 0, NULL, &init_struct_pid, 0, 0,
+>>>>>>> rebase
 			    cpu_to_node(cpu));
 	if (!IS_ERR(task)) {
 		init_idle_pids(task);
@@ -2471,15 +2643,22 @@ long _do_fork(unsigned long clone_flags,
 			trace = 0;
 	}
 
+<<<<<<< HEAD
 	p = copy_process(clone_flags, stack_start, stack_size, parent_tidptr,
+=======
+	p = copy_process(clone_flags, stack_start, stack_size,
+>>>>>>> rebase
 			 child_tidptr, NULL, trace, tls, NUMA_NO_NODE);
 	add_latent_entropy();
 
 	if (IS_ERR(p))
 		return PTR_ERR(p);
 
+<<<<<<< HEAD
 	cpufreq_task_times_alloc(p);
 
+=======
+>>>>>>> rebase
 	/*
 	 * Do this prior waking up the new thread - the thread pointer
 	 * might get invalid after that point, if the thread exits quickly.
@@ -2489,10 +2668,13 @@ long _do_fork(unsigned long clone_flags,
 	pid = get_task_pid(p, PIDTYPE_PID);
 	nr = pid_vnr(pid);
 
+<<<<<<< HEAD
 #ifdef CONFIG_SECURITY_DEFEX
 	task_defex_zero_creds(p);
 #endif
 
+=======
+>>>>>>> rebase
 	if (clone_flags & CLONE_PARENT_SETTID)
 		put_user(nr, parent_tidptr);
 

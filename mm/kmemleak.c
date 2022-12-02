@@ -226,6 +226,7 @@ static unsigned long jiffies_min_age;
 static unsigned long jiffies_last_scan;
 /* delay between automatic memory scannings */
 static signed long jiffies_scan_wait;
+<<<<<<< HEAD
 
 /*
  * Enables or disables the task stacks scanning.
@@ -240,6 +241,10 @@ static int kmemleak_stack_scan;
 static int kmemleak_stack_scan = 1;
 #endif
 
+=======
+/* enables or disables the task stacks scanning */
+static int kmemleak_stack_scan = 1;
+>>>>>>> rebase
 /* protects the memory scanning, parameters and debug/kmemleak file access */
 static DEFINE_MUTEX(scan_mutex);
 /* setting kmemleak=on, will set this var, skipping the disable */
@@ -2051,7 +2056,11 @@ void __init kmemleak_init(void)
 	create_object((unsigned long)__bss_start, __bss_stop - __bss_start,
 		      KMEMLEAK_GREY, GFP_ATOMIC);
 	/* only register .data..ro_after_init if not within .data */
+<<<<<<< HEAD
 	if (__start_ro_after_init < _sdata || __end_ro_after_init > _edata)
+=======
+	if (&__start_ro_after_init < &_sdata || &__end_ro_after_init > &_edata)
+>>>>>>> rebase
 		create_object((unsigned long)__start_ro_after_init,
 			      __end_ro_after_init - __start_ro_after_init,
 			      KMEMLEAK_GREY, GFP_ATOMIC);

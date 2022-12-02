@@ -1,7 +1,25 @@
+<<<<<<< HEAD
 // SPDX-License-Identifier: ISC
 /*
  * Copyright (c) 2012-2017 Qualcomm Atheros, Inc.
  * Copyright (c) 2018-2020, The Linux Foundation. All rights reserved.
+=======
+/*
+ * Copyright (c) 2012-2017 Qualcomm Atheros, Inc.
+ * Copyright (c) 2018, The Linux Foundation. All rights reserved.
+ *
+ * Permission to use, copy, modify, and/or distribute this software for any
+ * purpose with or without fee is hereby granted, provided that the above
+ * copyright notice and this permission notice appear in all copies.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+ * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+ * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+ * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+ * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+ * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+ * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+>>>>>>> rebase
  */
 
 #include <linux/moduleparam.h>
@@ -12,12 +30,18 @@
 #include "txrx.h"
 #include "wmi.h"
 #include "trace.h"
+<<<<<<< HEAD
 #include "ftm.h"
 #include "ipa.h"
 
 /* set the default max assoc sta to max supported by driver */
 uint max_assoc_sta = WIL6210_MAX_CID;
 module_param(max_assoc_sta, uint, 0444);
+=======
+
+static uint max_assoc_sta = WIL6210_MAX_CID;
+module_param(max_assoc_sta, uint, 0644);
+>>>>>>> rebase
 MODULE_PARM_DESC(max_assoc_sta, " Max number of stations associated to the AP");
 
 int agg_wsize; /* = 0; */
@@ -31,8 +55,12 @@ MODULE_PARM_DESC(led_id,
 		 " 60G device led enablement. Set the led ID (0-2) to enable");
 
 #define WIL_WAIT_FOR_SUSPEND_RESUME_COMP 200
+<<<<<<< HEAD
 #define WIL_WMI_PCP_STOP_TO_MS 5000
 #define WIL_WMI_SPI_SLAVE_RESET_TO_MS 500
+=======
+#define WIL_WMI_CALL_GENERAL_TO_MS 100
+>>>>>>> rebase
 
 /**
  * WMI event receiving - theory of operations
@@ -199,8 +227,13 @@ const struct fw_map talyn_mb_fw_mapping[] = {
 	{0x8c0000, 0x8c0210, 0x8c0000, "dum_user_rgf", true, true},
 	/* DMA OFU 296b */
 	{0x8c2000, 0x8c2128, 0x8c2000, "dma_ofu", true, true},
+<<<<<<< HEAD
 	/* ucode debug 256b */
 	{0x8c3000, 0x8c3100, 0x8c3000, "ucode_debug", true, true},
+=======
+	/* ucode debug 4k */
+	{0x8c3000, 0x8c4000, 0x8c3000, "ucode_debug", true, true},
+>>>>>>> rebase
 	/* upper area 1536k */
 	{0x900000, 0xa80000, 0x900000, "upper", true, true},
 	/* UCODE areas - accessible by debugfs blobs but not by
@@ -220,6 +253,7 @@ struct blink_on_off_time led_blink_time[] = {
 	{WIL_LED_BLINK_ON_FAST_MS, WIL_LED_BLINK_OFF_FAST_MS},
 };
 
+<<<<<<< HEAD
 struct auth_no_hdr {
 	__le16 auth_alg;
 	__le16 auth_transaction;
@@ -228,6 +262,8 @@ struct auth_no_hdr {
 	u8 variable[0];
 } __packed;
 
+=======
+>>>>>>> rebase
 u8 led_polarity = LED_POLARITY_LOW_ACTIVE;
 
 /**
@@ -469,6 +505,7 @@ static const char *cmdid2name(u16 cmdid)
 		return "WMI_LINK_STATS_CMD";
 	case WMI_SW_TX_REQ_EXT_CMDID:
 		return "WMI_SW_TX_REQ_EXT_CMDID";
+<<<<<<< HEAD
 	case WMI_FT_AUTH_CMDID:
 		return "WMI_FT_AUTH_CMD";
 	case WMI_FT_REASSOC_CMDID:
@@ -487,6 +524,8 @@ static const char *cmdid2name(u16 cmdid)
 		return "WMI_FST_CONFIG_CMD";
 	case WMI_SET_LINK_MONITOR_CMDID:
 		return "WMI_SET_LINK_MONITOR_CMD";
+=======
+>>>>>>> rebase
 	default:
 		return "Untracked CMD";
 	}
@@ -625,6 +664,7 @@ static const char *eventid2name(u16 eventid)
 		return "WMI_LINK_STATS_CONFIG_DONE_EVENT";
 	case WMI_LINK_STATS_EVENTID:
 		return "WMI_LINK_STATS_EVENT";
+<<<<<<< HEAD
 	case WMI_COMMAND_NOT_SUPPORTED_EVENTID:
 		return "WMI_COMMAND_NOT_SUPPORTED_EVENT";
 	case WMI_FT_AUTH_STATUS_EVENTID:
@@ -645,13 +685,19 @@ static const char *eventid2name(u16 eventid)
 		return "WMI_SET_LINK_MONITOR_EVENT";
 	case WMI_LINK_MONITOR_EVENTID:
 		return "WMI_LINK_MONITOR_EVENT";
+=======
+>>>>>>> rebase
 	default:
 		return "Untracked EVENT";
 	}
 }
 
 static int __wmi_send(struct wil6210_priv *wil, u16 cmdid, u8 mid,
+<<<<<<< HEAD
 		      void *buf, u16 len, bool force_send)
+=======
+		      void *buf, u16 len)
+>>>>>>> rebase
 {
 	struct {
 		struct wil6210_mbox_hdr hdr;
@@ -683,7 +729,11 @@ static int __wmi_send(struct wil6210_priv *wil, u16 cmdid, u8 mid,
 
 	might_sleep();
 
+<<<<<<< HEAD
 	if (!test_bit(wil_status_fwready, wil->status) && !force_send) {
+=======
+	if (!test_bit(wil_status_fwready, wil->status)) {
+>>>>>>> rebase
 		wil_err(wil, "WMI: cannot send command while FW not ready\n");
 		return -EAGAIN;
 	}
@@ -722,7 +772,11 @@ static int __wmi_send(struct wil6210_priv *wil, u16 cmdid, u8 mid,
 	wil_dbg_wmi(wil, "Head 0x%08x -> 0x%08x\n", r->head, next_head);
 	/* wait till FW finish with previous command */
 	for (retry = 5; retry > 0; retry--) {
+<<<<<<< HEAD
 		if (!test_bit(wil_status_fwready, wil->status) && !force_send) {
+=======
+		if (!test_bit(wil_status_fwready, wil->status)) {
+>>>>>>> rebase
 			wil_err(wil, "WMI: cannot send command while FW not ready\n");
 			rc = -EAGAIN;
 			goto out;
@@ -777,6 +831,7 @@ int wmi_send(struct wil6210_priv *wil, u16 cmdid, u8 mid, void *buf, u16 len)
 	int rc;
 
 	mutex_lock(&wil->wmi_mutex);
+<<<<<<< HEAD
 	rc = __wmi_send(wil, cmdid, mid, buf, len, false);
 	mutex_unlock(&wil->wmi_mutex);
 
@@ -790,6 +845,9 @@ int wmi_force_send(struct wil6210_priv *wil, u16 cmdid, u8 mid, void *buf,
 
 	mutex_lock(&wil->wmi_mutex);
 	rc = __wmi_send(wil, cmdid, mid, buf, len, true);
+=======
+	rc = __wmi_send(wil, cmdid, mid, buf, len);
+>>>>>>> rebase
 	mutex_unlock(&wil->wmi_mutex);
 
 	return rc;
@@ -801,7 +859,10 @@ static void wmi_evt_ready(struct wil6210_vif *vif, int id, void *d, int len)
 	struct wil6210_priv *wil = vif_to_wil(vif);
 	struct wiphy *wiphy = wil_to_wiphy(wil);
 	struct wmi_ready_event *evt = d;
+<<<<<<< HEAD
 	u8 fw_max_assoc_sta;
+=======
+>>>>>>> rebase
 
 	wil_info(wil, "FW ver. %s(SW %d); MAC %pM; %d MID's\n",
 		 wil->fw_version, le32_to_cpu(evt->sw_version),
@@ -819,6 +880,7 @@ static void wmi_evt_ready(struct wil6210_vif *vif, int id, void *d, int len)
 			    evt->rfc_read_calib_result);
 		wil->fw_calib_result = evt->rfc_read_calib_result;
 	}
+<<<<<<< HEAD
 
 	fw_max_assoc_sta = WIL6210_RX_DESC_MAX_CID;
 	if (len > offsetof(struct wmi_ready_event, max_assoc_sta) &&
@@ -838,6 +900,8 @@ static void wmi_evt_ready(struct wil6210_vif *vif, int id, void *d, int len)
 	max_assoc_sta = min_t(uint, max_assoc_sta, fw_max_assoc_sta);
 	wil_dbg_wmi(wil, "setting max assoc sta to %d\n", max_assoc_sta);
 
+=======
+>>>>>>> rebase
 	wil_set_recovery_state(wil, fw_recovery_idle);
 	set_bit(wil_status_fwready, wil->status);
 	/* let the reset sequence continue */
@@ -858,7 +922,11 @@ static void wmi_evt_rx_mgmt(struct wil6210_vif *vif, int id, void *d, int len)
 	s32 signal;
 	__le16 fc;
 	u32 d_len;
+<<<<<<< HEAD
 	s16 snr;
+=======
+	u16 d_status;
+>>>>>>> rebase
 
 	if (flen < 0) {
 		wil_err(wil, "MGMT Rx: short event, len %d\n", len);
@@ -880,13 +948,21 @@ static void wmi_evt_rx_mgmt(struct wil6210_vif *vif, int id, void *d, int len)
 		signal = 100 * data->info.rssi;
 	else
 		signal = data->info.sqi;
+<<<<<<< HEAD
 	snr = le16_to_cpu(data->info.snr); /* 1/4 dB units */
+=======
+	d_status = le16_to_cpu(data->info.status);
+>>>>>>> rebase
 	fc = rx_mgmt_frame->frame_control;
 
 	wil_dbg_wmi(wil, "MGMT Rx: channel %d MCS %d RSSI %d SQI %d%%\n",
 		    data->info.channel, data->info.mcs, data->info.rssi,
 		    data->info.sqi);
+<<<<<<< HEAD
 	wil_dbg_wmi(wil, "snr %ddB len %d fc 0x%04x\n", snr / 4, d_len,
+=======
+	wil_dbg_wmi(wil, "status 0x%04x len %d fc 0x%04x\n", d_status, d_len,
+>>>>>>> rebase
 		    le16_to_cpu(fc));
 	wil_dbg_wmi(wil, "qid %d mid %d cid %d\n",
 		    data->info.qid, data->info.mid, data->info.cid);
@@ -900,12 +976,15 @@ static void wmi_evt_rx_mgmt(struct wil6210_vif *vif, int id, void *d, int len)
 
 	if (ieee80211_is_beacon(fc) || ieee80211_is_probe_resp(fc)) {
 		struct cfg80211_bss *bss;
+<<<<<<< HEAD
 		struct cfg80211_inform_bss data = {
 			.chan = channel,
 			.scan_width = NL80211_BSS_CHAN_WIDTH_20,
 			.signal = signal,
 			.boottime_ns = ktime_to_ns(ktime_get_boottime()),
 		};
+=======
+>>>>>>> rebase
 		u64 tsf = le64_to_cpu(rx_mgmt_frame->u.beacon.timestamp);
 		u16 cap = le16_to_cpu(rx_mgmt_frame->u.beacon.capab_info);
 		u16 bi = le16_to_cpu(rx_mgmt_frame->u.beacon.beacon_int);
@@ -920,6 +999,7 @@ static void wmi_evt_rx_mgmt(struct wil6210_vif *vif, int id, void *d, int len)
 
 		wil_dbg_wmi(wil, "Capability info : 0x%04x\n", cap);
 
+<<<<<<< HEAD
 		if (wil->snr_thresh.enabled && snr < wil->snr_thresh.omni) {
 			wil_dbg_wmi(wil, "snr below threshold. dropping\n");
 			return;
@@ -928,6 +1008,10 @@ static void wmi_evt_rx_mgmt(struct wil6210_vif *vif, int id, void *d, int len)
 		bss = cfg80211_inform_bss_frame_data(wiphy, &data,
 						     rx_mgmt_frame,
 						     d_len, GFP_KERNEL);
+=======
+		bss = cfg80211_inform_bss_frame(wiphy, channel, rx_mgmt_frame,
+						d_len, signal, GFP_KERNEL);
+>>>>>>> rebase
 		if (bss) {
 			wil_dbg_wmi(wil, "Added BSS %pM\n",
 				    rx_mgmt_frame->bssid);
@@ -994,7 +1078,10 @@ static void wmi_evt_connect(struct wil6210_vif *vif, int id, void *d, int len)
 	struct wireless_dev *wdev = vif_to_wdev(vif);
 	struct wmi_connect_event *evt = d;
 	int ch; /* channel number */
+<<<<<<< HEAD
 	u8 spec_ch = 0; /* spec channel number */
+=======
+>>>>>>> rebase
 	struct station_info *sinfo;
 	u8 *assoc_req_ie, *assoc_resp_ie;
 	size_t assoc_req_ielen, assoc_resp_ielen;
@@ -1016,12 +1103,17 @@ static void wmi_evt_connect(struct wil6210_vif *vif, int id, void *d, int len)
 			evt->assoc_req_len, evt->assoc_resp_len);
 		return;
 	}
+<<<<<<< HEAD
 	if (evt->cid >= max_assoc_sta) {
+=======
+	if (evt->cid >= WIL6210_MAX_CID) {
+>>>>>>> rebase
 		wil_err(wil, "Connect CID invalid : %d\n", evt->cid);
 		return;
 	}
 
 	ch = evt->channel + 1;
+<<<<<<< HEAD
 	if (evt->edmg_channel &&
 	    test_bit(WMI_FW_CAPABILITY_CHANNEL_BONDING, wil->fw_capabilities))
 		wil_wmi2spec_ch(evt->edmg_channel, &spec_ch);
@@ -1032,6 +1124,10 @@ static void wmi_evt_connect(struct wil6210_vif *vif, int id, void *d, int len)
 		wil_info(wil, "Connect %pM channel [%d] cid %d aid %d\n",
 			 evt->bssid, ch, evt->cid, evt->aid);
 
+=======
+	wil_info(wil, "Connect %pM channel [%d] cid %d aid %d\n",
+		 evt->bssid, ch, evt->cid, evt->aid);
+>>>>>>> rebase
 	wil_hex_dump_wmi("connect AI : ", DUMP_PREFIX_OFFSET, 16, 1,
 			 evt->assoc_info, len - sizeof(*evt), true);
 
@@ -1079,6 +1175,7 @@ static void wmi_evt_connect(struct wil6210_vif *vif, int id, void *d, int len)
 			mutex_unlock(&wil->mutex);
 			return;
 		}
+<<<<<<< HEAD
 
 		sinfo = kzalloc(sizeof(*sinfo), GFP_KERNEL);
 		if (!sinfo) {
@@ -1097,6 +1194,8 @@ static void wmi_evt_connect(struct wil6210_vif *vif, int id, void *d, int len)
 
 		cfg80211_new_sta(ndev, evt->bssid, sinfo, GFP_KERNEL);
 		kfree(sinfo);
+=======
+>>>>>>> rebase
 	}
 
 	ether_addr_copy(wil->sta[evt->cid].addr, evt->bssid);
@@ -1108,7 +1207,11 @@ static void wmi_evt_connect(struct wil6210_vif *vif, int id, void *d, int len)
 		wil_err(wil, "config tx vring failed for CID %d, rc (%d)\n",
 			evt->cid, rc);
 		wmi_disconnect_sta(vif, wil->sta[evt->cid].addr,
+<<<<<<< HEAD
 				   WLAN_REASON_UNSPECIFIED, false);
+=======
+				   WLAN_REASON_UNSPECIFIED, false, false);
+>>>>>>> rebase
 	} else {
 		wil_info(wil, "successful connection to CID %d\n", evt->cid);
 	}
@@ -1139,10 +1242,35 @@ static void wmi_evt_connect(struct wil6210_vif *vif, int id, void *d, int len)
 		   (wdev->iftype == NL80211_IFTYPE_P2P_GO)) {
 
 		if (rc) {
+<<<<<<< HEAD
 			/* notify new_sta has failed */
 			cfg80211_del_sta(ndev, evt->bssid, GFP_KERNEL);
 			goto out;
 		}
+=======
+			if (disable_ap_sme)
+				/* notify new_sta has failed */
+				cfg80211_del_sta(ndev, evt->bssid, GFP_KERNEL);
+			goto out;
+		}
+
+		sinfo = kzalloc(sizeof(*sinfo), GFP_KERNEL);
+		if (!sinfo) {
+			rc = -ENOMEM;
+			goto out;
+		}
+
+		sinfo->generation = wil->sinfo_gen++;
+
+		if (assoc_req_ie) {
+			sinfo->assoc_req_ies = assoc_req_ie;
+			sinfo->assoc_req_ies_len = assoc_req_ielen;
+		}
+
+		cfg80211_new_sta(ndev, evt->bssid, sinfo, GFP_KERNEL);
+
+		kfree(sinfo);
+>>>>>>> rebase
 	} else {
 		wil_err(wil, "unhandled iftype %d for CID %d\n", wdev->iftype,
 			evt->cid);
@@ -1184,6 +1312,7 @@ static void wmi_evt_disconnect(struct wil6210_vif *vif, int id,
 	}
 
 	mutex_lock(&wil->mutex);
+<<<<<<< HEAD
 	wil6210_disconnect_complete(vif, evt->bssid, reason_code);
 	if (disable_ap_sme) {
 		struct wireless_dev *wdev = vif_to_wdev(vif);
@@ -1202,6 +1331,9 @@ static void wmi_evt_disconnect(struct wil6210_vif *vif, int id,
 			break;
 		}
 	}
+=======
+	wil6210_disconnect(vif, evt->bssid, reason_code, true);
+>>>>>>> rebase
 	mutex_unlock(&wil->mutex);
 }
 
@@ -1265,9 +1397,12 @@ static void wmi_evt_ring_en(struct wil6210_vif *vif, int id, void *d, int len)
 	struct wmi_ring_en_event *evt = d;
 	u8 vri = evt->ring_index;
 	struct wireless_dev *wdev = vif_to_wdev(vif);
+<<<<<<< HEAD
 	struct wil_sta_info *sta;
 	int cid;
 	struct key_params params;
+=======
+>>>>>>> rebase
 
 	wil_dbg_wmi(wil, "Enable vring %d MID %d\n", vri, vif->mid);
 
@@ -1276,14 +1411,21 @@ static void wmi_evt_ring_en(struct wil6210_vif *vif, int id, void *d, int len)
 		return;
 	}
 
+<<<<<<< HEAD
 	if (wdev->iftype != NL80211_IFTYPE_AP || !disable_ap_sme ||
 	    test_bit(wil_vif_ft_roam, vif->status))
 		/* in AP mode with disable_ap_sme that is not FT,
 		 * this is done by wil_cfg80211_change_station()
+=======
+	if (wdev->iftype != NL80211_IFTYPE_AP || !disable_ap_sme)
+		/* in AP mode with disable_ap_sme, this is done by
+		 * wil_cfg80211_change_station()
+>>>>>>> rebase
 		 */
 		wil->ring_tx_data[vri].dot1x_open = true;
 	if (vri == vif->bcast_ring) /* no BA for bcast */
 		return;
+<<<<<<< HEAD
 
 	cid = wil->ring2cid_tid[vri][0];
 	if (!wil_cid_valid(cid)) {
@@ -1303,6 +1445,8 @@ static void wmi_evt_ring_en(struct wil6210_vif *vif, int id, void *d, int len)
 			clear_bit(wil_vif_ft_roam, vif->status);
 	}
 
+=======
+>>>>>>> rebase
 	if (agg_wsize >= 0)
 		wil_addba_tx_request(wil, vri, agg_wsize);
 }
@@ -1343,6 +1487,7 @@ static void wmi_evt_addba_rx_req(struct wil6210_vif *vif, int id,
 				 void *d, int len)
 {
 	struct wil6210_priv *wil = vif_to_wil(vif);
+<<<<<<< HEAD
 	u8 cid, tid;
 	struct wmi_rcp_addba_req_event *evt = d;
 
@@ -1353,6 +1498,11 @@ static void wmi_evt_addba_rx_req(struct wil6210_vif *vif, int id,
 		tid = evt->tid;
 	}
 	wil_addba_rx_request(wil, vif->mid, cid, tid, evt->dialog_token,
+=======
+	struct wmi_rcp_addba_req_event *evt = d;
+
+	wil_addba_rx_request(wil, vif->mid, evt->cidxtid, evt->dialog_token,
+>>>>>>> rebase
 			     evt->ba_param_set, evt->ba_timeout,
 			     evt->ba_seq_ctrl);
 }
@@ -1368,6 +1518,7 @@ __acquires(&sta->tid_rx_lock) __releases(&sta->tid_rx_lock)
 	struct wil_tid_ampdu_rx *r;
 
 	might_sleep();
+<<<<<<< HEAD
 
 	if (evt->cidxtid != CIDXTID_EXTENDED_CID_TID) {
 		parse_cidxtid(evt->cidxtid, &cid, &tid);
@@ -1381,6 +1532,9 @@ __acquires(&sta->tid_rx_lock) __releases(&sta->tid_rx_lock)
 		return;
 	}
 
+=======
+	parse_cidxtid(evt->cidxtid, &cid, &tid);
+>>>>>>> rebase
 	wil_dbg_wmi(wil, "DELBA MID %d CID %d TID %d from %s reason %d\n",
 		    vif->mid, cid, tid,
 		    evt->from_initiator ? "originator" : "recipient",
@@ -1418,6 +1572,7 @@ __acquires(&sta->tid_rx_lock) __releases(&sta->tid_rx_lock)
 	spin_unlock_bh(&sta->tid_rx_lock);
 }
 
+<<<<<<< HEAD
 static void wmi_evt_aoa_meas(struct wil6210_vif *vif, int id, void *d, int len)
 {
 	struct wmi_aoa_meas_event *evt = d;
@@ -1441,6 +1596,8 @@ static void wmi_evt_per_dest_res(struct wil6210_vif *vif, int id,
 	wil_ftm_evt_per_dest_res(vif, evt);
 }
 
+=======
+>>>>>>> rebase
 static void
 wmi_evt_sched_scan_result(struct wil6210_vif *vif, int id, void *d, int len)
 {
@@ -1457,10 +1614,13 @@ wmi_evt_sched_scan_result(struct wil6210_vif *vif, int id, void *d, int len)
 	__le16 fc;
 	u32 d_len;
 	struct cfg80211_bss *bss;
+<<<<<<< HEAD
 	struct cfg80211_inform_bss bss_data = {
 		.scan_width = NL80211_BSS_CHAN_WIDTH_20,
 		.boottime_ns = ktime_to_ns(ktime_get_boottime()),
 	};
+=======
+>>>>>>> rebase
 
 	if (flen < 0) {
 		wil_err(wil, "sched scan result event too short, len %d\n",
@@ -1503,10 +1663,15 @@ wmi_evt_sched_scan_result(struct wil6210_vif *vif, int id, void *d, int len)
 		return;
 	}
 
+<<<<<<< HEAD
 	bss_data.signal = signal;
 	bss_data.chan = channel;
 	bss = cfg80211_inform_bss_frame_data(wiphy, &bss_data, rx_mgmt_frame,
 					     d_len, GFP_KERNEL);
+=======
+	bss = cfg80211_inform_bss_frame(wiphy, channel, rx_mgmt_frame,
+					d_len, signal, GFP_KERNEL);
+>>>>>>> rebase
 	if (bss) {
 		wil_dbg_wmi(wil, "Added BSS %pM\n", rx_mgmt_frame->bssid);
 		cfg80211_put_bss(wiphy, bss);
@@ -1524,7 +1689,11 @@ static void wil_link_stats_store_basic(struct wil6210_vif *vif,
 	u8 cid = basic->cid;
 	struct wil_sta_info *sta;
 
+<<<<<<< HEAD
 	if (cid < 0 || cid >= max_assoc_sta) {
+=======
+	if (cid < 0 || cid >= WIL6210_MAX_CID) {
+>>>>>>> rebase
 		wil_err(wil, "invalid cid %d\n", cid);
 		return;
 	}
@@ -1642,6 +1811,7 @@ wmi_evt_link_stats(struct wil6210_vif *vif, int id, void *d, int len)
 }
 
 /**
+<<<<<<< HEAD
  * find cid and ringid for the station vif
  *
  * return error, if other interfaces are used or ring was not found
@@ -1945,6 +2115,8 @@ wmi_evt_link_monitor(struct wil6210_vif *vif, int id, void *d, int len)
 }
 
 /**
+=======
+>>>>>>> rebase
  * Some events are ignored for purpose; and need not be interpreted as
  * "unhandled events"
  */
@@ -1973,6 +2145,7 @@ static const struct {
 	{WMI_DELBA_EVENTID,		wmi_evt_delba},
 	{WMI_RING_EN_EVENTID,		wmi_evt_ring_en},
 	{WMI_DATA_PORT_OPEN_EVENTID,		wmi_evt_ignore},
+<<<<<<< HEAD
 	{WMI_AOA_MEAS_EVENTID,			wmi_evt_aoa_meas},
 	{WMI_TOF_SESSION_END_EVENTID,		wmi_evt_ftm_session_ended},
 	{WMI_TOF_GET_CAPABILITIES_EVENTID,	wmi_evt_ignore},
@@ -1985,6 +2158,10 @@ static const struct {
 	{WMI_FT_AUTH_STATUS_EVENTID,		wmi_evt_auth_status},
 	{WMI_FT_REASSOC_STATUS_EVENTID,		wmi_evt_reassoc_status},
 	{WMI_LINK_MONITOR_EVENTID,		wmi_evt_link_monitor},
+=======
+	{WMI_SCHED_SCAN_RESULT_EVENTID,		wmi_evt_sched_scan_result},
+	{WMI_LINK_STATS_EVENTID,		wmi_evt_link_stats},
+>>>>>>> rebase
 };
 
 /*
@@ -2068,7 +2245,10 @@ void wmi_recv_cmd(struct wil6210_priv *wil)
 			u16 id = le16_to_cpu(wmi->command_id);
 			u8 mid = wmi->mid;
 			u32 tstamp = le32_to_cpu(wmi->fw_timestamp);
+<<<<<<< HEAD
 			wil_nl_60g_receive_wmi_evt(wil, cmd, len);
+=======
+>>>>>>> rebase
 			if (test_bit(wil_status_resuming, wil->status)) {
 				if (id == WMI_TRAFFIC_RESUME_EVENTID)
 					clear_bit(wil_status_resuming,
@@ -2128,9 +2308,14 @@ void wmi_recv_cmd(struct wil6210_priv *wil)
 		    n - num_immed_reply, num_immed_reply);
 }
 
+<<<<<<< HEAD
 static int __wmi_call(struct wil6210_priv *wil, u16 cmdid, u8 mid, void *buf,
 		      u16 len, u16 reply_id, void *reply, u16 reply_size,
 		      int to_msec, bool force_send)
+=======
+int wmi_call(struct wil6210_priv *wil, u16 cmdid, u8 mid, void *buf, u16 len,
+	     u16 reply_id, void *reply, u16 reply_size, int to_msec)
+>>>>>>> rebase
 {
 	int rc;
 	unsigned long remain;
@@ -2146,7 +2331,11 @@ static int __wmi_call(struct wil6210_priv *wil, u16 cmdid, u8 mid, void *buf,
 	reinit_completion(&wil->wmi_call);
 	spin_unlock_irqrestore(&wil->wmi_ev_lock, flags);
 
+<<<<<<< HEAD
 	rc = __wmi_send(wil, cmdid, mid, buf, len, force_send);
+=======
+	rc = __wmi_send(wil, cmdid, mid, buf, len);
+>>>>>>> rebase
 	if (rc)
 		goto out;
 
@@ -2176,6 +2365,7 @@ out:
 	return rc;
 }
 
+<<<<<<< HEAD
 int wmi_call(struct wil6210_priv *wil, u16 cmdid, u8 mid, void *buf, u16 len,
 	     u16 reply_id, void *reply, u16 reply_size, int to_msec)
 {
@@ -2183,6 +2373,8 @@ int wmi_call(struct wil6210_priv *wil, u16 cmdid, u8 mid, void *buf, u16 len,
 			  reply_size, to_msec, false);
 }
 
+=======
+>>>>>>> rebase
 int wmi_echo(struct wil6210_priv *wil)
 {
 	struct wil6210_vif *vif = ndev_to_vif(wil->main_ndev);
@@ -2191,8 +2383,12 @@ int wmi_echo(struct wil6210_priv *wil)
 	};
 
 	return wmi_call(wil, WMI_ECHO_CMDID, vif->mid, &cmd, sizeof(cmd),
+<<<<<<< HEAD
 			WMI_ECHO_RSP_EVENTID, NULL, 0,
 			WIL_WMI_CALL_GENERAL_TO_MS);
+=======
+			WMI_ECHO_RSP_EVENTID, NULL, 0, 50);
+>>>>>>> rebase
 }
 
 int wmi_set_mac_address(struct wil6210_priv *wil, void *addr)
@@ -2251,7 +2447,11 @@ int wmi_led_cfg(struct wil6210_priv *wil, bool enable)
 
 	rc = wmi_call(wil, WMI_LED_CFG_CMDID, vif->mid, &cmd, sizeof(cmd),
 		      WMI_LED_CFG_DONE_EVENTID, &reply, sizeof(reply),
+<<<<<<< HEAD
 		      WIL_WMI_CALL_GENERAL_TO_MS);
+=======
+		      100);
+>>>>>>> rebase
 	if (rc)
 		goto out;
 
@@ -2265,6 +2465,7 @@ out:
 	return rc;
 }
 
+<<<<<<< HEAD
 int wmi_rbufcap_cfg(struct wil6210_priv *wil, bool enable, u16 threshold)
 {
 	struct wil6210_vif *vif = ndev_to_vif(wil->main_ndev);
@@ -2298,6 +2499,10 @@ int wmi_rbufcap_cfg(struct wil6210_priv *wil, bool enable, u16 threshold)
 
 int wmi_pcp_start(struct wil6210_vif *vif, int bi, u8 wmi_nettype,
 		  u8 chan, u8 wmi_edmg_chan, u8 hidden_ssid, u8 is_go)
+=======
+int wmi_pcp_start(struct wil6210_vif *vif,
+		  int bi, u8 wmi_nettype, u8 chan, u8 hidden_ssid, u8 is_go)
+>>>>>>> rebase
 {
 	struct wil6210_priv *wil = vif_to_wil(vif);
 	int rc;
@@ -2307,7 +2512,10 @@ int wmi_pcp_start(struct wil6210_vif *vif, int bi, u8 wmi_nettype,
 		.network_type = wmi_nettype,
 		.disable_sec_offload = 1,
 		.channel = chan - 1,
+<<<<<<< HEAD
 		.edmg_channel = wmi_edmg_chan,
+=======
+>>>>>>> rebase
 		.pcp_max_assoc_sta = max_assoc_sta,
 		.hidden_ssid = hidden_ssid,
 		.is_go = is_go,
@@ -2323,6 +2531,7 @@ int wmi_pcp_start(struct wil6210_vif *vif, int bi, u8 wmi_nettype,
 		.evt = {.status = WMI_FW_STATUS_FAILURE},
 	};
 
+<<<<<<< HEAD
 	if (test_bit(WMI_FW_CAPABILITY_CHANNEL_BONDING, wil->fw_capabilities))
 		if (wil->force_edmg_channel) {
 			rc = wil_spec2wmi_ch(wil->force_edmg_channel,
@@ -2333,11 +2542,14 @@ int wmi_pcp_start(struct wil6210_vif *vif, int bi, u8 wmi_nettype,
 					wil->force_edmg_channel);
 		}
 
+=======
+>>>>>>> rebase
 	if (!vif->privacy)
 		cmd.disable_sec = 1;
 
 	if ((cmd.pcp_max_assoc_sta > WIL6210_MAX_CID) ||
 	    (cmd.pcp_max_assoc_sta <= 0)) {
+<<<<<<< HEAD
 		wil_err(wil, "unexpected max_assoc_sta %d\n",
 			cmd.pcp_max_assoc_sta);
 		return -EOPNOTSUPP;
@@ -2346,6 +2558,14 @@ int wmi_pcp_start(struct wil6210_vif *vif, int bi, u8 wmi_nettype,
 	if (wil->ipa_handle && cmd.pcp_max_assoc_sta > WIL_IPA_MAX_ASSOC_STA)
 		cmd.pcp_max_assoc_sta = WIL_IPA_MAX_ASSOC_STA;
 
+=======
+		wil_info(wil,
+			 "Requested connection limit %u, valid values are 1 - %d. Setting to %d\n",
+			 max_assoc_sta, WIL6210_MAX_CID, WIL6210_MAX_CID);
+		cmd.pcp_max_assoc_sta = WIL6210_MAX_CID;
+	}
+
+>>>>>>> rebase
 	if (disable_ap_sme &&
 	    !test_bit(WMI_FW_CAPABILITY_AP_SME_OFFLOAD_PARTIAL,
 		      wil->fw_capabilities)) {
@@ -2382,8 +2602,12 @@ int wmi_pcp_stop(struct wil6210_vif *vif)
 		return rc;
 
 	return wmi_call(wil, WMI_PCP_STOP_CMDID, vif->mid, NULL, 0,
+<<<<<<< HEAD
 			WMI_PCP_STOPPED_EVENTID, NULL, 0,
 			WIL_WMI_PCP_STOP_TO_MS);
+=======
+			WMI_PCP_STOPPED_EVENTID, NULL, 0, 20);
+>>>>>>> rebase
 }
 
 int wmi_set_ssid(struct wil6210_vif *vif, u8 ssid_len, const void *ssid)
@@ -2414,8 +2638,12 @@ int wmi_get_ssid(struct wil6210_vif *vif, u8 *ssid_len, void *ssid)
 	memset(&reply, 0, sizeof(reply));
 
 	rc = wmi_call(wil, WMI_GET_SSID_CMDID, vif->mid, NULL, 0,
+<<<<<<< HEAD
 		      WMI_GET_SSID_EVENTID, &reply, sizeof(reply),
 		      WIL_WMI_CALL_GENERAL_TO_MS);
+=======
+		      WMI_GET_SSID_EVENTID, &reply, sizeof(reply), 20);
+>>>>>>> rebase
 	if (rc)
 		return rc;
 
@@ -2452,8 +2680,12 @@ int wmi_get_channel(struct wil6210_priv *wil, int *channel)
 	memset(&reply, 0, sizeof(reply));
 
 	rc = wmi_call(wil, WMI_GET_PCP_CHANNEL_CMDID, vif->mid, NULL, 0,
+<<<<<<< HEAD
 		      WMI_GET_PCP_CHANNEL_EVENTID, &reply, sizeof(reply),
 		      WIL_WMI_CALL_GENERAL_TO_MS);
+=======
+		      WMI_GET_PCP_CHANNEL_EVENTID, &reply, sizeof(reply), 20);
+>>>>>>> rebase
 	if (rc)
 		return rc;
 
@@ -2549,8 +2781,12 @@ int wmi_stop_discovery(struct wil6210_vif *vif)
 	wil_dbg_wmi(wil, "sending WMI_DISCOVERY_STOP_CMDID\n");
 
 	rc = wmi_call(wil, WMI_DISCOVERY_STOP_CMDID, vif->mid, NULL, 0,
+<<<<<<< HEAD
 		      WMI_DISCOVERY_STOPPED_EVENTID, NULL, 0,
 		      WIL_WMI_CALL_GENERAL_TO_MS);
+=======
+		      WMI_DISCOVERY_STOPPED_EVENTID, NULL, 0, 100);
+>>>>>>> rebase
 
 	if (rc)
 		wil_err(wil, "Failed to stop discovery\n");
@@ -2584,6 +2820,7 @@ int wmi_add_cipher_key(struct wil6210_vif *vif, u8 key_index,
 		.key_len = key_len,
 	};
 
+<<<<<<< HEAD
 	if (key_len > sizeof(cmd.key))
 		return -EINVAL;
 
@@ -2595,6 +2832,12 @@ int wmi_add_cipher_key(struct wil6210_vif *vif, u8 key_index,
 	if (key)
 		memcpy(cmd.key, key, key_len);
 
+=======
+	if (!key || (key_len > sizeof(cmd.key)))
+		return -EINVAL;
+
+	memcpy(cmd.key, key, key_len);
+>>>>>>> rebase
 	if (mac_addr)
 		memcpy(cmd.mac, mac_addr, WMI_MAC_LEN);
 
@@ -2645,6 +2888,7 @@ out:
 	return rc;
 }
 
+<<<<<<< HEAD
 int wmi_update_ft_ies(struct wil6210_vif *vif, u16 ie_len, const void *ie)
 {
 	struct wil6210_priv *wil = vif_to_wil(vif);
@@ -2679,6 +2923,8 @@ out:
 	return rc;
 }
 
+=======
+>>>>>>> rebase
 /**
  * wmi_rxon - turn radio on/off
  * @on:		turn on if true, off otherwise
@@ -2703,14 +2949,22 @@ int wmi_rxon(struct wil6210_priv *wil, bool on)
 	if (on) {
 		rc = wmi_call(wil, WMI_START_LISTEN_CMDID, vif->mid, NULL, 0,
 			      WMI_LISTEN_STARTED_EVENTID,
+<<<<<<< HEAD
 			      &reply, sizeof(reply),
 			      WIL_WMI_CALL_GENERAL_TO_MS);
+=======
+			      &reply, sizeof(reply), 100);
+>>>>>>> rebase
 		if ((rc == 0) && (reply.evt.status != WMI_FW_STATUS_SUCCESS))
 			rc = -EINVAL;
 	} else {
 		rc = wmi_call(wil, WMI_DISCOVERY_STOP_CMDID, vif->mid, NULL, 0,
+<<<<<<< HEAD
 			      WMI_DISCOVERY_STOPPED_EVENTID, NULL, 0,
 			      WIL_WMI_CALL_GENERAL_TO_MS);
+=======
+			      WMI_DISCOVERY_STOPPED_EVENTID, NULL, 0, 20);
+>>>>>>> rebase
 	}
 
 	return rc;
@@ -2749,7 +3003,11 @@ int wmi_rx_chain_add(struct wil6210_priv *wil, struct wil_ring *vring)
 		if (ch)
 			cmd.sniffer_cfg.channel = ch->hw_value - 1;
 		cmd.sniffer_cfg.phy_info_mode =
+<<<<<<< HEAD
 			cpu_to_le32(WMI_SNIFFER_PHY_INFO_DISABLED);
+=======
+			cpu_to_le32(ndev->type == ARPHRD_IEEE80211_RADIOTAP);
+>>>>>>> rebase
 		cmd.sniffer_cfg.phy_support =
 			cpu_to_le32((wil->monitor_flags & MONITOR_FLAG_CONTROL)
 				    ? WMI_SNIFFER_CP : WMI_SNIFFER_BOTH_PHYS);
@@ -2799,8 +3057,12 @@ int wmi_get_temperature(struct wil6210_priv *wil, u32 *t_bb, u32 *t_rf)
 	memset(&reply, 0, sizeof(reply));
 
 	rc = wmi_call(wil, WMI_TEMP_SENSE_CMDID, vif->mid, &cmd, sizeof(cmd),
+<<<<<<< HEAD
 		      WMI_TEMP_SENSE_DONE_EVENTID, &reply, sizeof(reply),
 		      WIL_WMI_CALL_GENERAL_TO_MS);
+=======
+		      WMI_TEMP_SENSE_DONE_EVENTID, &reply, sizeof(reply), 100);
+>>>>>>> rebase
 	if (rc)
 		return rc;
 
@@ -2812,6 +3074,7 @@ int wmi_get_temperature(struct wil6210_priv *wil, u32 *t_bb, u32 *t_rf)
 	return 0;
 }
 
+<<<<<<< HEAD
 int wmi_get_all_temperatures(struct wil6210_priv *wil,
 			     struct wmi_temp_sense_all_done_event
 			     *sense_all_evt)
@@ -2855,6 +3118,14 @@ int wmi_disconnect_sta(struct wil6210_vif *vif, const u8 *mac, u16 reason,
 {
 	struct wil6210_priv *wil = vif_to_wil(vif);
 	int rc;
+=======
+int wmi_disconnect_sta(struct wil6210_vif *vif, const u8 *mac,
+		       u16 reason, bool full_disconnect, bool del_sta)
+{
+	struct wil6210_priv *wil = vif_to_wil(vif);
+	int rc;
+	u16 reason_code;
+>>>>>>> rebase
 	struct wmi_disconnect_sta_cmd disc_sta_cmd = {
 		.disconnect_reason = cpu_to_le16(reason),
 	};
@@ -2887,8 +3158,26 @@ int wmi_disconnect_sta(struct wil6210_vif *vif, const u8 *mac, u16 reason,
 		wil_fw_error_recovery(wil);
 		return rc;
 	}
+<<<<<<< HEAD
 	wil->sinfo_gen++;
 
+=======
+
+	if (full_disconnect) {
+		/* call event handler manually after processing wmi_call,
+		 * to avoid deadlock - disconnect event handler acquires
+		 * wil->mutex while it is already held here
+		 */
+		reason_code = le16_to_cpu(reply.evt.protocol_reason_status);
+
+		wil_dbg_wmi(wil, "Disconnect %pM reason [proto %d wmi %d]\n",
+			    reply.evt.bssid, reason_code,
+			    reply.evt.disconnect_reason);
+
+		wil->sinfo_gen++;
+		wil6210_disconnect(vif, reply.evt.bssid, reason_code, true);
+	}
+>>>>>>> rebase
 	return 0;
 }
 
@@ -2923,6 +3212,7 @@ int wmi_delba_tx(struct wil6210_priv *wil, u8 mid, u8 ringid, u16 reason)
 	return wmi_send(wil, WMI_RING_BA_DIS_CMDID, mid, &cmd, sizeof(cmd));
 }
 
+<<<<<<< HEAD
 int wmi_delba_rx(struct wil6210_priv *wil, u8 mid, u8 cid, u8 tid, u16 reason)
 {
 	struct wmi_rcp_delba_cmd cmd = {
@@ -2939,6 +3229,17 @@ int wmi_delba_rx(struct wil6210_priv *wil, u8 mid, u8 cid, u8 tid, u16 reason)
 
 	wil_dbg_wmi(wil, "delba_rx: (CID %d TID %d reason %d)\n", cid,
 		    tid, reason);
+=======
+int wmi_delba_rx(struct wil6210_priv *wil, u8 mid, u8 cidxtid, u16 reason)
+{
+	struct wmi_rcp_delba_cmd cmd = {
+		.cidxtid = cidxtid,
+		.reason = cpu_to_le16(reason),
+	};
+
+	wil_dbg_wmi(wil, "delba_rx: (CID %d TID %d reason %d)\n", cidxtid & 0xf,
+		    (cidxtid >> 4) & 0xf, reason);
+>>>>>>> rebase
 
 	return wmi_send(wil, WMI_RCP_DELBA_CMDID, mid, &cmd, sizeof(cmd));
 }
@@ -2949,10 +3250,18 @@ int wmi_addba_rx_resp(struct wil6210_priv *wil,
 {
 	int rc;
 	struct wmi_rcp_addba_resp_cmd cmd = {
+<<<<<<< HEAD
 		.dialog_token = token,
 		.status_code = cpu_to_le16(status),
 		/* bit 0: A-MSDU supported
 		 * bit 1: policy (controlled by FW)
+=======
+		.cidxtid = mk_cidxtid(cid, tid),
+		.dialog_token = token,
+		.status_code = cpu_to_le16(status),
+		/* bit 0: A-MSDU supported
+		 * bit 1: policy (should be 0 for us)
+>>>>>>> rebase
 		 * bits 2..5: TID
 		 * bits 6..15: buffer size
 		 */
@@ -2967,6 +3276,7 @@ int wmi_addba_rx_resp(struct wil6210_priv *wil,
 		.evt = {.status = cpu_to_le16(WMI_FW_STATUS_FAILURE)},
 	};
 
+<<<<<<< HEAD
 	if (cid >= WIL6210_RX_DESC_MAX_CID) {
 		cmd.cidxtid = CIDXTID_EXTENDED_CID_TID;
 		cmd.cid = cid;
@@ -2975,6 +3285,8 @@ int wmi_addba_rx_resp(struct wil6210_priv *wil,
 		cmd.cidxtid = mk_cidxtid(cid, tid);
 	}
 
+=======
+>>>>>>> rebase
 	wil_dbg_wmi(wil,
 		    "ADDBA response for MID %d CID %d TID %d size %d timeout %d status %d AMSDU%s\n",
 		    mid, cid, tid, agg_wsize,
@@ -2982,7 +3294,11 @@ int wmi_addba_rx_resp(struct wil6210_priv *wil,
 
 	rc = wmi_call(wil, WMI_RCP_ADDBA_RESP_CMDID, mid, &cmd, sizeof(cmd),
 		      WMI_RCP_ADDBA_RESP_SENT_EVENTID, &reply, sizeof(reply),
+<<<<<<< HEAD
 		      WIL_WMI_CALL_GENERAL_TO_MS);
+=======
+		      100);
+>>>>>>> rebase
 	if (rc)
 		return rc;
 
@@ -3006,15 +3322,24 @@ int wmi_addba_rx_resp_edma(struct wil6210_priv *wil, u8 mid, u8 cid, u8 tid,
 		.dialog_token = token,
 		.status_code = cpu_to_le16(status),
 		/* bit 0: A-MSDU supported
+<<<<<<< HEAD
 		 * bit 1: policy (controlled by FW)
+=======
+		 * bit 1: policy (should be 0 for us)
+>>>>>>> rebase
 		 * bits 2..5: TID
 		 * bits 6..15: buffer size
 		 */
 		.ba_param_set = cpu_to_le16((amsdu ? 1 : 0) | (tid << 2) |
 					    (agg_wsize << 6)),
 		.ba_timeout = cpu_to_le16(timeout),
+<<<<<<< HEAD
 		/* route all the connections to same Rx status ring */
 		.status_ring_id = wil->rx_sring_idx,
+=======
+		/* route all the connections to status ring 0 */
+		.status_ring_id = WIL_DEFAULT_RX_STATUS_RING_ID,
+>>>>>>> rebase
 	};
 	struct {
 		struct wmi_cmd_hdr wmi;
@@ -3026,7 +3351,11 @@ int wmi_addba_rx_resp_edma(struct wil6210_priv *wil, u8 mid, u8 cid, u8 tid,
 	wil_dbg_wmi(wil,
 		    "ADDBA response for CID %d TID %d size %d timeout %d status %d AMSDU%s, sring_id %d\n",
 		    cid, tid, agg_wsize, timeout, status, amsdu ? "+" : "-",
+<<<<<<< HEAD
 		    cmd.status_ring_id);
+=======
+		    WIL_DEFAULT_RX_STATUS_RING_ID);
+>>>>>>> rebase
 
 	rc = wmi_call(wil, WMI_RCP_ADDBA_RESP_EDMA_CMDID, mid, &cmd,
 		      sizeof(cmd), WMI_RCP_ADDBA_RESP_SENT_EVENTID, &reply,
@@ -3064,7 +3393,11 @@ int wmi_ps_dev_profile_cfg(struct wil6210_priv *wil,
 	rc = wmi_call(wil, WMI_PS_DEV_PROFILE_CFG_CMDID, vif->mid,
 		      &cmd, sizeof(cmd),
 		      WMI_PS_DEV_PROFILE_CFG_EVENTID, &reply, sizeof(reply),
+<<<<<<< HEAD
 		      WIL_WMI_CALL_GENERAL_TO_MS);
+=======
+		      100);
+>>>>>>> rebase
 	if (rc)
 		return rc;
 
@@ -3101,7 +3434,11 @@ int wmi_set_mgmt_retry(struct wil6210_priv *wil, u8 retry_short)
 	rc = wmi_call(wil, WMI_SET_MGMT_RETRY_LIMIT_CMDID, vif->mid,
 		      &cmd, sizeof(cmd),
 		      WMI_SET_MGMT_RETRY_LIMIT_EVENTID, &reply, sizeof(reply),
+<<<<<<< HEAD
 		      WIL_WMI_CALL_GENERAL_TO_MS);
+=======
+		      100);
+>>>>>>> rebase
 	if (rc)
 		return rc;
 
@@ -3131,7 +3468,11 @@ int wmi_get_mgmt_retry(struct wil6210_priv *wil, u8 *retry_short)
 	memset(&reply, 0, sizeof(reply));
 	rc = wmi_call(wil, WMI_GET_MGMT_RETRY_LIMIT_CMDID, vif->mid, NULL, 0,
 		      WMI_GET_MGMT_RETRY_LIMIT_EVENTID, &reply, sizeof(reply),
+<<<<<<< HEAD
 		      WIL_WMI_CALL_GENERAL_TO_MS);
+=======
+		      100);
+>>>>>>> rebase
 	if (rc)
 		return rc;
 
@@ -3174,6 +3515,7 @@ int wmi_new_sta(struct wil6210_vif *vif, const u8 *mac, u8 aid)
 	return rc;
 }
 
+<<<<<<< HEAD
 int wmi_set_tt_cfg(struct wil6210_priv *wil, struct wmi_tt_data *tt_data)
 {
 	struct wil6210_vif *vif = ndev_to_vif(wil->main_ndev);
@@ -3269,6 +3611,8 @@ int wmi_set_tof_tx_rx_offset(struct wil6210_priv *wil, u32 tx_offset,
 	return 0;
 }
 
+=======
+>>>>>>> rebase
 void wmi_event_flush(struct wil6210_priv *wil)
 {
 	ulong flags;
@@ -3291,10 +3635,13 @@ static const char *suspend_status2name(u8 status)
 	switch (status) {
 	case WMI_TRAFFIC_SUSPEND_REJECTED_LINK_NOT_IDLE:
 		return "LINK_NOT_IDLE";
+<<<<<<< HEAD
 	case WMI_TRAFFIC_SUSPEND_REJECTED_DISCONNECT:
 		return "DISCONNECT";
 	case WMI_TRAFFIC_SUSPEND_REJECTED_OTHER:
 		return "OTHER";
+=======
+>>>>>>> rebase
 	default:
 		return "Untracked status";
 	}
@@ -3384,9 +3731,12 @@ static void resume_triggers2string(u32 triggers, char *string, int str_size)
 
 	if (triggers & WMI_RESUME_TRIGGER_WMI_EVT)
 		strlcat(string, " WMI_EVT", str_size);
+<<<<<<< HEAD
 
 	if (triggers & WMI_RESUME_TRIGGER_DISCONNECT)
 		strlcat(string, " DISCONNECT", str_size);
+=======
+>>>>>>> rebase
 }
 
 int wmi_resume(struct wil6210_priv *wil)
@@ -3417,6 +3767,7 @@ int wmi_resume(struct wil6210_priv *wil)
 	return reply.evt.status;
 }
 
+<<<<<<< HEAD
 int wmi_link_maintain_cfg_write(struct wil6210_priv *wil,
 				const u8 *addr,
 				bool fst_link_loss)
@@ -3476,6 +3827,8 @@ int wmi_link_maintain_cfg_write(struct wil6210_priv *wil,
 	return rc;
 }
 
+=======
+>>>>>>> rebase
 int wmi_port_allocate(struct wil6210_priv *wil, u8 mid,
 		      const u8 *mac, enum nl80211_iftype iftype)
 {
@@ -3596,7 +3949,11 @@ static void wmi_event_handle(struct wil6210_priv *wil,
 
 		if (mid == MID_BROADCAST)
 			mid = 0;
+<<<<<<< HEAD
 		if (mid >= GET_MAX_VIFS(wil)) {
+=======
+		if (mid >= ARRAY_SIZE(wil->vifs) || mid >= wil->max_vifs) {
+>>>>>>> rebase
 			wil_dbg_wmi(wil, "invalid mid %d, event skipped\n",
 				    mid);
 			return;
@@ -3716,6 +4073,7 @@ out:
 	return rc;
 }
 
+<<<<<<< HEAD
 int wmi_set_snr_thresh(struct wil6210_priv *wil, short omni, short direct)
 {
 	struct wil6210_vif *vif = ndev_to_vif(wil->main_ndev);
@@ -3747,6 +4105,8 @@ int wmi_set_snr_thresh(struct wil6210_priv *wil, short omni, short direct)
 	return 0;
 }
 
+=======
+>>>>>>> rebase
 static void
 wmi_sched_scan_set_ssids(struct wil6210_priv *wil,
 			 struct wmi_start_sched_scan_cmd *cmd,
@@ -4008,7 +4368,11 @@ int wmi_mgmt_tx_ext(struct wil6210_vif *vif, const u8 *buf, size_t len,
 	return rc;
 }
 
+<<<<<<< HEAD
 int wil_wmi_tx_sring_cfg(struct wil6210_priv *wil, int ring_id, u8 irq_mode)
+=======
+int wil_wmi_tx_sring_cfg(struct wil6210_priv *wil, int ring_id)
+>>>>>>> rebase
 {
 	int rc;
 	struct wil6210_vif *vif = ndev_to_vif(wil->main_ndev);
@@ -4017,8 +4381,12 @@ int wil_wmi_tx_sring_cfg(struct wil6210_priv *wil, int ring_id, u8 irq_mode)
 		.ring_cfg = {
 			.ring_size = cpu_to_le16(sring->size),
 		},
+<<<<<<< HEAD
 		.irq_index = WIL_TX_STATUS_IRQ_IDX,
 		.irq_mode = irq_mode,
+=======
+		.irq_index = WIL_TX_STATUS_IRQ_IDX
+>>>>>>> rebase
 	};
 	struct {
 		struct wmi_cmd_hdr hdr;
@@ -4049,6 +4417,7 @@ int wil_wmi_tx_sring_cfg(struct wil6210_priv *wil, int ring_id, u8 irq_mode)
 	return 0;
 }
 
+<<<<<<< HEAD
 int wil_wmi_cfg_def_rx_offload(struct wil6210_priv *wil,
 			       u16 max_rx_pl_per_desc, bool checksum)
 {
@@ -4057,13 +4426,24 @@ int wil_wmi_cfg_def_rx_offload(struct wil6210_priv *wil,
 	struct wil6210_vif *vif = ndev_to_vif(ndev);
 	int rc;
 	u8 edmg_channel = 0;
+=======
+int wil_wmi_cfg_def_rx_offload(struct wil6210_priv *wil, u16 max_rx_pl_per_desc)
+{
+	struct net_device *ndev = wil->main_ndev;
+	struct wil6210_vif *vif = ndev_to_vif(ndev);
+	int rc;
+>>>>>>> rebase
 	struct wmi_cfg_def_rx_offload_cmd cmd = {
 		.max_msdu_size = cpu_to_le16(wil_mtu2macbuf(WIL_MAX_ETH_MTU)),
 		.max_rx_pl_per_desc = cpu_to_le16(max_rx_pl_per_desc),
 		.decap_trans_type = WMI_DECAP_TYPE_802_3,
 		.l2_802_3_offload_ctrl = 0,
+<<<<<<< HEAD
 		.l3_l4_ctrl =
 			(checksum ? 1 << L3_L4_CTRL_TCPIP_CHECKSUM_EN_POS : 0),
+=======
+		.l3_l4_ctrl = 1 << L3_L4_CTRL_TCPIP_CHECKSUM_EN_POS,
+>>>>>>> rebase
 	};
 	struct {
 		struct wmi_cmd_hdr hdr;
@@ -4072,6 +4452,7 @@ int wil_wmi_cfg_def_rx_offload(struct wil6210_priv *wil,
 		.evt = {.status = WMI_FW_STATUS_FAILURE},
 	};
 
+<<<<<<< HEAD
 	if (wdev->iftype == NL80211_IFTYPE_MONITOR) {
 		struct ieee80211_channel *ch = wil->monitor_chandef.chan;
 
@@ -4093,6 +4474,8 @@ int wil_wmi_cfg_def_rx_offload(struct wil6210_priv *wil,
 		cmd.sniffer_cfg.edmg_channel = edmg_channel;
 	}
 
+=======
+>>>>>>> rebase
 	rc = wmi_call(wil, WMI_CFG_DEF_RX_OFFLOAD_CMDID, vif->mid, &cmd,
 		      sizeof(cmd), WMI_CFG_DEF_RX_OFFLOAD_DONE_EVENTID, &reply,
 		      sizeof(reply), WIL_WMI_CALL_GENERAL_TO_MS);
@@ -4196,9 +4579,16 @@ int wil_wmi_rx_desc_ring_add(struct wil6210_priv *wil, int status_ring_id)
 }
 
 int wil_wmi_tx_desc_ring_add(struct wil6210_vif *vif, int ring_id, int cid,
+<<<<<<< HEAD
 			     int tid, int sring_id, u8 irq_mode)
 {
 	struct wil6210_priv *wil = vif_to_wil(vif);
+=======
+			     int tid)
+{
+	struct wil6210_priv *wil = vif_to_wil(vif);
+	int sring_id = wil->tx_sring_idx; /* there is only one TX sring */
+>>>>>>> rebase
 	int rc;
 	struct wil_ring *ring = &wil->ring_tx[ring_id];
 	struct wil_ring_tx_data *txdata = &wil->ring_tx_data[ring_id];
@@ -4215,9 +4605,13 @@ int wil_wmi_tx_desc_ring_add(struct wil6210_vif *vif, int ring_id, int cid,
 		.schd_params = {
 			.priority = cpu_to_le16(0),
 			.timeslot_us = cpu_to_le16(0xfff),
+<<<<<<< HEAD
 		},
 		.irq_index = ring_id,
 		.irq_mode = irq_mode,
+=======
+		}
+>>>>>>> rebase
 	};
 	struct {
 		struct wmi_cmd_hdr hdr;
@@ -4250,8 +4644,12 @@ int wil_wmi_tx_desc_ring_add(struct wil6210_vif *vif, int ring_id, int cid,
 	return 0;
 }
 
+<<<<<<< HEAD
 int wil_wmi_bcast_desc_ring_add(struct wil6210_vif *vif, int ring_id,
 				int sring_id)
+=======
+int wil_wmi_bcast_desc_ring_add(struct wil6210_vif *vif, int ring_id)
+>>>>>>> rebase
 {
 	struct wil6210_priv *wil = vif_to_wil(vif);
 	struct wil_ring *ring = &wil->ring_tx[ring_id];
@@ -4261,8 +4659,12 @@ int wil_wmi_bcast_desc_ring_add(struct wil6210_vif *vif, int ring_id,
 			.ring_size = cpu_to_le16(ring->size),
 			.ring_id = ring_id,
 		},
+<<<<<<< HEAD
 		.max_msdu_size = cpu_to_le16(wil_mtu2macbuf(mtu_max)),
 		.status_ring_id = sring_id,
+=======
+		.status_ring_id = wil->tx_sring_idx,
+>>>>>>> rebase
 		.encap_trans_type = WMI_VRING_ENC_TYPE_802_3,
 	};
 	struct {
@@ -4330,6 +4732,7 @@ int wmi_link_stats_cfg(struct wil6210_vif *vif, u32 type, u8 cid, u32 interval)
 
 	return 0;
 }
+<<<<<<< HEAD
 
 const char *
 wil_get_vr_profile_name(enum wmi_vr_profile profile)
@@ -4494,3 +4897,5 @@ int wmi_set_fst_config(struct wil6210_priv *wil, const u8 *bssid, u8 enabled,
 
 	return 0;
 }
+=======
+>>>>>>> rebase

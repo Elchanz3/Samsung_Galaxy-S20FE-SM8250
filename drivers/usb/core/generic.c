@@ -22,9 +22,12 @@
 #include <linux/usb.h>
 #include <linux/usb/hcd.h>
 #include "usb.h"
+<<<<<<< HEAD
 #if defined(CONFIG_USB_HOST_CERTI)
 #include <linux/usb_notify.h>
 #endif
+=======
+>>>>>>> rebase
 
 static inline const char *plural(int n)
 {
@@ -45,6 +48,7 @@ static int is_activesync(struct usb_interface_descriptor *desc)
 		&& desc->bInterfaceProtocol == 1;
 }
 
+<<<<<<< HEAD
 static int get_usb_audio_config(struct usb_host_bos *bos)
 {
 	unsigned int desc_cnt, num_cfg_desc, len = 0;
@@ -110,6 +114,8 @@ static int check_sec_skip_audio_device(struct usb_device *dev)
 }
 
 
+=======
+>>>>>>> rebase
 int usb_choose_configuration(struct usb_device *udev)
 {
 	int i;
@@ -207,6 +213,7 @@ int usb_choose_configuration(struct usb_device *udev)
 			best = c;
 	}
 
+<<<<<<< HEAD
 	if (insufficient_power > 0) {
 		dev_info(&udev->dev, "rejected %d configuration%s "
 			"due to insufficient available bus power\n",
@@ -226,6 +233,15 @@ int usb_choose_configuration(struct usb_device *udev)
 		else {
 			i = best->desc.bConfigurationValue;
 		}
+=======
+	if (insufficient_power > 0)
+		dev_info(&udev->dev, "rejected %d configuration%s "
+			"due to insufficient available bus power\n",
+			insufficient_power, plural(insufficient_power));
+
+	if (best) {
+		i = best->desc.bConfigurationValue;
+>>>>>>> rebase
 		dev_dbg(&udev->dev,
 			"configuration #%d chosen from %d choice%s\n",
 			i, num_configs, plural(num_configs));

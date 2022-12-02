@@ -1535,7 +1535,11 @@ static ssize_t format1_show(struct device *dev,
 					le16_to_cpu(nfit_dcr->dcr->code));
 			break;
 		}
+<<<<<<< HEAD
 		if (rc != ENXIO)
+=======
+		if (rc != -ENXIO)
+>>>>>>> rebase
 			break;
 	}
 	mutex_unlock(&acpi_desc->init_mutex);
@@ -1773,9 +1777,23 @@ static int acpi_nfit_add_dimm(struct acpi_nfit_desc *acpi_desc,
 	dev_set_drvdata(&adev_dimm->dev, nfit_mem);
 
 	/*
+<<<<<<< HEAD
 	 * Until standardization materializes we need to consider 4
 	 * different command sets.  Note, that checking for function0 (bit0)
 	 * tells us if any commands are reachable through this GUID.
+=======
+	 * There are 4 "legacy" NVDIMM command sets
+	 * (NVDIMM_FAMILY_{INTEL,MSFT,HPE1,HPE2}) that were created before
+	 * an EFI working group was established to constrain this
+	 * proliferation. The nfit driver probes for the supported command
+	 * set by GUID. Note, if you're a platform developer looking to add
+	 * a new command set to this probe, consider using an existing set,
+	 * or otherwise seek approval to publish the command set at
+	 * http://www.uefi.org/RFIC_LIST.
+	 *
+	 * Note, that checking for function0 (bit0) tells us if any commands
+	 * are reachable through this GUID.
+>>>>>>> rebase
 	 */
 	for (i = 0; i <= NVDIMM_FAMILY_MAX; i++)
 		if (acpi_check_dsm(adev_dimm->handle, to_nfit_uuid(i), 1, 1))
@@ -1798,6 +1816,11 @@ static int acpi_nfit_add_dimm(struct acpi_nfit_desc *acpi_desc,
 			dsm_mask &= ~(1 << 8);
 	} else if (nfit_mem->family == NVDIMM_FAMILY_MSFT) {
 		dsm_mask = 0xffffffff;
+<<<<<<< HEAD
+=======
+	} else if (nfit_mem->family == NVDIMM_FAMILY_HYPERV) {
+		dsm_mask = 0x1f;
+>>>>>>> rebase
 	} else {
 		dev_dbg(dev, "unknown dimm command family\n");
 		nfit_mem->family = -1;
@@ -2282,7 +2305,11 @@ static void write_blk_ctl(struct nfit_blk *nfit_blk, unsigned int bw,
 		offset = to_interleave_offset(offset, mmio);
 
 	writeq(cmd, mmio->addr.base + offset);
+<<<<<<< HEAD
 	nvdimm_flush(nfit_blk->nd_region, NULL);
+=======
+	nvdimm_flush(nfit_blk->nd_region);
+>>>>>>> rebase
 
 	if (nfit_blk->dimm_flags & NFIT_BLK_DCR_LATCH)
 		readq(mmio->addr.base + offset);
@@ -2331,7 +2358,11 @@ static int acpi_nfit_blk_single_io(struct nfit_blk *nfit_blk,
 	}
 
 	if (rw)
+<<<<<<< HEAD
 		nvdimm_flush(nfit_blk->nd_region, NULL);
+=======
+		nvdimm_flush(nfit_blk->nd_region);
+>>>>>>> rebase
 
 	rc = read_blk_stat(nfit_blk, lane) ? -EIO : 0;
 	return rc;
@@ -2824,6 +2855,12 @@ static int acpi_nfit_register_region(struct acpi_nfit_desc *acpi_desc,
 		struct acpi_nfit_memory_map *memdev = nfit_memdev->memdev;
 		struct nd_mapping_desc *mapping;
 
+<<<<<<< HEAD
+=======
+		/* range index 0 == unmapped in SPA or invalid-SPA */
+		if (memdev->range_index == 0 || spa->range_index == 0)
+			continue;
+>>>>>>> rebase
 		if (memdev->range_index != spa->range_index)
 			continue;
 		if (count >= ND_MAX_MAPPINGS) {
@@ -3622,6 +3659,10 @@ static __init int nfit_init(void)
 	guid_parse(UUID_NFIT_DIMM_N_HPE1, &nfit_uuid[NFIT_DEV_DIMM_N_HPE1]);
 	guid_parse(UUID_NFIT_DIMM_N_HPE2, &nfit_uuid[NFIT_DEV_DIMM_N_HPE2]);
 	guid_parse(UUID_NFIT_DIMM_N_MSFT, &nfit_uuid[NFIT_DEV_DIMM_N_MSFT]);
+<<<<<<< HEAD
+=======
+	guid_parse(UUID_NFIT_DIMM_N_HYPERV, &nfit_uuid[NFIT_DEV_DIMM_N_HYPERV]);
+>>>>>>> rebase
 
 	nfit_wq = create_singlethread_workqueue("nfit");
 	if (!nfit_wq)

@@ -80,6 +80,10 @@
 /*
  * SGTL5000_CHIP_DIG_POWER
  */
+<<<<<<< HEAD
+=======
+#define SGTL5000_DIG_POWER_DEFAULT		0x0000
+>>>>>>> rebase
 #define SGTL5000_ADC_EN				0x0040
 #define SGTL5000_DAC_EN				0x0020
 #define SGTL5000_DAP_POWERUP			0x0010
@@ -233,6 +237,10 @@
 /*
  * SGTL5000_CHIP_ANA_CTRL
  */
+<<<<<<< HEAD
+=======
+#define SGTL5000_CHIP_ANA_CTRL_DEFAULT		0x0133
+>>>>>>> rebase
 #define SGTL5000_LINE_OUT_MUTE			0x0100
 #define SGTL5000_HP_SEL_MASK			0x0040
 #define SGTL5000_HP_SEL_SHIFT			6

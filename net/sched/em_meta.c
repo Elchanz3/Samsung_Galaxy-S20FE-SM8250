@@ -199,7 +199,11 @@ META_COLLECTOR(int_priority)
 META_COLLECTOR(int_protocol)
 {
 	/* Let userspace take care of the byte ordering */
+<<<<<<< HEAD
 	dst->value = tc_skb_protocol(skb);
+=======
+	dst->value = skb_protocol(skb, false);
+>>>>>>> rebase
 }
 
 META_COLLECTOR(int_pkttype)

@@ -1057,8 +1057,15 @@ static int create_qp_common(struct mlx4_ib_dev *dev, struct ib_pd *pd,
 			if (dev->steering_support ==
 			    MLX4_STEERING_MODE_DEVICE_MANAGED)
 				qp->flags |= MLX4_IB_QP_NETIF;
+<<<<<<< HEAD
 			else
 				goto err;
+=======
+			else {
+				err = -EINVAL;
+				goto err;
+			}
+>>>>>>> rebase
 		}
 
 		err = set_kernel_sq_size(dev, &init_attr->cap, qp_type, qp);
@@ -2807,6 +2814,10 @@ static int build_sriov_qp0_header(struct mlx4_ib_sqp *sqp,
 	int send_size;
 	int header_size;
 	int spc;
+<<<<<<< HEAD
+=======
+	int err;
+>>>>>>> rebase
 	int i;
 
 	if (wr->wr.opcode != IB_WR_SEND)
@@ -2841,7 +2852,13 @@ static int build_sriov_qp0_header(struct mlx4_ib_sqp *sqp,
 
 	sqp->ud_header.lrh.virtual_lane    = 0;
 	sqp->ud_header.bth.solicited_event = !!(wr->wr.send_flags & IB_SEND_SOLICITED);
+<<<<<<< HEAD
 	ib_get_cached_pkey(ib_dev, sqp->qp.port, 0, &pkey);
+=======
+	err = ib_get_cached_pkey(ib_dev, sqp->qp.port, 0, &pkey);
+	if (err)
+		return err;
+>>>>>>> rebase
 	sqp->ud_header.bth.pkey = cpu_to_be16(pkey);
 	if (sqp->qp.mlx4_ib_qp_type == MLX4_IB_QPT_TUN_SMI_OWNER)
 		sqp->ud_header.bth.destination_qpn = cpu_to_be32(wr->remote_qpn);
@@ -3128,9 +3145,20 @@ static int build_mlx_header(struct mlx4_ib_sqp *sqp, const struct ib_ud_wr *wr,
 	}
 	sqp->ud_header.bth.solicited_event = !!(wr->wr.send_flags & IB_SEND_SOLICITED);
 	if (!sqp->qp.ibqp.qp_num)
+<<<<<<< HEAD
 		ib_get_cached_pkey(ib_dev, sqp->qp.port, sqp->pkey_index, &pkey);
 	else
 		ib_get_cached_pkey(ib_dev, sqp->qp.port, wr->pkey_index, &pkey);
+=======
+		err = ib_get_cached_pkey(ib_dev, sqp->qp.port, sqp->pkey_index,
+					 &pkey);
+	else
+		err = ib_get_cached_pkey(ib_dev, sqp->qp.port, wr->pkey_index,
+					 &pkey);
+	if (err)
+		return err;
+
+>>>>>>> rebase
 	sqp->ud_header.bth.pkey = cpu_to_be16(pkey);
 	sqp->ud_header.bth.destination_qpn = cpu_to_be32(wr->remote_qpn);
 	sqp->ud_header.bth.psn = cpu_to_be32((sqp->send_psn++) & ((1 << 24) - 1));

@@ -1371,7 +1371,11 @@ static int bdisp_probe(struct platform_device *pdev)
 	ret = pm_runtime_get_sync(dev);
 	if (ret < 0) {
 		dev_err(dev, "failed to set PM\n");
+<<<<<<< HEAD
 		goto err_dbg;
+=======
+		goto err_pm;
+>>>>>>> rebase
 	}
 
 	/* Filters */
@@ -1399,7 +1403,10 @@ err_filter:
 	bdisp_hw_free_filters(bdisp->dev);
 err_pm:
 	pm_runtime_put(dev);
+<<<<<<< HEAD
 err_dbg:
+=======
+>>>>>>> rebase
 	bdisp_debugfs_remove(bdisp);
 err_v4l2:
 	v4l2_device_unregister(&bdisp->v4l2_dev);

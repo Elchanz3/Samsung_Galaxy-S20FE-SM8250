@@ -224,11 +224,34 @@ static int neigh_del_timer(struct neighbour *n)
 	return 0;
 }
 
+<<<<<<< HEAD
 static void pneigh_queue_purge(struct sk_buff_head *list)
 {
 	struct sk_buff *skb;
 
 	while ((skb = skb_dequeue(list)) != NULL) {
+=======
+static void pneigh_queue_purge(struct sk_buff_head *list, struct net *net)
+{
+	struct sk_buff_head tmp;
+	unsigned long flags;
+	struct sk_buff *skb;
+
+	skb_queue_head_init(&tmp);
+	spin_lock_irqsave(&list->lock, flags);
+	skb = skb_peek(list);
+	while (skb != NULL) {
+		struct sk_buff *skb_next = skb_peek_next(skb, list);
+		if (net == NULL || net_eq(dev_net(skb->dev), net)) {
+			__skb_unlink(skb, list);
+			__skb_queue_tail(&tmp, skb);
+		}
+		skb = skb_next;
+	}
+	spin_unlock_irqrestore(&list->lock, flags);
+
+	while ((skb = __skb_dequeue(&tmp))) {
+>>>>>>> rebase
 		dev_put(skb->dev);
 		kfree_skb(skb);
 	}
@@ -297,9 +320,15 @@ int neigh_ifdown(struct neigh_table *tbl, struct net_device *dev)
 	write_lock_bh(&tbl->lock);
 	neigh_flush_dev(tbl, dev);
 	pneigh_ifdown_and_unlock(tbl, dev);
+<<<<<<< HEAD
 
 	del_timer_sync(&tbl->proxy_timer);
 	pneigh_queue_purge(&tbl->proxy_queue);
+=======
+	pneigh_queue_purge(&tbl->proxy_queue, dev ? dev_net(dev) : NULL);
+	if (skb_queue_empty_lockless(&tbl->proxy_queue))
+		del_timer_sync(&tbl->proxy_timer);
+>>>>>>> rebase
 	return 0;
 }
 EXPORT_SYMBOL(neigh_ifdown);
@@ -635,7 +664,11 @@ struct pneigh_entry * pneigh_lookup(struct neigh_table *tbl,
 
 	ASSERT_RTNL();
 
+<<<<<<< HEAD
 	n = kmalloc(sizeof(*n) + key_len, GFP_KERNEL);
+=======
+	n = kzalloc(sizeof(*n) + key_len, GFP_KERNEL);
+>>>>>>> rebase
 	if (!n)
 		goto out;
 
@@ -739,7 +772,11 @@ void neigh_destroy(struct neighbour *neigh)
 	NEIGH_CACHE_STAT_INC(neigh->tbl, destroys);
 
 	if (!neigh->dead) {
+<<<<<<< HEAD
 		pr_warn("Destroying alive neighbour %pK\n", neigh);
+=======
+		pr_warn("Destroying alive neighbour %p\n", neigh);
+>>>>>>> rebase
 		dump_stack();
 		return;
 	}
@@ -1271,7 +1308,11 @@ int neigh_update(struct neighbour *neigh, const u8 *lladdr, u8 new,
 			 * we can reinject the packet there.
 			 */
 			n2 = NULL;
+<<<<<<< HEAD
 			if (dst) {
+=======
+			if (dst && dst->obsolete != DST_OBSOLETE_DEAD) {
+>>>>>>> rebase
 				n2 = dst_neigh_lookup_skb(dst, skb);
 				if (n2)
 					n1 = n2;
@@ -1614,7 +1655,11 @@ int neigh_table_clear(int index, struct neigh_table *tbl)
 	/* It is not clean... Fix it to unload IPv6 module safely */
 	cancel_delayed_work_sync(&tbl->gc_work);
 	del_timer_sync(&tbl->proxy_timer);
+<<<<<<< HEAD
 	pneigh_queue_purge(&tbl->proxy_queue);
+=======
+	pneigh_queue_purge(&tbl->proxy_queue, NULL);
+>>>>>>> rebase
 	neigh_ifdown(tbl, NULL);
 	if (atomic_read(&tbl->entries))
 		pr_crit("neighbour leakage\n");
@@ -2844,6 +2889,10 @@ static void *neigh_stat_seq_next(struct seq_file *seq, void *v, loff_t *pos)
 		*pos = cpu+1;
 		return per_cpu_ptr(tbl->stats, cpu);
 	}
+<<<<<<< HEAD
+=======
+	(*pos)++;
+>>>>>>> rebase
 	return NULL;
 }
 

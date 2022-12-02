@@ -33,17 +33,24 @@ struct snd_jack_kctl {
 };
 
 #ifdef CONFIG_SND_JACK_INPUT_DEV
+<<<<<<< HEAD
 static int jack_switch_types[] = {
+=======
+static int jack_switch_types[SND_JACK_SWITCH_TYPES] = {
+>>>>>>> rebase
 	SW_HEADPHONE_INSERT,
 	SW_MICROPHONE_INSERT,
 	SW_LINEOUT_INSERT,
 	SW_JACK_PHYSICAL_INSERT,
 	SW_VIDEOOUT_INSERT,
 	SW_LINEIN_INSERT,
+<<<<<<< HEAD
 	SW_HPHL_OVERCURRENT,
 	SW_HPHR_OVERCURRENT,
 	SW_UNSUPPORT_INSERT,
 	SW_MICROPHONE2_INSERT,
+=======
+>>>>>>> rebase
 };
 #endif /* CONFIG_SND_JACK_INPUT_DEV */
 
@@ -52,8 +59,16 @@ static int snd_jack_dev_disconnect(struct snd_device *device)
 #ifdef CONFIG_SND_JACK_INPUT_DEV
 	struct snd_jack *jack = device->device_data;
 
+<<<<<<< HEAD
 	if (!jack->input_dev)
 		return 0;
+=======
+	mutex_lock(&jack->input_dev_lock);
+	if (!jack->input_dev) {
+		mutex_unlock(&jack->input_dev_lock);
+		return 0;
+	}
+>>>>>>> rebase
 
 	/* If the input device is registered with the input subsystem
 	 * then we need to use a different deallocator. */
@@ -62,6 +77,10 @@ static int snd_jack_dev_disconnect(struct snd_device *device)
 	else
 		input_free_device(jack->input_dev);
 	jack->input_dev = NULL;
+<<<<<<< HEAD
+=======
+	mutex_unlock(&jack->input_dev_lock);
+>>>>>>> rebase
 #endif /* CONFIG_SND_JACK_INPUT_DEV */
 	return 0;
 }
@@ -72,10 +91,19 @@ static int snd_jack_dev_free(struct snd_device *device)
 	struct snd_card *card = device->card;
 	struct snd_jack_kctl *jack_kctl, *tmp_jack_kctl;
 
+<<<<<<< HEAD
+=======
+	down_write(&card->controls_rwsem);
+>>>>>>> rebase
 	list_for_each_entry_safe(jack_kctl, tmp_jack_kctl, &jack->kctl_list, list) {
 		list_del_init(&jack_kctl->list);
 		snd_ctl_remove(card, jack_kctl->kctl);
 	}
+<<<<<<< HEAD
+=======
+	up_write(&card->controls_rwsem);
+
+>>>>>>> rebase
 	if (jack->private_free)
 		jack->private_free(jack);
 
@@ -97,8 +125,16 @@ static int snd_jack_dev_register(struct snd_device *device)
 	snprintf(jack->name, sizeof(jack->name), "%s %s",
 		 card->shortname, jack->id);
 
+<<<<<<< HEAD
 	if (!jack->input_dev)
 		return 0;
+=======
+	mutex_lock(&jack->input_dev_lock);
+	if (!jack->input_dev) {
+		mutex_unlock(&jack->input_dev_lock);
+		return 0;
+	}
+>>>>>>> rebase
 
 	jack->input_dev->name = jack->name;
 
@@ -123,6 +159,10 @@ static int snd_jack_dev_register(struct snd_device *device)
 	if (err == 0)
 		jack->registered = 1;
 
+<<<<<<< HEAD
+=======
+	mutex_unlock(&jack->input_dev_lock);
+>>>>>>> rebase
 	return err;
 }
 #endif /* CONFIG_SND_JACK_INPUT_DEV */
@@ -238,10 +278,23 @@ int snd_jack_new(struct snd_card *card, const char *id, int type,
 		return -ENOMEM;
 
 	jack->id = kstrdup(id, GFP_KERNEL);
+<<<<<<< HEAD
 
 	/* don't creat input device for phantom jack */
 	if (!phantom_jack) {
 #ifdef CONFIG_SND_JACK_INPUT_DEV
+=======
+	if (jack->id == NULL) {
+		kfree(jack);
+		return -ENOMEM;
+	}
+
+#ifdef CONFIG_SND_JACK_INPUT_DEV
+	mutex_init(&jack->input_dev_lock);
+
+	/* don't create input device for phantom jack */
+	if (!phantom_jack) {
+>>>>>>> rebase
 		int i;
 
 		jack->input_dev = input_allocate_device();
@@ -254,13 +307,22 @@ int snd_jack_new(struct snd_card *card, const char *id, int type,
 
 		jack->type = type;
 
+<<<<<<< HEAD
 		for (i = 0; i < ARRAY_SIZE(jack_switch_types); i++)
+=======
+		for (i = 0; i < SND_JACK_SWITCH_TYPES; i++)
+>>>>>>> rebase
 			if (type & (1 << i))
 				input_set_capability(jack->input_dev, EV_SW,
 						     jack_switch_types[i]);
 
+<<<<<<< HEAD
 #endif /* CONFIG_SND_JACK_INPUT_DEV */
 	}
+=======
+	}
+#endif /* CONFIG_SND_JACK_INPUT_DEV */
+>>>>>>> rebase
 
 	err = snd_device_new(card, SNDRV_DEV_JACK, jack, &ops);
 	if (err < 0)
@@ -300,10 +362,21 @@ EXPORT_SYMBOL(snd_jack_new);
 void snd_jack_set_parent(struct snd_jack *jack, struct device *parent)
 {
 	WARN_ON(jack->registered);
+<<<<<<< HEAD
 	if (!jack->input_dev)
 		return;
 
 	jack->input_dev->dev.parent = parent;
+=======
+	mutex_lock(&jack->input_dev_lock);
+	if (!jack->input_dev) {
+		mutex_unlock(&jack->input_dev_lock);
+		return;
+	}
+
+	jack->input_dev->dev.parent = parent;
+	mutex_unlock(&jack->input_dev_lock);
+>>>>>>> rebase
 }
 EXPORT_SYMBOL(snd_jack_set_parent);
 
@@ -351,6 +424,11 @@ EXPORT_SYMBOL(snd_jack_set_key);
 
 /**
  * snd_jack_report - Report the current status of a jack
+<<<<<<< HEAD
+=======
+ * Note: This function uses mutexes and should be called from a
+ * context which can sleep (such as a workqueue).
+>>>>>>> rebase
  *
  * @jack:   The jack to report status for
  * @status: The current status of the jack
@@ -370,8 +448,16 @@ void snd_jack_report(struct snd_jack *jack, int status)
 					    status & jack_kctl->mask_bits);
 
 #ifdef CONFIG_SND_JACK_INPUT_DEV
+<<<<<<< HEAD
 	if (!jack->input_dev)
 		return;
+=======
+	mutex_lock(&jack->input_dev_lock);
+	if (!jack->input_dev) {
+		mutex_unlock(&jack->input_dev_lock);
+		return;
+	}
+>>>>>>> rebase
 
 	for (i = 0; i < ARRAY_SIZE(jack->key); i++) {
 		int testbit = SND_JACK_BTN_0 >> i;
@@ -390,6 +476,10 @@ void snd_jack_report(struct snd_jack *jack, int status)
 	}
 
 	input_sync(jack->input_dev);
+<<<<<<< HEAD
+=======
+	mutex_unlock(&jack->input_dev_lock);
+>>>>>>> rebase
 #endif /* CONFIG_SND_JACK_INPUT_DEV */
 }
 EXPORT_SYMBOL(snd_jack_report);

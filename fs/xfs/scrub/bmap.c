@@ -53,9 +53,33 @@ xchk_setup_inode_bmap(
 	 */
 	if (S_ISREG(VFS_I(sc->ip)->i_mode) &&
 	    sc->sm->sm_type == XFS_SCRUB_TYPE_BMBTD) {
+<<<<<<< HEAD
 		inode_dio_wait(VFS_I(sc->ip));
 		error = filemap_write_and_wait(VFS_I(sc->ip)->i_mapping);
 		if (error)
+=======
+		struct address_space	*mapping = VFS_I(sc->ip)->i_mapping;
+
+		inode_dio_wait(VFS_I(sc->ip));
+
+		/*
+		 * Try to flush all incore state to disk before we examine the
+		 * space mappings for the data fork.  Leave accumulated errors
+		 * in the mapping for the writer threads to consume.
+		 *
+		 * On ENOSPC or EIO writeback errors, we continue into the
+		 * extent mapping checks because write failures do not
+		 * necessarily imply anything about the correctness of the file
+		 * metadata.  The metadata and the file data could be on
+		 * completely separate devices; a media failure might only
+		 * affect a subset of the disk, etc.  We can handle delalloc
+		 * extents in the scrubber, so leaving them in memory is fine.
+		 */
+		error = filemap_fdatawrite(mapping);
+		if (!error)
+			error = filemap_fdatawait_keep_errors(mapping);
+		if (error && (error != -ENOSPC && error != -EIO))
+>>>>>>> rebase
 			goto out;
 	}
 
@@ -102,6 +126,11 @@ xchk_bmap_get_rmap(
 
 	if (info->whichfork == XFS_ATTR_FORK)
 		rflags |= XFS_RMAP_ATTR_FORK;
+<<<<<<< HEAD
+=======
+	if (irec->br_state == XFS_EXT_UNWRITTEN)
+		rflags |= XFS_RMAP_UNWRITTEN;
+>>>>>>> rebase
 
 	/*
 	 * CoW staging extents are owned (on disk) by the refcountbt, so
@@ -205,6 +234,7 @@ xchk_bmap_xref_rmap(
 	 * which doesn't track unwritten state.
 	 */
 	if (owner != XFS_RMAP_OWN_COW &&
+<<<<<<< HEAD
 	    irec->br_state == XFS_EXT_UNWRITTEN &&
 	    !(rmap.rm_flags & XFS_RMAP_UNWRITTEN))
 		xchk_fblock_xref_set_corrupt(info->sc, info->whichfork,
@@ -212,6 +242,15 @@ xchk_bmap_xref_rmap(
 
 	if (info->whichfork == XFS_ATTR_FORK &&
 	    !(rmap.rm_flags & XFS_RMAP_ATTR_FORK))
+=======
+	    !!(irec->br_state == XFS_EXT_UNWRITTEN) !=
+	    !!(rmap.rm_flags & XFS_RMAP_UNWRITTEN))
+		xchk_fblock_xref_set_corrupt(info->sc, info->whichfork,
+				irec->br_startoff);
+
+	if (!!(info->whichfork == XFS_ATTR_FORK) !=
+	    !!(rmap.rm_flags & XFS_RMAP_ATTR_FORK))
+>>>>>>> rebase
 		xchk_fblock_xref_set_corrupt(info->sc, info->whichfork,
 				irec->br_startoff);
 	if (rmap.rm_flags & XFS_RMAP_BMBT_BLOCK)

@@ -17,9 +17,12 @@
 #ifdef CONFIG_CMA
 #include <linux/cma.h>
 #endif
+<<<<<<< HEAD
 #ifdef CONFIG_HUGEPAGE_POOL
 #include <linux/hugepage_pool.h>
 #endif
+=======
+>>>>>>> rebase
 #include <asm/page.h>
 #include <asm/pgtable.h>
 #include "internal.h"
@@ -41,10 +44,14 @@ static int meminfo_proc_show(struct seq_file *m, void *v)
 	long cached;
 	long available;
 	unsigned long pages[NR_LRU_LISTS];
+<<<<<<< HEAD
 	unsigned long sreclaimable, sunreclaim;
 	int lru;
 	long rbinfree;
 	long hugepage_pool_pages = 0;
+=======
+	int lru;
+>>>>>>> rebase
 
 	si_meminfo(&i);
 	si_swapinfo(&i);
@@ -52,9 +59,12 @@ static int meminfo_proc_show(struct seq_file *m, void *v)
 
 	cached = global_node_page_state(NR_FILE_PAGES) -
 			total_swapcache_pages() - i.bufferram;
+<<<<<<< HEAD
 #ifdef CONFIG_ION_RBIN_HEAP
 	cached += atomic_read(&rbin_cached_pages);
 #endif
+=======
+>>>>>>> rebase
 	if (cached < 0)
 		cached = 0;
 
@@ -62,6 +72,7 @@ static int meminfo_proc_show(struct seq_file *m, void *v)
 		pages[lru] = global_node_page_state(NR_LRU_BASE + lru);
 
 	available = si_mem_available();
+<<<<<<< HEAD
 	sreclaimable = global_node_page_state(NR_SLAB_RECLAIMABLE);
 	sunreclaim = global_node_page_state(NR_SLAB_UNRECLAIMABLE);
 	rbinfree = global_zone_page_state(NR_FREE_RBIN_PAGES);
@@ -72,6 +83,12 @@ static int meminfo_proc_show(struct seq_file *m, void *v)
 	show_val_kb(m, "MemTotal:       ", i.totalram);
 	show_val_kb(m, "MemFree:        ", i.freeram + rbinfree + hugepage_pool_pages);
 	show_val_kb(m, "MemAvailable:   ", available + rbinfree);
+=======
+
+	show_val_kb(m, "MemTotal:       ", i.totalram);
+	show_val_kb(m, "MemFree:        ", i.freeram);
+	show_val_kb(m, "MemAvailable:   ", available);
+>>>>>>> rebase
 	show_val_kb(m, "Buffers:        ", i.bufferram);
 	show_val_kb(m, "Cached:         ", cached);
 	show_val_kb(m, "SwapCached:     ", total_swapcache_pages());
@@ -98,6 +115,7 @@ static int meminfo_proc_show(struct seq_file *m, void *v)
 		    (unsigned long)atomic_long_read(&mmap_pages_allocated));
 #endif
 
+<<<<<<< HEAD
 #ifdef CONFIG_ION_RBIN_HEAP
 	show_val_kb(m, "RbinTotal:      ", totalrbin_pages);
 	show_val_kb(m, "RbinAlloced:    ",
@@ -111,6 +129,8 @@ static int meminfo_proc_show(struct seq_file *m, void *v)
 #ifdef CONFIG_KZEROD
 	show_val_kb(m, "ZeroedFree:     ", kzerod_get_zeroed_size());
 #endif
+=======
+>>>>>>> rebase
 	show_val_kb(m, "SwapTotal:      ", i.totalswap);
 	show_val_kb(m, "SwapFree:       ", i.freeswap);
 	show_val_kb(m, "Dirty:          ",
@@ -122,6 +142,7 @@ static int meminfo_proc_show(struct seq_file *m, void *v)
 	show_val_kb(m, "Mapped:         ",
 		    global_node_page_state(NR_FILE_MAPPED));
 	show_val_kb(m, "Shmem:          ", i.sharedram);
+<<<<<<< HEAD
 	show_val_kb(m, "KReclaimable:   ", sreclaimable +
 		    global_node_page_state(NR_KERNEL_MISC_RECLAIMABLE));
 	show_val_kb(m, "Slab:           ", sreclaimable + sunreclaim);
@@ -133,6 +154,18 @@ static int meminfo_proc_show(struct seq_file *m, void *v)
 	seq_printf(m, "ShadowCallStack:%8lu kB\n",
 		   global_zone_page_state(NR_KERNEL_SCS_BYTES) / 1024);
 #endif
+=======
+	show_val_kb(m, "Slab:           ",
+		    global_node_page_state(NR_SLAB_RECLAIMABLE) +
+		    global_node_page_state(NR_SLAB_UNRECLAIMABLE));
+
+	show_val_kb(m, "SReclaimable:   ",
+		    global_node_page_state(NR_SLAB_RECLAIMABLE));
+	show_val_kb(m, "SUnreclaim:     ",
+		    global_node_page_state(NR_SLAB_UNRECLAIMABLE));
+	seq_printf(m, "KernelStack:    %8lu kB\n",
+		   global_zone_page_state(NR_KERNEL_STACK_KB));
+>>>>>>> rebase
 	show_val_kb(m, "PageTables:     ",
 		    global_zone_page_state(NR_PAGETABLE));
 #ifdef CONFIG_QUICKLIST
@@ -149,7 +182,11 @@ static int meminfo_proc_show(struct seq_file *m, void *v)
 	show_val_kb(m, "Committed_AS:   ", committed);
 	seq_printf(m, "VmallocTotal:   %8lu kB\n",
 		   (unsigned long)VMALLOC_TOTAL >> 10);
+<<<<<<< HEAD
 	show_val_kb(m, "VmallocUsed:    ", vmalloc_nr_pages());
+=======
+	show_val_kb(m, "VmallocUsed:    ", 0ul);
+>>>>>>> rebase
 	show_val_kb(m, "VmallocChunk:   ", 0ul);
 	show_val_kb(m, "Percpu:         ", pcpu_nr_pages());
 
@@ -165,9 +202,12 @@ static int meminfo_proc_show(struct seq_file *m, void *v)
 		    global_node_page_state(NR_SHMEM_THPS) * HPAGE_PMD_NR);
 	show_val_kb(m, "ShmemPmdMapped: ",
 		    global_node_page_state(NR_SHMEM_PMDMAPPED) * HPAGE_PMD_NR);
+<<<<<<< HEAD
 #ifdef CONFIG_HUGEPAGE_POOL
 	show_val_kb(m, "HugepagePool:   ", hugepage_pool_pages);
 #endif
+=======
+>>>>>>> rebase
 #endif
 
 #ifdef CONFIG_CMA

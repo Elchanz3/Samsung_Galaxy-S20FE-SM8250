@@ -38,8 +38,11 @@
 #include <linux/syscalls.h>
 #include <linux/proc_ns.h>
 #include <linux/proc_fs.h>
+<<<<<<< HEAD
 #include <linux/anon_inodes.h>
 #include <linux/sched/signal.h>
+=======
+>>>>>>> rebase
 #include <linux/sched/task.h>
 #include <linux/idr.h>
 
@@ -216,8 +219,11 @@ struct pid *alloc_pid(struct pid_namespace *ns)
 	for (type = 0; type < PIDTYPE_MAX; ++type)
 		INIT_HLIST_HEAD(&pid->tasks[type]);
 
+<<<<<<< HEAD
 	init_waitqueue_head(&pid->wait_pidfd);
 
+=======
+>>>>>>> rebase
 	upid = pid->numbers + ns->level;
 	spin_lock_irq(&pidmap_lock);
 	if (!(ns->pid_allocated & PIDNS_ADDING))
@@ -455,6 +461,7 @@ struct pid *find_ge_pid(int nr, struct pid_namespace *ns)
 	return idr_get_next(&ns->idr, &nr);
 }
 
+<<<<<<< HEAD
 /**
  * pidfd_create() - Create a new pid file descriptor.
  *
@@ -522,6 +529,8 @@ SYSCALL_DEFINE2(pidfd_open, pid_t, pid, unsigned int, flags)
 	return fd;
 }
 
+=======
+>>>>>>> rebase
 void __init pid_idr_init(void)
 {
 	/* Verify no one has done anything silly: */

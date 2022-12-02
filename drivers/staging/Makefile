@@ -33,7 +33,10 @@ obj-$(CONFIG_DGNC)			+= dgnc/
 obj-$(CONFIG_MTD_SPINAND_MT29F)	+= mt29f_spinand/
 obj-$(CONFIG_GS_FPGABOOT)	+= gs_fpgaboot/
 obj-$(CONFIG_UNISYSSPAR)	+= unisys/
+<<<<<<< HEAD
 obj-$(CONFIG_SEC_EXT)		+= samsung/
+=======
+>>>>>>> rebase
 obj-$(CONFIG_COMMON_CLK_XLNX_CLKWZRD)	+= clocking-wizard/
 obj-$(CONFIG_FB_TFT)		+= fbtft/
 obj-$(CONFIG_FSL_DPAA2)		+= fsl-dpaa2/
@@ -48,10 +51,16 @@ obj-$(CONFIG_SOC_MT7621)	+= mt7621-pci/
 obj-$(CONFIG_SOC_MT7621)	+= mt7621-pinctrl/
 obj-$(CONFIG_SOC_MT7621)	+= mt7621-spi/
 obj-$(CONFIG_SOC_MT7621)	+= mt7621-dma/
+<<<<<<< HEAD
 obj-$(CONFIG_SOC_MT7621)	+= mt7621-mmc/
+=======
+>>>>>>> rebase
 obj-$(CONFIG_SOC_MT7621)	+= mt7621-eth/
 obj-$(CONFIG_SOC_MT7621)	+= mt7621-dts/
 obj-$(CONFIG_STAGING_GASKET_FRAMEWORK)	+= gasket/
 obj-$(CONFIG_XIL_AXIS_FIFO)	+= axis-fifo/
 obj-$(CONFIG_EROFS_FS)		+= erofs/
+<<<<<<< HEAD
 obj-$(CONFIG_SEC_STI)		+= sti/
+=======
+>>>>>>> rebase

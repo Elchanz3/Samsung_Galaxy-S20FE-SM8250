@@ -20,7 +20,10 @@ struct ovl_config {
 	bool nfs_export;
 	int xino;
 	bool metacopy;
+<<<<<<< HEAD
 	bool override_creds;
+=======
+>>>>>>> rebase
 };
 
 struct ovl_sb {

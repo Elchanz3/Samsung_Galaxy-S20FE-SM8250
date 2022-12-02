@@ -566,7 +566,12 @@ nfqnl_build_packet_message(struct net *net, struct nfqnl_instance *queue,
 		goto nla_put_failure;
 
 	if (indev && entskb->dev &&
+<<<<<<< HEAD
 	    entskb->mac_header != entskb->network_header) {
+=======
+	    skb_mac_header_was_set(entskb) &&
+	    skb_mac_header_len(entskb) != 0) {
+>>>>>>> rebase
 		struct nfqnl_msg_packet_hw phw;
 		int len;
 
@@ -685,7 +690,11 @@ __nfqnl_enqueue_packet(struct net *net, struct nfqnl_instance *queue,
 	*packet_id_ptr = htonl(entry->id);
 
 	/* nfnetlink_unicast will either free the nskb or add it to a socket */
+<<<<<<< HEAD
 	err = nfnetlink_unicast(nskb, net, queue->peer_portid, MSG_DONTWAIT);
+=======
+	err = nfnetlink_unicast(nskb, net, queue->peer_portid);
+>>>>>>> rebase
 	if (err < 0) {
 		if (queue->flags & NFQA_CFG_F_FAIL_OPEN) {
 			failopen = 1;
@@ -715,9 +724,21 @@ static struct nf_queue_entry *
 nf_queue_entry_dup(struct nf_queue_entry *e)
 {
 	struct nf_queue_entry *entry = kmemdup(e, e->size, GFP_ATOMIC);
+<<<<<<< HEAD
 	if (entry)
 		nf_queue_entry_get_refs(entry);
 	return entry;
+=======
+
+	if (!entry)
+		return NULL;
+
+	if (nf_queue_entry_get_refs(entry))
+		return entry;
+
+	kfree(entry);
+	return NULL;
+>>>>>>> rebase
 }
 
 #if IS_ENABLED(CONFIG_BRIDGE_NETFILTER)
@@ -843,11 +864,23 @@ nfqnl_enqueue_packet(struct nf_queue_entry *entry, unsigned int queuenum)
 }
 
 static int
+<<<<<<< HEAD
 nfqnl_mangle(void *data, int data_len, struct nf_queue_entry *e, int diff)
+=======
+nfqnl_mangle(void *data, unsigned int data_len, struct nf_queue_entry *e, int diff)
+>>>>>>> rebase
 {
 	struct sk_buff *nskb;
 
 	if (diff < 0) {
+<<<<<<< HEAD
+=======
+		unsigned int min_len = skb_transport_offset(e->skb);
+
+		if (data_len < min_len)
+			return -EINVAL;
+
+>>>>>>> rebase
 		if (pskb_trim(e->skb, data_len))
 			return -ENOMEM;
 	} else if (diff > 0) {

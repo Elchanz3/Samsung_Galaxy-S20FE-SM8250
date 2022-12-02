@@ -31,7 +31,10 @@
 #include <linux/pci.h>
 #include <linux/scatterlist.h>
 #include <linux/vmalloc.h>
+<<<<<<< HEAD
 #include <linux/msm_dma_iommu_mapping.h>
+=======
+>>>>>>> rebase
 
 #define IOMMU_MAPPING_ERROR	0
 
@@ -308,7 +311,10 @@ int iommu_dma_init_domain(struct iommu_domain *domain, dma_addr_t base,
 		return 0;
 	}
 
+<<<<<<< HEAD
 	iovad->end_pfn = end_pfn;
+=======
+>>>>>>> rebase
 	init_iova_domain(iovad, 1UL << order, base_pfn);
 	if (!dev)
 		return 0;
@@ -317,6 +323,7 @@ int iommu_dma_init_domain(struct iommu_domain *domain, dma_addr_t base,
 }
 EXPORT_SYMBOL(iommu_dma_init_domain);
 
+<<<<<<< HEAD
 /*
  * Should be called prior to using dma-apis
  */
@@ -360,6 +367,8 @@ int iommu_dma_enable_best_fit_algo(struct device *dev)
 }
 EXPORT_SYMBOL(iommu_dma_enable_best_fit_algo);
 
+=======
+>>>>>>> rebase
 /**
  * dma_info_to_prot - Translate DMA API directions and attributes to IOMMU API
  *                    page flags.
@@ -377,6 +386,7 @@ int dma_info_to_prot(enum dma_data_direction dir, bool coherent,
 	if (attrs & DMA_ATTR_PRIVILEGED)
 		prot |= IOMMU_PRIV;
 
+<<<<<<< HEAD
 	if (!(attrs & DMA_ATTR_EXEC_MAPPING))
 		prot |= IOMMU_NOEXEC;
 
@@ -386,6 +396,8 @@ int dma_info_to_prot(enum dma_data_direction dir, bool coherent,
 	if (attrs & DMA_ATTR_IOMMU_USE_LLC_NWA)
 		prot |= IOMMU_USE_LLC_NWA;
 
+=======
+>>>>>>> rebase
 	switch (dir) {
 	case DMA_BIDIRECTIONAL:
 		return prot | IOMMU_READ | IOMMU_WRITE;
@@ -404,7 +416,10 @@ static dma_addr_t iommu_dma_alloc_iova(struct iommu_domain *domain,
 	struct iommu_dma_cookie *cookie = domain->iova_cookie;
 	struct iova_domain *iovad = &cookie->iovad;
 	unsigned long shift, iova_len, iova = 0;
+<<<<<<< HEAD
 	dma_addr_t limit;
+=======
+>>>>>>> rebase
 
 	if (cookie->type == IOMMU_DMA_MSI_COOKIE) {
 		cookie->msi_iova += size;
@@ -428,6 +443,7 @@ static dma_addr_t iommu_dma_alloc_iova(struct iommu_domain *domain,
 	if (domain->geometry.force_aperture)
 		dma_limit = min(dma_limit, domain->geometry.aperture_end);
 
+<<<<<<< HEAD
 	/*
 	 * Ensure iova is within range specified in iommu_dma_init_domain().
 	 * This also prevents unnecessary work iterating through the entire
@@ -449,6 +465,18 @@ static dma_addr_t iommu_dma_alloc_iova(struct iommu_domain *domain,
 
 	return (dma_addr_t)iova << shift;
 
+=======
+	/* Try to get PCI devices a SAC address */
+	if (dma_limit > DMA_BIT_MASK(32) && dev_is_pci(dev))
+		iova = alloc_iova_fast(iovad, iova_len,
+				       DMA_BIT_MASK(32) >> shift, false);
+
+	if (!iova)
+		iova = alloc_iova_fast(iovad, iova_len, dma_limit >> shift,
+				       true);
+
+	return (dma_addr_t)iova << shift;
+>>>>>>> rebase
 }
 
 static void iommu_dma_free_iova(struct iommu_dma_cookie *cookie,
@@ -519,9 +547,14 @@ static struct page **__iommu_dma_alloc_pages(unsigned int count,
 			unsigned int order = __fls(order_mask);
 
 			order_size = 1U << order;
+<<<<<<< HEAD
 			page = alloc_pages(order ?
 					   (gfp | __GFP_NORETRY) &
 						~__GFP_RECLAIM : gfp, order);
+=======
+			page = alloc_pages((order_mask - order_size) ?
+					   gfp | __GFP_NORETRY : gfp, order);
+>>>>>>> rebase
 			if (!page)
 				continue;
 			if (!order)
@@ -715,7 +748,11 @@ void iommu_dma_unmap_page(struct device *dev, dma_addr_t handle, size_t size,
  * avoid individually crossing any boundaries, so we merely need to check a
  * segment's start address to avoid concatenating across one.
  */
+<<<<<<< HEAD
 int iommu_dma_finalise_sg(struct device *dev, struct scatterlist *sg, int nents,
+=======
+static int __finalise_sg(struct device *dev, struct scatterlist *sg, int nents,
+>>>>>>> rebase
 		dma_addr_t dma_addr)
 {
 	struct scatterlist *s, *cur = sg;
@@ -768,7 +805,11 @@ int iommu_dma_finalise_sg(struct device *dev, struct scatterlist *sg, int nents,
  * If mapping failed, then just restore the original list,
  * but making sure the DMA fields are invalidated.
  */
+<<<<<<< HEAD
 void iommu_dma_invalidate_sg(struct scatterlist *sg, int nents)
+=======
+static void __invalidate_sg(struct scatterlist *sg, int nents)
+>>>>>>> rebase
 {
 	struct scatterlist *s;
 	int i;
@@ -790,10 +831,21 @@ void iommu_dma_invalidate_sg(struct scatterlist *sg, int nents)
  * impedance-matching, to be able to hand off a suitably-aligned list,
  * but still preserve the original offsets and sizes for the caller.
  */
+<<<<<<< HEAD
 size_t iommu_dma_prepare_map_sg(struct device *dev, struct iova_domain *iovad,
 				struct scatterlist *sg, int nents)
 {
 	struct scatterlist *s, *prev = NULL;
+=======
+int iommu_dma_map_sg(struct device *dev, struct scatterlist *sg,
+		int nents, int prot)
+{
+	struct iommu_domain *domain = iommu_get_domain_for_dev(dev);
+	struct iommu_dma_cookie *cookie = domain->iova_cookie;
+	struct iova_domain *iovad = &cookie->iovad;
+	struct scatterlist *s, *prev = NULL;
+	dma_addr_t iova;
+>>>>>>> rebase
 	size_t iova_len = 0;
 	unsigned long mask = dma_get_seg_boundary(dev);
 	int i;
@@ -837,6 +889,7 @@ size_t iommu_dma_prepare_map_sg(struct device *dev, struct iova_domain *iovad,
 		prev = s;
 	}
 
+<<<<<<< HEAD
 	return iova_len;
 }
 
@@ -863,11 +916,17 @@ int iommu_dma_map_sg(struct device *dev, struct scatterlist *sg,
 		msm_dma_debug_count_buffers(dev);
 		goto out_restore_sg;
 	}
+=======
+	iova = iommu_dma_alloc_iova(domain, iova_len, dma_get_mask(dev), dev);
+	if (!iova)
+		goto out_restore_sg;
+>>>>>>> rebase
 
 	/*
 	 * We'll leave any physical concatenation to the IOMMU driver's
 	 * implementation - it knows better than we do.
 	 */
+<<<<<<< HEAD
 	if (iommu_map_sg(domain, iova, sg, nents, prot) < iova_len) {
 		pr_err("DEBUG: Map failed for DMAADDR=0x%pad\n", iova);
 		msm_dma_debug_count_buffers(dev);
@@ -875,11 +934,21 @@ int iommu_dma_map_sg(struct device *dev, struct scatterlist *sg,
 	}
 
 	return iommu_dma_finalise_sg(dev, sg, nents, iova);
+=======
+	if (iommu_map_sg(domain, iova, sg, nents, prot) < iova_len)
+		goto out_free_iova;
+
+	return __finalise_sg(dev, sg, nents, iova);
+>>>>>>> rebase
 
 out_free_iova:
 	iommu_dma_free_iova(cookie, iova, iova_len);
 out_restore_sg:
+<<<<<<< HEAD
 	iommu_dma_invalidate_sg(sg, nents);
+=======
+	__invalidate_sg(sg, nents);
+>>>>>>> rebase
 	return 0;
 }
 

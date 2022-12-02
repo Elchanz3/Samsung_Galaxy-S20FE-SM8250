@@ -1391,7 +1391,11 @@ static int __init probe_docg4(struct platform_device *pdev)
 	 * ->attach_chip callback.
 	 */
 	nand->dummy_controller.ops = &docg4_controller_ops;
+<<<<<<< HEAD
 	retval = nand_scan(mtd, 0);
+=======
+	retval = nand_scan(nand, 0);
+>>>>>>> rebase
 	if (retval)
 		goto free_nand;
 
@@ -1420,7 +1424,11 @@ unmap:
 static int __exit cleanup_docg4(struct platform_device *pdev)
 {
 	struct docg4_priv *doc = platform_get_drvdata(pdev);
+<<<<<<< HEAD
 	nand_release(doc->mtd);
+=======
+	nand_release(mtd_to_nand(doc->mtd));
+>>>>>>> rebase
 	kfree(mtd_to_nand(doc->mtd));
 	iounmap(doc->virtadr);
 	return 0;

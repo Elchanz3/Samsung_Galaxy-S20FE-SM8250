@@ -229,7 +229,11 @@ static const struct pci_device_id rtl8169_pci_tbl[] = {
 	{ PCI_DEVICE(PCI_VENDOR_ID_DLINK,	0x4300), 0, 0, RTL_CFG_0 },
 	{ PCI_DEVICE(PCI_VENDOR_ID_DLINK,	0x4302), 0, 0, RTL_CFG_0 },
 	{ PCI_DEVICE(PCI_VENDOR_ID_AT,		0xc107), 0, 0, RTL_CFG_0 },
+<<<<<<< HEAD
 	{ PCI_DEVICE(0x16ec,			0x0116), 0, 0, RTL_CFG_0 },
+=======
+	{ PCI_DEVICE(PCI_VENDOR_ID_USR,		0x0116), 0, 0, RTL_CFG_0 },
+>>>>>>> rebase
 	{ PCI_VENDOR_ID_LINKSYS,		0x1032,
 		PCI_ANY_ID, 0x0024, 0, 0, RTL_CFG_0 },
 	{ 0x0001,				0x8168,
@@ -1823,7 +1827,11 @@ static void rtl8169_get_strings(struct net_device *dev, u32 stringset, u8 *data)
 {
 	switch(stringset) {
 	case ETH_SS_STATS:
+<<<<<<< HEAD
 		memcpy(data, *rtl8169_gstrings, sizeof(rtl8169_gstrings));
+=======
+		memcpy(data, rtl8169_gstrings, sizeof(rtl8169_gstrings));
+>>>>>>> rebase
 		break;
 	}
 }
@@ -4111,6 +4119,30 @@ static void rtl_rar_set(struct rtl8169_private *tp, u8 *addr)
 	rtl_unlock_work(tp);
 }
 
+<<<<<<< HEAD
+=======
+static void rtl_init_rxcfg(struct rtl8169_private *tp)
+{
+	switch (tp->mac_version) {
+	case RTL_GIGA_MAC_VER_01 ... RTL_GIGA_MAC_VER_06:
+	case RTL_GIGA_MAC_VER_10 ... RTL_GIGA_MAC_VER_17:
+		RTL_W32(tp, RxConfig, RX_FIFO_THRESH | RX_DMA_BURST);
+		break;
+	case RTL_GIGA_MAC_VER_18 ... RTL_GIGA_MAC_VER_24:
+	case RTL_GIGA_MAC_VER_34 ... RTL_GIGA_MAC_VER_36:
+	case RTL_GIGA_MAC_VER_38:
+		RTL_W32(tp, RxConfig, RX128_INT_EN | RX_MULTI_EN | RX_DMA_BURST);
+		break;
+	case RTL_GIGA_MAC_VER_40 ... RTL_GIGA_MAC_VER_51:
+		RTL_W32(tp, RxConfig, RX128_INT_EN | RX_MULTI_EN | RX_DMA_BURST | RX_EARLY_OFF);
+		break;
+	default:
+		RTL_W32(tp, RxConfig, RX128_INT_EN | RX_DMA_BURST);
+		break;
+	}
+}
+
+>>>>>>> rebase
 static int rtl_set_mac_address(struct net_device *dev, void *p)
 {
 	struct rtl8169_private *tp = netdev_priv(dev);
@@ -4128,6 +4160,13 @@ static int rtl_set_mac_address(struct net_device *dev, void *p)
 
 	pm_runtime_put_noidle(d);
 
+<<<<<<< HEAD
+=======
+	/* Reportedly at least Asus X453MA truncates packets otherwise */
+	if (tp->mac_version == RTL_GIGA_MAC_VER_37)
+		rtl_init_rxcfg(tp);
+
+>>>>>>> rebase
 	return 0;
 }
 
@@ -4212,7 +4251,13 @@ static void r8168_pll_power_down(struct rtl8169_private *tp)
 		return;
 
 	switch (tp->mac_version) {
+<<<<<<< HEAD
 	case RTL_GIGA_MAC_VER_25 ... RTL_GIGA_MAC_VER_33:
+=======
+	case RTL_GIGA_MAC_VER_25 ... RTL_GIGA_MAC_VER_26:
+	case RTL_GIGA_MAC_VER_29 ... RTL_GIGA_MAC_VER_30:
+	case RTL_GIGA_MAC_VER_32 ... RTL_GIGA_MAC_VER_33:
+>>>>>>> rebase
 	case RTL_GIGA_MAC_VER_37:
 	case RTL_GIGA_MAC_VER_39:
 	case RTL_GIGA_MAC_VER_43:
@@ -4238,7 +4283,13 @@ static void r8168_pll_power_down(struct rtl8169_private *tp)
 static void r8168_pll_power_up(struct rtl8169_private *tp)
 {
 	switch (tp->mac_version) {
+<<<<<<< HEAD
 	case RTL_GIGA_MAC_VER_25 ... RTL_GIGA_MAC_VER_33:
+=======
+	case RTL_GIGA_MAC_VER_25 ... RTL_GIGA_MAC_VER_26:
+	case RTL_GIGA_MAC_VER_29 ... RTL_GIGA_MAC_VER_30:
+	case RTL_GIGA_MAC_VER_32 ... RTL_GIGA_MAC_VER_33:
+>>>>>>> rebase
 	case RTL_GIGA_MAC_VER_37:
 	case RTL_GIGA_MAC_VER_39:
 	case RTL_GIGA_MAC_VER_43:
@@ -4289,6 +4340,7 @@ static void rtl_pll_power_up(struct rtl8169_private *tp)
 	}
 }
 
+<<<<<<< HEAD
 static void rtl_init_rxcfg(struct rtl8169_private *tp)
 {
 	switch (tp->mac_version) {
@@ -4310,6 +4362,8 @@ static void rtl_init_rxcfg(struct rtl8169_private *tp)
 	}
 }
 
+=======
+>>>>>>> rebase
 static void rtl8169_init_ring_indexes(struct rtl8169_private *tp)
 {
 	tp->dirty_tx = tp->cur_tx = tp->cur_rx = 0;
@@ -4359,7 +4413,11 @@ static void r8168dp_hw_jumbo_disable(struct rtl8169_private *tp)
 
 static void r8168e_hw_jumbo_enable(struct rtl8169_private *tp)
 {
+<<<<<<< HEAD
 	RTL_W8(tp, MaxTxPacketSize, 0x3f);
+=======
+	RTL_W8(tp, MaxTxPacketSize, 0x24);
+>>>>>>> rebase
 	RTL_W8(tp, Config3, RTL_R8(tp, Config3) | Jumbo_En0);
 	RTL_W8(tp, Config4, RTL_R8(tp, Config4) | 0x01);
 	rtl_tx_performance_tweak(tp, PCI_EXP_DEVCTL_READRQ_512B);
@@ -4367,7 +4425,11 @@ static void r8168e_hw_jumbo_enable(struct rtl8169_private *tp)
 
 static void r8168e_hw_jumbo_disable(struct rtl8169_private *tp)
 {
+<<<<<<< HEAD
 	RTL_W8(tp, MaxTxPacketSize, 0x0c);
+=======
+	RTL_W8(tp, MaxTxPacketSize, 0x3f);
+>>>>>>> rebase
 	RTL_W8(tp, Config3, RTL_R8(tp, Config3) & ~Jumbo_En0);
 	RTL_W8(tp, Config4, RTL_R8(tp, Config4) & ~0x01);
 	rtl_tx_performance_tweak(tp, PCI_EXP_DEVCTL_READRQ_4096B);
@@ -6270,7 +6332,12 @@ static bool rtl8169_tso_csum_v2(struct rtl8169_private *tp,
 		opts[1] |= transport_offset << TCPHO_SHIFT;
 	} else {
 		if (unlikely(rtl_test_hw_pad_bug(tp, skb)))
+<<<<<<< HEAD
 			return !eth_skb_pad(skb);
+=======
+			/* eth_skb_pad would free the skb on error */
+			return !__skb_put_padto(skb, ETH_ZLEN, false);
+>>>>>>> rebase
 	}
 
 	return true;
@@ -6626,7 +6693,11 @@ static irqreturn_t rtl8169_interrupt(int irq, void *dev_instance)
 		return IRQ_NONE;
 
 	rtl_irq_disable(tp);
+<<<<<<< HEAD
 	napi_schedule_irqoff(&tp->napi);
+=======
+	napi_schedule(&tp->napi);
+>>>>>>> rebase
 
 	return IRQ_HANDLED;
 }
@@ -6826,7 +6897,11 @@ static int rtl8169_close(struct net_device *dev)
 
 	phy_disconnect(dev->phydev);
 
+<<<<<<< HEAD
 	pci_free_irq(pdev, 0, tp);
+=======
+	free_irq(pci_irq_vector(pdev, 0), tp);
+>>>>>>> rebase
 
 	dma_free_coherent(&pdev->dev, R8169_RX_RING_BYTES, tp->RxDescArray,
 			  tp->RxPhyAddr);
@@ -6881,8 +6956,13 @@ static int rtl_open(struct net_device *dev)
 
 	rtl_request_firmware(tp);
 
+<<<<<<< HEAD
 	retval = pci_request_irq(pdev, 0, rtl8169_interrupt, NULL, tp,
 				 dev->name);
+=======
+	retval = request_irq(pci_irq_vector(pdev, 0), rtl8169_interrupt,
+			     IRQF_SHARED, dev->name, tp);
+>>>>>>> rebase
 	if (retval < 0)
 		goto err_release_fw_2;
 
@@ -6915,7 +6995,11 @@ out:
 	return retval;
 
 err_free_irq:
+<<<<<<< HEAD
 	pci_free_irq(pdev, 0, tp);
+=======
+	free_irq(pci_irq_vector(pdev, 0), tp);
+>>>>>>> rebase
 err_release_fw_2:
 	rtl_release_firmware(tp);
 	rtl8169_rx_clear(tp);
@@ -7249,7 +7333,11 @@ static int rtl_alloc_irq(struct rtl8169_private *tp)
 		RTL_W8(tp, Config2, RTL_R8(tp, Config2) & ~MSIEnable);
 		RTL_W8(tp, Cfg9346, Cfg9346_Lock);
 		/* fall through */
+<<<<<<< HEAD
 	case RTL_GIGA_MAC_VER_07 ... RTL_GIGA_MAC_VER_24:
+=======
+	case RTL_GIGA_MAC_VER_07 ... RTL_GIGA_MAC_VER_17:
+>>>>>>> rebase
 		flags = PCI_IRQ_LEGACY;
 		break;
 	default:
@@ -7433,6 +7521,7 @@ static int rtl_init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
 	int chipset, region, i;
 	int jumbo_max, rc;
 
+<<<<<<< HEAD
 	/* Some tools for creating an initramfs don't consider softdeps, then
 	 * r8169.ko may be in initramfs, but realtek.ko not. Then the generic
 	 * PHY driver is used that doesn't work with most chip versions.
@@ -7442,6 +7531,8 @@ static int rtl_init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
 		return -ENOENT;
 	}
 
+=======
+>>>>>>> rebase
 	dev = devm_alloc_etherdev(&pdev->dev, sizeof (*tp));
 	if (!dev)
 		return -ENOMEM;

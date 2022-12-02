@@ -67,6 +67,7 @@ out:
 	return ret;
 }
 
+<<<<<<< HEAD
 static uint64_t get_pageflags(unsigned long addr)
 {
 	FILE *file;
@@ -120,6 +121,8 @@ static uint64_t get_kpageflags(unsigned long pfn)
 	return flags;
 }
 
+=======
+>>>>>>> rebase
 #define VMFLAGS "VmFlags:"
 
 static bool is_vmflag_set(unsigned long addr, const char *vmflag)
@@ -159,6 +162,7 @@ out:
 #define RSS  "Rss:"
 #define LOCKED "lo"
 
+<<<<<<< HEAD
 static bool is_vma_lock_on_fault(unsigned long addr)
 {
 	bool ret = false;
@@ -172,6 +176,15 @@ static bool is_vma_lock_on_fault(unsigned long addr)
 	locked = is_vmflag_set(addr, LOCKED);
 	if (!locked)
 		goto out;
+=======
+static unsigned long get_value_for_name(unsigned long addr, const char *name)
+{
+	char *line = NULL;
+	size_t size = 0;
+	char *value_ptr;
+	FILE *smaps = NULL;
+	unsigned long value = -1UL;
+>>>>>>> rebase
 
 	smaps = seek_to_smaps_entry(addr);
 	if (!smaps) {
@@ -180,21 +193,31 @@ static bool is_vma_lock_on_fault(unsigned long addr)
 	}
 
 	while (getline(&line, &size, smaps) > 0) {
+<<<<<<< HEAD
 		if (!strstr(line, SIZE)) {
+=======
+		if (!strstr(line, name)) {
+>>>>>>> rebase
 			free(line);
 			line = NULL;
 			size = 0;
 			continue;
 		}
 
+<<<<<<< HEAD
 		value = line + strlen(SIZE);
 		if (sscanf(value, "%lu kB", &vma_size) < 1) {
+=======
+		value_ptr = line + strlen(name);
+		if (sscanf(value_ptr, "%lu kB", &value) < 1) {
+>>>>>>> rebase
 			printf("Unable to parse smaps entry for Size\n");
 			goto out;
 		}
 		break;
 	}
 
+<<<<<<< HEAD
 	while (getline(&line, &size, smaps) > 0) {
 		if (!strstr(line, RSS)) {
 			free(line);
@@ -217,12 +240,36 @@ out:
 	if (smaps)
 		fclose(smaps);
 	return ret;
+=======
+out:
+	if (smaps)
+		fclose(smaps);
+	free(line);
+	return value;
+}
+
+static bool is_vma_lock_on_fault(unsigned long addr)
+{
+	bool locked;
+	unsigned long vma_size, vma_rss;
+
+	locked = is_vmflag_set(addr, LOCKED);
+	if (!locked)
+		return false;
+
+	vma_size = get_value_for_name(addr, SIZE);
+	vma_rss = get_value_for_name(addr, RSS);
+
+	/* only one page is faulted in */
+	return (vma_rss < vma_size);
+>>>>>>> rebase
 }
 
 #define PRESENT_BIT     0x8000000000000000ULL
 #define PFN_MASK        0x007FFFFFFFFFFFFFULL
 #define UNEVICTABLE_BIT (1UL << 18)
 
+<<<<<<< HEAD
 static int lock_check(char *map)
 {
 	unsigned long page_size = getpagesize();
@@ -259,10 +306,26 @@ static int lock_check(char *map)
 	}
 
 	return 0;
+=======
+static int lock_check(unsigned long addr)
+{
+	bool locked;
+	unsigned long vma_size, vma_rss;
+
+	locked = is_vmflag_set(addr, LOCKED);
+	if (!locked)
+		return false;
+
+	vma_size = get_value_for_name(addr, SIZE);
+	vma_rss = get_value_for_name(addr, RSS);
+
+	return (vma_rss == vma_size);
+>>>>>>> rebase
 }
 
 static int unlock_lock_check(char *map)
 {
+<<<<<<< HEAD
 	unsigned long page_size = getpagesize();
 	uint64_t page1_flags, page2_flags;
 
@@ -276,16 +339,21 @@ static int unlock_lock_check(char *map)
 		return 1;
 	}
 
+=======
+>>>>>>> rebase
 	if (is_vmflag_set((unsigned long)map, LOCKED)) {
 		printf("VMA flag %s is present on page 1 after unlock\n", LOCKED);
 		return 1;
 	}
 
+<<<<<<< HEAD
 	if (is_vmflag_set((unsigned long)map + page_size, LOCKED)) {
 		printf("VMA flag %s is present on page 2 after unlock\n", LOCKED);
 		return 1;
 	}
 
+=======
+>>>>>>> rebase
 	return 0;
 }
 
@@ -311,7 +379,11 @@ static int test_mlock_lock()
 		goto unmap;
 	}
 
+<<<<<<< HEAD
 	if (lock_check(map))
+=======
+	if (!lock_check((unsigned long)map))
+>>>>>>> rebase
 		goto unmap;
 
 	/* Now unlock and recheck attributes */
@@ -330,6 +402,7 @@ out:
 
 static int onfault_check(char *map)
 {
+<<<<<<< HEAD
 	unsigned long page_size = getpagesize();
 	uint64_t page1_flags, page2_flags;
 
@@ -363,22 +436,29 @@ static int onfault_check(char *map)
 		return 1;
 	}
 
+=======
+	*map = 'a';
+>>>>>>> rebase
 	if (!is_vma_lock_on_fault((unsigned long)map)) {
 		printf("VMA is not marked for lock on fault\n");
 		return 1;
 	}
 
+<<<<<<< HEAD
 	if (!is_vma_lock_on_fault((unsigned long)map + page_size)) {
 		printf("VMA is not marked for lock on fault\n");
 		return 1;
 	}
 
+=======
+>>>>>>> rebase
 	return 0;
 }
 
 static int unlock_onfault_check(char *map)
 {
 	unsigned long page_size = getpagesize();
+<<<<<<< HEAD
 	uint64_t page1_flags;
 
 	page1_flags = get_pageflags((unsigned long)map);
@@ -388,6 +468,8 @@ static int unlock_onfault_check(char *map)
 		printf("Page 1 is still marked unevictable after unlock\n");
 		return 1;
 	}
+=======
+>>>>>>> rebase
 
 	if (is_vma_lock_on_fault((unsigned long)map) ||
 	    is_vma_lock_on_fault((unsigned long)map + page_size)) {
@@ -445,7 +527,10 @@ static int test_lock_onfault_of_present()
 	char *map;
 	int ret = 1;
 	unsigned long page_size = getpagesize();
+<<<<<<< HEAD
 	uint64_t page1_flags, page2_flags;
+=======
+>>>>>>> rebase
 
 	map = mmap(NULL, 2 * page_size, PROT_READ | PROT_WRITE,
 		   MAP_ANONYMOUS | MAP_PRIVATE, -1, 0);
@@ -465,6 +550,7 @@ static int test_lock_onfault_of_present()
 		goto unmap;
 	}
 
+<<<<<<< HEAD
 	page1_flags = get_pageflags((unsigned long)map);
 	page2_flags = get_pageflags((unsigned long)map + page_size);
 	page1_flags = get_kpageflags(page1_flags & PFN_MASK);
@@ -476,6 +562,8 @@ static int test_lock_onfault_of_present()
 		goto unmap;
 	}
 
+=======
+>>>>>>> rebase
 	if (!is_vma_lock_on_fault((unsigned long)map) ||
 	    !is_vma_lock_on_fault((unsigned long)map + page_size)) {
 		printf("VMA with present pages is not marked lock on fault\n");
@@ -507,7 +595,11 @@ static int test_munlockall()
 		goto out;
 	}
 
+<<<<<<< HEAD
 	if (lock_check(map))
+=======
+	if (!lock_check((unsigned long)map))
+>>>>>>> rebase
 		goto unmap;
 
 	if (munlockall()) {
@@ -549,7 +641,11 @@ static int test_munlockall()
 		goto out;
 	}
 
+<<<<<<< HEAD
 	if (lock_check(map))
+=======
+	if (!lock_check((unsigned long)map))
+>>>>>>> rebase
 		goto unmap;
 
 	if (munlockall()) {

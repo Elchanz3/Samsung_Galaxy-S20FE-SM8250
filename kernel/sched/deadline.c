@@ -17,7 +17,10 @@
  */
 #include "sched.h"
 #include "pelt.h"
+<<<<<<< HEAD
 #include "walt.h"
+=======
+>>>>>>> rebase
 
 struct dl_bandwidth def_dl_bandwidth;
 
@@ -44,6 +47,31 @@ static inline int on_dl_rq(struct sched_dl_entity *dl_se)
 	return !RB_EMPTY_NODE(&dl_se->rb_node);
 }
 
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_RT_MUTEXES
+static inline struct sched_dl_entity *pi_of(struct sched_dl_entity *dl_se)
+{
+	return dl_se->pi_se;
+}
+
+static inline bool is_dl_boosted(struct sched_dl_entity *dl_se)
+{
+	return pi_of(dl_se) != dl_se;
+}
+#else
+static inline struct sched_dl_entity *pi_of(struct sched_dl_entity *dl_se)
+{
+	return dl_se;
+}
+
+static inline bool is_dl_boosted(struct sched_dl_entity *dl_se)
+{
+	return false;
+}
+#endif
+
+>>>>>>> rebase
 #ifdef CONFIG_SMP
 static inline struct dl_bw *dl_bw_of(int i)
 {
@@ -658,7 +686,11 @@ static inline void setup_new_dl_entity(struct sched_dl_entity *dl_se)
 	struct dl_rq *dl_rq = dl_rq_of_se(dl_se);
 	struct rq *rq = rq_of_dl_rq(dl_rq);
 
+<<<<<<< HEAD
 	WARN_ON(dl_se->dl_boosted);
+=======
+	WARN_ON(is_dl_boosted(dl_se));
+>>>>>>> rebase
 	WARN_ON(dl_time_before(rq_clock(rq), dl_se->deadline));
 
 	/*
@@ -696,21 +728,34 @@ static inline void setup_new_dl_entity(struct sched_dl_entity *dl_se)
  * could happen are, typically, a entity voluntarily trying to overcome its
  * runtime, or it just underestimated it during sched_setattr().
  */
+<<<<<<< HEAD
 static void replenish_dl_entity(struct sched_dl_entity *dl_se,
 				struct sched_dl_entity *pi_se)
+=======
+static void replenish_dl_entity(struct sched_dl_entity *dl_se)
+>>>>>>> rebase
 {
 	struct dl_rq *dl_rq = dl_rq_of_se(dl_se);
 	struct rq *rq = rq_of_dl_rq(dl_rq);
 
+<<<<<<< HEAD
 	BUG_ON(pi_se->dl_runtime <= 0);
+=======
+	BUG_ON(pi_of(dl_se)->dl_runtime <= 0);
+>>>>>>> rebase
 
 	/*
 	 * This could be the case for a !-dl task that is boosted.
 	 * Just go with full inherited parameters.
 	 */
 	if (dl_se->dl_deadline == 0) {
+<<<<<<< HEAD
 		dl_se->deadline = rq_clock(rq) + pi_se->dl_deadline;
 		dl_se->runtime = pi_se->dl_runtime;
+=======
+		dl_se->deadline = rq_clock(rq) + pi_of(dl_se)->dl_deadline;
+		dl_se->runtime = pi_of(dl_se)->dl_runtime;
+>>>>>>> rebase
 	}
 
 	if (dl_se->dl_yielded && dl_se->runtime > 0)
@@ -723,8 +768,13 @@ static void replenish_dl_entity(struct sched_dl_entity *dl_se,
 	 * arbitrary large.
 	 */
 	while (dl_se->runtime <= 0) {
+<<<<<<< HEAD
 		dl_se->deadline += pi_se->dl_period;
 		dl_se->runtime += pi_se->dl_runtime;
+=======
+		dl_se->deadline += pi_of(dl_se)->dl_period;
+		dl_se->runtime += pi_of(dl_se)->dl_runtime;
+>>>>>>> rebase
 	}
 
 	/*
@@ -738,8 +788,13 @@ static void replenish_dl_entity(struct sched_dl_entity *dl_se,
 	 */
 	if (dl_time_before(dl_se->deadline, rq_clock(rq))) {
 		printk_deferred_once("sched: DL replenish lagged too much\n");
+<<<<<<< HEAD
 		dl_se->deadline = rq_clock(rq) + pi_se->dl_deadline;
 		dl_se->runtime = pi_se->dl_runtime;
+=======
+		dl_se->deadline = rq_clock(rq) + pi_of(dl_se)->dl_deadline;
+		dl_se->runtime = pi_of(dl_se)->dl_runtime;
+>>>>>>> rebase
 	}
 
 	if (dl_se->dl_yielded)
@@ -772,8 +827,12 @@ static void replenish_dl_entity(struct sched_dl_entity *dl_se,
  * task with deadline equal to period this is the same of using
  * dl_period instead of dl_deadline in the equation above.
  */
+<<<<<<< HEAD
 static bool dl_entity_overflow(struct sched_dl_entity *dl_se,
 			       struct sched_dl_entity *pi_se, u64 t)
+=======
+static bool dl_entity_overflow(struct sched_dl_entity *dl_se, u64 t)
+>>>>>>> rebase
 {
 	u64 left, right;
 
@@ -795,9 +854,15 @@ static bool dl_entity_overflow(struct sched_dl_entity *dl_se,
 	 * of anything below microseconds resolution is actually fiction
 	 * (but still we want to give the user that illusion >;).
 	 */
+<<<<<<< HEAD
 	left = (pi_se->dl_deadline >> DL_SCALE) * (dl_se->runtime >> DL_SCALE);
 	right = ((dl_se->deadline - t) >> DL_SCALE) *
 		(pi_se->dl_runtime >> DL_SCALE);
+=======
+	left = (pi_of(dl_se)->dl_deadline >> DL_SCALE) * (dl_se->runtime >> DL_SCALE);
+	right = ((dl_se->deadline - t) >> DL_SCALE) *
+		(pi_of(dl_se)->dl_runtime >> DL_SCALE);
+>>>>>>> rebase
 
 	return dl_time_before(right, left);
 }
@@ -882,24 +947,41 @@ static inline bool dl_is_implicit(struct sched_dl_entity *dl_se)
  * Please refer to the comments update_dl_revised_wakeup() function to find
  * more about the Revised CBS rule.
  */
+<<<<<<< HEAD
 static void update_dl_entity(struct sched_dl_entity *dl_se,
 			     struct sched_dl_entity *pi_se)
+=======
+static void update_dl_entity(struct sched_dl_entity *dl_se)
+>>>>>>> rebase
 {
 	struct dl_rq *dl_rq = dl_rq_of_se(dl_se);
 	struct rq *rq = rq_of_dl_rq(dl_rq);
 
 	if (dl_time_before(dl_se->deadline, rq_clock(rq)) ||
+<<<<<<< HEAD
 	    dl_entity_overflow(dl_se, pi_se, rq_clock(rq))) {
 
 		if (unlikely(!dl_is_implicit(dl_se) &&
 			     !dl_time_before(dl_se->deadline, rq_clock(rq)) &&
 			     !dl_se->dl_boosted)){
+=======
+	    dl_entity_overflow(dl_se, rq_clock(rq))) {
+
+		if (unlikely(!dl_is_implicit(dl_se) &&
+			     !dl_time_before(dl_se->deadline, rq_clock(rq)) &&
+			     !is_dl_boosted(dl_se))) {
+>>>>>>> rebase
 			update_dl_revised_wakeup(dl_se, rq);
 			return;
 		}
 
+<<<<<<< HEAD
 		dl_se->deadline = rq_clock(rq) + pi_se->dl_deadline;
 		dl_se->runtime = pi_se->dl_runtime;
+=======
+		dl_se->deadline = rq_clock(rq) + pi_of(dl_se)->dl_deadline;
+		dl_se->runtime = pi_of(dl_se)->dl_runtime;
+>>>>>>> rebase
 	}
 }
 
@@ -998,7 +1080,11 @@ static enum hrtimer_restart dl_task_timer(struct hrtimer *timer)
 	 * The task might have been boosted by someone else and might be in the
 	 * boosting/deboosting path, its not throttled.
 	 */
+<<<<<<< HEAD
 	if (dl_se->dl_boosted)
+=======
+	if (is_dl_boosted(dl_se))
+>>>>>>> rebase
 		goto unlock;
 
 	/*
@@ -1026,7 +1112,11 @@ static enum hrtimer_restart dl_task_timer(struct hrtimer *timer)
 	 * but do not enqueue -- wait for our wakeup to do that.
 	 */
 	if (!task_on_rq_queued(p)) {
+<<<<<<< HEAD
 		replenish_dl_entity(dl_se, dl_se);
+=======
+		replenish_dl_entity(dl_se);
+>>>>>>> rebase
 		goto unlock;
 	}
 
@@ -1116,7 +1206,11 @@ static inline void dl_check_constrained_dl(struct sched_dl_entity *dl_se)
 
 	if (dl_time_before(dl_se->deadline, rq_clock(rq)) &&
 	    dl_time_before(rq_clock(rq), dl_next_period(dl_se))) {
+<<<<<<< HEAD
 		if (unlikely(dl_se->dl_boosted || !start_dl_timer(p)))
+=======
+		if (unlikely(is_dl_boosted(dl_se) || !start_dl_timer(p)))
+>>>>>>> rebase
 			return;
 		dl_se->dl_throttled = 1;
 		if (dl_se->runtime > 0)
@@ -1247,7 +1341,11 @@ throttle:
 			dl_se->dl_overrun = 1;
 
 		__dequeue_task_dl(rq, curr, 0);
+<<<<<<< HEAD
 		if (unlikely(dl_se->dl_boosted || !start_dl_timer(curr)))
+=======
+		if (unlikely(is_dl_boosted(dl_se) || !start_dl_timer(curr)))
+>>>>>>> rebase
 			enqueue_task_dl(rq, curr, ENQUEUE_REPLENISH);
 
 		if (!is_leftmost(curr, &rq->dl))
@@ -1381,7 +1479,10 @@ void inc_dl_tasks(struct sched_dl_entity *dl_se, struct dl_rq *dl_rq)
 	WARN_ON(!dl_prio(prio));
 	dl_rq->dl_nr_running++;
 	add_nr_running(rq_of_dl_rq(dl_rq), 1);
+<<<<<<< HEAD
 	walt_inc_cumulative_runnable_avg(rq_of_dl_rq(dl_rq), dl_task_of(dl_se));
+=======
+>>>>>>> rebase
 
 	inc_dl_deadline(dl_rq, deadline);
 	inc_dl_migration(dl_se, dl_rq);
@@ -1396,7 +1497,10 @@ void dec_dl_tasks(struct sched_dl_entity *dl_se, struct dl_rq *dl_rq)
 	WARN_ON(!dl_rq->dl_nr_running);
 	dl_rq->dl_nr_running--;
 	sub_nr_running(rq_of_dl_rq(dl_rq), 1);
+<<<<<<< HEAD
 	walt_dec_cumulative_runnable_avg(rq_of_dl_rq(dl_rq), dl_task_of(dl_se));
+=======
+>>>>>>> rebase
 
 	dec_dl_deadline(dl_rq, dl_se->deadline);
 	dec_dl_migration(dl_se, dl_rq);
@@ -1443,8 +1547,12 @@ static void __dequeue_dl_entity(struct sched_dl_entity *dl_se)
 }
 
 static void
+<<<<<<< HEAD
 enqueue_dl_entity(struct sched_dl_entity *dl_se,
 		  struct sched_dl_entity *pi_se, int flags)
+=======
+enqueue_dl_entity(struct sched_dl_entity *dl_se, int flags)
+>>>>>>> rebase
 {
 	BUG_ON(on_dl_rq(dl_se));
 
@@ -1455,9 +1563,15 @@ enqueue_dl_entity(struct sched_dl_entity *dl_se,
 	 */
 	if (flags & ENQUEUE_WAKEUP) {
 		task_contending(dl_se, flags);
+<<<<<<< HEAD
 		update_dl_entity(dl_se, pi_se);
 	} else if (flags & ENQUEUE_REPLENISH) {
 		replenish_dl_entity(dl_se, pi_se);
+=======
+		update_dl_entity(dl_se);
+	} else if (flags & ENQUEUE_REPLENISH) {
+		replenish_dl_entity(dl_se);
+>>>>>>> rebase
 	} else if ((flags & ENQUEUE_RESTORE) &&
 		  dl_time_before(dl_se->deadline,
 				 rq_clock(rq_of_dl_rq(dl_rq_of_se(dl_se))))) {
@@ -1474,6 +1588,7 @@ static void dequeue_dl_entity(struct sched_dl_entity *dl_se)
 
 static void enqueue_task_dl(struct rq *rq, struct task_struct *p, int flags)
 {
+<<<<<<< HEAD
 	struct task_struct *pi_task = rt_mutex_get_top_task(p);
 	struct sched_dl_entity *pi_se = &p->dl;
 
@@ -1496,6 +1611,42 @@ static void enqueue_task_dl(struct rq *rq, struct task_struct *p, int flags)
 		 * scheduling class after this.
 		 */
 		BUG_ON(!p->dl.dl_boosted || flags != ENQUEUE_REPLENISH);
+=======
+	if (is_dl_boosted(&p->dl)) {
+		/*
+		 * Because of delays in the detection of the overrun of a
+		 * thread's runtime, it might be the case that a thread
+		 * goes to sleep in a rt mutex with negative runtime. As
+		 * a consequence, the thread will be throttled.
+		 *
+		 * While waiting for the mutex, this thread can also be
+		 * boosted via PI, resulting in a thread that is throttled
+		 * and boosted at the same time.
+		 *
+		 * In this case, the boost overrides the throttle.
+		 */
+		if (p->dl.dl_throttled) {
+			/*
+			 * The replenish timer needs to be canceled. No
+			 * problem if it fires concurrently: boosted threads
+			 * are ignored in dl_task_timer().
+			 */
+			hrtimer_try_to_cancel(&p->dl.dl_timer);
+			p->dl.dl_throttled = 0;
+		}
+	} else if (!dl_prio(p->normal_prio)) {
+		/*
+		 * Special case in which we have a !SCHED_DEADLINE task that is going
+		 * to be deboosted, but exceeds its runtime while doing so. No point in
+		 * replenishing it, as it's going to return back to its original
+		 * scheduling class after this. If it has been throttled, we need to
+		 * clear the flag, otherwise the task may wake up as throttled after
+		 * being boosted again with no means to replenish the runtime and clear
+		 * the throttle.
+		 */
+		p->dl.dl_throttled = 0;
+		BUG_ON(!is_dl_boosted(&p->dl) || flags != ENQUEUE_REPLENISH);
+>>>>>>> rebase
 		return;
 	}
 
@@ -1532,7 +1683,11 @@ static void enqueue_task_dl(struct rq *rq, struct task_struct *p, int flags)
 		return;
 	}
 
+<<<<<<< HEAD
 	enqueue_dl_entity(&p->dl, pi_se, flags);
+=======
+	enqueue_dl_entity(&p->dl, flags);
+>>>>>>> rebase
 
 	if (!task_current(rq, p) && p->nr_cpus_allowed > 1)
 		enqueue_pushable_dl_task(rq, p);
@@ -1602,8 +1757,12 @@ static void yield_task_dl(struct rq *rq)
 static int find_later_rq(struct task_struct *task);
 
 static int
+<<<<<<< HEAD
 select_task_rq_dl(struct task_struct *p, int cpu, int sd_flag, int flags,
 		  int sibling_count_hint)
+=======
+select_task_rq_dl(struct task_struct *p, int cpu, int sd_flag, int flags)
+>>>>>>> rebase
 {
 	struct task_struct *curr;
 	struct rq *rq;
@@ -1658,6 +1817,10 @@ static void migrate_task_rq_dl(struct task_struct *p, int new_cpu __maybe_unused
 	 */
 	raw_spin_lock(&rq->lock);
 	if (p->dl.dl_non_contending) {
+<<<<<<< HEAD
+=======
+		update_rq_clock(rq);
+>>>>>>> rebase
 		sub_running_bw(&p->dl, &rq->dl);
 		p->dl.dl_non_contending = 0;
 		/*
@@ -1797,7 +1960,11 @@ pick_next_task_dl(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
 	deadline_queue_push_tasks(rq);
 
 	if (rq->curr->sched_class != &dl_sched_class)
+<<<<<<< HEAD
 		update_dl_rq_load_avg(rq_clock_pelt(rq), rq, 0);
+=======
+		update_dl_rq_load_avg(rq_clock_task(rq), rq, 0);
+>>>>>>> rebase
 
 	return p;
 }
@@ -1806,7 +1973,11 @@ static void put_prev_task_dl(struct rq *rq, struct task_struct *p)
 {
 	update_curr_dl(rq);
 
+<<<<<<< HEAD
 	update_dl_rq_load_avg(rq_clock_pelt(rq), rq, 1);
+=======
+	update_dl_rq_load_avg(rq_clock_task(rq), rq, 1);
+>>>>>>> rebase
 	if (on_dl_rq(&p->dl) && p->nr_cpus_allowed > 1)
 		enqueue_pushable_dl_task(rq, p);
 }
@@ -1823,7 +1994,11 @@ static void task_tick_dl(struct rq *rq, struct task_struct *p, int queued)
 {
 	update_curr_dl(rq);
 
+<<<<<<< HEAD
 	update_dl_rq_load_avg(rq_clock_pelt(rq), rq, 1);
+=======
+	update_dl_rq_load_avg(rq_clock_task(rq), rq, 1);
+>>>>>>> rebase
 	/*
 	 * Even when we have runtime, update_curr_dl() might have resulted in us
 	 * not being the leftmost task anymore. In that case NEED_RESCHED will
@@ -2128,9 +2303,13 @@ retry:
 	deactivate_task(rq, next_task, 0);
 	sub_running_bw(&next_task->dl, &rq->dl);
 	sub_rq_bw(&next_task->dl, &rq->dl);
+<<<<<<< HEAD
 	next_task->on_rq = TASK_ON_RQ_MIGRATING;
 	set_task_cpu(next_task, later_rq->cpu);
 	next_task->on_rq = TASK_ON_RQ_QUEUED;
+=======
+	set_task_cpu(next_task, later_rq->cpu);
+>>>>>>> rebase
 	add_rq_bw(&next_task->dl, &later_rq->dl);
 
 	/*
@@ -2228,9 +2407,13 @@ static void pull_dl_task(struct rq *this_rq)
 			deactivate_task(src_rq, p, 0);
 			sub_running_bw(&p->dl, &src_rq->dl);
 			sub_rq_bw(&p->dl, &src_rq->dl);
+<<<<<<< HEAD
 			p->on_rq = TASK_ON_RQ_MIGRATING;
 			set_task_cpu(p, this_cpu);
 			p->on_rq = TASK_ON_RQ_QUEUED;
+=======
+			set_task_cpu(p, this_cpu);
+>>>>>>> rebase
 			add_rq_bw(&p->dl, &this_rq->dl);
 			add_running_bw(&p->dl, &this_rq->dl);
 			activate_task(this_rq, p, 0);
@@ -2464,9 +2647,12 @@ const struct sched_class dl_sched_class = {
 	.switched_to		= switched_to_dl,
 
 	.update_curr		= update_curr_dl,
+<<<<<<< HEAD
 #ifdef CONFIG_SCHED_WALT
 	.fixup_walt_sched_stats	= fixup_walt_sched_stats_common,
 #endif
+=======
+>>>>>>> rebase
 };
 
 int sched_dl_global_validate(void)
@@ -2475,7 +2661,11 @@ int sched_dl_global_validate(void)
 	u64 period = global_rt_period();
 	u64 new_bw = to_ratio(period, runtime);
 	struct dl_bw *dl_b;
+<<<<<<< HEAD
 	int cpu, ret = 0;
+=======
+	int cpu, cpus, ret = 0;
+>>>>>>> rebase
 	unsigned long flags;
 
 	/*
@@ -2490,9 +2680,16 @@ int sched_dl_global_validate(void)
 	for_each_possible_cpu(cpu) {
 		rcu_read_lock_sched();
 		dl_b = dl_bw_of(cpu);
+<<<<<<< HEAD
 
 		raw_spin_lock_irqsave(&dl_b->lock, flags);
 		if (new_bw < dl_b->total_bw)
+=======
+		cpus = dl_bw_cpus(cpu);
+
+		raw_spin_lock_irqsave(&dl_b->lock, flags);
+		if (new_bw * cpus < dl_b->total_bw)
+>>>>>>> rebase
 			ret = -EBUSY;
 		raw_spin_unlock_irqrestore(&dl_b->lock, flags);
 
@@ -2625,7 +2822,11 @@ void __setparam_dl(struct task_struct *p, const struct sched_attr *attr)
 	dl_se->dl_runtime = attr->sched_runtime;
 	dl_se->dl_deadline = attr->sched_deadline;
 	dl_se->dl_period = attr->sched_period ?: dl_se->dl_deadline;
+<<<<<<< HEAD
 	dl_se->flags = attr->sched_flags;
+=======
+	dl_se->flags = attr->sched_flags & SCHED_DL_FLAGS;
+>>>>>>> rebase
 	dl_se->dl_bw = to_ratio(dl_se->dl_period, dl_se->dl_runtime);
 	dl_se->dl_density = to_ratio(dl_se->dl_deadline, dl_se->dl_runtime);
 }
@@ -2638,7 +2839,12 @@ void __getparam_dl(struct task_struct *p, struct sched_attr *attr)
 	attr->sched_runtime = dl_se->dl_runtime;
 	attr->sched_deadline = dl_se->dl_deadline;
 	attr->sched_period = dl_se->dl_period;
+<<<<<<< HEAD
 	attr->sched_flags = dl_se->flags;
+=======
+	attr->sched_flags &= ~SCHED_DL_FLAGS;
+	attr->sched_flags |= dl_se->flags;
+>>>>>>> rebase
 }
 
 /*
@@ -2703,6 +2909,13 @@ void __dl_clear_params(struct task_struct *p)
 	dl_se->dl_yielded		= 0;
 	dl_se->dl_non_contending	= 0;
 	dl_se->dl_overrun		= 0;
+<<<<<<< HEAD
+=======
+
+#ifdef CONFIG_RT_MUTEXES
+	dl_se->pi_se			= dl_se;
+#endif
+>>>>>>> rebase
 }
 
 bool dl_param_changed(struct task_struct *p, const struct sched_attr *attr)
@@ -2712,7 +2925,11 @@ bool dl_param_changed(struct task_struct *p, const struct sched_attr *attr)
 	if (dl_se->dl_runtime != attr->sched_runtime ||
 	    dl_se->dl_deadline != attr->sched_deadline ||
 	    dl_se->dl_period != attr->sched_period ||
+<<<<<<< HEAD
 	    dl_se->flags != attr->sched_flags)
+=======
+	    dl_se->flags != (attr->sched_flags & SCHED_DL_FLAGS))
+>>>>>>> rebase
 		return true;
 
 	return false;

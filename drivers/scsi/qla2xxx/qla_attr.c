@@ -1934,6 +1934,11 @@ qla2x00_reset_host_stats(struct Scsi_Host *shost)
 	vha->qla_stats.jiffies_at_last_reset = get_jiffies_64();
 
 	if (IS_FWI2_CAPABLE(ha)) {
+<<<<<<< HEAD
+=======
+		int rval;
+
+>>>>>>> rebase
 		stats = dma_alloc_coherent(&ha->pdev->dev,
 		    sizeof(*stats), &stats_dma, GFP_KERNEL);
 		if (!stats) {
@@ -1943,7 +1948,15 @@ qla2x00_reset_host_stats(struct Scsi_Host *shost)
 		}
 
 		/* reset firmware statistics */
+<<<<<<< HEAD
 		qla24xx_get_isp_stats(base_vha, stats, stats_dma, BIT_0);
+=======
+		rval = qla24xx_get_isp_stats(base_vha, stats, stats_dma, BIT_0);
+		if (rval != QLA_SUCCESS)
+			ql_log(ql_log_warn, vha, 0x70de,
+			       "Resetting ISP statistics failed: rval = %d\n",
+			       rval);
+>>>>>>> rebase
 
 		dma_free_coherent(&ha->pdev->dev, sizeof(*stats),
 		    stats, stats_dma);
@@ -2162,11 +2175,18 @@ qla24xx_vport_delete(struct fc_vport *fc_vport)
 	    test_bit(FCPORT_UPDATE_NEEDED, &vha->dpc_flags))
 		msleep(1000);
 
+<<<<<<< HEAD
 	qla_nvme_delete(vha);
+=======
+>>>>>>> rebase
 
 	qla24xx_disable_vp(vha);
 	qla2x00_wait_for_sess_deletion(vha);
 
+<<<<<<< HEAD
+=======
+	qla_nvme_delete(vha);
+>>>>>>> rebase
 	vha->flags.delete_progress = 1;
 
 	qlt_remove_target(ha, vha);

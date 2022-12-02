@@ -4154,9 +4154,17 @@ static void srp_remove_one(struct ib_device *device, void *client_data)
 		spin_unlock(&host->target_lock);
 
 		/*
+<<<<<<< HEAD
 		 * Wait for tl_err and target port removal tasks.
 		 */
 		flush_workqueue(system_long_wq);
+=======
+		 * srp_queue_remove_work() queues a call to
+		 * srp_remove_target(). The latter function cancels
+		 * target->tl_err_work so waiting for the remove works to
+		 * finish is sufficient.
+		 */
+>>>>>>> rebase
 		flush_workqueue(srp_remove_wq);
 
 		kfree(host);

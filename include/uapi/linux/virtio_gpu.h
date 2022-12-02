@@ -41,7 +41,10 @@
 #include <linux/types.h>
 
 #define VIRTIO_GPU_F_VIRGL 0
+<<<<<<< HEAD
 #define VIRTIO_GPU_F_EDID  1
+=======
+>>>>>>> rebase
 
 enum virtio_gpu_ctrl_type {
 	VIRTIO_GPU_UNDEFINED = 0,
@@ -57,7 +60,10 @@ enum virtio_gpu_ctrl_type {
 	VIRTIO_GPU_CMD_RESOURCE_DETACH_BACKING,
 	VIRTIO_GPU_CMD_GET_CAPSET_INFO,
 	VIRTIO_GPU_CMD_GET_CAPSET,
+<<<<<<< HEAD
 	VIRTIO_GPU_CMD_GET_EDID,
+=======
+>>>>>>> rebase
 
 	/* 3d commands */
 	VIRTIO_GPU_CMD_CTX_CREATE = 0x0200,
@@ -78,7 +84,10 @@ enum virtio_gpu_ctrl_type {
 	VIRTIO_GPU_RESP_OK_DISPLAY_INFO,
 	VIRTIO_GPU_RESP_OK_CAPSET_INFO,
 	VIRTIO_GPU_RESP_OK_CAPSET,
+<<<<<<< HEAD
 	VIRTIO_GPU_RESP_OK_EDID,
+=======
+>>>>>>> rebase
 
 	/* error responses */
 	VIRTIO_GPU_RESP_ERR_UNSPEC = 0x1200,
@@ -294,6 +303,7 @@ struct virtio_gpu_resp_capset {
 	__u8 capset_data[];
 };
 
+<<<<<<< HEAD
 /* VIRTIO_GPU_CMD_GET_EDID */
 struct virtio_gpu_cmd_get_edid {
 	struct virtio_gpu_ctrl_hdr hdr;
@@ -309,6 +319,8 @@ struct virtio_gpu_resp_edid {
 	__u8 edid[1024];
 };
 
+=======
+>>>>>>> rebase
 #define VIRTIO_GPU_EVENT_DISPLAY (1 << 0)
 
 struct virtio_gpu_config {

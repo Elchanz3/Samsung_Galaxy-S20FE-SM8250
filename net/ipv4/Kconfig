@@ -302,6 +302,10 @@ config SYN_COOKIES
 
 config NET_IPVTI
 	tristate "Virtual (secure) IP: tunneling"
+<<<<<<< HEAD
+=======
+	depends on IPV6 || IPV6=n
+>>>>>>> rebase
 	select INET_TUNNEL
 	select NET_IP_TUNNEL
 	depends on INET_XFRM_MODE_TUNNEL
@@ -680,6 +684,7 @@ config TCP_CONG_BBR
 	bufferbloat, policers, or AQM schemes that do not provide a delay
 	signal. It requires the fq ("Fair Queue") pacing packet scheduler.
 
+<<<<<<< HEAD
 config TCP_CONG_LIA
 	tristate "MPTCP Linked Increase"
 	depends on MPTCP
@@ -725,6 +730,8 @@ config TCP_CONG_MCTCPDESYNC
 	  http://ieeexplore.ieee.org/abstract/document/6911722/
 	  https://doi.org/10.1016/j.comcom.2015.07.010
 
+=======
+>>>>>>> rebase
 choice
 	prompt "Default TCP congestion control"
 	default DEFAULT_CUBIC
@@ -762,6 +769,7 @@ choice
 	config DEFAULT_BBR
 		bool "BBR" if TCP_CONG_BBR=y
 
+<<<<<<< HEAD
 	config DEFAULT_LIA
 		bool "Lia" if TCP_CONG_LIA=y
 
@@ -777,6 +785,8 @@ choice
 	config DEFAULT_MCTCPDESYNC
 		bool "Mctcpdesync (EXPERIMENTAL)" if TCP_CONG_MCTCPDESYNC=y
 
+=======
+>>>>>>> rebase
 	config DEFAULT_RENO
 		bool "Reno"
 endchoice
@@ -797,10 +807,13 @@ config DEFAULT_TCP_CONG
 	default "vegas" if DEFAULT_VEGAS
 	default "westwood" if DEFAULT_WESTWOOD
 	default "veno" if DEFAULT_VENO
+<<<<<<< HEAD
 	default "lia" if DEFAULT_LIA
 	default "olia" if DEFAULT_OLIA
 	default "wvegas" if DEFAULT_WVEGAS
 	default "balia" if DEFAULT_BALIA
+=======
+>>>>>>> rebase
 	default "reno" if DEFAULT_RENO
 	default "dctcp" if DEFAULT_DCTCP
 	default "cdg" if DEFAULT_CDG

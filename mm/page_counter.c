@@ -77,7 +77,11 @@ void page_counter_charge(struct page_counter *counter, unsigned long nr_pages)
 		long new;
 
 		new = atomic_long_add_return(nr_pages, &c->usage);
+<<<<<<< HEAD
 		propagate_protected_usage(counter, new);
+=======
+		propagate_protected_usage(c, new);
+>>>>>>> rebase
 		/*
 		 * This is indeed racy, but we can live with some
 		 * inaccuracy in the watermark.
@@ -121,7 +125,11 @@ bool page_counter_try_charge(struct page_counter *counter,
 		new = atomic_long_add_return(nr_pages, &c->usage);
 		if (new > c->max) {
 			atomic_long_sub(nr_pages, &c->usage);
+<<<<<<< HEAD
 			propagate_protected_usage(counter, new);
+=======
+			propagate_protected_usage(c, new);
+>>>>>>> rebase
 			/*
 			 * This is racy, but we can live with some
 			 * inaccuracy in the failcnt.
@@ -130,7 +138,11 @@ bool page_counter_try_charge(struct page_counter *counter,
 			*fail = c;
 			goto failed;
 		}
+<<<<<<< HEAD
 		propagate_protected_usage(counter, new);
+=======
+		propagate_protected_usage(c, new);
+>>>>>>> rebase
 		/*
 		 * Just like with failcnt, we can live with some
 		 * inaccuracy in the watermark.

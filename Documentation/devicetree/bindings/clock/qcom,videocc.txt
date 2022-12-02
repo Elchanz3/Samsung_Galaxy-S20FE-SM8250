@@ -2,6 +2,7 @@ Qualcomm Video Clock & Reset Controller Binding
 -----------------------------------------------
 
 Required properties :
+<<<<<<< HEAD
 - compatible : shall contain "qcom,sdm845-videocc", "qcom,videocc-kona",
 		"qcom,videocc-kona-v2", "qcom,lito-videocc" or
 		"qcom,lagoon-videocc"
@@ -20,6 +21,15 @@ Optional properties :
 - #reset-cells : from common reset binding, shall contain 1.
 - nvmem-cells: list of phandle to the nvmem data cells.
 - nvmem-cell-names: names for the each nvmem-cells specified.
+=======
+- compatible : shall contain "qcom,sdm845-videocc"
+- reg : shall contain base register location and length
+- #clock-cells : from common clock binding, shall contain 1.
+- #power-domain-cells : from generic power domain binding, shall contain 1.
+
+Optional properties :
+- #reset-cells : from common reset binding, shall contain 1.
+>>>>>>> rebase
 
 Example:
 	videocc: clock-controller@ab00000 {
@@ -27,6 +37,7 @@ Example:
 		reg = <0xab00000 0x10000>;
 		#clock-cells = <1>;
 		#power-domain-cells = <1>;
+<<<<<<< HEAD
 		};
 
 Example with vdd mm/mx supply:
@@ -40,4 +51,6 @@ Example with vdd mm/mx supply:
 		clocks = <&clock_gcc GCC_VIDEO_AHB_CLK>;
 		#clock-cells = <1>;
 		#reset-cells = <1>;
+=======
+>>>>>>> rebase
 	};

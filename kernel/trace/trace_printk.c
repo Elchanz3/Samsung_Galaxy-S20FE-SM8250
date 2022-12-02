@@ -18,6 +18,7 @@
 
 #include "trace.h"
 
+<<<<<<< HEAD
 static noinline void tracing_mark_write(int type, const char *str)
 {
 	if (!tracing_is_on())
@@ -40,6 +41,8 @@ void tracing_mark_write_helper(int type, const char *str)
 	tracing_mark_write(type, str);
 }
 
+=======
+>>>>>>> rebase
 #ifdef CONFIG_MODULES
 
 /*
@@ -327,7 +330,11 @@ static int t_show(struct seq_file *m, void *v)
 	if (!*fmt)
 		return 0;
 
+<<<<<<< HEAD
 	seq_printf(m, "0x%lx : \"", 0L);
+=======
+	seq_printf(m, "0x%lx : \"", *(unsigned long *)fmt);
+>>>>>>> rebase
 
 	/*
 	 * Tabs and new lines need to be converted.

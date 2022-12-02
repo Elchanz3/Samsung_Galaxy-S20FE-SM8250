@@ -827,10 +827,17 @@ static int xemaclite_mdio_write(struct mii_bus *bus, int phy_id, int reg,
 static int xemaclite_mdio_setup(struct net_local *lp, struct device *dev)
 {
 	struct mii_bus *bus;
+<<<<<<< HEAD
 	int rc;
 	struct resource res;
 	struct device_node *np = of_get_parent(lp->phy_node);
 	struct device_node *npp;
+=======
+	struct resource res;
+	struct device_node *np = of_get_parent(lp->phy_node);
+	struct device_node *npp;
+	int rc, ret;
+>>>>>>> rebase
 
 	/* Don't register the MDIO bus if the phy_node or its parent node
 	 * can't be found.
@@ -840,8 +847,19 @@ static int xemaclite_mdio_setup(struct net_local *lp, struct device *dev)
 		return -ENODEV;
 	}
 	npp = of_get_parent(np);
+<<<<<<< HEAD
 
 	of_address_to_resource(npp, 0, &res);
+=======
+	ret = of_address_to_resource(npp, 0, &res);
+	of_node_put(npp);
+	if (ret) {
+		dev_err(dev, "%s resource error!\n",
+			dev->of_node->full_name);
+		of_node_put(np);
+		return ret;
+	}
+>>>>>>> rebase
 	if (lp->ndev->mem_start != res.start) {
 		struct phy_device *phydev;
 		phydev = of_phy_find_device(lp->phy_node);
@@ -850,6 +868,10 @@ static int xemaclite_mdio_setup(struct net_local *lp, struct device *dev)
 				 "MDIO of the phy is not registered yet\n");
 		else
 			put_device(&phydev->mdio.dev);
+<<<<<<< HEAD
+=======
+		of_node_put(np);
+>>>>>>> rebase
 		return 0;
 	}
 
@@ -862,6 +884,10 @@ static int xemaclite_mdio_setup(struct net_local *lp, struct device *dev)
 	bus = mdiobus_alloc();
 	if (!bus) {
 		dev_err(dev, "Failed to allocate mdiobus\n");
+<<<<<<< HEAD
+=======
+		of_node_put(np);
+>>>>>>> rebase
 		return -ENOMEM;
 	}
 
@@ -874,6 +900,10 @@ static int xemaclite_mdio_setup(struct net_local *lp, struct device *dev)
 	bus->parent = dev;
 
 	rc = of_mdiobus_register(bus, np);
+<<<<<<< HEAD
+=======
+	of_node_put(np);
+>>>>>>> rebase
 	if (rc) {
 		dev_err(dev, "Failed to register mdio bus.\n");
 		goto err_register;
@@ -1173,6 +1203,7 @@ static int xemaclite_of_probe(struct platform_device *ofdev)
 	if (rc) {
 		dev_err(dev,
 			"Cannot register network device, aborting\n");
+<<<<<<< HEAD
 		goto error;
 	}
 
@@ -1182,6 +1213,18 @@ static int xemaclite_of_probe(struct platform_device *ofdev)
 		 (unsigned int __force)lp->base_addr, ndev->irq);
 	return 0;
 
+=======
+		goto put_node;
+	}
+
+	dev_info(dev,
+		 "Xilinx EmacLite at 0x%08X mapped to 0x%p, irq=%d\n",
+		 (unsigned int __force)ndev->mem_start, lp->base_addr, ndev->irq);
+	return 0;
+
+put_node:
+	of_node_put(lp->phy_node);
+>>>>>>> rebase
 error:
 	free_netdev(ndev);
 	return rc;

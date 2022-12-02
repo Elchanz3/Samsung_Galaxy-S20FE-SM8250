@@ -122,8 +122,12 @@ extern void srcu_init_notifier_head(struct srcu_notifier_head *nh);
 
 #ifdef CONFIG_TREE_SRCU
 #define _SRCU_NOTIFIER_HEAD(name, mod)				\
+<<<<<<< HEAD
 	static DEFINE_PER_CPU(struct srcu_data,			\
 			name##_head_srcu_data);			\
+=======
+	static DEFINE_PER_CPU(struct srcu_data, name##_head_srcu_data); \
+>>>>>>> rebase
 	mod struct srcu_notifier_head name =			\
 			SRCU_NOTIFIER_INIT(name, name##_head_srcu_data)
 
@@ -238,11 +242,14 @@ static inline int notifier_to_errno(int ret)
 
 extern struct blocking_notifier_head reboot_notifier_list;
 
+<<<<<<< HEAD
 extern int show_mem_extra_notifier_register(struct notifier_block *nb);
 extern int show_mem_extra_notifier_unregister(struct notifier_block *nb);
 extern void show_mem_extra_call_notifiers(void);
 
 extern int am_app_launch_notifier_register(struct notifier_block *nb);
 extern int am_app_launch_notifier_unregister(struct notifier_block *nb);
+=======
+>>>>>>> rebase
 #endif /* __KERNEL__ */
 #endif /* _LINUX_NOTIFIER_H */

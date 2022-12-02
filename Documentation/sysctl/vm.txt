@@ -31,9 +31,13 @@ Currently, these files are in /proc/sys/vm:
 - dirty_writeback_centisecs
 - drop_caches
 - extfrag_threshold
+<<<<<<< HEAD
 - extra_free_kbytes
 - hugetlb_shm_group
 - kswapd_threads
+=======
+- hugetlb_shm_group
+>>>>>>> rebase
 - laptop_mode
 - legacy_va_layout
 - lowmem_reserve_ratio
@@ -52,7 +56,10 @@ Currently, these files are in /proc/sys/vm:
 - nr_trim_pages         (only if CONFIG_MMU=n)
 - numa_zonelist_order
 - oom_dump_tasks
+<<<<<<< HEAD
 - reap_mem_on_sigkill
+=======
+>>>>>>> rebase
 - oom_kill_allocating_task
 - overcommit_kbytes
 - overcommit_memory
@@ -66,10 +73,15 @@ Currently, these files are in /proc/sys/vm:
 - swappiness
 - user_reserve_kbytes
 - vfs_cache_pressure
+<<<<<<< HEAD
 - watermark_boost_factor
 - watermark_scale_factor
 - zone_reclaim_mode
 - want_old_faultaround_pte
+=======
+- watermark_scale_factor
+- zone_reclaim_mode
+>>>>>>> rebase
 
 ==============================================================
 
@@ -279,6 +291,7 @@ any throttling.
 
 ==============================================================
 
+<<<<<<< HEAD
 extra_free_kbytes
 
 This parameter tells the VM to keep extra free memory between the threshold
@@ -294,6 +307,8 @@ related latencies.
 
 ==============================================================
 
+=======
+>>>>>>> rebase
 hugetlb_shm_group
 
 hugetlb_shm_group contains group id that is allowed to create SysV
@@ -301,6 +316,7 @@ shared memory segment using hugetlb page.
 
 ==============================================================
 
+<<<<<<< HEAD
 kswapd_threads
 
 kswapd_threads allows you to control the number of kswapd threads per node
@@ -323,6 +339,8 @@ higher due to increased lock contention.
 
 ==============================================================
 
+=======
+>>>>>>> rebase
 laptop_mode
 
 laptop_mode is a knob that controls "laptop mode". All the things that are
@@ -680,6 +698,7 @@ The default value is 1 (enabled).
 
 ==============================================================
 
+<<<<<<< HEAD
 reap_mem_on_sigkill
 
 This enables or disables the memory reaping for a SIGKILL received
@@ -698,6 +717,8 @@ The default value is 0 (disabled).
 
 ==============================================================
 
+=======
+>>>>>>> rebase
 oom_kill_allocating_task
 
 This enables or disables killing the OOM-triggering task in
@@ -916,6 +937,7 @@ ten times more freeable objects than there are.
 
 =============================================================
 
+<<<<<<< HEAD
 watermark_boost_factor:
 
 This factor controls the level of reclaim when memory is being fragmented.
@@ -936,6 +958,8 @@ of 0 will disable the feature.
 
 =============================================================
 
+=======
+>>>>>>> rebase
 watermark_scale_factor:
 
 This factor controls the aggressiveness of kswapd. It defines the
@@ -990,6 +1014,7 @@ Allowing regular swap effectively restricts allocations to the local
 node unless explicitly overridden by memory policies or cpuset
 configurations.
 
+<<<<<<< HEAD
 =============================================================
 
 want_old_faultaround_pte:
@@ -1011,4 +1036,6 @@ benefit with old faultaround ptes.
 
 The default value is 0.
 
+=======
+>>>>>>> rebase
 ============ End of Document =================================

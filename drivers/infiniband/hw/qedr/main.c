@@ -338,6 +338,13 @@ static int qedr_alloc_resources(struct qedr_dev *dev)
 		spin_lock_init(&dev->qpidr.idr_lock);
 		idr_init(&dev->qpidr.idr);
 		dev->iwarp_wq = create_singlethread_workqueue("qedr_iwarpq");
+<<<<<<< HEAD
+=======
+		if (!dev->iwarp_wq) {
+			rc = -ENOMEM;
+			goto err1;
+		}
+>>>>>>> rebase
 	}
 
 	/* Allocate Status blocks for CNQ */
@@ -345,7 +352,11 @@ static int qedr_alloc_resources(struct qedr_dev *dev)
 				GFP_KERNEL);
 	if (!dev->sb_array) {
 		rc = -ENOMEM;
+<<<<<<< HEAD
 		goto err1;
+=======
+		goto err_destroy_wq;
+>>>>>>> rebase
 	}
 
 	dev->cnq_array = kcalloc(dev->num_cnq,
@@ -399,6 +410,12 @@ err3:
 	kfree(dev->cnq_array);
 err2:
 	kfree(dev->sb_array);
+<<<<<<< HEAD
+=======
+err_destroy_wq:
+	if (IS_IWARP(dev))
+		destroy_workqueue(dev->iwarp_wq);
+>>>>>>> rebase
 err1:
 	kfree(dev->sgid_tbl);
 	return rc;
@@ -604,7 +621,11 @@ static int qedr_set_device_attr(struct qedr_dev *dev)
 	qed_attr = dev->ops->rdma_query_device(dev->rdma_ctx);
 
 	/* Part 2 - check capabilities */
+<<<<<<< HEAD
 	page_size = ~dev->attr.page_size_caps + 1;
+=======
+	page_size = ~qed_attr->page_size_caps + 1;
+>>>>>>> rebase
 	if (page_size > PAGE_SIZE) {
 		DP_ERR(dev,
 		       "Kernel PAGE_SIZE is %ld which is smaller than minimum page size (%d) required by qedr\n",

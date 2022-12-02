@@ -48,6 +48,12 @@ void hci_conn_add_sysfs(struct hci_conn *conn)
 
 	BT_DBG("conn %p", conn);
 
+<<<<<<< HEAD
+=======
+	if (device_is_registered(&conn->dev))
+		return;
+
+>>>>>>> rebase
 	dev_set_name(&conn->dev, "%s:%d", hdev->name, conn->handle);
 
 	if (device_add(&conn->dev) < 0) {
@@ -83,6 +89,12 @@ void hci_conn_del_sysfs(struct hci_conn *conn)
 static void bt_host_release(struct device *dev)
 {
 	struct hci_dev *hdev = to_hci_dev(dev);
+<<<<<<< HEAD
+=======
+
+	if (hci_dev_test_flag(hdev, HCI_UNREGISTER))
+		hci_cleanup_dev(hdev);
+>>>>>>> rebase
 	kfree(hdev);
 	module_put(THIS_MODULE);
 }

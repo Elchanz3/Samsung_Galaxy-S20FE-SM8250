@@ -53,8 +53,16 @@
 #define ARM64_HAS_STAGE2_FWB			32
 #define ARM64_WORKAROUND_1463225		33
 #define ARM64_SSBS				34
+<<<<<<< HEAD
 #define ARM64_WORKAROUND_1188873		35
 #define ARM64_WORKAROUND_1542418		36
 #define ARM64_NCAPS				37
+=======
+#define ARM64_WORKAROUND_1542419		35
+#define ARM64_SPECTRE_BHB			36
+#define ARM64_WORKAROUND_1742098		37
+
+#define ARM64_NCAPS				38
+>>>>>>> rebase
 
 #endif /* __ASM_CPUCAPS_H */

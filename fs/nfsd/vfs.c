@@ -1206,6 +1206,12 @@ nfsd_create_locked(struct svc_rqst *rqstp, struct svc_fh *fhp,
 		iap->ia_mode = 0;
 	iap->ia_mode = (iap->ia_mode & S_IALLUGO) | type;
 
+<<<<<<< HEAD
+=======
+	if (!IS_POSIXACL(dirp))
+		iap->ia_mode &= ~current_umask();
+
+>>>>>>> rebase
 	err = 0;
 	host_err = 0;
 	switch (type) {
@@ -1439,6 +1445,12 @@ do_nfsd_create(struct svc_rqst *rqstp, struct svc_fh *fhp,
 		goto out;
 	}
 
+<<<<<<< HEAD
+=======
+	if (!IS_POSIXACL(dirp))
+		iap->ia_mode &= ~current_umask();
+
+>>>>>>> rebase
 	host_err = vfs_create(dirp, dchild, iap->ia_mode, true);
 	if (host_err < 0) {
 		fh_drop_write(fhp);

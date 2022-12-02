@@ -403,7 +403,11 @@ static struct aa_loaddata *aa_simple_write_to_buffer(const char __user *userbuf,
 
 	data->size = copy_size;
 	if (copy_from_user(data->data, userbuf, copy_size)) {
+<<<<<<< HEAD
 		kvfree(data);
+=======
+		aa_put_loaddata(data);
+>>>>>>> rebase
 		return ERR_PTR(-EFAULT);
 	}
 
@@ -424,7 +428,11 @@ static ssize_t policy_update(u32 mask, const char __user *buf, size_t size,
 	 */
 	error = aa_may_manage_policy(label, ns, mask);
 	if (error)
+<<<<<<< HEAD
 		return error;
+=======
+		goto end_section;
+>>>>>>> rebase
 
 	data = aa_simple_write_to_buffer(buf, size, size, pos);
 	error = PTR_ERR(data);
@@ -432,6 +440,10 @@ static ssize_t policy_update(u32 mask, const char __user *buf, size_t size,
 		error = aa_replace_profiles(ns, label, mask, data);
 		aa_put_loaddata(data);
 	}
+<<<<<<< HEAD
+=======
+end_section:
+>>>>>>> rebase
 	end_current_label_crit_section(label);
 
 	return error;
@@ -1959,9 +1971,12 @@ fail2:
 	return error;
 }
 
+<<<<<<< HEAD
 
 #define list_entry_is_head(pos, head, member) (&pos->member == (head))
 
+=======
+>>>>>>> rebase
 /**
  * __next_ns - find the next namespace to list
  * @root: root namespace to stop search at (NOT NULL)

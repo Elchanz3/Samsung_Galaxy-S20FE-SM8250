@@ -331,8 +331,11 @@ static int svc_rdma_post_chunk_ctxt(struct svc_rdma_chunk_ctxt *cc)
 		if (atomic_sub_return(cc->cc_sqecount,
 				      &rdma->sc_sq_avail) > 0) {
 			ret = ib_post_send(rdma->sc_qp, first_wr, &bad_wr);
+<<<<<<< HEAD
 			trace_svcrdma_post_rw(&cc->cc_cqe,
 					      cc->cc_sqecount, ret);
+=======
+>>>>>>> rebase
 			if (ret)
 				break;
 			return 0;
@@ -345,6 +348,10 @@ static int svc_rdma_post_chunk_ctxt(struct svc_rdma_chunk_ctxt *cc)
 		trace_svcrdma_sq_retry(rdma);
 	} while (1);
 
+<<<<<<< HEAD
+=======
+	trace_svcrdma_sq_post_err(rdma, ret);
+>>>>>>> rebase
 	set_bit(XPT_CLOSE, &xprt->xpt_flags);
 
 	/* If even one was posted, there will be a completion. */
@@ -680,7 +687,10 @@ static int svc_rdma_build_read_chunk(struct svc_rqst *rqstp,
 				     struct svc_rdma_read_info *info,
 				     __be32 *p)
 {
+<<<<<<< HEAD
 	unsigned int i;
+=======
+>>>>>>> rebase
 	int ret;
 
 	ret = -EINVAL;
@@ -703,12 +713,15 @@ static int svc_rdma_build_read_chunk(struct svc_rqst *rqstp,
 		info->ri_chunklen += rs_length;
 	}
 
+<<<<<<< HEAD
 	/* Pages under I/O have been copied to head->rc_pages.
 	 * Prevent their premature release by svc_xprt_release() .
 	 */
 	for (i = 0; i < info->ri_readctxt->rc_page_count; i++)
 		rqstp->rq_pages[i] = NULL;
 
+=======
+>>>>>>> rebase
 	return ret;
 }
 
@@ -803,6 +816,29 @@ out:
 	return ret;
 }
 
+<<<<<<< HEAD
+=======
+/* Pages under I/O have been copied to head->rc_pages. Ensure they
+ * are not released by svc_xprt_release() until the I/O is complete.
+ *
+ * This has to be done after all Read WRs are constructed to properly
+ * handle a page that is part of I/O on behalf of two different RDMA
+ * segments.
+ *
+ * Do this only if I/O has been posted. Otherwise, we do indeed want
+ * svc_xprt_release() to clean things up properly.
+ */
+static void svc_rdma_save_io_pages(struct svc_rqst *rqstp,
+				   const unsigned int start,
+				   const unsigned int num_pages)
+{
+	unsigned int i;
+
+	for (i = start; i < num_pages + start; i++)
+		rqstp->rq_pages[i] = NULL;
+}
+
+>>>>>>> rebase
 /**
  * svc_rdma_recv_read_chunk - Pull a Read chunk from the client
  * @rdma: controlling RDMA transport
@@ -856,6 +892,10 @@ int svc_rdma_recv_read_chunk(struct svcxprt_rdma *rdma, struct svc_rqst *rqstp,
 	ret = svc_rdma_post_chunk_ctxt(&info->ri_cc);
 	if (ret < 0)
 		goto out_err;
+<<<<<<< HEAD
+=======
+	svc_rdma_save_io_pages(rqstp, 0, head->rc_page_count);
+>>>>>>> rebase
 	return 0;
 
 out_err:

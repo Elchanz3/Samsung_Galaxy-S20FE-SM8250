@@ -26,7 +26,11 @@ static ssize_t clock_name_show(struct device *dev,
 			       struct device_attribute *attr, char *page)
 {
 	struct ptp_clock *ptp = dev_get_drvdata(dev);
+<<<<<<< HEAD
 	return snprintf(page, PAGE_SIZE-1, "%s\n", ptp->info->name);
+=======
+	return sysfs_emit(page, "%s\n", ptp->info->name);
+>>>>>>> rebase
 }
 static DEVICE_ATTR_RO(clock_name);
 
@@ -240,7 +244,11 @@ static ssize_t ptp_pin_show(struct device *dev, struct device_attribute *attr,
 
 	mutex_unlock(&ptp->pincfg_mux);
 
+<<<<<<< HEAD
 	return snprintf(page, PAGE_SIZE, "%u %u\n", func, chan);
+=======
+	return sysfs_emit(page, "%u %u\n", func, chan);
+>>>>>>> rebase
 }
 
 static ssize_t ptp_pin_store(struct device *dev, struct device_attribute *attr,

@@ -23,9 +23,12 @@
 #include <asm/processor.h>
 #include <asm/cacheflush.h>
 #include <asm/tlbflush.h>
+<<<<<<< HEAD
 #ifdef CONFIG_UH_RKP
 #include <linux/rkp.h>
 #endif
+=======
+>>>>>>> rebase
 
 #define check_pgt_cache()		do { } while (0)
 
@@ -36,6 +39,7 @@
 
 static inline pmd_t *pmd_alloc_one(struct mm_struct *mm, unsigned long addr)
 {
+<<<<<<< HEAD
 #ifdef CONFIG_UH_RKP
 	/* FIXME not zeroing the page */
 	pmd_t *rkp_ropage = NULL;
@@ -44,17 +48,22 @@ static inline pmd_t *pmd_alloc_one(struct mm_struct *mm, unsigned long addr)
 		return rkp_ropage;
 	else
 #endif
+=======
+>>>>>>> rebase
 	return (pmd_t *)__get_free_page(PGALLOC_GFP);
 }
 
 static inline void pmd_free(struct mm_struct *mm, pmd_t *pmdp)
 {
 	BUG_ON((unsigned long)pmdp & (PAGE_SIZE-1));
+<<<<<<< HEAD
 #ifdef CONFIG_UH_RKP
 	if (is_rkp_ro_page((unsigned long)pmdp))
 		rkp_ro_free((void *)pmdp);
 	else
 #endif
+=======
+>>>>>>> rebase
 	free_page((unsigned long)pmdp);
 }
 
@@ -78,6 +87,7 @@ static inline void __pud_populate(pud_t *pudp, phys_addr_t pmdp, pudval_t prot)
 
 static inline pud_t *pud_alloc_one(struct mm_struct *mm, unsigned long addr)
 {
+<<<<<<< HEAD
 #ifdef CONFIG_UH_RKP
 	pmd_t *rkp_ropage = NULL;
 
@@ -86,17 +96,22 @@ static inline pud_t *pud_alloc_one(struct mm_struct *mm, unsigned long addr)
 		return rkp_ropage;
 	else
 #endif
+=======
+>>>>>>> rebase
 	return (pud_t *)__get_free_page(PGALLOC_GFP);
 }
 
 static inline void pud_free(struct mm_struct *mm, pud_t *pudp)
 {
 	BUG_ON((unsigned long)pudp & (PAGE_SIZE-1));
+<<<<<<< HEAD
 #ifdef CONFIG_UH_RKP
 	if (is_rkp_ro_page((unsigned long)pudp))
 		rkp_ro_free((void *)pudp);
 	else
 #endif
+=======
+>>>>>>> rebase
 	free_page((unsigned long)pudp);
 }
 

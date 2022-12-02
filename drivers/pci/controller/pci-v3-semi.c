@@ -743,7 +743,11 @@ static int v3_pci_probe(struct platform_device *pdev)
 	int ret;
 	LIST_HEAD(res);
 
+<<<<<<< HEAD
 	host = pci_alloc_host_bridge(sizeof(*v3));
+=======
+	host = devm_pci_alloc_host_bridge(dev, sizeof(*v3));
+>>>>>>> rebase
 	if (!host)
 		return -ENOMEM;
 

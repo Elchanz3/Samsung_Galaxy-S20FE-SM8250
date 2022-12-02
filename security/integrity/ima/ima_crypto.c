@@ -415,7 +415,11 @@ int ima_calc_file_hash(struct file *file, struct ima_digest_data *hash)
 	loff_t i_size;
 	int rc;
 	struct file *f = file;
+<<<<<<< HEAD
 	bool new_file_instance = false, modified_flags = false;
+=======
+	bool new_file_instance = false;
+>>>>>>> rebase
 
 	/*
 	 * For consistency, fail file's opened with the O_DIRECT flag on
@@ -433,6 +437,7 @@ int ima_calc_file_hash(struct file *file, struct ima_digest_data *hash)
 				O_TRUNC | O_CREAT | O_NOCTTY | O_EXCL);
 		flags |= O_RDONLY;
 		f = dentry_open(&file->f_path, flags, file->f_cred);
+<<<<<<< HEAD
 		if (IS_ERR(f)) {
 			/*
 			 * Cannot open the file again, lets modify f_flags
@@ -445,6 +450,12 @@ int ima_calc_file_hash(struct file *file, struct ima_digest_data *hash)
 		} else {
 			new_file_instance = true;
 		}
+=======
+		if (IS_ERR(f))
+			return PTR_ERR(f);
+
+		new_file_instance = true;
+>>>>>>> rebase
 	}
 
 	i_size = i_size_read(file_inode(f));
@@ -459,8 +470,11 @@ int ima_calc_file_hash(struct file *file, struct ima_digest_data *hash)
 out:
 	if (new_file_instance)
 		fput(f);
+<<<<<<< HEAD
 	else if (modified_flags)
 		f->f_flags &= ~FMODE_READ;
+=======
+>>>>>>> rebase
 	return rc;
 }
 
@@ -651,7 +665,11 @@ int ima_calc_buffer_hash(const void *buf, loff_t len,
 	return calc_buffer_shash(buf, len, hash);
 }
 
+<<<<<<< HEAD
 static void __init ima_pcrread(int idx, u8 *pcr)
+=======
+static void ima_pcrread(int idx, u8 *pcr)
+>>>>>>> rebase
 {
 	if (!ima_tpm_chip)
 		return;
@@ -663,8 +681,13 @@ static void __init ima_pcrread(int idx, u8 *pcr)
 /*
  * Calculate the boot aggregate hash
  */
+<<<<<<< HEAD
 static int __init ima_calc_boot_aggregate_tfm(char *digest,
 					      struct crypto_shash *tfm)
+=======
+static int ima_calc_boot_aggregate_tfm(char *digest,
+				       struct crypto_shash *tfm)
+>>>>>>> rebase
 {
 	u8 pcr_i[TPM_DIGEST_SIZE];
 	int rc, i;
@@ -682,13 +705,22 @@ static int __init ima_calc_boot_aggregate_tfm(char *digest,
 		ima_pcrread(i, pcr_i);
 		/* now accumulate with current aggregate */
 		rc = crypto_shash_update(shash, pcr_i, TPM_DIGEST_SIZE);
+<<<<<<< HEAD
+=======
+		if (rc != 0)
+			return rc;
+>>>>>>> rebase
 	}
 	if (!rc)
 		crypto_shash_final(shash, digest);
 	return rc;
 }
 
+<<<<<<< HEAD
 int __init ima_calc_boot_aggregate(struct ima_digest_data *hash)
+=======
+int ima_calc_boot_aggregate(struct ima_digest_data *hash)
+>>>>>>> rebase
 {
 	struct crypto_shash *tfm;
 	int rc;

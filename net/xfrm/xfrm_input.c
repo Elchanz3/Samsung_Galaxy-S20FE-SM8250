@@ -407,7 +407,11 @@ resume:
 		dev_put(skb->dev);
 
 		spin_lock(&x->lock);
+<<<<<<< HEAD
 		if (nexthdr <= 0) {
+=======
+		if (nexthdr < 0) {
+>>>>>>> rebase
 			if (nexthdr == -EBADMSG) {
 				xfrm_audit_state_icvfail(x, skb,
 							 x->type->proto);
@@ -420,7 +424,11 @@ resume:
 		/* only the first xfrm gets the encap type */
 		encap_type = 0;
 
+<<<<<<< HEAD
 		if (async && x->repl->recheck(x, skb, seq)) {
+=======
+		if (x->repl->recheck(x, skb, seq)) {
+>>>>>>> rebase
 			XFRM_INC_STATS(net, LINUX_MIB_XFRMINSTATESEQERROR);
 			goto drop_unlock;
 		}

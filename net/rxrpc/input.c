@@ -446,7 +446,11 @@ static void rxrpc_input_data(struct rxrpc_call *call, struct sk_buff *skb,
 	if (state >= RXRPC_CALL_COMPLETE)
 		return;
 
+<<<<<<< HEAD
 	if (call->state == RXRPC_CALL_SERVER_RECV_REQUEST) {
+=======
+	if (state == RXRPC_CALL_SERVER_RECV_REQUEST) {
+>>>>>>> rebase
 		unsigned long timo = READ_ONCE(call->next_req_timo);
 		unsigned long now, expect_req_by;
 
@@ -735,6 +739,7 @@ static void rxrpc_input_ackinfo(struct rxrpc_call *call, struct sk_buff *skb,
 	       ntohl(ackinfo->rxMTU), ntohl(ackinfo->maxMTU),
 	       rwind, ntohl(ackinfo->jumbo_max));
 
+<<<<<<< HEAD
 	if (call->tx_winsize != rwind) {
 		if (rwind > RXRPC_RXTX_BUFF_SIZE - 1)
 			rwind = RXRPC_RXTX_BUFF_SIZE - 1;
@@ -742,6 +747,14 @@ static void rxrpc_input_ackinfo(struct rxrpc_call *call, struct sk_buff *skb,
 			wake = true;
 		trace_rxrpc_rx_rwind_change(call, sp->hdr.serial,
 					    ntohl(ackinfo->rwind), wake);
+=======
+	if (rwind > RXRPC_RXTX_BUFF_SIZE - 1)
+		rwind = RXRPC_RXTX_BUFF_SIZE - 1;
+	if (call->tx_winsize != rwind) {
+		if (rwind > call->tx_winsize)
+			wake = true;
+		trace_rxrpc_rx_rwind_change(call, sp->hdr.serial, rwind, wake);
+>>>>>>> rebase
 		call->tx_winsize = rwind;
 	}
 
@@ -815,6 +828,33 @@ static void rxrpc_input_soft_acks(struct rxrpc_call *call, u8 *acks,
 }
 
 /*
+<<<<<<< HEAD
+=======
+ * Return true if the ACK is valid - ie. it doesn't appear to have regressed
+ * with respect to the ack state conveyed by preceding ACKs.
+ */
+static bool rxrpc_is_ack_valid(struct rxrpc_call *call,
+			       rxrpc_seq_t first_pkt, rxrpc_seq_t prev_pkt)
+{
+	rxrpc_seq_t base = READ_ONCE(call->ackr_first_seq);
+
+	if (after(first_pkt, base))
+		return true; /* The window advanced */
+
+	if (before(first_pkt, base))
+		return false; /* firstPacket regressed */
+
+	if (after_eq(prev_pkt, call->ackr_prev_seq))
+		return true; /* previousPacket hasn't regressed. */
+
+	/* Some rx implementations put a serial number in previousPacket. */
+	if (after_eq(prev_pkt, base + call->tx_winsize))
+		return false;
+	return true;
+}
+
+/*
+>>>>>>> rebase
  * Process an ACK packet.
  *
  * ack.firstPacket is the sequence number of the first soft-ACK'd/NAK'd packet
@@ -878,9 +918,18 @@ static void rxrpc_input_ack(struct rxrpc_call *call, struct sk_buff *skb,
 	}
 
 	/* Discard any out-of-order or duplicate ACKs (outside lock). */
+<<<<<<< HEAD
 	if (before(first_soft_ack, call->ackr_first_seq) ||
 	    before(prev_pkt, call->ackr_prev_seq))
 		return;
+=======
+	if (!rxrpc_is_ack_valid(call, first_soft_ack, prev_pkt)) {
+		trace_rxrpc_rx_discard_ack(call->debug_id, sp->hdr.serial,
+					   first_soft_ack, call->ackr_first_seq,
+					   prev_pkt, call->ackr_prev_seq);
+		return;
+	}
+>>>>>>> rebase
 
 	buf.info.rxMTU = 0;
 	ioffset = offset + nr_acks + 3;
@@ -891,9 +940,18 @@ static void rxrpc_input_ack(struct rxrpc_call *call, struct sk_buff *skb,
 	spin_lock(&call->input_lock);
 
 	/* Discard any out-of-order or duplicate ACKs (inside lock). */
+<<<<<<< HEAD
 	if (before(first_soft_ack, call->ackr_first_seq) ||
 	    before(prev_pkt, call->ackr_prev_seq))
 		goto out;
+=======
+	if (!rxrpc_is_ack_valid(call, first_soft_ack, prev_pkt)) {
+		trace_rxrpc_rx_discard_ack(call->debug_id, sp->hdr.serial,
+					   first_soft_ack, call->ackr_first_seq,
+					   prev_pkt, call->ackr_prev_seq);
+		goto out;
+	}
+>>>>>>> rebase
 	call->acks_latest_ts = skb->tstamp;
 	call->acks_latest = sp->hdr.serial;
 

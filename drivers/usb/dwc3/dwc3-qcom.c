@@ -173,6 +173,17 @@ static int dwc3_qcom_register_extcon(struct dwc3_qcom *qcom)
 	return 0;
 }
 
+<<<<<<< HEAD
+=======
+/* Only usable in contexts where the role can not change. */
+static bool dwc3_qcom_is_host(struct dwc3_qcom *qcom)
+{
+	struct dwc3 *dwc = platform_get_drvdata(qcom->dwc3);
+
+	return dwc->xhci;
+}
+
+>>>>>>> rebase
 static void dwc3_qcom_disable_interrupts(struct dwc3_qcom *qcom)
 {
 	if (qcom->hs_phy_irq) {
@@ -234,8 +245,15 @@ static int dwc3_qcom_suspend(struct dwc3_qcom *qcom)
 	for (i = qcom->num_clocks - 1; i >= 0; i--)
 		clk_disable_unprepare(qcom->clks[i]);
 
+<<<<<<< HEAD
 	qcom->is_suspended = true;
 	dwc3_qcom_enable_interrupts(qcom);
+=======
+	if (device_may_wakeup(qcom->dev))
+		dwc3_qcom_enable_interrupts(qcom);
+
+	qcom->is_suspended = true;
+>>>>>>> rebase
 
 	return 0;
 }
@@ -248,7 +266,12 @@ static int dwc3_qcom_resume(struct dwc3_qcom *qcom)
 	if (!qcom->is_suspended)
 		return 0;
 
+<<<<<<< HEAD
 	dwc3_qcom_disable_interrupts(qcom);
+=======
+	if (device_may_wakeup(qcom->dev))
+		dwc3_qcom_disable_interrupts(qcom);
+>>>>>>> rebase
 
 	for (i = 0; i < qcom->num_clocks; i++) {
 		ret = clk_prepare_enable(qcom->clks[i]);
@@ -277,7 +300,15 @@ static irqreturn_t qcom_dwc3_resume_irq(int irq, void *data)
 	if (qcom->pm_suspended)
 		return IRQ_HANDLED;
 
+<<<<<<< HEAD
 	if (dwc->xhci)
+=======
+	/*
+	 * This is safe as role switching is done from a freezable workqueue
+	 * and the wakeup interrupts are disabled as part of resume.
+	 */
+	if (dwc3_qcom_is_host(qcom))
+>>>>>>> rebase
 		pm_runtime_resume(&dwc->xhci->dev);
 
 	return IRQ_HANDLED;

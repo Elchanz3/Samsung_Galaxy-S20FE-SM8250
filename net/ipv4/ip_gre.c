@@ -435,6 +435,7 @@ static void __gre_xmit(struct sk_buff *skb, struct net_device *dev,
 		       __be16 proto)
 {
 	struct ip_tunnel *tunnel = netdev_priv(dev);
+<<<<<<< HEAD
 
 	if (tunnel->parms.o_flags & TUNNEL_SEQ)
 		tunnel->o_seqno++;
@@ -443,15 +444,26 @@ static void __gre_xmit(struct sk_buff *skb, struct net_device *dev,
 	gre_build_header(skb, tunnel->tun_hlen,
 			 tunnel->parms.o_flags, proto, tunnel->parms.o_key,
 			 htonl(tunnel->o_seqno));
+=======
+	__be16 flags = tunnel->parms.o_flags;
+
+	/* Push GRE header. */
+	gre_build_header(skb, tunnel->tun_hlen,
+			 flags, proto, tunnel->parms.o_key,
+			 (flags & TUNNEL_SEQ) ? htonl(tunnel->o_seqno++) : 0);
+>>>>>>> rebase
 
 	ip_tunnel_xmit(skb, dev, tnl_params, tnl_params->protocol);
 }
 
 static int gre_handle_offloads(struct sk_buff *skb, bool csum)
 {
+<<<<<<< HEAD
 	if (csum && skb_checksum_start(skb) < skb->data)
 	return -EINVAL;
 
+=======
+>>>>>>> rebase
 	return iptunnel_handle_offloads(skb, csum ? SKB_GSO_GRE_CSUM : SKB_GSO_GRE);
 }
 
@@ -579,7 +591,10 @@ static void erspan_fb_xmit(struct sk_buff *skb, struct net_device *dev)
 	int tunnel_hlen;
 	int version;
 	int nhoff;
+<<<<<<< HEAD
 	int thoff;
+=======
+>>>>>>> rebase
 
 	tun_info = skb_tunnel_info(skb);
 	if (unlikely(!tun_info || !(tun_info->mode & IP_TUNNEL_INFO_TX) ||
@@ -614,10 +629,23 @@ static void erspan_fb_xmit(struct sk_buff *skb, struct net_device *dev)
 	    (ntohs(ip_hdr(skb)->tot_len) > skb->len - nhoff))
 		truncate = true;
 
+<<<<<<< HEAD
 	thoff = skb_transport_header(skb) - skb_mac_header(skb);
 	if (skb->protocol == htons(ETH_P_IPV6) &&
 	    (ntohs(ipv6_hdr(skb)->payload_len) > skb->len - thoff))
 		truncate = true;
+=======
+	if (skb->protocol == htons(ETH_P_IPV6)) {
+		int thoff;
+
+		if (skb_transport_header_was_set(skb))
+			thoff = skb_transport_header(skb) - skb_mac_header(skb);
+		else
+			thoff = nhoff + sizeof(struct ipv6hdr);
+		if (ntohs(ipv6_hdr(skb)->payload_len) > skb->len - thoff)
+			truncate = true;
+	}
+>>>>>>> rebase
 
 	if (version == 1) {
 		erspan_build_header(skb, ntohl(tunnel_id_to_key32(key->tun_id)),
@@ -683,9 +711,13 @@ static netdev_tx_t ipgre_xmit(struct sk_buff *skb,
 	}
 
 	if (dev->header_ops) {
+<<<<<<< HEAD
 		/* Need space for new headers */
 		if (skb_cow_head(skb, dev->needed_headroom -
 				      (tunnel->hlen + sizeof(struct iphdr))))
+=======
+		if (skb_cow_head(skb, 0))
+>>>>>>> rebase
 			goto free_skb;
 
 		tnl_params = (const struct iphdr *)skb->data;
@@ -695,6 +727,13 @@ static netdev_tx_t ipgre_xmit(struct sk_buff *skb,
 		 */
 		skb_pull(skb, tunnel->hlen + sizeof(struct iphdr));
 		skb_reset_mac_header(skb);
+<<<<<<< HEAD
+=======
+
+		if (skb->ip_summed == CHECKSUM_PARTIAL &&
+		    skb_checksum_start(skb) < skb->data)
+			goto free_skb;
+>>>>>>> rebase
 	} else {
 		if (skb_cow_head(skb, dev->needed_headroom))
 			goto free_skb;
@@ -803,7 +842,15 @@ static void ipgre_link_update(struct net_device *dev, bool set_mtu)
 	len = tunnel->tun_hlen - len;
 	tunnel->hlen = tunnel->hlen + len;
 
+<<<<<<< HEAD
 	dev->needed_headroom = dev->needed_headroom + len;
+=======
+	if (dev->header_ops)
+		dev->hard_header_len += len;
+	else
+		dev->needed_headroom += len;
+
+>>>>>>> rebase
 	if (set_mtu)
 		dev->mtu = max_t(int, dev->mtu - len, 68);
 
@@ -1006,6 +1053,10 @@ static void __gre_tunnel_init(struct net_device *dev)
 	tunnel->parms.iph.protocol = IPPROTO_GRE;
 
 	tunnel->hlen = tunnel->tun_hlen + tunnel->encap_hlen;
+<<<<<<< HEAD
+=======
+	dev->needed_headroom = tunnel->hlen + sizeof(tunnel->parms.iph);
+>>>>>>> rebase
 
 	dev->features		|= GRE_FEATURES;
 	dev->hw_features	|= GRE_FEATURES;
@@ -1049,10 +1100,20 @@ static int ipgre_tunnel_init(struct net_device *dev)
 				return -EINVAL;
 			dev->flags = IFF_BROADCAST;
 			dev->header_ops = &ipgre_header_ops;
+<<<<<<< HEAD
+=======
+			dev->hard_header_len = tunnel->hlen + sizeof(*iph);
+			dev->needed_headroom = 0;
+>>>>>>> rebase
 		}
 #endif
 	} else if (!tunnel->collect_md) {
 		dev->header_ops = &ipgre_header_ops;
+<<<<<<< HEAD
+=======
+		dev->hard_header_len = tunnel->hlen + sizeof(*iph);
+		dev->needed_headroom = 0;
+>>>>>>> rebase
 	}
 
 	return ip_tunnel_init(dev);
@@ -1229,6 +1290,27 @@ static int ipgre_netlink_parms(struct net_device *dev,
 	if (data[IFLA_GRE_FWMARK])
 		*fwmark = nla_get_u32(data[IFLA_GRE_FWMARK]);
 
+<<<<<<< HEAD
+=======
+	return 0;
+}
+
+static int erspan_netlink_parms(struct net_device *dev,
+				struct nlattr *data[],
+				struct nlattr *tb[],
+				struct ip_tunnel_parm *parms,
+				__u32 *fwmark)
+{
+	struct ip_tunnel *t = netdev_priv(dev);
+	int err;
+
+	err = ipgre_netlink_parms(dev, data, tb, parms, fwmark);
+	if (err)
+		return err;
+	if (!data)
+		return 0;
+
+>>>>>>> rebase
 	if (data[IFLA_GRE_ERSPAN_VER]) {
 		t->erspan_ver = nla_get_u8(data[IFLA_GRE_ERSPAN_VER]);
 
@@ -1358,6 +1440,7 @@ bool is_gretap_dev(const struct net_device *dev)
 }
 EXPORT_SYMBOL_GPL(is_gretap_dev);
 
+<<<<<<< HEAD
 static int ipgre_newlink(struct net *src_net, struct net_device *dev,
 			 struct nlattr *tb[], struct nlattr *data[],
 			 struct netlink_ext_ack *extack)
@@ -1370,33 +1453,91 @@ static int ipgre_newlink(struct net *src_net, struct net_device *dev,
 	if (ipgre_netlink_encap_parms(data, &ipencap)) {
 		struct ip_tunnel *t = netdev_priv(dev);
 		err = ip_tunnel_encap_setup(t, &ipencap);
+=======
+static int
+ipgre_newlink_encap_setup(struct net_device *dev, struct nlattr *data[])
+{
+	struct ip_tunnel_encap ipencap;
+
+	if (ipgre_netlink_encap_parms(data, &ipencap)) {
+		struct ip_tunnel *t = netdev_priv(dev);
+		int err = ip_tunnel_encap_setup(t, &ipencap);
+>>>>>>> rebase
 
 		if (err < 0)
 			return err;
 	}
 
+<<<<<<< HEAD
+=======
+	return 0;
+}
+
+static int ipgre_newlink(struct net *src_net, struct net_device *dev,
+			 struct nlattr *tb[], struct nlattr *data[],
+			 struct netlink_ext_ack *extack)
+{
+	struct ip_tunnel_parm p;
+	__u32 fwmark = 0;
+	int err;
+
+	err = ipgre_newlink_encap_setup(dev, data);
+	if (err)
+		return err;
+
+>>>>>>> rebase
 	err = ipgre_netlink_parms(dev, data, tb, &p, &fwmark);
 	if (err < 0)
 		return err;
 	return ip_tunnel_newlink(dev, tb, &p, fwmark);
 }
 
+<<<<<<< HEAD
+=======
+static int erspan_newlink(struct net *src_net, struct net_device *dev,
+			  struct nlattr *tb[], struct nlattr *data[],
+			  struct netlink_ext_ack *extack)
+{
+	struct ip_tunnel_parm p;
+	__u32 fwmark = 0;
+	int err;
+
+	err = ipgre_newlink_encap_setup(dev, data);
+	if (err)
+		return err;
+
+	err = erspan_netlink_parms(dev, data, tb, &p, &fwmark);
+	if (err)
+		return err;
+	return ip_tunnel_newlink(dev, tb, &p, fwmark);
+}
+
+>>>>>>> rebase
 static int ipgre_changelink(struct net_device *dev, struct nlattr *tb[],
 			    struct nlattr *data[],
 			    struct netlink_ext_ack *extack)
 {
 	struct ip_tunnel *t = netdev_priv(dev);
+<<<<<<< HEAD
 	struct ip_tunnel_encap ipencap;
+=======
+>>>>>>> rebase
 	__u32 fwmark = t->fwmark;
 	struct ip_tunnel_parm p;
 	int err;
 
+<<<<<<< HEAD
 	if (ipgre_netlink_encap_parms(data, &ipencap)) {
 		err = ip_tunnel_encap_setup(t, &ipencap);
 
 		if (err < 0)
 			return err;
 	}
+=======
+	err = ipgre_newlink_encap_setup(dev, data);
+	if (err)
+		return err;
+>>>>>>> rebase
 
 	err = ipgre_netlink_parms(dev, data, tb, &p, &fwmark);
 	if (err < 0)
@@ -1409,8 +1550,39 @@ static int ipgre_changelink(struct net_device *dev, struct nlattr *tb[],
 	t->parms.i_flags = p.i_flags;
 	t->parms.o_flags = p.o_flags;
 
+<<<<<<< HEAD
 	if (strcmp(dev->rtnl_link_ops->kind, "erspan"))
 		ipgre_link_update(dev, !tb[IFLA_MTU]);
+=======
+	ipgre_link_update(dev, !tb[IFLA_MTU]);
+
+	return 0;
+}
+
+static int erspan_changelink(struct net_device *dev, struct nlattr *tb[],
+			     struct nlattr *data[],
+			     struct netlink_ext_ack *extack)
+{
+	struct ip_tunnel *t = netdev_priv(dev);
+	__u32 fwmark = t->fwmark;
+	struct ip_tunnel_parm p;
+	int err;
+
+	err = ipgre_newlink_encap_setup(dev, data);
+	if (err)
+		return err;
+
+	err = erspan_netlink_parms(dev, data, tb, &p, &fwmark);
+	if (err < 0)
+		return err;
+
+	err = ip_tunnel_changelink(dev, tb, &p, fwmark);
+	if (err < 0)
+		return err;
+
+	t->parms.i_flags = p.i_flags;
+	t->parms.o_flags = p.o_flags;
+>>>>>>> rebase
 
 	return 0;
 }
@@ -1601,8 +1773,13 @@ static struct rtnl_link_ops erspan_link_ops __read_mostly = {
 	.priv_size	= sizeof(struct ip_tunnel),
 	.setup		= erspan_setup,
 	.validate	= erspan_validate,
+<<<<<<< HEAD
 	.newlink	= ipgre_newlink,
 	.changelink	= ipgre_changelink,
+=======
+	.newlink	= erspan_newlink,
+	.changelink	= erspan_changelink,
+>>>>>>> rebase
 	.dellink	= ip_tunnel_dellink,
 	.get_size	= ipgre_get_size,
 	.fill_info	= ipgre_fill_info,

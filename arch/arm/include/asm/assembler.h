@@ -21,11 +21,18 @@
 #endif
 
 #include <asm/ptrace.h>
+<<<<<<< HEAD
 #include <asm/domain.h>
+=======
+>>>>>>> rebase
 #include <asm/opcodes-virt.h>
 #include <asm/asm-offsets.h>
 #include <asm/page.h>
 #include <asm/thread_info.h>
+<<<<<<< HEAD
+=======
+#include <asm/uaccess-asm.h>
+>>>>>>> rebase
 
 #define IOMEM(x)	(x)
 
@@ -110,6 +117,19 @@
 	.endm
 #endif
 
+<<<<<<< HEAD
+=======
+#if __LINUX_ARM_ARCH__ < 7
+	.macro	dsb, args
+	mcr	p15, 0, r0, c7, c10, 4
+	.endm
+
+	.macro	isb, args
+	mcr	p15, 0, r0, c7, c5, 4
+	.endm
+#endif
+
+>>>>>>> rebase
 	.macro asm_trace_hardirqs_off, save=1
 #if defined(CONFIG_TRACE_IRQFLAGS)
 	.if \save
@@ -374,9 +394,15 @@ THUMB(	orr	\reg , \reg , #PSR_T_BIT	)
 	.macro	usraccoff, instr, reg, ptr, inc, off, cond, abort, t=TUSER()
 9999:
 	.if	\inc == 1
+<<<<<<< HEAD
 	\instr\cond\()b\()\t\().w \reg, [\ptr, #\off]
 	.elseif	\inc == 4
 	\instr\cond\()\t\().w \reg, [\ptr, #\off]
+=======
+	\instr\()b\t\cond\().w \reg, [\ptr, #\off]
+	.elseif	\inc == 4
+	\instr\t\cond\().w \reg, [\ptr, #\off]
+>>>>>>> rebase
 	.else
 	.error	"Unsupported inc macro argument"
 	.endif
@@ -415,9 +441,15 @@ THUMB(	orr	\reg , \reg , #PSR_T_BIT	)
 	.rept	\rept
 9999:
 	.if	\inc == 1
+<<<<<<< HEAD
 	\instr\cond\()b\()\t \reg, [\ptr], #\inc
 	.elseif	\inc == 4
 	\instr\cond\()\t \reg, [\ptr], #\inc
+=======
+	\instr\()b\t\cond \reg, [\ptr], #\inc
+	.elseif	\inc == 4
+	\instr\t\cond \reg, [\ptr], #\inc
+>>>>>>> rebase
 	.else
 	.error	"Unsupported inc macro argument"
 	.endif
@@ -447,6 +479,7 @@ THUMB(	orr	\reg , \reg , #PSR_T_BIT	)
 	.size \name , . - \name
 	.endm
 
+<<<<<<< HEAD
 	.macro	csdb
 #ifdef CONFIG_THUMB2_KERNEL
 	.inst.w	0xf3af8014
@@ -520,6 +553,8 @@ THUMB(	orr	\reg , \reg , #PSR_T_BIT	)
 #endif
 	.endm
 
+=======
+>>>>>>> rebase
 	.irp	c,,eq,ne,cs,cc,mi,pl,vs,vc,hi,ls,ge,lt,gt,le,hs,lo
 	.macro	ret\c, reg
 #if __LINUX_ARM_ARCH__ < 6

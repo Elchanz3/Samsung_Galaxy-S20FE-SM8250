@@ -505,18 +505,35 @@ function test_num()
 	fi
 }
 
+<<<<<<< HEAD
 function get_test_count()
 {
 	test_num $1
 	TEST_DATA=$(echo $ALL_TESTS | awk '{print $'$1'}')
+=======
+function get_test_data()
+{
+	test_num $1
+	local field_num=$(echo $1 | sed 's/^0*//')
+	echo $ALL_TESTS | awk '{print $'$field_num'}'
+}
+
+function get_test_count()
+{
+	TEST_DATA=$(get_test_data $1)
+>>>>>>> rebase
 	LAST_TWO=${TEST_DATA#*:*}
 	echo ${LAST_TWO%:*}
 }
 
 function get_test_enabled()
 {
+<<<<<<< HEAD
 	test_num $1
 	TEST_DATA=$(echo $ALL_TESTS | awk '{print $'$1'}')
+=======
+	TEST_DATA=$(get_test_data $1)
+>>>>>>> rebase
 	echo ${TEST_DATA#*:*:}
 }
 

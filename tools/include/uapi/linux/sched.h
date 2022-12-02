@@ -2,8 +2,11 @@
 #ifndef _UAPI_LINUX_SCHED_H
 #define _UAPI_LINUX_SCHED_H
 
+<<<<<<< HEAD
 #include <linux/types.h>
 
+=======
+>>>>>>> rebase
 /*
  * cloning flags:
  */
@@ -33,6 +36,7 @@
 #define CLONE_IO		0x80000000	/* Clone io context */
 
 /*
+<<<<<<< HEAD
  * Arguments for the clone3 syscall
  */
 struct clone_args {
@@ -47,6 +51,8 @@ struct clone_args {
 };
 
 /*
+=======
+>>>>>>> rebase
  * Scheduling policies
  */
 #define SCHED_NORMAL		0
@@ -66,6 +72,7 @@ struct clone_args {
 #define SCHED_FLAG_RESET_ON_FORK	0x01
 #define SCHED_FLAG_RECLAIM		0x02
 #define SCHED_FLAG_DL_OVERRUN		0x04
+<<<<<<< HEAD
 #define SCHED_FLAG_KEEP_POLICY		0x08
 #define SCHED_FLAG_KEEP_PARAMS		0x10
 #define SCHED_FLAG_UTIL_CLAMP_MIN	0x20
@@ -82,5 +89,11 @@ struct clone_args {
 			 SCHED_FLAG_DL_OVERRUN		| \
 			 SCHED_FLAG_KEEP_ALL		| \
 			 SCHED_FLAG_UTIL_CLAMP)
+=======
+
+#define SCHED_FLAG_ALL	(SCHED_FLAG_RESET_ON_FORK	| \
+			 SCHED_FLAG_RECLAIM		| \
+			 SCHED_FLAG_DL_OVERRUN)
+>>>>>>> rebase
 
 #endif /* _UAPI_LINUX_SCHED_H */

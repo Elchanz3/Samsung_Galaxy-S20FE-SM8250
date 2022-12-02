@@ -2875,6 +2875,7 @@ static int wlcore_join(struct wl1271 *wl, struct wl12xx_vif *wlvif)
 
 	if (is_ibss)
 		ret = wl12xx_cmd_role_start_ibss(wl, wlvif);
+<<<<<<< HEAD
 	else {
 		if (wl->quirks & WLCORE_QUIRK_START_STA_FAILS) {
 			/*
@@ -2890,6 +2891,10 @@ static int wlcore_join(struct wl1271 *wl, struct wl12xx_vif *wlvif)
 
 		ret = wl12xx_cmd_role_start_sta(wl, wlvif);
 	}
+=======
+	else
+		ret = wl12xx_cmd_role_start_sta(wl, wlvif);
+>>>>>>> rebase
 
 	return ret;
 }
@@ -3671,8 +3676,15 @@ void wlcore_regdomain_config(struct wl1271 *wl)
 		goto out;
 
 	ret = pm_runtime_get_sync(wl->dev);
+<<<<<<< HEAD
 	if (ret < 0)
 		goto out;
+=======
+	if (ret < 0) {
+		pm_runtime_put_autosuspend(wl->dev);
+		goto out;
+	}
+>>>>>>> rebase
 
 	ret = wlcore_cmd_regdomain_config_locked(wl);
 	if (ret < 0) {

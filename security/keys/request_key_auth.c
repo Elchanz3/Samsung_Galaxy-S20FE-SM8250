@@ -27,7 +27,11 @@ static int request_key_auth_instantiate(struct key *,
 static void request_key_auth_describe(const struct key *, struct seq_file *);
 static void request_key_auth_revoke(struct key *);
 static void request_key_auth_destroy(struct key *);
+<<<<<<< HEAD
 static long request_key_auth_read(const struct key *, char __user *, size_t);
+=======
+static long request_key_auth_read(const struct key *, char *, size_t);
+>>>>>>> rebase
 
 /*
  * The request-key authorisation key type definition.
@@ -85,7 +89,11 @@ static void request_key_auth_describe(const struct key *key,
  * - the key's semaphore is read-locked
  */
 static long request_key_auth_read(const struct key *key,
+<<<<<<< HEAD
 				  char __user *buffer, size_t buflen)
+=======
+				  char *buffer, size_t buflen)
+>>>>>>> rebase
 {
 	struct request_key_auth *rka = get_request_key_auth(key);
 	size_t datalen;
@@ -102,8 +110,12 @@ static long request_key_auth_read(const struct key *key,
 		if (buflen > datalen)
 			buflen = datalen;
 
+<<<<<<< HEAD
 		if (copy_to_user(buffer, rka->callout_info, buflen) != 0)
 			ret = -EFAULT;
+=======
+		memcpy(buffer, rka->callout_info, buflen);
+>>>>>>> rebase
 	}
 
 	return ret;

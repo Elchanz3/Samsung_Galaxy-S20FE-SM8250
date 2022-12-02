@@ -249,6 +249,12 @@ static void meson_mx_mmc_request_done(struct meson_mx_mmc_host *host)
 
 	mrq = host->mrq;
 
+<<<<<<< HEAD
+=======
+	if (host->cmd->error)
+		meson_mx_mmc_soft_reset(host);
+
+>>>>>>> rebase
 	host->mrq = NULL;
 	host->cmd = NULL;
 
@@ -360,6 +366,7 @@ static void meson_mx_mmc_request(struct mmc_host *mmc, struct mmc_request *mrq)
 		meson_mx_mmc_start_cmd(mmc, mrq->cmd);
 }
 
+<<<<<<< HEAD
 static int meson_mx_mmc_card_busy(struct mmc_host *mmc)
 {
 	struct meson_mx_mmc_host *host = mmc_priv(mmc);
@@ -368,6 +375,8 @@ static int meson_mx_mmc_card_busy(struct mmc_host *mmc)
 	return !!(irqc & MESON_MX_SDIO_IRQC_FORCE_DATA_DAT_MASK);
 }
 
+=======
+>>>>>>> rebase
 static void meson_mx_mmc_read_response(struct mmc_host *mmc,
 				       struct mmc_command *cmd)
 {
@@ -509,7 +518,10 @@ static void meson_mx_mmc_timeout(struct timer_list *t)
 static struct mmc_host_ops meson_mx_mmc_ops = {
 	.request		= meson_mx_mmc_request,
 	.set_ios		= meson_mx_mmc_set_ios,
+<<<<<<< HEAD
 	.card_busy		= meson_mx_mmc_card_busy,
+=======
+>>>>>>> rebase
 	.get_cd			= mmc_gpio_get_cd,
 	.get_ro			= mmc_gpio_get_ro,
 };
@@ -573,7 +585,11 @@ static int meson_mx_mmc_add_host(struct meson_mx_mmc_host *host)
 	mmc->f_max = clk_round_rate(host->cfg_div_clk,
 				    clk_get_rate(host->parent_clk));
 
+<<<<<<< HEAD
 	mmc->caps |= MMC_CAP_ERASE | MMC_CAP_CMD23;
+=======
+	mmc->caps |= MMC_CAP_ERASE | MMC_CAP_CMD23 | MMC_CAP_WAIT_WHILE_BUSY;
+>>>>>>> rebase
 	mmc->ops = &meson_mx_mmc_ops;
 
 	ret = mmc_of_parse(mmc);
@@ -674,6 +690,14 @@ static int meson_mx_mmc_probe(struct platform_device *pdev)
 	}
 
 	irq = platform_get_irq(pdev, 0);
+<<<<<<< HEAD
+=======
+	if (irq < 0) {
+		ret = irq;
+		goto error_free_mmc;
+	}
+
+>>>>>>> rebase
 	ret = devm_request_threaded_irq(host->controller_dev, irq,
 					meson_mx_mmc_irq,
 					meson_mx_mmc_irq_thread, IRQF_ONESHOT,

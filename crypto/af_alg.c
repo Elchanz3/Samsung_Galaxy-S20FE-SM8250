@@ -133,12 +133,17 @@ EXPORT_SYMBOL_GPL(af_alg_release);
 void af_alg_release_parent(struct sock *sk)
 {
 	struct alg_sock *ask = alg_sk(sk);
+<<<<<<< HEAD
 	unsigned int nokey = ask->nokey_refcnt;
 	bool last = nokey && !ask->refcnt;
+=======
+	unsigned int nokey = atomic_read(&ask->nokey_refcnt);
+>>>>>>> rebase
 
 	sk = ask->parent;
 	ask = alg_sk(sk);
 
+<<<<<<< HEAD
 	local_bh_disable();
 	bh_lock_sock(sk);
 	ask->nokey_refcnt -= nokey;
@@ -148,6 +153,12 @@ void af_alg_release_parent(struct sock *sk)
 	local_bh_enable();
 
 	if (last)
+=======
+	if (nokey)
+		atomic_dec(&ask->nokey_refcnt);
+
+	if (atomic_dec_and_test(&ask->refcnt))
+>>>>>>> rebase
 		sock_put(sk);
 }
 EXPORT_SYMBOL_GPL(af_alg_release_parent);
@@ -157,7 +168,11 @@ static int alg_bind(struct socket *sock, struct sockaddr *uaddr, int addr_len)
 	const u32 allowed = CRYPTO_ALG_KERN_DRIVER_ONLY;
 	struct sock *sk = sock->sk;
 	struct alg_sock *ask = alg_sk(sk);
+<<<<<<< HEAD
 	struct sockaddr_alg *sa = (void *)uaddr;
+=======
+	struct sockaddr_alg_new *sa = (void *)uaddr;
+>>>>>>> rebase
 	const struct af_alg_type *type;
 	void *private;
 	int err;
@@ -165,7 +180,15 @@ static int alg_bind(struct socket *sock, struct sockaddr *uaddr, int addr_len)
 	if (sock->state == SS_CONNECTED)
 		return -EINVAL;
 
+<<<<<<< HEAD
 	if (addr_len < sizeof(*sa))
+=======
+	BUILD_BUG_ON(offsetof(struct sockaddr_alg_new, salg_name) !=
+		     offsetof(struct sockaddr_alg, salg_name));
+	BUILD_BUG_ON(offsetof(struct sockaddr_alg, salg_name) != sizeof(*sa));
+
+	if (addr_len < sizeof(*sa) + 1)
+>>>>>>> rebase
 		return -EINVAL;
 
 	/* If caller uses non-allowed flag, return error. */
@@ -173,7 +196,11 @@ static int alg_bind(struct socket *sock, struct sockaddr *uaddr, int addr_len)
 		return -EINVAL;
 
 	sa->salg_type[sizeof(sa->salg_type) - 1] = 0;
+<<<<<<< HEAD
 	sa->salg_name[sizeof(sa->salg_name) + addr_len - sizeof(*sa) - 1] = 0;
+=======
+	sa->salg_name[addr_len - sizeof(*sa) - 1] = 0;
+>>>>>>> rebase
 
 	type = alg_get_type(sa->salg_type);
 	if (IS_ERR(type) && PTR_ERR(type) == -ENOENT) {
@@ -192,7 +219,11 @@ static int alg_bind(struct socket *sock, struct sockaddr *uaddr, int addr_len)
 
 	err = -EBUSY;
 	lock_sock(sk);
+<<<<<<< HEAD
 	if (ask->refcnt | ask->nokey_refcnt)
+=======
+	if (atomic_read(&ask->refcnt))
+>>>>>>> rebase
 		goto unlock;
 
 	swap(ask->type, type);
@@ -241,7 +272,11 @@ static int alg_setsockopt(struct socket *sock, int level, int optname,
 	int err = -EBUSY;
 
 	lock_sock(sk);
+<<<<<<< HEAD
 	if (ask->refcnt)
+=======
+	if (atomic_read(&ask->refcnt) != atomic_read(&ask->nokey_refcnt))
+>>>>>>> rebase
 		goto unlock;
 
 	type = ask->type;
@@ -308,12 +343,23 @@ int af_alg_accept(struct sock *sk, struct socket *newsock, bool kern)
 
 	sk2->sk_family = PF_ALG;
 
+<<<<<<< HEAD
 	if (nokey || !ask->refcnt++)
 		sock_hold(sk);
 	ask->nokey_refcnt += nokey;
 	alg_sk(sk2)->parent = sk;
 	alg_sk(sk2)->type = type;
 	alg_sk(sk2)->nokey_refcnt = nokey;
+=======
+	if (atomic_inc_return_relaxed(&ask->refcnt) == 1)
+		sock_hold(sk);
+	if (nokey) {
+		atomic_inc(&ask->nokey_refcnt);
+		atomic_set(&alg_sk(sk2)->nokey_refcnt, 1);
+	}
+	alg_sk(sk2)->parent = sk;
+	alg_sk(sk2)->type = type;
+>>>>>>> rebase
 
 	newsock->ops = type->ops;
 	newsock->state = SS_CONNECTED;

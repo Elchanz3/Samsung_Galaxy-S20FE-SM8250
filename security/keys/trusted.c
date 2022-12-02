@@ -123,7 +123,11 @@ out:
  */
 static int TSS_authhmac(unsigned char *digest, const unsigned char *key,
 			unsigned int keylen, unsigned char *h1,
+<<<<<<< HEAD
 			unsigned char *h2, unsigned int h3, ...)
+=======
+			unsigned char *h2, unsigned char h3, ...)
+>>>>>>> rebase
 {
 	unsigned char paramdigest[SHA1_DIGEST_SIZE];
 	struct sdesc *sdesc;
@@ -139,7 +143,11 @@ static int TSS_authhmac(unsigned char *digest, const unsigned char *key,
 		return PTR_ERR(sdesc);
 	}
 
+<<<<<<< HEAD
 	c = !!h3;
+=======
+	c = h3;
+>>>>>>> rebase
 	ret = crypto_shash_init(&sdesc->shash);
 	if (ret < 0)
 		goto out;
@@ -796,7 +804,11 @@ static int getoptions(char *c, struct trusted_key_payload *pay,
 		case Opt_migratable:
 			if (*args[0].from == '0')
 				pay->migratable = 0;
+<<<<<<< HEAD
 			else
+=======
+			else if (*args[0].from != '1')
+>>>>>>> rebase
 				return -EINVAL;
 			break;
 		case Opt_pcrlock:
@@ -1135,11 +1147,18 @@ out:
  * trusted_read - copy the sealed blob data to userspace in hex.
  * On success, return to userspace the trusted key datablob size.
  */
+<<<<<<< HEAD
 static long trusted_read(const struct key *key, char __user *buffer,
 			 size_t buflen)
 {
 	const struct trusted_key_payload *p;
 	char *ascii_buf;
+=======
+static long trusted_read(const struct key *key, char *buffer,
+			 size_t buflen)
+{
+	const struct trusted_key_payload *p;
+>>>>>>> rebase
 	char *bufp;
 	int i;
 
@@ -1148,6 +1167,7 @@ static long trusted_read(const struct key *key, char __user *buffer,
 		return -EINVAL;
 
 	if (buffer && buflen >= 2 * p->blob_len) {
+<<<<<<< HEAD
 		ascii_buf = kmalloc_array(2, p->blob_len, GFP_KERNEL);
 		if (!ascii_buf)
 			return -ENOMEM;
@@ -1160,6 +1180,11 @@ static long trusted_read(const struct key *key, char __user *buffer,
 			return -EFAULT;
 		}
 		kzfree(ascii_buf);
+=======
+		bufp = buffer;
+		for (i = 0; i < p->blob_len; i++)
+			bufp = hex_byte_pack(bufp, p->blob[i]);
+>>>>>>> rebase
 	}
 	return 2 * p->blob_len;
 }

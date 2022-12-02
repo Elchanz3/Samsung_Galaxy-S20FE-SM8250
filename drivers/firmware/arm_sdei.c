@@ -410,14 +410,29 @@ int sdei_event_enable(u32 event_num)
 		return -ENOENT;
 	}
 
+<<<<<<< HEAD
 	spin_lock(&sdei_list_lock);
 	event->reenable = true;
 	spin_unlock(&sdei_list_lock);
 
+=======
+
+	cpus_read_lock();
+>>>>>>> rebase
 	if (event->type == SDEI_EVENT_TYPE_SHARED)
 		err = sdei_api_event_enable(event->event_num);
 	else
 		err = sdei_do_cross_call(_local_event_enable, event);
+<<<<<<< HEAD
+=======
+
+	if (!err) {
+		spin_lock(&sdei_list_lock);
+		event->reenable = true;
+		spin_unlock(&sdei_list_lock);
+	}
+	cpus_read_unlock();
+>>>>>>> rebase
 	mutex_unlock(&sdei_events_lock);
 
 	return err;
@@ -489,11 +504,14 @@ static int _sdei_event_unregister(struct sdei_event *event)
 {
 	lockdep_assert_held(&sdei_events_lock);
 
+<<<<<<< HEAD
 	spin_lock(&sdei_list_lock);
 	event->reregister = false;
 	event->reenable = false;
 	spin_unlock(&sdei_list_lock);
 
+=======
+>>>>>>> rebase
 	if (event->type == SDEI_EVENT_TYPE_SHARED)
 		return sdei_api_event_unregister(event->event_num);
 
@@ -516,6 +534,14 @@ int sdei_event_unregister(u32 event_num)
 			break;
 		}
 
+<<<<<<< HEAD
+=======
+		spin_lock(&sdei_list_lock);
+		event->reregister = false;
+		event->reenable = false;
+		spin_unlock(&sdei_list_lock);
+
+>>>>>>> rebase
 		err = _sdei_event_unregister(event);
 		if (err)
 			break;
@@ -583,16 +609,20 @@ static int _sdei_event_register(struct sdei_event *event)
 
 	lockdep_assert_held(&sdei_events_lock);
 
+<<<<<<< HEAD
 	spin_lock(&sdei_list_lock);
 	event->reregister = true;
 	spin_unlock(&sdei_list_lock);
 
+=======
+>>>>>>> rebase
 	if (event->type == SDEI_EVENT_TYPE_SHARED)
 		return sdei_api_event_register(event->event_num,
 					       sdei_entry_point,
 					       event->registered,
 					       SDEI_EVENT_REGISTER_RM_ANY, 0);
 
+<<<<<<< HEAD
 
 	err = sdei_do_cross_call(_local_event_register, event);
 	if (err) {
@@ -603,6 +633,11 @@ static int _sdei_event_register(struct sdei_event *event)
 
 		sdei_do_cross_call(_local_event_unregister, event);
 	}
+=======
+	err = sdei_do_cross_call(_local_event_register, event);
+	if (err)
+		sdei_do_cross_call(_local_event_unregister, event);
+>>>>>>> rebase
 
 	return err;
 }
@@ -630,12 +665,25 @@ int sdei_event_register(u32 event_num, sdei_event_callback *cb, void *arg)
 			break;
 		}
 
+<<<<<<< HEAD
+=======
+		cpus_read_lock();
+>>>>>>> rebase
 		err = _sdei_event_register(event);
 		if (err) {
 			sdei_event_destroy(event);
 			pr_warn("Failed to register event %u: %d\n", event_num,
 				err);
+<<<<<<< HEAD
 		}
+=======
+		} else {
+			spin_lock(&sdei_list_lock);
+			event->reregister = true;
+			spin_unlock(&sdei_list_lock);
+		}
+		cpus_read_unlock();
+>>>>>>> rebase
 	} while (0);
 	mutex_unlock(&sdei_events_lock);
 

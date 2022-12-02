@@ -63,12 +63,15 @@ struct mutex {
 #ifdef CONFIG_DEBUG_LOCK_ALLOC
 	struct lockdep_map	dep_map;
 #endif
+<<<<<<< HEAD
 #ifdef CONFIG_FAST_TRACK
 	struct task_struct 	*ftt_dep_task;
 #endif
 #ifdef CONFIG_KPERFMON
 	unsigned long		time;
 #endif
+=======
+>>>>>>> rebase
 };
 
 /*
@@ -131,6 +134,7 @@ do {									\
 # define __DEP_MAP_MUTEX_INITIALIZER(lockname)
 #endif
 
+<<<<<<< HEAD
 #ifdef CONFIG_FAST_TRACK
 #define __MUTEX_INITIALIZER(lockname) \
 		{ .owner = ATOMIC_LONG_INIT(0) \
@@ -140,13 +144,18 @@ do {									\
 		__DEBUG_MUTEX_INITIALIZER(lockname) \
 		__DEP_MAP_MUTEX_INITIALIZER(lockname) }
 #else
+=======
+>>>>>>> rebase
 #define __MUTEX_INITIALIZER(lockname) \
 		{ .owner = ATOMIC_LONG_INIT(0) \
 		, .wait_lock = __SPIN_LOCK_UNLOCKED(lockname.wait_lock) \
 		, .wait_list = LIST_HEAD_INIT(lockname.wait_list) \
 		__DEBUG_MUTEX_INITIALIZER(lockname) \
 		__DEP_MAP_MUTEX_INITIALIZER(lockname) }
+<<<<<<< HEAD
 #endif
+=======
+>>>>>>> rebase
 
 #define DEFINE_MUTEX(mutexname) \
 	struct mutex mutexname = __MUTEX_INITIALIZER(mutexname)
@@ -200,7 +209,11 @@ extern void mutex_lock_io(struct mutex *lock);
 # define mutex_lock_interruptible_nested(lock, subclass) mutex_lock_interruptible(lock)
 # define mutex_lock_killable_nested(lock, subclass) mutex_lock_killable(lock)
 # define mutex_lock_nest_lock(lock, nest_lock) mutex_lock(lock)
+<<<<<<< HEAD
 # define mutex_lock_io_nested(lock, subclass) mutex_lock(lock)
+=======
+# define mutex_lock_io_nested(lock, subclass) mutex_lock_io(lock)
+>>>>>>> rebase
 #endif
 
 /*
@@ -214,10 +227,13 @@ extern void mutex_unlock(struct mutex *lock);
 
 extern int atomic_dec_and_mutex_lock(atomic_t *cnt, struct mutex *lock);
 
+<<<<<<< HEAD
 #ifdef CONFIG_FAST_TRACK
 #include <cpu/ftt/ftt_mutex.h>
 #endif
 
+=======
+>>>>>>> rebase
 /*
  * These values are chosen such that FAIL and SUCCESS match the
  * values of the regular mutex_trylock().

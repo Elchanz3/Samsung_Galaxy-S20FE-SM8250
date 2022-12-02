@@ -423,8 +423,12 @@ show_cpuinfo (struct seq_file *m, void *v)
 		}
 		seq_printf(m, " (0x%02lx)\n", boot_cpu_data.pdc.capabilities);
 
+<<<<<<< HEAD
 		seq_printf(m, "model\t\t: %s\n"
 				"model name\t: %s\n",
+=======
+		seq_printf(m, "model\t\t: %s - %s\n",
+>>>>>>> rebase
 				 boot_cpu_data.pdc.sys_model_name,
 				 cpuinfo->dev ?
 				 cpuinfo->dev->name : "Unknown");

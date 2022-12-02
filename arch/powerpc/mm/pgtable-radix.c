@@ -115,7 +115,11 @@ static int early_map_kernel_page(unsigned long ea, unsigned long pa,
 
 set_the_pte:
 	set_pte_at(&init_mm, ea, ptep, pfn_pte(pfn, flags));
+<<<<<<< HEAD
 	smp_wmb();
+=======
+	asm volatile("ptesync": : :"memory");
+>>>>>>> rebase
 	return 0;
 }
 
@@ -169,7 +173,11 @@ static int __map_kernel_page(unsigned long ea, unsigned long pa,
 
 set_the_pte:
 	set_pte_at(&init_mm, ea, ptep, pfn_pte(pfn, flags));
+<<<<<<< HEAD
 	smp_wmb();
+=======
+	asm volatile("ptesync": : :"memory");
+>>>>>>> rebase
 	return 0;
 }
 

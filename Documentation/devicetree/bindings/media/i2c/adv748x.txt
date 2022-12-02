@@ -73,7 +73,11 @@ Example:
 			};
 		};
 
+<<<<<<< HEAD
 		port@10 {
+=======
+		port@a {
+>>>>>>> rebase
 			reg = <10>;
 
 			adv7482_txa: endpoint {
@@ -83,7 +87,11 @@ Example:
 			};
 		};
 
+<<<<<<< HEAD
 		port@11 {
+=======
+		port@b {
+>>>>>>> rebase
 			reg = <11>;
 
 			adv7482_txb: endpoint {

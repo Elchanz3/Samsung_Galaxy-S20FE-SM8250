@@ -72,7 +72,11 @@ int ftrace_make_call(struct dyn_ftrace *rec, unsigned long addr)
 {
 	unsigned long pc = rec->ip;
 	u32 old, new;
+<<<<<<< HEAD
 	long offset = (long)pc - (long)addr;
+=======
+	long offset = (long)addr - (long)pc;
+>>>>>>> rebase
 
 	if (offset < -SZ_128M || offset >= SZ_128M) {
 #ifdef CONFIG_ARM64_MODULE_PLTS
@@ -151,7 +155,11 @@ int ftrace_make_nop(struct module *mod, struct dyn_ftrace *rec,
 	unsigned long pc = rec->ip;
 	bool validate = true;
 	u32 old = 0, new;
+<<<<<<< HEAD
 	long offset = (long)pc - (long)addr;
+=======
+	long offset = (long)addr - (long)pc;
+>>>>>>> rebase
 
 	if (offset < -SZ_128M || offset >= SZ_128M) {
 #ifdef CONFIG_ARM64_MODULE_PLTS

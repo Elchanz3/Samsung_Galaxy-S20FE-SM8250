@@ -19,8 +19,11 @@
 
 #include "internals.h"
 
+<<<<<<< HEAD
 #include <linux/sec_debug.h>
 
+=======
+>>>>>>> rebase
 static irqreturn_t bad_chained_irq(int irq, void *dev_id)
 {
 	WARN_ONCE(1, "Chained irq %d should not call an action\n", irq);
@@ -267,8 +270,16 @@ int irq_startup(struct irq_desc *desc, bool resend, bool force)
 	} else {
 		switch (__irq_startup_managed(desc, aff, force)) {
 		case IRQ_STARTUP_NORMAL:
+<<<<<<< HEAD
 			ret = __irq_startup(desc);
 			irq_setup_affinity(desc);
+=======
+			if (d->chip->flags & IRQCHIP_AFFINITY_PRE_STARTUP)
+				irq_setup_affinity(desc);
+			ret = __irq_startup(desc);
+			if (!(d->chip->flags & IRQCHIP_AFFINITY_PRE_STARTUP))
+				irq_setup_affinity(desc);
+>>>>>>> rebase
 			break;
 		case IRQ_STARTUP_MANAGED:
 			irq_do_set_affinity(d, aff, false);
@@ -906,6 +917,7 @@ void handle_percpu_devid_irq(struct irq_desc *desc)
 		chip->irq_ack(&desc->irq_data);
 
 	if (likely(action)) {
+<<<<<<< HEAD
 		sec_debug_irq_sched_log(irq, action->handler,
 					(char *)action->name, IRQ_ENTRY);
 		trace_irq_handler_entry(irq, action);
@@ -913,6 +925,11 @@ void handle_percpu_devid_irq(struct irq_desc *desc)
 		trace_irq_handler_exit(irq, action, res);
 		sec_debug_irq_sched_log(irq, action->handler,
 					(char *)action->name, IRQ_EXIT);
+=======
+		trace_irq_handler_entry(irq, action);
+		res = action->handler(irq, raw_cpu_ptr(action->percpu_dev_id));
+		trace_irq_handler_exit(irq, action, res);
+>>>>>>> rebase
 	} else {
 		unsigned int cpu = smp_processor_id();
 		bool enabled = cpumask_test_cpu(cpu, desc->percpu_enabled);
@@ -1246,6 +1263,7 @@ EXPORT_SYMBOL_GPL(handle_fasteoi_mask_irq);
 #endif /* CONFIG_IRQ_FASTEOI_HIERARCHY_HANDLERS */
 
 /**
+<<<<<<< HEAD
  *	irq_chip_set_parent_state - set the state of a parent interrupt.
  *	@data: Pointer to interrupt specific data
  *	@which: State to be restored (one of IRQCHIP_STATE_*)
@@ -1290,6 +1308,8 @@ int irq_chip_get_parent_state(struct irq_data *data,
 EXPORT_SYMBOL(irq_chip_get_parent_state);
 
 /**
+=======
+>>>>>>> rebase
  * irq_chip_enable_parent - Enable the parent interrupt (defaults to unmask if
  * NULL)
  * @data:	Pointer to interrupt specific data
@@ -1415,7 +1435,10 @@ int irq_chip_retrigger_hierarchy(struct irq_data *data)
 
 	return 0;
 }
+<<<<<<< HEAD
 EXPORT_SYMBOL_GPL(irq_chip_retrigger_hierarchy);
+=======
+>>>>>>> rebase
 
 /**
  * irq_chip_set_vcpu_affinity_parent - Set vcpu affinity on the parent interrupt
@@ -1430,7 +1453,10 @@ int irq_chip_set_vcpu_affinity_parent(struct irq_data *data, void *vcpu_info)
 
 	return -ENOSYS;
 }
+<<<<<<< HEAD
 EXPORT_SYMBOL_GPL(irq_chip_set_vcpu_affinity_parent);
+=======
+>>>>>>> rebase
 
 /**
  * irq_chip_set_wake_parent - Set/reset wake-up on the parent interrupt
@@ -1451,7 +1477,10 @@ int irq_chip_set_wake_parent(struct irq_data *data, unsigned int on)
 
 	return -ENOSYS;
 }
+<<<<<<< HEAD
 EXPORT_SYMBOL_GPL(irq_chip_set_wake_parent);
+=======
+>>>>>>> rebase
 #endif
 
 /**

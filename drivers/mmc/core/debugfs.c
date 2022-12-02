@@ -196,6 +196,7 @@ static int mmc_ios_show(struct seq_file *s, void *data)
 
 	return 0;
 }
+<<<<<<< HEAD
 static int mmc_ios_open(struct inode *inode, struct file *file)
 {
 	return single_open(file, mmc_ios_show, inode->i_private);
@@ -207,6 +208,9 @@ static const struct file_operations mmc_ios_fops = {
 	.llseek         = seq_lseek,
 	.release        = single_release,
 };
+=======
+DEFINE_SHOW_ATTRIBUTE(mmc_ios);
+>>>>>>> rebase
 
 static int mmc_clock_opt_get(void *data, u64 *val)
 {
@@ -235,6 +239,7 @@ static int mmc_clock_opt_set(void *data, u64 val)
 DEFINE_SIMPLE_ATTRIBUTE(mmc_clock_fops, mmc_clock_opt_get, mmc_clock_opt_set,
 	"%llu\n");
 
+<<<<<<< HEAD
 static int mmc_scale_get(void *data, u64 *val)
 {
 	struct mmc_host *host = data;
@@ -430,6 +435,8 @@ static int mmc_force_err_set(void *data, u64 val)
 
 DEFINE_SIMPLE_ATTRIBUTE(mmc_force_err_fops, NULL, mmc_force_err_set, "%llu\n");
 
+=======
+>>>>>>> rebase
 void mmc_add_host_debugfs(struct mmc_host *host)
 {
 	struct dentry *root;
@@ -445,6 +452,7 @@ void mmc_add_host_debugfs(struct mmc_host *host)
 
 	host->debugfs_root = root;
 
+<<<<<<< HEAD
 	if (!debugfs_create_file("ios", 0400, root, host, &mmc_ios_fops))
 		goto err_node;
 
@@ -479,6 +487,21 @@ void mmc_add_host_debugfs(struct mmc_host *host)
 		&mmc_err_stats_fops))
 		goto err_node;
 
+=======
+	if (!debugfs_create_file("ios", S_IRUSR, root, host, &mmc_ios_fops))
+		goto err_node;
+
+	if (!debugfs_create_x32("caps", S_IRUSR, root, &host->caps))
+		goto err_node;
+
+	if (!debugfs_create_x32("caps2", S_IRUSR, root, &host->caps2))
+		goto err_node;
+
+	if (!debugfs_create_file("clock", S_IRUSR | S_IWUSR, root, host,
+			&mmc_clock_fops))
+		goto err_node;
+
+>>>>>>> rebase
 #ifdef CONFIG_FAIL_MMC_REQUEST
 	if (fail_request)
 		setup_fault_attr(&fail_default_attr, fail_request);
@@ -488,6 +511,7 @@ void mmc_add_host_debugfs(struct mmc_host *host)
 					     &host->fail_mmc_request)))
 		goto err_node;
 #endif
+<<<<<<< HEAD
 	if (!debugfs_create_file("force_error", 0200, root, host,
 		&mmc_force_err_fops))
 		goto err_node;
@@ -497,6 +521,8 @@ void mmc_add_host_debugfs(struct mmc_host *host)
 		&host->crash_on_err))
 		goto err_node;
 
+=======
+>>>>>>> rebase
 	return;
 
 err_node:
@@ -530,7 +556,11 @@ void mmc_add_card_debugfs(struct mmc_card *card)
 
 	card->debugfs_root = root;
 
+<<<<<<< HEAD
 	if (!debugfs_create_x32("state", 0400, root, &card->state))
+=======
+	if (!debugfs_create_x32("state", S_IRUSR, root, &card->state))
+>>>>>>> rebase
 		goto err;
 
 	return;

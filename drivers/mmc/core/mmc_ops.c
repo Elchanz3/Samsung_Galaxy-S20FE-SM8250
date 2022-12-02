@@ -23,7 +23,13 @@
 #include "host.h"
 #include "mmc_ops.h"
 
+<<<<<<< HEAD
 #define MMC_OPS_TIMEOUT_MS	(10 * 60 * 1000) /* 10 minute timeout */
+=======
+#define MMC_OPS_TIMEOUT_MS		(10 * 60 * 1000) /* 10min*/
+#define MMC_BKOPS_TIMEOUT_MS		(120 * 1000) /* 120s */
+#define MMC_CACHE_FLUSH_TIMEOUT_MS	(30 * 1000) /* 30s */
+>>>>>>> rebase
 
 static const u8 tuning_blk_pattern_4bit[] = {
 	0xff, 0x0f, 0xff, 0x00, 0xff, 0xcc, 0xc3, 0xcc,
@@ -366,7 +372,11 @@ int mmc_get_ext_csd(struct mmc_card *card, u8 **new_ext_csd)
 	 * As the ext_csd is so large and mostly unused, we don't store the
 	 * raw block in mmc_card.
 	 */
+<<<<<<< HEAD
 	ext_csd = kzalloc(512, GFP_NOIO | __GFP_NOFAIL);
+=======
+	ext_csd = kzalloc(512, GFP_KERNEL);
+>>>>>>> rebase
 	if (!ext_csd)
 		return -ENOMEM;
 
@@ -456,10 +466,13 @@ static int mmc_poll_for_busy(struct mmc_card *card, unsigned int timeout_ms,
 	bool expired = false;
 	bool busy = false;
 
+<<<<<<< HEAD
 	/* We have an unspecified cmd timeout, use the fallback value. */
 	if (!timeout_ms)
 		timeout_ms = MMC_OPS_TIMEOUT_MS;
 
+=======
+>>>>>>> rebase
 	/*
 	 * In cases when not allowed to poll by using CMD13 or because we aren't
 	 * capable of polling by using ->card_busy(), then rely on waiting the
@@ -532,14 +545,32 @@ int __mmc_switch(struct mmc_card *card, u8 set, u8 index, u8 value,
 
 	mmc_retune_hold(host);
 
+<<<<<<< HEAD
+=======
+	if (!timeout_ms) {
+		pr_warn("%s: unspecified timeout for CMD6 - use generic\n",
+			mmc_hostname(host));
+		timeout_ms = card->ext_csd.generic_cmd6_time;
+	}
+
+>>>>>>> rebase
 	/*
 	 * If the cmd timeout and the max_busy_timeout of the host are both
 	 * specified, let's validate them. A failure means we need to prevent
 	 * the host from doing hw busy detection, which is done by converting
+<<<<<<< HEAD
 	 * to a R1 response instead of a R1B.
 	 */
 	if (timeout_ms && host->max_busy_timeout &&
 		(timeout_ms > host->max_busy_timeout))
+=======
+	 * to a R1 response instead of a R1B. Note, some hosts requires R1B,
+	 * which also means they are on their own when it comes to deal with the
+	 * busy timeout.
+	 */
+	if (!(host->caps & MMC_CAP_NEED_RSP_BUSY) &&
+	    host->max_busy_timeout && (timeout_ms > host->max_busy_timeout))
+>>>>>>> rebase
 		use_r1b_resp = false;
 
 	cmd.opcode = MMC_SWITCH;
@@ -550,10 +581,13 @@ int __mmc_switch(struct mmc_card *card, u8 set, u8 index, u8 value,
 	cmd.flags = MMC_CMD_AC;
 	if (use_r1b_resp) {
 		cmd.flags |= MMC_RSP_SPI_R1B | MMC_RSP_R1B;
+<<<<<<< HEAD
 		/*
 		 * A busy_timeout of zero means the host can decide to use
 		 * whatever value it finds suitable.
 		 */
+=======
+>>>>>>> rebase
 		cmd.busy_timeout = timeout_ms;
 	} else {
 		cmd.flags |= MMC_RSP_SPI_R1 | MMC_RSP_R1;
@@ -802,7 +836,11 @@ static int mmc_send_hpi_cmd(struct mmc_card *card, u32 *status)
 	unsigned int opcode;
 	int err;
 
+<<<<<<< HEAD
 	if (!card->ext_csd.hpi_en) {
+=======
+	if (!card->ext_csd.hpi) {
+>>>>>>> rebase
 		pr_warn("%s: Card didn't support HPI command\n",
 			mmc_hostname(card->host));
 		return -EINVAL;
@@ -819,7 +857,11 @@ static int mmc_send_hpi_cmd(struct mmc_card *card, u32 *status)
 
 	err = mmc_wait_for_cmd(card->host, &cmd, 0);
 	if (err) {
+<<<<<<< HEAD
 		pr_debug("%s: error %d interrupting operation. "
+=======
+		pr_warn("%s: error %d interrupting operation. "
+>>>>>>> rebase
 			"HPI command response %#x\n", mmc_hostname(card->host),
 			err, cmd.resp[0]);
 		return err;
@@ -875,6 +917,11 @@ int mmc_interrupt_hpi(struct mmc_card *card)
 	}
 
 	err = mmc_send_hpi_cmd(card, &status);
+<<<<<<< HEAD
+=======
+	if (err)
+		goto out;
+>>>>>>> rebase
 
 	prg_wait = jiffies + msecs_to_jiffies(card->ext_csd.out_of_int_time);
 	do {
@@ -882,6 +929,7 @@ int mmc_interrupt_hpi(struct mmc_card *card)
 
 		if (!err && R1_CURRENT_STATE(status) == R1_STATE_TRAN)
 			break;
+<<<<<<< HEAD
 		if (time_after(jiffies, prg_wait)) {
 			err = mmc_send_status(card, &status);
 			if (!err && R1_CURRENT_STATE(status) != R1_STATE_TRAN)
@@ -889,6 +937,10 @@ int mmc_interrupt_hpi(struct mmc_card *card)
 			else
 				break;
 		}
+=======
+		if (time_after(jiffies, prg_wait))
+			err = -ETIMEDOUT;
+>>>>>>> rebase
 	} while (!err);
 
 out:
@@ -900,6 +952,7 @@ int mmc_can_ext_csd(struct mmc_card *card)
 	return (card && card->csd.mmca_vsn > CSD_SPEC_VER_3);
 }
 
+<<<<<<< HEAD
 /**
  *	mmc_stop_bkops - stop ongoing BKOPS
  *	@card: MMC card to check BKOPS
@@ -928,6 +981,8 @@ int mmc_stop_bkops(struct mmc_card *card)
 	return err;
 }
 
+=======
+>>>>>>> rebase
 static int mmc_read_bkops_status(struct mmc_card *card)
 {
 	int err;
@@ -937,6 +992,7 @@ static int mmc_read_bkops_status(struct mmc_card *card)
 	if (err)
 		return err;
 
+<<<<<<< HEAD
 	card->ext_csd.raw_bkops_status = ext_csd[EXT_CSD_BKOPS_STATUS] &
 						MMC_BKOPS_URGENCY_MASK;
 	card->ext_csd.raw_exception_status =
@@ -945,11 +1001,16 @@ static int mmc_read_bkops_status(struct mmc_card *card)
 					 EXT_CSD_DYNCAP_NEEDED |
 					 EXT_CSD_SYSPOOL_EXHAUSTED
 					 | EXT_CSD_PACKED_FAILURE);
+=======
+	card->ext_csd.raw_bkops_status = ext_csd[EXT_CSD_BKOPS_STATUS];
+	card->ext_csd.raw_exception_status = ext_csd[EXT_CSD_EXP_EVENTS_STATUS];
+>>>>>>> rebase
 	kfree(ext_csd);
 	return 0;
 }
 
 /**
+<<<<<<< HEAD
  *	mmc_start_bkops - start BKOPS for supported cards
  *	@card: MMC card to start BKOPS
  *	@from_exception: A flag to indicate if this function was
@@ -966,6 +1027,19 @@ void mmc_start_bkops(struct mmc_card *card, bool from_exception)
 	bool use_busy_signal;
 
 	if (!card->ext_csd.man_bkops_en || mmc_card_doing_bkops(card))
+=======
+ *	mmc_run_bkops - Run BKOPS for supported cards
+ *	@card: MMC card to run BKOPS for
+ *
+ *	Run background operations synchronously for cards having manual BKOPS
+ *	enabled and in case it reports urgent BKOPS level.
+*/
+void mmc_run_bkops(struct mmc_card *card)
+{
+	int err;
+
+	if (!card->ext_csd.man_bkops_en)
+>>>>>>> rebase
 		return;
 
 	err = mmc_read_bkops_status(card);
@@ -975,6 +1049,7 @@ void mmc_start_bkops(struct mmc_card *card, bool from_exception)
 		return;
 	}
 
+<<<<<<< HEAD
 	if (!card->ext_csd.raw_bkops_status)
 		return;
 
@@ -1013,6 +1088,28 @@ void mmc_start_bkops(struct mmc_card *card, bool from_exception)
 		mmc_retune_release(card->host);
 }
 EXPORT_SYMBOL(mmc_start_bkops);
+=======
+	if (!card->ext_csd.raw_bkops_status ||
+	    card->ext_csd.raw_bkops_status < EXT_CSD_BKOPS_LEVEL_2)
+		return;
+
+	mmc_retune_hold(card->host);
+
+	/*
+	 * For urgent BKOPS status, LEVEL_2 and higher, let's execute
+	 * synchronously. Future wise, we may consider to start BKOPS, for less
+	 * urgent levels by using an asynchronous background task, when idle.
+	 */
+	err = mmc_switch(card, EXT_CSD_CMD_SET_NORMAL,
+			 EXT_CSD_BKOPS_START, 1, MMC_BKOPS_TIMEOUT_MS);
+	if (err)
+		pr_warn("%s: Error %d starting bkops\n",
+			mmc_hostname(card->host), err);
+
+	mmc_retune_release(card->host);
+}
+EXPORT_SYMBOL(mmc_run_bkops);
+>>>>>>> rebase
 
 /*
  * Flush the cache to the non-volatile storage.
@@ -1021,12 +1118,19 @@ int mmc_flush_cache(struct mmc_card *card)
 {
 	int err = 0;
 
+<<<<<<< HEAD
 	if (mmc_card_mmc(card) &&
 			(card->ext_csd.cache_size > 0) &&
 			(card->ext_csd.cache_ctrl & 1) &&
 			(!(card->quirks & MMC_QUIRK_CACHE_DISABLE))) {
 		err = mmc_switch(card, EXT_CSD_CMD_SET_NORMAL,
 				EXT_CSD_FLUSH_CACHE, 1, 0);
+=======
+	if (mmc_cache_enabled(card->host)) {
+		err = mmc_switch(card, EXT_CSD_CMD_SET_NORMAL,
+				 EXT_CSD_FLUSH_CACHE, 1,
+				 MMC_CACHE_FLUSH_TIMEOUT_MS);
+>>>>>>> rebase
 		if (err)
 			pr_err("%s: cache flush error %d\n",
 					mmc_hostname(card->host), err);

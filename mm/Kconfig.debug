@@ -31,6 +31,7 @@ config DEBUG_PAGEALLOC
 	  enabled by DEBUG_PAGEALLOC_ENABLE_DEFAULT or the debug_pagealloc
 	  command line parameter.
 
+<<<<<<< HEAD
 config SLUB_DEBUG_PANIC_ON
 	bool "Enable to Panic on SLUB corruption detection"
 	depends on SLUB_DEBUG
@@ -49,6 +50,8 @@ config DEBUG_PANIC_ON_OOM
 	  oom-killer can mask problems with this feature, which may be
 	  undesireable in a debug environment.
 
+=======
+>>>>>>> rebase
 config DEBUG_PAGEALLOC_ENABLE_DEFAULT
 	bool "Enable debug page memory allocations by default?"
 	default n
@@ -72,6 +75,7 @@ config PAGE_POISONING
 
 	  If unsure, say N
 
+<<<<<<< HEAD
 config PAGE_POISONING_ENABLE_DEFAULT
 	bool "Enable page poisoning by default?"
 	default n
@@ -82,6 +86,8 @@ config PAGE_POISONING_ENABLE_DEFAULT
 	  to avoid passing the kernel parameter and let page poisoning
 	  feature enabled by default.
 
+=======
+>>>>>>> rebase
 config PAGE_POISONING_NO_SANITY
 	depends on PAGE_POISONING
 	bool "Only poison, don't sanity check"

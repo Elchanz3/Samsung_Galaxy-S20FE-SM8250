@@ -99,11 +99,18 @@ int bnxt_set_vf_spoofchk(struct net_device *dev, int vf_id, bool setting)
 	if (old_setting == setting)
 		return 0;
 
+<<<<<<< HEAD
 	func_flags = vf->func_flags;
 	if (setting)
 		func_flags |= FUNC_CFG_REQ_FLAGS_SRC_MAC_ADDR_CHECK_ENABLE;
 	else
 		func_flags |= FUNC_CFG_REQ_FLAGS_SRC_MAC_ADDR_CHECK_DISABLE;
+=======
+	if (setting)
+		func_flags = FUNC_CFG_REQ_FLAGS_SRC_MAC_ADDR_CHECK_ENABLE;
+	else
+		func_flags = FUNC_CFG_REQ_FLAGS_SRC_MAC_ADDR_CHECK_DISABLE;
+>>>>>>> rebase
 	/*TODO: if the driver supports VLAN filter on guest VLAN,
 	 * the spoof check should also include vlan anti-spoofing
 	 */
@@ -112,7 +119,10 @@ int bnxt_set_vf_spoofchk(struct net_device *dev, int vf_id, bool setting)
 	req.flags = cpu_to_le32(func_flags);
 	rc = hwrm_send_message(bp, &req, sizeof(req), HWRM_CMD_TIMEOUT);
 	if (!rc) {
+<<<<<<< HEAD
 		vf->func_flags = func_flags;
+=======
+>>>>>>> rebase
 		if (setting)
 			vf->flags |= BNXT_VF_SPOOFCHK;
 		else
@@ -197,7 +207,10 @@ int bnxt_set_vf_mac(struct net_device *dev, int vf_id, u8 *mac)
 	memcpy(vf->mac_addr, mac, ETH_ALEN);
 	bnxt_hwrm_cmd_hdr_init(bp, &req, HWRM_FUNC_CFG, -1, -1);
 	req.fid = cpu_to_le16(vf->fw_fid);
+<<<<<<< HEAD
 	req.flags = cpu_to_le32(vf->func_flags);
+=======
+>>>>>>> rebase
 	req.enables = cpu_to_le32(FUNC_CFG_REQ_ENABLES_DFLT_MAC_ADDR);
 	memcpy(req.dflt_mac_addr, mac, ETH_ALEN);
 	return hwrm_send_message(bp, &req, sizeof(req), HWRM_CMD_TIMEOUT);
@@ -235,7 +248,10 @@ int bnxt_set_vf_vlan(struct net_device *dev, int vf_id, u16 vlan_id, u8 qos,
 
 	bnxt_hwrm_cmd_hdr_init(bp, &req, HWRM_FUNC_CFG, -1, -1);
 	req.fid = cpu_to_le16(vf->fw_fid);
+<<<<<<< HEAD
 	req.flags = cpu_to_le32(vf->func_flags);
+=======
+>>>>>>> rebase
 	req.dflt_vlan = cpu_to_le16(vlan_tag);
 	req.enables = cpu_to_le32(FUNC_CFG_REQ_ENABLES_DFLT_VLAN);
 	rc = hwrm_send_message(bp, &req, sizeof(req), HWRM_CMD_TIMEOUT);
@@ -274,7 +290,10 @@ int bnxt_set_vf_bw(struct net_device *dev, int vf_id, int min_tx_rate,
 		return 0;
 	bnxt_hwrm_cmd_hdr_init(bp, &req, HWRM_FUNC_CFG, -1, -1);
 	req.fid = cpu_to_le16(vf->fw_fid);
+<<<<<<< HEAD
 	req.flags = cpu_to_le32(vf->func_flags);
+=======
+>>>>>>> rebase
 	req.enables = cpu_to_le32(FUNC_CFG_REQ_ENABLES_MAX_BW);
 	req.max_bw = cpu_to_le32(max_tx_rate);
 	req.enables |= cpu_to_le32(FUNC_CFG_REQ_ENABLES_MIN_BW);
@@ -370,6 +389,10 @@ static void bnxt_free_vf_resources(struct bnxt *bp)
 		}
 	}
 
+<<<<<<< HEAD
+=======
+	bp->pf.active_vfs = 0;
+>>>>>>> rebase
 	kfree(bp->pf.vf);
 	bp->pf.vf = NULL;
 }
@@ -755,7 +778,10 @@ void bnxt_sriov_disable(struct bnxt *bp)
 
 	bnxt_free_vf_resources(bp);
 
+<<<<<<< HEAD
 	bp->pf.active_vfs = 0;
+=======
+>>>>>>> rebase
 	/* Reclaim all resources for the PF. */
 	rtnl_lock();
 	bnxt_restore_pf_fw_resources(bp);

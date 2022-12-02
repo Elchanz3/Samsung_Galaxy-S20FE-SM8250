@@ -51,9 +51,12 @@
 #include <asm/virt.h>
 #include <asm/mach/arch.h>
 #include <asm/mpu.h>
+<<<<<<< HEAD
 #include <soc/qcom/minidump.h>
 
 #include <soc/qcom/lpm_levels.h>
+=======
+>>>>>>> rebase
 
 #define CREATE_TRACE_POINTS
 #include <trace/events/ipi.h>
@@ -536,6 +539,7 @@ static void smp_cross_call(const struct cpumask *target, unsigned int ipinr)
 	__smp_cross_call(target, ipinr);
 }
 
+<<<<<<< HEAD
 DEFINE_PER_CPU(bool, pending_ipi);
 static void smp_cross_call_common(const struct cpumask *cpumask,
 						unsigned int func)
@@ -548,6 +552,8 @@ static void smp_cross_call_common(const struct cpumask *cpumask,
 	smp_cross_call(cpumask, func);
 }
 
+=======
+>>>>>>> rebase
 void show_ipi_list(struct seq_file *p, int prec)
 {
 	unsigned int cpu, i;
@@ -576,32 +582,52 @@ u64 smp_irq_stat_cpu(unsigned int cpu)
 
 void arch_send_call_function_ipi_mask(const struct cpumask *mask)
 {
+<<<<<<< HEAD
 	smp_cross_call_common(mask, IPI_CALL_FUNC);
+=======
+	smp_cross_call(mask, IPI_CALL_FUNC);
+>>>>>>> rebase
 }
 
 void arch_send_wakeup_ipi_mask(const struct cpumask *mask)
 {
+<<<<<<< HEAD
 	smp_cross_call_common(mask, IPI_WAKEUP);
+=======
+	smp_cross_call(mask, IPI_WAKEUP);
+>>>>>>> rebase
 }
 
 void arch_send_call_function_single_ipi(int cpu)
 {
+<<<<<<< HEAD
 	smp_cross_call_common(cpumask_of(cpu), IPI_CALL_FUNC);
+=======
+	smp_cross_call(cpumask_of(cpu), IPI_CALL_FUNC);
+>>>>>>> rebase
 }
 
 #ifdef CONFIG_IRQ_WORK
 void arch_irq_work_raise(void)
 {
 	if (arch_irq_work_has_interrupt())
+<<<<<<< HEAD
 		smp_cross_call_common(cpumask_of(smp_processor_id()),
 				IPI_IRQ_WORK);
+=======
+		smp_cross_call(cpumask_of(smp_processor_id()), IPI_IRQ_WORK);
+>>>>>>> rebase
 }
 #endif
 
 #ifdef CONFIG_GENERIC_CLOCKEVENTS_BROADCAST
 void tick_broadcast(const struct cpumask *mask)
 {
+<<<<<<< HEAD
 	smp_cross_call_common(mask, IPI_TIMER);
+=======
+	smp_cross_call(mask, IPI_TIMER);
+>>>>>>> rebase
 }
 #endif
 
@@ -610,17 +636,28 @@ static DEFINE_RAW_SPINLOCK(stop_lock);
 /*
  * ipi_cpu_stop - handle IPI from smp_send_stop()
  */
+<<<<<<< HEAD
 static void ipi_cpu_stop(unsigned int cpu, struct pt_regs *regs)
+=======
+static void ipi_cpu_stop(unsigned int cpu)
+>>>>>>> rebase
 {
 	if (system_state <= SYSTEM_RUNNING) {
 		raw_spin_lock(&stop_lock);
 		pr_crit("CPU%u: stopping\n", cpu);
 		dump_stack();
+<<<<<<< HEAD
 		dump_stack_minidump(regs->uregs[13]);
 		raw_spin_unlock(&stop_lock);
 	}
 
 	set_cpu_active(cpu, false);
+=======
+		raw_spin_unlock(&stop_lock);
+	}
+
+	set_cpu_online(cpu, false);
+>>>>>>> rebase
 
 	local_fiq_disable();
 	local_irq_disable();
@@ -686,7 +723,11 @@ void handle_IPI(int ipinr, struct pt_regs *regs)
 
 	case IPI_CPU_STOP:
 		irq_enter();
+<<<<<<< HEAD
 		ipi_cpu_stop(cpu, regs);
+=======
+		ipi_cpu_stop(cpu);
+>>>>>>> rebase
 		irq_exit();
 		break;
 
@@ -720,15 +761,22 @@ void handle_IPI(int ipinr, struct pt_regs *regs)
 
 	if ((unsigned)ipinr < NR_IPI)
 		trace_ipi_exit_rcuidle(ipi_types[ipinr]);
+<<<<<<< HEAD
 
 	per_cpu(pending_ipi, cpu) = false;
+=======
+>>>>>>> rebase
 	set_irq_regs(old_regs);
 }
 
 void smp_send_reschedule(int cpu)
 {
+<<<<<<< HEAD
 	update_ipi_history(cpu);
 	smp_cross_call_common(cpumask_of(cpu), IPI_RESCHEDULE);
+=======
+	smp_cross_call(cpumask_of(cpu), IPI_RESCHEDULE);
+>>>>>>> rebase
 }
 
 void smp_send_stop(void)
@@ -739,6 +787,7 @@ void smp_send_stop(void)
 	cpumask_copy(&mask, cpu_online_mask);
 	cpumask_clear_cpu(smp_processor_id(), &mask);
 	if (!cpumask_empty(&mask))
+<<<<<<< HEAD
 		smp_cross_call_common(&mask, IPI_CPU_STOP);
 
 	/* Wait up to one second for other CPUs to stop */
@@ -747,6 +796,16 @@ void smp_send_stop(void)
 		udelay(1);
 
 	if (num_active_cpus() > 1)
+=======
+		smp_cross_call(&mask, IPI_CPU_STOP);
+
+	/* Wait up to one second for other CPUs to stop */
+	timeout = USEC_PER_SEC;
+	while (num_online_cpus() > 1 && timeout--)
+		udelay(1);
+
+	if (num_online_cpus() > 1)
+>>>>>>> rebase
 		pr_warn("SMP: failed to stop secondary CPUs\n");
 }
 

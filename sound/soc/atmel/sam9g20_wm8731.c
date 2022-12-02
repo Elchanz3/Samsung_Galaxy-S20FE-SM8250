@@ -59,6 +59,7 @@
  */
 #undef ENABLE_MIC_INPUT
 
+<<<<<<< HEAD
 static struct clk *mclk;
 
 static int at91sam9g20ek_set_bias_level(struct snd_soc_card *card,
@@ -88,6 +89,8 @@ static int at91sam9g20ek_set_bias_level(struct snd_soc_card *card,
 	return ret;
 }
 
+=======
+>>>>>>> rebase
 static const struct snd_soc_dapm_widget at91sam9g20ek_dapm_widgets[] = {
 	SND_SOC_DAPM_MIC("Int Mic", NULL),
 	SND_SOC_DAPM_SPK("Ext Spk", NULL),
@@ -146,7 +149,10 @@ static struct snd_soc_card snd_soc_at91sam9g20ek = {
 	.owner = THIS_MODULE,
 	.dai_link = &at91sam9g20ek_dai,
 	.num_links = 1,
+<<<<<<< HEAD
 	.set_bias_level = at91sam9g20ek_set_bias_level,
+=======
+>>>>>>> rebase
 
 	.dapm_widgets = at91sam9g20ek_dapm_widgets,
 	.num_dapm_widgets = ARRAY_SIZE(at91sam9g20ek_dapm_widgets),
@@ -159,7 +165,10 @@ static int at91sam9g20ek_audio_probe(struct platform_device *pdev)
 {
 	struct device_node *np = pdev->dev.of_node;
 	struct device_node *codec_np, *cpu_np;
+<<<<<<< HEAD
 	struct clk *pllb;
+=======
+>>>>>>> rebase
 	struct snd_soc_card *card = &snd_soc_at91sam9g20ek;
 	int ret;
 
@@ -173,6 +182,7 @@ static int at91sam9g20ek_audio_probe(struct platform_device *pdev)
 		return -EINVAL;
 	}
 
+<<<<<<< HEAD
 	/*
 	 * Codec MCLK is supplied by PCK0 - set it up.
 	 */
@@ -198,6 +208,8 @@ static int at91sam9g20ek_audio_probe(struct platform_device *pdev)
 
 	clk_set_rate(mclk, MCLK_RATE);
 
+=======
+>>>>>>> rebase
 	card->dev = &pdev->dev;
 
 	/* Parse device node info */
@@ -225,6 +237,10 @@ static int at91sam9g20ek_audio_probe(struct platform_device *pdev)
 	cpu_np = of_parse_phandle(np, "atmel,ssc-controller", 0);
 	if (!cpu_np) {
 		dev_err(&pdev->dev, "dai and pcm info missing\n");
+<<<<<<< HEAD
+=======
+		of_node_put(codec_np);
+>>>>>>> rebase
 		return -EINVAL;
 	}
 	at91sam9g20ek_dai.cpu_of_node = cpu_np;
@@ -240,9 +256,12 @@ static int at91sam9g20ek_audio_probe(struct platform_device *pdev)
 
 	return ret;
 
+<<<<<<< HEAD
 err_mclk:
 	clk_put(mclk);
 	mclk = NULL;
+=======
+>>>>>>> rebase
 err:
 	atmel_ssc_put_audio(0);
 	return ret;
@@ -252,8 +271,11 @@ static int at91sam9g20ek_audio_remove(struct platform_device *pdev)
 {
 	struct snd_soc_card *card = platform_get_drvdata(pdev);
 
+<<<<<<< HEAD
 	clk_disable(mclk);
 	mclk = NULL;
+=======
+>>>>>>> rebase
 	snd_soc_unregister_card(card);
 	atmel_ssc_put_audio(0);
 

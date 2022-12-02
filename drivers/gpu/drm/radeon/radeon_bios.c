@@ -104,6 +104,7 @@ static bool radeon_read_bios(struct radeon_device *rdev)
 
 static bool radeon_read_platform_bios(struct radeon_device *rdev)
 {
+<<<<<<< HEAD
 	uint8_t __iomem *bios;
 	size_t size;
 
@@ -123,6 +124,35 @@ static bool radeon_read_platform_bios(struct radeon_device *rdev)
 	}
 
 	return true;
+=======
+	phys_addr_t rom = rdev->pdev->rom;
+	size_t romlen = rdev->pdev->romlen;
+	void __iomem *bios;
+
+	rdev->bios = NULL;
+
+	if (!rom || romlen == 0)
+		return false;
+
+	rdev->bios = kzalloc(romlen, GFP_KERNEL);
+	if (!rdev->bios)
+		return false;
+
+	bios = ioremap(rom, romlen);
+	if (!bios)
+		goto free_bios;
+
+	memcpy_fromio(rdev->bios, bios, romlen);
+	iounmap(bios);
+
+	if (rdev->bios[0] != 0x55 || rdev->bios[1] != 0xaa)
+		goto free_bios;
+
+	return true;
+free_bios:
+	kfree(rdev->bios);
+	return false;
+>>>>>>> rebase
 }
 
 #ifdef CONFIG_ACPI

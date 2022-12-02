@@ -11,6 +11,10 @@
 #include <uapi/linux/pkt_sched.h>
 
 #define DEFAULT_TX_QUEUE_LEN	1000
+<<<<<<< HEAD
+=======
+#define STAB_SIZE_LOG_MAX	30
+>>>>>>> rebase
 
 struct qdisc_walker {
 	int	stop;
@@ -102,6 +106,10 @@ int qdisc_set_default(const char *id);
 void qdisc_hash_add(struct Qdisc *q, bool invisible);
 void qdisc_hash_del(struct Qdisc *q);
 struct Qdisc *qdisc_lookup(struct net_device *dev, u32 handle);
+<<<<<<< HEAD
+=======
+struct Qdisc *qdisc_lookup_rcu(struct net_device *dev, u32 handle);
+>>>>>>> rebase
 struct qdisc_rate_table *qdisc_get_rtab(struct tc_ratespec *r,
 					struct nlattr *tab,
 					struct netlink_ext_ack *extack);
@@ -122,6 +130,7 @@ static inline void qdisc_run(struct Qdisc *q)
 	}
 }
 
+<<<<<<< HEAD
 static inline __be16 tc_skb_protocol(const struct sk_buff *skb)
 {
 	/* We need to take extra care in case the skb came via
@@ -133,6 +142,8 @@ static inline __be16 tc_skb_protocol(const struct sk_buff *skb)
 	return skb->protocol;
 }
 
+=======
+>>>>>>> rebase
 /* Calculate maximal size of packet seen by hard_start_xmit
    routine of this device.
  */

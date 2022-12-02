@@ -598,6 +598,7 @@ static int dsa_slave_get_sset_count(struct net_device *dev, int sset)
 	struct dsa_switch *ds = dp->ds;
 
 	if (sset == ETH_SS_STATS) {
+<<<<<<< HEAD
 		int count;
 
 		count = 4;
@@ -605,6 +606,17 @@ static int dsa_slave_get_sset_count(struct net_device *dev, int sset)
 			count += ds->ops->get_sset_count(ds, dp->index, sset);
 
 		return count;
+=======
+		int count = 0;
+
+		if (ds->ops->get_sset_count) {
+			count = ds->ops->get_sset_count(ds, dp->index, sset);
+			if (count < 0)
+				return count;
+		}
+
+		return count + 4;
+>>>>>>> rebase
 	}
 
 	return -EOPNOTSUPP;
@@ -1224,6 +1236,7 @@ static int dsa_slave_phy_setup(struct net_device *slave_dev)
 		 * use the switch internal MDIO bus instead
 		 */
 		ret = dsa_slave_phy_connect(slave_dev, dp->index);
+<<<<<<< HEAD
 		if (ret) {
 			netdev_err(slave_dev,
 				   "failed to connect to port %d: %d\n",
@@ -1231,6 +1244,13 @@ static int dsa_slave_phy_setup(struct net_device *slave_dev)
 			phylink_destroy(dp->pl);
 			return ret;
 		}
+=======
+	}
+	if (ret) {
+		netdev_err(slave_dev, "failed to connect to PHY: %pe\n",
+			   ERR_PTR(ret));
+		phylink_destroy(dp->pl);
+>>>>>>> rebase
 	}
 
 	return ret;
@@ -1313,7 +1333,14 @@ int dsa_slave_create(struct dsa_port *port)
 	slave_dev->features = master->vlan_features | NETIF_F_HW_TC;
 	slave_dev->hw_features |= NETIF_F_HW_TC;
 	slave_dev->ethtool_ops = &dsa_slave_ethtool_ops;
+<<<<<<< HEAD
 	eth_hw_addr_inherit(slave_dev, master);
+=======
+	if (port->mac && is_valid_ether_addr(port->mac))
+		ether_addr_copy(slave_dev->dev_addr, port->mac);
+	else
+		eth_hw_addr_inherit(slave_dev, master);
+>>>>>>> rebase
 	slave_dev->priv_flags |= IFF_NO_QUEUE;
 	slave_dev->netdev_ops = &dsa_slave_netdev_ops;
 	slave_dev->switchdev_ops = &dsa_slave_switchdev_ops;
@@ -1334,6 +1361,14 @@ int dsa_slave_create(struct dsa_port *port)
 		free_netdev(slave_dev);
 		return -ENOMEM;
 	}
+<<<<<<< HEAD
+=======
+
+	ret = gro_cells_init(&p->gcells, slave_dev);
+	if (ret)
+		goto out_free;
+
+>>>>>>> rebase
 	p->dp = port;
 	INIT_LIST_HEAD(&p->mall_tc_list);
 	p->xmit = cpu_dp->tag_ops->xmit;
@@ -1344,7 +1379,11 @@ int dsa_slave_create(struct dsa_port *port)
 	ret = dsa_slave_phy_setup(slave_dev);
 	if (ret) {
 		netdev_err(master, "error %d setting up slave phy\n", ret);
+<<<<<<< HEAD
 		goto out_free;
+=======
+		goto out_gcells;
+>>>>>>> rebase
 	}
 
 	dsa_slave_notify(slave_dev, DSA_PORT_REGISTER);
@@ -1363,6 +1402,11 @@ out_phy:
 	phylink_disconnect_phy(p->dp->pl);
 	rtnl_unlock();
 	phylink_destroy(p->dp->pl);
+<<<<<<< HEAD
+=======
+out_gcells:
+	gro_cells_destroy(&p->gcells);
+>>>>>>> rebase
 out_free:
 	free_percpu(p->stats64);
 	free_netdev(slave_dev);
@@ -1383,6 +1427,10 @@ void dsa_slave_destroy(struct net_device *slave_dev)
 	dsa_slave_notify(slave_dev, DSA_PORT_UNREGISTER);
 	unregister_netdev(slave_dev);
 	phylink_destroy(dp->pl);
+<<<<<<< HEAD
+=======
+	gro_cells_destroy(&p->gcells);
+>>>>>>> rebase
 	free_percpu(p->stats64);
 	free_netdev(slave_dev);
 }

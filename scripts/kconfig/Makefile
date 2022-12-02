@@ -70,6 +70,7 @@ $(simple-targets): $(obj)/conf
 
 PHONY += oldnoconfig silentoldconfig savedefconfig defconfig
 
+<<<<<<< HEAD
 ifneq ($(VARIANT_DEFCONFIG),)
 export KCONFIG_VARIANT := arch/$(SRCARCH)/configs/$(VARIANT_DEFCONFIG)
 endif
@@ -90,6 +91,8 @@ ifneq ($(KASLR_DEFCONFIG),)
 export KCONFIG_KASLR := arch/$(SRCARCH)/configs/$(KASLR_DEFCONFIG)
 endif
 
+=======
+>>>>>>> rebase
 # oldnoconfig is an alias of olddefconfig, because people already are dependent
 # on its behavior (sets new symbols to their default value but not 'n') with the
 # counter-intuitive name.

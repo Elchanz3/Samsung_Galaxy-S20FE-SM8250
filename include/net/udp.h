@@ -173,6 +173,10 @@ typedef struct sock *(*udp_lookup_t)(struct sk_buff *skb, __be16 sport,
 struct sk_buff *udp_gro_receive(struct list_head *head, struct sk_buff *skb,
 				struct udphdr *uh, udp_lookup_t lookup);
 int udp_gro_complete(struct sk_buff *skb, int nhoff, udp_lookup_t lookup);
+<<<<<<< HEAD
+=======
+void udp_v6_early_demux(struct sk_buff *skb);
+>>>>>>> rebase
 
 struct sk_buff *__udp_gso_segment(struct sk_buff *gso_skb,
 				  netdev_features_t features);
@@ -406,6 +410,7 @@ static inline int copy_linear_skb(struct sk_buff *skb, int len, int off,
 } while(0)
 
 #if IS_ENABLED(CONFIG_IPV6)
+<<<<<<< HEAD
 #define __UDPX_MIB(sk, ipv4)						\
 ({									\
 	ipv4 ? (IS_UDPLITE(sk) ? sock_net(sk)->mib.udplite_statistics :	\
@@ -424,6 +429,19 @@ static inline int copy_linear_skb(struct sk_buff *skb, int len, int off,
 #define __UDPX_INC_STATS(sk, field) \
 	__SNMP_INC_STATS(__UDPX_MIB(sk, (sk)->sk_family == AF_INET), field)
 
+=======
+#define __UDPX_INC_STATS(sk, field)					\
+do {									\
+	if ((sk)->sk_family == AF_INET)					\
+		__UDP_INC_STATS(sock_net(sk), field, 0);		\
+	else								\
+		__UDP6_INC_STATS(sock_net(sk), field, 0);		\
+} while (0)
+#else
+#define __UDPX_INC_STATS(sk, field) __UDP_INC_STATS(sock_net(sk), field, 0)
+#endif
+
+>>>>>>> rebase
 #ifdef CONFIG_PROC_FS
 struct udp_seq_afinfo {
 	sa_family_t			family;
@@ -455,6 +473,7 @@ void udp_encap_enable(void);
 void udpv6_encap_enable(void);
 #endif
 
+<<<<<<< HEAD
 static inline struct sk_buff *udp_rcv_segment(struct sock *sk,
 					      struct sk_buff *skb, bool ipv4)
 {
@@ -484,4 +503,6 @@ static inline struct sk_buff *udp_rcv_segment(struct sock *sk,
 	return segs;
 }
 
+=======
+>>>>>>> rebase
 #endif	/* _UDP_H */

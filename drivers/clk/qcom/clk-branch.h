@@ -1,5 +1,9 @@
 /* SPDX-License-Identifier: GPL-2.0 */
+<<<<<<< HEAD
 /* Copyright (c) 2013, 2017, The Linux Foundation. All rights reserved. */
+=======
+/* Copyright (c) 2013, The Linux Foundation. All rights reserved. */
+>>>>>>> rebase
 
 #ifndef __QCOM_CLK_BRANCH_H__
 #define __QCOM_CLK_BRANCH_H__
@@ -16,8 +20,11 @@
  * @halt_reg: halt register
  * @halt_bit: ANDed with @halt_reg to test for clock halted
  * @halt_check: type of halt checking to perform
+<<<<<<< HEAD
  * @aggr_sibling_rates: set if the branch clock's parent needs to be scaled
  *			based on an aggregation of its siblings votes.
+=======
+>>>>>>> rebase
  * @clkr: handle between common and hardware-specific interfaces
  *
  * Clock which can gate its output.
@@ -28,8 +35,11 @@ struct clk_branch {
 	u8	hwcg_bit;
 	u8	halt_bit;
 	u8	halt_check;
+<<<<<<< HEAD
 	bool	aggr_sibling_rates;
 	unsigned long rate;
+=======
+>>>>>>> rebase
 #define BRANCH_VOTED			BIT(7) /* Delay on disable */
 #define BRANCH_HALT			0 /* pol: 1 = halt */
 #define BRANCH_HALT_VOTED		(BRANCH_HALT | BRANCH_VOTED)
@@ -43,7 +53,10 @@ struct clk_branch {
 
 extern const struct clk_ops clk_branch_ops;
 extern const struct clk_ops clk_branch2_ops;
+<<<<<<< HEAD
 extern const struct clk_ops clk_branch2_hw_ctl_ops;
+=======
+>>>>>>> rebase
 extern const struct clk_ops clk_branch_simple_ops;
 
 #define to_clk_branch(_hw) \

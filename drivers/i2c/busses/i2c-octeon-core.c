@@ -347,7 +347,11 @@ static int octeon_i2c_read(struct octeon_i2c *i2c, int target,
 		if (result)
 			return result;
 		if (recv_len && i == 0) {
+<<<<<<< HEAD
 			if (data[i] > I2C_SMBUS_BLOCK_MAX + 1)
+=======
+			if (data[i] > I2C_SMBUS_BLOCK_MAX)
+>>>>>>> rebase
 				return -EPROTO;
 			length += data[i];
 		}

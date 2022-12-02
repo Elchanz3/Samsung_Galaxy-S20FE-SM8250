@@ -156,14 +156,22 @@ static int pasemi_nand_probe(struct platform_device *ofdev)
 	chip->bbt_options = NAND_BBT_USE_FLASH;
 
 	/* Scan to find existence of the device */
+<<<<<<< HEAD
 	err = nand_scan(pasemi_nand_mtd, 1);
+=======
+	err = nand_scan(chip, 1);
+>>>>>>> rebase
 	if (err)
 		goto out_lpc;
 
 	if (mtd_device_register(pasemi_nand_mtd, NULL, 0)) {
 		dev_err(dev, "Unable to register MTD device\n");
 		err = -ENODEV;
+<<<<<<< HEAD
 		goto out_lpc;
+=======
+		goto out_cleanup_nand;
+>>>>>>> rebase
 	}
 
 	dev_info(dev, "PA Semi NAND flash at %pR, control at I/O %x\n", &res,
@@ -171,6 +179,11 @@ static int pasemi_nand_probe(struct platform_device *ofdev)
 
 	return 0;
 
+<<<<<<< HEAD
+=======
+ out_cleanup_nand:
+	nand_cleanup(chip);
+>>>>>>> rebase
  out_lpc:
 	release_region(lpcctl, 4);
  out_ior:
@@ -191,7 +204,11 @@ static int pasemi_nand_remove(struct platform_device *ofdev)
 	chip = mtd_to_nand(pasemi_nand_mtd);
 
 	/* Release resources, unregister device */
+<<<<<<< HEAD
 	nand_release(pasemi_nand_mtd);
+=======
+	nand_release(chip);
+>>>>>>> rebase
 
 	release_region(lpcctl, 4);
 

@@ -7219,8 +7219,13 @@ static inline void tg3_reset_task_schedule(struct tg3 *tp)
 
 static inline void tg3_reset_task_cancel(struct tg3 *tp)
 {
+<<<<<<< HEAD
 	cancel_work_sync(&tp->reset_task);
 	tg3_flag_clear(tp, RESET_TASK_PENDING);
+=======
+	if (test_and_clear_bit(TG3_FLAG_RESET_TASK_PENDING, tp->tg3_flags))
+		cancel_work_sync(&tp->reset_task);
+>>>>>>> rebase
 	tg3_flag_clear(tp, TX_RECOVERY_PENDING);
 }
 
@@ -11213,18 +11218,39 @@ static void tg3_reset_task(struct work_struct *work)
 
 	tg3_halt(tp, RESET_KIND_SHUTDOWN, 0);
 	err = tg3_init_hw(tp, true);
+<<<<<<< HEAD
 	if (err)
 		goto out;
 
 	tg3_netif_start(tp);
 
 out:
+=======
+	if (err) {
+		tg3_full_unlock(tp);
+		tp->irq_sync = 0;
+		tg3_napi_enable(tp);
+		/* Clear this flag so that tg3_reset_task_cancel() will not
+		 * call cancel_work_sync() and wait forever.
+		 */
+		tg3_flag_clear(tp, RESET_TASK_PENDING);
+		dev_close(tp->dev);
+		goto out;
+	}
+
+	tg3_netif_start(tp);
+
+>>>>>>> rebase
 	tg3_full_unlock(tp);
 
 	if (!err)
 		tg3_phy_start(tp);
 
 	tg3_flag_clear(tp, RESET_TASK_PENDING);
+<<<<<<< HEAD
+=======
+out:
+>>>>>>> rebase
 	rtnl_unlock();
 }
 
@@ -18198,16 +18224,31 @@ static void tg3_shutdown(struct pci_dev *pdev)
 	struct net_device *dev = pci_get_drvdata(pdev);
 	struct tg3 *tp = netdev_priv(dev);
 
+<<<<<<< HEAD
 	rtnl_lock();
+=======
+	tg3_reset_task_cancel(tp);
+
+	rtnl_lock();
+
+>>>>>>> rebase
 	netif_device_detach(dev);
 
 	if (netif_running(dev))
 		dev_close(dev);
 
+<<<<<<< HEAD
 	if (system_state == SYSTEM_POWER_OFF)
 		tg3_power_down(tp);
 
 	rtnl_unlock();
+=======
+	tg3_power_down(tp);
+
+	rtnl_unlock();
+
+	pci_disable_device(pdev);
+>>>>>>> rebase
 }
 
 /**
@@ -18229,8 +18270,13 @@ static pci_ers_result_t tg3_io_error_detected(struct pci_dev *pdev,
 
 	rtnl_lock();
 
+<<<<<<< HEAD
 	/* We probably don't have netdev yet */
 	if (!netdev || !netif_running(netdev))
+=======
+	/* Could be second call or maybe we don't have netdev yet */
+	if (!netdev || tp->pcierr_recovery || !netif_running(netdev))
+>>>>>>> rebase
 		goto done;
 
 	/* We needn't recover from permanent error */

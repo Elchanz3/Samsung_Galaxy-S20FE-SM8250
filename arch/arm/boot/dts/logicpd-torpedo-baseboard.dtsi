@@ -84,6 +84,11 @@
 };
 
 &mcbsp2 {
+<<<<<<< HEAD
+=======
+	pinctrl-names = "default";
+	pinctrl-0 = <&mcbsp2_pins>;
+>>>>>>> rebase
 	status = "okay";
 };
 

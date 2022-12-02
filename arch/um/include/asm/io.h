@@ -2,6 +2,7 @@
 #ifndef _ASM_UM_IO_H
 #define _ASM_UM_IO_H
 
+<<<<<<< HEAD
 #include <linux/types.h>
 #include <asm/byteorder.h>
 
@@ -9,12 +10,17 @@
 #include <asm/io-mock-shared.h>
 #endif
 
+=======
+>>>>>>> rebase
 #define ioremap ioremap
 static inline void __iomem *ioremap(phys_addr_t offset, size_t size)
 {
 	return (void __iomem *)(unsigned long)offset;
 }
+<<<<<<< HEAD
 #define ioremap_nocache ioremap
+=======
+>>>>>>> rebase
 
 #define iounmap iounmap
 static inline void iounmap(void __iomem *addr)

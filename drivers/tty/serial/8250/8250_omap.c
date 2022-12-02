@@ -163,11 +163,14 @@ static void omap_8250_mdr1_errataset(struct uart_8250_port *up,
 				     struct omap8250_priv *priv)
 {
 	u8 timeout = 255;
+<<<<<<< HEAD
 	u8 old_mdr1;
 
 	old_mdr1 = serial_in(up, UART_OMAP_MDR1);
 	if (old_mdr1 == priv->mdr1)
 		return;
+=======
+>>>>>>> rebase
 
 	serial_out(up, UART_OMAP_MDR1, priv->mdr1);
 	udelay(2);
@@ -781,7 +784,14 @@ static void __dma_rx_do_complete(struct uart_8250_port *p)
 	dmaengine_tx_status(dma->rxchan, dma->rx_cookie, &state);
 
 	count = dma->rx_size - state.residue;
+<<<<<<< HEAD
 
+=======
+	if (count < dma->rx_size)
+		dmaengine_terminate_async(dma->rxchan);
+	if (!count)
+		goto unlock;
+>>>>>>> rebase
 	ret = tty_insert_flip_string(tty_port, dma->rx_buf, count);
 
 	p->port.icount.rx += ret;
@@ -843,7 +853,10 @@ static void omap_8250_rx_dma_flush(struct uart_8250_port *p)
 	spin_unlock_irqrestore(&priv->rx_dma_lock, flags);
 
 	__dma_rx_do_complete(p);
+<<<<<<< HEAD
 	dmaengine_terminate_all(dma->rxchan);
+=======
+>>>>>>> rebase
 }
 
 static int omap_8250_rx_dma(struct uart_8250_port *p)
@@ -1227,11 +1240,18 @@ static int omap8250_probe(struct platform_device *pdev)
 	spin_lock_init(&priv->rx_dma_lock);
 
 	device_init_wakeup(&pdev->dev, true);
+<<<<<<< HEAD
+=======
+	pm_runtime_enable(&pdev->dev);
+>>>>>>> rebase
 	pm_runtime_use_autosuspend(&pdev->dev);
 	pm_runtime_set_autosuspend_delay(&pdev->dev, -1);
 
 	pm_runtime_irq_safe(&pdev->dev);
+<<<<<<< HEAD
 	pm_runtime_enable(&pdev->dev);
+=======
+>>>>>>> rebase
 
 	pm_runtime_get_sync(&pdev->dev);
 

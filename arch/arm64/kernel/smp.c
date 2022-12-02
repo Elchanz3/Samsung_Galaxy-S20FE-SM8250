@@ -54,22 +54,31 @@
 #include <asm/pgtable.h>
 #include <asm/pgalloc.h>
 #include <asm/processor.h>
+<<<<<<< HEAD
 #include <asm/scs.h>
+=======
+>>>>>>> rebase
 #include <asm/smp_plat.h>
 #include <asm/sections.h>
 #include <asm/tlbflush.h>
 #include <asm/ptrace.h>
 #include <asm/virt.h>
+<<<<<<< HEAD
 #include <asm/system_misc.h>
 #include <soc/qcom/minidump.h>
 
 #include <soc/qcom/lpm_levels.h>
+=======
+>>>>>>> rebase
 
 #define CREATE_TRACE_POINTS
 #include <trace/events/ipi.h>
 
+<<<<<<< HEAD
 #include <linux/sec_debug.h>
 
+=======
+>>>>>>> rebase
 DEFINE_PER_CPU_READ_MOSTLY(int, cpu_number);
 EXPORT_PER_CPU_SYMBOL(cpu_number);
 
@@ -334,7 +343,11 @@ void __cpu_die(unsigned int cpu)
 		pr_crit("CPU%u: cpu didn't die\n", cpu);
 		return;
 	}
+<<<<<<< HEAD
 	pr_info("CPU%u: shutdown\n", cpu);
+=======
+	pr_notice("CPU%u: shutdown\n", cpu);
+>>>>>>> rebase
 
 	/*
 	 * Now that the dying CPU is beyond the point of no return w.r.t.
@@ -356,9 +369,12 @@ void cpu_die(void)
 {
 	unsigned int cpu = smp_processor_id();
 
+<<<<<<< HEAD
 	/* Save the shadow stack pointer before exiting the idle task */
 	scs_save(current);
 
+=======
+>>>>>>> rebase
 	idle_task_exit();
 
 	local_daif_mask();
@@ -424,6 +440,14 @@ void __init smp_cpus_done(unsigned int max_cpus)
 void __init smp_prepare_boot_cpu(void)
 {
 	set_my_cpu_offset(per_cpu_offset(smp_processor_id()));
+<<<<<<< HEAD
+=======
+	/*
+	 * Initialise the static keys early as they may be enabled by the
+	 * cpufeature code.
+	 */
+	jump_label_init();
+>>>>>>> rebase
 	cpuinfo_store_boot_cpu();
 }
 
@@ -603,8 +627,11 @@ static void __init acpi_parse_and_init_cpus(void)
 #else
 #define acpi_parse_and_init_cpus(...)	do { } while (0)
 #endif
+<<<<<<< HEAD
 void (*__smp_cross_call)(const struct cpumask *, unsigned int);
 DEFINE_PER_CPU(bool, pending_ipi);
+=======
+>>>>>>> rebase
 
 /*
  * Enumerate the possible CPU set from the device tree and build the
@@ -746,6 +773,11 @@ void __init smp_prepare_cpus(unsigned int max_cpus)
 	}
 }
 
+<<<<<<< HEAD
+=======
+void (*__smp_cross_call)(const struct cpumask *, unsigned int);
+
+>>>>>>> rebase
 void __init set_smp_cross_call(void (*fn)(const struct cpumask *, unsigned int))
 {
 	__smp_cross_call = fn;
@@ -768,6 +800,7 @@ static void smp_cross_call(const struct cpumask *target, unsigned int ipinr)
 	__smp_cross_call(target, ipinr);
 }
 
+<<<<<<< HEAD
 static void smp_cross_call_common(const struct cpumask *cpumask,
 				  unsigned int func)
 {
@@ -779,6 +812,8 @@ static void smp_cross_call_common(const struct cpumask *cpumask,
 	smp_cross_call(cpumask, func);
 }
 
+=======
+>>>>>>> rebase
 void show_ipi_list(struct seq_file *p, int prec)
 {
 	unsigned int cpu, i;
@@ -806,18 +841,30 @@ u64 smp_irq_stat_cpu(unsigned int cpu)
 
 void arch_send_call_function_ipi_mask(const struct cpumask *mask)
 {
+<<<<<<< HEAD
 	smp_cross_call_common(mask, IPI_CALL_FUNC);
+=======
+	smp_cross_call(mask, IPI_CALL_FUNC);
+>>>>>>> rebase
 }
 
 void arch_send_call_function_single_ipi(int cpu)
 {
+<<<<<<< HEAD
 	smp_cross_call_common(cpumask_of(cpu), IPI_CALL_FUNC);
+=======
+	smp_cross_call(cpumask_of(cpu), IPI_CALL_FUNC);
+>>>>>>> rebase
 }
 
 #ifdef CONFIG_ARM64_ACPI_PARKING_PROTOCOL
 void arch_send_wakeup_ipi_mask(const struct cpumask *mask)
 {
+<<<<<<< HEAD
 	smp_cross_call_common(mask, IPI_WAKEUP);
+=======
+	smp_cross_call(mask, IPI_WAKEUP);
+>>>>>>> rebase
 }
 #endif
 
@@ -825,6 +872,7 @@ void arch_send_wakeup_ipi_mask(const struct cpumask *mask)
 void arch_irq_work_raise(void)
 {
 	if (__smp_cross_call)
+<<<<<<< HEAD
 		smp_cross_call_common(cpumask_of(smp_processor_id()),
 				      IPI_IRQ_WORK);
 }
@@ -854,6 +902,19 @@ static void ipi_cpu_stop(unsigned int cpu, struct pt_regs *regs)
 	set_cpu_active(cpu, false);
 
 	flush_cache_all();
+=======
+		smp_cross_call(cpumask_of(smp_processor_id()), IPI_IRQ_WORK);
+}
+#endif
+
+/*
+ * ipi_cpu_stop - handle IPI from smp_send_stop()
+ */
+static void ipi_cpu_stop(unsigned int cpu)
+{
+	set_cpu_online(cpu, false);
+
+>>>>>>> rebase
 	local_daif_mask();
 	sdei_mask_local_cpu();
 
@@ -911,7 +972,11 @@ void handle_IPI(int ipinr, struct pt_regs *regs)
 
 	case IPI_CPU_STOP:
 		irq_enter();
+<<<<<<< HEAD
 		ipi_cpu_stop(cpu, regs);
+=======
+		ipi_cpu_stop(cpu);
+>>>>>>> rebase
 		irq_exit();
 		break;
 
@@ -955,21 +1020,32 @@ void handle_IPI(int ipinr, struct pt_regs *regs)
 
 	if ((unsigned)ipinr < NR_IPI)
 		trace_ipi_exit_rcuidle(ipi_types[ipinr]);
+<<<<<<< HEAD
 	per_cpu(pending_ipi, cpu) = false;
+=======
+>>>>>>> rebase
 	set_irq_regs(old_regs);
 }
 
 void smp_send_reschedule(int cpu)
 {
+<<<<<<< HEAD
 	BUG_ON(cpu_is_offline(cpu));
 	update_ipi_history(cpu);
 	smp_cross_call_common(cpumask_of(cpu), IPI_RESCHEDULE);
+=======
+	smp_cross_call(cpumask_of(cpu), IPI_RESCHEDULE);
+>>>>>>> rebase
 }
 
 #ifdef CONFIG_GENERIC_CLOCKEVENTS_BROADCAST
 void tick_broadcast(const struct cpumask *mask)
 {
+<<<<<<< HEAD
 	smp_cross_call_common(mask, IPI_TIMER);
+=======
+	smp_cross_call(mask, IPI_TIMER);
+>>>>>>> rebase
 }
 #endif
 
@@ -984,6 +1060,7 @@ static inline unsigned int num_other_online_cpus(void)
 	return num_online_cpus() - this_cpu_online;
 }
 
+<<<<<<< HEAD
 static inline unsigned int num_other_active_cpus(void)
 {
 	unsigned int this_cpu_active = cpu_active(smp_processor_id());
@@ -991,6 +1068,8 @@ static inline unsigned int num_other_active_cpus(void)
 	return num_active_cpus() - this_cpu_active;
 }
 
+=======
+>>>>>>> rebase
 void smp_send_stop(void)
 {
 	unsigned long timeout;
@@ -1003,15 +1082,26 @@ void smp_send_stop(void)
 
 		if (system_state <= SYSTEM_RUNNING)
 			pr_crit("SMP: stopping secondary CPUs\n");
+<<<<<<< HEAD
 		smp_cross_call_common(&mask, IPI_CPU_STOP);
+=======
+		smp_cross_call(&mask, IPI_CPU_STOP);
+>>>>>>> rebase
 	}
 
 	/* Wait up to one second for other CPUs to stop */
 	timeout = USEC_PER_SEC;
+<<<<<<< HEAD
 	while (num_other_active_cpus() && timeout--)
 		udelay(1);
 
 	if (num_other_active_cpus())
+=======
+	while (num_other_online_cpus() && timeout--)
+		udelay(1);
+
+	if (num_other_online_cpus())
+>>>>>>> rebase
 		pr_warning("SMP: failed to stop secondary CPUs %*pbl\n",
 			   cpumask_pr_args(cpu_online_mask));
 

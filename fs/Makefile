@@ -4,7 +4,11 @@
 #
 # 14 Sep 2000, Christoph Hellwig <hch@infradead.org>
 # Rewritten to use lists instead of if-statements.
+<<<<<<< HEAD
 #
+=======
+# 
+>>>>>>> rebase
 
 obj-y :=	open.o read_write.o file_table.o super.o \
 		char_dev.o stat.o exec.o pipe.o namei.o fcntl.o \
@@ -21,12 +25,19 @@ obj-y +=	no-block.o
 endif
 
 obj-$(CONFIG_PROC_FS) += proc_namespace.o
+<<<<<<< HEAD
 obj-$(CONFIG_PROC_DLOG) += dlog_hook.o
 obj-$(CONFIG_FS_HPB) += hpb_supp.o
 
 obj-y				+= notify/
 obj-$(CONFIG_EPOLL)		+= eventpoll.o
 obj-y				+= anon_inodes.o
+=======
+
+obj-y				+= notify/
+obj-$(CONFIG_EPOLL)		+= eventpoll.o
+obj-$(CONFIG_ANON_INODES)	+= anon_inodes.o
+>>>>>>> rebase
 obj-$(CONFIG_SIGNALFD)		+= signalfd.o
 obj-$(CONFIG_TIMERFD)		+= timerfd.o
 obj-$(CONFIG_EVENTFD)		+= eventfd.o
@@ -34,7 +45,10 @@ obj-$(CONFIG_USERFAULTFD)	+= userfaultfd.o
 obj-$(CONFIG_AIO)               += aio.o
 obj-$(CONFIG_FS_DAX)		+= dax.o
 obj-$(CONFIG_FS_ENCRYPTION)	+= crypto/
+<<<<<<< HEAD
 obj-$(CONFIG_FS_VERITY)		+= verity/
+=======
+>>>>>>> rebase
 obj-$(CONFIG_FILE_LOCKING)      += locks.o
 obj-$(CONFIG_COMPAT)		+= compat.o compat_ioctl.o
 obj-$(CONFIG_BINFMT_AOUT)	+= binfmt_aout.o
@@ -65,7 +79,11 @@ obj-y				+= devpts/
 
 obj-$(CONFIG_PROFILING)		+= dcookies.o
 obj-$(CONFIG_DLM)		+= dlm/
+<<<<<<< HEAD
 
+=======
+ 
+>>>>>>> rebase
 # Do not add any filesystems before this line
 obj-$(CONFIG_FSCACHE)		+= fscache/
 obj-$(CONFIG_REISERFS_FS)	+= reiserfs/
@@ -82,20 +100,29 @@ obj-$(CONFIG_HUGETLBFS)		+= hugetlbfs/
 obj-$(CONFIG_CODA_FS)		+= coda/
 obj-$(CONFIG_MINIX_FS)		+= minix/
 obj-$(CONFIG_FAT_FS)		+= fat/
+<<<<<<< HEAD
 obj-$(CONFIG_SDFAT_FS)		+= sdfat/
+=======
+>>>>>>> rebase
 obj-$(CONFIG_BFS_FS)		+= bfs/
 obj-$(CONFIG_ISO9660_FS)	+= isofs/
 obj-$(CONFIG_HFSPLUS_FS)	+= hfsplus/ # Before hfs to find wrapped HFS+
 obj-$(CONFIG_HFS_FS)		+= hfs/
 obj-$(CONFIG_ECRYPT_FS)		+= ecryptfs/
+<<<<<<< HEAD
 obj-$(CONFIG_SDCARD_FS)		+= sdcardfs/
+=======
+>>>>>>> rebase
 obj-$(CONFIG_VXFS_FS)		+= freevxfs/
 obj-$(CONFIG_NFS_FS)		+= nfs/
 obj-$(CONFIG_EXPORTFS)		+= exportfs/
 obj-$(CONFIG_NFSD)		+= nfsd/
 obj-$(CONFIG_LOCKD)		+= lockd/
 obj-$(CONFIG_NLS)		+= nls/
+<<<<<<< HEAD
 obj-$(CONFIG_UNICODE)		+= unicode/
+=======
+>>>>>>> rebase
 obj-$(CONFIG_SYSV_FS)		+= sysv/
 obj-$(CONFIG_CIFS)		+= cifs/
 obj-$(CONFIG_HPFS_FS)		+= hpfs/
@@ -113,7 +140,10 @@ obj-$(CONFIG_ADFS_FS)		+= adfs/
 obj-$(CONFIG_FUSE_FS)		+= fuse/
 obj-$(CONFIG_OVERLAY_FS)	+= overlayfs/
 obj-$(CONFIG_ORANGEFS_FS)       += orangefs/
+<<<<<<< HEAD
 obj-$(CONFIG_INCREMENTAL_FS)	+= incfs/
+=======
+>>>>>>> rebase
 obj-$(CONFIG_UDF_FS)		+= udf/
 obj-$(CONFIG_SUN_OPENPROMFS)	+= openpromfs/
 obj-$(CONFIG_OMFS_FS)		+= omfs/

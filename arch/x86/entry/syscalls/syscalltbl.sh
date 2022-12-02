@@ -25,15 +25,36 @@ emit() {
     nr="$2"
     entry="$3"
     compat="$4"
+<<<<<<< HEAD
+=======
+    umlentry=""
+>>>>>>> rebase
 
     if [ "$abi" = "64" -a -n "$compat" ]; then
 	echo "a compat entry for a 64-bit syscall makes no sense" >&2
 	exit 1
     fi
 
+<<<<<<< HEAD
     if [ -z "$compat" ]; then
 	if [ -n "$entry" ]; then
 	    syscall_macro "$abi" "$nr" "$entry"
+=======
+    # For CONFIG_UML, we need to strip the __x64_sys prefix
+    if [ "$abi" = "64" -a "${entry}" != "${entry#__x64_sys}" ]; then
+	    umlentry="sys${entry#__x64_sys}"
+    fi
+
+    if [ -z "$compat" ]; then
+	if [ -n "$entry" -a -z "$umlentry" ]; then
+	    syscall_macro "$abi" "$nr" "$entry"
+	elif [ -n "$umlentry" ]; then # implies -n "$entry"
+	    echo "#ifdef CONFIG_X86"
+	    syscall_macro "$abi" "$nr" "$entry"
+	    echo "#else /* CONFIG_UML */"
+	    syscall_macro "$abi" "$nr" "$umlentry"
+	    echo "#endif"
+>>>>>>> rebase
 	fi
     else
 	echo "#ifdef CONFIG_X86_32"

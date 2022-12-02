@@ -32,6 +32,7 @@ edge.
 	Definition: reference to the "rpm_hlos" mailbox in APCS, as described
 		    in mailbox/mailbox.txt
 
+<<<<<<< HEAD
 - cpu-affinity:
 	Usage: optional
 	Value type: <prop-encoded-array>
@@ -72,6 +73,8 @@ uses these physical address when writing to the spi bus.
 	Definition: must contain the physical addresses of the incoming FIFO
 		    head and tail descriptors. The array should be <head tail>
 
+=======
+>>>>>>> rebase
 = GLINK DEVICES
 Each subnode of the GLINK node represent function tied to a virtual
 communication channel. The name of the nodes are not important. The properties

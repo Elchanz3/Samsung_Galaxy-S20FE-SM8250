@@ -138,7 +138,65 @@ static int add_extent_changeset(struct extent_state *state, unsigned bits,
 	return ret;
 }
 
+<<<<<<< HEAD
 static void flush_write_bio(struct extent_page_data *epd);
+=======
+static int __must_check submit_one_bio(struct bio *bio, int mirror_num,
+				       unsigned long bio_flags)
+{
+	blk_status_t ret = 0;
+	struct bio_vec *bvec = bio_last_bvec_all(bio);
+	struct page *page = bvec->bv_page;
+	struct extent_io_tree *tree = bio->bi_private;
+	u64 start;
+
+	start = page_offset(page) + bvec->bv_offset;
+
+	bio->bi_private = NULL;
+
+	if (tree->ops)
+		ret = tree->ops->submit_bio_hook(tree->private_data, bio,
+					   mirror_num, bio_flags, start);
+	else
+		btrfsic_submit_bio(bio);
+
+	return blk_status_to_errno(ret);
+}
+
+/* Cleanup unsubmitted bios */
+static void end_write_bio(struct extent_page_data *epd, int ret)
+{
+	if (epd->bio) {
+		epd->bio->bi_status = errno_to_blk_status(ret);
+		bio_endio(epd->bio);
+		epd->bio = NULL;
+	}
+}
+
+/*
+ * Submit bio from extent page data via submit_one_bio
+ *
+ * Return 0 if everything is OK.
+ * Return <0 for error.
+ */
+static int __must_check flush_write_bio(struct extent_page_data *epd)
+{
+	int ret = 0;
+
+	if (epd->bio) {
+		ret = submit_one_bio(epd->bio, 0, 0);
+		/*
+		 * Clean up of epd->bio is handled by its endio function.
+		 * And endio is either triggered by successful bio execution
+		 * or the error handler of submit bio hook.
+		 * So at this point, no matter what happened, we don't need
+		 * to clean up epd->bio.
+		 */
+		epd->bio = NULL;
+	}
+	return ret;
+}
+>>>>>>> rebase
 
 int __init extent_io_init(void)
 {
@@ -1707,7 +1765,12 @@ static int __process_pages_contig(struct address_space *mapping,
 				if (!PageDirty(pages[i]) ||
 				    pages[i]->mapping != mapping) {
 					unlock_page(pages[i]);
+<<<<<<< HEAD
 					put_page(pages[i]);
+=======
+					for (; i < ret; i++)
+						put_page(pages[i]);
+>>>>>>> rebase
 					err = -EAGAIN;
 					goto out;
 				}
@@ -2709,6 +2772,7 @@ struct bio *btrfs_bio_clone_partial(struct bio *orig, int offset, int size)
 	return bio;
 }
 
+<<<<<<< HEAD
 static int __must_check submit_one_bio(struct bio *bio, int mirror_num,
 				       unsigned long bio_flags)
 {
@@ -2731,6 +2795,8 @@ static int __must_check submit_one_bio(struct bio *bio, int mirror_num,
 	return blk_status_to_errno(ret);
 }
 
+=======
+>>>>>>> rebase
 /*
  * @opf:	bio REQ_OP_* and REQ_* flags as one value
  * @tree:	tree so we can call our merge_bio hook
@@ -3438,6 +3504,12 @@ done:
  * records are inserted to lock ranges in the tree, and as dirty areas
  * are found, they are marked writeback.  Then the lock bits are removed
  * and the end_io handler clears the writeback ranges
+<<<<<<< HEAD
+=======
+ *
+ * Return 0 if everything goes well.
+ * Return <0 for error.
+>>>>>>> rebase
  */
 static int __extent_writepage(struct page *page, struct writeback_control *wbc,
 			      struct extent_page_data *epd)
@@ -3505,6 +3577,10 @@ done:
 		end_extent_writepage(page, ret, start, page_end);
 	}
 	unlock_page(page);
+<<<<<<< HEAD
+=======
+	ASSERT(ret <= 0);
+>>>>>>> rebase
 	return ret;
 
 done_unlocked:
@@ -3517,18 +3593,46 @@ void wait_on_extent_buffer_writeback(struct extent_buffer *eb)
 		       TASK_UNINTERRUPTIBLE);
 }
 
+<<<<<<< HEAD
+=======
+static void end_extent_buffer_writeback(struct extent_buffer *eb)
+{
+	clear_bit(EXTENT_BUFFER_WRITEBACK, &eb->bflags);
+	smp_mb__after_atomic();
+	wake_up_bit(&eb->bflags, EXTENT_BUFFER_WRITEBACK);
+}
+
+/*
+ * Lock eb pages and flush the bio if we can't the locks
+ *
+ * Return  0 if nothing went wrong
+ * Return >0 is same as 0, except bio is not submitted
+ * Return <0 if something went wrong, no page is locked
+ */
+>>>>>>> rebase
 static noinline_for_stack int
 lock_extent_buffer_for_io(struct extent_buffer *eb,
 			  struct btrfs_fs_info *fs_info,
 			  struct extent_page_data *epd)
 {
+<<<<<<< HEAD
 	int i, num_pages;
+=======
+	int i, num_pages, failed_page_nr;
+>>>>>>> rebase
 	int flush = 0;
 	int ret = 0;
 
 	if (!btrfs_try_tree_write_lock(eb)) {
+<<<<<<< HEAD
 		flush = 1;
 		flush_write_bio(epd);
+=======
+		ret = flush_write_bio(epd);
+		if (ret < 0)
+			return ret;
+		flush = 1;
+>>>>>>> rebase
 		btrfs_tree_lock(eb);
 	}
 
@@ -3537,7 +3641,13 @@ lock_extent_buffer_for_io(struct extent_buffer *eb,
 		if (!epd->sync_io)
 			return 0;
 		if (!flush) {
+<<<<<<< HEAD
 			flush_write_bio(epd);
+=======
+			ret = flush_write_bio(epd);
+			if (ret < 0)
+				return ret;
+>>>>>>> rebase
 			flush = 1;
 		}
 		while (1) {
@@ -3578,7 +3688,18 @@ lock_extent_buffer_for_io(struct extent_buffer *eb,
 
 		if (!trylock_page(p)) {
 			if (!flush) {
+<<<<<<< HEAD
 				flush_write_bio(epd);
+=======
+				int err;
+
+				err = flush_write_bio(epd);
+				if (err < 0) {
+					ret = err;
+					failed_page_nr = i;
+					goto err_unlock;
+				}
+>>>>>>> rebase
 				flush = 1;
 			}
 			lock_page(p);
@@ -3586,6 +3707,7 @@ lock_extent_buffer_for_io(struct extent_buffer *eb,
 	}
 
 	return ret;
+<<<<<<< HEAD
 }
 
 static void end_extent_buffer_writeback(struct extent_buffer *eb)
@@ -3593,6 +3715,27 @@ static void end_extent_buffer_writeback(struct extent_buffer *eb)
 	clear_bit(EXTENT_BUFFER_WRITEBACK, &eb->bflags);
 	smp_mb__after_atomic();
 	wake_up_bit(&eb->bflags, EXTENT_BUFFER_WRITEBACK);
+=======
+err_unlock:
+	/* Unlock already locked pages */
+	for (i = 0; i < failed_page_nr; i++)
+		unlock_page(eb->pages[i]);
+	/*
+	 * Clear EXTENT_BUFFER_WRITEBACK and wake up anyone waiting on it.
+	 * Also set back EXTENT_BUFFER_DIRTY so future attempts to this eb can
+	 * be made and undo everything done before.
+	 */
+	btrfs_tree_lock(eb);
+	spin_lock(&eb->refs_lock);
+	set_bit(EXTENT_BUFFER_DIRTY, &eb->bflags);
+	end_extent_buffer_writeback(eb);
+	spin_unlock(&eb->refs_lock);
+	percpu_counter_add_batch(&fs_info->dirty_metadata_bytes, eb->len,
+				 fs_info->dirty_metadata_batch);
+	btrfs_clear_header_flag(eb, BTRFS_HEADER_FLAG_WRITTEN);
+	btrfs_tree_unlock(eb);
+	return ret;
+>>>>>>> rebase
 }
 
 static void set_btree_ioerr(struct page *page)
@@ -3839,6 +3982,13 @@ retry:
 			if (!ret) {
 				free_extent_buffer(eb);
 				continue;
+<<<<<<< HEAD
+=======
+			} else if (ret < 0) {
+				done = 1;
+				free_extent_buffer(eb);
+				break;
+>>>>>>> rebase
 			}
 
 			ret = write_one_eb(eb, fs_info, wbc, &epd);
@@ -3868,7 +4018,48 @@ retry:
 		index = 0;
 		goto retry;
 	}
+<<<<<<< HEAD
 	flush_write_bio(&epd);
+=======
+	ASSERT(ret <= 0);
+	if (ret < 0) {
+		end_write_bio(&epd, ret);
+		return ret;
+	}
+	/*
+	 * If something went wrong, don't allow any metadata write bio to be
+	 * submitted.
+	 *
+	 * This would prevent use-after-free if we had dirty pages not
+	 * cleaned up, which can still happen by fuzzed images.
+	 *
+	 * - Bad extent tree
+	 *   Allowing existing tree block to be allocated for other trees.
+	 *
+	 * - Log tree operations
+	 *   Exiting tree blocks get allocated to log tree, bumps its
+	 *   generation, then get cleaned in tree re-balance.
+	 *   Such tree block will not be written back, since it's clean,
+	 *   thus no WRITTEN flag set.
+	 *   And after log writes back, this tree block is not traced by
+	 *   any dirty extent_io_tree.
+	 *
+	 * - Offending tree block gets re-dirtied from its original owner
+	 *   Since it has bumped generation, no WRITTEN flag, it can be
+	 *   reused without COWing. This tree block will not be traced
+	 *   by btrfs_transaction::dirty_pages.
+	 *
+	 *   Now such dirty tree block will not be cleaned by any dirty
+	 *   extent io tree. Thus we don't want to submit such wild eb
+	 *   if the fs already has error.
+	 */
+	if (!test_bit(BTRFS_FS_STATE_ERROR, &fs_info->fs_state)) {
+		ret = flush_write_bio(&epd);
+	} else {
+		ret = -EUCLEAN;
+		end_write_bio(&epd, ret);
+	}
+>>>>>>> rebase
 	return ret;
 }
 
@@ -3965,7 +4156,12 @@ retry:
 			 * tmpfs file mapping
 			 */
 			if (!trylock_page(page)) {
+<<<<<<< HEAD
 				flush_write_bio(epd);
+=======
+				ret = flush_write_bio(epd);
+				BUG_ON(ret < 0);
+>>>>>>> rebase
 				lock_page(page);
 			}
 
@@ -3975,8 +4171,15 @@ retry:
 			}
 
 			if (wbc->sync_mode != WB_SYNC_NONE) {
+<<<<<<< HEAD
 				if (PageWriteback(page))
 					flush_write_bio(epd);
+=======
+				if (PageWriteback(page)) {
+					ret = flush_write_bio(epd);
+					BUG_ON(ret < 0);
+				}
+>>>>>>> rebase
 				wait_on_page_writeback(page);
 			}
 
@@ -4021,8 +4224,14 @@ retry:
 		 * page in our current bio, and thus deadlock, so flush the
 		 * write bio here.
 		 */
+<<<<<<< HEAD
 		flush_write_bio(epd);
 		goto retry;
+=======
+		ret = flush_write_bio(epd);
+		if (!ret)
+			goto retry;
+>>>>>>> rebase
 	}
 
 	if (wbc->range_cyclic || (wbc->nr_to_write > 0 && range_whole))
@@ -4032,6 +4241,7 @@ retry:
 	return ret;
 }
 
+<<<<<<< HEAD
 static void flush_write_bio(struct extent_page_data *epd)
 {
 	if (epd->bio) {
@@ -4043,6 +4253,8 @@ static void flush_write_bio(struct extent_page_data *epd)
 	}
 }
 
+=======
+>>>>>>> rebase
 int extent_write_full_page(struct page *page, struct writeback_control *wbc)
 {
 	int ret;
@@ -4054,8 +4266,19 @@ int extent_write_full_page(struct page *page, struct writeback_control *wbc)
 	};
 
 	ret = __extent_writepage(page, wbc, &epd);
+<<<<<<< HEAD
 
 	flush_write_bio(&epd);
+=======
+	ASSERT(ret <= 0);
+	if (ret < 0) {
+		end_write_bio(&epd, ret);
+		return ret;
+	}
+
+	ret = flush_write_bio(&epd);
+	ASSERT(ret <= 0);
+>>>>>>> rebase
 	return ret;
 }
 
@@ -4063,6 +4286,10 @@ int extent_write_locked_range(struct inode *inode, u64 start, u64 end,
 			      int mode)
 {
 	int ret = 0;
+<<<<<<< HEAD
+=======
+	int flush_ret;
+>>>>>>> rebase
 	struct address_space *mapping = inode->i_mapping;
 	struct extent_io_tree *tree = &BTRFS_I(inode)->io_tree;
 	struct page *page;
@@ -4097,7 +4324,12 @@ int extent_write_locked_range(struct inode *inode, u64 start, u64 end,
 		start += PAGE_SIZE;
 	}
 
+<<<<<<< HEAD
 	flush_write_bio(&epd);
+=======
+	flush_ret = flush_write_bio(&epd);
+	BUG_ON(flush_ret < 0);
+>>>>>>> rebase
 	return ret;
 }
 
@@ -4105,6 +4337,10 @@ int extent_writepages(struct address_space *mapping,
 		      struct writeback_control *wbc)
 {
 	int ret = 0;
+<<<<<<< HEAD
+=======
+	int flush_ret;
+>>>>>>> rebase
 	struct extent_page_data epd = {
 		.bio = NULL,
 		.tree = &BTRFS_I(mapping->host)->io_tree,
@@ -4113,7 +4349,12 @@ int extent_writepages(struct address_space *mapping,
 	};
 
 	ret = extent_write_cache_pages(mapping, wbc, &epd);
+<<<<<<< HEAD
 	flush_write_bio(&epd);
+=======
+	flush_ret = flush_write_bio(&epd);
+	BUG_ON(flush_ret < 0);
+>>>>>>> rebase
 	return ret;
 }
 
@@ -4269,6 +4510,11 @@ int try_release_extent_mapping(struct page *page, gfp_t mask)
 
 			/* once for us */
 			free_extent_map(em);
+<<<<<<< HEAD
+=======
+
+			cond_resched(); /* Allow large-extent preemption. */
+>>>>>>> rebase
 		}
 	}
 	return try_release_extent_state(tree, page, mask);
@@ -4801,6 +5047,7 @@ struct extent_buffer *alloc_dummy_extent_buffer(struct btrfs_fs_info *fs_info,
 static void check_buffer_tree_ref(struct extent_buffer *eb)
 {
 	int refs;
+<<<<<<< HEAD
 	/* the ref bit is tricky.  We have to make sure it is set
 	 * if we have the buffer dirty.   Otherwise the
 	 * code to free a buffer can end up dropping a dirty
@@ -4820,6 +5067,30 @@ static void check_buffer_tree_ref(struct extent_buffer *eb)
 	 *
 	 * So bump the ref count first, then set the bit.  If someone
 	 * beat us to it, drop the ref we added.
+=======
+	/*
+	 * The TREE_REF bit is first set when the extent_buffer is added
+	 * to the radix tree. It is also reset, if unset, when a new reference
+	 * is created by find_extent_buffer.
+	 *
+	 * It is only cleared in two cases: freeing the last non-tree
+	 * reference to the extent_buffer when its STALE bit is set or
+	 * calling releasepage when the tree reference is the only reference.
+	 *
+	 * In both cases, care is taken to ensure that the extent_buffer's
+	 * pages are not under io. However, releasepage can be concurrently
+	 * called with creating new references, which is prone to race
+	 * conditions between the calls to check_buffer_tree_ref in those
+	 * codepaths and clearing TREE_REF in try_release_extent_buffer.
+	 *
+	 * The actual lifetime of the extent_buffer in the radix tree is
+	 * adequately protected by the refcount, but the TREE_REF bit and
+	 * its corresponding reference are not. To protect against this
+	 * class of races, we call check_buffer_tree_ref from the codepaths
+	 * which trigger io after they set eb->io_pages. Note that once io is
+	 * initiated, TREE_REF can no longer be cleared, so that is the
+	 * moment at which any such race is best fixed.
+>>>>>>> rebase
 	 */
 	refs = atomic_read(&eb->refs);
 	if (refs >= 2 && test_bit(EXTENT_BUFFER_TREE_REF, &eb->bflags))
@@ -5273,6 +5544,14 @@ int read_extent_buffer_pages(struct extent_io_tree *tree,
 	clear_bit(EXTENT_BUFFER_READ_ERR, &eb->bflags);
 	eb->read_mirror = 0;
 	atomic_set(&eb->io_pages, num_reads);
+<<<<<<< HEAD
+=======
+	/*
+	 * It is possible for releasepage to clear the TREE_REF bit before we
+	 * set io_pages. See check_buffer_tree_ref for a more detailed comment.
+	 */
+	check_buffer_tree_ref(eb);
+>>>>>>> rebase
 	for (i = 0; i < num_pages; i++) {
 		page = eb->pages[i];
 
@@ -5366,9 +5645,15 @@ void read_extent_buffer(const struct extent_buffer *eb, void *dstv,
 	}
 }
 
+<<<<<<< HEAD
 int read_extent_buffer_to_user(const struct extent_buffer *eb,
 			       void __user *dstv,
 			       unsigned long start, unsigned long len)
+=======
+int read_extent_buffer_to_user_nofault(const struct extent_buffer *eb,
+				       void __user *dstv,
+				       unsigned long start, unsigned long len)
+>>>>>>> rebase
 {
 	size_t cur;
 	size_t offset;
@@ -5389,7 +5674,11 @@ int read_extent_buffer_to_user(const struct extent_buffer *eb,
 
 		cur = min(len, (PAGE_SIZE - offset));
 		kaddr = page_address(page);
+<<<<<<< HEAD
 		if (copy_to_user(dst, kaddr + offset, cur)) {
+=======
+		if (probe_user_write(dst, kaddr + offset, cur)) {
+>>>>>>> rebase
 			ret = -EFAULT;
 			break;
 		}

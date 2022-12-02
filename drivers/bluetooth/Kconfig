@@ -413,6 +413,7 @@ config BT_HCIRSI
 	  Say Y here to compile support for HCI over Redpine into the
 	  kernel or say M to compile as a module.
 
+<<<<<<< HEAD
 config MSM_BT_POWER
 	bool "MSM Bluetooth Power Control"
 	depends on ARCH_QCOM && RFKILL
@@ -472,4 +473,6 @@ config BT_BLUESLEEP
 	  Adds BlUESLEEP driver for Broadcom chipset.
 	  default is n.
 
+=======
+>>>>>>> rebase
 endmenu

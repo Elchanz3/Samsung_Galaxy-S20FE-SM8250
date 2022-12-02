@@ -9,6 +9,10 @@ config QCOM_BAM_DMA
 
 config QCOM_HIDMA_MGMT
 	tristate "Qualcomm Technologies HIDMA Management support"
+<<<<<<< HEAD
+=======
+	depends on HAS_IOMEM
+>>>>>>> rebase
 	select DMA_ENGINE
 	help
 	  Enable support for the Qualcomm Technologies HIDMA Management.
@@ -27,6 +31,7 @@ config QCOM_HIDMA
 	  (user to kernel, kernel to kernel, etc.).  It only supports
 	  memcpy interface. The core is not intended for general
 	  purpose slave DMA.
+<<<<<<< HEAD
 
 config QCOM_GPI_DMA
         tristate "Qualcomm Technologies Inc GPI DMA support"
@@ -46,3 +51,5 @@ config QCOM_GPI_DMA_DEBUG
 	help
 	  Enable detailed logging for QCOM GPI driver. Extra logging will be
 	  helpful when debugging critical issues.
+=======
+>>>>>>> rebase

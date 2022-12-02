@@ -549,9 +549,14 @@ static int gtp_build_skb_ip4(struct sk_buff *skb, struct net_device *dev,
 	if (!skb_is_gso(skb) && (iph->frag_off & htons(IP_DF)) &&
 	    mtu < ntohs(iph->tot_len)) {
 		netdev_dbg(dev, "packet too big, fragmentation needed\n");
+<<<<<<< HEAD
 		memset(IPCB(skb), 0, sizeof(*IPCB(skb)));
 		icmp_send(skb, ICMP_DEST_UNREACH, ICMP_FRAG_NEEDED,
 			  htonl(mtu));
+=======
+		icmp_ndo_send(skb, ICMP_DEST_UNREACH, ICMP_FRAG_NEEDED,
+			      htonl(mtu));
+>>>>>>> rebase
 		goto err_rt;
 	}
 
@@ -667,10 +672,13 @@ static int gtp_newlink(struct net *src_net, struct net_device *dev,
 
 	gtp = netdev_priv(dev);
 
+<<<<<<< HEAD
 	err = gtp_encap_enable(gtp, data);
 	if (err < 0)
 		return err;
 
+=======
+>>>>>>> rebase
 	if (!data[IFLA_GTP_PDP_HASHSIZE]) {
 		hashsize = 1024;
 	} else {
@@ -681,12 +689,24 @@ static int gtp_newlink(struct net *src_net, struct net_device *dev,
 
 	err = gtp_hashtable_new(gtp, hashsize);
 	if (err < 0)
+<<<<<<< HEAD
 		goto out_encap;
+=======
+		return err;
+
+	err = gtp_encap_enable(gtp, data);
+	if (err < 0)
+		goto out_hashtable;
+>>>>>>> rebase
 
 	err = register_netdevice(dev);
 	if (err < 0) {
 		netdev_dbg(dev, "failed to register new netdev %d\n", err);
+<<<<<<< HEAD
 		goto out_hashtable;
+=======
+		goto out_encap;
+>>>>>>> rebase
 	}
 
 	gn = net_generic(dev_net(dev), gtp_net_id);
@@ -697,11 +717,19 @@ static int gtp_newlink(struct net *src_net, struct net_device *dev,
 
 	return 0;
 
+<<<<<<< HEAD
 out_hashtable:
 	kfree(gtp->addr_hash);
 	kfree(gtp->tid_hash);
 out_encap:
 	gtp_encap_disable(gtp);
+=======
+out_encap:
+	gtp_encap_disable(gtp);
+out_hashtable:
+	kfree(gtp->addr_hash);
+	kfree(gtp->tid_hash);
+>>>>>>> rebase
 	return err;
 }
 
@@ -1177,16 +1205,28 @@ out_unlock:
 static struct genl_family gtp_genl_family;
 
 static int gtp_genl_fill_info(struct sk_buff *skb, u32 snd_portid, u32 snd_seq,
+<<<<<<< HEAD
 			      u32 type, struct pdp_ctx *pctx)
 {
 	void *genlh;
 
 	genlh = genlmsg_put(skb, snd_portid, snd_seq, &gtp_genl_family, 0,
+=======
+			      int flags, u32 type, struct pdp_ctx *pctx)
+{
+	void *genlh;
+
+	genlh = genlmsg_put(skb, snd_portid, snd_seq, &gtp_genl_family, flags,
+>>>>>>> rebase
 			    type);
 	if (genlh == NULL)
 		goto nlmsg_failure;
 
 	if (nla_put_u32(skb, GTPA_VERSION, pctx->gtp_version) ||
+<<<<<<< HEAD
+=======
+	    nla_put_u32(skb, GTPA_LINK, pctx->dev->ifindex) ||
+>>>>>>> rebase
 	    nla_put_be32(skb, GTPA_PEER_ADDRESS, pctx->peer_addr_ip4.s_addr) ||
 	    nla_put_be32(skb, GTPA_MS_ADDRESS, pctx->ms_addr_ip4.s_addr))
 		goto nla_put_failure;
@@ -1235,8 +1275,13 @@ static int gtp_genl_get_pdp(struct sk_buff *skb, struct genl_info *info)
 		goto err_unlock;
 	}
 
+<<<<<<< HEAD
 	err = gtp_genl_fill_info(skb2, NETLINK_CB(skb).portid,
 				 info->snd_seq, info->nlhdr->nlmsg_type, pctx);
+=======
+	err = gtp_genl_fill_info(skb2, NETLINK_CB(skb).portid, info->snd_seq,
+				 0, info->nlhdr->nlmsg_type, pctx);
+>>>>>>> rebase
 	if (err < 0)
 		goto err_unlock_free;
 
@@ -1279,6 +1324,10 @@ static int gtp_genl_dump_pdp(struct sk_buff *skb,
 				    gtp_genl_fill_info(skb,
 					    NETLINK_CB(cb->skb).portid,
 					    cb->nlh->nlmsg_seq,
+<<<<<<< HEAD
+=======
+					    NLM_F_MULTI,
+>>>>>>> rebase
 					    cb->nlh->nlmsg_type, pctx)) {
 					cb->args[0] = i;
 					cb->args[1] = j;

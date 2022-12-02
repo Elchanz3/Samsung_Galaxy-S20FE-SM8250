@@ -20,6 +20,7 @@
 #include "input-event-codes.h"
 
 /*
+<<<<<<< HEAD
  * sys/class/sec/tsp/support_feature
  * bit value should be made a promise with InputFramework.
  */
@@ -145,10 +146,16 @@
 #endif
 
 /*
+=======
+>>>>>>> rebase
  * The event structure itself
  * Note that __USE_TIME_BITS64 is defined by libc based on
  * application's request to use 64 bit time_t.
  */
+<<<<<<< HEAD
+=======
+
+>>>>>>> rebase
 struct input_event {
 #if (__BITS_PER_LONG != 32 || !defined(__USE_TIME_BITS64)) && !defined(__KERNEL__)
 	struct timeval time;
@@ -364,6 +371,7 @@ struct input_mask {
 #define EVIOCSCLOCKID		_IOW('E', 0xa0, int)			/* Set clockid to be used for timestamps */
 
 /*
+<<<<<<< HEAD
  * Switch events
  */
 #define SW_FLIP                 0x15  /* set = flip cover open, close*/
@@ -372,6 +380,8 @@ struct input_mask {
 #define SW_HALL_LOGICAL		0x1f  /* set = logical hall ic attach/detach */
 
 /*
+=======
+>>>>>>> rebase
  * IDs.
  */
 

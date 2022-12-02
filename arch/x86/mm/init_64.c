@@ -1195,7 +1195,11 @@ int kernel_set_to_readonly;
 void set_kernel_text_rw(void)
 {
 	unsigned long start = PFN_ALIGN(_text);
+<<<<<<< HEAD
 	unsigned long end = PFN_ALIGN(_etext);
+=======
+	unsigned long end = PFN_ALIGN(__stop___ex_table);
+>>>>>>> rebase
 
 	if (!kernel_set_to_readonly)
 		return;
@@ -1214,7 +1218,11 @@ void set_kernel_text_rw(void)
 void set_kernel_text_ro(void)
 {
 	unsigned long start = PFN_ALIGN(_text);
+<<<<<<< HEAD
 	unsigned long end = PFN_ALIGN(_etext);
+=======
+	unsigned long end = PFN_ALIGN(__stop___ex_table);
+>>>>>>> rebase
 
 	if (!kernel_set_to_readonly)
 		return;
@@ -1233,7 +1241,11 @@ void mark_rodata_ro(void)
 	unsigned long start = PFN_ALIGN(_text);
 	unsigned long rodata_start = PFN_ALIGN(__start_rodata);
 	unsigned long end = (unsigned long) &__end_rodata_hpage_align;
+<<<<<<< HEAD
 	unsigned long text_end = PFN_ALIGN(&_etext);
+=======
+	unsigned long text_end = PFN_ALIGN(&__stop___ex_table);
+>>>>>>> rebase
 	unsigned long rodata_end = PFN_ALIGN(&__end_rodata);
 	unsigned long all_end;
 
@@ -1289,18 +1301,30 @@ int kern_addr_valid(unsigned long addr)
 		return 0;
 
 	p4d = p4d_offset(pgd, addr);
+<<<<<<< HEAD
 	if (p4d_none(*p4d))
 		return 0;
 
 	pud = pud_offset(p4d, addr);
 	if (pud_none(*pud))
+=======
+	if (!p4d_present(*p4d))
+		return 0;
+
+	pud = pud_offset(p4d, addr);
+	if (!pud_present(*pud))
+>>>>>>> rebase
 		return 0;
 
 	if (pud_large(*pud))
 		return pfn_valid(pud_pfn(*pud));
 
 	pmd = pmd_offset(pud, addr);
+<<<<<<< HEAD
 	if (pmd_none(*pmd))
+=======
+	if (!pmd_present(*pmd))
+>>>>>>> rebase
 		return 0;
 
 	if (pmd_large(*pmd))

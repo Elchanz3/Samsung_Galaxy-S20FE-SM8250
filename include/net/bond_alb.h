@@ -142,7 +142,11 @@ struct tlb_slave_info {
 struct alb_bond_info {
 	struct tlb_client_info	*tx_hashtbl; /* Dynamically allocated */
 	u32			unbalanced_load;
+<<<<<<< HEAD
 	int			tx_rebalance_counter;
+=======
+	atomic_t		tx_rebalance_counter;
+>>>>>>> rebase
 	int			lp_counter;
 	/* -------- rlb parameters -------- */
 	int rlb_enabled;

@@ -96,7 +96,11 @@ static inline __u32 inotify_arg_to_mask(u32 arg)
 	mask = (FS_IN_IGNORED | FS_EVENT_ON_CHILD | FS_UNMOUNT);
 
 	/* mask off the flags used to open the fd */
+<<<<<<< HEAD
 	mask |= (arg & (IN_ALL_EVENTS | IN_ONESHOT | IN_EXCL_UNLINK));
+=======
+	mask |= (arg & INOTIFY_USER_MASK);
+>>>>>>> rebase
 
 	return mask;
 }
@@ -350,7 +354,11 @@ static int inotify_find_inode(const char __user *dirname, struct path *path, uns
 	if (error)
 		return error;
 	/* you can only watch an inode if you have read permissions on it */
+<<<<<<< HEAD
 	error = inode_permission2(path->mnt, path->dentry->d_inode, MAY_READ);
+=======
+	error = inode_permission(path->dentry->d_inode, MAY_READ);
+>>>>>>> rebase
 	if (error)
 		path_put(path);
 	return error;
@@ -702,8 +710,11 @@ SYSCALL_DEFINE3(inotify_add_watch, int, fd, const char __user *, pathname,
 	struct fsnotify_group *group;
 	struct inode *inode;
 	struct path path;
+<<<<<<< HEAD
 	struct path alteredpath;
 	struct path *canonical_path = &path;
+=======
+>>>>>>> rebase
 	struct fd f;
 	int ret;
 	unsigned flags = 0;
@@ -749,6 +760,7 @@ SYSCALL_DEFINE3(inotify_add_watch, int, fd, const char __user *, pathname,
 	if (ret)
 		goto fput_and_out;
 
+<<<<<<< HEAD
 	/* support stacked filesystems */
 	if(path.dentry && path.dentry->d_op) {
 		if (path.dentry->d_op->d_canonical_path) {
@@ -760,11 +772,19 @@ SYSCALL_DEFINE3(inotify_add_watch, int, fd, const char __user *, pathname,
 
 	/* inode held in place by reference to path; group by fget on fd */
 	inode = canonical_path->dentry->d_inode;
+=======
+	/* inode held in place by reference to path; group by fget on fd */
+	inode = path.dentry->d_inode;
+>>>>>>> rebase
 	group = f.file->private_data;
 
 	/* create/update an inode mark */
 	ret = inotify_update_watch(group, inode, mask);
+<<<<<<< HEAD
 	path_put(canonical_path);
+=======
+	path_put(&path);
+>>>>>>> rebase
 fput_and_out:
 	fdput(f);
 	return ret;

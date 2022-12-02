@@ -114,6 +114,10 @@ enum dso_binary_type distro_dwarf_types[] = {
 	DSO_BINARY_TYPE__UBUNTU_DEBUGINFO,
 	DSO_BINARY_TYPE__OPENEMBEDDED_DEBUGINFO,
 	DSO_BINARY_TYPE__BUILDID_DEBUGINFO,
+<<<<<<< HEAD
+=======
+	DSO_BINARY_TYPE__MIXEDUP_UBUNTU_DEBUGINFO,
+>>>>>>> rebase
 	DSO_BINARY_TYPE__NOT_FOUND,
 };
 
@@ -623,14 +627,28 @@ static int convert_to_trace_point(Dwarf_Die *sp_die, Dwfl_Module *mod,
 		return -EINVAL;
 	}
 
+<<<<<<< HEAD
 	/* Try to get actual symbol name from symtab */
 	symbol = dwfl_module_addrsym(mod, paddr, &sym, NULL);
+=======
+	if (dwarf_entrypc(sp_die, &eaddr) == 0) {
+		/* If the DIE has entrypc, use it. */
+		symbol = dwarf_diename(sp_die);
+	} else {
+		/* Try to get actual symbol name and address from symtab */
+		symbol = dwfl_module_addrsym(mod, paddr, &sym, NULL);
+		eaddr = sym.st_value;
+	}
+>>>>>>> rebase
 	if (!symbol) {
 		pr_warning("Failed to find symbol at 0x%lx\n",
 			   (unsigned long)paddr);
 		return -ENOENT;
 	}
+<<<<<<< HEAD
 	eaddr = sym.st_value;
+=======
+>>>>>>> rebase
 
 	tp->offset = (unsigned long)(paddr - eaddr);
 	tp->address = (unsigned long)paddr;
@@ -1345,7 +1363,11 @@ int debuginfo__find_trace_events(struct debuginfo *dbg,
 	tf.ntevs = 0;
 
 	ret = debuginfo__find_probes(dbg, &tf.pf);
+<<<<<<< HEAD
 	if (ret < 0) {
+=======
+	if (ret < 0 || tf.ntevs == 0) {
+>>>>>>> rebase
 		for (i = 0; i < tf.ntevs; i++)
 			clear_probe_trace_event(&tf.tevs[i]);
 		zfree(tevs);

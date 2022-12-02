@@ -560,11 +560,16 @@ void elv_bio_merged(struct request_queue *q, struct request *rq,
 #ifdef CONFIG_PM
 static void blk_pm_requeue_request(struct request *rq)
 {
+<<<<<<< HEAD
 	if (rq->q->dev && !(rq->rq_flags & RQF_PM)) {
 		rq->q->nr_pending--;
 		if (!rq->q->nr_pending)
 			pm_runtime_mark_last_busy(rq->q->dev);
 	}
+=======
+	if (rq->q->dev && !(rq->rq_flags & RQF_PM))
+		rq->q->nr_pending--;
+>>>>>>> rebase
 }
 
 static void blk_pm_add_request(struct request_queue *q, struct request *rq)
@@ -623,8 +628,11 @@ void __elv_add_request(struct request_queue *q, struct request *rq, int where)
 {
 	trace_block_rq_insert(q, rq);
 
+<<<<<<< HEAD
 	blk_queue_io_vol_add(q, rq->cmd_flags, blk_rq_bytes(rq));
 
+=======
+>>>>>>> rebase
 	blk_pm_add_request(q, rq);
 
 	rq->q = q;
@@ -785,8 +793,11 @@ void elv_completed_request(struct request_queue *q, struct request *rq)
 	 */
 	if (blk_account_rq(rq)) {
 		q->in_flight[rq_is_sync(rq)]--;
+<<<<<<< HEAD
 		if (!queue_in_flight(q))
 			q->in_flight_time += ktime_us_delta(ktime_get(), q->in_flight_stamp);
+=======
+>>>>>>> rebase
 		if ((rq->rq_flags & RQF_SORTED) &&
 		    e->type->ops.sq.elevator_completed_req_fn)
 			e->type->ops.sq.elevator_completed_req_fn(q, rq);
@@ -840,13 +851,25 @@ static struct kobj_type elv_ktype = {
 	.release	= elevator_release,
 };
 
+<<<<<<< HEAD
 int elv_register_queue(struct request_queue *q)
+=======
+/*
+ * elv_register_queue is called from either blk_register_queue or
+ * elevator_switch, elevator switch is prevented from being happen
+ * in the two paths, so it is safe to not hold q->sysfs_lock.
+ */
+int elv_register_queue(struct request_queue *q, bool uevent)
+>>>>>>> rebase
 {
 	struct elevator_queue *e = q->elevator;
 	int error;
 
+<<<<<<< HEAD
 	lockdep_assert_held(&q->sysfs_lock);
 
+=======
+>>>>>>> rebase
 	error = kobject_add(&e->kobj, &q->kobj, "%s", "iosched");
 	if (!error) {
 		struct elv_fs_entry *attr = e->type->elevator_attrs;
@@ -857,28 +880,52 @@ int elv_register_queue(struct request_queue *q)
 				attr++;
 			}
 		}
+<<<<<<< HEAD
 		kobject_uevent(&e->kobj, KOBJ_ADD);
 		e->registered = 1;
 		if (!e->uses_mq && e->type->ops.sq.elevator_registered_fn)
 			e->type->ops.sq.elevator_registered_fn(q);
 		else if (e->uses_mq && e->type->ops.mq.elevator_registered_fn)
 			e->type->ops.mq.elevator_registered_fn(q);
+=======
+		if (uevent)
+			kobject_uevent(&e->kobj, KOBJ_ADD);
+
+		e->registered = 1;
+		if (!e->uses_mq && e->type->ops.sq.elevator_registered_fn)
+			e->type->ops.sq.elevator_registered_fn(q);
+>>>>>>> rebase
 	}
 	return error;
 }
 
+<<<<<<< HEAD
 void elv_unregister_queue(struct request_queue *q)
 {
 	lockdep_assert_held(&q->sysfs_lock);
 
+=======
+/*
+ * elv_unregister_queue is called from either blk_unregister_queue or
+ * elevator_switch, elevator switch is prevented from being happen
+ * in the two paths, so it is safe to not hold q->sysfs_lock.
+ */
+void elv_unregister_queue(struct request_queue *q)
+{
+>>>>>>> rebase
 	if (q) {
 		struct elevator_queue *e = q->elevator;
 
 		kobject_uevent(&e->kobj, KOBJ_REMOVE);
 		kobject_del(&e->kobj);
+<<<<<<< HEAD
 		e->registered = 0;
 		/* Re-enable throttling in case elevator disabled it */
 		wbt_enable_default(q);
+=======
+
+		e->registered = 0;
+>>>>>>> rebase
 	}
 }
 
@@ -951,6 +998,10 @@ int elevator_switch_mq(struct request_queue *q,
 	if (q->elevator) {
 		if (q->elevator->registered)
 			elv_unregister_queue(q);
+<<<<<<< HEAD
+=======
+
+>>>>>>> rebase
 		ioc_clear_queue(q);
 		elevator_exit(q, q->elevator);
 	}
@@ -960,7 +1011,11 @@ int elevator_switch_mq(struct request_queue *q,
 		goto out;
 
 	if (new_e) {
+<<<<<<< HEAD
 		ret = elv_register_queue(q);
+=======
+		ret = elv_register_queue(q, true);
+>>>>>>> rebase
 		if (ret) {
 			elevator_exit(q, q->elevator);
 			goto out;
@@ -989,6 +1044,7 @@ int elevator_init_mq(struct request_queue *q)
 	if (q->nr_hw_queues != 1)
 		return 0;
 
+<<<<<<< HEAD
 	/*
 	 * q->sysfs_lock must be held to provide mutual exclusion between
 	 * elevator_switch() and here.
@@ -1010,6 +1066,21 @@ int elevator_init_mq(struct request_queue *q)
 		elevator_put(e);
 out_unlock:
 	mutex_unlock(&q->sysfs_lock);
+=======
+	WARN_ON_ONCE(test_bit(QUEUE_FLAG_REGISTERED, &q->queue_flags));
+
+	if (unlikely(q->elevator))
+		goto out;
+
+	e = elevator_get(q, "mq-deadline", false);
+	if (!e)
+		goto out;
+
+	err = blk_mq_init_sched(q, e);
+	if (err)
+		elevator_put(e);
+out:
+>>>>>>> rebase
 	return err;
 }
 
@@ -1064,7 +1135,11 @@ static int elevator_switch(struct request_queue *q, struct elevator_type *new_e)
 	if (err)
 		goto fail_init;
 
+<<<<<<< HEAD
 	err = elv_register_queue(q);
+=======
+	err = elv_register_queue(q, true);
+>>>>>>> rebase
 	if (err)
 		goto fail_register;
 
@@ -1084,7 +1159,11 @@ fail_init:
 	/* switch failed, restore and re-register old elevator */
 	if (old) {
 		q->elevator = old;
+<<<<<<< HEAD
 		elv_register_queue(q);
+=======
+		elv_register_queue(q, true);
+>>>>>>> rebase
 		blk_queue_bypass_end(q);
 	}
 
@@ -1100,7 +1179,11 @@ static int __elevator_change(struct request_queue *q, const char *name)
 	struct elevator_type *e;
 
 	/* Make sure queue is not in the middle of being removed */
+<<<<<<< HEAD
 	if (!test_bit(QUEUE_FLAG_REGISTERED, &q->queue_flags))
+=======
+	if (!blk_queue_registered(q))
+>>>>>>> rebase
 		return -ENOENT;
 
 	/*

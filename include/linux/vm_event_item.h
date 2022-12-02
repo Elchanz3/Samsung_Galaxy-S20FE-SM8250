@@ -22,7 +22,11 @@
 
 #define FOR_ALL_ZONES(xx) DMA_ZONE(xx) DMA32_ZONE(xx) xx##_NORMAL, HIGHMEM_ZONE(xx) xx##_MOVABLE
 
+<<<<<<< HEAD
 enum vm_event_item { PGPGIN, PGPGOUT, PGPGOUTCLEAN, PSWPIN, PSWPOUT,
+=======
+enum vm_event_item { PGPGIN, PGPGOUT, PSWPIN, PSWPOUT,
+>>>>>>> rebase
 		FOR_ALL_ZONES(PGALLOC),
 		FOR_ALL_ZONES(ALLOCSTALL),
 		FOR_ALL_ZONES(PGSCAN_SKIP),
@@ -80,9 +84,12 @@ enum vm_event_item { PGPGIN, PGPGOUT, PGPGOUTCLEAN, PSWPIN, PSWPOUT,
 		THP_SPLIT_PAGE,
 		THP_SPLIT_PAGE_FAILED,
 		THP_DEFERRED_SPLIT_PAGE,
+<<<<<<< HEAD
 #ifdef CONFIG_HUGEPAGE_POOL
 		THP_DEFERRED_SPLIT_PAGE_CURRENT,
 #endif
+=======
+>>>>>>> rebase
 		THP_SPLIT_PMD,
 #ifdef CONFIG_HAVE_ARCH_TRANSPARENT_HUGEPAGE_PUD
 		THP_SPLIT_PUD,
@@ -113,6 +120,7 @@ enum vm_event_item { PGPGIN, PGPGOUT, PGPGOUTCLEAN, PSWPIN, PSWPOUT,
 		SWAP_RA,
 		SWAP_RA_HIT,
 #endif
+<<<<<<< HEAD
 #ifdef CONFIG_SPECULATIVE_PAGE_FAULT
 		SPECULATIVE_PGFAULT_ANON,	/* Speculative page fault field */
 		SPECULATIVE_PGFAULT_FILE,	/* Speculative page fault field */
@@ -123,6 +131,8 @@ enum vm_event_item { PGPGIN, PGPGOUT, PGPGOUTCLEAN, PSWPIN, PSWPOUT,
 		SQZR_READ,
 		SQZR_WRITE,
 #endif
+=======
+>>>>>>> rebase
 		NR_VM_EVENT_ITEMS
 };
 

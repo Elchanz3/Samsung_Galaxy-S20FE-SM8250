@@ -34,8 +34,13 @@ Example:
 Use specific request line passing from dma
 For example, MMC request line is 5
 
+<<<<<<< HEAD
 	sdhci: sdhci@98e00000 {
 		compatible = "moxa,moxart-sdhci";
+=======
+	mmc: mmc@98e00000 {
+		compatible = "moxa,moxart-mmc";
+>>>>>>> rebase
 		reg = <0x98e00000 0x5C>;
 		interrupts = <5 0>;
 		clocks = <&clk_apb>;

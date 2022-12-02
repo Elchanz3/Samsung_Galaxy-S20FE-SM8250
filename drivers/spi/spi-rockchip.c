@@ -15,7 +15,10 @@
 
 #include <linux/clk.h>
 #include <linux/dmaengine.h>
+<<<<<<< HEAD
 #include <linux/interrupt.h>
+=======
+>>>>>>> rebase
 #include <linux/module.h>
 #include <linux/of.h>
 #include <linux/pinctrl/consumer.h>

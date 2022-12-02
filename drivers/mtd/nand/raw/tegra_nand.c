@@ -1119,7 +1119,11 @@ static int tegra_nand_chips_init(struct device *dev,
 	chip->select_chip = tegra_nand_select_chip;
 	chip->setup_data_interface = tegra_nand_setup_data_interface;
 
+<<<<<<< HEAD
 	ret = nand_scan(mtd, 1);
+=======
+	ret = nand_scan(chip, 1);
+>>>>>>> rebase
 	if (ret)
 		return ret;
 

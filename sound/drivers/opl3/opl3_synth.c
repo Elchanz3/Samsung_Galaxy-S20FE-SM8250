@@ -105,6 +105,11 @@ int snd_opl3_ioctl(struct snd_hwdep * hw, struct file *file,
 		{
 			struct snd_dm_fm_info info;
 
+<<<<<<< HEAD
+=======
+			memset(&info, 0, sizeof(info));
+
+>>>>>>> rebase
 			info.fm_mode = opl3->fm_mode;
 			info.rhythm = opl3->rhythm;
 			if (copy_to_user(argp, &info, sizeof(struct snd_dm_fm_info)))

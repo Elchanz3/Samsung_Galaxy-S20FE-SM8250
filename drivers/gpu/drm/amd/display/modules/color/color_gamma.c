@@ -1206,6 +1206,10 @@ static void interpolate_user_regamma(uint32_t hw_points_num,
 	struct fixed31_32 lut2;
 	struct fixed31_32 delta_lut;
 	struct fixed31_32 delta_index;
+<<<<<<< HEAD
+=======
+	const struct fixed31_32 one = dc_fixpt_from_int(1);
+>>>>>>> rebase
 
 	i = 0;
 	/* fixed_pt library has problems handling too small values */
@@ -1234,6 +1238,12 @@ static void interpolate_user_regamma(uint32_t hw_points_num,
 			} else
 				hw_x = coordinates_x[i].x;
 
+<<<<<<< HEAD
+=======
+			if (dc_fixpt_le(one, hw_x))
+				hw_x = one;
+
+>>>>>>> rebase
 			norm_x = dc_fixpt_mul(norm_factor, hw_x);
 			index = dc_fixpt_floor(norm_x);
 			if (index < 0 || index > 255)
@@ -1561,7 +1571,11 @@ bool calculate_user_regamma_ramp(struct dc_transfer_func *output_tf,
 
 	kfree(rgb_regamma);
 rgb_regamma_alloc_fail:
+<<<<<<< HEAD
 	kvfree(rgb_user);
+=======
+	kfree(rgb_user);
+>>>>>>> rebase
 rgb_user_alloc_fail:
 	return ret;
 }

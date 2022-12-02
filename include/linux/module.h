@@ -20,9 +20,13 @@
 #include <linux/export.h>
 #include <linux/rbtree_latch.h>
 #include <linux/error-injection.h>
+<<<<<<< HEAD
 #include <linux/cfi.h>
 #include <linux/tracepoint-defs.h>
 #include <linux/cfi.h>
+=======
+#include <linux/tracepoint-defs.h>
+>>>>>>> rebase
 
 #include <linux/percpu.h>
 #include <asm/module.h>
@@ -350,10 +354,13 @@ struct module {
 	const s32 *crcs;
 	unsigned int num_syms;
 
+<<<<<<< HEAD
 #ifdef CONFIG_CFI_CLANG
 	cfi_check_fn cfi_check;
 #endif
 
+=======
+>>>>>>> rebase
 	/* Kernel parameters. */
 #ifdef CONFIG_SYSFS
 	struct mutex param_lock;
@@ -365,6 +372,10 @@ struct module {
 	unsigned int num_gpl_syms;
 	const struct kernel_symbol *gpl_syms;
 	const s32 *gpl_crcs;
+<<<<<<< HEAD
+=======
+	bool using_gplonly_symbols;
+>>>>>>> rebase
 
 #ifdef CONFIG_UNUSED_SYMBOLS
 	/* unused exported symbols. */
@@ -378,12 +389,19 @@ struct module {
 	const s32 *unused_gpl_crcs;
 #endif
 
+<<<<<<< HEAD
 	/*
 	 * Signature was verified. Unconditionally compiled in Android to
 	 * preserve ABI compatibility between kernels without module
 	 * signing enabled and signed modules.
 	 */
 	bool sig_ok;
+=======
+#ifdef CONFIG_MODULE_SIG
+	/* Signature was verified. */
+	bool sig_ok;
+#endif
+>>>>>>> rebase
 
 	bool async_probe_requested;
 
@@ -537,6 +555,7 @@ struct module *find_module(const char *name);
 struct symsearch {
 	const struct kernel_symbol *start, *stop;
 	const s32 *crcs;
+<<<<<<< HEAD
 	enum {
 		NOT_GPL_ONLY,
 		GPL_ONLY,
@@ -565,6 +584,16 @@ bool each_symbol_section(bool (*fn)(const struct symsearch *arr,
 				    struct module *owner,
 				    void *data), void *data);
 
+=======
+	enum mod_license {
+		NOT_GPL_ONLY,
+		GPL_ONLY,
+		WILL_BE_GPL_ONLY,
+	} license;
+	bool unused;
+};
+
+>>>>>>> rebase
 /* Returns 0 and fills in value, defined and namebuf, or -ERANGE if
    symnum out of range. */
 int module_get_kallsym(unsigned int symnum, unsigned long *value, char *type,
@@ -612,7 +641,10 @@ static inline void __module_get(struct module *module)
 #define symbol_put_addr(p) do { } while (0)
 
 #endif /* CONFIG_MODULE_UNLOAD */
+<<<<<<< HEAD
 int ref_module(struct module *a, struct module *b);
+=======
+>>>>>>> rebase
 
 /* This is a #define so the string doesn't get put in every .o file */
 #define module_name(mod)			\
@@ -691,6 +723,7 @@ static inline bool is_module_text_address(unsigned long addr)
 	return false;
 }
 
+<<<<<<< HEAD
 static inline bool within_module_core(unsigned long addr,
 				      const struct module *mod)
 {
@@ -708,6 +741,8 @@ static inline bool within_module(unsigned long addr, const struct module *mod)
 	return false;
 }
 
+=======
+>>>>>>> rebase
 /* Get/put a kernel symbol (calls should be symmetric) */
 #define symbol_get(x) ({ extern typeof(x) x __attribute__((weak)); &(x); })
 #define symbol_put(x) do { } while (0)

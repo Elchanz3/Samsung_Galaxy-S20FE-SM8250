@@ -168,6 +168,11 @@ struct kretprobe {
 	raw_spinlock_t lock;
 };
 
+<<<<<<< HEAD
+=======
+#define KRETPROBE_MAX_DATA_SIZE	4096
+
+>>>>>>> rebase
 struct kretprobe_instance {
 	struct hlist_node hlist;
 	struct kretprobe *rp;
@@ -245,7 +250,11 @@ extern void kprobes_inc_nmissed_count(struct kprobe *p);
 extern bool arch_within_kprobe_blacklist(unsigned long addr);
 extern int arch_populate_kprobe_blacklist(void);
 extern bool arch_kprobe_on_func_entry(unsigned long offset);
+<<<<<<< HEAD
 extern bool kprobe_on_func_entry(kprobe_opcode_t *addr, const char *sym, unsigned long offset);
+=======
+extern int kprobe_on_func_entry(kprobe_opcode_t *addr, const char *sym, unsigned long offset);
+>>>>>>> rebase
 
 extern bool within_kprobe_blacklist(unsigned long addr);
 extern int kprobe_add_ksym_blacklist(unsigned long entry);
@@ -363,6 +372,13 @@ static inline struct kprobe_ctlblk *get_kprobe_ctlblk(void)
 	return this_cpu_ptr(&kprobe_ctlblk);
 }
 
+<<<<<<< HEAD
+=======
+extern struct kprobe kprobe_busy;
+void kprobe_busy_begin(void);
+void kprobe_busy_end(void);
+
+>>>>>>> rebase
 kprobe_opcode_t *kprobe_lookup_name(const char *name, unsigned int offset);
 int register_kprobe(struct kprobe *p);
 void unregister_kprobe(struct kprobe *p);

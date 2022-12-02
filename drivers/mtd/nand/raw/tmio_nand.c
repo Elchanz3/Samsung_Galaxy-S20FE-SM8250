@@ -436,7 +436,11 @@ static int tmio_probe(struct platform_device *dev)
 	nand_chip->waitfunc = tmio_nand_wait;
 
 	/* Scan to find existence of the device */
+<<<<<<< HEAD
 	retval = nand_scan(mtd, 1);
+=======
+	retval = nand_scan(nand_chip, 1);
+>>>>>>> rebase
 	if (retval)
 		goto err_irq;
 
@@ -449,7 +453,11 @@ static int tmio_probe(struct platform_device *dev)
 	if (!retval)
 		return retval;
 
+<<<<<<< HEAD
 	nand_release(mtd);
+=======
+	nand_cleanup(nand_chip);
+>>>>>>> rebase
 
 err_irq:
 	tmio_hw_stop(dev, tmio);
@@ -460,7 +468,11 @@ static int tmio_remove(struct platform_device *dev)
 {
 	struct tmio_nand *tmio = platform_get_drvdata(dev);
 
+<<<<<<< HEAD
 	nand_release(nand_to_mtd(&tmio->chip));
+=======
+	nand_release(&tmio->chip);
+>>>>>>> rebase
 	tmio_hw_stop(dev, tmio);
 	return 0;
 }

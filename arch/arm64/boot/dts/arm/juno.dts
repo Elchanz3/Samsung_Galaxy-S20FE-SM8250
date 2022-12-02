@@ -98,7 +98,10 @@
 			clocks = <&scpi_dvfs 0>;
 			cpu-idle-states = <&CPU_SLEEP_0 &CLUSTER_SLEEP_0>;
 			capacity-dmips-mhz = <1024>;
+<<<<<<< HEAD
 			dynamic-power-coefficient = <530>;
+=======
+>>>>>>> rebase
 		};
 
 		A57_1: cpu@1 {
@@ -116,7 +119,10 @@
 			clocks = <&scpi_dvfs 0>;
 			cpu-idle-states = <&CPU_SLEEP_0 &CLUSTER_SLEEP_0>;
 			capacity-dmips-mhz = <1024>;
+<<<<<<< HEAD
 			dynamic-power-coefficient = <530>;
+=======
+>>>>>>> rebase
 		};
 
 		A53_0: cpu@100 {
@@ -134,7 +140,10 @@
 			clocks = <&scpi_dvfs 1>;
 			cpu-idle-states = <&CPU_SLEEP_0 &CLUSTER_SLEEP_0>;
 			capacity-dmips-mhz = <578>;
+<<<<<<< HEAD
 			dynamic-power-coefficient = <140>;
+=======
+>>>>>>> rebase
 		};
 
 		A53_1: cpu@101 {
@@ -152,7 +161,10 @@
 			clocks = <&scpi_dvfs 1>;
 			cpu-idle-states = <&CPU_SLEEP_0 &CLUSTER_SLEEP_0>;
 			capacity-dmips-mhz = <578>;
+<<<<<<< HEAD
 			dynamic-power-coefficient = <140>;
+=======
+>>>>>>> rebase
 		};
 
 		A53_2: cpu@102 {
@@ -170,7 +182,10 @@
 			clocks = <&scpi_dvfs 1>;
 			cpu-idle-states = <&CPU_SLEEP_0 &CLUSTER_SLEEP_0>;
 			capacity-dmips-mhz = <578>;
+<<<<<<< HEAD
 			dynamic-power-coefficient = <140>;
+=======
+>>>>>>> rebase
 		};
 
 		A53_3: cpu@103 {
@@ -188,7 +203,10 @@
 			clocks = <&scpi_dvfs 1>;
 			cpu-idle-states = <&CPU_SLEEP_0 &CLUSTER_SLEEP_0>;
 			capacity-dmips-mhz = <578>;
+<<<<<<< HEAD
 			dynamic-power-coefficient = <140>;
+=======
+>>>>>>> rebase
 		};
 
 		A57_L2: l2-cache0 {

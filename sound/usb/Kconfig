@@ -162,6 +162,7 @@ config SND_BCD2000
 
 source "sound/usb/line6/Kconfig"
 
+<<<<<<< HEAD
 config SND_USB_AUDIO_QMI
 	tristate "USB Audio QMI Service driver"
 	depends on QCOM_QMI_HELPERS
@@ -171,5 +172,7 @@ config SND_USB_AUDIO_QMI
 	  stream on a connected USB device, subsystem restart and
 	  device disconnect.
 
+=======
+>>>>>>> rebase
 endif	# SND_USB
 

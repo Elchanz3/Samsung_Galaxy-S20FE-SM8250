@@ -12,7 +12,10 @@
 #include "ext4.h"
 #include "xattr.h"
 #include "truncate.h"
+<<<<<<< HEAD
 #include <trace/events/android_fs.h>
+=======
+>>>>>>> rebase
 
 #define EXT4_XATTR_SYSTEM_DATA	"data"
 #define EXT4_MIN_INLINE_DATA_SIZE	((sizeof(__le32) * EXT4_N_BLOCKS))
@@ -35,6 +38,12 @@ static int get_max_inline_xattr_value_size(struct inode *inode,
 	struct ext4_inode *raw_inode;
 	int free, min_offs;
 
+<<<<<<< HEAD
+=======
+	if (!EXT4_INODE_HAS_XATTR_SPACE(inode))
+		return 0;
+
+>>>>>>> rebase
 	min_offs = EXT4_SB(inode->i_sb)->s_inode_size -
 			EXT4_GOOD_OLD_INODE_SIZE -
 			EXT4_I(inode)->i_extra_isize -
@@ -506,6 +515,7 @@ int ext4_readpage_inline(struct inode *inode, struct page *page)
 		return -EAGAIN;
 	}
 
+<<<<<<< HEAD
 	if (trace_android_fs_dataread_start_enabled()) {
 		char *path, pathbuf[MAX_TRACE_PATHBUF_LEN];
 
@@ -517,6 +527,8 @@ int ext4_readpage_inline(struct inode *inode, struct page *page)
 						path, current->comm);
 	}
 
+=======
+>>>>>>> rebase
 	/*
 	 * Current inline data can only exist in the 1st page,
 	 * So for all the other pages, just set them uptodate.
@@ -528,8 +540,11 @@ int ext4_readpage_inline(struct inode *inode, struct page *page)
 		SetPageUptodate(page);
 	}
 
+<<<<<<< HEAD
 	trace_android_fs_dataread_end(inode, page_offset(page), PAGE_SIZE);
 
+=======
+>>>>>>> rebase
 	up_read(&EXT4_I(inode)->xattr_sem);
 
 	unlock_page(page);
@@ -764,6 +779,15 @@ int ext4_write_inline_data_end(struct inode *inode, loff_t pos, unsigned len,
 	ext4_write_lock_xattr(inode, &no_expand);
 	BUG_ON(!ext4_has_inline_data(inode));
 
+<<<<<<< HEAD
+=======
+	/*
+	 * ei->i_inline_off may have changed since ext4_write_begin()
+	 * called ext4_try_to_write_inline_data()
+	 */
+	(void) ext4_find_inline_data_nolock(inode);
+
+>>>>>>> rebase
 	kaddr = kmap_atomic(page);
 	ext4_write_inline_data(inode, &iloc, kaddr, pos, len);
 	kunmap_atomic(kaddr);
@@ -1133,7 +1157,19 @@ static void ext4_restore_inline_data(handle_t *handle, struct inode *inode,
 				     struct ext4_iloc *iloc,
 				     void *buf, int inline_size)
 {
+<<<<<<< HEAD
 	ext4_create_inline_data(handle, inode, inline_size);
+=======
+	int ret;
+
+	ret = ext4_create_inline_data(handle, inode, inline_size);
+	if (ret) {
+		ext4_msg(inode->i_sb, KERN_EMERG,
+			"error restoring inline_data for inode -- potential data loss! (inode %lu, error %d)",
+			inode->i_ino, ret);
+		return;
+	}
+>>>>>>> rebase
 	ext4_write_inline_data(inode, iloc, buf, 0, inline_size);
 	ext4_set_inode_state(inode, EXT4_STATE_MAY_INLINE_DATA);
 }
@@ -1421,7 +1457,11 @@ int htree_inlinedir_to_tree(struct file *dir_file,
 			}
 		}
 
+<<<<<<< HEAD
 		ext4fs_dirhash(dir, de->name, de->name_len, hinfo);
+=======
+		ext4fs_dirhash(de->name, de->name_len, hinfo);
+>>>>>>> rebase
 		if ((hinfo->hash < start_hash) ||
 		    ((hinfo->hash == start_hash) &&
 		     (hinfo->minor_hash < start_minor_hash)))
@@ -1935,6 +1975,10 @@ int ext4_inline_data_truncate(struct inode *inode, int *has_inline)
 
 	ext4_write_lock_xattr(inode, &no_expand);
 	if (!ext4_has_inline_data(inode)) {
+<<<<<<< HEAD
+=======
+		ext4_write_unlock_xattr(inode, &no_expand);
+>>>>>>> rebase
 		*has_inline = 0;
 		ext4_journal_stop(handle);
 		return 0;
@@ -2020,6 +2064,21 @@ int ext4_convert_inline_data(struct inode *inode)
 	if (!ext4_has_inline_data(inode)) {
 		ext4_clear_inode_state(inode, EXT4_STATE_MAY_INLINE_DATA);
 		return 0;
+<<<<<<< HEAD
+=======
+	} else if (!ext4_test_inode_state(inode, EXT4_STATE_MAY_INLINE_DATA)) {
+		/*
+		 * Inode has inline data but EXT4_STATE_MAY_INLINE_DATA is
+		 * cleared. This means we are in the middle of moving of
+		 * inline data to delay allocated block. Just force writeout
+		 * here to finish conversion.
+		 */
+		error = filemap_flush(inode->i_mapping);
+		if (error)
+			return error;
+		if (!ext4_has_inline_data(inode))
+			return 0;
+>>>>>>> rebase
 	}
 
 	needed_blocks = ext4_writepage_trans_blocks(inode);

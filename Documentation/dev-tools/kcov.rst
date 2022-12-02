@@ -34,7 +34,10 @@ Profiling data will only become accessible once debugfs has been mounted::
 
 Coverage collection
 -------------------
+<<<<<<< HEAD
 
+=======
+>>>>>>> rebase
 The following program demonstrates coverage collection from within a test
 program using kcov:
 
@@ -129,7 +132,10 @@ only need to enable coverage (disable happens automatically on thread end).
 
 Comparison operands collection
 ------------------------------
+<<<<<<< HEAD
 
+=======
+>>>>>>> rebase
 Comparison operands collection is similar to coverage collection:
 
 .. code-block:: c
@@ -204,6 +210,7 @@ Comparison operands collection is similar to coverage collection:
 
 Note that the kcov modes (coverage collection or comparison operands) are
 mutually exclusive.
+<<<<<<< HEAD
 
 Remote coverage collection
 --------------------------
@@ -331,3 +338,5 @@ selectively from different subsystems.
 		perror("close"), exit(1);
 	return 0;
     }
+=======
+>>>>>>> rebase

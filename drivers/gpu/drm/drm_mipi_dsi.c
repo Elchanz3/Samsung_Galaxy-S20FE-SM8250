@@ -305,6 +305,10 @@ static int mipi_dsi_remove_device_fn(struct device *dev, void *priv)
 {
 	struct mipi_dsi_device *dsi = to_mipi_dsi_device(dev);
 
+<<<<<<< HEAD
+=======
+	mipi_dsi_detach(dsi);
+>>>>>>> rebase
 	mipi_dsi_device_unregister(dsi);
 
 	return 0;
@@ -360,7 +364,10 @@ static ssize_t mipi_dsi_device_transfer(struct mipi_dsi_device *dsi,
 
 	if (dsi->mode_flags & MIPI_DSI_MODE_LPM)
 		msg->flags |= MIPI_DSI_MSG_USE_LPM;
+<<<<<<< HEAD
 	msg->flags |= MIPI_DSI_MSG_LASTCOMMAND;
+=======
+>>>>>>> rebase
 
 	return ops->transfer(dsi->host, msg);
 }
@@ -457,7 +464,11 @@ int mipi_dsi_create_packet(struct mipi_dsi_packet *packet,
 		return -EINVAL;
 
 	memset(packet, 0, sizeof(*packet));
+<<<<<<< HEAD
 	packet->header[2] = ((msg->channel & 0x3) << 6) | (msg->type & 0x3f);
+=======
+	packet->header[0] = ((msg->channel & 0x3) << 6) | (msg->type & 0x3f);
+>>>>>>> rebase
 
 	/* TODO: compute ECC if hardware support is not available */
 
@@ -469,16 +480,26 @@ int mipi_dsi_create_packet(struct mipi_dsi_packet *packet,
 	 * and 2.
 	 */
 	if (mipi_dsi_packet_format_is_long(msg->type)) {
+<<<<<<< HEAD
 		packet->header[0] = (msg->tx_len >> 0) & 0xff;
 		packet->header[1] = (msg->tx_len >> 8) & 0xff;
+=======
+		packet->header[1] = (msg->tx_len >> 0) & 0xff;
+		packet->header[2] = (msg->tx_len >> 8) & 0xff;
+>>>>>>> rebase
 
 		packet->payload_length = msg->tx_len;
 		packet->payload = msg->tx_buf;
 	} else {
 		const u8 *tx = msg->tx_buf;
 
+<<<<<<< HEAD
 		packet->header[0] = (msg->tx_len > 0) ? tx[0] : 0;
 		packet->header[1] = (msg->tx_len > 1) ? tx[1] : 0;
+=======
+		packet->header[1] = (msg->tx_len > 0) ? tx[0] : 0;
+		packet->header[2] = (msg->tx_len > 1) ? tx[1] : 0;
+>>>>>>> rebase
 	}
 
 	packet->size = sizeof(packet->header) + packet->payload_length;
@@ -564,6 +585,7 @@ EXPORT_SYMBOL(mipi_dsi_set_maximum_return_packet_size);
  * Return: The number of bytes transmitted on success or a negative error code
  * on failure.
  */
+<<<<<<< HEAD
 #if defined(CONFIG_DISPLAY_SAMSUNG)
 ssize_t mipi_dsi_generic_write(struct mipi_dsi_device *dsi, void *payload,
 				   size_t size)
@@ -571,6 +593,10 @@ ssize_t mipi_dsi_generic_write(struct mipi_dsi_device *dsi, void *payload,
 ssize_t mipi_dsi_generic_write(struct mipi_dsi_device *dsi, const void *payload,
 			       size_t size)
 #endif
+=======
+ssize_t mipi_dsi_generic_write(struct mipi_dsi_device *dsi, const void *payload,
+			       size_t size)
+>>>>>>> rebase
 {
 	struct mipi_dsi_msg msg = {
 		.channel = dsi->channel,
@@ -614,6 +640,7 @@ EXPORT_SYMBOL(mipi_dsi_generic_write);
  * Return: The number of bytes successfully read or a negative error code on
  * failure.
  */
+<<<<<<< HEAD
 #if defined(CONFIG_DISPLAY_SAMSUNG)
 ssize_t mipi_dsi_generic_read(struct mipi_dsi_device *dsi, void *params,
 				  size_t num_params, void *data, size_t size)
@@ -621,6 +648,10 @@ ssize_t mipi_dsi_generic_read(struct mipi_dsi_device *dsi, void *params,
 ssize_t mipi_dsi_generic_read(struct mipi_dsi_device *dsi, const void *params,
 			      size_t num_params, void *data, size_t size)
 #endif
+=======
+ssize_t mipi_dsi_generic_read(struct mipi_dsi_device *dsi, const void *params,
+			      size_t num_params, void *data, size_t size)
+>>>>>>> rebase
 {
 	struct mipi_dsi_msg msg = {
 		.channel = dsi->channel,
@@ -663,6 +694,7 @@ EXPORT_SYMBOL(mipi_dsi_generic_read);
  * Return: The number of bytes successfully transmitted or a negative error
  * code on failure.
  */
+<<<<<<< HEAD
 #if defined(CONFIG_DISPLAY_SAMSUNG)
 ssize_t mipi_dsi_dcs_write_buffer(struct mipi_dsi_device *dsi,
 				  void *data, size_t len)
@@ -670,6 +702,10 @@ ssize_t mipi_dsi_dcs_write_buffer(struct mipi_dsi_device *dsi,
 ssize_t mipi_dsi_dcs_write_buffer(struct mipi_dsi_device *dsi,
 				  const void *data, size_t len)
 #endif
+=======
+ssize_t mipi_dsi_dcs_write_buffer(struct mipi_dsi_device *dsi,
+				  const void *data, size_t len)
+>>>>>>> rebase
 {
 	struct mipi_dsi_msg msg = {
 		.channel = dsi->channel,
@@ -1050,11 +1086,19 @@ EXPORT_SYMBOL(mipi_dsi_dcs_set_pixel_format);
  */
 int mipi_dsi_dcs_set_tear_scanline(struct mipi_dsi_device *dsi, u16 scanline)
 {
+<<<<<<< HEAD
 	u8 payload[3] = { MIPI_DCS_SET_TEAR_SCANLINE, scanline >> 8,
 			  scanline & 0xff };
 	ssize_t err;
 
 	err = mipi_dsi_generic_write(dsi, payload, sizeof(payload));
+=======
+	u8 payload[2] = { scanline >> 8, scanline & 0xff };
+	ssize_t err;
+
+	err = mipi_dsi_dcs_write(dsi, MIPI_DCS_SET_TEAR_SCANLINE, payload,
+				 sizeof(payload));
+>>>>>>> rebase
 	if (err < 0)
 		return err;
 

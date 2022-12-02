@@ -41,7 +41,11 @@ static int __init powersave_off(char *arg)
 {
 	ppc_md.power_save = NULL;
 	cpuidle_disable = IDLE_POWERSAVE_OFF;
+<<<<<<< HEAD
 	return 0;
+=======
+	return 1;
+>>>>>>> rebase
 }
 __setup("powersave=off", powersave_off);
 

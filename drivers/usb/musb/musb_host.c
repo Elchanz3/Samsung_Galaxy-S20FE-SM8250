@@ -1462,10 +1462,14 @@ done:
 	 * We need to map sg if the transfer_buffer is
 	 * NULL.
 	 */
+<<<<<<< HEAD
 	if (!urb->transfer_buffer)
 		qh->use_sg = true;
 
 	if (qh->use_sg) {
+=======
+	if (!urb->transfer_buffer) {
+>>>>>>> rebase
 		/* sg_miter_start is already done in musb_ep_program */
 		if (!sg_miter_next(&qh->sg_miter)) {
 			dev_err(musb->controller, "error: sg list empty\n");
@@ -1473,9 +1477,14 @@ done:
 			status = -EINVAL;
 			goto done;
 		}
+<<<<<<< HEAD
 		urb->transfer_buffer = qh->sg_miter.addr;
 		length = min_t(u32, length, qh->sg_miter.length);
 		musb_write_fifo(hw_ep, length, urb->transfer_buffer);
+=======
+		length = min_t(u32, length, qh->sg_miter.length);
+		musb_write_fifo(hw_ep, length, qh->sg_miter.addr);
+>>>>>>> rebase
 		qh->sg_miter.consumed = length;
 		sg_miter_stop(&qh->sg_miter);
 	} else {
@@ -1484,11 +1493,14 @@ done:
 
 	qh->segsize = length;
 
+<<<<<<< HEAD
 	if (qh->use_sg) {
 		if (offset + length >= urb->transfer_buffer_length)
 			qh->use_sg = false;
 	}
 
+=======
+>>>>>>> rebase
 	musb_ep_select(mbase, epnum);
 	musb_writew(epio, MUSB_TXCSR,
 			MUSB_TXCSR_H_WZC_BITS | MUSB_TXCSR_TXPKTRDY);
@@ -2003,8 +2015,15 @@ finish:
 	urb->actual_length += xfer_len;
 	qh->offset += xfer_len;
 	if (done) {
+<<<<<<< HEAD
 		if (qh->use_sg)
 			qh->use_sg = false;
+=======
+		if (qh->use_sg) {
+			qh->use_sg = false;
+			urb->transfer_buffer = NULL;
+		}
+>>>>>>> rebase
 
 		if (urb->status == -EINPROGRESS)
 			urb->status = status;

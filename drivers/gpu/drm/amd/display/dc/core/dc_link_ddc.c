@@ -127,6 +127,7 @@ struct aux_payloads {
 	struct vector payloads;
 };
 
+<<<<<<< HEAD
 static struct i2c_payloads *dal_ddc_i2c_payloads_create(struct dc_context *ctx, uint32_t count)
 {
 	struct i2c_payloads *payloads;
@@ -143,6 +144,18 @@ static struct i2c_payloads *dal_ddc_i2c_payloads_create(struct dc_context *ctx, 
 	kfree(payloads);
 	return NULL;
 
+=======
+static bool dal_ddc_i2c_payloads_create(
+		struct dc_context *ctx,
+		struct i2c_payloads *payloads,
+		uint32_t count)
+{
+	if (dal_vector_construct(
+		&payloads->payloads, ctx, count, sizeof(struct i2c_payload)))
+		return true;
+
+	return false;
+>>>>>>> rebase
 }
 
 static struct i2c_payload *dal_ddc_i2c_payloads_get(struct i2c_payloads *p)
@@ -155,6 +168,7 @@ static uint32_t dal_ddc_i2c_payloads_get_count(struct i2c_payloads *p)
 	return p->payloads.count;
 }
 
+<<<<<<< HEAD
 static void dal_ddc_i2c_payloads_destroy(struct i2c_payloads **p)
 {
 	if (!p || !*p)
@@ -163,6 +177,14 @@ static void dal_ddc_i2c_payloads_destroy(struct i2c_payloads **p)
 	kfree(*p);
 	*p = NULL;
 
+=======
+static void dal_ddc_i2c_payloads_destroy(struct i2c_payloads *p)
+{
+	if (!p)
+		return;
+
+	dal_vector_destruct(&p->payloads);
+>>>>>>> rebase
 }
 
 static struct aux_payloads *dal_ddc_aux_payloads_create(struct dc_context *ctx, uint32_t count)
@@ -580,9 +602,19 @@ bool dal_ddc_service_query_ddc_data(
 
 	uint32_t payloads_num = write_payloads + read_payloads;
 
+<<<<<<< HEAD
 	if (write_size > EDID_SEGMENT_SIZE || read_size > EDID_SEGMENT_SIZE)
 		return false;
 
+=======
+
+	if (write_size > EDID_SEGMENT_SIZE || read_size > EDID_SEGMENT_SIZE)
+		return false;
+
+	if (!payloads_num)
+		return false;
+
+>>>>>>> rebase
 	/*TODO: len of payload data for i2c and aux is uint8!!!!,
 	 *  but we want to read 256 over i2c!!!!*/
 	if (dal_ddc_service_is_in_aux_transaction_mode(ddc)) {
@@ -613,6 +645,7 @@ bool dal_ddc_service_query_ddc_data(
 		dal_ddc_aux_payloads_destroy(&payloads);
 
 	} else {
+<<<<<<< HEAD
 		struct i2c_payloads *payloads =
 			dal_ddc_i2c_payloads_create(ddc->ctx, payloads_num);
 
@@ -630,6 +663,27 @@ bool dal_ddc_service_query_ddc_data(
 
 		command.number_of_payloads =
 			dal_ddc_i2c_payloads_get_count(payloads);
+=======
+		struct i2c_command command = {0};
+		struct i2c_payloads payloads;
+
+		if (!dal_ddc_i2c_payloads_create(ddc->ctx, &payloads, payloads_num))
+			return false;
+
+		command.payloads = dal_ddc_i2c_payloads_get(&payloads);
+		command.number_of_payloads = 0;
+		command.engine = DDC_I2C_COMMAND_ENGINE;
+		command.speed = ddc->ctx->dc->caps.i2c_speed_in_khz;
+
+		dal_ddc_i2c_payloads_add(
+			&payloads, address, write_size, write_buf, true);
+
+		dal_ddc_i2c_payloads_add(
+			&payloads, address, read_size, read_buf, false);
+
+		command.number_of_payloads =
+			dal_ddc_i2c_payloads_get_count(&payloads);
+>>>>>>> rebase
 
 		ret = dm_helpers_submit_i2c(
 				ddc->ctx,

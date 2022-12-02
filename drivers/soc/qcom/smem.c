@@ -1,7 +1,22 @@
+<<<<<<< HEAD
 // SPDX-License-Identifier: GPL-2.0-only
 /*
  * Copyright (c) 2015, Sony Mobile Communications AB.
  * Copyright (c) 2012-2013, 2018-2020 The Linux Foundation. All rights reserved.
+=======
+/*
+ * Copyright (c) 2015, Sony Mobile Communications AB.
+ * Copyright (c) 2012-2013, The Linux Foundation. All rights reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2 and
+ * only version 2 as published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+>>>>>>> rebase
  */
 
 #include <linux/hwspinlock.h>
@@ -83,7 +98,11 @@
 #define SMEM_GLOBAL_HOST	0xfffe
 
 /* Max number of processors/hosts in a system */
+<<<<<<< HEAD
 #define SMEM_HOST_COUNT		11
+=======
+#define SMEM_HOST_COUNT		10
+>>>>>>> rebase
 
 /**
   * struct smem_proc_comm - proc_comm communication struct (legacy)
@@ -192,6 +211,7 @@ struct smem_partition_header {
 	__le32 offset_free_cached;
 	__le32 reserved[3];
 };
+<<<<<<< HEAD
 /**
  * struct smem_partition_desc - descriptor for partition
  * @virt_base:	starting virtual address of partition
@@ -205,6 +225,8 @@ struct smem_partition_desc {
 	u32 cacheline;
 	u32 size;
 };
+=======
+>>>>>>> rebase
 
 static const u8 SMEM_PART_MAGIC[] = { 0x24, 0x50, 0x52, 0x54 };
 
@@ -261,9 +283,17 @@ struct smem_region {
  * struct qcom_smem - device data for the smem device
  * @dev:	device pointer
  * @hwlock:	reference to a hwspinlock
+<<<<<<< HEAD
  * @ptable_base: virtual base of partition table
  * @global_partition_desc: descriptor for global partition when in use
  * @partition_desc: list of partition descriptor of current processor/host
+=======
+ * @global_partition:	pointer to global partition when in use
+ * @global_cacheline:	cacheline size for global partition
+ * @partitions:	list of pointers to partitions affecting the current
+ *		processor/host
+ * @cacheline:	list of cacheline sizes for each host
+>>>>>>> rebase
  * @item_count: max accepted item number
  * @num_regions: number of @regions
  * @regions:	list of the memory regions defining the shared memory
@@ -273,15 +303,24 @@ struct qcom_smem {
 
 	struct hwspinlock *hwlock;
 
+<<<<<<< HEAD
 	u32 item_count;
 	struct smem_ptable *ptable_base;
 	struct smem_partition_desc global_partition_desc;
 	struct smem_partition_desc partition_desc[SMEM_HOST_COUNT];
+=======
+	struct smem_partition_header *global_partition;
+	size_t global_cacheline;
+	struct smem_partition_header *partitions[SMEM_HOST_COUNT];
+	size_t cacheline[SMEM_HOST_COUNT];
+	u32 item_count;
+>>>>>>> rebase
 
 	unsigned num_regions;
 	struct smem_region regions[0];
 };
 
+<<<<<<< HEAD
 /* Pointer to the one and only smem handle */
 static struct qcom_smem *__smem;
 
@@ -289,6 +328,9 @@ static struct qcom_smem *__smem;
 #define HWSPINLOCK_TIMEOUT	1000
 
 static struct smem_private_entry *
+=======
+static void *
+>>>>>>> rebase
 phdr_to_last_uncached_entry(struct smem_partition_header *phdr)
 {
 	void *p = phdr;
@@ -353,12 +395,24 @@ static void *cached_entry_to_item(struct smem_private_entry *e)
 	return p - le32_to_cpu(e->size);
 }
 
+<<<<<<< HEAD
 static int qcom_smem_alloc_private(struct qcom_smem *smem,
 				   struct smem_partition_desc *p_desc,
+=======
+/* Pointer to the one and only smem handle */
+static struct qcom_smem *__smem;
+
+/* Timeout (ms) for the trylock of remote spinlocks */
+#define HWSPINLOCK_TIMEOUT	1000
+
+static int qcom_smem_alloc_private(struct qcom_smem *smem,
+				   struct smem_partition_header *phdr,
+>>>>>>> rebase
 				   unsigned item,
 				   size_t size)
 {
 	struct smem_private_entry *hdr, *end;
+<<<<<<< HEAD
 	struct smem_partition_header *phdr;
 	size_t alloc_size;
 	void *cached;
@@ -366,14 +420,21 @@ static int qcom_smem_alloc_private(struct qcom_smem *smem,
 
 	phdr = p_desc->virt_base;
 	p_end = (void *)phdr + p_desc->size;
+=======
+	size_t alloc_size;
+	void *cached;
+>>>>>>> rebase
 
 	hdr = phdr_to_first_uncached_entry(phdr);
 	end = phdr_to_last_uncached_entry(phdr);
 	cached = phdr_to_last_cached_entry(phdr);
 
+<<<<<<< HEAD
 	if (WARN_ON((void *)end > p_end || (void *)cached > p_end))
 		return -EINVAL;
 
+=======
+>>>>>>> rebase
 	while (hdr < end) {
 		if (hdr->canary != SMEM_PRIVATE_CANARY)
 			goto bad_canary;
@@ -382,8 +443,11 @@ static int qcom_smem_alloc_private(struct qcom_smem *smem,
 
 		hdr = uncached_entry_next(hdr);
 	}
+<<<<<<< HEAD
 	if (WARN_ON((void *)hdr > p_end))
 		return -EINVAL;
+=======
+>>>>>>> rebase
 
 	/* Check that we don't grow into the cached region */
 	alloc_size = sizeof(*hdr) + ALIGN(size, 8);
@@ -458,7 +522,11 @@ static int qcom_smem_alloc_global(struct qcom_smem *smem,
  */
 int qcom_smem_alloc(unsigned host, unsigned item, size_t size)
 {
+<<<<<<< HEAD
 	struct smem_partition_desc *p_desc;
+=======
+	struct smem_partition_header *phdr;
+>>>>>>> rebase
 	unsigned long flags;
 	int ret;
 
@@ -480,12 +548,21 @@ int qcom_smem_alloc(unsigned host, unsigned item, size_t size)
 	if (ret)
 		return ret;
 
+<<<<<<< HEAD
 	if (host < SMEM_HOST_COUNT && __smem->partition_desc[host].virt_base) {
 		p_desc = &__smem->partition_desc[host];
 		ret = qcom_smem_alloc_private(__smem, p_desc, item, size);
 	} else if (__smem->global_partition_desc.virt_base) {
 		p_desc = &__smem->global_partition_desc;
 		ret = qcom_smem_alloc_private(__smem, p_desc, item, size);
+=======
+	if (host < SMEM_HOST_COUNT && __smem->partitions[host]) {
+		phdr = __smem->partitions[host];
+		ret = qcom_smem_alloc_private(__smem, phdr, item, size);
+	} else if (__smem->global_partition) {
+		phdr = __smem->global_partition;
+		ret = qcom_smem_alloc_private(__smem, phdr, item, size);
+>>>>>>> rebase
 	} else {
 		ret = qcom_smem_alloc_global(__smem, item, size);
 	}
@@ -500,11 +577,17 @@ static void *qcom_smem_get_global(struct qcom_smem *smem,
 				  unsigned item,
 				  size_t *size)
 {
+<<<<<<< HEAD
 	struct smem_global_entry *entry;
 	struct smem_header *header;
 	struct smem_region *area;
 	u64 entry_offset;
 	u32 e_size;
+=======
+	struct smem_header *header;
+	struct smem_region *area;
+	struct smem_global_entry *entry;
+>>>>>>> rebase
 	u32 aux_base;
 	unsigned i;
 
@@ -519,6 +602,7 @@ static void *qcom_smem_get_global(struct qcom_smem *smem,
 		area = &smem->regions[i];
 
 		if (area->aux_base == aux_base || !aux_base) {
+<<<<<<< HEAD
 			e_size = le32_to_cpu(entry->size);
 			entry_offset = le32_to_cpu(entry->offset);
 
@@ -529,6 +613,11 @@ static void *qcom_smem_get_global(struct qcom_smem *smem,
 				*size = e_size;
 
 			return area->virt_base + entry_offset;
+=======
+			if (size != NULL)
+				*size = le32_to_cpu(entry->size);
+			return area->virt_base + le32_to_cpu(entry->offset);
+>>>>>>> rebase
 		}
 	}
 
@@ -536,11 +625,17 @@ static void *qcom_smem_get_global(struct qcom_smem *smem,
 }
 
 static void *qcom_smem_get_private(struct qcom_smem *smem,
+<<<<<<< HEAD
 				   struct smem_partition_desc *p_desc,
+=======
+				   struct smem_partition_header *phdr,
+				   size_t cacheline,
+>>>>>>> rebase
 				   unsigned item,
 				   size_t *size)
 {
 	struct smem_private_entry *e, *end;
+<<<<<<< HEAD
 	struct smem_partition_header *phdr;
 	void *item_ptr, *p_end;
 	size_t cacheline;
@@ -550,18 +645,24 @@ static void *qcom_smem_get_private(struct qcom_smem *smem,
 	phdr = p_desc->virt_base;
 	p_end = (void *)phdr + p_desc->size;
 	cacheline = p_desc->cacheline;
+=======
+>>>>>>> rebase
 
 	e = phdr_to_first_uncached_entry(phdr);
 	end = phdr_to_last_uncached_entry(phdr);
 
+<<<<<<< HEAD
 	if (WARN_ON((void *)end > p_end))
 		return ERR_PTR(-EINVAL);
 
+=======
+>>>>>>> rebase
 	while (e < end) {
 		if (e->canary != SMEM_PRIVATE_CANARY)
 			goto invalid_canary;
 
 		if (le16_to_cpu(e->item) == item) {
+<<<<<<< HEAD
 			if (size != NULL) {
 				e_size = le32_to_cpu(e->size);
 				padding_data = le16_to_cpu(e->padding_data);
@@ -578,26 +679,40 @@ static void *qcom_smem_get_private(struct qcom_smem *smem,
 				return ERR_PTR(-EINVAL);
 
 			return item_ptr;
+=======
+			if (size != NULL)
+				*size = le32_to_cpu(e->size) -
+					le16_to_cpu(e->padding_data);
+
+			return uncached_entry_to_item(e);
+>>>>>>> rebase
 		}
 
 		e = uncached_entry_next(e);
 	}
+<<<<<<< HEAD
 	if (WARN_ON((void *)e > p_end))
 		return ERR_PTR(-EINVAL);
+=======
+>>>>>>> rebase
 
 	/* Item was not found in the uncached list, search the cached list */
 
 	e = phdr_to_first_cached_entry(phdr, cacheline);
 	end = phdr_to_last_cached_entry(phdr);
 
+<<<<<<< HEAD
 	if (WARN_ON((void *)e < (void *)phdr || (void *)end > p_end))
 		return ERR_PTR(-EINVAL);
 
+=======
+>>>>>>> rebase
 	while (e > end) {
 		if (e->canary != SMEM_PRIVATE_CANARY)
 			goto invalid_canary;
 
 		if (le16_to_cpu(e->item) == item) {
+<<<<<<< HEAD
 			if (size != NULL) {
 				e_size = le32_to_cpu(e->size);
 				padding_data = le16_to_cpu(e->padding_data);
@@ -614,12 +729,22 @@ static void *qcom_smem_get_private(struct qcom_smem *smem,
 				return ERR_PTR(-EINVAL);
 
 			return item_ptr;
+=======
+			if (size != NULL)
+				*size = le32_to_cpu(e->size) -
+					le16_to_cpu(e->padding_data);
+
+			return cached_entry_to_item(e);
+>>>>>>> rebase
 		}
 
 		e = cached_entry_next(e, cacheline);
 	}
+<<<<<<< HEAD
 	if (WARN_ON((void *)e < (void *)phdr))
 		return ERR_PTR(-EINVAL);
+=======
+>>>>>>> rebase
 
 	return ERR_PTR(-ENOENT);
 
@@ -641,8 +766,14 @@ invalid_canary:
  */
 void *qcom_smem_get(unsigned host, unsigned item, size_t *size)
 {
+<<<<<<< HEAD
 	struct smem_partition_desc *p_desc;
 	unsigned long flags;
+=======
+	struct smem_partition_header *phdr;
+	unsigned long flags;
+	size_t cacheln;
+>>>>>>> rebase
 	int ret;
 	void *ptr = ERR_PTR(-EPROBE_DEFER);
 
@@ -658,12 +789,23 @@ void *qcom_smem_get(unsigned host, unsigned item, size_t *size)
 	if (ret)
 		return ERR_PTR(ret);
 
+<<<<<<< HEAD
 	if (host < SMEM_HOST_COUNT && __smem->partition_desc[host].virt_base) {
 		p_desc = &__smem->partition_desc[host];
 		ptr = qcom_smem_get_private(__smem, p_desc, item, size);
 	} else if (__smem->global_partition_desc.virt_base) {
 		p_desc = &__smem->global_partition_desc;
 		ptr = qcom_smem_get_private(__smem, p_desc, item, size);
+=======
+	if (host < SMEM_HOST_COUNT && __smem->partitions[host]) {
+		phdr = __smem->partitions[host];
+		cacheln = __smem->cacheline[host];
+		ptr = qcom_smem_get_private(__smem, phdr, cacheln, item, size);
+	} else if (__smem->global_partition) {
+		phdr = __smem->global_partition;
+		cacheln = __smem->global_cacheline;
+		ptr = qcom_smem_get_private(__smem, phdr, cacheln, item, size);
+>>>>>>> rebase
 	} else {
 		ptr = qcom_smem_get_global(__smem, item, size);
 	}
@@ -685,13 +827,17 @@ EXPORT_SYMBOL(qcom_smem_get);
 int qcom_smem_get_free_space(unsigned host)
 {
 	struct smem_partition_header *phdr;
+<<<<<<< HEAD
 	struct smem_partition_desc *p_desc;
+=======
+>>>>>>> rebase
 	struct smem_header *header;
 	unsigned ret;
 
 	if (!__smem)
 		return -EPROBE_DEFER;
 
+<<<<<<< HEAD
 	if (host < SMEM_HOST_COUNT && __smem->partition_desc[host].virt_base) {
 		p_desc = &__smem->partition_desc[host];
 		phdr = p_desc->virt_base;
@@ -716,12 +862,26 @@ int qcom_smem_get_free_space(unsigned host)
 
 		if (ret > __smem->regions[0].size)
 			return -EINVAL;
+=======
+	if (host < SMEM_HOST_COUNT && __smem->partitions[host]) {
+		phdr = __smem->partitions[host];
+		ret = le32_to_cpu(phdr->offset_free_cached) -
+		      le32_to_cpu(phdr->offset_free_uncached);
+	} else if (__smem->global_partition) {
+		phdr = __smem->global_partition;
+		ret = le32_to_cpu(phdr->offset_free_cached) -
+		      le32_to_cpu(phdr->offset_free_uncached);
+	} else {
+		header = __smem->regions[0].virt_base;
+		ret = le32_to_cpu(header->available);
+>>>>>>> rebase
 	}
 
 	return ret;
 }
 EXPORT_SYMBOL(qcom_smem_get_free_space);
 
+<<<<<<< HEAD
 static int addr_in_range(void *virt_base, unsigned int size, void *addr)
 {
 	if (virt_base && addr >= virt_base &&
@@ -731,6 +891,8 @@ static int addr_in_range(void *virt_base, unsigned int size, void *addr)
 	return 0;
 }
 
+=======
+>>>>>>> rebase
 /**
  * qcom_smem_virt_to_phys() - return the physical address associated
  * with an smem item pointer (previously returned by qcom_smem_get()
@@ -740,6 +902,7 @@ static int addr_in_range(void *virt_base, unsigned int size, void *addr)
  */
 phys_addr_t qcom_smem_virt_to_phys(void *p)
 {
+<<<<<<< HEAD
 	struct smem_partition_desc *p_desc;
 	struct smem_region *area;
 	u64 offset;
@@ -770,6 +933,19 @@ phys_addr_t qcom_smem_virt_to_phys(void *p)
 			offset = p - area->virt_base;
 
 			return (phys_addr_t)area->aux_base + offset;
+=======
+	unsigned i;
+
+	for (i = 0; i < __smem->num_regions; i++) {
+		struct smem_region *region = &__smem->regions[i];
+
+		if (p < region->virt_base)
+			continue;
+		if (p < region->virt_base + region->size) {
+			u64 offset = p - region->virt_base;
+
+			return (phys_addr_t)region->aux_base + offset;
+>>>>>>> rebase
 		}
 	}
 
@@ -793,7 +969,11 @@ static struct smem_ptable *qcom_smem_get_ptable(struct qcom_smem *smem)
 	struct smem_ptable *ptable;
 	u32 version;
 
+<<<<<<< HEAD
 	ptable = smem->ptable_base;
+=======
+	ptable = smem->regions[0].virt_base + smem->regions[0].size - SZ_4K;
+>>>>>>> rebase
 	if (memcmp(ptable->magic, SMEM_PTABLE_MAGIC, sizeof(ptable->magic)))
 		return ERR_PTR(-ENOENT);
 
@@ -827,12 +1007,19 @@ static int qcom_smem_set_global_partition(struct qcom_smem *smem)
 	struct smem_partition_header *header;
 	struct smem_ptable_entry *entry;
 	struct smem_ptable *ptable;
+<<<<<<< HEAD
 	u32 phys_addr;
+=======
+>>>>>>> rebase
 	u32 host0, host1, size;
 	bool found = false;
 	int i;
 
+<<<<<<< HEAD
 	if (smem->global_partition_desc.virt_base) {
+=======
+	if (smem->global_partition) {
+>>>>>>> rebase
 		dev_err(smem->dev, "Already found the global partition\n");
 		return -EINVAL;
 	}
@@ -862,12 +1049,16 @@ static int qcom_smem_set_global_partition(struct qcom_smem *smem)
 		return -EINVAL;
 	}
 
+<<<<<<< HEAD
 	phys_addr = smem->regions[0].aux_base + le32_to_cpu(entry->offset);
 	header = devm_ioremap_wc(smem->dev,
 				  phys_addr, le32_to_cpu(entry->size));
 	if (!header)
 		return -ENOMEM;
 
+=======
+	header = smem->regions[0].virt_base + le32_to_cpu(entry->offset);
+>>>>>>> rebase
 	host0 = le16_to_cpu(header->host0);
 	host1 = le16_to_cpu(header->host1);
 
@@ -893,10 +1084,15 @@ static int qcom_smem_set_global_partition(struct qcom_smem *smem)
 		return -EINVAL;
 	}
 
+<<<<<<< HEAD
 	smem->global_partition_desc.virt_base = (void __iomem *)header;
 	smem->global_partition_desc.phys_base = phys_addr;
 	smem->global_partition_desc.size = le32_to_cpu(entry->size);
 	smem->global_partition_desc.cacheline = le32_to_cpu(entry->cacheline);
+=======
+	smem->global_partition = header;
+	smem->global_cacheline = le32_to_cpu(entry->cacheline);
+>>>>>>> rebase
 
 	return 0;
 }
@@ -907,7 +1103,10 @@ static int qcom_smem_enumerate_partitions(struct qcom_smem *smem,
 	struct smem_partition_header *header;
 	struct smem_ptable_entry *entry;
 	struct smem_ptable *ptable;
+<<<<<<< HEAD
 	u32 phys_addr;
+=======
+>>>>>>> rebase
 	unsigned int remote_host;
 	u32 host0, host1;
 	int i;
@@ -942,13 +1141,18 @@ static int qcom_smem_enumerate_partitions(struct qcom_smem *smem,
 			return -EINVAL;
 		}
 
+<<<<<<< HEAD
 		if (smem->partition_desc[remote_host].virt_base) {
+=======
+		if (smem->partitions[remote_host]) {
+>>>>>>> rebase
 			dev_err(smem->dev,
 				"Already found a partition for host %d\n",
 				remote_host);
 			return -EINVAL;
 		}
 
+<<<<<<< HEAD
 		phys_addr = smem->regions[0].aux_base +
 				le32_to_cpu(entry->offset);
 		header = devm_ioremap_wc(smem->dev,
@@ -956,6 +1160,9 @@ static int qcom_smem_enumerate_partitions(struct qcom_smem *smem,
 		if (!header)
 			return -ENOMEM;
 
+=======
+		header = smem->regions[0].virt_base + le32_to_cpu(entry->offset);
+>>>>>>> rebase
 		host0 = le16_to_cpu(header->host0);
 		host1 = le16_to_cpu(header->host1);
 
@@ -990,6 +1197,7 @@ static int qcom_smem_enumerate_partitions(struct qcom_smem *smem,
 			return -EINVAL;
 		}
 
+<<<<<<< HEAD
 		smem->partition_desc[remote_host].virt_base =
 						(void __iomem *)header;
 		smem->partition_desc[remote_host].phys_base = phys_addr;
@@ -997,6 +1205,10 @@ static int qcom_smem_enumerate_partitions(struct qcom_smem *smem,
 						le32_to_cpu(entry->size);
 		smem->partition_desc[remote_host].cacheline =
 						le32_to_cpu(entry->cacheline);
+=======
+		smem->partitions[remote_host] = header;
+		smem->cacheline[remote_host] = le32_to_cpu(entry->cacheline);
+>>>>>>> rebase
 	}
 
 	return 0;
@@ -1029,6 +1241,7 @@ static int qcom_smem_map_memory(struct qcom_smem *smem, struct device *dev,
 	return 0;
 }
 
+<<<<<<< HEAD
 static int qcom_smem_map_toc(struct qcom_smem *smem, struct device *dev,
 				const char *name, int i)
 {
@@ -1084,6 +1297,8 @@ static int qcom_smem_mamp_legacy(struct qcom_smem *smem)
 	return 0;
 }
 
+=======
+>>>>>>> rebase
 static int qcom_smem_probe(struct platform_device *pdev)
 {
 	struct smem_header *header;
@@ -1106,7 +1321,11 @@ static int qcom_smem_probe(struct platform_device *pdev)
 	smem->dev = &pdev->dev;
 	smem->num_regions = num_regions;
 
+<<<<<<< HEAD
 	ret = qcom_smem_map_toc(smem, &pdev->dev, "memory-region", 0);
+=======
+	ret = qcom_smem_map_memory(smem, &pdev->dev, "memory-region", 0);
+>>>>>>> rebase
 	if (ret)
 		return ret;
 
@@ -1130,7 +1349,10 @@ static int qcom_smem_probe(struct platform_device *pdev)
 		smem->item_count = qcom_smem_get_item_count(smem);
 		break;
 	case SMEM_GLOBAL_HEAP_VERSION:
+<<<<<<< HEAD
 		qcom_smem_mamp_legacy(smem);
+=======
+>>>>>>> rebase
 		smem->item_count = SMEM_ITEM_COUNT;
 		break;
 	default:

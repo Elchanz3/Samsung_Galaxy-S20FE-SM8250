@@ -151,7 +151,10 @@ config INPUT_JOYDEV
 
 config INPUT_EVDEV
 	tristate "Event interface"
+<<<<<<< HEAD
 	select SEC_INPUT_BOOSTER
+=======
+>>>>>>> rebase
 	help
 	  Say Y here if you want your input device events be accessible
 	  under char device 13:64+ - /dev/input/eventX in a generic way.
@@ -185,6 +188,7 @@ config INPUT_APMPOWER
 	  To compile this driver as a module, choose M here: the
 	  module will be called apm-power.
 
+<<<<<<< HEAD
 config INPUT_KEYRESET
 	bool "Reset key"
 	depends on INPUT
@@ -247,6 +251,8 @@ config SEC_INPUT_BOOSTER
 
 	  It's triggered in evdev module.
 
+=======
+>>>>>>> rebase
 comment "Input Device Drivers"
 
 source "drivers/input/keyboard/Kconfig"
@@ -263,8 +269,11 @@ source "drivers/input/misc/Kconfig"
 
 source "drivers/input/rmi4/Kconfig"
 
+<<<<<<< HEAD
 source "drivers/input/wacom/Kconfig"
 
+=======
+>>>>>>> rebase
 endif
 
 menu "Hardware I/O ports"

@@ -48,7 +48,11 @@
 struct i2c_dev {
 	struct list_head list;
 	struct i2c_adapter *adap;
+<<<<<<< HEAD
 	struct device *dev;
+=======
+	struct device dev;
+>>>>>>> rebase
 	struct cdev cdev;
 };
 
@@ -92,12 +96,22 @@ static struct i2c_dev *get_free_i2c_dev(struct i2c_adapter *adap)
 	return i2c_dev;
 }
 
+<<<<<<< HEAD
 static void put_i2c_dev(struct i2c_dev *i2c_dev)
+=======
+static void put_i2c_dev(struct i2c_dev *i2c_dev, bool del_cdev)
+>>>>>>> rebase
 {
 	spin_lock(&i2c_dev_list_lock);
 	list_del(&i2c_dev->list);
 	spin_unlock(&i2c_dev_list_lock);
+<<<<<<< HEAD
 	kfree(i2c_dev);
+=======
+	if (del_cdev)
+		cdev_device_del(&i2c_dev->cdev, &i2c_dev->dev);
+	put_device(&i2c_dev->dev);
+>>>>>>> rebase
 }
 
 static ssize_t name_show(struct device *dev,
@@ -147,7 +161,11 @@ static ssize_t i2cdev_read(struct file *file, char __user *buf, size_t count,
 	if (count > 8192)
 		count = 8192;
 
+<<<<<<< HEAD
 	tmp = kmalloc(count, GFP_KERNEL);
+=======
+	tmp = kzalloc(count, GFP_KERNEL);
+>>>>>>> rebase
 	if (tmp == NULL)
 		return -ENOMEM;
 
@@ -156,7 +174,12 @@ static ssize_t i2cdev_read(struct file *file, char __user *buf, size_t count,
 
 	ret = i2c_master_recv(client, tmp, count);
 	if (ret >= 0)
+<<<<<<< HEAD
 		ret = copy_to_user(buf, tmp, count) ? -EFAULT : ret;
+=======
+		if (copy_to_user(buf, tmp, ret))
+			ret = -EFAULT;
+>>>>>>> rebase
 	kfree(tmp);
 	return ret;
 }
@@ -446,8 +469,18 @@ static long i2cdev_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
 				   sizeof(rdwr_arg)))
 			return -EFAULT;
 
+<<<<<<< HEAD
 		/* Put an arbitrary limit on the number of messages that can
 		 * be sent at once */
+=======
+		if (!rdwr_arg.msgs || rdwr_arg.nmsgs == 0)
+			return -EINVAL;
+
+		/*
+		 * Put an arbitrary limit on the number of messages that can
+		 * be sent at once
+		 */
+>>>>>>> rebase
 		if (rdwr_arg.nmsgs > I2C_RDWR_IOCTL_MAX_MSGS)
 			return -EINVAL;
 
@@ -536,6 +569,12 @@ static long compat_i2cdev_ioctl(struct file *file, unsigned int cmd, unsigned lo
 				   sizeof(rdwr_arg)))
 			return -EFAULT;
 
+<<<<<<< HEAD
+=======
+		if (!rdwr_arg.msgs || rdwr_arg.nmsgs == 0)
+			return -EINVAL;
+
+>>>>>>> rebase
 		if (rdwr_arg.nmsgs > I2C_RDWR_IOCTL_MAX_MSGS)
 			return -EINVAL;
 
@@ -636,6 +675,17 @@ static const struct file_operations i2cdev_fops = {
 
 static struct class *i2c_dev_class;
 
+<<<<<<< HEAD
+=======
+static void i2cdev_dev_release(struct device *dev)
+{
+	struct i2c_dev *i2c_dev;
+
+	i2c_dev = container_of(dev, struct i2c_dev, dev);
+	kfree(i2c_dev);
+}
+
+>>>>>>> rebase
 static int i2cdev_attach_adapter(struct device *dev, void *dummy)
 {
 	struct i2c_adapter *adap;
@@ -652,6 +702,7 @@ static int i2cdev_attach_adapter(struct device *dev, void *dummy)
 
 	cdev_init(&i2c_dev->cdev, &i2cdev_fops);
 	i2c_dev->cdev.owner = THIS_MODULE;
+<<<<<<< HEAD
 	res = cdev_add(&i2c_dev->cdev, MKDEV(I2C_MAJOR, adap->nr), 1);
 	if (res)
 		goto error_cdev;
@@ -663,16 +714,33 @@ static int i2cdev_attach_adapter(struct device *dev, void *dummy)
 	if (IS_ERR(i2c_dev->dev)) {
 		res = PTR_ERR(i2c_dev->dev);
 		goto error;
+=======
+
+	device_initialize(&i2c_dev->dev);
+	i2c_dev->dev.devt = MKDEV(I2C_MAJOR, adap->nr);
+	i2c_dev->dev.class = i2c_dev_class;
+	i2c_dev->dev.parent = &adap->dev;
+	i2c_dev->dev.release = i2cdev_dev_release;
+	dev_set_name(&i2c_dev->dev, "i2c-%d", adap->nr);
+
+	res = cdev_device_add(&i2c_dev->cdev, &i2c_dev->dev);
+	if (res) {
+		put_i2c_dev(i2c_dev, false);
+		return res;
+>>>>>>> rebase
 	}
 
 	pr_debug("i2c-dev: adapter [%s] registered as minor %d\n",
 		 adap->name, adap->nr);
 	return 0;
+<<<<<<< HEAD
 error:
 	cdev_del(&i2c_dev->cdev);
 error_cdev:
 	put_i2c_dev(i2c_dev);
 	return res;
+=======
+>>>>>>> rebase
 }
 
 static int i2cdev_detach_adapter(struct device *dev, void *dummy)
@@ -688,9 +756,13 @@ static int i2cdev_detach_adapter(struct device *dev, void *dummy)
 	if (!i2c_dev) /* attach_adapter must have failed */
 		return 0;
 
+<<<<<<< HEAD
 	cdev_del(&i2c_dev->cdev);
 	put_i2c_dev(i2c_dev);
 	device_destroy(i2c_dev_class, MKDEV(I2C_MAJOR, adap->nr));
+=======
+	put_i2c_dev(i2c_dev, true);
+>>>>>>> rebase
 
 	pr_debug("i2c-dev: adapter [%s] unregistered\n", adap->name);
 	return 0;

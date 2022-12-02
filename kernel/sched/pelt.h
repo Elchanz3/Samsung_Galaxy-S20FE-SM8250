@@ -1,9 +1,16 @@
 #ifdef CONFIG_SMP
+<<<<<<< HEAD
 #include "sched-pelt.h"
 
 int __update_load_avg_blocked_se(u64 now, struct sched_entity *se);
 int __update_load_avg_se(u64 now, struct cfs_rq *cfs_rq, struct sched_entity *se);
 int __update_load_avg_cfs_rq(u64 now, struct cfs_rq *cfs_rq);
+=======
+
+int __update_load_avg_blocked_se(u64 now, int cpu, struct sched_entity *se);
+int __update_load_avg_se(u64 now, int cpu, struct cfs_rq *cfs_rq, struct sched_entity *se);
+int __update_load_avg_cfs_rq(u64 now, int cpu, struct cfs_rq *cfs_rq);
+>>>>>>> rebase
 int update_rt_rq_load_avg(u64 now, struct rq *rq, int running);
 int update_dl_rq_load_avg(u64 now, struct rq *rq, int running);
 
@@ -43,6 +50,7 @@ static inline void cfs_se_util_change(struct sched_avg *avg)
 	WRITE_ONCE(avg->util_est.enqueued, enqueued);
 }
 
+<<<<<<< HEAD
 /*
  * The clock_pelt scales the time to reflect the effective amount of
  * computation done during the running delta time but then sync back to
@@ -138,6 +146,8 @@ static inline u64 cfs_rq_clock_pelt(struct cfs_rq *cfs_rq)
 }
 #endif
 
+=======
+>>>>>>> rebase
 #else
 
 static inline int
@@ -163,6 +173,7 @@ update_irq_load_avg(struct rq *rq, u64 running)
 {
 	return 0;
 }
+<<<<<<< HEAD
 
 static inline u64 rq_clock_pelt(struct rq *rq)
 {
@@ -175,6 +186,8 @@ update_rq_clock_pelt(struct rq *rq, s64 delta) { }
 static inline void
 update_idle_rq_clock_pelt(struct rq *rq) { }
 
+=======
+>>>>>>> rebase
 #endif
 
 

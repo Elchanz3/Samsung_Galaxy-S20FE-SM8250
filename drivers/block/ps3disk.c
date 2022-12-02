@@ -466,7 +466,10 @@ static int ps3disk_probe(struct ps3_system_bus_device *_dev)
 	queue->queuedata = dev;
 
 	blk_queue_max_hw_sectors(queue, dev->bounce_size >> 9);
+<<<<<<< HEAD
 	blk_queue_segment_boundary(queue, -1UL);
+=======
+>>>>>>> rebase
 	blk_queue_dma_alignment(queue, dev->blk_size-1);
 	blk_queue_logical_block_size(queue, dev->blk_size);
 
@@ -500,7 +503,11 @@ static int ps3disk_probe(struct ps3_system_bus_device *_dev)
 		 gendisk->disk_name, priv->model, priv->raw_capacity >> 11,
 		 get_capacity(gendisk) >> 11);
 
+<<<<<<< HEAD
 	device_add_disk(&dev->sbd.core, gendisk);
+=======
+	device_add_disk(&dev->sbd.core, gendisk, NULL);
+>>>>>>> rebase
 	return 0;
 
 fail_cleanup_queue:

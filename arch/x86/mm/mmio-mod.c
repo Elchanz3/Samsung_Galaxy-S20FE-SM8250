@@ -384,7 +384,11 @@ static void enter_uniprocessor(void)
 	int cpu;
 	int err;
 
+<<<<<<< HEAD
 	if (downed_cpus == NULL &&
+=======
+	if (!cpumask_available(downed_cpus) &&
+>>>>>>> rebase
 	    !alloc_cpumask_var(&downed_cpus, GFP_KERNEL)) {
 		pr_notice("Failed to allocate mask\n");
 		goto out;
@@ -414,7 +418,11 @@ static void leave_uniprocessor(void)
 	int cpu;
 	int err;
 
+<<<<<<< HEAD
 	if (downed_cpus == NULL || cpumask_weight(downed_cpus) == 0)
+=======
+	if (!cpumask_available(downed_cpus) || cpumask_weight(downed_cpus) == 0)
+>>>>>>> rebase
 		return;
 	pr_notice("Re-enabling CPUs...\n");
 	for_each_cpu(cpu, downed_cpus) {

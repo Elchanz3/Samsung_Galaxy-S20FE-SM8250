@@ -1,13 +1,19 @@
 # UAPI Header export list
 
+<<<<<<< HEAD
 header-y += self_display/
 
+=======
+>>>>>>> rebase
 ifeq ($(wildcard $(srctree)/arch/$(SRCARCH)/include/uapi/asm/a.out.h),)
 no-export-headers += a.out.h
 endif
 
+<<<<<<< HEAD
 header-y += hbtp_input.h
 
+=======
+>>>>>>> rebase
 ifeq ($(wildcard $(srctree)/arch/$(SRCARCH)/include/uapi/asm/kvm.h),)
 no-export-headers += kvm.h
 endif
@@ -15,6 +21,7 @@ endif
 ifeq ($(wildcard $(srctree)/arch/$(SRCARCH)/include/uapi/asm/kvm_para.h),)
 no-export-headers += kvm_para.h
 endif
+<<<<<<< HEAD
 
 header-y += nfc/
 header-y += qbt_handler.h
@@ -24,3 +31,5 @@ include include/linux/Kbuild.vservices
 endif
 header-y += okl4-link-shbuf.h
 header-y += sockev.h
+=======
+>>>>>>> rebase

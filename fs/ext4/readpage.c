@@ -46,6 +46,7 @@
 #include <linux/cleancache.h>
 
 #include "ext4.h"
+<<<<<<< HEAD
 #include <trace/events/android_fs.h>
 
 #define NUM_PREALLOC_POST_READ_CTXS	128
@@ -156,6 +157,16 @@ ext4_trace_read_completion(struct bio *bio)
 		trace_android_fs_dataread_end(first_page->mapping->host,
 					      page_offset(first_page),
 					      bio->bi_iter.bi_size);
+=======
+
+static inline bool ext4_bio_encrypted(struct bio *bio)
+{
+#ifdef CONFIG_EXT4_FS_ENCRYPTION
+	return unlikely(bio->bi_private != NULL);
+#else
+	return false;
+#endif
+>>>>>>> rebase
 }
 
 /*
@@ -172,6 +183,7 @@ ext4_trace_read_completion(struct bio *bio)
  */
 static void mpage_end_io(struct bio *bio)
 {
+<<<<<<< HEAD
 	if (trace_android_fs_dataread_start_enabled())
 		ext4_trace_read_completion(bio);
 
@@ -285,6 +297,33 @@ static int ext4_dd_submit_bio_read(struct inode *inode, struct bio *bio)
 #else
 static inline int ext4_dd_submit_bio_read(struct inode *inode, struct bio *bio) { return -EOPNOTSUPP; }
 #endif
+=======
+	struct bio_vec *bv;
+	int i;
+
+	if (ext4_bio_encrypted(bio)) {
+		if (bio->bi_status) {
+			fscrypt_release_ctx(bio->bi_private);
+		} else {
+			fscrypt_enqueue_decrypt_bio(bio->bi_private, bio);
+			return;
+		}
+	}
+	bio_for_each_segment_all(bv, bio, i) {
+		struct page *page = bv->bv_page;
+
+		if (!bio->bi_status) {
+			SetPageUptodate(page);
+		} else {
+			ClearPageUptodate(page);
+			SetPageError(page);
+		}
+		unlock_page(page);
+	}
+
+	bio_put(bio);
+}
+>>>>>>> rebase
 
 int ext4_mpage_readpages(struct address_space *mapping,
 			 struct list_head *pages, struct page *page,
@@ -297,7 +336,10 @@ int ext4_mpage_readpages(struct address_space *mapping,
 	const unsigned blkbits = inode->i_blkbits;
 	const unsigned blocks_per_page = PAGE_SIZE >> blkbits;
 	const unsigned blocksize = 1 << blkbits;
+<<<<<<< HEAD
 	sector_t next_block;
+=======
+>>>>>>> rebase
 	sector_t block_in_file;
 	sector_t last_block;
 	sector_t last_block_in_file;
@@ -329,11 +371,17 @@ int ext4_mpage_readpages(struct address_space *mapping,
 		if (page_has_buffers(page))
 			goto confused;
 
+<<<<<<< HEAD
 		block_in_file = next_block =
 			(sector_t)page->index << (PAGE_SHIFT - blkbits);
 		last_block = block_in_file + nr_pages * blocks_per_page;
 		last_block_in_file = (ext4_readpage_limit(inode) +
 				      blocksize - 1) >> blkbits;
+=======
+		block_in_file = (sector_t)page->index << (PAGE_SHIFT - blkbits);
+		last_block = block_in_file + nr_pages * blocks_per_page;
+		last_block_in_file = (i_size_read(inode) + blocksize - 1) >> blkbits;
+>>>>>>> rebase
 		if (last_block > last_block_in_file)
 			last_block = last_block_in_file;
 		page_block = 0;
@@ -410,9 +458,12 @@ int ext4_mpage_readpages(struct address_space *mapping,
 			zero_user_segment(page, first_hole << blkbits,
 					  PAGE_SIZE);
 			if (first_hole == 0) {
+<<<<<<< HEAD
 				if (ext4_need_verity(inode, page->index) &&
 				    !fsverity_verify_page(page))
 					goto set_error_page;
+=======
+>>>>>>> rebase
 				SetPageUptodate(page);
 				unlock_page(page);
 				goto next_page;
@@ -430,6 +481,7 @@ int ext4_mpage_readpages(struct address_space *mapping,
 		 * This page will go to BIO.  Do we need to send this
 		 * BIO off first?
 		 */
+<<<<<<< HEAD
 		if (bio && (last_block_in_bio != blocks[0] - 1 ||
 			    !fscrypt_mergeable_bio(bio, inode, next_block))) {
 		submit_and_realloc:
@@ -450,6 +502,27 @@ int ext4_mpage_readpages(struct address_space *mapping,
 			if (IS_ERR(ctx)) {
 				bio_put(bio);
 				bio = NULL;
+=======
+		if (bio && (last_block_in_bio != blocks[0] - 1)) {
+		submit_and_realloc:
+			submit_bio(bio);
+			bio = NULL;
+		}
+		if (bio == NULL) {
+			struct fscrypt_ctx *ctx = NULL;
+
+			if (ext4_encrypted_inode(inode) &&
+			    S_ISREG(inode->i_mode)) {
+				ctx = fscrypt_get_ctx(inode, GFP_NOFS);
+				if (IS_ERR(ctx))
+					goto set_error_page;
+			}
+			bio = bio_alloc(GFP_KERNEL,
+				min_t(int, nr_pages, BIO_MAX_PAGES));
+			if (!bio) {
+				if (ctx)
+					fscrypt_release_ctx(ctx);
+>>>>>>> rebase
 				goto set_error_page;
 			}
 			bio_set_dev(bio, bdev);
@@ -467,16 +540,24 @@ int ext4_mpage_readpages(struct address_space *mapping,
 		if (((map.m_flags & EXT4_MAP_BOUNDARY) &&
 		     (relative_block == map.m_len)) ||
 		    (first_hole != blocks_per_page)) {
+<<<<<<< HEAD
 			if (ext4_dd_submit_bio_read(inode, bio) == -EOPNOTSUPP)
 				ext4_submit_bio_read(bio);
+=======
+			submit_bio(bio);
+>>>>>>> rebase
 			bio = NULL;
 		} else
 			last_block_in_bio = blocks[blocks_per_page - 1];
 		goto next_page;
 	confused:
 		if (bio) {
+<<<<<<< HEAD
 			if (ext4_dd_submit_bio_read(inode, bio) == -EOPNOTSUPP)
 				ext4_submit_bio_read(bio);
+=======
+			submit_bio(bio);
+>>>>>>> rebase
 			bio = NULL;
 		}
 		if (!PageUptodate(page))
@@ -489,6 +570,7 @@ int ext4_mpage_readpages(struct address_space *mapping,
 	}
 	BUG_ON(pages && !list_empty(pages));
 	if (bio)
+<<<<<<< HEAD
 		if (ext4_dd_submit_bio_read(inode, bio) == -EOPNOTSUPP)
 			ext4_submit_bio_read(bio);
 	return 0;
@@ -519,3 +601,8 @@ void ext4_exit_post_read_processing(void)
 	mempool_destroy(bio_post_read_ctx_pool);
 	kmem_cache_destroy(bio_post_read_ctx_cache);
 }
+=======
+		submit_bio(bio);
+	return 0;
+}
+>>>>>>> rebase

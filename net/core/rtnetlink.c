@@ -130,6 +130,15 @@ int rtnl_is_locked(void)
 }
 EXPORT_SYMBOL(rtnl_is_locked);
 
+<<<<<<< HEAD
+=======
+bool refcount_dec_and_rtnl_lock(refcount_t *r)
+{
+	return refcount_dec_and_mutex_lock(r, &rtnl_mutex);
+}
+EXPORT_SYMBOL(refcount_dec_and_rtnl_lock);
+
+>>>>>>> rebase
 #ifdef CONFIG_PROVE_LOCKING
 bool lockdep_rtnl_is_held(void)
 {
@@ -2936,9 +2945,15 @@ static int rtnl_newlink(struct sk_buff *skb, struct nlmsghdr *nlh,
 {
 	struct net *net = sock_net(skb->sk);
 	const struct rtnl_link_ops *ops;
+<<<<<<< HEAD
 	const struct rtnl_link_ops *m_ops = NULL;
 	struct net_device *dev;
 	struct net_device *master_dev = NULL;
+=======
+	const struct rtnl_link_ops *m_ops;
+	struct net_device *dev;
+	struct net_device *master_dev;
+>>>>>>> rebase
 	struct ifinfomsg *ifm;
 	char kind[MODULE_NAME_LEN];
 	char ifname[IFNAMSIZ];
@@ -2973,6 +2988,11 @@ replay:
 			dev = NULL;
 	}
 
+<<<<<<< HEAD
+=======
+	master_dev = NULL;
+	m_ops = NULL;
+>>>>>>> rebase
 	if (dev) {
 		master_dev = netdev_master_upper_dev_get(dev);
 		if (master_dev)
@@ -3146,7 +3166,12 @@ replay:
 			 */
 			if (err < 0) {
 				/* If device is not registered at all, free it now */
+<<<<<<< HEAD
 				if (dev->reg_state == NETREG_UNINITIALIZED)
+=======
+				if (dev->reg_state == NETREG_UNINITIALIZED ||
+				    dev->reg_state == NETREG_UNREGISTERED)
+>>>>>>> rebase
 					free_netdev(dev);
 				goto out;
 			}
@@ -4101,6 +4126,13 @@ static int rtnl_bridge_notify(struct net_device *dev)
 	if (err < 0)
 		goto errout;
 
+<<<<<<< HEAD
+=======
+	/* Notification info is only filled for bridge ports, not the bridge
+	 * device itself. Therefore, a zero notification length is valid and
+	 * should not result in an error.
+	 */
+>>>>>>> rebase
 	if (!skb->len)
 		goto errout;
 
@@ -4507,7 +4539,11 @@ nla_put_failure:
 static size_t if_nlmsg_stats_size(const struct net_device *dev,
 				  u32 filter_mask)
 {
+<<<<<<< HEAD
 	size_t size = 0;
+=======
+	size_t size = NLMSG_ALIGN(sizeof(struct if_stats_msg));
+>>>>>>> rebase
 
 	if (stats_attr_valid(filter_mask, IFLA_STATS_LINK_64, 0))
 		size += nla_total_size_64bit(sizeof(struct rtnl_link_stats64));

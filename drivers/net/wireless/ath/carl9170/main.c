@@ -582,11 +582,18 @@ static int carl9170_init_interface(struct ar9170 *ar,
 	ar->disable_offload |= ((vif->type != NL80211_IFTYPE_STATION) &&
 	    (vif->type != NL80211_IFTYPE_AP));
 
+<<<<<<< HEAD
 	/* While the driver supports HW offload in a single
 	 * P2P client configuration, it doesn't support HW
 	 * offload in the favourit, concurrent P2P GO+CLIENT
 	 * configuration. Hence, HW offload will always be
 	 * disabled for P2P.
+=======
+	/* The driver used to have P2P GO+CLIENT support,
+	 * but since this was dropped and we don't know if
+	 * there are any gremlins lurking in the shadows,
+	 * so best we keep HW offload disabled for P2P.
+>>>>>>> rebase
 	 */
 	ar->disable_offload |= vif->p2p;
 
@@ -639,6 +646,7 @@ static int carl9170_op_add_interface(struct ieee80211_hw *hw,
 			if (vif->type == NL80211_IFTYPE_STATION)
 				break;
 
+<<<<<<< HEAD
 			/* P2P GO [master] use-case
 			 * Because the P2P GO station is selected dynamically
 			 * by all participating peers of a WIFI Direct network,
@@ -651,6 +659,8 @@ static int carl9170_op_add_interface(struct ieee80211_hw *hw,
 				break;
 			}
 
+=======
+>>>>>>> rebase
 			err = -EBUSY;
 			rcu_read_unlock();
 
@@ -1935,7 +1945,11 @@ static int carl9170_parse_eeprom(struct ar9170 *ar)
 		WARN_ON(!(tx_streams >= 1 && tx_streams <=
 			IEEE80211_HT_MCS_TX_MAX_STREAMS));
 
+<<<<<<< HEAD
 		tx_params = (tx_streams - 1) <<
+=======
+		tx_params |= (tx_streams - 1) <<
+>>>>>>> rebase
 			    IEEE80211_HT_MCS_TX_MAX_STREAMS_SHIFT;
 
 		carl9170_band_2GHz.ht_cap.mcs.tx_params |= tx_params;

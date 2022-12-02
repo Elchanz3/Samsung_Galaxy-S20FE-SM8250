@@ -1,3 +1,7 @@
+<<<<<<< HEAD
+=======
+
+>>>>>>> rebase
 config DRM_MSM
 	tristate "MSM DRM"
 	depends on DRM
@@ -11,11 +15,18 @@ config DRM_MSM
 	select SHMEM
 	select TMPFS
 	select QCOM_SCM
+<<<<<<< HEAD
 	select QCOM_COMMAND_DB if ARCH_QCOM
+=======
+>>>>>>> rebase
 	select WANT_DEV_COREDUMP
 	select SND_SOC_HDMI_CODEC if SND_SOC
 	select SYNC_FILE
 	select PM_OPP
+<<<<<<< HEAD
+=======
+	default y
+>>>>>>> rebase
 	help
 	  DRM/KMS driver for MSM/snapdragon.
 
@@ -101,4 +112,7 @@ config DRM_MSM_DSI_10NM_PHY
 	default y
 	help
 	  Choose this option if DSI PHY on SDM845 is used on the platform.
+<<<<<<< HEAD
 
+=======
+>>>>>>> rebase

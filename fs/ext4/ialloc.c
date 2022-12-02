@@ -347,7 +347,10 @@ out:
 		if (!fatal)
 			fatal = err;
 	} else {
+<<<<<<< HEAD
 		print_bh(sb, bitmap_bh, 0, EXT4_BLOCK_SIZE(sb));
+=======
+>>>>>>> rebase
 		ext4_error(sb, "bit already cleared for inode %lu", ino);
 		ext4_mark_group_bitmap_corrupted(sb, block_group,
 					EXT4_GROUP_INFO_IBITMAP_CORRUPT);
@@ -400,7 +403,11 @@ static void get_orlov_stats(struct super_block *sb, ext4_group_t g,
  *
  * We always try to spread first-level directories.
  *
+<<<<<<< HEAD
  * If there are blockgroups with both free inodes and free blocks counts
+=======
+ * If there are blockgroups with both free inodes and free clusters counts
+>>>>>>> rebase
  * not worse than average we return one with smallest directory count.
  * Otherwise we simply return a random group.
  *
@@ -409,7 +416,11 @@ static void get_orlov_stats(struct super_block *sb, ext4_group_t g,
  * It's OK to put directory into a group unless
  * it has too many directories already (max_dirs) or
  * it has too few free inodes left (min_inodes) or
+<<<<<<< HEAD
  * it has too few free blocks left (min_blocks) or
+=======
+ * it has too few free clusters left (min_clusters) or
+>>>>>>> rebase
  * Parent's group is preferred, if it doesn't satisfy these
  * conditions we search cyclically through the rest. If none
  * of the groups look good we just look for a group with more
@@ -425,7 +436,11 @@ static int find_group_orlov(struct super_block *sb, struct inode *parent,
 	ext4_group_t real_ngroups = ext4_get_groups_count(sb);
 	int inodes_per_group = EXT4_INODES_PER_GROUP(sb);
 	unsigned int freei, avefreei, grp_free;
+<<<<<<< HEAD
 	ext4_fsblk_t freeb, avefreec;
+=======
+	ext4_fsblk_t freec, avefreec;
+>>>>>>> rebase
 	unsigned int ndirs;
 	int max_dirs, min_inodes;
 	ext4_grpblk_t min_clusters;
@@ -444,9 +459,14 @@ static int find_group_orlov(struct super_block *sb, struct inode *parent,
 
 	freei = percpu_counter_read_positive(&sbi->s_freeinodes_counter);
 	avefreei = freei / ngroups;
+<<<<<<< HEAD
 	freeb = EXT4_C2B(sbi,
 		percpu_counter_read_positive(&sbi->s_freeclusters_counter));
 	avefreec = freeb;
+=======
+	freec = percpu_counter_read_positive(&sbi->s_freeclusters_counter);
+	avefreec = freec;
+>>>>>>> rebase
 	do_div(avefreec, ngroups);
 	ndirs = percpu_counter_read_positive(&sbi->s_dirs_counter);
 
@@ -459,7 +479,11 @@ static int find_group_orlov(struct super_block *sb, struct inode *parent,
 		if (qstr) {
 			hinfo.hash_version = DX_HASH_HALF_MD4;
 			hinfo.seed = sbi->s_hash_seed;
+<<<<<<< HEAD
 			ext4fs_dirhash(parent, qstr->name, qstr->len, &hinfo);
+=======
+			ext4fs_dirhash(qstr->name, qstr->len, &hinfo);
+>>>>>>> rebase
 			grp = hinfo.hash;
 		} else
 			grp = prandom_u32();
@@ -507,7 +531,11 @@ static int find_group_orlov(struct super_block *sb, struct inode *parent,
 		goto fallback;
 	}
 
+<<<<<<< HEAD
 	max_dirs = ndirs / ngroups + inodes_per_group / 16;
+=======
+	max_dirs = ndirs / ngroups + inodes_per_group*flex_size / 16;
+>>>>>>> rebase
 	min_inodes = avefreei - inodes_per_group*flex_size / 4;
 	if (min_inodes < 1)
 		min_inodes = 1;
@@ -666,7 +694,11 @@ static int find_group_other(struct super_block *sb, struct inode *parent,
  * block has been written back to disk.  (Yes, these values are
  * somewhat arbitrary...)
  */
+<<<<<<< HEAD
 #define RECENTCY_MIN	5
+=======
+#define RECENTCY_MIN	60
+>>>>>>> rebase
 #define RECENTCY_DIRTY	300
 
 static int recently_deleted(struct super_block *sb, ext4_group_t group, int ino)
@@ -734,6 +766,7 @@ next:
 }
 
 /*
+<<<<<<< HEAD
  * ext4_has_free_inodes()
  * @sbi: in-core super block structure.
  *
@@ -756,6 +789,8 @@ static inline int ext4_has_free_inodes(struct ext4_sb_info *sbi)
 }
 
 /*
+=======
+>>>>>>> rebase
  * There are two policies for allocating an inode.  If the new inode is
  * a directory, then a forward search is made for a block group with both
  * free space and a low directory-to-inode ratio; if that fails, then of
@@ -797,7 +832,11 @@ struct inode *__ext4_new_inode(handle_t *handle, struct inode *dir,
 	if (unlikely(ext4_forced_shutdown(sbi)))
 		return ERR_PTR(-EIO);
 
+<<<<<<< HEAD
 	if ((IS_ENCRYPTED(dir) || DUMMY_ENCRYPTION_ENABLED(sbi)) &&
+=======
+	if ((ext4_encrypted_inode(dir) || DUMMY_ENCRYPTION_ENABLED(sbi)) &&
+>>>>>>> rebase
 	    (S_ISREG(mode) || S_ISDIR(mode) || S_ISLNK(mode)) &&
 	    !(i_flags & EXT4_EA_INODE_FL)) {
 		err = fscrypt_get_encryption_info(dir);
@@ -883,11 +922,14 @@ struct inode *__ext4_new_inode(handle_t *handle, struct inode *dir,
 	if (err)
 		goto out;
 
+<<<<<<< HEAD
 	if (!ext4_has_free_inodes(sbi)) {
 		err = -ENOSPC;
 		goto out;
 	}
 
+=======
+>>>>>>> rebase
 	if (!goal)
 		goal = sbi->s_inode_goal;
 
@@ -1225,11 +1267,14 @@ fail_drop:
 	clear_nlink(inode);
 	unlock_new_inode(inode);
 out:
+<<<<<<< HEAD
 	if (err == -ENOSPC) {
 		printk_ratelimited(KERN_INFO "Return ENOSPC: ifree=%d, inodes=%u\n",
 			(int) percpu_counter_read_positive(&sbi->s_freeinodes_counter),
 			le32_to_cpu(sbi->s_es->s_inodes_count));
 	}
+=======
+>>>>>>> rebase
 	dquot_drop(inode);
 	inode->i_flags |= S_NOQUOTA;
 	iput(inode);
@@ -1391,6 +1436,10 @@ int ext4_init_inode_table(struct super_block *sb, ext4_group_t group,
 	handle_t *handle;
 	ext4_fsblk_t blk;
 	int num, ret = 0, used_blks = 0;
+<<<<<<< HEAD
+=======
+	unsigned long used_inos = 0;
+>>>>>>> rebase
 
 	/* This should not happen, but just to be sure check this */
 	if (sb_rdonly(sb)) {
@@ -1421,6 +1470,7 @@ int ext4_init_inode_table(struct super_block *sb, ext4_group_t group,
 	 * used inodes so we need to skip blocks with used inodes in
 	 * inode table.
 	 */
+<<<<<<< HEAD
 	if (!(gdp->bg_flags & cpu_to_le16(EXT4_BG_INODE_UNINIT)))
 		used_blks = DIV_ROUND_UP((EXT4_INODES_PER_GROUP(sb) -
 			    ext4_itable_unused_count(sb, gdp)),
@@ -1437,6 +1487,39 @@ int ext4_init_inode_table(struct super_block *sb, ext4_group_t group,
 			   ext4_itable_unused_count(sb, gdp));
 		ret = 1;
 		goto err_out;
+=======
+	if (!(gdp->bg_flags & cpu_to_le16(EXT4_BG_INODE_UNINIT))) {
+		used_inos = EXT4_INODES_PER_GROUP(sb) -
+			    ext4_itable_unused_count(sb, gdp);
+		used_blks = DIV_ROUND_UP(used_inos, sbi->s_inodes_per_block);
+
+		/* Bogus inode unused count? */
+		if (used_blks < 0 || used_blks > sbi->s_itb_per_group) {
+			ext4_error(sb, "Something is wrong with group %u: "
+				   "used itable blocks: %d; "
+				   "itable unused count: %u",
+				   group, used_blks,
+				   ext4_itable_unused_count(sb, gdp));
+			ret = 1;
+			goto err_out;
+		}
+
+		used_inos += group * EXT4_INODES_PER_GROUP(sb);
+		/*
+		 * Are there some uninitialized inodes in the inode table
+		 * before the first normal inode?
+		 */
+		if ((used_blks != sbi->s_itb_per_group) &&
+		     (used_inos < EXT4_FIRST_INO(sb))) {
+			ext4_error(sb, "Something is wrong with group %u: "
+				   "itable unused count: %u; "
+				   "itables initialized count: %ld",
+				   group, ext4_itable_unused_count(sb, gdp),
+				   used_inos);
+			ret = 1;
+			goto err_out;
+		}
+>>>>>>> rebase
 	}
 
 	blk = ext4_inode_table(sb, gdp) + used_blks;

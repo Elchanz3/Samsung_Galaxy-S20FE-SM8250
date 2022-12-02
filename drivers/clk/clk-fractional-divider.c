@@ -134,7 +134,11 @@ struct clk_hw *clk_hw_register_fractional_divider(struct device *dev,
 		u8 clk_divider_flags, spinlock_t *lock)
 {
 	struct clk_fractional_divider *fd;
+<<<<<<< HEAD
 	struct clk_init_data init = {};
+=======
+	struct clk_init_data init;
+>>>>>>> rebase
 	struct clk_hw *hw;
 	int ret;
 
@@ -161,7 +165,10 @@ struct clk_hw *clk_hw_register_fractional_divider(struct device *dev,
 
 	hw = &fd->hw;
 	ret = clk_hw_register(dev, hw);
+<<<<<<< HEAD
 	hw->init = NULL;
+=======
+>>>>>>> rebase
 	if (ret) {
 		kfree(fd);
 		hw = ERR_PTR(ret);

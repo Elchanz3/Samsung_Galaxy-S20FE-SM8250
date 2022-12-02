@@ -26,6 +26,14 @@
 #include <net/ip.h>
 #include "ar-internal.h"
 
+<<<<<<< HEAD
+=======
+static void rxrpc_dummy_notify(struct sock *sk, struct rxrpc_call *call,
+			       unsigned long user_call_ID)
+{
+}
+
+>>>>>>> rebase
 /*
  * Preallocate a single service call, connection and peer and, if possible,
  * give them a user ID and attach the user's side of the ID to them.
@@ -206,6 +214,10 @@ void rxrpc_discard_prealloc(struct rxrpc_sock *rx)
 	tail = b->peer_backlog_tail;
 	while (CIRC_CNT(head, tail, size) > 0) {
 		struct rxrpc_peer *peer = b->peer_backlog[tail];
+<<<<<<< HEAD
+=======
+		rxrpc_put_local(peer->local);
+>>>>>>> rebase
 		kfree(peer);
 		tail = (tail + 1) & (size - 1);
 	}
@@ -232,6 +244,11 @@ void rxrpc_discard_prealloc(struct rxrpc_sock *rx)
 		if (rx->discard_new_call) {
 			_debug("discard %lx", call->user_call_ID);
 			rx->discard_new_call(call, call->user_call_ID);
+<<<<<<< HEAD
+=======
+			if (call->notify_rx)
+				call->notify_rx = rxrpc_dummy_notify;
+>>>>>>> rebase
 			rxrpc_put_call(call, rxrpc_call_put_kernel);
 		}
 		rxrpc_call_completed(call);

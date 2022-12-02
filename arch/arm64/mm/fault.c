@@ -39,18 +39,27 @@
 #include <asm/exception.h>
 #include <asm/debug-monitors.h>
 #include <asm/esr.h>
+<<<<<<< HEAD
 #include <asm/kasan.h>
+=======
+>>>>>>> rebase
 #include <asm/sysreg.h>
 #include <asm/system_misc.h>
 #include <asm/pgtable.h>
 #include <asm/tlbflush.h>
 #include <asm/traps.h>
+<<<<<<< HEAD
 #include <soc/qcom/scm.h>
 
 #include <acpi/ghes.h>
 
 #include <linux/sec_debug.h>
 
+=======
+
+#include <acpi/ghes.h>
+
+>>>>>>> rebase
 struct fault_info {
 	int	(*fn)(unsigned long addr, unsigned int esr,
 		      struct pt_regs *regs);
@@ -129,6 +138,7 @@ static void mem_abort_decode(unsigned int esr)
 		data_abort_decode(esr);
 }
 
+<<<<<<< HEAD
 static inline bool is_ttbr0_addr(unsigned long addr)
 {
 	/* entry assembly clears tags for TTBR0 addrs */
@@ -141,6 +151,8 @@ static inline bool is_ttbr1_addr(unsigned long addr)
 	return arch_kasan_reset_tag(addr) >= VA_START;
 }
 
+=======
+>>>>>>> rebase
 /*
  * Dump out the page tables associated with 'addr' in the currently active mm.
  */
@@ -150,7 +162,11 @@ void show_pte(unsigned long addr)
 	pgd_t *pgdp;
 	pgd_t pgd;
 
+<<<<<<< HEAD
 	if (is_ttbr0_addr(addr)) {
+=======
+	if (addr < TASK_SIZE) {
+>>>>>>> rebase
 		/* TTBR0 */
 		mm = current->active_mm;
 		if (mm == &init_mm) {
@@ -158,29 +174,42 @@ void show_pte(unsigned long addr)
 				 addr);
 			return;
 		}
+<<<<<<< HEAD
 	} else if (is_ttbr1_addr(addr)) {
+=======
+	} else if (addr >= VA_START) {
+>>>>>>> rebase
 		/* TTBR1 */
 		mm = &init_mm;
 	} else {
 		pr_alert("[%016lx] address between user and kernel address ranges\n",
 			 addr);
+<<<<<<< HEAD
 		sec_debug_store_pte((unsigned long)addr, 1);
+=======
+>>>>>>> rebase
 		return;
 	}
 
 	pr_alert("%s pgtable: %luk pages, %u-bit VAs, pgdp = %p\n",
 		 mm == &init_mm ? "swapper" : "user", PAGE_SIZE / SZ_1K,
 		 VA_BITS, mm->pgd);
+<<<<<<< HEAD
 
 	sec_debug_store_pte((unsigned long)mm->pgd, 0);
 
+=======
+>>>>>>> rebase
 	pgdp = pgd_offset(mm, addr);
 	pgd = READ_ONCE(*pgdp);
 	pr_alert("[%016lx] pgd=%016llx", addr, pgd_val(pgd));
 
+<<<<<<< HEAD
 	sec_debug_store_pte((unsigned long)addr, 1);
 	sec_debug_store_pte((unsigned long)pgd_val(pgd), 2);
 
+=======
+>>>>>>> rebase
 	do {
 		pud_t *pudp, pud;
 		pmd_t *pmdp, pmd;
@@ -192,27 +221,36 @@ void show_pte(unsigned long addr)
 		pudp = pud_offset(pgdp, addr);
 		pud = READ_ONCE(*pudp);
 		pr_cont(", pud=%016llx", pud_val(pud));
+<<<<<<< HEAD
 
 		sec_debug_store_pte((unsigned long)pud_val(pud), 3);
 
+=======
+>>>>>>> rebase
 		if (pud_none(pud) || pud_bad(pud))
 			break;
 
 		pmdp = pmd_offset(pudp, addr);
 		pmd = READ_ONCE(*pmdp);
 		pr_cont(", pmd=%016llx", pmd_val(pmd));
+<<<<<<< HEAD
 
 		sec_debug_store_pte((unsigned long)pmd_val(pmd), 4);
 
+=======
+>>>>>>> rebase
 		if (pmd_none(pmd) || pmd_bad(pmd))
 			break;
 
 		ptep = pte_offset_map(pmdp, addr);
 		pte = READ_ONCE(*ptep);
 		pr_cont(", pte=%016llx", pte_val(pte));
+<<<<<<< HEAD
 
 		sec_debug_store_pte((unsigned long)pte_val(pte), 5);
 
+=======
+>>>>>>> rebase
 		pte_unmap(ptep);
 	} while(0);
 
@@ -280,7 +318,11 @@ static inline bool is_el1_permission_fault(unsigned int esr,
 	if (fsc_type == ESR_ELx_FSC_PERM)
 		return true;
 
+<<<<<<< HEAD
 	if (is_ttbr0_addr(addr) && system_uses_ttbr0_pan())
+=======
+	if (addr < TASK_SIZE && system_uses_ttbr0_pan())
+>>>>>>> rebase
 		return fsc_type == ESR_ELx_FSC_FAULT &&
 			(regs->pstate & PSR_PAN_BIT);
 
@@ -326,18 +368,24 @@ static void __do_kernel_fault(unsigned long addr, unsigned int esr,
 		msg = "paging request";
 	}
 
+<<<<<<< HEAD
 	sec_debug_store_extc_idx(false);
 
+=======
+>>>>>>> rebase
 	die_kernel_fault(msg, addr, esr, regs);
 }
 
 static void __do_user_fault(struct siginfo *info, unsigned int esr)
 {
+<<<<<<< HEAD
 	if (IS_ENABLED(CONFIG_SEC_DEBUG) && current->pid == 0x1) {
 		pr_err("[%s] trap before tragedy\n", current->comm);
 		panic("init");
 	}
 
+=======
+>>>>>>> rebase
 	current->thread.fault_address = (unsigned long)info->si_addr;
 
 	/*
@@ -352,7 +400,11 @@ static void __do_user_fault(struct siginfo *info, unsigned int esr)
 	 * type", so we ignore this wrinkle and just return the translation
 	 * fault.)
 	 */
+<<<<<<< HEAD
 	if (!is_ttbr0_addr(current->thread.fault_address)) {
+=======
+	if (current->thread.fault_address >= TASK_SIZE) {
+>>>>>>> rebase
 		switch (ESR_ELx_EC(esr)) {
 		case ESR_ELx_EC_DABT_LOW:
 			/*
@@ -418,12 +470,23 @@ static void do_bad_area(unsigned long addr, unsigned int esr, struct pt_regs *re
 #define VM_FAULT_BADMAP		0x010000
 #define VM_FAULT_BADACCESS	0x020000
 
+<<<<<<< HEAD
 static int __do_page_fault(struct vm_area_struct *vma, unsigned long addr,
 			   unsigned int mm_flags, unsigned long vm_flags,
 			   struct task_struct *tsk)
 {
 	vm_fault_t fault;
 
+=======
+static vm_fault_t __do_page_fault(struct mm_struct *mm, unsigned long addr,
+			   unsigned int mm_flags, unsigned long vm_flags,
+			   struct task_struct *tsk)
+{
+	struct vm_area_struct *vma;
+	vm_fault_t fault;
+
+	vma = find_vma(mm, addr);
+>>>>>>> rebase
 	fault = VM_FAULT_BADMAP;
 	if (unlikely(!vma))
 		goto out;
@@ -467,7 +530,10 @@ static int __kprobes do_page_fault(unsigned long addr, unsigned int esr,
 	vm_fault_t fault, major = 0;
 	unsigned long vm_flags = VM_READ | VM_WRITE | VM_EXEC;
 	unsigned int mm_flags = FAULT_FLAG_ALLOW_RETRY | FAULT_FLAG_KILLABLE;
+<<<<<<< HEAD
 	struct vm_area_struct *vma = NULL;
+=======
+>>>>>>> rebase
 
 	if (notify_page_fault(regs, esr))
 		return 0;
@@ -492,7 +558,11 @@ static int __kprobes do_page_fault(unsigned long addr, unsigned int esr,
 		mm_flags |= FAULT_FLAG_WRITE;
 	}
 
+<<<<<<< HEAD
 	if (is_ttbr0_addr(addr) && is_el1_permission_fault(esr, regs, addr)) {
+=======
+	if (addr < TASK_SIZE && is_el1_permission_fault(esr, regs, addr)) {
+>>>>>>> rebase
 		/* regs->orig_addr_limit may be 0 if we entered from EL0 */
 		if (regs->orig_addr_limit == KERNEL_DS)
 			die_kernel_fault("access to user memory with fs=KERNEL_DS",
@@ -510,6 +580,7 @@ static int __kprobes do_page_fault(unsigned long addr, unsigned int esr,
 	perf_sw_event(PERF_COUNT_SW_PAGE_FAULTS, 1, regs, addr);
 
 	/*
+<<<<<<< HEAD
 	 * let's try a speculative page fault without grabbing the
 	 * mmap_sem.
 	 */
@@ -518,6 +589,8 @@ static int __kprobes do_page_fault(unsigned long addr, unsigned int esr,
 		goto done;
 
 	/*
+=======
+>>>>>>> rebase
 	 * As per x86, we may deadlock here. However, since the kernel only
 	 * validly references user space from well defined areas of the code,
 	 * we can bug out early if this is from code which shouldn't.
@@ -539,10 +612,14 @@ retry:
 #endif
 	}
 
+<<<<<<< HEAD
 	if (!vma || !can_reuse_spf_vma(vma, addr))
 		vma = find_vma(mm, addr);
 
 	fault = __do_page_fault(vma, addr, mm_flags, vm_flags, tsk);
+=======
+	fault = __do_page_fault(mm, addr, mm_flags, vm_flags, tsk);
+>>>>>>> rebase
 	major |= fault & VM_FAULT_MAJOR;
 
 	if (fault & VM_FAULT_RETRY) {
@@ -565,6 +642,7 @@ retry:
 		if (mm_flags & FAULT_FLAG_ALLOW_RETRY) {
 			mm_flags &= ~FAULT_FLAG_ALLOW_RETRY;
 			mm_flags |= FAULT_FLAG_TRIED;
+<<<<<<< HEAD
 
 			/*
 			 * Do not try to reuse this vma and fetch it
@@ -572,13 +650,18 @@ retry:
 			 */
 			vma = NULL;
 
+=======
+>>>>>>> rebase
 			goto retry;
 		}
 	}
 	up_read(&mm->mmap_sem);
 
+<<<<<<< HEAD
 done:
 
+=======
+>>>>>>> rebase
 	/*
 	 * Handle the "normal" (no error) case first.
 	 */
@@ -658,6 +741,7 @@ no_context:
 	return 0;
 }
 
+<<<<<<< HEAD
 static int do_tlb_conf_fault(unsigned long addr,
 				unsigned int esr,
 				struct pt_regs *regs)
@@ -675,11 +759,17 @@ static int do_tlb_conf_fault(unsigned long addr,
 	return 0;
 }
 
+=======
+>>>>>>> rebase
 static int __kprobes do_translation_fault(unsigned long addr,
 					  unsigned int esr,
 					  struct pt_regs *regs)
 {
+<<<<<<< HEAD
 	if (is_ttbr0_addr(addr))
+=======
+	if (addr < TASK_SIZE)
+>>>>>>> rebase
 		return do_page_fault(addr, esr, regs);
 
 	do_bad_area(addr, esr, regs);
@@ -782,7 +872,11 @@ static const struct fault_info fault_info[] = {
 	{ do_bad,		SIGKILL, SI_KERNEL,	"unknown 45"			},
 	{ do_bad,		SIGKILL, SI_KERNEL,	"unknown 46"			},
 	{ do_bad,		SIGKILL, SI_KERNEL,	"unknown 47"			},
+<<<<<<< HEAD
 	{ do_tlb_conf_fault,	SIGKILL, SI_KERNEL,	"TLB conflict abort"},
+=======
+	{ do_bad,		SIGKILL, SI_KERNEL,	"TLB conflict abort"		},
+>>>>>>> rebase
 	{ do_bad,		SIGKILL, SI_KERNEL,	"Unsupported atomic hardware update fault"	},
 	{ do_bad,		SIGKILL, SI_KERNEL,	"unknown 50"			},
 	{ do_bad,		SIGKILL, SI_KERNEL,	"unknown 51"			},
@@ -811,8 +905,11 @@ asmlinkage void __exception do_mem_abort(unsigned long addr, unsigned int esr,
 	const struct fault_info *inf = esr_to_fault_info(esr);
 	struct siginfo info;
 
+<<<<<<< HEAD
 	sec_debug_save_fault_info(esr, inf->name, addr, 0UL);
 
+=======
+>>>>>>> rebase
 	if (!inf->fn(addr, esr, regs))
 		return;
 
@@ -845,7 +942,11 @@ asmlinkage void __exception do_el0_ia_bp_hardening(unsigned long addr,
 	 * re-enabled IRQs. If the address is a kernel address, apply
 	 * BP hardening prior to enabling IRQs and pre-emption.
 	 */
+<<<<<<< HEAD
 	if (!is_ttbr0_addr(addr))
+=======
+	if (addr > TASK_SIZE)
+>>>>>>> rebase
 		arm64_apply_bp_hardening();
 
 	local_irq_enable();
@@ -860,14 +961,21 @@ asmlinkage void __exception do_sp_pc_abort(unsigned long addr,
 	struct siginfo info;
 
 	if (user_mode(regs)) {
+<<<<<<< HEAD
 		if (!is_ttbr0_addr(instruction_pointer(regs)))
+=======
+		if (instruction_pointer(regs) > TASK_SIZE)
+>>>>>>> rebase
 			arm64_apply_bp_hardening();
 		local_irq_enable();
 	}
 
+<<<<<<< HEAD
 	sec_debug_save_fault_info(esr, esr_get_class_string(esr),
 			(unsigned long)regs->pc, (unsigned long)regs->sp);
 
+=======
+>>>>>>> rebase
 	clear_siginfo(&info);
 	info.si_signo = SIGBUS;
 	info.si_errno = 0;
@@ -948,8 +1056,11 @@ asmlinkage int __exception do_debug_exception(unsigned long addr_if_watchpoint,
 	if (cortex_a76_erratum_1463225_debug_handler(regs))
 		return 0;
 
+<<<<<<< HEAD
 	sec_debug_save_fault_info(esr, inf->name, addr_if_watchpoint, 0UL);
 
+=======
+>>>>>>> rebase
 	/*
 	 * Tell lockdep we disabled irqs in entry.S. Do nothing if they were
 	 * already disabled to preserve the last enabled/disabled addresses.
@@ -957,7 +1068,11 @@ asmlinkage int __exception do_debug_exception(unsigned long addr_if_watchpoint,
 	if (interrupts_enabled(regs))
 		trace_hardirqs_off();
 
+<<<<<<< HEAD
 	if (user_mode(regs) && !is_ttbr0_addr(pc))
+=======
+	if (user_mode(regs) && pc > TASK_SIZE)
+>>>>>>> rebase
 		arm64_apply_bp_hardening();
 
 	if (!inf->fn(addr_if_watchpoint, esr, regs)) {

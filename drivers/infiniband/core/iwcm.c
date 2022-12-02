@@ -1173,29 +1173,57 @@ static int __init iw_cm_init(void)
 
 	ret = iwpm_init(RDMA_NL_IWCM);
 	if (ret)
+<<<<<<< HEAD
 		pr_err("iw_cm: couldn't init iwpm\n");
 	else
 		rdma_nl_register(RDMA_NL_IWCM, iwcm_nl_cb_table);
 	iwcm_wq = alloc_ordered_workqueue("iw_cm_wq", 0);
 	if (!iwcm_wq)
 		return -ENOMEM;
+=======
+		return ret;
+
+	iwcm_wq = alloc_ordered_workqueue("iw_cm_wq", 0);
+	if (!iwcm_wq)
+		goto err_alloc;
+>>>>>>> rebase
 
 	iwcm_ctl_table_hdr = register_net_sysctl(&init_net, "net/iw_cm",
 						 iwcm_ctl_table);
 	if (!iwcm_ctl_table_hdr) {
 		pr_err("iw_cm: couldn't register sysctl paths\n");
+<<<<<<< HEAD
 		destroy_workqueue(iwcm_wq);
 		return -ENOMEM;
 	}
 
 	return 0;
+=======
+		goto err_sysctl;
+	}
+
+	rdma_nl_register(RDMA_NL_IWCM, iwcm_nl_cb_table);
+	return 0;
+
+err_sysctl:
+	destroy_workqueue(iwcm_wq);
+err_alloc:
+	iwpm_exit(RDMA_NL_IWCM);
+	return -ENOMEM;
+>>>>>>> rebase
 }
 
 static void __exit iw_cm_cleanup(void)
 {
+<<<<<<< HEAD
 	unregister_net_sysctl_table(iwcm_ctl_table_hdr);
 	destroy_workqueue(iwcm_wq);
 	rdma_nl_unregister(RDMA_NL_IWCM);
+=======
+	rdma_nl_unregister(RDMA_NL_IWCM);
+	unregister_net_sysctl_table(iwcm_ctl_table_hdr);
+	destroy_workqueue(iwcm_wq);
+>>>>>>> rebase
 	iwpm_exit(RDMA_NL_IWCM);
 }
 

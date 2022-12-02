@@ -1193,6 +1193,7 @@ static NVM_DEV_ATTR_12_RO(multiplane_modes);
 static NVM_DEV_ATTR_12_RO(media_capabilities);
 static NVM_DEV_ATTR_12_RO(max_phys_secs);
 
+<<<<<<< HEAD
 static struct attribute *nvm_dev_attrs_12[] = {
 	&dev_attr_version.attr,
 	&dev_attr_capabilities.attr,
@@ -1229,6 +1230,8 @@ static const struct attribute_group nvm_dev_attr_group_12 = {
 	.attrs		= nvm_dev_attrs_12,
 };
 
+=======
+>>>>>>> rebase
 /* 2.0 values */
 static NVM_DEV_ATTR_20_RO(groups);
 static NVM_DEV_ATTR_20_RO(punits);
@@ -1244,10 +1247,44 @@ static NVM_DEV_ATTR_20_RO(write_max);
 static NVM_DEV_ATTR_20_RO(reset_typ);
 static NVM_DEV_ATTR_20_RO(reset_max);
 
+<<<<<<< HEAD
 static struct attribute *nvm_dev_attrs_20[] = {
 	&dev_attr_version.attr,
 	&dev_attr_capabilities.attr,
 
+=======
+static struct attribute *nvm_dev_attrs[] = {
+	/* version agnostic attrs */
+	&dev_attr_version.attr,
+	&dev_attr_capabilities.attr,
+	&dev_attr_read_typ.attr,
+	&dev_attr_read_max.attr,
+
+	/* 1.2 attrs */
+	&dev_attr_vendor_opcode.attr,
+	&dev_attr_device_mode.attr,
+	&dev_attr_media_manager.attr,
+	&dev_attr_ppa_format.attr,
+	&dev_attr_media_type.attr,
+	&dev_attr_flash_media_type.attr,
+	&dev_attr_num_channels.attr,
+	&dev_attr_num_luns.attr,
+	&dev_attr_num_planes.attr,
+	&dev_attr_num_blocks.attr,
+	&dev_attr_num_pages.attr,
+	&dev_attr_page_size.attr,
+	&dev_attr_hw_sector_size.attr,
+	&dev_attr_oob_sector_size.attr,
+	&dev_attr_prog_typ.attr,
+	&dev_attr_prog_max.attr,
+	&dev_attr_erase_typ.attr,
+	&dev_attr_erase_max.attr,
+	&dev_attr_multiplane_modes.attr,
+	&dev_attr_media_capabilities.attr,
+	&dev_attr_max_phys_secs.attr,
+
+	/* 2.0 attrs */
+>>>>>>> rebase
 	&dev_attr_groups.attr,
 	&dev_attr_punits.attr,
 	&dev_attr_chunks.attr,
@@ -1258,8 +1295,11 @@ static struct attribute *nvm_dev_attrs_20[] = {
 	&dev_attr_maxocpu.attr,
 	&dev_attr_mw_cunits.attr,
 
+<<<<<<< HEAD
 	&dev_attr_read_typ.attr,
 	&dev_attr_read_max.attr,
+=======
+>>>>>>> rebase
 	&dev_attr_write_typ.attr,
 	&dev_attr_write_max.attr,
 	&dev_attr_reset_typ.attr,
@@ -1268,6 +1308,7 @@ static struct attribute *nvm_dev_attrs_20[] = {
 	NULL,
 };
 
+<<<<<<< HEAD
 static const struct attribute_group nvm_dev_attr_group_20 = {
 	.name		= "lightnvm",
 	.attrs		= nvm_dev_attrs_20,
@@ -1309,3 +1350,40 @@ void nvme_nvm_unregister_sysfs(struct nvme_ns *ns)
 		break;
 	}
 }
+=======
+static umode_t nvm_dev_attrs_visible(struct kobject *kobj,
+				     struct attribute *attr, int index)
+{
+	struct device *dev = container_of(kobj, struct device, kobj);
+	struct gendisk *disk = dev_to_disk(dev);
+	struct nvme_ns *ns = disk->private_data;
+	struct nvm_dev *ndev = ns->ndev;
+	struct device_attribute *dev_attr =
+		container_of(attr, typeof(*dev_attr), attr);
+
+	if (!ndev)
+		return 0;
+
+	if (dev_attr->show == nvm_dev_attr_show)
+		return attr->mode;
+
+	switch (ndev->geo.major_ver_id) {
+	case 1:
+		if (dev_attr->show == nvm_dev_attr_show_12)
+			return attr->mode;
+		break;
+	case 2:
+		if (dev_attr->show == nvm_dev_attr_show_20)
+			return attr->mode;
+		break;
+	}
+
+	return 0;
+}
+
+const struct attribute_group nvme_nvm_attr_group = {
+	.name		= "lightnvm",
+	.attrs		= nvm_dev_attrs,
+	.is_visible	= nvm_dev_attrs_visible,
+};
+>>>>>>> rebase

@@ -78,8 +78,15 @@ int msm_submitqueue_create(struct drm_device *drm, struct msm_file_private *ctx,
 	queue->flags = flags;
 
 	if (priv->gpu) {
+<<<<<<< HEAD
 		if (prio >= priv->gpu->nr_rings)
 			return -EINVAL;
+=======
+		if (prio >= priv->gpu->nr_rings) {
+			kfree(queue);
+			return -EINVAL;
+		}
+>>>>>>> rebase
 
 		queue->prio = prio;
 	}

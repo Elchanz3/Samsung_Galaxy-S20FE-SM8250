@@ -15,7 +15,10 @@
 #include <linux/scatterlist.h>
 #include <linux/vmalloc.h>
 #include "ion.h"
+<<<<<<< HEAD
 #include <linux/memblock.h>
+=======
+>>>>>>> rebase
 
 void *ion_heap_map_kernel(struct ion_heap *heap,
 			  struct ion_buffer *buffer)
@@ -98,12 +101,20 @@ int ion_heap_map_user(struct ion_heap *heap, struct ion_buffer *buffer,
 
 static int ion_heap_clear_pages(struct page **pages, int num, pgprot_t pgprot)
 {
+<<<<<<< HEAD
 	void *addr = vm_map_ram(pages, num, -1, pgprot);
+=======
+	void *addr = vmap(pages, num, VM_MAP, pgprot);
+>>>>>>> rebase
 
 	if (!addr)
 		return -ENOMEM;
 	memset(addr, 0, PAGE_SIZE * num);
+<<<<<<< HEAD
 	vm_unmap_ram(addr, num);
+=======
+	vunmap(addr);
+>>>>>>> rebase
 
 	return 0;
 }
@@ -243,9 +254,14 @@ static int ion_heap_deferred_free(void *data)
 
 int ion_heap_init_deferred_free(struct ion_heap *heap)
 {
+<<<<<<< HEAD
 #ifndef CONFIG_ION_DEFER_FREE_NO_SCHED_IDLE
 	struct sched_param param = { .sched_priority = 0 };
 #endif
+=======
+	struct sched_param param = { .sched_priority = 0 };
+
+>>>>>>> rebase
 	INIT_LIST_HEAD(&heap->free_list);
 	init_waitqueue_head(&heap->waitqueue);
 	heap->task = kthread_run(ion_heap_deferred_free, heap,
@@ -255,9 +271,13 @@ int ion_heap_init_deferred_free(struct ion_heap *heap)
 		       __func__);
 		return PTR_ERR_OR_ZERO(heap->task);
 	}
+<<<<<<< HEAD
 #ifndef CONFIG_ION_DEFER_FREE_NO_SCHED_IDLE
 	sched_setscheduler(heap->task, SCHED_IDLE, &param);
 #endif
+=======
+	sched_setscheduler(heap->task, SCHED_IDLE, &param);
+>>>>>>> rebase
 	return 0;
 }
 
@@ -311,6 +331,7 @@ int ion_heap_init_shrinker(struct ion_heap *heap)
 
 	return register_shrinker(&heap->shrinker);
 }
+<<<<<<< HEAD
 
 #ifdef CONFIG_ION_RBIN_HEAP
 bool need_ion_rbin_heap(void)
@@ -393,3 +414,5 @@ struct ion_heap *ion_heap_create(struct ion_platform_heap *heap_data)
 	return heap;
 }
 EXPORT_SYMBOL(ion_heap_create);
+=======
+>>>>>>> rebase

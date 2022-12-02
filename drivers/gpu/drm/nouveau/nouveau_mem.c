@@ -176,6 +176,11 @@ void
 nouveau_mem_del(struct ttm_mem_reg *reg)
 {
 	struct nouveau_mem *mem = nouveau_mem(reg);
+<<<<<<< HEAD
+=======
+	if (!mem)
+		return;
+>>>>>>> rebase
 	nouveau_mem_fini(mem);
 	kfree(reg->mm_node);
 	reg->mm_node = NULL;

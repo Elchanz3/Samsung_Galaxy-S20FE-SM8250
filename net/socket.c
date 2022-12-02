@@ -115,8 +115,11 @@ unsigned int sysctl_net_busy_poll __read_mostly;
 
 static ssize_t sock_read_iter(struct kiocb *iocb, struct iov_iter *to);
 static ssize_t sock_write_iter(struct kiocb *iocb, struct iov_iter *from);
+<<<<<<< HEAD
 static BLOCKING_NOTIFIER_HEAD(sockev_notifier_list);
 
+=======
+>>>>>>> rebase
 static int sock_mmap(struct file *file, struct vm_area_struct *vma);
 
 static int sock_close(struct inode *inode, struct file *file);
@@ -165,6 +168,7 @@ static DEFINE_SPINLOCK(net_family_lock);
 static const struct net_proto_family __rcu *net_families[NPROTO] __read_mostly;
 
 /*
+<<<<<<< HEAD
  * Socket Event framework helpers
  */
 static void sockev_notify(unsigned long event, struct socket *sk)
@@ -173,6 +177,8 @@ static void sockev_notify(unsigned long event, struct socket *sk)
 }
 
 /**
+=======
+>>>>>>> rebase
  * Support routines.
  * Move socket addresses back and forth across the kernel/user
  * divide and look after the messy bits.
@@ -394,6 +400,21 @@ static struct file_system_type sock_fs_type = {
  *	but we take care of internal coherence yet.
  */
 
+<<<<<<< HEAD
+=======
+/**
+ *	sock_alloc_file - Bind a &socket to a &file
+ *	@sock: socket
+ *	@flags: file status flags
+ *	@dname: protocol name
+ *
+ *	Returns the &file bound with @sock, implicitly storing it
+ *	in sock->file. If dname is %NULL, sets to "".
+ *	On failure the return is a ERR pointer (see linux/err.h).
+ *	This function uses GFP_KERNEL internally.
+ */
+
+>>>>>>> rebase
 struct file *sock_alloc_file(struct socket *sock, int flags, const char *dname)
 {
 	struct file *file;
@@ -434,6 +455,17 @@ static int sock_map_fd(struct socket *sock, int flags)
 	return PTR_ERR(newfile);
 }
 
+<<<<<<< HEAD
+=======
+/**
+ *	sock_from_file - Return the &socket bounded to @file.
+ *	@file: file
+ *	@err: pointer to an error code return
+ *
+ *	On failure returns %NULL and assigns -ENOTSOCK to @err.
+ */
+
+>>>>>>> rebase
 struct socket *sock_from_file(struct file *file, int *err)
 {
 	if (file->f_op == &socket_file_ops)
@@ -484,7 +516,11 @@ static struct socket *sockfd_lookup_light(int fd, int *err, int *fput_needed)
 	if (f.file) {
 		sock = sock_from_file(f.file, err);
 		if (likely(sock)) {
+<<<<<<< HEAD
 			*fput_needed = f.flags;
+=======
+			*fput_needed = f.flags & FDPUT_FPUT;
+>>>>>>> rebase
 			return sock;
 		}
 		fdput(f);
@@ -542,11 +578,19 @@ static const struct inode_operations sockfs_inode_ops = {
 };
 
 /**
+<<<<<<< HEAD
  *	sock_alloc	-	allocate a socket
  *
  *	Allocate a new inode and socket object. The two are bound together
  *	and initialised. The socket is then returned. If we are out of inodes
  *	NULL is returned.
+=======
+ *	sock_alloc - allocate a socket
+ *
+ *	Allocate a new inode and socket object. The two are bound together
+ *	and initialised. The socket is then returned. If we are out of inodes
+ *	NULL is returned. This functions uses GFP_KERNEL internally.
+>>>>>>> rebase
  */
 
 struct socket *sock_alloc(void)
@@ -571,7 +615,11 @@ struct socket *sock_alloc(void)
 EXPORT_SYMBOL(sock_alloc);
 
 /**
+<<<<<<< HEAD
  *	sock_release	-	close a socket
+=======
+ *	sock_release - close a socket
+>>>>>>> rebase
  *	@sock: socket to close
  *
  *	The socket is released from the protocol stack if it has a release
@@ -627,6 +675,18 @@ void __sock_tx_timestamp(__u16 tsflags, __u8 *tx_flags)
 }
 EXPORT_SYMBOL(__sock_tx_timestamp);
 
+<<<<<<< HEAD
+=======
+/**
+ *	sock_sendmsg - send a message through @sock
+ *	@sock: socket
+ *	@msg: message to send
+ *
+ *	Sends @msg through @sock, passing through LSM.
+ *	Returns the number of bytes sent, or an error code.
+ */
+
+>>>>>>> rebase
 static inline int sock_sendmsg_nosec(struct socket *sock, struct msghdr *msg)
 {
 	int ret = sock->ops->sendmsg(sock, msg, msg_data_left(msg));
@@ -643,6 +703,21 @@ int sock_sendmsg(struct socket *sock, struct msghdr *msg)
 }
 EXPORT_SYMBOL(sock_sendmsg);
 
+<<<<<<< HEAD
+=======
+/**
+ *	kernel_sendmsg - send a message through @sock (kernel-space)
+ *	@sock: socket
+ *	@msg: message header
+ *	@vec: kernel vec
+ *	@num: vec array length
+ *	@size: total message data size
+ *
+ *	Builds the message data with @vec and sends it through @sock.
+ *	Returns the number of bytes sent, or an error code.
+ */
+
+>>>>>>> rebase
 int kernel_sendmsg(struct socket *sock, struct msghdr *msg,
 		   struct kvec *vec, size_t num, size_t size)
 {
@@ -651,6 +726,22 @@ int kernel_sendmsg(struct socket *sock, struct msghdr *msg,
 }
 EXPORT_SYMBOL(kernel_sendmsg);
 
+<<<<<<< HEAD
+=======
+/**
+ *	kernel_sendmsg_locked - send a message through @sock (kernel-space)
+ *	@sk: sock
+ *	@msg: message header
+ *	@vec: output s/g array
+ *	@num: output s/g array length
+ *	@size: total message data size
+ *
+ *	Builds the message data with @vec and sends it through @sock.
+ *	Returns the number of bytes sent, or an error code.
+ *	Caller must hold @sk.
+ */
+
+>>>>>>> rebase
 int kernel_sendmsg_locked(struct sock *sk, struct msghdr *msg,
 			  struct kvec *vec, size_t num, size_t size)
 {
@@ -799,6 +890,19 @@ void __sock_recv_ts_and_drops(struct msghdr *msg, struct sock *sk,
 }
 EXPORT_SYMBOL_GPL(__sock_recv_ts_and_drops);
 
+<<<<<<< HEAD
+=======
+/**
+ *	sock_recvmsg - receive a message from @sock
+ *	@sock: socket
+ *	@msg: message to receive
+ *	@flags: message flags
+ *
+ *	Receives @msg from @sock, passing through LSM. Returns the total number
+ *	of bytes received, or an error.
+ */
+
+>>>>>>> rebase
 static inline int sock_recvmsg_nosec(struct socket *sock, struct msghdr *msg,
 				     int flags)
 {
@@ -814,6 +918,7 @@ int sock_recvmsg(struct socket *sock, struct msghdr *msg, int flags)
 EXPORT_SYMBOL(sock_recvmsg);
 
 /**
+<<<<<<< HEAD
  * kernel_recvmsg - Receive a message from a socket (kernel space)
  * @sock:       The socket to receive the message from
  * @msg:        Received message
@@ -828,6 +933,23 @@ EXPORT_SYMBOL(sock_recvmsg);
  *
  * The returned value is the total number of bytes received, or an error.
  */
+=======
+ *	kernel_recvmsg - Receive a message from a socket (kernel space)
+ *	@sock: The socket to receive the message from
+ *	@msg: Received message
+ *	@vec: Input s/g array for message data
+ *	@num: Size of input s/g array
+ *	@size: Number of bytes to read
+ *	@flags: Message flags (MSG_DONTWAIT, etc...)
+ *
+ *	On return the msg structure contains the scatter/gather array passed in the
+ *	vec argument. The array is modified so that it consists of the unfilled
+ *	portion of the original array.
+ *
+ *	The returned value is the total number of bytes received, or an error.
+ */
+
+>>>>>>> rebase
 int kernel_recvmsg(struct socket *sock, struct msghdr *msg,
 		   struct kvec *vec, size_t num, size_t size, int flags)
 {
@@ -975,7 +1097,11 @@ static long sock_do_ioctl(struct net *net, struct socket *sock,
 		rtnl_unlock();
 		if (!err && copy_to_user(argp, &ifc, sizeof(struct ifconf)))
 			err = -EFAULT;
+<<<<<<< HEAD
 	} else {
+=======
+	} else if (is_socket_ioctl_cmd(cmd)) {
+>>>>>>> rebase
 		struct ifreq ifr;
 		bool need_copyout;
 		if (copy_from_user(&ifr, argp, sizeof(struct ifreq)))
@@ -984,6 +1110,11 @@ static long sock_do_ioctl(struct net *net, struct socket *sock,
 		if (!err && need_copyout)
 			if (copy_to_user(argp, &ifr, sizeof(struct ifreq)))
 				return -EFAULT;
+<<<<<<< HEAD
+=======
+	} else {
+		err = -ENOTTY;
+>>>>>>> rebase
 	}
 	return err;
 }
@@ -993,12 +1124,15 @@ static long sock_do_ioctl(struct net *net, struct socket *sock,
  *	what to do with it - that's up to the protocol still.
  */
 
+<<<<<<< HEAD
 struct ns_common *get_net_ns(struct ns_common *ns)
 {
 	return &get_net(container_of(ns, struct net, ns))->ns;
 }
 EXPORT_SYMBOL_GPL(get_net_ns);
 
+=======
+>>>>>>> rebase
 static long sock_ioctl(struct file *file, unsigned cmd, unsigned long arg)
 {
 	struct socket *sock;
@@ -1087,6 +1221,22 @@ static long sock_ioctl(struct file *file, unsigned cmd, unsigned long arg)
 	return err;
 }
 
+<<<<<<< HEAD
+=======
+/**
+ *	sock_create_lite - creates a socket
+ *	@family: protocol family (AF_INET, ...)
+ *	@type: communication type (SOCK_STREAM, ...)
+ *	@protocol: protocol (0, ...)
+ *	@res: new socket
+ *
+ *	Creates a new socket and assigns it to @res, passing through LSM.
+ *	The new socket initialization is not complete, see kernel_accept().
+ *	Returns 0 or an error. On failure @res is set to %NULL.
+ *	This function internally uses GFP_KERNEL.
+ */
+
+>>>>>>> rebase
 int sock_create_lite(int family, int type, int protocol, struct socket **res)
 {
 	int err;
@@ -1212,6 +1362,24 @@ call_kill:
 }
 EXPORT_SYMBOL(sock_wake_async);
 
+<<<<<<< HEAD
+=======
+/**
+ *	__sock_create - creates a socket
+ *	@net: net namespace
+ *	@family: protocol family (AF_INET, ...)
+ *	@type: communication type (SOCK_STREAM, ...)
+ *	@protocol: protocol (0, ...)
+ *	@res: new socket
+ *	@kern: boolean for kernel space sockets
+ *
+ *	Creates a new socket and assigns it to @res, passing through LSM.
+ *	Returns 0 or an error. On failure @res is set to %NULL. @kern must
+ *	be set to true if the socket resides in kernel space.
+ *	This function internally uses GFP_KERNEL.
+ */
+
+>>>>>>> rebase
 int __sock_create(struct net *net, int family, int type, int protocol,
 			 struct socket **res, int kern)
 {
@@ -1321,12 +1489,41 @@ out_release:
 }
 EXPORT_SYMBOL(__sock_create);
 
+<<<<<<< HEAD
+=======
+/**
+ *	sock_create - creates a socket
+ *	@family: protocol family (AF_INET, ...)
+ *	@type: communication type (SOCK_STREAM, ...)
+ *	@protocol: protocol (0, ...)
+ *	@res: new socket
+ *
+ *	A wrapper around __sock_create().
+ *	Returns 0 or an error. This function internally uses GFP_KERNEL.
+ */
+
+>>>>>>> rebase
 int sock_create(int family, int type, int protocol, struct socket **res)
 {
 	return __sock_create(current->nsproxy->net_ns, family, type, protocol, res, 0);
 }
 EXPORT_SYMBOL(sock_create);
 
+<<<<<<< HEAD
+=======
+/**
+ *	sock_create_kern - creates a socket (kernel space)
+ *	@net: net namespace
+ *	@family: protocol family (AF_INET, ...)
+ *	@type: communication type (SOCK_STREAM, ...)
+ *	@protocol: protocol (0, ...)
+ *	@res: new socket
+ *
+ *	A wrapper around __sock_create().
+ *	Returns 0 or an error. This function internally uses GFP_KERNEL.
+ */
+
+>>>>>>> rebase
 int sock_create_kern(struct net *net, int family, int type, int protocol, struct socket **res)
 {
 	return __sock_create(net, family, type, protocol, res, 1);
@@ -1357,9 +1554,12 @@ int __sys_socket(int family, int type, int protocol)
 	if (retval < 0)
 		return retval;
 
+<<<<<<< HEAD
 	if (retval == 0)
 		sockev_notify(SOCKEV_SOCKET, sock);
 
+=======
+>>>>>>> rebase
 	return sock_map_fd(sock, flags & (O_CLOEXEC | O_NONBLOCK));
 }
 
@@ -1496,8 +1696,11 @@ int __sys_bind(int fd, struct sockaddr __user *umyaddr, int addrlen)
 						      (struct sockaddr *)
 						      &address, addrlen);
 		}
+<<<<<<< HEAD
 		if (!err)
 			sockev_notify(SOCKEV_BIND, sock);
+=======
+>>>>>>> rebase
 		fput_light(sock->file, fput_needed);
 	}
 	return err;
@@ -1522,7 +1725,11 @@ int __sys_listen(int fd, int backlog)
 
 	sock = sockfd_lookup_light(fd, &err, &fput_needed);
 	if (sock) {
+<<<<<<< HEAD
 		somaxconn = sock_net(sock->sk)->core.sysctl_somaxconn;
+=======
+		somaxconn = READ_ONCE(sock_net(sock->sk)->core.sysctl_somaxconn);
+>>>>>>> rebase
 		if ((unsigned int)backlog > somaxconn)
 			backlog = somaxconn;
 
@@ -1530,8 +1737,11 @@ int __sys_listen(int fd, int backlog)
 		if (!err)
 			err = sock->ops->listen(sock, backlog);
 
+<<<<<<< HEAD
 		if (!err)
 			sockev_notify(SOCKEV_LISTEN, sock);
+=======
+>>>>>>> rebase
 		fput_light(sock->file, fput_needed);
 	}
 	return err;
@@ -1624,8 +1834,12 @@ int __sys_accept4(int fd, struct sockaddr __user *upeer_sockaddr,
 
 	fd_install(newfd, newfile);
 	err = newfd;
+<<<<<<< HEAD
 	if (!err)
 		sockev_notify(SOCKEV_ACCEPT, sock);
+=======
+
+>>>>>>> rebase
 out_put:
 	fput_light(sock->file, fput_needed);
 out:
@@ -1680,8 +1894,11 @@ int __sys_connect(int fd, struct sockaddr __user *uservaddr, int addrlen)
 
 	err = sock->ops->connect(sock, (struct sockaddr *)&address, addrlen,
 				 sock->file->f_flags);
+<<<<<<< HEAD
 	if (!err)
 		sockev_notify(SOCKEV_CONNECT, sock);
+=======
+>>>>>>> rebase
 out_put:
 	fput_light(sock->file, fput_needed);
 out:
@@ -1980,7 +2197,10 @@ int __sys_shutdown(int fd, int how)
 
 	sock = sockfd_lookup_light(fd, &err, &fput_needed);
 	if (sock != NULL) {
+<<<<<<< HEAD
 		sockev_notify(SOCKEV_SHUTDOWN, sock);
+=======
+>>>>>>> rebase
 		err = security_socket_shutdown(sock, how);
 		if (!err)
 			err = sock->ops->shutdown(sock, how);
@@ -2975,6 +3195,11 @@ static int compat_ifr_data_ioctl(struct net *net, unsigned int cmd,
 	struct ifreq ifreq;
 	u32 data32;
 
+<<<<<<< HEAD
+=======
+	if (!is_socket_ioctl_cmd(cmd))
+		return -ENOTTY;
+>>>>>>> rebase
 	if (copy_from_user(ifreq.ifr_name, u_ifreq32->ifr_name, IFNAMSIZ))
 		return -EFAULT;
 	if (get_user(data32, &u_ifreq32->ifr_data))
@@ -3294,18 +3519,55 @@ static long compat_sock_ioctl(struct file *file, unsigned int cmd,
 }
 #endif
 
+<<<<<<< HEAD
+=======
+/**
+ *	kernel_bind - bind an address to a socket (kernel space)
+ *	@sock: socket
+ *	@addr: address
+ *	@addrlen: length of address
+ *
+ *	Returns 0 or an error.
+ */
+
+>>>>>>> rebase
 int kernel_bind(struct socket *sock, struct sockaddr *addr, int addrlen)
 {
 	return sock->ops->bind(sock, addr, addrlen);
 }
 EXPORT_SYMBOL(kernel_bind);
 
+<<<<<<< HEAD
+=======
+/**
+ *	kernel_listen - move socket to listening state (kernel space)
+ *	@sock: socket
+ *	@backlog: pending connections queue size
+ *
+ *	Returns 0 or an error.
+ */
+
+>>>>>>> rebase
 int kernel_listen(struct socket *sock, int backlog)
 {
 	return sock->ops->listen(sock, backlog);
 }
 EXPORT_SYMBOL(kernel_listen);
 
+<<<<<<< HEAD
+=======
+/**
+ *	kernel_accept - accept a connection (kernel space)
+ *	@sock: listening socket
+ *	@newsock: new connected socket
+ *	@flags: flags
+ *
+ *	@flags must be SOCK_CLOEXEC, SOCK_NONBLOCK or 0.
+ *	If it fails, @newsock is guaranteed to be %NULL.
+ *	Returns 0 or an error.
+ */
+
+>>>>>>> rebase
 int kernel_accept(struct socket *sock, struct socket **newsock, int flags)
 {
 	struct sock *sk = sock->sk;
@@ -3331,6 +3593,22 @@ done:
 }
 EXPORT_SYMBOL(kernel_accept);
 
+<<<<<<< HEAD
+=======
+/**
+ *	kernel_connect - connect a socket (kernel space)
+ *	@sock: socket
+ *	@addr: address
+ *	@addrlen: address length
+ *	@flags: flags (O_NONBLOCK, ...)
+ *
+ *	For datagram sockets, @addr is the addres to which datagrams are sent
+ *	by default, and the only address from which datagrams are received.
+ *	For stream sockets, attempts to connect to @addr.
+ *	Returns 0 or an error code.
+ */
+
+>>>>>>> rebase
 int kernel_connect(struct socket *sock, struct sockaddr *addr, int addrlen,
 		   int flags)
 {
@@ -3338,18 +3616,57 @@ int kernel_connect(struct socket *sock, struct sockaddr *addr, int addrlen,
 }
 EXPORT_SYMBOL(kernel_connect);
 
+<<<<<<< HEAD
+=======
+/**
+ *	kernel_getsockname - get the address which the socket is bound (kernel space)
+ *	@sock: socket
+ *	@addr: address holder
+ *
+ * 	Fills the @addr pointer with the address which the socket is bound.
+ *	Returns 0 or an error code.
+ */
+
+>>>>>>> rebase
 int kernel_getsockname(struct socket *sock, struct sockaddr *addr)
 {
 	return sock->ops->getname(sock, addr, 0);
 }
 EXPORT_SYMBOL(kernel_getsockname);
 
+<<<<<<< HEAD
+=======
+/**
+ *	kernel_peername - get the address which the socket is connected (kernel space)
+ *	@sock: socket
+ *	@addr: address holder
+ *
+ * 	Fills the @addr pointer with the address which the socket is connected.
+ *	Returns 0 or an error code.
+ */
+
+>>>>>>> rebase
 int kernel_getpeername(struct socket *sock, struct sockaddr *addr)
 {
 	return sock->ops->getname(sock, addr, 1);
 }
 EXPORT_SYMBOL(kernel_getpeername);
 
+<<<<<<< HEAD
+=======
+/**
+ *	kernel_getsockopt - get a socket option (kernel space)
+ *	@sock: socket
+ *	@level: API level (SOL_SOCKET, ...)
+ *	@optname: option tag
+ *	@optval: option value
+ *	@optlen: option length
+ *
+ *	Assigns the option length to @optlen.
+ *	Returns 0 or an error.
+ */
+
+>>>>>>> rebase
 int kernel_getsockopt(struct socket *sock, int level, int optname,
 			char *optval, int *optlen)
 {
@@ -3372,6 +3689,20 @@ int kernel_getsockopt(struct socket *sock, int level, int optname,
 }
 EXPORT_SYMBOL(kernel_getsockopt);
 
+<<<<<<< HEAD
+=======
+/**
+ *	kernel_setsockopt - set a socket option (kernel space)
+ *	@sock: socket
+ *	@level: API level (SOL_SOCKET, ...)
+ *	@optname: option tag
+ *	@optval: option value
+ *	@optlen: option length
+ *
+ *	Returns 0 or an error.
+ */
+
+>>>>>>> rebase
 int kernel_setsockopt(struct socket *sock, int level, int optname,
 			char *optval, unsigned int optlen)
 {
@@ -3392,6 +3723,20 @@ int kernel_setsockopt(struct socket *sock, int level, int optname,
 }
 EXPORT_SYMBOL(kernel_setsockopt);
 
+<<<<<<< HEAD
+=======
+/**
+ *	kernel_sendpage - send a &page through a socket (kernel space)
+ *	@sock: socket
+ *	@page: page
+ *	@offset: page offset
+ *	@size: total size in bytes
+ *	@flags: flags (MSG_DONTWAIT, ...)
+ *
+ *	Returns the total amount sent in bytes or an error.
+ */
+
+>>>>>>> rebase
 int kernel_sendpage(struct socket *sock, struct page *page, int offset,
 		    size_t size, int flags)
 {
@@ -3402,6 +3747,21 @@ int kernel_sendpage(struct socket *sock, struct page *page, int offset,
 }
 EXPORT_SYMBOL(kernel_sendpage);
 
+<<<<<<< HEAD
+=======
+/**
+ *	kernel_sendpage_locked - send a &page through the locked sock (kernel space)
+ *	@sk: sock
+ *	@page: page
+ *	@offset: page offset
+ *	@size: total size in bytes
+ *	@flags: flags (MSG_DONTWAIT, ...)
+ *
+ *	Returns the total amount sent in bytes or an error.
+ *	Caller must hold @sk.
+ */
+
+>>>>>>> rebase
 int kernel_sendpage_locked(struct sock *sk, struct page *page, int offset,
 			   size_t size, int flags)
 {
@@ -3415,17 +3775,41 @@ int kernel_sendpage_locked(struct sock *sk, struct page *page, int offset,
 }
 EXPORT_SYMBOL(kernel_sendpage_locked);
 
+<<<<<<< HEAD
+=======
+/**
+ *	kernel_shutdown - shut down part of a full-duplex connection (kernel space)
+ *	@sock: socket
+ *	@how: connection part
+ *
+ *	Returns 0 or an error.
+ */
+
+>>>>>>> rebase
 int kernel_sock_shutdown(struct socket *sock, enum sock_shutdown_cmd how)
 {
 	return sock->ops->shutdown(sock, how);
 }
 EXPORT_SYMBOL(kernel_sock_shutdown);
 
+<<<<<<< HEAD
 /* This routine returns the IP overhead imposed by a socket i.e.
  * the length of the underlying IP header, depending on whether
  * this is an IPv4 or IPv6 socket and the length from IP options turned
  * on at the socket. Assumes that the caller has a lock on the socket.
  */
+=======
+/**
+ *	kernel_sock_ip_overhead - returns the IP overhead imposed by a socket
+ *	@sk: socket
+ *
+ *	This routine returns the IP overhead imposed by a socket i.e.
+ *	the length of the underlying IP header, depending on whether
+ *	this is an IPv4 or IPv6 socket and the length from IP options turned
+ *	on at the socket. Assumes that the caller has a lock on the socket.
+ */
+
+>>>>>>> rebase
 u32 kernel_sock_ip_overhead(struct sock *sk)
 {
 	struct inet_sock *inet;
@@ -3464,6 +3848,7 @@ u32 kernel_sock_ip_overhead(struct sock *sk)
 	}
 }
 EXPORT_SYMBOL(kernel_sock_ip_overhead);
+<<<<<<< HEAD
 int sockev_register_notify(struct notifier_block *nb)
 {
 	return blocking_notifier_chain_register(&sockev_notifier_list, nb);
@@ -3475,3 +3860,5 @@ int sockev_unregister_notify(struct notifier_block *nb)
 	return blocking_notifier_chain_unregister(&sockev_notifier_list, nb);
 }
 EXPORT_SYMBOL(sockev_unregister_notify);
+=======
+>>>>>>> rebase

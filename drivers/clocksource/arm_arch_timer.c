@@ -29,9 +29,13 @@
 #include <linux/acpi.h>
 
 #include <asm/arch_timer.h>
+<<<<<<< HEAD
 #include <asm/traps.h>
 #include <asm/virt.h>
 #include <asm/cputype.h>
+=======
+#include <asm/virt.h>
+>>>>>>> rebase
 
 #include <clocksource/arm_arch_timer.h>
 
@@ -54,8 +58,11 @@
 #define CNTFRQ		0x10
 #define CNTP_TVAL	0x28
 #define CNTP_CTL	0x2c
+<<<<<<< HEAD
 #define CNTCVAL_LO	0x30
 #define CNTCVAL_HI	0x34
+=======
+>>>>>>> rebase
 #define CNTV_TVAL	0x38
 #define CNTV_CTL	0x3c
 
@@ -102,20 +109,34 @@ void arch_timer_reg_write(int access, enum arch_timer_reg reg, u32 val,
 		struct arch_timer *timer = to_arch_timer(clk);
 		switch (reg) {
 		case ARCH_TIMER_REG_CTRL:
+<<<<<<< HEAD
 			writel_relaxed_no_log(val, timer->base + CNTP_CTL);
 			break;
 		case ARCH_TIMER_REG_TVAL:
 			writel_relaxed_no_log(val, timer->base + CNTP_TVAL);
+=======
+			writel_relaxed(val, timer->base + CNTP_CTL);
+			break;
+		case ARCH_TIMER_REG_TVAL:
+			writel_relaxed(val, timer->base + CNTP_TVAL);
+>>>>>>> rebase
 			break;
 		}
 	} else if (access == ARCH_TIMER_MEM_VIRT_ACCESS) {
 		struct arch_timer *timer = to_arch_timer(clk);
 		switch (reg) {
 		case ARCH_TIMER_REG_CTRL:
+<<<<<<< HEAD
 			writel_relaxed_no_log(val, timer->base + CNTV_CTL);
 			break;
 		case ARCH_TIMER_REG_TVAL:
 			writel_relaxed_no_log(val, timer->base + CNTV_TVAL);
+=======
+			writel_relaxed(val, timer->base + CNTV_CTL);
+			break;
+		case ARCH_TIMER_REG_TVAL:
+			writel_relaxed(val, timer->base + CNTV_TVAL);
+>>>>>>> rebase
 			break;
 		}
 	} else {
@@ -133,20 +154,34 @@ u32 arch_timer_reg_read(int access, enum arch_timer_reg reg,
 		struct arch_timer *timer = to_arch_timer(clk);
 		switch (reg) {
 		case ARCH_TIMER_REG_CTRL:
+<<<<<<< HEAD
 			val = readl_relaxed_no_log(timer->base + CNTP_CTL);
 			break;
 		case ARCH_TIMER_REG_TVAL:
 			val = readl_relaxed_no_log(timer->base + CNTP_TVAL);
+=======
+			val = readl_relaxed(timer->base + CNTP_CTL);
+			break;
+		case ARCH_TIMER_REG_TVAL:
+			val = readl_relaxed(timer->base + CNTP_TVAL);
+>>>>>>> rebase
 			break;
 		}
 	} else if (access == ARCH_TIMER_MEM_VIRT_ACCESS) {
 		struct arch_timer *timer = to_arch_timer(clk);
 		switch (reg) {
 		case ARCH_TIMER_REG_CTRL:
+<<<<<<< HEAD
 			val = readl_relaxed_no_log(timer->base + CNTV_CTL);
 			break;
 		case ARCH_TIMER_REG_TVAL:
 			val = readl_relaxed_no_log(timer->base + CNTV_TVAL);
+=======
+			val = readl_relaxed(timer->base + CNTV_CTL);
+			break;
+		case ARCH_TIMER_REG_TVAL:
+			val = readl_relaxed(timer->base + CNTV_TVAL);
+>>>>>>> rebase
 			break;
 		}
 	} else {
@@ -194,6 +229,7 @@ struct ate_acpi_oem_info {
 	u32 oem_revision;
 };
 
+<<<<<<< HEAD
 #ifdef CONFIG_ARM_ERRATUM_858921
 DEFINE_PER_CPU(bool, timer_erratum_858921_workaround_enabled);
 EXPORT_PER_CPU_SYMBOL(timer_erratum_858921_workaround_enabled);
@@ -213,6 +249,8 @@ static void arch_timer_check_858921_workaround(void)
 #define arch_timer_check_858921_workaround()	do { } while (0)
 #endif
 
+=======
+>>>>>>> rebase
 #ifdef CONFIG_FSL_ERRATUM_A008585
 /*
  * The number of retries is an arbitrary value well beyond the highest number
@@ -357,7 +395,11 @@ static u64 notrace arm64_858921_read_cntvct_el0(void)
 	do {								\
 		_val = read_sysreg(reg);				\
 		_retries--;						\
+<<<<<<< HEAD
 	} while (((_val + 1) & GENMASK(9, 0)) <= 1 && _retries);	\
+=======
+	} while (((_val + 1) & GENMASK(8, 0)) <= 1 && _retries);	\
+>>>>>>> rebase
 									\
 	WARN_ON_ONCE(!_retries);					\
 	_val;								\
@@ -383,12 +425,15 @@ static u32 notrace sun50i_a64_read_cntv_tval_el0(void)
 	return read_sysreg(cntv_cval_el0) - sun50i_a64_read_cntvct_el0();
 }
 #endif
+<<<<<<< HEAD
 #ifdef CONFIG_ARM64_ERRATUM_1188873
 static u64 notrace arm64_1188873_read_cntvct_el0(void)
 {
 	return read_sysreg(cntvct_el0);
 }
 #endif
+=======
+>>>>>>> rebase
 
 #ifdef CONFIG_ARM_ARCH_TIMER_OOL_WORKAROUND
 DEFINE_PER_CPU(const struct arch_timer_erratum_workaround *, timer_unstable_counter_workaround);
@@ -492,6 +537,7 @@ static const struct arch_timer_erratum_workaround ool_workarounds[] = {
 		.set_next_event_virt = erratum_set_next_event_tval_virt,
 	},
 #endif
+<<<<<<< HEAD
 #ifdef CONFIG_ARM64_ERRATUM_1188873
 	{
 		.match_type = ate_match_local_cap_id,
@@ -500,6 +546,8 @@ static const struct arch_timer_erratum_workaround ool_workarounds[] = {
 		.read_cntvct_el0 = arm64_1188873_read_cntvct_el0,
 	},
 #endif
+=======
+>>>>>>> rebase
 };
 
 typedef bool (*ate_match_fn_t)(const struct arch_timer_erratum_workaround *,
@@ -823,7 +871,10 @@ static void __arch_timer_setup(unsigned type,
 		}
 
 		arch_timer_check_ool_workaround(ate_match_local_cap_id, NULL);
+<<<<<<< HEAD
 		arch_timer_check_858921_workaround();
+=======
+>>>>>>> rebase
 	} else {
 		clk->features |= CLOCK_EVT_FEAT_DYNIRQ;
 		clk->name = "arch_mem_timer";
@@ -865,6 +916,7 @@ static void arch_timer_evtstrm_enable(int divider)
 
 static void arch_timer_configure_evtstream(void)
 {
+<<<<<<< HEAD
 	int evt_stream_div, pos;
 
 	/* Find the closest power of two to the divisor */
@@ -874,6 +926,26 @@ static void arch_timer_configure_evtstream(void)
 		pos--;
 	/* enable event stream */
 	arch_timer_evtstrm_enable(min(pos, 15));
+=======
+	int evt_stream_div, lsb;
+
+	/*
+	 * As the event stream can at most be generated at half the frequency
+	 * of the counter, use half the frequency when computing the divider.
+	 */
+	evt_stream_div = arch_timer_rate / ARCH_TIMER_EVT_STREAM_FREQ / 2;
+
+	/*
+	 * Find the closest power of two to the divisor. If the adjacent bit
+	 * of lsb (last set bit, starts from 0) is set, then we use (lsb + 1).
+	 */
+	lsb = fls(evt_stream_div) - 1;
+	if (lsb > 0 && (evt_stream_div & BIT(lsb - 1)))
+		lsb++;
+
+	/* enable event stream */
+	arch_timer_evtstrm_enable(max(0, min(lsb, 15)));
+>>>>>>> rebase
 }
 
 static void arch_counter_set_user_access(void)
@@ -893,8 +965,12 @@ static void arch_counter_set_user_access(void)
 	 * need to be workaround. The vdso may have been already
 	 * disabled though.
 	 */
+<<<<<<< HEAD
 	if (arch_timer_this_cpu_has_cntvct_wa() ||
 	    !IS_ENABLED(CONFIG_ARM_ARCH_TIMER_VCT_ACCESS))
+=======
+	if (arch_timer_this_cpu_has_cntvct_wa())
+>>>>>>> rebase
 		pr_info("CPU%d: Trapping CNTVCT access\n", smp_processor_id());
 	else
 		cntkctl |= ARCH_TIMER_USR_VCT_ACCESS_EN;
@@ -996,6 +1072,7 @@ bool arch_timer_evtstrm_available(void)
 	return cpumask_test_cpu(raw_smp_processor_id(), &evtstrm_available);
 }
 
+<<<<<<< HEAD
 void arch_timer_mem_get_cval(u32 *lo, u32 *hi)
 {
 	u32 ctrl;
@@ -1013,14 +1090,22 @@ void arch_timer_mem_get_cval(u32 *lo, u32 *hi)
 	}
 }
 
+=======
+>>>>>>> rebase
 static u64 arch_counter_get_cntvct_mem(void)
 {
 	u32 vct_lo, vct_hi, tmp_hi;
 
 	do {
+<<<<<<< HEAD
 		vct_hi = readl_relaxed_no_log(arch_counter_base + CNTVCT_HI);
 		vct_lo = readl_relaxed_no_log(arch_counter_base + CNTVCT_LO);
 		tmp_hi = readl_relaxed_no_log(arch_counter_base + CNTVCT_HI);
+=======
+		vct_hi = readl_relaxed(arch_counter_base + CNTVCT_HI);
+		vct_lo = readl_relaxed(arch_counter_base + CNTVCT_LO);
+		tmp_hi = readl_relaxed(arch_counter_base + CNTVCT_HI);
+>>>>>>> rebase
 	} while (vct_hi != tmp_hi);
 
 	return ((u64) vct_hi << 32) | vct_lo;
@@ -1265,6 +1350,7 @@ static bool __init arch_timer_needs_of_probing(void)
 
 static int __init arch_timer_common_init(void)
 {
+<<<<<<< HEAD
 	int ret;
 
 	arch_timer_banner(arch_timers_present);
@@ -1274,6 +1360,11 @@ static int __init arch_timer_common_init(void)
 		clocksource_select_force();
 
 	return ret;
+=======
+	arch_timer_banner(arch_timers_present);
+	arch_counter_register(arch_timers_present);
+	return arch_timer_arch_init();
+>>>>>>> rebase
 }
 
 /**
@@ -1397,7 +1488,11 @@ arch_timer_mem_find_best_frame(struct arch_timer_mem *timer_mem)
 		return NULL;
 	}
 
+<<<<<<< HEAD
 	cnttidr = readl_relaxed_no_log(cntctlbase + CNTTIDR);
+=======
+	cnttidr = readl_relaxed(cntctlbase + CNTTIDR);
+>>>>>>> rebase
 
 	/*
 	 * Try to find a virtual capable frame. Otherwise fall back to a
@@ -1542,8 +1637,11 @@ static int __init arch_timer_mem_of_init(struct device_node *np)
 	ret = arch_timer_mem_frame_register(frame);
 	if (!ret && !arch_timer_needs_of_probing())
 		ret = arch_timer_common_init();
+<<<<<<< HEAD
 	get_timer_count_hook_init();
 	get_timer_freq_hook_init();
+=======
+>>>>>>> rebase
 out:
 	kfree(timer_mem);
 	return ret;

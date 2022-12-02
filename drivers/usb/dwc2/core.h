@@ -112,6 +112,10 @@ struct dwc2_hsotg_req;
  * @debugfs: File entry for debugfs file for this endpoint.
  * @dir_in: Set to true if this endpoint is of the IN direction, which
  *          means that it is sending data to the Host.
+<<<<<<< HEAD
+=======
+ * @map_dir: Set to the value of dir_in when the DMA buffer is mapped.
+>>>>>>> rebase
  * @index: The index for the endpoint registers.
  * @mc: Multi Count - number of transactions per microframe
  * @interval: Interval for periodic endpoints, in frames or microframes.
@@ -161,6 +165,10 @@ struct dwc2_hsotg_ep {
 	unsigned short		fifo_index;
 
 	unsigned char           dir_in;
+<<<<<<< HEAD
+=======
+	unsigned char           map_dir;
+>>>>>>> rebase
 	unsigned char           index;
 	unsigned char           mc;
 	u16                     interval;

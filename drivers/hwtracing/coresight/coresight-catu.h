@@ -9,7 +9,10 @@
 #define _CORESIGHT_CATU_H
 
 #include "coresight-priv.h"
+<<<<<<< HEAD
 #include "coresight-tmc.h"
+=======
+>>>>>>> rebase
 
 /* Register offset from base */
 #define CATU_CONTROL		0x000

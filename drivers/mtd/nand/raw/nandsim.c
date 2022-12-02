@@ -2319,7 +2319,11 @@ static int __init ns_init_module(void)
 		goto error;
 
 	chip->dummy_controller.ops = &ns_controller_ops;
+<<<<<<< HEAD
 	retval = nand_scan(nsmtd, 1);
+=======
+	retval = nand_scan(chip, 1);
+>>>>>>> rebase
 	if (retval) {
 		NS_ERR("Could not scan NAND Simulator device\n");
 		goto error;
@@ -2364,7 +2368,11 @@ static int __init ns_init_module(void)
 
 err_exit:
 	free_nandsim(nand);
+<<<<<<< HEAD
 	nand_release(nsmtd);
+=======
+	nand_release(chip);
+>>>>>>> rebase
 	for (i = 0;i < ARRAY_SIZE(nand->partitions); ++i)
 		kfree(nand->partitions[i].name);
 error:
@@ -2386,7 +2394,11 @@ static void __exit ns_cleanup_module(void)
 	int i;
 
 	free_nandsim(ns);    /* Free nandsim private resources */
+<<<<<<< HEAD
 	nand_release(nsmtd); /* Unregister driver */
+=======
+	nand_release(chip); /* Unregister driver */
+>>>>>>> rebase
 	for (i = 0;i < ARRAY_SIZE(ns->partitions); ++i)
 		kfree(ns->partitions[i].name);
 	kfree(mtd_to_nand(nsmtd));        /* Free other structures */

@@ -274,6 +274,7 @@ int of_irq_parse_raw(const __be32 *addr, struct of_phandle_args *out_irq)
 }
 EXPORT_SYMBOL_GPL(of_irq_parse_raw);
 
+<<<<<<< HEAD
 int of_irq_domain_map(const struct irq_fwspec *in, struct irq_fwspec *out)
 {
 	char *stem_name;
@@ -403,6 +404,8 @@ free:
 }
 EXPORT_SYMBOL(of_irq_domain_map);
 
+=======
+>>>>>>> rebase
 /**
  * of_irq_parse_one - Resolve an interrupt for a device
  * @device: the device whose interrupt is to be resolved
@@ -479,8 +482,11 @@ EXPORT_SYMBOL_GPL(of_irq_parse_one);
 int of_irq_to_resource(struct device_node *dev, int index, struct resource *r)
 {
 	int irq = of_irq_get(dev, index);
+<<<<<<< HEAD
 	u32 trigger_type;
 	struct of_phandle_args oirq;
+=======
+>>>>>>> rebase
 
 	if (irq < 0)
 		return irq;
@@ -498,6 +504,7 @@ int of_irq_to_resource(struct device_node *dev, int index, struct resource *r)
 		of_property_read_string_index(dev, "interrupt-names", index,
 					      &name);
 
+<<<<<<< HEAD
 		trigger_type = irqd_get_trigger_type(irq_get_irq_data(irq));
 
 		of_irq_parse_one(dev, index, &oirq);
@@ -509,6 +516,10 @@ int of_irq_to_resource(struct device_node *dev, int index, struct resource *r)
 
 		r->start = r->end = irq;
 		r->flags = IORESOURCE_IRQ | trigger_type;
+=======
+		r->start = r->end = irq;
+		r->flags = IORESOURCE_IRQ | irqd_get_trigger_type(irq_get_irq_data(irq));
+>>>>>>> rebase
 		r->name = name ? name : of_node_full_name(dev);
 	}
 

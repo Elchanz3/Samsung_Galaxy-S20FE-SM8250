@@ -101,6 +101,7 @@ static ssize_t
 queue_ra_store(struct request_queue *q, const char *page, size_t count)
 {
 	unsigned long ra_kb;
+<<<<<<< HEAD
 	ssize_t ret;
 	static const char temp[] = "temporary ";
 
@@ -111,13 +112,20 @@ queue_ra_store(struct request_queue *q, const char *page, size_t count)
 	page += sizeof(temp) - 1;
 
 	ret = queue_var_store(&ra_kb, page, count);
+=======
+	ssize_t ret = queue_var_store(&ra_kb, page, count);
+>>>>>>> rebase
 
 	if (ret < 0)
 		return ret;
 
 	q->backing_dev_info->ra_pages = ra_kb >> (PAGE_SHIFT - 10);
 
+<<<<<<< HEAD
 	return count;
+=======
+	return ret;
+>>>>>>> rebase
 }
 
 static ssize_t queue_max_sectors_show(struct request_queue *q, char *page)
@@ -712,6 +720,7 @@ static struct queue_sysfs_entry throtl_sample_time_entry = {
 };
 #endif
 
+<<<<<<< HEAD
 #ifdef CONFIG_BLK_IO_VOLUME
 static ssize_t queue_io_vol_show(struct request_queue *q, char *page)
 {
@@ -1083,6 +1092,8 @@ static struct queue_sysfs_entry queue_tw_off_delay_ms_entry = {
 };
 #endif
 
+=======
+>>>>>>> rebase
 static struct attribute *default_attrs[] = {
 	&queue_requests_entry.attr,
 	&queue_ra_entry.attr,
@@ -1120,6 +1131,7 @@ static struct attribute *default_attrs[] = {
 #ifdef CONFIG_BLK_DEV_THROTTLING_LOW
 	&throtl_sample_time_entry.attr,
 #endif
+<<<<<<< HEAD
 #ifdef CONFIG_BLK_IO_VOLUME
 	&queue_io_volume_entry.attr,
 #endif
@@ -1133,6 +1145,8 @@ static struct attribute *default_attrs[] = {
 	&queue_tw_on_interval_ms_entry.attr,
 	&queue_tw_off_delay_ms_entry.attr,
 #endif
+=======
+>>>>>>> rebase
 	NULL,
 };
 
@@ -1285,14 +1299,24 @@ int blk_register_queue(struct gendisk *disk)
 	int ret;
 	struct device *dev = disk_to_dev(disk);
 	struct request_queue *q = disk->queue;
+<<<<<<< HEAD
+=======
+	bool has_elevator = false;
+>>>>>>> rebase
 
 	if (WARN_ON(!q))
 		return -ENXIO;
 
+<<<<<<< HEAD
 	WARN_ONCE(test_bit(QUEUE_FLAG_REGISTERED, &q->queue_flags),
 		  "%s is registering an already registered queue\n",
 		  kobject_name(&dev->kobj));
 	queue_flag_set_unlocked(QUEUE_FLAG_REGISTERED, q);
+=======
+	WARN_ONCE(blk_queue_registered(q),
+		  "%s is registering an already registered queue\n",
+		  kobject_name(&dev->kobj));
+>>>>>>> rebase
 
 	/*
 	 * SCSI probing may synchronously create and destroy a lot of
@@ -1313,8 +1337,12 @@ int blk_register_queue(struct gendisk *disk)
 	if (ret)
 		return ret;
 
+<<<<<<< HEAD
 	/* Prevent changes through sysfs until registration is completed. */
 	mutex_lock(&q->sysfs_lock);
+=======
+	mutex_lock(&q->sysfs_dir_lock);
+>>>>>>> rebase
 
 	ret = kobject_add(&q->kobj, kobject_get(&dev->kobj), "%s", "queue");
 	if (ret < 0) {
@@ -1327,6 +1355,7 @@ int blk_register_queue(struct gendisk *disk)
 		blk_mq_debugfs_register(q);
 	}
 
+<<<<<<< HEAD
 	kobject_uevent(&q->kobj, KOBJ_ADD);
 
 	wbt_enable_default(q);
@@ -1338,15 +1367,46 @@ int blk_register_queue(struct gendisk *disk)
 		if (ret) {
 			mutex_unlock(&q->sysfs_lock);
 			kobject_uevent(&q->kobj, KOBJ_REMOVE);
+=======
+	mutex_lock(&q->sysfs_lock);
+	/*
+	 * The flag of QUEUE_FLAG_REGISTERED isn't set yet, so elevator
+	 * switch won't happen at all.
+	 */
+	if (q->request_fn || (q->mq_ops && q->elevator)) {
+		ret = elv_register_queue(q, false);
+		if (ret) {
+			mutex_unlock(&q->sysfs_lock);
+			mutex_unlock(&q->sysfs_dir_lock);
+>>>>>>> rebase
 			kobject_del(&q->kobj);
 			blk_trace_remove_sysfs(dev);
 			kobject_put(&dev->kobj);
 			return ret;
 		}
+<<<<<<< HEAD
 	}
 	ret = 0;
 unlock:
 	mutex_unlock(&q->sysfs_lock);
+=======
+		has_elevator = true;
+	}
+
+	blk_queue_flag_set(QUEUE_FLAG_REGISTERED, q);
+	wbt_enable_default(q);
+	blk_throtl_register_queue(q);
+
+	/* Now everything is ready and send out KOBJ_ADD uevent */
+	kobject_uevent(&q->kobj, KOBJ_ADD);
+	if (has_elevator)
+		kobject_uevent(&q->elevator->kobj, KOBJ_ADD);
+	mutex_unlock(&q->sysfs_lock);
+
+	ret = 0;
+unlock:
+	mutex_unlock(&q->sysfs_dir_lock);
+>>>>>>> rebase
 	return ret;
 }
 EXPORT_SYMBOL_GPL(blk_register_queue);
@@ -1366,7 +1426,11 @@ void blk_unregister_queue(struct gendisk *disk)
 		return;
 
 	/* Return early if disk->queue was never registered. */
+<<<<<<< HEAD
 	if (!test_bit(QUEUE_FLAG_REGISTERED, &q->queue_flags))
+=======
+	if (!blk_queue_registered(q))
+>>>>>>> rebase
 		return;
 
 	/*
@@ -1375,15 +1439,23 @@ void blk_unregister_queue(struct gendisk *disk)
 	 * concurrent elv_iosched_store() calls.
 	 */
 	mutex_lock(&q->sysfs_lock);
+<<<<<<< HEAD
 
 	blk_queue_flag_clear(QUEUE_FLAG_REGISTERED, q);
 
+=======
+	blk_queue_flag_clear(QUEUE_FLAG_REGISTERED, q);
+	mutex_unlock(&q->sysfs_lock);
+
+	mutex_lock(&q->sysfs_dir_lock);
+>>>>>>> rebase
 	/*
 	 * Remove the sysfs attributes before unregistering the queue data
 	 * structures that can be modified through sysfs.
 	 */
 	if (q->mq_ops)
 		blk_mq_unregister_dev(disk_to_dev(disk), q);
+<<<<<<< HEAD
 	mutex_unlock(&q->sysfs_lock);
 
 	kobject_uevent(&q->kobj, KOBJ_REMOVE);
@@ -1395,5 +1467,24 @@ void blk_unregister_queue(struct gendisk *disk)
 		elv_unregister_queue(q);
 	mutex_unlock(&q->sysfs_lock);
 
+=======
+	blk_trace_remove_sysfs(disk_to_dev(disk));
+
+	mutex_lock(&q->sysfs_lock);
+	/*
+	 * q->kobj has been removed, so it is safe to check if elevator
+	 * exists without holding q->sysfs_lock.
+	 */
+	if (q->request_fn || q->elevator)
+		elv_unregister_queue(q);
+	mutex_unlock(&q->sysfs_lock);
+
+	/* Now that we've deleted all child objects, we can delete the queue. */
+	kobject_uevent(&q->kobj, KOBJ_REMOVE);
+	kobject_del(&q->kobj);
+
+	mutex_unlock(&q->sysfs_dir_lock);
+
+>>>>>>> rebase
 	kobject_put(&disk_to_dev(disk)->kobj);
 }

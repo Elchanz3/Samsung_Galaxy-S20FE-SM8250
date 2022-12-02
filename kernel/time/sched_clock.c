@@ -20,8 +20,11 @@
 #include <linux/seqlock.h>
 #include <linux/bitops.h>
 
+<<<<<<< HEAD
 #include <linux/sec_debug.h>
 
+=======
+>>>>>>> rebase
 /**
  * struct clock_read_data - data required to read from sched_clock()
  *
@@ -73,9 +76,12 @@ struct clock_data {
 
 static struct hrtimer sched_clock_timer;
 static int irqtime = -1;
+<<<<<<< HEAD
 static u64 suspend_ns;
 static u64 suspend_cycles;
 static u64 resume_cycles;
+=======
+>>>>>>> rebase
 
 core_param(irqtime, irqtime, int, 0400);
 
@@ -114,8 +120,11 @@ unsigned long long notrace sched_clock(void)
 		res = rd->epoch_ns + cyc_to_ns(cyc, rd->mult, rd->shift);
 	} while (read_seqcount_retry(&cd.seq, seq));
 
+<<<<<<< HEAD
 	sec_debug_save_last_ns(res);
 
+=======
+>>>>>>> rebase
 	return res;
 }
 
@@ -287,11 +296,14 @@ int sched_clock_suspend(void)
 	struct clock_read_data *rd = &cd.read_data[0];
 
 	update_sched_clock();
+<<<<<<< HEAD
 
 	suspend_ns = rd->epoch_ns;
 	suspend_cycles = rd->epoch_cyc;
 	pr_info("suspend ns:%17llu	suspend cycles:%17llu\n",
 				rd->epoch_ns, rd->epoch_cyc);
+=======
+>>>>>>> rebase
 	hrtimer_cancel(&sched_clock_timer);
 	rd->read_sched_clock = suspended_sched_clock_read;
 
@@ -303,8 +315,11 @@ void sched_clock_resume(void)
 	struct clock_read_data *rd = &cd.read_data[0];
 
 	rd->epoch_cyc = cd.actual_read_sched_clock();
+<<<<<<< HEAD
 	resume_cycles = rd->epoch_cyc;
 	pr_info("resume cycles:%17llu\n", rd->epoch_cyc);
+=======
+>>>>>>> rebase
 	hrtimer_start(&sched_clock_timer, cd.wrap_kt, HRTIMER_MODE_REL);
 	rd->read_sched_clock = cd.actual_read_sched_clock;
 }

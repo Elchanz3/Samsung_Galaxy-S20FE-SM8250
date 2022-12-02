@@ -471,7 +471,12 @@ static struct sk_buff *add_grec(struct sk_buff *skb, struct ip_mc_list *pmc,
 
 	if (pmc->multiaddr == IGMP_ALL_HOSTS)
 		return skb;
+<<<<<<< HEAD
 	if (ipv4_is_local_multicast(pmc->multiaddr) && !net->ipv4.sysctl_igmp_llm_reports)
+=======
+	if (ipv4_is_local_multicast(pmc->multiaddr) &&
+	    !READ_ONCE(net->ipv4.sysctl_igmp_llm_reports))
+>>>>>>> rebase
 		return skb;
 
 	mtu = READ_ONCE(dev->mtu);
@@ -597,7 +602,11 @@ static int igmpv3_send_report(struct in_device *in_dev, struct ip_mc_list *pmc)
 			if (pmc->multiaddr == IGMP_ALL_HOSTS)
 				continue;
 			if (ipv4_is_local_multicast(pmc->multiaddr) &&
+<<<<<<< HEAD
 			     !net->ipv4.sysctl_igmp_llm_reports)
+=======
+			    !READ_ONCE(net->ipv4.sysctl_igmp_llm_reports))
+>>>>>>> rebase
 				continue;
 			spin_lock_bh(&pmc->lock);
 			if (pmc->sfcount[MCAST_EXCLUDE])
@@ -740,7 +749,12 @@ static int igmp_send_report(struct in_device *in_dev, struct ip_mc_list *pmc,
 	if (type == IGMPV3_HOST_MEMBERSHIP_REPORT)
 		return igmpv3_send_report(in_dev, pmc);
 
+<<<<<<< HEAD
 	if (ipv4_is_local_multicast(group) && !net->ipv4.sysctl_igmp_llm_reports)
+=======
+	if (ipv4_is_local_multicast(group) &&
+	    !READ_ONCE(net->ipv4.sysctl_igmp_llm_reports))
+>>>>>>> rebase
 		return 0;
 
 	if (type == IGMP_HOST_LEAVE_MESSAGE)
@@ -807,10 +821,24 @@ static void igmp_gq_timer_expire(struct timer_list *t)
 static void igmp_ifc_timer_expire(struct timer_list *t)
 {
 	struct in_device *in_dev = from_timer(in_dev, t, mr_ifc_timer);
+<<<<<<< HEAD
 
 	igmpv3_send_cr(in_dev);
 	if (in_dev->mr_ifc_count) {
 		in_dev->mr_ifc_count--;
+=======
+	u32 mr_ifc_count;
+
+	igmpv3_send_cr(in_dev);
+restart:
+	mr_ifc_count = READ_ONCE(in_dev->mr_ifc_count);
+
+	if (mr_ifc_count) {
+		if (cmpxchg(&in_dev->mr_ifc_count,
+			    mr_ifc_count,
+			    mr_ifc_count - 1) != mr_ifc_count)
+			goto restart;
+>>>>>>> rebase
 		igmp_ifc_start_timer(in_dev,
 				     unsolicited_report_interval(in_dev));
 	}
@@ -822,7 +850,11 @@ static void igmp_ifc_event(struct in_device *in_dev)
 	struct net *net = dev_net(in_dev->dev);
 	if (IGMP_V1_SEEN(in_dev) || IGMP_V2_SEEN(in_dev))
 		return;
+<<<<<<< HEAD
 	in_dev->mr_ifc_count = in_dev->mr_qrv ?: net->ipv4.sysctl_igmp_qrv;
+=======
+	WRITE_ONCE(in_dev->mr_ifc_count, in_dev->mr_qrv ?: READ_ONCE(net->ipv4.sysctl_igmp_qrv));
+>>>>>>> rebase
 	igmp_ifc_start_timer(in_dev, 1);
 }
 
@@ -917,7 +949,12 @@ static bool igmp_heard_report(struct in_device *in_dev, __be32 group)
 
 	if (group == IGMP_ALL_HOSTS)
 		return false;
+<<<<<<< HEAD
 	if (ipv4_is_local_multicast(group) && !net->ipv4.sysctl_igmp_llm_reports)
+=======
+	if (ipv4_is_local_multicast(group) &&
+	    !READ_ONCE(net->ipv4.sysctl_igmp_llm_reports))
+>>>>>>> rebase
 		return false;
 
 	rcu_read_lock();
@@ -961,7 +998,11 @@ static bool igmp_heard_query(struct in_device *in_dev, struct sk_buff *skb,
 				in_dev->mr_qri;
 		}
 		/* cancel the interface change timer */
+<<<<<<< HEAD
 		in_dev->mr_ifc_count = 0;
+=======
+		WRITE_ONCE(in_dev->mr_ifc_count, 0);
+>>>>>>> rebase
 		if (del_timer(&in_dev->mr_ifc_timer))
 			__in_dev_put(in_dev);
 		/* clear deleted report items */
@@ -1003,7 +1044,11 @@ static bool igmp_heard_query(struct in_device *in_dev, struct sk_buff *skb,
 		 * received value was zero, use the default or statically
 		 * configured value.
 		 */
+<<<<<<< HEAD
 		in_dev->mr_qrv = ih3->qrv ?: net->ipv4.sysctl_igmp_qrv;
+=======
+		in_dev->mr_qrv = ih3->qrv ?: READ_ONCE(net->ipv4.sysctl_igmp_qrv);
+>>>>>>> rebase
 		in_dev->mr_qi = IGMPV3_QQIC(ih3->qqic)*HZ ?: IGMP_QUERY_INTERVAL;
 
 		/* RFC3376, 8.3. Query Response Interval:
@@ -1042,7 +1087,11 @@ static bool igmp_heard_query(struct in_device *in_dev, struct sk_buff *skb,
 		if (im->multiaddr == IGMP_ALL_HOSTS)
 			continue;
 		if (ipv4_is_local_multicast(im->multiaddr) &&
+<<<<<<< HEAD
 		    !net->ipv4.sysctl_igmp_llm_reports)
+=======
+		    !READ_ONCE(net->ipv4.sysctl_igmp_llm_reports))
+>>>>>>> rebase
 			continue;
 		spin_lock_bh(&im->lock);
 		if (im->tm_running)
@@ -1182,7 +1231,11 @@ static void igmpv3_add_delrec(struct in_device *in_dev, struct ip_mc_list *im)
 	pmc->interface = im->interface;
 	in_dev_hold(in_dev);
 	pmc->multiaddr = im->multiaddr;
+<<<<<<< HEAD
 	pmc->crcount = in_dev->mr_qrv ?: net->ipv4.sysctl_igmp_qrv;
+=======
+	pmc->crcount = in_dev->mr_qrv ?: READ_ONCE(net->ipv4.sysctl_igmp_qrv);
+>>>>>>> rebase
 	pmc->sfmode = im->sfmode;
 	if (pmc->sfmode == MCAST_INCLUDE) {
 		struct ip_sf_list *psf;
@@ -1233,9 +1286,17 @@ static void igmpv3_del_delrec(struct in_device *in_dev, struct ip_mc_list *im)
 			swap(im->tomb, pmc->tomb);
 			swap(im->sources, pmc->sources);
 			for (psf = im->sources; psf; psf = psf->sf_next)
+<<<<<<< HEAD
 				psf->sf_crcount = in_dev->mr_qrv ?: net->ipv4.sysctl_igmp_qrv;
 		} else {
 			im->crcount = in_dev->mr_qrv ?: net->ipv4.sysctl_igmp_qrv;
+=======
+				psf->sf_crcount = in_dev->mr_qrv ?:
+					READ_ONCE(net->ipv4.sysctl_igmp_qrv);
+		} else {
+			im->crcount = in_dev->mr_qrv ?:
+				READ_ONCE(net->ipv4.sysctl_igmp_qrv);
+>>>>>>> rebase
 		}
 		in_dev_put(pmc->interface);
 		kfree_pmc(pmc);
@@ -1292,7 +1353,12 @@ static void igmp_group_dropped(struct ip_mc_list *im)
 #ifdef CONFIG_IP_MULTICAST
 	if (im->multiaddr == IGMP_ALL_HOSTS)
 		return;
+<<<<<<< HEAD
 	if (ipv4_is_local_multicast(im->multiaddr) && !net->ipv4.sysctl_igmp_llm_reports)
+=======
+	if (ipv4_is_local_multicast(im->multiaddr) &&
+	    !READ_ONCE(net->ipv4.sysctl_igmp_llm_reports))
+>>>>>>> rebase
 		return;
 
 	reporter = im->reporter;
@@ -1329,13 +1395,22 @@ static void igmp_group_added(struct ip_mc_list *im)
 #ifdef CONFIG_IP_MULTICAST
 	if (im->multiaddr == IGMP_ALL_HOSTS)
 		return;
+<<<<<<< HEAD
 	if (ipv4_is_local_multicast(im->multiaddr) && !net->ipv4.sysctl_igmp_llm_reports)
+=======
+	if (ipv4_is_local_multicast(im->multiaddr) &&
+	    !READ_ONCE(net->ipv4.sysctl_igmp_llm_reports))
+>>>>>>> rebase
 		return;
 
 	if (in_dev->dead)
 		return;
 
+<<<<<<< HEAD
 	im->unsolicit_count = net->ipv4.sysctl_igmp_qrv;
+=======
+	im->unsolicit_count = READ_ONCE(net->ipv4.sysctl_igmp_qrv);
+>>>>>>> rebase
 	if (IGMP_V1_SEEN(in_dev) || IGMP_V2_SEEN(in_dev)) {
 		spin_lock_bh(&im->lock);
 		igmp_start_timer(im, IGMP_INITIAL_REPORT_DELAY);
@@ -1349,7 +1424,11 @@ static void igmp_group_added(struct ip_mc_list *im)
 	 * IN() to IN(A).
 	 */
 	if (im->sfmode == MCAST_EXCLUDE)
+<<<<<<< HEAD
 		im->crcount = in_dev->mr_qrv ?: net->ipv4.sysctl_igmp_qrv;
+=======
+		im->crcount = in_dev->mr_qrv ?: READ_ONCE(net->ipv4.sysctl_igmp_qrv);
+>>>>>>> rebase
 
 	igmp_ifc_event(in_dev);
 #endif
@@ -1650,7 +1729,11 @@ static void ip_mc_rejoin_groups(struct in_device *in_dev)
 		if (im->multiaddr == IGMP_ALL_HOSTS)
 			continue;
 		if (ipv4_is_local_multicast(im->multiaddr) &&
+<<<<<<< HEAD
 		    !net->ipv4.sysctl_igmp_llm_reports)
+=======
+		    !READ_ONCE(net->ipv4.sysctl_igmp_llm_reports))
+>>>>>>> rebase
 			continue;
 
 		/* a failover is happening and switches
@@ -1739,7 +1822,11 @@ void ip_mc_down(struct in_device *in_dev)
 		igmp_group_dropped(pmc);
 
 #ifdef CONFIG_IP_MULTICAST
+<<<<<<< HEAD
 	in_dev->mr_ifc_count = 0;
+=======
+	WRITE_ONCE(in_dev->mr_ifc_count, 0);
+>>>>>>> rebase
 	if (del_timer(&in_dev->mr_ifc_timer))
 		__in_dev_put(in_dev);
 	in_dev->mr_gq_running = 0;
@@ -1757,7 +1844,11 @@ static void ip_mc_reset(struct in_device *in_dev)
 
 	in_dev->mr_qi = IGMP_QUERY_INTERVAL;
 	in_dev->mr_qri = IGMP_QUERY_RESPONSE_INTERVAL;
+<<<<<<< HEAD
 	in_dev->mr_qrv = net->ipv4.sysctl_igmp_qrv;
+=======
+	in_dev->mr_qrv = READ_ONCE(net->ipv4.sysctl_igmp_qrv);
+>>>>>>> rebase
 }
 #else
 static void ip_mc_reset(struct in_device *in_dev)
@@ -1816,6 +1907,10 @@ void ip_mc_destroy_dev(struct in_device *in_dev)
 	while ((i = rtnl_dereference(in_dev->mc_list)) != NULL) {
 		in_dev->mc_list = i->next_rcu;
 		in_dev->mc_count--;
+<<<<<<< HEAD
+=======
+		ip_mc_clear_src(i);
+>>>>>>> rebase
 		ip_ma_put(i);
 	}
 }
@@ -1890,7 +1985,11 @@ static int ip_mc_del1_src(struct ip_mc_list *pmc, int sfmode,
 #ifdef CONFIG_IP_MULTICAST
 		if (psf->sf_oldin &&
 		    !IGMP_V1_SEEN(in_dev) && !IGMP_V2_SEEN(in_dev)) {
+<<<<<<< HEAD
 			psf->sf_crcount = in_dev->mr_qrv ?: net->ipv4.sysctl_igmp_qrv;
+=======
+			psf->sf_crcount = in_dev->mr_qrv ?: READ_ONCE(net->ipv4.sysctl_igmp_qrv);
+>>>>>>> rebase
 			psf->sf_next = pmc->tomb;
 			pmc->tomb = psf;
 			rv = 1;
@@ -1954,8 +2053,13 @@ static int ip_mc_del_src(struct in_device *in_dev, __be32 *pmca, int sfmode,
 		/* filter mode change */
 		pmc->sfmode = MCAST_INCLUDE;
 #ifdef CONFIG_IP_MULTICAST
+<<<<<<< HEAD
 		pmc->crcount = in_dev->mr_qrv ?: net->ipv4.sysctl_igmp_qrv;
 		in_dev->mr_ifc_count = pmc->crcount;
+=======
+		pmc->crcount = in_dev->mr_qrv ?: READ_ONCE(net->ipv4.sysctl_igmp_qrv);
+		WRITE_ONCE(in_dev->mr_ifc_count, pmc->crcount);
+>>>>>>> rebase
 		for (psf = pmc->sources; psf; psf = psf->sf_next)
 			psf->sf_crcount = 0;
 		igmp_ifc_event(pmc->interface);
@@ -2133,8 +2237,13 @@ static int ip_mc_add_src(struct in_device *in_dev, __be32 *pmca, int sfmode,
 #ifdef CONFIG_IP_MULTICAST
 		/* else no filters; keep old mode for reports */
 
+<<<<<<< HEAD
 		pmc->crcount = in_dev->mr_qrv ?: net->ipv4.sysctl_igmp_qrv;
 		in_dev->mr_ifc_count = pmc->crcount;
+=======
+		pmc->crcount = in_dev->mr_qrv ?: READ_ONCE(net->ipv4.sysctl_igmp_qrv);
+		WRITE_ONCE(in_dev->mr_ifc_count, pmc->crcount);
+>>>>>>> rebase
 		for (psf = pmc->sources; psf; psf = psf->sf_next)
 			psf->sf_crcount = 0;
 		igmp_ifc_event(in_dev);
@@ -2199,7 +2308,11 @@ static int __ip_mc_join_group(struct sock *sk, struct ip_mreqn *imr,
 		count++;
 	}
 	err = -ENOBUFS;
+<<<<<<< HEAD
 	if (count >= net->ipv4.sysctl_igmp_max_memberships)
+=======
+	if (count >= READ_ONCE(net->ipv4.sysctl_igmp_max_memberships))
+>>>>>>> rebase
 		goto done;
 	iml = sock_kmalloc(sk, sizeof(*iml), GFP_KERNEL);
 	if (!iml)
@@ -2408,9 +2521,16 @@ int ip_mc_source(int add, int omode, struct sock *sk, struct
 				newpsl->sl_addr[i] = psl->sl_addr[i];
 			/* decrease mem now to avoid the memleak warning */
 			atomic_sub(IP_SFLSIZE(psl->sl_max), &sk->sk_omem_alloc);
+<<<<<<< HEAD
 			kfree_rcu(psl, rcu);
 		}
 		rcu_assign_pointer(pmc->sflist, newpsl);
+=======
+		}
+		rcu_assign_pointer(pmc->sflist, newpsl);
+		if (psl)
+			kfree_rcu(psl, rcu);
+>>>>>>> rebase
 		psl = newpsl;
 	}
 	rv = 1;	/* > 0 for insert logic below if sl_count is 0 */
@@ -2508,11 +2628,21 @@ int ip_mc_msfilter(struct sock *sk, struct ip_msfilter *msf, int ifindex)
 			psl->sl_count, psl->sl_addr, 0);
 		/* decrease mem now to avoid the memleak warning */
 		atomic_sub(IP_SFLSIZE(psl->sl_max), &sk->sk_omem_alloc);
+<<<<<<< HEAD
 		kfree_rcu(psl, rcu);
 	} else
 		(void) ip_mc_del_src(in_dev, &msf->imsf_multiaddr, pmc->sfmode,
 			0, NULL, 0);
 	rcu_assign_pointer(pmc->sflist, newpsl);
+=======
+	} else {
+		(void) ip_mc_del_src(in_dev, &msf->imsf_multiaddr, pmc->sfmode,
+			0, NULL, 0);
+	}
+	rcu_assign_pointer(pmc->sflist, newpsl);
+	if (psl)
+		kfree_rcu(psl, rcu);
+>>>>>>> rebase
 	pmc->sfmode = msf->imsf_fmode;
 	err = 0;
 done:

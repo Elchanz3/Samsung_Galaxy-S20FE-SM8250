@@ -36,12 +36,20 @@
  */
 #define PAGE_ALLOC_COSTLY_ORDER 3
 
+<<<<<<< HEAD
 #define MAX_KSWAPD_THREADS 16
 
+=======
+>>>>>>> rebase
 enum migratetype {
 	MIGRATE_UNMOVABLE,
 	MIGRATE_MOVABLE,
 	MIGRATE_RECLAIMABLE,
+<<<<<<< HEAD
+=======
+	MIGRATE_PCPTYPES,	/* the number of types on the pcp lists */
+	MIGRATE_HIGHATOMIC = MIGRATE_PCPTYPES,
+>>>>>>> rebase
 #ifdef CONFIG_CMA
 	/*
 	 * MIGRATE_CMA migration type is designed to mimic the way
@@ -58,8 +66,11 @@ enum migratetype {
 	 */
 	MIGRATE_CMA,
 #endif
+<<<<<<< HEAD
 	MIGRATE_PCPTYPES, /* the number of types on the pcp lists */
 	MIGRATE_HIGHATOMIC = MIGRATE_PCPTYPES,
+=======
+>>>>>>> rebase
 #ifdef CONFIG_MEMORY_ISOLATION
 	MIGRATE_ISOLATE,	/* can't allocate from here */
 #endif
@@ -72,11 +83,17 @@ extern char * const migratetype_names[MIGRATE_TYPES];
 #ifdef CONFIG_CMA
 #  define is_migrate_cma(migratetype) unlikely((migratetype) == MIGRATE_CMA)
 #  define is_migrate_cma_page(_page) (get_pageblock_migratetype(_page) == MIGRATE_CMA)
+<<<<<<< HEAD
 #  define get_cma_migrate_type() MIGRATE_CMA
 #else
 #  define is_migrate_cma(migratetype) false
 #  define is_migrate_cma_page(_page) false
 #  define get_cma_migrate_type() MIGRATE_MOVABLE
+=======
+#else
+#  define is_migrate_cma(migratetype) false
+#  define is_migrate_cma_page(_page) false
+>>>>>>> rebase
 #endif
 
 static inline bool is_migrate_movable(int mt)
@@ -146,16 +163,22 @@ enum zone_stat_item {
 	NR_MLOCK,		/* mlock()ed pages found and moved off LRU */
 	NR_PAGETABLE,		/* used for pagetables */
 	NR_KERNEL_STACK_KB,	/* measured in KiB */
+<<<<<<< HEAD
 #if IS_ENABLED(CONFIG_SHADOW_CALL_STACK)
 	NR_KERNEL_SCS_BYTES,	/* measured in bytes */
 #endif
+=======
+>>>>>>> rebase
 	/* Second 128 byte cacheline */
 	NR_BOUNCE,
 #if IS_ENABLED(CONFIG_ZSMALLOC)
 	NR_ZSPAGES,		/* allocated in zsmalloc */
 #endif
 	NR_FREE_CMA_PAGES,
+<<<<<<< HEAD
 	NR_FREE_RBIN_PAGES,
+=======
+>>>>>>> rebase
 	NR_VM_ZONE_STAT_ITEMS };
 
 enum node_stat_item {
@@ -171,7 +194,10 @@ enum node_stat_item {
 	NR_ISOLATED_FILE,	/* Temporary isolated pages from file lru */
 	WORKINGSET_REFAULT,
 	WORKINGSET_ACTIVATE,
+<<<<<<< HEAD
 	WORKINGSET_RESTORE,
+=======
+>>>>>>> rebase
 	WORKINGSET_NODERECLAIM,
 	NR_ANON_MAPPED,	/* Mapped anonymous pages */
 	NR_FILE_MAPPED,	/* pagecache pages mapped into pagetables.
@@ -189,12 +215,16 @@ enum node_stat_item {
 	NR_VMSCAN_IMMEDIATE,	/* Prioritise for reclaim when writeback ends */
 	NR_DIRTIED,		/* page dirtyings since bootup */
 	NR_WRITTEN,		/* page writings since bootup */
+<<<<<<< HEAD
 #ifdef CONFIG_KZEROD
 	ZERO_PAGE_ALLOC_TOTAL,
 	ZERO_PAGE_ALLOC_PREZERO,
 #endif
 	NR_KERNEL_MISC_RECLAIMABLE,	/* reclaimable non-slab kernel pages */
 	NR_UNRECLAIMABLE_PAGES,
+=======
+	NR_INDIRECTLY_RECLAIMABLE_BYTES, /* measured in bytes */
+>>>>>>> rebase
 	NR_VM_NODE_STAT_ITEMS
 };
 
@@ -281,10 +311,16 @@ enum zone_watermarks {
 	NR_WMARK
 };
 
+<<<<<<< HEAD
 #define min_wmark_pages(z) (z->_watermark[WMARK_MIN] + z->watermark_boost)
 #define low_wmark_pages(z) (z->_watermark[WMARK_LOW] + z->watermark_boost)
 #define high_wmark_pages(z) (z->_watermark[WMARK_HIGH] + z->watermark_boost)
 #define wmark_pages(z, i) (z->_watermark[i] + z->watermark_boost)
+=======
+#define min_wmark_pages(z) (z->watermark[WMARK_MIN])
+#define low_wmark_pages(z) (z->watermark[WMARK_LOW])
+#define high_wmark_pages(z) (z->watermark[WMARK_HIGH])
+>>>>>>> rebase
 
 struct per_cpu_pages {
 	int count;		/* number of pages in the list */
@@ -375,8 +411,12 @@ struct zone {
 	/* Read-mostly fields */
 
 	/* zone watermarks, access with *_wmark_pages(zone) macros */
+<<<<<<< HEAD
 	unsigned long _watermark[NR_WMARK];
 	unsigned long watermark_boost;
+=======
+	unsigned long watermark[NR_WMARK];
+>>>>>>> rebase
 
 	unsigned long nr_reserved_highatomic;
 
@@ -397,10 +437,13 @@ struct zone {
 	struct pglist_data	*zone_pgdat;
 	struct per_cpu_pageset __percpu *pageset;
 
+<<<<<<< HEAD
 #ifdef CONFIG_CMA
 	bool			cma_alloc;
 #endif
 
+=======
+>>>>>>> rebase
 #ifndef CONFIG_SPARSEMEM
 	/*
 	 * Flags for a pageblock_nr_pages block. See pageblock-flags.h.
@@ -502,8 +545,11 @@ struct zone {
 	unsigned long		compact_cached_free_pfn;
 	/* pfn where async and sync compaction migration scanner should start */
 	unsigned long		compact_cached_migrate_pfn[2];
+<<<<<<< HEAD
 	unsigned long		compact_init_migrate_pfn;
 	unsigned long		compact_init_free_pfn;
+=======
+>>>>>>> rebase
 #endif
 
 #ifdef CONFIG_COMPACTION
@@ -544,12 +590,15 @@ enum pgdat_flags {
 	PGDAT_RECLAIM_LOCKED,		/* prevents concurrent reclaim */
 };
 
+<<<<<<< HEAD
 enum zone_flags {
 	ZONE_BOOSTED_WATERMARK,		/* zone recently boosted watermarks.
 					 * Cleared when kswapd is woken.
 					 */
 };
 
+=======
+>>>>>>> rebase
 static inline unsigned long zone_end_pfn(const struct zone *zone)
 {
 	return zone->zone_start_pfn + zone->spanned_pages;
@@ -666,6 +715,11 @@ typedef struct pglist_data {
 	/*
 	 * Must be held any time you expect node_start_pfn, node_present_pages
 	 * or node_spanned_pages stay constant.
+<<<<<<< HEAD
+=======
+	 * Also synchronizes pgdat->first_deferred_pfn during deferred page
+	 * init.
+>>>>>>> rebase
 	 *
 	 * pgdat_resize_lock() and pgdat_resize_unlock() are provided to
 	 * manipulate node_size_lock without checking for CONFIG_MEMORY_HOTPLUG
@@ -682,10 +736,15 @@ typedef struct pglist_data {
 	int node_id;
 	wait_queue_head_t kswapd_wait;
 	wait_queue_head_t pfmemalloc_wait;
+<<<<<<< HEAD
 	/*
 	 * Protected by mem_hotplug_begin/end()
 	 */
 	struct task_struct *kswapd[MAX_KSWAPD_THREADS];
+=======
+	struct task_struct *kswapd;	/* Protected by
+					   mem_hotplug_begin/end() */
+>>>>>>> rebase
 	int kswapd_order;
 	enum zone_type kswapd_classzone_idx;
 
@@ -787,10 +846,22 @@ bool zone_watermark_ok(struct zone *z, unsigned int order,
 		unsigned int alloc_flags);
 bool zone_watermark_ok_safe(struct zone *z, unsigned int order,
 		unsigned long mark, int classzone_idx);
+<<<<<<< HEAD
 enum memmap_context {
 	MEMMAP_EARLY,
 	MEMMAP_HOTPLUG,
 };
+=======
+/*
+ * Memory initialization context, use to differentiate memory added by
+ * the platform statically or via memory hotplug interface.
+ */
+enum meminit_context {
+	MEMINIT_EARLY,
+	MEMINIT_HOTPLUG,
+};
+
+>>>>>>> rebase
 extern void init_currently_empty_zone(struct zone *zone, unsigned long start_pfn,
 				     unsigned long size);
 
@@ -912,12 +983,17 @@ static inline int is_highmem(struct zone *zone)
 
 /* These two functions are used to setup the per zone pages min values */
 struct ctl_table;
+<<<<<<< HEAD
 int kswapd_threads_sysctl_handler(struct ctl_table *, int,
 					void __user *, size_t *, loff_t *);
 int min_free_kbytes_sysctl_handler(struct ctl_table *, int,
 					void __user *, size_t *, loff_t *);
 int watermark_boost_factor_sysctl_handler(struct ctl_table *, int,
 					void __user *, size_t *, loff_t *);
+=======
+int min_free_kbytes_sysctl_handler(struct ctl_table *, int,
+					void __user *, size_t *, loff_t *);
+>>>>>>> rebase
 int watermark_scale_factor_sysctl_handler(struct ctl_table *, int,
 					void __user *, size_t *, loff_t *);
 extern int sysctl_lowmem_reserve_ratio[MAX_NR_ZONES];
@@ -1182,6 +1258,7 @@ extern struct mem_section mem_section[NR_SECTION_ROOTS][SECTIONS_PER_ROOT];
 
 static inline struct mem_section *__nr_to_section(unsigned long nr)
 {
+<<<<<<< HEAD
 #ifdef CONFIG_SPARSEMEM_EXTREME
 	if (!mem_section)
 		return NULL;
@@ -1189,6 +1266,18 @@ static inline struct mem_section *__nr_to_section(unsigned long nr)
 	if (!mem_section[SECTION_NR_TO_ROOT(nr)])
 		return NULL;
 	return &mem_section[SECTION_NR_TO_ROOT(nr)][nr & SECTION_ROOT_MASK];
+=======
+	unsigned long root = SECTION_NR_TO_ROOT(nr);
+
+	if (unlikely(root >= NR_SECTION_ROOTS))
+		return NULL;
+
+#ifdef CONFIG_SPARSEMEM_EXTREME
+	if (!mem_section || !mem_section[root])
+		return NULL;
+#endif
+	return &mem_section[root][nr & SECTION_ROOT_MASK];
+>>>>>>> rebase
 }
 extern int __section_nr(struct mem_section* ms);
 extern unsigned long usemap_size(void);

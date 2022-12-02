@@ -629,6 +629,7 @@ struct clk *clk_get_parent(struct clk *clk);
  */
 struct clk *clk_get_sys(const char *dev_id, const char *con_id);
 
+<<<<<<< HEAD
 /**
  * clk_set_flags - set the custom HW specific flags for this clock
  * @clk: clock source
@@ -638,6 +639,8 @@ struct clk *clk_get_sys(const char *dev_id, const char *con_id);
  */
 int clk_set_flags(struct clk *clk, unsigned long flags);
 
+=======
+>>>>>>> rebase
 #else /* !CONFIG_HAVE_CLK */
 
 static inline struct clk *clk_get(struct device *dev, const char *id)
@@ -737,11 +740,14 @@ static inline struct clk *clk_get_sys(const char *dev_id, const char *con_id)
 {
 	return NULL;
 }
+<<<<<<< HEAD
 
 static inline int clk_set_flags(struct clk *clk, unsigned long flags)
 {
 	return 0;
 }
+=======
+>>>>>>> rebase
 #endif
 
 /* clk_prepare_enable helps cases using clk_enable in non-atomic context. */

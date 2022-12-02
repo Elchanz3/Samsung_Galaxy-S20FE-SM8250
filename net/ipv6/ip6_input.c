@@ -47,6 +47,7 @@
 #include <net/inet_ecn.h>
 #include <net/dst_metadata.h>
 
+<<<<<<< HEAD
 static void ip6_rcv_finish_core(struct net *net, struct sock *sk,
 				struct sk_buff *skb)
 {
@@ -59,6 +60,27 @@ static void ip6_rcv_finish_core(struct net *net, struct sock *sk,
 		if (ipprot && (edemux = READ_ONCE(ipprot->early_demux)))
 			edemux(skb);
 	}
+=======
+void udp_v6_early_demux(struct sk_buff *);
+void tcp_v6_early_demux(struct sk_buff *);
+static void ip6_rcv_finish_core(struct net *net, struct sock *sk,
+				struct sk_buff *skb)
+{
+	if (READ_ONCE(net->ipv4.sysctl_ip_early_demux) &&
+	    !skb_dst(skb) && !skb->sk) {
+		switch (ipv6_hdr(skb)->nexthdr) {
+		case IPPROTO_TCP:
+			if (READ_ONCE(net->ipv4.sysctl_tcp_early_demux))
+				tcp_v6_early_demux(skb);
+			break;
+		case IPPROTO_UDP:
+			if (READ_ONCE(net->ipv4.sysctl_udp_early_demux))
+				udp_v6_early_demux(skb);
+			break;
+		}
+	}
+
+>>>>>>> rebase
 	if (!skb_valid_dst(skb))
 		ip6_route_input(skb);
 }
@@ -222,6 +244,7 @@ static struct sk_buff *ip6_rcv_core(struct sk_buff *skb, struct net_device *dev,
 	if (ipv6_addr_is_multicast(&hdr->saddr))
 		goto err;
 
+<<<<<<< HEAD
 	/* While RFC4291 is not explicit about v4mapped addresses
 	 * in IPv6 headers, it seems clear linux dual-stack
 	 * model can not deal properly with these.
@@ -232,6 +255,8 @@ static struct sk_buff *ip6_rcv_core(struct sk_buff *skb, struct net_device *dev,
 	if (ipv6_addr_v4mapped(&hdr->saddr))
 		goto err;
 
+=======
+>>>>>>> rebase
 	skb->transport_header = skb->network_header + sizeof(*hdr);
 	IP6CB(skb)->nhoff = offsetof(struct ipv6hdr, nexthdr);
 
@@ -330,18 +355,31 @@ void ipv6_list_rcv(struct list_head *head, struct packet_type *pt,
 /*
  *	Deliver the packet to the host
  */
+<<<<<<< HEAD
 void ip6_protocol_deliver_rcu(struct net *net, struct sk_buff *skb, int nexthdr,
 			      bool have_final)
+=======
+
+
+static int ip6_input_finish(struct net *net, struct sock *sk, struct sk_buff *skb)
+>>>>>>> rebase
 {
 	const struct inet6_protocol *ipprot;
 	struct inet6_dev *idev;
 	unsigned int nhoff;
+<<<<<<< HEAD
 	bool raw;
+=======
+	int nexthdr;
+	bool raw;
+	bool have_final = false;
+>>>>>>> rebase
 
 	/*
 	 *	Parse extension headers
 	 */
 
+<<<<<<< HEAD
 resubmit:
 	idev = ip6_dst_idev(skb_dst(skb));
 	nhoff = IP6CB(skb)->nhoff;
@@ -350,6 +388,15 @@ resubmit:
 			goto discard;
 		nexthdr = skb_network_header(skb)[nhoff];
 	}
+=======
+	rcu_read_lock();
+resubmit:
+	idev = ip6_dst_idev(skb_dst(skb));
+	if (!pskb_pull(skb, skb_transport_offset(skb)))
+		goto discard;
+	nhoff = IP6CB(skb)->nhoff;
+	nexthdr = skb_network_header(skb)[nhoff];
+>>>>>>> rebase
 
 resubmit_final:
 	raw = raw6_local_deliver(skb, nexthdr);
@@ -420,6 +467,7 @@ resubmit_final:
 			consume_skb(skb);
 		}
 	}
+<<<<<<< HEAD
 	return;
 
 discard:
@@ -433,6 +481,15 @@ static int ip6_input_finish(struct net *net, struct sock *sk, struct sk_buff *sk
 	ip6_protocol_deliver_rcu(net, skb, 0, false);
 	rcu_read_unlock();
 
+=======
+	rcu_read_unlock();
+	return 0;
+
+discard:
+	__IP6_INC_STATS(net, idev, IPSTATS_MIB_INDISCARDS);
+	rcu_read_unlock();
+	kfree_skb(skb);
+>>>>>>> rebase
 	return 0;
 }
 

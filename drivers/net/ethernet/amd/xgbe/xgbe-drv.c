@@ -515,7 +515,11 @@ static void xgbe_isr_task(unsigned long data)
 				xgbe_disable_rx_tx_ints(pdata);
 
 				/* Turn on polling */
+<<<<<<< HEAD
 				__napi_schedule_irqoff(&pdata->napi);
+=======
+				__napi_schedule(&pdata->napi);
+>>>>>>> rebase
 			}
 		} else {
 			/* Don't clear Rx/Tx status if doing per channel DMA
@@ -722,7 +726,13 @@ static void xgbe_stop_timers(struct xgbe_prv_data *pdata)
 		if (!channel->tx_ring)
 			break;
 
+<<<<<<< HEAD
 		del_timer_sync(&channel->tx_timer);
+=======
+		/* Deactivate the Tx timer */
+		del_timer_sync(&channel->tx_timer);
+		channel->tx_timer_active = 0;
+>>>>>>> rebase
 	}
 }
 
@@ -1444,6 +1454,10 @@ static void xgbe_stop(struct xgbe_prv_data *pdata)
 		return;
 
 	netif_tx_stop_all_queues(netdev);
+<<<<<<< HEAD
+=======
+	netif_carrier_off(pdata->netdev);
+>>>>>>> rebase
 
 	xgbe_stop_timers(pdata);
 	flush_workqueue(pdata->dev_workqueue);
@@ -2765,6 +2779,17 @@ read_again:
 			buf2_len = xgbe_rx_buf2_len(rdata, packet, len);
 			len += buf2_len;
 
+<<<<<<< HEAD
+=======
+			if (buf2_len > rdata->rx.buf.dma_len) {
+				/* Hardware inconsistency within the descriptors
+				 * that has resulted in a length underflow.
+				 */
+				error = 1;
+				goto skip_data;
+			}
+
+>>>>>>> rebase
 			if (!skb) {
 				skb = xgbe_create_skb(pdata, napi, rdata,
 						      buf1_len);
@@ -2794,8 +2819,15 @@ skip_data:
 		if (!last || context_next)
 			goto read_again;
 
+<<<<<<< HEAD
 		if (!skb)
 			goto next_packet;
+=======
+		if (!skb || error) {
+			dev_kfree_skb(skb);
+			goto next_packet;
+		}
+>>>>>>> rebase
 
 		/* Be sure we don't exceed the configured MTU */
 		max_len = netdev->mtu + ETH_HLEN;

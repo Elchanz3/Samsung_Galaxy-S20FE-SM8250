@@ -181,6 +181,7 @@ config DA8XX_MSTPRI
 	  configuration. Allows to adjust the priorities of all master
 	  peripherals.
 
+<<<<<<< HEAD
 config MHI_BUS
 	tristate "Modem Host Interface"
 	help
@@ -201,5 +202,8 @@ config MHI_DEBUG
 source "drivers/bus/fsl-mc/Kconfig"
 source "drivers/bus/mhi/controllers/Kconfig"
 source "drivers/bus/mhi/devices/Kconfig"
+=======
+source "drivers/bus/fsl-mc/Kconfig"
+>>>>>>> rebase
 
 endmenu

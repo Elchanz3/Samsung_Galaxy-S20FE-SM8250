@@ -26,7 +26,10 @@
 #include <linux/interrupt.h>
 #include <linux/io.h>
 #include <linux/io-64-nonatomic-hi-lo.h>
+<<<<<<< HEAD
 #include <linux/io-pgtable.h>
+=======
+>>>>>>> rebase
 #include <linux/iommu.h>
 #include <linux/iopoll.h>
 #include <linux/kconfig.h>
@@ -43,6 +46,10 @@
 #include <linux/slab.h>
 #include <linux/spinlock.h>
 
+<<<<<<< HEAD
+=======
+#include "io-pgtable.h"
+>>>>>>> rebase
 #include "arm-smmu-regs.h"
 
 #define SMMU_INTR_SEL_NS     0x2000
@@ -767,9 +774,18 @@ static bool qcom_iommu_has_secure_context(struct qcom_iommu_dev *qcom_iommu)
 {
 	struct device_node *child;
 
+<<<<<<< HEAD
 	for_each_child_of_node(qcom_iommu->dev->of_node, child)
 		if (of_device_is_compatible(child, "qcom,msm-iommu-v1-sec"))
 			return true;
+=======
+	for_each_child_of_node(qcom_iommu->dev->of_node, child) {
+		if (of_device_is_compatible(child, "qcom,msm-iommu-v1-sec")) {
+			of_node_put(child);
+			return true;
+		}
+	}
+>>>>>>> rebase
 
 	return false;
 }
@@ -797,8 +813,16 @@ static int qcom_iommu_device_probe(struct platform_device *pdev)
 	qcom_iommu->dev = dev;
 
 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+<<<<<<< HEAD
 	if (res)
 		qcom_iommu->local_base = devm_ioremap_resource(dev, res);
+=======
+	if (res) {
+		qcom_iommu->local_base = devm_ioremap_resource(dev, res);
+		if (IS_ERR(qcom_iommu->local_base))
+			return PTR_ERR(qcom_iommu->local_base);
+	}
+>>>>>>> rebase
 
 	qcom_iommu->iface_clk = devm_clk_get(dev, "iface");
 	if (IS_ERR(qcom_iommu->iface_clk)) {

@@ -241,7 +241,10 @@ int ttm_tt_init(struct ttm_tt *ttm, struct ttm_buffer_object *bo,
 	ttm_tt_init_fields(ttm, bo, page_flags);
 
 	if (ttm_tt_alloc_page_directory(ttm)) {
+<<<<<<< HEAD
 		ttm_tt_destroy(ttm);
+=======
+>>>>>>> rebase
 		pr_err("Failed allocating page table\n");
 		return -ENOMEM;
 	}
@@ -265,7 +268,10 @@ int ttm_dma_tt_init(struct ttm_dma_tt *ttm_dma, struct ttm_buffer_object *bo,
 
 	INIT_LIST_HEAD(&ttm_dma->pages_list);
 	if (ttm_dma_tt_alloc_page_directory(ttm_dma)) {
+<<<<<<< HEAD
 		ttm_tt_destroy(ttm);
+=======
+>>>>>>> rebase
 		pr_err("Failed allocating page table\n");
 		return -ENOMEM;
 	}
@@ -287,7 +293,10 @@ int ttm_sg_tt_init(struct ttm_dma_tt *ttm_dma, struct ttm_buffer_object *bo,
 	else
 		ret = ttm_dma_tt_alloc_page_directory(ttm_dma);
 	if (ret) {
+<<<<<<< HEAD
 		ttm_tt_destroy(ttm);
+=======
+>>>>>>> rebase
 		pr_err("Failed allocating page table\n");
 		return -ENOMEM;
 	}

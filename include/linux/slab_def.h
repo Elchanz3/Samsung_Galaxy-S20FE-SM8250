@@ -104,6 +104,7 @@ static inline void *nearest_obj(struct kmem_cache *cache, struct page *page,
 		return object;
 }
 
+<<<<<<< HEAD
 /*
  * We want to avoid an expensive divide : (offset / cache->size)
  *   Using the fact that size is a constant for a particular cache,
@@ -117,4 +118,6 @@ static inline unsigned int obj_to_index(const struct kmem_cache *cache,
 	return reciprocal_divide(offset, cache->reciprocal_buffer_size);
 }
 
+=======
+>>>>>>> rebase
 #endif	/* _LINUX_SLAB_DEF_H */

@@ -691,8 +691,12 @@ qla2x00_rff_id(scsi_qla_host_t *vha, u8 type)
 		return (QLA_SUCCESS);
 	}
 
+<<<<<<< HEAD
 	return qla_async_rffid(vha, &vha->d_id, qlt_rff_id(vha),
 	    FC4_TYPE_FCP_SCSI);
+=======
+	return qla_async_rffid(vha, &vha->d_id, qlt_rff_id(vha), type);
+>>>>>>> rebase
 }
 
 static int qla_async_rffid(scsi_qla_host_t *vha, port_id_t *d_id,
@@ -744,7 +748,11 @@ static int qla_async_rffid(scsi_qla_host_t *vha, port_id_t *d_id,
 	ct_req->req.rff_id.port_id[1] = d_id->b.area;
 	ct_req->req.rff_id.port_id[2] = d_id->b.al_pa;
 	ct_req->req.rff_id.fc4_feature = fc4feature;
+<<<<<<< HEAD
 	ct_req->req.rff_id.fc4_type = fc4type;		/* SCSI - FCP */
+=======
+	ct_req->req.rff_id.fc4_type = fc4type;		/* SCSI-FCP or FC-NVMe */
+>>>>>>> rebase
 
 	sp->u.iocb_cmd.u.ctarg.req_size = RFF_ID_REQ_SIZE;
 	sp->u.iocb_cmd.u.ctarg.rsp_size = RFF_ID_RSP_SIZE;
@@ -3973,7 +3981,11 @@ void qla24xx_async_gnnft_done(scsi_qla_host_t *vha, srb_t *sp)
 		list_for_each_entry(fcport, &vha->vp_fcports, list) {
 			if (memcmp(rp->port_name, fcport->port_name, WWN_SIZE))
 				continue;
+<<<<<<< HEAD
 			fcport->rscn_rcvd = 0;
+=======
+			fcport->scan_needed = 0;
+>>>>>>> rebase
 			fcport->scan_state = QLA_FCPORT_FOUND;
 			found = true;
 			/*
@@ -4009,11 +4021,16 @@ void qla24xx_async_gnnft_done(scsi_qla_host_t *vha, srb_t *sp)
 	 */
 	list_for_each_entry(fcport, &vha->vp_fcports, list) {
 		if ((fcport->flags & FCF_FABRIC_DEVICE) == 0) {
+<<<<<<< HEAD
 			fcport->rscn_rcvd = 0;
+=======
+			fcport->scan_needed = 0;
+>>>>>>> rebase
 			continue;
 		}
 
 		if (fcport->scan_state != QLA_FCPORT_FOUND) {
+<<<<<<< HEAD
 			fcport->rscn_rcvd = 0;
 			if ((qla_dual_mode_enabled(vha) ||
 				qla_ini_mode_enabled(vha)) &&
@@ -4023,6 +4040,16 @@ void qla24xx_async_gnnft_done(scsi_qla_host_t *vha, srb_t *sp)
 
 				if (fcport->loop_id != FC_NO_LOOP_ID &&
 				    (fcport->flags & FCF_FCP2_DEVICE) == 0) {
+=======
+			fcport->scan_needed = 0;
+			if ((qla_dual_mode_enabled(vha) ||
+				qla_ini_mode_enabled(vha)) &&
+			    atomic_read(&fcport->state) == FCS_ONLINE) {
+				if (fcport->loop_id != FC_NO_LOOP_ID) {
+					if (fcport->flags & FCF_FCP2_DEVICE)
+						fcport->logout_on_delete = 0;
+
+>>>>>>> rebase
 					ql_dbg(ql_dbg_disc, vha, 0x20f0,
 					    "%s %d %8phC post del sess\n",
 					    __func__, __LINE__,
@@ -4033,7 +4060,11 @@ void qla24xx_async_gnnft_done(scsi_qla_host_t *vha, srb_t *sp)
 				}
 			}
 		} else {
+<<<<<<< HEAD
 			if (fcport->rscn_rcvd ||
+=======
+			if (fcport->scan_needed ||
+>>>>>>> rebase
 			    fcport->disc_state != DSC_LOGIN_COMPLETE) {
 				if (fcport->login_retry == 0) {
 					fcport->login_retry =
@@ -4043,7 +4074,11 @@ void qla24xx_async_gnnft_done(scsi_qla_host_t *vha, srb_t *sp)
 					    fcport->port_name, fcport->loop_id,
 					    fcport->login_retry);
 				}
+<<<<<<< HEAD
 				fcport->rscn_rcvd = 0;
+=======
+				fcport->scan_needed = 0;
+>>>>>>> rebase
 				qla24xx_fcport_handle_login(vha, fcport);
 			}
 		}
@@ -4058,7 +4093,11 @@ out:
 
 	if (recheck) {
 		list_for_each_entry(fcport, &vha->vp_fcports, list) {
+<<<<<<< HEAD
 			if (fcport->rscn_rcvd) {
+=======
+			if (fcport->scan_needed) {
+>>>>>>> rebase
 				set_bit(LOCAL_LOOP_UPDATE, &vha->dpc_flags);
 				set_bit(LOOP_RESYNC_NEEDED, &vha->dpc_flags);
 				break;
@@ -4261,12 +4300,20 @@ static void qla2x00_async_gpnft_gnnft_sp_done(void *s, int res)
 
 		sp->rc = res;
 		rc = qla2x00_post_nvme_gpnft_done_work(vha, sp, QLA_EVT_GPNFT);
+<<<<<<< HEAD
 		if (!rc) {
+=======
+		if (rc) {
+>>>>>>> rebase
 			qla24xx_sp_unmap(vha, sp);
 			set_bit(LOCAL_LOOP_UPDATE, &vha->dpc_flags);
 			set_bit(LOOP_RESYNC_NEEDED, &vha->dpc_flags);
 			return;
 		}
+<<<<<<< HEAD
+=======
+		return;
+>>>>>>> rebase
 	}
 
 	if (cmd == GPN_FT_CMD) {
@@ -4316,6 +4363,11 @@ static int qla24xx_async_gnnft(scsi_qla_host_t *vha, struct srb *sp,
 		vha->scan.scan_flags &= ~SF_SCANNING;
 		spin_unlock_irqrestore(&vha->work_lock, flags);
 		WARN_ON(1);
+<<<<<<< HEAD
+=======
+		set_bit(LOCAL_LOOP_UPDATE, &vha->dpc_flags);
+		set_bit(LOOP_RESYNC_NEEDED, &vha->dpc_flags);
+>>>>>>> rebase
 		goto done_free_sp;
 	}
 
@@ -4349,8 +4401,17 @@ static int qla24xx_async_gnnft(scsi_qla_host_t *vha, struct srb *sp,
 	sp->done = qla2x00_async_gpnft_gnnft_sp_done;
 
 	rval = qla2x00_start_sp(sp);
+<<<<<<< HEAD
 	if (rval != QLA_SUCCESS)
 		goto done_free_sp;
+=======
+	if (rval != QLA_SUCCESS) {
+		spin_lock_irqsave(&vha->work_lock, flags);
+		vha->scan.scan_flags &= ~SF_SCANNING;
+		spin_unlock_irqrestore(&vha->work_lock, flags);
+		goto done_free_sp;
+	}
+>>>>>>> rebase
 
 	ql_dbg(ql_dbg_disc, vha, 0xffff,
 	    "Async-%s hdl=%x FC4Type %x.\n", sp->name,

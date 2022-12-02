@@ -1,8 +1,11 @@
 /* SPDX-License-Identifier: GPL-2.0 */
+<<<<<<< HEAD
 /*
  * Copyright (c) 2016-2018, The Linux Foundation. All rights reserved.
  */
 
+=======
+>>>>>>> rebase
 #undef TRACE_SYSTEM
 #define TRACE_SYSTEM kmem
 
@@ -319,6 +322,7 @@ TRACE_EVENT(mm_page_alloc_extfrag,
 		__entry->change_ownership)
 );
 
+<<<<<<< HEAD
 
 DECLARE_EVENT_CLASS(ion_alloc,
 
@@ -899,6 +903,8 @@ TRACE_EVENT(rss_stat,
 		__entry->member,
 		__entry->size)
 	);
+=======
+>>>>>>> rebase
 #endif /* _TRACE_KMEM_H */
 
 /* This part must be outside protection */

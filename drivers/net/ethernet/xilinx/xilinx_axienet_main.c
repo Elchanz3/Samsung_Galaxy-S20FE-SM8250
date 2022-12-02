@@ -279,6 +279,19 @@ static int axienet_dma_bd_init(struct net_device *ndev)
 	axienet_dma_out32(lp, XAXIDMA_TX_CR_OFFSET,
 			  cr | XAXIDMA_CR_RUNSTOP_MASK);
 
+<<<<<<< HEAD
+=======
+	/* Wait for PhyRstCmplt bit to be set, indicating the PHY reset has finished */
+	ret = read_poll_timeout(axienet_ior, value,
+				value & XAE_INT_PHYRSTCMPLT_MASK,
+				DELAY_OF_ONE_MILLISEC, 50000, false, lp,
+				XAE_IS_OFFSET);
+	if (ret) {
+		dev_err(lp->dev, "%s: timeout waiting for PhyRstCmplt\n", __func__);
+		return ret;
+	}
+
+>>>>>>> rebase
 	return 0;
 out:
 	axienet_dma_bd_release(ndev);
@@ -672,7 +685,11 @@ axienet_start_xmit(struct sk_buff *skb, struct net_device *ndev)
 	num_frag = skb_shinfo(skb)->nr_frags;
 	cur_p = &lp->tx_bd_v[lp->tx_bd_tail];
 
+<<<<<<< HEAD
 	if (axienet_check_tx_bd_space(lp, num_frag)) {
+=======
+	if (axienet_check_tx_bd_space(lp, num_frag + 1)) {
+>>>>>>> rebase
 		if (netif_queue_stopped(ndev))
 			return NETDEV_TX_BUSY;
 
@@ -682,7 +699,11 @@ axienet_start_xmit(struct sk_buff *skb, struct net_device *ndev)
 		smp_mb();
 
 		/* Space might have just been freed - check again */
+<<<<<<< HEAD
 		if (axienet_check_tx_bd_space(lp, num_frag))
+=======
+		if (axienet_check_tx_bd_space(lp, num_frag + 1))
+>>>>>>> rebase
 			return NETDEV_TX_BUSY;
 
 		netif_wake_queue(ndev);

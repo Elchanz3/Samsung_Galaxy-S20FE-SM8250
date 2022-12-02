@@ -12,7 +12,11 @@
  */
 
 struct trace_seq {
+<<<<<<< HEAD
 	unsigned char		buffer[PAGE_SIZE];
+=======
+	char			buffer[PAGE_SIZE];
+>>>>>>> rebase
 	struct seq_buf		seq;
 	int			full;
 };
@@ -51,7 +55,11 @@ static inline int trace_seq_used(struct trace_seq *s)
  * that is about to be written to and then return the result
  * of that write.
  */
+<<<<<<< HEAD
 static inline unsigned char *
+=======
+static inline char *
+>>>>>>> rebase
 trace_seq_buffer_ptr(struct trace_seq *s)
 {
 	return s->buffer + seq_buf_used(&s->seq);

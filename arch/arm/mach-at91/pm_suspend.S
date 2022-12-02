@@ -220,6 +220,13 @@ ENDPROC(at91_backup_mode)
 	orr	tmp1, tmp1, #AT91_PMC_KEY
 	str	tmp1, [pmc, #AT91_CKGR_MOR]
 
+<<<<<<< HEAD
+=======
+	/* Quirk for SAM9X60's PMC */
+	nop
+	nop
+
+>>>>>>> rebase
 	wait_mckrdy
 
 	/* Enable the crystal oscillator */

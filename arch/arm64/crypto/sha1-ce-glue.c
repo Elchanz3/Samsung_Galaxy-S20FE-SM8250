@@ -21,6 +21,10 @@
 MODULE_DESCRIPTION("SHA1 secure hash using ARMv8 Crypto Extensions");
 MODULE_AUTHOR("Ard Biesheuvel <ard.biesheuvel@linaro.org>");
 MODULE_LICENSE("GPL v2");
+<<<<<<< HEAD
+=======
+MODULE_ALIAS_CRYPTO("sha1");
+>>>>>>> rebase
 
 struct sha1_ce_state {
 	struct sha1_state	sst;
@@ -29,6 +33,7 @@ struct sha1_ce_state {
 
 asmlinkage void sha1_ce_transform(struct sha1_ce_state *sst, u8 const *src,
 				  int blocks);
+<<<<<<< HEAD
 #ifdef CONFIG_CFI_CLANG
 static inline void __cfi_sha1_ce_transform(struct sha1_state *sst,
 					   u8 const *src, int blocks)
@@ -37,6 +42,8 @@ static inline void __cfi_sha1_ce_transform(struct sha1_state *sst,
 }
 #define sha1_ce_transform __cfi_sha1_ce_transform
 #endif
+=======
+>>>>>>> rebase
 
 const u32 sha1_ce_offsetof_count = offsetof(struct sha1_ce_state, sst.count);
 const u32 sha1_ce_offsetof_finalize = offsetof(struct sha1_ce_state, finalize);

@@ -2254,7 +2254,11 @@ static int omap_nand_probe(struct platform_device *pdev)
 	/* scan NAND device connected to chip controller */
 	nand_chip->options |= info->devsize & NAND_BUSWIDTH_16;
 
+<<<<<<< HEAD
 	err = nand_scan(mtd, 1);
+=======
+	err = nand_scan(nand_chip, 1);
+>>>>>>> rebase
 	if (err)
 		goto return_error;
 
@@ -2290,7 +2294,11 @@ static int omap_nand_remove(struct platform_device *pdev)
 	}
 	if (info->dma)
 		dma_release_channel(info->dma);
+<<<<<<< HEAD
 	nand_release(mtd);
+=======
+	nand_release(nand_chip);
+>>>>>>> rebase
 	return 0;
 }
 

@@ -249,6 +249,10 @@ extern struct key *key_alloc(struct key_type *type,
 #define KEY_ALLOC_BUILT_IN		0x0004	/* Key is built into kernel */
 #define KEY_ALLOC_BYPASS_RESTRICTION	0x0008	/* Override the check on restricted keyrings */
 #define KEY_ALLOC_UID_KEYRING		0x0010	/* allocating a user or user session keyring */
+<<<<<<< HEAD
+=======
+#define KEY_ALLOC_SET_KEEP		0x0020	/* Set the KEEP flag on the key/keyring */
+>>>>>>> rebase
 
 extern void key_revoke(struct key *key);
 extern void key_invalidate(struct key *key);
@@ -303,9 +307,12 @@ extern key_ref_t key_create_or_update(key_ref_t keyring,
 				      key_perm_t perm,
 				      unsigned long flags);
 
+<<<<<<< HEAD
 extern key_ref_t lookup_user_key(key_serial_t id, unsigned long flags,
 				 key_perm_t perm);
 
+=======
+>>>>>>> rebase
 extern int key_update(key_ref_t key,
 		      const void *payload,
 		      size_t plen);
@@ -349,9 +356,12 @@ static inline key_serial_t key_serial(const struct key *key)
 
 extern void key_set_timeout(struct key *, unsigned);
 
+<<<<<<< HEAD
 extern key_ref_t lookup_user_key(key_serial_t id, unsigned long flags,
 				 key_perm_t perm);
 
+=======
+>>>>>>> rebase
 /*
  * The permissions required on a key that we're looking up.
  */

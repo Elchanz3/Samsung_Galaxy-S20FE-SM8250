@@ -8,7 +8,11 @@
 #include <linux/types.h>
 #include <linux/tracepoint.h>
 
+<<<<<<< HEAD
 DECLARE_EVENT_CLASS(cma_alloc_class,
+=======
+TRACE_EVENT(cma_alloc,
+>>>>>>> rebase
 
 	TP_PROTO(unsigned long pfn, const struct page *page,
 		 unsigned int count, unsigned int align),
@@ -61,6 +65,7 @@ TRACE_EVENT(cma_release,
 		  __entry->count)
 );
 
+<<<<<<< HEAD
 TRACE_EVENT(cma_alloc_start,
 
 	TP_PROTO(unsigned int count, unsigned int align),
@@ -99,6 +104,8 @@ DEFINE_EVENT(cma_alloc_class, cma_alloc_busy_retry,
 );
 
 
+=======
+>>>>>>> rebase
 #endif /* _TRACE_CMA_H */
 
 /* This part must be outside protection */

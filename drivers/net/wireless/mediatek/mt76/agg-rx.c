@@ -154,8 +154,13 @@ void mt76_rx_aggr_reorder(struct sk_buff *skb, struct sk_buff_head *frames)
 	struct ieee80211_sta *sta;
 	struct mt76_rx_tid *tid;
 	bool sn_less;
+<<<<<<< HEAD
 	u16 seqno, head, size;
 	u8 ackp, idx;
+=======
+	u16 seqno, head, size, idx;
+	u8 ackp;
+>>>>>>> rebase
 
 	__skb_queue_tail(frames, skb);
 
@@ -240,7 +245,11 @@ out:
 }
 
 int mt76_rx_aggr_start(struct mt76_dev *dev, struct mt76_wcid *wcid, u8 tidno,
+<<<<<<< HEAD
 		       u16 ssn, u8 size)
+=======
+		       u16 ssn, u16 size)
+>>>>>>> rebase
 {
 	struct mt76_rx_tid *tid;
 
@@ -264,7 +273,11 @@ EXPORT_SYMBOL_GPL(mt76_rx_aggr_start);
 
 static void mt76_rx_aggr_shutdown(struct mt76_dev *dev, struct mt76_rx_tid *tid)
 {
+<<<<<<< HEAD
 	u8 size = tid->size;
+=======
+	u16 size = tid->size;
+>>>>>>> rebase
 	int i;
 
 	cancel_delayed_work(&tid->reorder_work);
@@ -278,6 +291,10 @@ static void mt76_rx_aggr_shutdown(struct mt76_dev *dev, struct mt76_rx_tid *tid)
 		if (!skb)
 			continue;
 
+<<<<<<< HEAD
+=======
+		tid->reorder_buf[i] = NULL;
+>>>>>>> rebase
 		tid->nframes--;
 		dev_kfree_skb(skb);
 	}

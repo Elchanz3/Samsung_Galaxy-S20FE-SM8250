@@ -44,17 +44,26 @@ out:
 	return irq;
 }
 
+<<<<<<< HEAD
 #define NUMBER_OF_PROPS	5
 int dwc3_host_init(struct dwc3 *dwc)
 {
 	struct property_entry	props[NUMBER_OF_PROPS];
+=======
+int dwc3_host_init(struct dwc3 *dwc)
+{
+	struct property_entry	props[3];
+>>>>>>> rebase
 	struct platform_device	*xhci;
 	int			ret, irq;
 	struct resource		*res;
 	struct platform_device	*dwc3_pdev = to_platform_device(dwc->dev);
 	int			prop_idx = 0;
+<<<<<<< HEAD
 	struct property_entry	imod_prop;
 	struct property_entry	core_id_prop;
+=======
+>>>>>>> rebase
 
 	irq = dwc3_host_get_irq(dwc);
 	if (irq < 0)
@@ -96,6 +105,7 @@ int dwc3_host_init(struct dwc3 *dwc)
 	if (dwc->usb3_lpm_capable)
 		props[prop_idx++].name = "usb3-lpm-capable";
 
+<<<<<<< HEAD
 	if (dwc->xhci_imod_value) {
 		imod_prop.name  = "imod-interval-ns";
 		imod_prop.length  = sizeof(u32);
@@ -114,6 +124,8 @@ int dwc3_host_init(struct dwc3 *dwc)
 		props[prop_idx++] = core_id_prop;
 	}
 
+=======
+>>>>>>> rebase
 	/**
 	 * WORKAROUND: dwc3 revisions <=3.00a have a limitation
 	 * where Port Disable command doesn't work.
@@ -126,9 +138,12 @@ int dwc3_host_init(struct dwc3 *dwc)
 	if (dwc->revision <= DWC3_REVISION_300A)
 		props[prop_idx++].name = "quirk-broken-port-ped";
 
+<<<<<<< HEAD
 	if (dwc->host_poweroff_in_pm_suspend)
 		props[prop_idx++].name = "host-poweroff-in-pm-suspend";
 
+=======
+>>>>>>> rebase
 	if (prop_idx) {
 		ret = platform_device_add_properties(xhci, props);
 		if (ret) {
@@ -166,4 +181,8 @@ void dwc3_host_exit(struct dwc3 *dwc)
 	phy_remove_lookup(dwc->usb3_generic_phy, "usb3-phy",
 			  dev_name(dwc->dev));
 	platform_device_unregister(dwc->xhci);
+<<<<<<< HEAD
+=======
+	dwc->xhci = NULL;
+>>>>>>> rebase
 }

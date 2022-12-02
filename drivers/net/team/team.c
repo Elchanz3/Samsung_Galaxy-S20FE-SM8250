@@ -294,7 +294,11 @@ inst_rollback:
 	for (i--; i >= 0; i--)
 		__team_option_inst_del_option(team, dst_opts[i]);
 
+<<<<<<< HEAD
 	i = option_count - 1;
+=======
+	i = option_count;
+>>>>>>> rebase
 alloc_rollback:
 	for (i--; i >= 0; i--)
 		kfree(dst_opts[i]);
@@ -475,6 +479,12 @@ static const struct team_mode *team_mode_get(const char *kind)
 	struct team_mode_item *mitem;
 	const struct team_mode *mode = NULL;
 
+<<<<<<< HEAD
+=======
+	if (!try_module_get(THIS_MODULE))
+		return NULL;
+
+>>>>>>> rebase
 	spin_lock(&mode_list_lock);
 	mitem = __find_mode(kind);
 	if (!mitem) {
@@ -490,6 +500,10 @@ static const struct team_mode *team_mode_get(const char *kind)
 	}
 
 	spin_unlock(&mode_list_lock);
+<<<<<<< HEAD
+=======
+	module_put(THIS_MODULE);
+>>>>>>> rebase
 	return mode;
 }
 
@@ -994,7 +1008,12 @@ static void __team_compute_features(struct team *team)
 	unsigned int dst_release_flag = IFF_XMIT_DST_RELEASE |
 					IFF_XMIT_DST_RELEASE_PERM;
 
+<<<<<<< HEAD
 	list_for_each_entry(port, &team->port_list, list) {
+=======
+	rcu_read_lock();
+	list_for_each_entry_rcu(port, &team->port_list, list) {
+>>>>>>> rebase
 		vlan_features = netdev_increment_features(vlan_features,
 					port->dev->vlan_features,
 					TEAM_VLAN_FEATURES);
@@ -1008,6 +1027,10 @@ static void __team_compute_features(struct team *team)
 		if (port->dev->hard_header_len > max_hard_header_len)
 			max_hard_header_len = port->dev->hard_header_len;
 	}
+<<<<<<< HEAD
+=======
+	rcu_read_unlock();
+>>>>>>> rebase
 
 	team->dev->vlan_features = vlan_features;
 	team->dev->hw_enc_features = enc_features | NETIF_F_GSO_ENCAP_ALL |
@@ -1023,9 +1046,13 @@ static void __team_compute_features(struct team *team)
 
 static void team_compute_features(struct team *team)
 {
+<<<<<<< HEAD
 	mutex_lock(&team->lock);
 	__team_compute_features(team);
 	mutex_unlock(&team->lock);
+=======
+	__team_compute_features(team);
+>>>>>>> rebase
 	netdev_change_features(team->dev);
 }
 
@@ -1276,10 +1303,19 @@ static int team_port_add(struct team *team, struct net_device *port_dev,
 		}
 	}
 
+<<<<<<< HEAD
 	netif_addr_lock_bh(dev);
 	dev_uc_sync_multiple(port_dev, dev);
 	dev_mc_sync_multiple(port_dev, dev);
 	netif_addr_unlock_bh(dev);
+=======
+	if (dev->flags & IFF_UP) {
+		netif_addr_lock_bh(dev);
+		dev_uc_sync_multiple(port_dev, dev);
+		dev_mc_sync_multiple(port_dev, dev);
+		netif_addr_unlock_bh(dev);
+	}
+>>>>>>> rebase
 
 	port->index = -1;
 	list_add_tail_rcu(&port->list, &team->port_list);
@@ -1350,8 +1386,15 @@ static int team_port_del(struct team *team, struct net_device *port_dev)
 	netdev_rx_handler_unregister(port_dev);
 	team_port_disable_netpoll(port);
 	vlan_vids_del_by_dev(port_dev, dev);
+<<<<<<< HEAD
 	dev_uc_unsync(port_dev, dev);
 	dev_mc_unsync(port_dev, dev);
+=======
+	if (dev->flags & IFF_UP) {
+		dev_uc_unsync(port_dev, dev);
+		dev_mc_unsync(port_dev, dev);
+	}
+>>>>>>> rebase
 	dev_close(port_dev);
 	team_port_leave(team, port);
 
@@ -1699,6 +1742,17 @@ static int team_open(struct net_device *dev)
 
 static int team_close(struct net_device *dev)
 {
+<<<<<<< HEAD
+=======
+	struct team *team = netdev_priv(dev);
+	struct team_port *port;
+
+	list_for_each_entry(port, &team->port_list, list) {
+		dev_uc_unsync(port->dev, dev);
+		dev_mc_unsync(port->dev, dev);
+	}
+
+>>>>>>> rebase
 	return 0;
 }
 
@@ -2082,6 +2136,10 @@ static void team_setup_by_port(struct net_device *dev,
 	dev->header_ops	= port_dev->header_ops;
 	dev->type = port_dev->type;
 	dev->hard_header_len = port_dev->hard_header_len;
+<<<<<<< HEAD
+=======
+	dev->needed_headroom = port_dev->needed_headroom;
+>>>>>>> rebase
 	dev->addr_len = port_dev->addr_len;
 	dev->mtu = port_dev->mtu;
 	memcpy(dev->broadcast, port_dev->broadcast, port_dev->addr_len);

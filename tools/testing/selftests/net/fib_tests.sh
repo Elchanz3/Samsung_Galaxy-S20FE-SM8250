@@ -987,7 +987,10 @@ ipv6_addr_metric_test()
 
 	check_route6 "2001:db8:104::1 dev dummy2 proto kernel metric 260"
 	log_test $? 0 "Set metric with peer route on local side"
+<<<<<<< HEAD
 	log_test $? 0 "User specified metric on local address"
+=======
+>>>>>>> rebase
 	check_route6 "2001:db8:104::2 dev dummy2 proto kernel metric 260"
 	log_test $? 0 "Set metric with peer route on peer side"
 

@@ -380,6 +380,16 @@ int irq_matrix_alloc(struct irq_matrix *m, const struct cpumask *msk,
 	unsigned int cpu, bit;
 	struct cpumap *cm;
 
+<<<<<<< HEAD
+=======
+	/*
+	 * Not required in theory, but matrix_find_best_cpu() uses
+	 * for_each_cpu() which ignores the cpumask on UP .
+	 */
+	if (cpumask_empty(msk))
+		return -EINVAL;
+
+>>>>>>> rebase
 	cpu = matrix_find_best_cpu(m, msk);
 	if (cpu == UINT_MAX)
 		return -ENOSPC;
@@ -416,7 +426,13 @@ void irq_matrix_free(struct irq_matrix *m, unsigned int cpu,
 	if (WARN_ON_ONCE(bit < m->alloc_start || bit >= m->alloc_end))
 		return;
 
+<<<<<<< HEAD
 	clear_bit(bit, cm->alloc_map);
+=======
+	if (WARN_ON_ONCE(!test_and_clear_bit(bit, cm->alloc_map)))
+		return;
+
+>>>>>>> rebase
 	cm->allocated--;
 	if(managed)
 		cm->managed_allocated--;

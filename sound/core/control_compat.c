@@ -279,6 +279,10 @@ static int copy_ctl_value_to_user(void __user *userdata,
 				  struct snd_ctl_elem_value *data,
 				  int type, int count)
 {
+<<<<<<< HEAD
+=======
+	struct snd_ctl_elem_value32 __user *data32 = userdata;
+>>>>>>> rebase
 	int i, size;
 
 	if (type == SNDRV_CTL_ELEM_TYPE_BOOLEAN ||
@@ -295,6 +299,11 @@ static int copy_ctl_value_to_user(void __user *userdata,
 		if (copy_to_user(valuep, data->value.bytes.data, size))
 			return -EFAULT;
 	}
+<<<<<<< HEAD
+=======
+	if (copy_to_user(&data32->id, &data->id, sizeof(data32->id)))
+		return -EFAULT;
+>>>>>>> rebase
 	return 0;
 }
 

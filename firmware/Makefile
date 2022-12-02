@@ -3,8 +3,11 @@
 # kbuild file for firmware/
 #
 
+<<<<<<< HEAD
 CONFIG_EXTRA_FIRMWARE_DIR="firmware"
 
+=======
+>>>>>>> rebase
 # Create $(fwabs) from $(CONFIG_EXTRA_FIRMWARE_DIR) -- if it doesn't have a
 # leading /, it's relative to $(srctree).
 fwdir := $(subst $(quote),,$(CONFIG_EXTRA_FIRMWARE_DIR))
@@ -12,6 +15,7 @@ fwabs := $(addprefix $(srctree)/,$(filter-out /%,$(fwdir)))$(filter /%,$(fwdir))
 
 fw-external-y := $(subst $(quote),,$(CONFIG_EXTRA_FIRMWARE))
 
+<<<<<<< HEAD
 fw-external-$(CONFIG_TOUCHSCREEN_SEC_TS_Y79A) += tsp_sec/y771_y2_ub.bin tsp_sec/y79a_y2.bin tsp_sec/y79a_x1.bin \
 							tsp_sec/y79a_y2_ub.bin tsp_sec/y79a_x1_ub.bin tsp_sec/y79a_z3.bin
 
@@ -91,6 +95,8 @@ ifeq ($(CONFIG_FIVE_TEE_DRIVER),y)
 include $(srctree)/firmware/five/Makefile
 endif
 
+=======
+>>>>>>> rebase
 quiet_cmd_fwbin = MK_FW   $@
       cmd_fwbin = FWNAME="$(patsubst firmware/%.gen.S,%,$@)";		     \
 		  FWSTR="$(subst /,_,$(subst .,_,$(subst -,_,$(patsubst	     \
@@ -123,7 +129,12 @@ wordsize_deps := $(wildcard include/config/64bit.h include/config/32bit.h \
 		include/config/x86_32.h include/config/x86_64.h \
 		firmware/Makefile)
 
+<<<<<<< HEAD
 $(patsubst %,$(obj)/%.gen.S, $(fw-external-y)): %: $(wordsize_deps)
+=======
+$(patsubst %,$(obj)/%.gen.S, $(fw-external-y)): %: $(wordsize_deps) \
+		include/config/extra/firmware/dir.h
+>>>>>>> rebase
 	$(call cmd,fwbin,$(fwabs)/$(patsubst $(obj)/%.gen.S,%,$@))
 
 # The .o files depend on the binaries directly; the .S files don't.

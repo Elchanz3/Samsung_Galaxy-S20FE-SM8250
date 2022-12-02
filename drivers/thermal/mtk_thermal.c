@@ -431,8 +431,12 @@ static int mtk_thermal_bank_temperature(struct mtk_thermal_bank *bank)
 	u32 raw;
 
 	for (i = 0; i < conf->bank_data[bank->id].num_sensors; i++) {
+<<<<<<< HEAD
 		raw = readl(mt->thermal_base +
 			    conf->msr[conf->bank_data[bank->id].sensors[i]]);
+=======
+		raw = readl(mt->thermal_base + conf->msr[i]);
+>>>>>>> rebase
 
 		temp = raw_to_mcelsius(mt,
 				       conf->bank_data[bank->id].sensors[i],
@@ -569,8 +573,12 @@ static void mtk_thermal_init_bank(struct mtk_thermal *mt, int num,
 
 	for (i = 0; i < conf->bank_data[num].num_sensors; i++)
 		writel(conf->sensor_mux_values[conf->bank_data[num].sensors[i]],
+<<<<<<< HEAD
 		       mt->thermal_base +
 		       conf->adcpnp[conf->bank_data[num].sensors[i]]);
+=======
+		       mt->thermal_base + conf->adcpnp[i]);
+>>>>>>> rebase
 
 	writel((1 << conf->bank_data[num].num_sensors) - 1,
 	       mt->thermal_base + TEMP_MONCTL0);

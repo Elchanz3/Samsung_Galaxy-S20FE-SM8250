@@ -20,10 +20,13 @@
 #include <linux/kernel.h>
 #include <net/secure_seq.h>
 #include <net/ipv6.h>
+<<<<<<< HEAD
 #ifdef CONFIG_MPTCP
 #include <net/mptcp.h>
 #include <net/mptcp_v6.h>
 #endif
+=======
+>>>>>>> rebase
 #include <net/tcp.h>
 
 #define COOKIEBITS 24	/* Upper bits store count */
@@ -115,12 +118,16 @@ u32 __cookie_v6_init_sequence(const struct ipv6hdr *iph,
 }
 EXPORT_SYMBOL_GPL(__cookie_v6_init_sequence);
 
+<<<<<<< HEAD
 #ifdef CONFIG_MPTCP
 	__u32 cookie_v6_init_sequence(struct request_sock *req, const struct sock *sk,
 				      const struct sk_buff *skb, __u16 *mssp)
 #else
 	__u32 cookie_v6_init_sequence(const struct sk_buff *skb, __u16 *mssp)
 #endif
+=======
+__u32 cookie_v6_init_sequence(const struct sk_buff *skb, __u16 *mssp)
+>>>>>>> rebase
 {
 	const struct ipv6hdr *iph = ipv6_hdr(skb);
 	const struct tcphdr *th = tcp_hdr(skb);
@@ -142,9 +149,12 @@ EXPORT_SYMBOL_GPL(__cookie_v6_check);
 struct sock *cookie_v6_check(struct sock *sk, struct sk_buff *skb)
 {
 	struct tcp_options_received tcp_opt;
+<<<<<<< HEAD
 #ifdef CONFIG_MPTCP
 	struct mptcp_options_received mopt;
 #endif
+=======
+>>>>>>> rebase
 	struct inet_request_sock *ireq;
 	struct tcp_request_sock *treq;
 	struct ipv6_pinfo *np = inet6_sk(sk);
@@ -153,7 +163,11 @@ struct sock *cookie_v6_check(struct sock *sk, struct sk_buff *skb)
 	__u32 cookie = ntohl(th->ack_seq) - 1;
 	struct sock *ret = sk;
 	struct request_sock *req;
+<<<<<<< HEAD
 	int mss;
+=======
+	int full_space, mss;
+>>>>>>> rebase
 	struct dst_entry *dst;
 	__u8 rcv_wscale;
 	u32 tsoff = 0;
@@ -174,12 +188,17 @@ struct sock *cookie_v6_check(struct sock *sk, struct sk_buff *skb)
 
 	/* check for timestamp cookie support */
 	memset(&tcp_opt, 0, sizeof(tcp_opt));
+<<<<<<< HEAD
 #ifdef CONFIG_MPTCP
 	mptcp_init_mp_opt(&mopt);
 	tcp_parse_options(sock_net(sk), skb, &tcp_opt, &mopt, 0, NULL, NULL);
 #else
 	tcp_parse_options(sock_net(sk), skb, &tcp_opt, 0, NULL);
 #endif
+=======
+	tcp_parse_options(sock_net(sk), skb, &tcp_opt, 0, NULL);
+
+>>>>>>> rebase
 	if (tcp_opt.saw_tstamp && tcp_opt.rcv_tsecr) {
 		tsoff = secure_tcpv6_ts_off(sock_net(sk),
 					    ipv6_hdr(skb)->daddr.s6_addr32,
@@ -191,16 +210,21 @@ struct sock *cookie_v6_check(struct sock *sk, struct sk_buff *skb)
 		goto out;
 
 	ret = NULL;
+<<<<<<< HEAD
 #ifdef CONFIG_MPTCP
 	if (mopt.saw_mpc)
 		req = inet_reqsk_alloc(&mptcp6_request_sock_ops, sk, false);
 	else
 #endif
 		req = inet_reqsk_alloc(&tcp6_request_sock_ops, sk, false);
+=======
+	req = inet_reqsk_alloc(&tcp6_request_sock_ops, sk, false);
+>>>>>>> rebase
 	if (!req)
 		goto out;
 
 	ireq = inet_rsk(req);
+<<<<<<< HEAD
 #ifdef CONFIG_MPTCP
 	ireq->mptcp_rqsk = 0;
 	ireq->saw_mpc = 0;
@@ -216,6 +240,12 @@ struct sock *cookie_v6_check(struct sock *sk, struct sk_buff *skb)
 		mptcp_cookies_reqsk_init(req, &mopt, skb);
 #endif
 
+=======
+	treq = tcp_rsk(req);
+	treq->af_specific = &tcp_request_sock_ipv6_ops;
+	treq->tfo_listener = false;
+
+>>>>>>> rebase
 	if (security_inet_conn_request(sk, skb, req))
 		goto out_free;
 
@@ -273,12 +303,17 @@ struct sock *cookie_v6_check(struct sock *sk, struct sk_buff *skb)
 		fl6.flowi6_uid = sk->sk_uid;
 		security_req_classify_flow(req, flowi6_to_flowi(&fl6));
 
+<<<<<<< HEAD
 		dst = ip6_dst_lookup_flow(sk, &fl6, final_p);
+=======
+		dst = ip6_dst_lookup_flow(sock_net(sk), sk, &fl6, final_p);
+>>>>>>> rebase
 		if (IS_ERR(dst))
 			goto out_free;
 	}
 
 	req->rsk_window_clamp = tp->window_clamp ? :dst_metric(dst, RTAX_WINDOW);
+<<<<<<< HEAD
 #ifdef CONFIG_MPTCP
 	tp->ops->select_initial_window(sk, tcp_full_space(sk), req->mss,
 				       &req->rsk_rcv_wnd, &req->rsk_window_clamp,
@@ -290,6 +325,18 @@ struct sock *cookie_v6_check(struct sock *sk, struct sk_buff *skb)
 				  ireq->wscale_ok, &rcv_wscale,
 				  dst_metric(dst, RTAX_INITRWND));
 #endif
+=======
+	/* limit the window selection if the user enforce a smaller rx buffer */
+	full_space = tcp_full_space(sk);
+	if (sk->sk_userlocks & SOCK_RCVBUF_LOCK &&
+	    (req->rsk_window_clamp > full_space || req->rsk_window_clamp == 0))
+		req->rsk_window_clamp = full_space;
+
+	tcp_select_initial_window(sk, full_space, req->mss,
+				  &req->rsk_rcv_wnd, &req->rsk_window_clamp,
+				  ireq->wscale_ok, &rcv_wscale,
+				  dst_metric(dst, RTAX_INITRWND));
+>>>>>>> rebase
 
 	ireq->rcv_wscale = rcv_wscale;
 	ireq->ecn_ok = cookie_ecn_ok(&tcp_opt, sock_net(sk), dst);

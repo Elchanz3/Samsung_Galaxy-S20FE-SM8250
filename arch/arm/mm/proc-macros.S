@@ -5,6 +5,10 @@
  *  VMA_VM_FLAGS
  *  VM_EXEC
  */
+<<<<<<< HEAD
+=======
+#include <linux/const.h>
+>>>>>>> rebase
 #include <asm/asm-offsets.h>
 #include <asm/thread_info.h>
 
@@ -30,7 +34,11 @@
  * act_mm - get current->active_mm
  */
 	.macro	act_mm, rd
+<<<<<<< HEAD
 	bic	\rd, sp, #8128
+=======
+	bic	\rd, sp, #(THREAD_SIZE - 1) & ~63
+>>>>>>> rebase
 	bic	\rd, \rd, #63
 	ldr	\rd, [\rd, #TI_TASK]
 	.if (TSK_ACTIVE_MM > IMM12_MASK)
@@ -335,14 +343,21 @@ ENTRY(\name\()_cache_fns)
 	.long	\name\()_flush_kern_dcache_area
 	.long	\name\()_dma_map_area
 	.long	\name\()_dma_unmap_area
+<<<<<<< HEAD
 	.long   \name\()_dma_inv_range
 	.long   \name\()_dma_clean_range
+=======
+>>>>>>> rebase
 	.long	\name\()_dma_flush_range
 	.size	\name\()_cache_fns, . - \name\()_cache_fns
 .endm
 
 .macro define_tlb_functions name:req, flags_up:req, flags_smp
 	.type	\name\()_tlb_fns, #object
+<<<<<<< HEAD
+=======
+	.align 2
+>>>>>>> rebase
 ENTRY(\name\()_tlb_fns)
 	.long	\name\()_flush_user_tlb_range
 	.long	\name\()_flush_kern_tlb_range

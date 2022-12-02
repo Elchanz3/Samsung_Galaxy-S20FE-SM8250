@@ -16,6 +16,7 @@
 #include <linux/debugfs.h>
 #include <linux/seq_file.h>
 #include <linux/suspend.h>
+<<<<<<< HEAD
 #ifdef CONFIG_SEC_PM
 #include <linux/input/qpnp-power-on.h>
 #include <linux/fb.h>
@@ -32,6 +33,11 @@
 static struct delayed_work ws_work;
 #endif
 
+=======
+
+#include "power.h"
+
+>>>>>>> rebase
 #ifdef CONFIG_PM_SLEEP
 
 void lock_system_sleep(void)
@@ -255,6 +261,10 @@ static ssize_t pm_test_store(struct kobject *kobj, struct kobj_attribute *attr,
 power_attr(pm_test);
 #endif /* CONFIG_PM_SLEEP_DEBUG */
 
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_DEBUG_FS
+>>>>>>> rebase
 static char *suspend_step_name(enum suspend_stat_step step)
 {
 	switch (step) {
@@ -275,6 +285,7 @@ static char *suspend_step_name(enum suspend_stat_step step)
 	}
 }
 
+<<<<<<< HEAD
 #define suspend_attr(_name)					\
 static ssize_t _name##_show(struct kobject *kobj,		\
 		struct kobj_attribute *attr, char *buf)		\
@@ -361,6 +372,8 @@ static struct attribute_group suspend_attr_group = {
 };
 
 #ifdef CONFIG_DEBUG_FS
+=======
+>>>>>>> rebase
 static int suspend_stats_show(struct seq_file *s, void *unused)
 {
 	int i, index, last_dev, last_errno, last_step;
@@ -792,6 +805,7 @@ power_attr(wake_unlock);
 #endif /* CONFIG_PM_WAKELOCKS */
 #endif /* CONFIG_PM_SLEEP */
 
+<<<<<<< HEAD
 #ifdef CONFIG_CPU_FREQ_LIMIT_USERSPACE
 #define MAX_BUF_SIZE	100
 DEFINE_MUTEX(cpufreq_limit_mutex);
@@ -948,6 +962,8 @@ power_attr(cpufreq_min_limit);
 power_attr(over_limit);
 #endif
 
+=======
+>>>>>>> rebase
 #ifdef CONFIG_PM_TRACE
 int pm_trace_enabled;
 
@@ -1011,6 +1027,7 @@ power_attr(pm_freeze_timeout);
 
 #endif	/* CONFIG_FREEZER*/
 
+<<<<<<< HEAD
 #ifdef CONFIG_SEC_PM
 extern int qpnp_set_resin_wk_int(int en);
 static int volkey_wakeup;
@@ -1086,6 +1103,8 @@ static struct kobj_attribute fota_limit_attr = {
 #endif /* CONFIG_FOTA_LIMIT */
 
 
+=======
+>>>>>>> rebase
 static struct attribute * g[] = {
 	&state_attr.attr,
 #ifdef CONFIG_PM_TRACE
@@ -1112,6 +1131,7 @@ static struct attribute * g[] = {
 	&pm_debug_messages_attr.attr,
 #endif
 #endif
+<<<<<<< HEAD
 #ifdef CONFIG_CPU_FREQ_LIMIT_USERSPACE
 	&cpufreq_table_attr.attr,
 	&cpufreq_max_limit_attr.attr,
@@ -1128,6 +1148,11 @@ static struct attribute * g[] = {
 #if defined(CONFIG_FOTA_LIMIT)
 	&fota_limit_attr.attr,
 #endif /* CONFIG_FOTA_LIMIT */
+=======
+#ifdef CONFIG_FREEZER
+	&pm_freeze_timeout_attr.attr,
+#endif
+>>>>>>> rebase
 	NULL,
 };
 
@@ -1135,6 +1160,7 @@ static const struct attribute_group attr_group = {
 	.attrs = g,
 };
 
+<<<<<<< HEAD
 static const struct attribute_group *attr_groups[] = {
 	&attr_group,
 #ifdef CONFIG_PM_SLEEP
@@ -1143,6 +1169,8 @@ static const struct attribute_group *attr_groups[] = {
 	NULL,
 };
 
+=======
+>>>>>>> rebase
 struct workqueue_struct *pm_wq;
 EXPORT_SYMBOL_GPL(pm_wq);
 
@@ -1153,6 +1181,7 @@ static int __init pm_start_workqueue(void)
 	return pm_wq ? 0 : -ENOMEM;
 }
 
+<<<<<<< HEAD
 #ifdef CONFIG_SEC_PM
 static void handle_ws_work(struct work_struct *work)
 {
@@ -1184,6 +1213,8 @@ static struct notifier_block fb_block = {
 };
 #endif
 
+=======
+>>>>>>> rebase
 static int __init pm_init(void)
 {
 	int error = pm_start_workqueue();
@@ -1195,6 +1226,7 @@ static int __init pm_init(void)
 	power_kobj = kobject_create_and_add("power", NULL);
 	if (!power_kobj)
 		return -ENOMEM;
+<<<<<<< HEAD
 	error = sysfs_create_groups(power_kobj, attr_groups);
 	if (error)
 		return error;
@@ -1203,6 +1235,12 @@ static int __init pm_init(void)
 	msm_drm_register_notifier_client(&fb_block);
 	INIT_DELAYED_WORK(&ws_work, handle_ws_work);
 #endif	
+=======
+	error = sysfs_create_group(power_kobj, &attr_group);
+	if (error)
+		return error;
+	pm_print_times_init();
+>>>>>>> rebase
 	return pm_autosleep_init();
 }
 

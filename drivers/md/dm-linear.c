@@ -26,7 +26,11 @@ struct linear_c {
 /*
  * Construct a linear mapping: <dev_path> <offset>
  */
+<<<<<<< HEAD
 int dm_linear_ctr(struct dm_target *ti, unsigned int argc, char **argv)
+=======
+static int linear_ctr(struct dm_target *ti, unsigned int argc, char **argv)
+>>>>>>> rebase
 {
 	struct linear_c *lc;
 	unsigned long long tmp;
@@ -62,7 +66,10 @@ int dm_linear_ctr(struct dm_target *ti, unsigned int argc, char **argv)
 	ti->num_secure_erase_bios = 1;
 	ti->num_write_same_bios = 1;
 	ti->num_write_zeroes_bios = 1;
+<<<<<<< HEAD
 	ti->may_passthrough_inline_crypto = true;
+=======
+>>>>>>> rebase
 	ti->private = lc;
 	return 0;
 
@@ -71,7 +78,11 @@ int dm_linear_ctr(struct dm_target *ti, unsigned int argc, char **argv)
 	return ret;
 }
 
+<<<<<<< HEAD
 void dm_linear_dtr(struct dm_target *ti)
+=======
+static void linear_dtr(struct dm_target *ti)
+>>>>>>> rebase
 {
 	struct linear_c *lc = (struct linear_c *) ti->private;
 
@@ -96,7 +107,11 @@ static void linear_map_bio(struct dm_target *ti, struct bio *bio)
 			linear_map_sector(ti, bio->bi_iter.bi_sector);
 }
 
+<<<<<<< HEAD
 int dm_linear_map(struct dm_target *ti, struct bio *bio)
+=======
+static int linear_map(struct dm_target *ti, struct bio *bio)
+>>>>>>> rebase
 {
 	linear_map_bio(ti, bio);
 
@@ -104,7 +119,11 @@ int dm_linear_map(struct dm_target *ti, struct bio *bio)
 }
 
 #ifdef CONFIG_BLK_DEV_ZONED
+<<<<<<< HEAD
 int dm_linear_end_io(struct dm_target *ti, struct bio *bio,
+=======
+static int linear_end_io(struct dm_target *ti, struct bio *bio,
+>>>>>>> rebase
 			 blk_status_t *error)
 {
 	struct linear_c *lc = ti->private;
@@ -114,10 +133,16 @@ int dm_linear_end_io(struct dm_target *ti, struct bio *bio,
 
 	return DM_ENDIO_DONE;
 }
+<<<<<<< HEAD
 EXPORT_SYMBOL_GPL(dm_linear_end_io);
 #endif
 
 void dm_linear_status(struct dm_target *ti, status_type_t type,
+=======
+#endif
+
+static void linear_status(struct dm_target *ti, status_type_t type,
+>>>>>>> rebase
 			  unsigned status_flags, char *result, unsigned maxlen)
 {
 	struct linear_c *lc = (struct linear_c *) ti->private;
@@ -134,7 +159,11 @@ void dm_linear_status(struct dm_target *ti, status_type_t type,
 	}
 }
 
+<<<<<<< HEAD
 int dm_linear_prepare_ioctl(struct dm_target *ti, struct block_device **bdev)
+=======
+static int linear_prepare_ioctl(struct dm_target *ti, struct block_device **bdev)
+>>>>>>> rebase
 {
 	struct linear_c *lc = (struct linear_c *) ti->private;
 	struct dm_dev *dev = lc->dev;
@@ -150,7 +179,11 @@ int dm_linear_prepare_ioctl(struct dm_target *ti, struct block_device **bdev)
 	return 0;
 }
 
+<<<<<<< HEAD
 int dm_linear_iterate_devices(struct dm_target *ti,
+=======
+static int linear_iterate_devices(struct dm_target *ti,
+>>>>>>> rebase
 				  iterate_devices_callout_fn fn, void *data)
 {
 	struct linear_c *lc = ti->private;
@@ -159,7 +192,11 @@ int dm_linear_iterate_devices(struct dm_target *ti,
 }
 
 #if IS_ENABLED(CONFIG_DAX_DRIVER)
+<<<<<<< HEAD
 long dm_linear_dax_direct_access(struct dm_target *ti, pgoff_t pgoff,
+=======
+static long linear_dax_direct_access(struct dm_target *ti, pgoff_t pgoff,
+>>>>>>> rebase
 		long nr_pages, void **kaddr, pfn_t *pfn)
 {
 	long ret;
@@ -174,9 +211,14 @@ long dm_linear_dax_direct_access(struct dm_target *ti, pgoff_t pgoff,
 		return ret;
 	return dax_direct_access(dax_dev, pgoff, nr_pages, kaddr, pfn);
 }
+<<<<<<< HEAD
 EXPORT_SYMBOL_GPL(dm_linear_dax_direct_access);
 
 size_t dm_linear_dax_copy_from_iter(struct dm_target *ti, pgoff_t pgoff,
+=======
+
+static size_t linear_dax_copy_from_iter(struct dm_target *ti, pgoff_t pgoff,
+>>>>>>> rebase
 		void *addr, size_t bytes, struct iov_iter *i)
 {
 	struct linear_c *lc = ti->private;
@@ -189,9 +231,14 @@ size_t dm_linear_dax_copy_from_iter(struct dm_target *ti, pgoff_t pgoff,
 		return 0;
 	return dax_copy_from_iter(dax_dev, pgoff, addr, bytes, i);
 }
+<<<<<<< HEAD
 EXPORT_SYMBOL_GPL(dm_linear_dax_copy_from_iter);
 
 static size_t dm_linear_dax_copy_to_iter(struct dm_target *ti, pgoff_t pgoff,
+=======
+
+static size_t linear_dax_copy_to_iter(struct dm_target *ti, pgoff_t pgoff,
+>>>>>>> rebase
 		void *addr, size_t bytes, struct iov_iter *i)
 {
 	struct linear_c *lc = ti->private;
@@ -206,21 +253,32 @@ static size_t dm_linear_dax_copy_to_iter(struct dm_target *ti, pgoff_t pgoff,
 }
 
 #else
+<<<<<<< HEAD
 #define dm_linear_dax_direct_access NULL
 #define dm_linear_dax_copy_from_iter NULL
 #define dm_linear_dax_copy_to_iter NULL
+=======
+#define linear_dax_direct_access NULL
+#define linear_dax_copy_from_iter NULL
+#define linear_dax_copy_to_iter NULL
+>>>>>>> rebase
 #endif
 
 static struct target_type linear_target = {
 	.name   = "linear",
 	.version = {1, 4, 0},
 #ifdef CONFIG_BLK_DEV_ZONED
+<<<<<<< HEAD
 	.end_io = dm_linear_end_io,
+=======
+	.end_io = linear_end_io,
+>>>>>>> rebase
 	.features = DM_TARGET_PASSES_INTEGRITY | DM_TARGET_ZONED_HM,
 #else
 	.features = DM_TARGET_PASSES_INTEGRITY,
 #endif
 	.module = THIS_MODULE,
+<<<<<<< HEAD
 	.ctr    = dm_linear_ctr,
 	.dtr    = dm_linear_dtr,
 	.map    = dm_linear_map,
@@ -230,6 +288,17 @@ static struct target_type linear_target = {
 	.direct_access = dm_linear_dax_direct_access,
 	.dax_copy_from_iter = dm_linear_dax_copy_from_iter,
 	.dax_copy_to_iter = dm_linear_dax_copy_to_iter,
+=======
+	.ctr    = linear_ctr,
+	.dtr    = linear_dtr,
+	.map    = linear_map,
+	.status = linear_status,
+	.prepare_ioctl = linear_prepare_ioctl,
+	.iterate_devices = linear_iterate_devices,
+	.direct_access = linear_dax_direct_access,
+	.dax_copy_from_iter = linear_dax_copy_from_iter,
+	.dax_copy_to_iter = linear_dax_copy_to_iter,
+>>>>>>> rebase
 };
 
 int __init dm_linear_init(void)

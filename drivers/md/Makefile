@@ -2,7 +2,10 @@
 #
 # Makefile for the kernel software RAID and LVM drivers.
 #
+<<<<<<< HEAD
 ccflags-y += -Wformat
+=======
+>>>>>>> rebase
 
 dm-mod-y	+= dm.o dm-table.o dm-target.o dm-linear.o dm-stripe.o \
 		   dm-ioctl.o dm-io.o dm-kcopyd.o dm-sysfs.o dm-stats.o \
@@ -19,7 +22,11 @@ dm-cache-y	+= dm-cache-target.o dm-cache-metadata.o dm-cache-policy.o \
 		    dm-cache-background-tracker.o
 dm-cache-smq-y   += dm-cache-policy-smq.o
 dm-era-y	+= dm-era-target.o
+<<<<<<< HEAD
 dm-verity-y	+= dm-verity-target.o dm-verity-debug.o alta_bigdata.o
+=======
+dm-verity-y	+= dm-verity-target.o
+>>>>>>> rebase
 md-mod-y	+= md.o md-bitmap.o
 raid456-y	+= raid5.o raid5-cache.o raid5-ppl.o
 dm-zoned-y	+= dm-zoned-target.o dm-zoned-metadata.o dm-zoned-reclaim.o
@@ -48,7 +55,10 @@ obj-$(CONFIG_DM_UNSTRIPED)	+= dm-unstripe.o
 obj-$(CONFIG_DM_BUFIO)		+= dm-bufio.o
 obj-$(CONFIG_DM_BIO_PRISON)	+= dm-bio-prison.o
 obj-$(CONFIG_DM_CRYPT)		+= dm-crypt.o
+<<<<<<< HEAD
 obj-$(CONFIG_DM_DEFAULT_KEY)	+= dm-default-key.o
+=======
+>>>>>>> rebase
 obj-$(CONFIG_DM_DELAY)		+= dm-delay.o
 obj-$(CONFIG_DM_FLAKEY)		+= dm-flakey.o
 obj-$(CONFIG_DM_MULTIPATH)	+= dm-multipath.o dm-round-robin.o
@@ -70,12 +80,16 @@ obj-$(CONFIG_DM_LOG_WRITES)	+= dm-log-writes.o
 obj-$(CONFIG_DM_INTEGRITY)	+= dm-integrity.o
 obj-$(CONFIG_DM_ZONED)		+= dm-zoned.o
 obj-$(CONFIG_DM_WRITECACHE)	+= dm-writecache.o
+<<<<<<< HEAD
 obj-$(CONFIG_DM_BOW)		+= dm-bow.o
+=======
+>>>>>>> rebase
 
 ifeq ($(CONFIG_DM_UEVENT),y)
 dm-mod-objs			+= dm-uevent.o
 endif
 
+<<<<<<< HEAD
 ifeq ($(CONFIG_DM_VERITY_AVB),y)
 dm-verity-objs			+= dm-verity-avb.o
 endif
@@ -91,3 +105,8 @@ endif
 ifeq ($(CONFIG_DM_ANDROID_VERITY),y)
 dm-verity-objs			+= dm-android-verity.o
 endif
+=======
+ifeq ($(CONFIG_DM_VERITY_FEC),y)
+dm-verity-objs			+= dm-verity-fec.o
+endif
+>>>>>>> rebase

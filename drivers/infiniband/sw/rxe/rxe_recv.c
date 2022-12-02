@@ -36,6 +36,7 @@
 #include "rxe.h"
 #include "rxe_loc.h"
 
+<<<<<<< HEAD
 static int check_type_state(struct rxe_dev *rxe, struct rxe_pkt_info *pkt,
 			    struct rxe_qp *qp)
 {
@@ -45,12 +46,32 @@ static int check_type_state(struct rxe_dev *rxe, struct rxe_pkt_info *pkt,
 	switch (qp_type(qp)) {
 	case IB_QPT_RC:
 		if (unlikely((pkt->opcode & IB_OPCODE_RC) != 0)) {
+=======
+/* check that QP matches packet opcode type and is in a valid state */
+static int check_type_state(struct rxe_dev *rxe, struct rxe_pkt_info *pkt,
+			    struct rxe_qp *qp)
+{
+	unsigned int pkt_type;
+
+	if (unlikely(!qp->valid))
+		goto err1;
+
+	pkt_type = pkt->opcode & 0xe0;
+
+	switch (qp_type(qp)) {
+	case IB_QPT_RC:
+		if (unlikely(pkt_type != IB_OPCODE_RC)) {
+>>>>>>> rebase
 			pr_warn_ratelimited("bad qp type\n");
 			goto err1;
 		}
 		break;
 	case IB_QPT_UC:
+<<<<<<< HEAD
 		if (unlikely(!(pkt->opcode & IB_OPCODE_UC))) {
+=======
+		if (unlikely(pkt_type != IB_OPCODE_UC)) {
+>>>>>>> rebase
 			pr_warn_ratelimited("bad qp type\n");
 			goto err1;
 		}
@@ -58,7 +79,11 @@ static int check_type_state(struct rxe_dev *rxe, struct rxe_pkt_info *pkt,
 	case IB_QPT_UD:
 	case IB_QPT_SMI:
 	case IB_QPT_GSI:
+<<<<<<< HEAD
 		if (unlikely(!(pkt->opcode & IB_OPCODE_UD))) {
+=======
+		if (unlikely(pkt_type != IB_OPCODE_UD)) {
+>>>>>>> rebase
 			pr_warn_ratelimited("bad qp type\n");
 			goto err1;
 		}
@@ -332,10 +357,20 @@ err1:
 
 static int rxe_match_dgid(struct rxe_dev *rxe, struct sk_buff *skb)
 {
+<<<<<<< HEAD
+=======
+	struct rxe_pkt_info *pkt = SKB_TO_PKT(skb);
+>>>>>>> rebase
 	const struct ib_gid_attr *gid_attr;
 	union ib_gid dgid;
 	union ib_gid *pdgid;
 
+<<<<<<< HEAD
+=======
+	if (pkt->mask & RXE_LOOPBACK_MASK)
+		return 0;
+
+>>>>>>> rebase
 	if (skb->protocol == htons(ETH_P_IP)) {
 		ipv6_addr_set_v4mapped(ip_hdr(skb)->daddr,
 				       (struct in6_addr *)&dgid);
@@ -368,7 +403,11 @@ void rxe_rcv(struct sk_buff *skb)
 	if (unlikely(skb->len < pkt->offset + RXE_BTH_BYTES))
 		goto drop;
 
+<<<<<<< HEAD
 	if (unlikely(rxe_match_dgid(rxe, skb) < 0)) {
+=======
+	if (rxe_match_dgid(rxe, skb) < 0) {
+>>>>>>> rebase
 		pr_warn_ratelimited("failed matching dgid\n");
 		goto drop;
 	}

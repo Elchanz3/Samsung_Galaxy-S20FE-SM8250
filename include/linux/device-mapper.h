@@ -317,10 +317,16 @@ struct dm_target {
 	bool split_discard_bios:1;
 
 	/*
+<<<<<<< HEAD
 	 * Set if inline crypto capabilities from this target's underlying
 	 * device(s) can be exposed via the device-mapper device.
 	 */
 	bool may_passthrough_inline_crypto:1;
+=======
+	 * Set if we need to limit the number of in-flight bios when swapping.
+	 */
+	bool limit_swap_bios:1;
+>>>>>>> rebase
 };
 
 /* Each target can link one of these into the table */
@@ -405,12 +411,15 @@ void dm_set_mdptr(struct mapped_device *md, void *ptr);
 void *dm_get_mdptr(struct mapped_device *md);
 
 /*
+<<<<<<< HEAD
  * Export the device via the ioctl interface (uses mdptr).
  */
 int dm_ioctl_export(struct mapped_device *md, const char *name,
 		    const char *uuid);
 
 /*
+=======
+>>>>>>> rebase
  * A device can still be used while suspended, but I/O is deferred.
  */
 int dm_suspend(struct mapped_device *md, unsigned suspend_flags);
@@ -431,6 +440,10 @@ const char *dm_device_name(struct mapped_device *md);
 int dm_copy_name_and_uuid(struct mapped_device *md, char *name, char *uuid);
 struct gendisk *dm_disk(struct mapped_device *md);
 int dm_suspended(struct dm_target *ti);
+<<<<<<< HEAD
+=======
+int dm_post_suspending(struct dm_target *ti);
+>>>>>>> rebase
 int dm_noflush_suspending(struct dm_target *ti);
 void dm_accept_partial_bio(struct bio *bio, unsigned n_sectors);
 void dm_remap_zone_report(struct dm_target *ti, struct bio *bio,
@@ -439,6 +452,7 @@ union map_info *dm_get_rq_mapinfo(struct request *rq);
 
 struct queue_limits *dm_get_queue_limits(struct mapped_device *md);
 
+<<<<<<< HEAD
 void dm_lock_md_type(struct mapped_device *md);
 void dm_unlock_md_type(struct mapped_device *md);
 void dm_set_md_type(struct mapped_device *md, unsigned type);
@@ -446,6 +460,8 @@ unsigned dm_get_md_type(struct mapped_device *md);
 int dm_setup_md_queue(struct mapped_device *md, struct dm_table *t);
 unsigned dm_table_get_type(struct dm_table *t);
 
+=======
+>>>>>>> rebase
 /*
  * Geometry functions.
  */

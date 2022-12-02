@@ -492,8 +492,12 @@ EXPORT_SYMBOL(iscsit_queue_rsp);
 void iscsit_aborted_task(struct iscsi_conn *conn, struct iscsi_cmd *cmd)
 {
 	spin_lock_bh(&conn->cmd_lock);
+<<<<<<< HEAD
 	if (!list_empty(&cmd->i_conn_node) &&
 	    !(cmd->se_cmd.transport_state & CMD_T_FABRIC_STOP))
+=======
+	if (!list_empty(&cmd->i_conn_node))
+>>>>>>> rebase
 		list_del_init(&cmd->i_conn_node);
 	spin_unlock_bh(&conn->cmd_lock);
 
@@ -1381,14 +1385,36 @@ static u32 iscsit_do_crypto_hash_sg(
 	sg = cmd->first_data_sg;
 	page_off = cmd->first_data_sg_off;
 
+<<<<<<< HEAD
 	while (data_length) {
 		u32 cur_len = min_t(u32, data_length, (sg->length - page_off));
+=======
+	if (data_length && page_off) {
+		struct scatterlist first_sg;
+		u32 len = min_t(u32, data_length, sg->length - page_off);
+
+		sg_init_table(&first_sg, 1);
+		sg_set_page(&first_sg, sg_page(sg), len, sg->offset + page_off);
+
+		ahash_request_set_crypt(hash, &first_sg, NULL, len);
+		crypto_ahash_update(hash);
+
+		data_length -= len;
+		sg = sg_next(sg);
+	}
+
+	while (data_length) {
+		u32 cur_len = min_t(u32, data_length, sg->length);
+>>>>>>> rebase
 
 		ahash_request_set_crypt(hash, sg, NULL, cur_len);
 		crypto_ahash_update(hash);
 
 		data_length -= cur_len;
+<<<<<<< HEAD
 		page_off = 0;
+=======
+>>>>>>> rebase
 		/* iscsit_map_iovec has already checked for invalid sg pointers */
 		sg = sg_next(sg);
 	}
@@ -4041,12 +4067,30 @@ static void iscsit_release_commands_from_conn(struct iscsi_conn *conn)
 	spin_lock_bh(&conn->cmd_lock);
 	list_splice_init(&conn->conn_cmd_list, &tmp_list);
 
+<<<<<<< HEAD
 	list_for_each_entry(cmd, &tmp_list, i_conn_node) {
+=======
+	list_for_each_entry_safe(cmd, cmd_tmp, &tmp_list, i_conn_node) {
+>>>>>>> rebase
 		struct se_cmd *se_cmd = &cmd->se_cmd;
 
 		if (se_cmd->se_tfo != NULL) {
 			spin_lock_irq(&se_cmd->t_state_lock);
+<<<<<<< HEAD
 			se_cmd->transport_state |= CMD_T_FABRIC_STOP;
+=======
+			if (se_cmd->transport_state & CMD_T_ABORTED) {
+				/*
+				 * LIO's abort path owns the cleanup for this,
+				 * so put it back on the list and let
+				 * aborted_task handle it.
+				 */
+				list_move_tail(&cmd->i_conn_node,
+					       &conn->conn_cmd_list);
+			} else {
+				se_cmd->transport_state |= CMD_T_FABRIC_STOP;
+			}
+>>>>>>> rebase
 			spin_unlock_irq(&se_cmd->t_state_lock);
 		}
 	}
@@ -4275,22 +4319,38 @@ int iscsit_close_connection(
 	if (!atomic_read(&sess->session_reinstatement) &&
 	     atomic_read(&sess->session_fall_back_to_erl0)) {
 		spin_unlock_bh(&sess->conn_lock);
+<<<<<<< HEAD
+=======
+		complete_all(&sess->session_wait_comp);
+>>>>>>> rebase
 		iscsit_close_session(sess);
 
 		return 0;
 	} else if (atomic_read(&sess->session_logout)) {
 		pr_debug("Moving to TARG_SESS_STATE_FREE.\n");
 		sess->session_state = TARG_SESS_STATE_FREE;
+<<<<<<< HEAD
 		spin_unlock_bh(&sess->conn_lock);
 
 		if (atomic_read(&sess->sleep_on_sess_wait_comp))
 			complete(&sess->session_wait_comp);
+=======
+
+		if (atomic_read(&sess->session_close)) {
+			spin_unlock_bh(&sess->conn_lock);
+			complete_all(&sess->session_wait_comp);
+			iscsit_close_session(sess);
+		} else {
+			spin_unlock_bh(&sess->conn_lock);
+		}
+>>>>>>> rebase
 
 		return 0;
 	} else {
 		pr_debug("Moving to TARG_SESS_STATE_FAILED.\n");
 		sess->session_state = TARG_SESS_STATE_FAILED;
 
+<<<<<<< HEAD
 		if (!atomic_read(&sess->session_continuation)) {
 			spin_unlock_bh(&sess->conn_lock);
 			iscsit_start_time2retain_handler(sess);
@@ -4299,6 +4359,18 @@ int iscsit_close_connection(
 
 		if (atomic_read(&sess->sleep_on_sess_wait_comp))
 			complete(&sess->session_wait_comp);
+=======
+		if (!atomic_read(&sess->session_continuation))
+			iscsit_start_time2retain_handler(sess);
+
+		if (atomic_read(&sess->session_close)) {
+			spin_unlock_bh(&sess->conn_lock);
+			complete_all(&sess->session_wait_comp);
+			iscsit_close_session(sess);
+		} else {
+			spin_unlock_bh(&sess->conn_lock);
+		}
+>>>>>>> rebase
 
 		return 0;
 	}
@@ -4404,9 +4476,15 @@ static void iscsit_logout_post_handler_closesession(
 	complete(&conn->conn_logout_comp);
 
 	iscsit_dec_conn_usage_count(conn);
+<<<<<<< HEAD
 	iscsit_stop_session(sess, sleep, sleep);
 	iscsit_dec_session_usage_count(sess);
 	iscsit_close_session(sess);
+=======
+	atomic_set(&sess->session_close, 1);
+	iscsit_stop_session(sess, sleep, sleep);
+	iscsit_dec_session_usage_count(sess);
+>>>>>>> rebase
 }
 
 static void iscsit_logout_post_handler_samecid(
@@ -4541,6 +4619,7 @@ void iscsit_fail_session(struct iscsi_session *sess)
 	sess->session_state = TARG_SESS_STATE_FAILED;
 }
 
+<<<<<<< HEAD
 int iscsit_free_session(struct iscsi_session *sess)
 {
 	u16 conn_count = atomic_read(&sess->nconn);
@@ -4584,6 +4663,8 @@ int iscsit_free_session(struct iscsi_session *sess)
 	return 0;
 }
 
+=======
+>>>>>>> rebase
 void iscsit_stop_session(
 	struct iscsi_session *sess,
 	int session_sleep,
@@ -4594,8 +4675,11 @@ void iscsit_stop_session(
 	int is_last;
 
 	spin_lock_bh(&sess->conn_lock);
+<<<<<<< HEAD
 	if (session_sleep)
 		atomic_set(&sess->sleep_on_sess_wait_comp, 1);
+=======
+>>>>>>> rebase
 
 	if (connection_sleep) {
 		list_for_each_entry_safe(conn, conn_tmp, &sess->sess_conn_list,
@@ -4653,12 +4737,23 @@ int iscsit_release_sessions_for_tpg(struct iscsi_portal_group *tpg, int force)
 		spin_lock(&sess->conn_lock);
 		if (atomic_read(&sess->session_fall_back_to_erl0) ||
 		    atomic_read(&sess->session_logout) ||
+<<<<<<< HEAD
+=======
+		    atomic_read(&sess->session_close) ||
+>>>>>>> rebase
 		    (sess->time2retain_timer_flags & ISCSI_TF_EXPIRED)) {
 			spin_unlock(&sess->conn_lock);
 			continue;
 		}
+<<<<<<< HEAD
 		atomic_set(&sess->session_reinstatement, 1);
 		atomic_set(&sess->session_fall_back_to_erl0, 1);
+=======
+		iscsit_inc_session_usage_count(sess);
+		atomic_set(&sess->session_reinstatement, 1);
+		atomic_set(&sess->session_fall_back_to_erl0, 1);
+		atomic_set(&sess->session_close, 1);
+>>>>>>> rebase
 		spin_unlock(&sess->conn_lock);
 
 		list_move_tail(&se_sess->sess_list, &free_list);
@@ -4668,7 +4763,13 @@ int iscsit_release_sessions_for_tpg(struct iscsi_portal_group *tpg, int force)
 	list_for_each_entry_safe(se_sess, se_sess_tmp, &free_list, sess_list) {
 		sess = (struct iscsi_session *)se_sess->fabric_sess_ptr;
 
+<<<<<<< HEAD
 		iscsit_free_session(sess);
+=======
+		list_del_init(&se_sess->sess_list);
+		iscsit_stop_session(sess, 1, 1);
+		iscsit_dec_session_usage_count(sess);
+>>>>>>> rebase
 		session_count++;
 	}
 

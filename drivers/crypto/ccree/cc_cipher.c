@@ -137,7 +137,10 @@ static int cc_cipher_init(struct crypto_tfm *tfm)
 				     skcipher_alg.base);
 	struct device *dev = drvdata_to_dev(cc_alg->drvdata);
 	unsigned int max_key_buf_size = cc_alg->skcipher_alg.max_keysize;
+<<<<<<< HEAD
 	int rc = 0;
+=======
+>>>>>>> rebase
 
 	dev_dbg(dev, "Initializing context @%p for %s\n", ctx_p,
 		crypto_tfm_alg_name(tfm));
@@ -149,10 +152,26 @@ static int cc_cipher_init(struct crypto_tfm *tfm)
 	ctx_p->flow_mode = cc_alg->flow_mode;
 	ctx_p->drvdata = cc_alg->drvdata;
 
+<<<<<<< HEAD
 	/* Allocate key buffer, cache line aligned */
 	ctx_p->user.key = kmalloc(max_key_buf_size, GFP_KERNEL);
 	if (!ctx_p->user.key)
 		return -ENOMEM;
+=======
+	if (ctx_p->cipher_mode == DRV_CIPHER_ESSIV) {
+		/* Alloc hash tfm for essiv */
+		ctx_p->shash_tfm = crypto_alloc_shash("sha256-generic", 0, 0);
+		if (IS_ERR(ctx_p->shash_tfm)) {
+			dev_err(dev, "Error allocating hash tfm for ESSIV.\n");
+			return PTR_ERR(ctx_p->shash_tfm);
+		}
+	}
+
+	/* Allocate key buffer, cache line aligned */
+	ctx_p->user.key = kmalloc(max_key_buf_size, GFP_KERNEL);
+	if (!ctx_p->user.key)
+		goto free_shash;
+>>>>>>> rebase
 
 	dev_dbg(dev, "Allocated key buffer in context. key=@%p\n",
 		ctx_p->user.key);
@@ -164,11 +183,16 @@ static int cc_cipher_init(struct crypto_tfm *tfm)
 	if (dma_mapping_error(dev, ctx_p->user.key_dma_addr)) {
 		dev_err(dev, "Mapping Key %u B at va=%pK for DMA failed\n",
 			max_key_buf_size, ctx_p->user.key);
+<<<<<<< HEAD
 		return -ENOMEM;
+=======
+		goto free_key;
+>>>>>>> rebase
 	}
 	dev_dbg(dev, "Mapped key %u B at va=%pK to dma=%pad\n",
 		max_key_buf_size, ctx_p->user.key, &ctx_p->user.key_dma_addr);
 
+<<<<<<< HEAD
 	if (ctx_p->cipher_mode == DRV_CIPHER_ESSIV) {
 		/* Alloc hash tfm for essiv */
 		ctx_p->shash_tfm = crypto_alloc_shash("sha256-generic", 0, 0);
@@ -179,6 +203,16 @@ static int cc_cipher_init(struct crypto_tfm *tfm)
 	}
 
 	return rc;
+=======
+	return 0;
+
+free_key:
+	kfree(ctx_p->user.key);
+free_shash:
+	crypto_free_shash(ctx_p->shash_tfm);
+
+	return -ENOMEM;
+>>>>>>> rebase
 }
 
 static void cc_cipher_exit(struct crypto_tfm *tfm)

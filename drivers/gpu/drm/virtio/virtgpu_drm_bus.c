@@ -71,6 +71,7 @@ int drm_virtio_init(struct drm_driver *driver, struct virtio_device *vdev)
 		if (vga)
 			virtio_pci_kick_out_firmware_fb(pdev);
 
+<<<<<<< HEAD
 		/*
 		 * Normally the drm_dev_set_unique() call is done by core DRM.
 		 * The following comment covers, why virtio cannot rely on it.
@@ -102,6 +103,8 @@ int drm_virtio_init(struct drm_driver *driver, struct virtio_device *vdev)
 		 * for the next person who feels like removing this
 		 * drm_dev_set_unique() quirk.
 		 */
+=======
+>>>>>>> rebase
 		snprintf(unique, sizeof(unique), "pci:%s", pname);
 		ret = drm_dev_set_unique(dev, unique);
 		if (ret)
@@ -116,6 +119,10 @@ int drm_virtio_init(struct drm_driver *driver, struct virtio_device *vdev)
 	return 0;
 
 err_free:
+<<<<<<< HEAD
 	drm_dev_put(dev);
+=======
+	drm_dev_unref(dev);
+>>>>>>> rebase
 	return ret;
 }

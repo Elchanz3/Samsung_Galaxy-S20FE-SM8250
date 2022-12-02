@@ -341,6 +341,10 @@ static void ieee80211_key_replace(struct ieee80211_sub_if_data *sdata,
 	if (sta) {
 		if (pairwise) {
 			rcu_assign_pointer(sta->ptk[idx], new);
+<<<<<<< HEAD
+=======
+			set_sta_flag(sta, WLAN_STA_USES_ENCRYPTION);
+>>>>>>> rebase
 			sta->ptk_idx = idx;
 			ieee80211_check_fast_xmit(sta);
 		} else {
@@ -653,6 +657,10 @@ int ieee80211_key_link(struct ieee80211_key *key,
 		       struct ieee80211_sub_if_data *sdata,
 		       struct sta_info *sta)
 {
+<<<<<<< HEAD
+=======
+	static atomic_t key_color = ATOMIC_INIT(0);
+>>>>>>> rebase
 	struct ieee80211_local *local = sdata->local;
 	struct ieee80211_key *old_key;
 	int idx = key->conf.keyidx;
@@ -688,6 +696,15 @@ int ieee80211_key_link(struct ieee80211_key *key,
 	key->sdata = sdata;
 	key->sta = sta;
 
+<<<<<<< HEAD
+=======
+	/*
+	 * Assign a unique ID to every key so we can easily prevent mixed
+	 * key and fragment cache attacks.
+	 */
+	key->color = atomic_inc_return(&key_color);
+
+>>>>>>> rebase
 	increment_tailroom_need_count(sdata);
 
 	ieee80211_key_replace(sdata, sta, pairwise, old_key, key);

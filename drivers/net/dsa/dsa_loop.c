@@ -333,6 +333,20 @@ static struct mdio_driver dsa_loop_drv = {
 
 #define NUM_FIXED_PHYS	(DSA_LOOP_NUM_PORTS - 2)
 
+<<<<<<< HEAD
+=======
+static void dsa_loop_phydevs_unregister(void)
+{
+	unsigned int i;
+
+	for (i = 0; i < NUM_FIXED_PHYS; i++)
+		if (!IS_ERR(phydevs[i])) {
+			fixed_phy_unregister(phydevs[i]);
+			phy_device_free(phydevs[i]);
+		}
+}
+
+>>>>>>> rebase
 static int __init dsa_loop_init(void)
 {
 	struct fixed_phy_status status = {
@@ -340,17 +354,30 @@ static int __init dsa_loop_init(void)
 		.speed = SPEED_100,
 		.duplex = DUPLEX_FULL,
 	};
+<<<<<<< HEAD
 	unsigned int i;
+=======
+	unsigned int i, ret;
+>>>>>>> rebase
 
 	for (i = 0; i < NUM_FIXED_PHYS; i++)
 		phydevs[i] = fixed_phy_register(PHY_POLL, &status, -1, NULL);
 
+<<<<<<< HEAD
 	return mdio_driver_register(&dsa_loop_drv);
+=======
+	ret = mdio_driver_register(&dsa_loop_drv);
+	if (ret)
+		dsa_loop_phydevs_unregister();
+
+	return ret;
+>>>>>>> rebase
 }
 module_init(dsa_loop_init);
 
 static void __exit dsa_loop_exit(void)
 {
+<<<<<<< HEAD
 	unsigned int i;
 
 	mdio_driver_unregister(&dsa_loop_drv);
@@ -360,6 +387,14 @@ static void __exit dsa_loop_exit(void)
 }
 module_exit(dsa_loop_exit);
 
+=======
+	mdio_driver_unregister(&dsa_loop_drv);
+	dsa_loop_phydevs_unregister();
+}
+module_exit(dsa_loop_exit);
+
+MODULE_SOFTDEP("pre: dsa_loop_bdinfo");
+>>>>>>> rebase
 MODULE_LICENSE("GPL");
 MODULE_AUTHOR("Florian Fainelli");
 MODULE_DESCRIPTION("DSA loopback driver");

@@ -619,6 +619,11 @@ struct l2cap_ops {
 	struct sk_buff		*(*alloc_skb) (struct l2cap_chan *chan,
 					       unsigned long hdr_len,
 					       unsigned long len, int nb);
+<<<<<<< HEAD
+=======
+	int			(*filter) (struct l2cap_chan * chan,
+					   struct sk_buff *skb);
+>>>>>>> rebase
 };
 
 struct l2cap_conn {
@@ -796,6 +801,10 @@ enum {
 };
 
 void l2cap_chan_hold(struct l2cap_chan *c);
+<<<<<<< HEAD
+=======
+struct l2cap_chan *l2cap_chan_hold_unless_zero(struct l2cap_chan *c);
+>>>>>>> rebase
 void l2cap_chan_put(struct l2cap_chan *c);
 
 static inline void l2cap_chan_lock(struct l2cap_chan *chan)

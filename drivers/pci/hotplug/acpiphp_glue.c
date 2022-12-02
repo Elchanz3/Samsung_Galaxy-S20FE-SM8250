@@ -122,6 +122,7 @@ static struct acpiphp_context *acpiphp_grab_context(struct acpi_device *adev)
 	struct acpiphp_context *context;
 
 	acpi_lock_hp_context();
+<<<<<<< HEAD
 	context = acpiphp_get_context(adev);
 	if (!context || context->func.parent->is_going_away) {
 		acpi_unlock_hp_context();
@@ -129,6 +130,23 @@ static struct acpiphp_context *acpiphp_grab_context(struct acpi_device *adev)
 	}
 	get_bridge(context->func.parent);
 	acpiphp_put_context(context);
+=======
+
+	context = acpiphp_get_context(adev);
+	if (!context)
+		goto unlock;
+
+	if (context->func.parent->is_going_away) {
+		acpiphp_put_context(context);
+		context = NULL;
+		goto unlock;
+	}
+
+	get_bridge(context->func.parent);
+	acpiphp_put_context(context);
+
+unlock:
+>>>>>>> rebase
 	acpi_unlock_hp_context();
 	return context;
 }
@@ -532,6 +550,10 @@ static void enable_slot(struct acpiphp_slot *slot, bool bridge)
 			slot->flags &= ~SLOT_ENABLED;
 			continue;
 		}
+<<<<<<< HEAD
+=======
+		pci_dev_put(dev);
+>>>>>>> rebase
 	}
 }
 

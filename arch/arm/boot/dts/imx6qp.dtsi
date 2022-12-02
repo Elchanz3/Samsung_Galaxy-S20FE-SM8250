@@ -9,12 +9,24 @@
 		ocram2: sram@940000 {
 			compatible = "mmio-sram";
 			reg = <0x00940000 0x20000>;
+<<<<<<< HEAD
+=======
+			ranges = <0 0x00940000 0x20000>;
+			#address-cells = <1>;
+			#size-cells = <1>;
+>>>>>>> rebase
 			clocks = <&clks IMX6QDL_CLK_OCRAM>;
 		};
 
 		ocram3: sram@960000 {
 			compatible = "mmio-sram";
 			reg = <0x00960000 0x20000>;
+<<<<<<< HEAD
+=======
+			ranges = <0 0x00960000 0x20000>;
+			#address-cells = <1>;
+			#size-cells = <1>;
+>>>>>>> rebase
 			clocks = <&clks IMX6QDL_CLK_OCRAM>;
 		};
 
@@ -77,7 +89,10 @@
 };
 
 &fec {
+<<<<<<< HEAD
 	/delete-property/interrupts-extended;
+=======
+>>>>>>> rebase
 	interrupts = <0 118 IRQ_TYPE_LEVEL_HIGH>,
 		     <0 119 IRQ_TYPE_LEVEL_HIGH>;
 };

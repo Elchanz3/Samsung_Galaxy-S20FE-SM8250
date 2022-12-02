@@ -26,6 +26,7 @@
 #include <asm/page.h>
 #include <asm/tlbflush.h>
 
+<<<<<<< HEAD
 #ifdef CONFIG_UH
 #include <linux/uh.h>
 #ifdef CONFIG_UH_RKP
@@ -33,10 +34,13 @@
 #endif
 #endif
 
+=======
+>>>>>>> rebase
 static struct kmem_cache *pgd_cache __ro_after_init;
 
 pgd_t *pgd_alloc(struct mm_struct *mm)
 {
+<<<<<<< HEAD
 #ifdef CONFIG_UH_RKP
 	pgd_t *ret = NULL;
 
@@ -59,15 +63,21 @@ pgd_t *pgd_alloc(struct mm_struct *mm)
 
 	return ret;
 #else
+=======
+>>>>>>> rebase
 	if (PGD_SIZE == PAGE_SIZE)
 		return (pgd_t *)__get_free_page(PGALLOC_GFP);
 	else
 		return kmem_cache_alloc(pgd_cache, PGALLOC_GFP);
+<<<<<<< HEAD
 #endif
+=======
+>>>>>>> rebase
 }
 
 void pgd_free(struct mm_struct *mm, pgd_t *pgd)
 {
+<<<<<<< HEAD
 #ifdef CONFIG_UH_RKP
 	if (rkp_started)
 		uh_call(UH_APP_RKP, RKP_FREE_PGD, (u64)pgd, 0, 0, 0);
@@ -82,11 +92,16 @@ void pgd_free(struct mm_struct *mm, pgd_t *pgd)
 			kmem_cache_free(pgd_cache, pgd);
 	}
 #else
+=======
+>>>>>>> rebase
 	if (PGD_SIZE == PAGE_SIZE)
 		free_page((unsigned long)pgd);
 	else
 		kmem_cache_free(pgd_cache, pgd);
+<<<<<<< HEAD
 #endif
+=======
+>>>>>>> rebase
 }
 
 void __init pgd_cache_init(void)

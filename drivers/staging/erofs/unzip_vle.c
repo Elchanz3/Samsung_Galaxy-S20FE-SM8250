@@ -228,6 +228,7 @@ static inline bool try_to_reuse_as_compressed_page(
 }
 
 /* callers must be with work->lock held */
+<<<<<<< HEAD
 static int z_erofs_vle_work_add_page(
 	struct z_erofs_vle_work_builder *builder,
 	struct page *page,
@@ -235,6 +236,14 @@ static int z_erofs_vle_work_add_page(
 {
 	int ret;
 	bool occupied;
+=======
+static int z_erofs_vle_work_add_page(struct z_erofs_vle_work_builder *builder,
+				     struct page *page,
+				     enum z_erofs_page_type type,
+				     bool pvec_safereuse)
+{
+	int ret;
+>>>>>>> rebase
 
 	/* give priority for the compressed data storage */
 	if (builder->role >= Z_EROFS_VLE_WORK_PRIMARY &&
@@ -242,10 +251,16 @@ static int z_erofs_vle_work_add_page(
 		try_to_reuse_as_compressed_page(builder, page))
 		return 0;
 
+<<<<<<< HEAD
 	ret = z_erofs_pagevec_ctor_enqueue(&builder->vector,
 		page, type, &occupied);
 	builder->work->vcnt += (unsigned)ret;
 
+=======
+	ret = z_erofs_pagevec_ctor_enqueue(&builder->vector, page, type,
+					   pvec_safereuse);
+	builder->work->vcnt += (unsigned)ret;
+>>>>>>> rebase
 	return ret ? 0 : -EAGAIN;
 }
 
@@ -690,14 +705,23 @@ hitted:
 		tight &= builder_is_followed(builder);
 
 retry:
+<<<<<<< HEAD
 	err = z_erofs_vle_work_add_page(builder, page, page_type);
+=======
+	err = z_erofs_vle_work_add_page(builder, page, page_type,
+					builder_is_followed(builder));
+>>>>>>> rebase
 	/* should allocate an additional staging page for pagevec */
 	if (err == -EAGAIN) {
 		struct page *const newpage =
 			__stagingpage_alloc(page_pool, GFP_NOFS);
 
 		err = z_erofs_vle_work_add_page(builder,
+<<<<<<< HEAD
 			newpage, Z_EROFS_PAGE_TYPE_EXCLUSIVE);
+=======
+			newpage, Z_EROFS_PAGE_TYPE_EXCLUSIVE, true);
+>>>>>>> rebase
 		if (likely(!err))
 			goto retry;
 	}

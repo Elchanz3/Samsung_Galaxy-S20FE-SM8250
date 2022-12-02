@@ -899,6 +899,11 @@ static struct snd_soc_dai_driver q6afe_dais[] = {
 				 SNDRV_PCM_RATE_16000,
 			.formats = SNDRV_PCM_FMTBIT_S16_LE |
 				   SNDRV_PCM_FMTBIT_S24_LE,
+<<<<<<< HEAD
+=======
+			.channels_min = 1,
+			.channels_max = 8,
+>>>>>>> rebase
 			.rate_min =     8000,
 			.rate_max =     48000,
 		},
@@ -914,6 +919,11 @@ static struct snd_soc_dai_driver q6afe_dais[] = {
 				 SNDRV_PCM_RATE_16000,
 			.formats = SNDRV_PCM_FMTBIT_S16_LE |
 				   SNDRV_PCM_FMTBIT_S24_LE,
+<<<<<<< HEAD
+=======
+			.channels_min = 1,
+			.channels_max = 8,
+>>>>>>> rebase
 			.rate_min =     8000,
 			.rate_max =     48000,
 		},
@@ -928,6 +938,11 @@ static struct snd_soc_dai_driver q6afe_dais[] = {
 			.rates = SNDRV_PCM_RATE_48000 | SNDRV_PCM_RATE_8000 |
 				 SNDRV_PCM_RATE_16000,
 			.formats = SNDRV_PCM_FMTBIT_S16_LE,
+<<<<<<< HEAD
+=======
+			.channels_min = 1,
+			.channels_max = 8,
+>>>>>>> rebase
 			.rate_min =     8000,
 			.rate_max =     48000,
 		},
@@ -943,6 +958,11 @@ static struct snd_soc_dai_driver q6afe_dais[] = {
 				 SNDRV_PCM_RATE_16000,
 			.formats = SNDRV_PCM_FMTBIT_S16_LE |
 				   SNDRV_PCM_FMTBIT_S24_LE,
+<<<<<<< HEAD
+=======
+			.channels_min = 1,
+			.channels_max = 8,
+>>>>>>> rebase
 			.rate_min =     8000,
 			.rate_max =     48000,
 		},
@@ -957,6 +977,11 @@ static struct snd_soc_dai_driver q6afe_dais[] = {
 			.rates = SNDRV_PCM_RATE_48000 | SNDRV_PCM_RATE_8000 |
 				 SNDRV_PCM_RATE_16000,
 			.formats = SNDRV_PCM_FMTBIT_S16_LE,
+<<<<<<< HEAD
+=======
+			.channels_min = 1,
+			.channels_max = 8,
+>>>>>>> rebase
 			.rate_min =     8000,
 			.rate_max =     48000,
 		},
@@ -972,6 +997,11 @@ static struct snd_soc_dai_driver q6afe_dais[] = {
 				 SNDRV_PCM_RATE_16000,
 			.formats = SNDRV_PCM_FMTBIT_S16_LE |
 				   SNDRV_PCM_FMTBIT_S24_LE,
+<<<<<<< HEAD
+=======
+			.channels_min = 1,
+			.channels_max = 8,
+>>>>>>> rebase
 			.rate_min =     8000,
 			.rate_max =     48000,
 		},
@@ -986,6 +1016,11 @@ static struct snd_soc_dai_driver q6afe_dais[] = {
 			.rates = SNDRV_PCM_RATE_48000 | SNDRV_PCM_RATE_8000 |
 				 SNDRV_PCM_RATE_16000,
 			.formats = SNDRV_PCM_FMTBIT_S16_LE,
+<<<<<<< HEAD
+=======
+			.channels_min = 1,
+			.channels_max = 8,
+>>>>>>> rebase
 			.rate_min =     8000,
 			.rate_max =     48000,
 		},
@@ -1001,6 +1036,11 @@ static struct snd_soc_dai_driver q6afe_dais[] = {
 				 SNDRV_PCM_RATE_16000,
 			.formats = SNDRV_PCM_FMTBIT_S16_LE |
 				   SNDRV_PCM_FMTBIT_S24_LE,
+<<<<<<< HEAD
+=======
+			.channels_min = 1,
+			.channels_max = 8,
+>>>>>>> rebase
 			.rate_min =     8000,
 			.rate_max =     48000,
 		},

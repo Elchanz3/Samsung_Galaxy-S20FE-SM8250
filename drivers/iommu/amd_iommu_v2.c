@@ -776,6 +776,16 @@ int amd_iommu_init_device(struct pci_dev *pdev, int pasids)
 
 	might_sleep();
 
+<<<<<<< HEAD
+=======
+	/*
+	 * When memory encryption is active the device is likely not in a
+	 * direct-mapped domain. Forbid using IOMMUv2 functionality for now.
+	 */
+	if (mem_encrypt_active())
+		return -ENODEV;
+
+>>>>>>> rebase
 	if (!amd_iommu_v2_supported())
 		return -ENODEV;
 

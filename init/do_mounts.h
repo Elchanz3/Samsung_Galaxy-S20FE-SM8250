@@ -61,6 +61,7 @@ void md_run_setup(void);
 static inline void md_run_setup(void) {}
 
 #endif
+<<<<<<< HEAD
 
 #ifdef CONFIG_BLK_DEV_DM
 
@@ -71,3 +72,5 @@ void dm_run_setup(void);
 static inline void dm_run_setup(void) {}
 
 #endif
+=======
+>>>>>>> rebase

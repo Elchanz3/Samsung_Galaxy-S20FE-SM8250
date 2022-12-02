@@ -201,6 +201,7 @@ static int i40iw_dealloc_ucontext(struct ib_ucontext *context)
  */
 static int i40iw_mmap(struct ib_ucontext *context, struct vm_area_struct *vma)
 {
+<<<<<<< HEAD
 	struct i40iw_ucontext *ucontext;
 	u64 db_addr_offset;
 	u64 push_offset;
@@ -233,6 +234,18 @@ static int i40iw_mmap(struct ib_ucontext *context, struct vm_area_struct *vma)
 	if (io_remap_pfn_range(vma, vma->vm_start,
 			       vma->vm_pgoff + (pci_resource_start(ucontext->iwdev->ldev->pcidev, 0) >> PAGE_SHIFT),
 			       PAGE_SIZE, vma->vm_page_prot))
+=======
+	struct i40iw_ucontext *ucontext = to_ucontext(context);
+	u64 dbaddr;
+
+	if (vma->vm_pgoff || vma->vm_end - vma->vm_start != PAGE_SIZE)
+		return -EINVAL;
+
+	dbaddr = I40IW_DB_ADDR_OFFSET + pci_resource_start(ucontext->iwdev->ldev->pcidev, 0);
+
+	if (io_remap_pfn_range(vma, vma->vm_start, dbaddr >> PAGE_SHIFT, PAGE_SIZE,
+			       pgprot_noncached(vma->vm_page_prot)))
+>>>>>>> rebase
 		return -EAGAIN;
 
 	return 0;

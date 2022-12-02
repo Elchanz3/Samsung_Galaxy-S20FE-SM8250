@@ -13,9 +13,12 @@
 
 #ifdef CONFIG_LOCKUP_DETECTOR
 void lockup_detector_init(void);
+<<<<<<< HEAD
 extern void watchdog_enable(unsigned int cpu);
 extern void watchdog_disable(unsigned int cpu);
 extern bool watchdog_configured(unsigned int cpu);
+=======
+>>>>>>> rebase
 void lockup_detector_soft_poweroff(void);
 void lockup_detector_cleanup(void);
 bool is_hardlockup(void);
@@ -40,6 +43,7 @@ extern int sysctl_hardlockup_all_cpu_backtrace;
 static inline void lockup_detector_init(void) { }
 static inline void lockup_detector_soft_poweroff(void) { }
 static inline void lockup_detector_cleanup(void) { }
+<<<<<<< HEAD
 static inline void watchdog_enable(unsigned int cpu)
 {
 }
@@ -54,6 +58,8 @@ static inline bool watchdog_configured(unsigned int cpu)
 	 */
 	return true;
 }
+=======
+>>>>>>> rebase
 #endif /* !CONFIG_LOCKUP_DETECTOR */
 
 #ifdef CONFIG_SOFTLOCKUP_DETECTOR
@@ -139,6 +145,11 @@ int watchdog_nmi_probe(void);
 int watchdog_nmi_enable(unsigned int cpu);
 void watchdog_nmi_disable(unsigned int cpu);
 
+<<<<<<< HEAD
+=======
+void lockup_detector_reconfigure(void);
+
+>>>>>>> rebase
 /**
  * touch_nmi_watchdog - restart NMI watchdog timeout.
  *

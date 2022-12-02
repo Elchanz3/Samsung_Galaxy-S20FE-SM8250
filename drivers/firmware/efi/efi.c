@@ -236,7 +236,11 @@ static void generic_ops_unregister(void)
 	efivars_unregister(&generic_efivars);
 }
 
+<<<<<<< HEAD
 #if IS_ENABLED(CONFIG_ACPI)
+=======
+#ifdef CONFIG_EFI_CUSTOM_SSDT_OVERLAYS
+>>>>>>> rebase
 #define EFIVAR_SSDT_NAME_MAX	16
 static char efivar_ssdt[EFIVAR_SSDT_NAME_MAX] __initdata;
 static int __init efivar_ssdt_setup(char *str)
@@ -245,7 +249,11 @@ static int __init efivar_ssdt_setup(char *str)
 		memcpy(efivar_ssdt, str, strlen(str));
 	else
 		pr_warn("efivar_ssdt: name too long: %s\n", str);
+<<<<<<< HEAD
 	return 0;
+=======
+	return 1;
+>>>>>>> rebase
 }
 __setup("efivar_ssdt=", efivar_ssdt_setup);
 
@@ -359,6 +367,10 @@ static int __init efisubsys_init(void)
 	efi_kobj = kobject_create_and_add("efi", firmware_kobj);
 	if (!efi_kobj) {
 		pr_err("efi: Firmware registration failed.\n");
+<<<<<<< HEAD
+=======
+		destroy_workqueue(efi_rts_wq);
+>>>>>>> rebase
 		return -ENOMEM;
 	}
 
@@ -395,6 +407,10 @@ err_unregister:
 	generic_ops_unregister();
 err_put:
 	kobject_put(efi_kobj);
+<<<<<<< HEAD
+=======
+	destroy_workqueue(efi_rts_wq);
+>>>>>>> rebase
 	return error;
 }
 
@@ -554,7 +570,11 @@ int __init efi_config_parse_tables(void *config_tables, int count, int sz,
 
 		seed = early_memremap(efi.rng_seed, sizeof(*seed));
 		if (seed != NULL) {
+<<<<<<< HEAD
 			size = seed->size;
+=======
+			size = min(seed->size, EFI_RANDOM_SEED_SIZE);
+>>>>>>> rebase
 			early_memunmap(seed, sizeof(*seed));
 		} else {
 			pr_err("Could not map UEFI random seed!\n");
@@ -572,7 +592,11 @@ int __init efi_config_parse_tables(void *config_tables, int count, int sz,
 		}
 	}
 
+<<<<<<< HEAD
 	if (efi_enabled(EFI_MEMMAP))
+=======
+	if (!IS_ENABLED(CONFIG_X86_32) && efi_enabled(EFI_MEMMAP))
+>>>>>>> rebase
 		efi_memattr_init();
 
 	efi_tpm_eventlog_init();

@@ -515,7 +515,11 @@
 		reg = <0x39>;
 		interrupt-parent = <&gpio1>;
 		interrupts = <1 2>;
+<<<<<<< HEAD
 		pd-gpio = <&gpio0 4 0>;
+=======
+		pd-gpios = <&gpio0 4 0>;
+>>>>>>> rebase
 		adi,dsi-lanes = <4>;
 		#sound-dai-cells = <0>;
 

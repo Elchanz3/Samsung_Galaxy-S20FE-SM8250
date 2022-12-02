@@ -256,7 +256,13 @@ int drm_connector_init(struct drm_device *dev,
 
 	if (connector_type != DRM_MODE_CONNECTOR_VIRTUAL &&
 	    connector_type != DRM_MODE_CONNECTOR_WRITEBACK)
+<<<<<<< HEAD
 		drm_connector_attach_edid_property(connector);
+=======
+		drm_object_attach_property(&connector->base,
+					      config->edid_property,
+					      0);
+>>>>>>> rebase
 
 	drm_object_attach_property(&connector->base,
 				      config->dpms_property, 0);
@@ -289,6 +295,7 @@ out_put:
 EXPORT_SYMBOL(drm_connector_init);
 
 /**
+<<<<<<< HEAD
  * drm_connector_attach_edid_property - attach edid property.
  * @dev: DRM device
  * @connector: the connector
@@ -308,6 +315,8 @@ void drm_connector_attach_edid_property(struct drm_connector *connector)
 EXPORT_SYMBOL(drm_connector_attach_edid_property);
 
 /**
+=======
+>>>>>>> rebase
  * drm_connector_attach_encoder - attach a connector to an encoder
  * @connector: connector to attach
  * @encoder: encoder to attach @connector to
@@ -392,7 +401,12 @@ void drm_connector_cleanup(struct drm_connector *connector)
 	/* The connector should have been removed from userspace long before
 	 * it is finally destroyed.
 	 */
+<<<<<<< HEAD
 	if (WARN_ON(connector->registered))
+=======
+	if (WARN_ON(connector->registration_state ==
+		    DRM_CONNECTOR_REGISTERED))
+>>>>>>> rebase
 		drm_connector_unregister(connector);
 
 	if (connector->tile_group) {
@@ -449,7 +463,11 @@ int drm_connector_register(struct drm_connector *connector)
 		return 0;
 
 	mutex_lock(&connector->mutex);
+<<<<<<< HEAD
 	if (connector->registered)
+=======
+	if (connector->registration_state != DRM_CONNECTOR_INITIALIZING)
+>>>>>>> rebase
 		goto unlock;
 
 	ret = drm_sysfs_connector_add(connector);
@@ -469,7 +487,11 @@ int drm_connector_register(struct drm_connector *connector)
 
 	drm_mode_object_register(connector->dev, &connector->base);
 
+<<<<<<< HEAD
 	connector->registered = true;
+=======
+	connector->registration_state = DRM_CONNECTOR_REGISTERED;
+>>>>>>> rebase
 	goto unlock;
 
 err_debugfs:
@@ -491,7 +513,11 @@ EXPORT_SYMBOL(drm_connector_register);
 void drm_connector_unregister(struct drm_connector *connector)
 {
 	mutex_lock(&connector->mutex);
+<<<<<<< HEAD
 	if (!connector->registered) {
+=======
+	if (connector->registration_state != DRM_CONNECTOR_REGISTERED) {
+>>>>>>> rebase
 		mutex_unlock(&connector->mutex);
 		return;
 	}
@@ -502,7 +528,11 @@ void drm_connector_unregister(struct drm_connector *connector)
 	drm_sysfs_connector_remove(connector);
 	drm_debugfs_connector_remove(connector);
 
+<<<<<<< HEAD
 	connector->registered = false;
+=======
+	connector->registration_state = DRM_CONNECTOR_UNREGISTERED;
+>>>>>>> rebase
 	mutex_unlock(&connector->mutex);
 }
 EXPORT_SYMBOL(drm_connector_unregister);
@@ -822,6 +852,7 @@ static struct drm_prop_enum_list drm_cp_enum_list[] = {
 };
 DRM_ENUM_NAME_FN(drm_get_content_protection_name, drm_cp_enum_list)
 
+<<<<<<< HEAD
 static const struct drm_prop_enum_list hdmi_colorspaces[] = {
 	/* For Default case, driver will set the colorspace */
 	{ DRM_MODE_COLORIMETRY_DEFAULT, "Default" },
@@ -871,6 +902,8 @@ static const struct drm_prop_enum_list dp_colorspaces[] = {
 	{ DRM_MODE_COLORIMETRY_BT2020_YCC, "BT2020_YCC" },
 };
 
+=======
+>>>>>>> rebase
 /**
  * DOC: standard connector properties
  *
@@ -1440,6 +1473,7 @@ int drm_mode_create_aspect_ratio_property(struct drm_device *dev)
 EXPORT_SYMBOL(drm_mode_create_aspect_ratio_property);
 
 /**
+<<<<<<< HEAD
  * DOC: standard connector properties
  *
  * Colorspace:
@@ -1499,6 +1533,8 @@ int drm_mode_create_colorspace_property(struct drm_connector *connector)
 EXPORT_SYMBOL(drm_mode_create_colorspace_property);
 
 /**
+=======
+>>>>>>> rebase
  * drm_mode_create_content_type_property - create content type property
  * @dev: DRM device
  *

@@ -598,6 +598,7 @@ void hfsplus_file_truncate(struct inode *inode)
 		res = __hfsplus_ext_cache_extent(&fd, inode, alloc_cnt);
 		if (res)
 			break;
+<<<<<<< HEAD
 		hfs_brec_remove(&fd);
 
 		mutex_unlock(&fd.tree->tree_lock);
@@ -605,6 +606,17 @@ void hfsplus_file_truncate(struct inode *inode)
 		hfsplus_free_extents(sb, hip->cached_extents,
 				     alloc_cnt - start, alloc_cnt - blk_cnt);
 		hfsplus_dump_extent(hip->cached_extents);
+=======
+
+		start = hip->cached_start;
+		if (blk_cnt <= start)
+			hfs_brec_remove(&fd);
+		mutex_unlock(&fd.tree->tree_lock);
+		hfsplus_free_extents(sb, hip->cached_extents,
+				     alloc_cnt - start, alloc_cnt - blk_cnt);
+		hfsplus_dump_extent(hip->cached_extents);
+		mutex_lock(&fd.tree->tree_lock);
+>>>>>>> rebase
 		if (blk_cnt > start) {
 			hip->extent_state |= HFSPLUS_EXT_DIRTY;
 			break;
@@ -612,7 +624,10 @@ void hfsplus_file_truncate(struct inode *inode)
 		alloc_cnt = start;
 		hip->cached_start = hip->cached_blocks = 0;
 		hip->extent_state &= ~(HFSPLUS_EXT_DIRTY | HFSPLUS_EXT_NEW);
+<<<<<<< HEAD
 		mutex_lock(&fd.tree->tree_lock);
+=======
+>>>>>>> rebase
 	}
 	hfs_find_exit(&fd);
 

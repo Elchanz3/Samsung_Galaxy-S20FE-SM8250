@@ -91,8 +91,11 @@ int back_to_back_ebbs(void)
 	ebb_global_disable();
 	ebb_freeze_pmcs();
 
+<<<<<<< HEAD
 	count_pmc(1, sample_period);
 
+=======
+>>>>>>> rebase
 	dump_ebb_state();
 
 	event_close(&event);

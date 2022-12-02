@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 # SPDX-License-Identifier: GPL-2.0-only
+=======
+>>>>>>> rebase
 #
 # Multifunction miscellaneous devices
 #
@@ -710,6 +713,7 @@ config MFD_MAX14577
 	  additional drivers must be enabled in order to use the functionality
 	  of the device.
 
+<<<<<<< HEAD
 config MFD_MAX77705
 	bool "Maxim Semiconductor MAX77705 PMIC Support"
 	depends on I2C=y
@@ -721,6 +725,8 @@ config MFD_MAX77705
 	  This driver provides common support for accessing the device;
 	  additional drivers
 
+=======
+>>>>>>> rebase
 config MFD_MAX77620
 	bool "Maxim Semiconductor MAX77620 and MAX20024 PMIC Support"
 	depends on I2C=y
@@ -943,6 +949,7 @@ config MFD_PM8XXX
 	  Say M here if you want to include support for PM8xxx chips as a
 	  module. This will build a module called "pm8xxx-core".
 
+<<<<<<< HEAD
 config MFD_I2C_PMIC
 	tristate "QTI I2C PMIC support"
 	depends on I2C && OF
@@ -954,6 +961,8 @@ config MFD_I2C_PMIC
 	  access for all of the device's peripherals.  Some QTI PMIC chips
 	  support communication over both I2C and SPMI.
 
+=======
+>>>>>>> rebase
 config MFD_QCOM_RPM
 	tristate "Qualcomm Resource Power Manager (RPM)"
 	depends on ARCH_QCOM && OF
@@ -1057,6 +1066,7 @@ config MFD_SEC_CORE
 	 additional drivers must be enabled in order to use the functionality
 	 of the device
 
+<<<<<<< HEAD
 config MFD_S2MPB02
 	bool "Samsung Semiconductor S2MPB02 PMIC Support"
 	depends on I2C=y
@@ -1067,6 +1077,8 @@ config MFD_S2MPB02
 	  This driver provides common support for accessing the device;
 	  additional drivers
 
+=======
+>>>>>>> rebase
 config MFD_SI476X_CORE
 	tristate "Silicon Laboratories 4761/64/68 AM/FM radio."
 	depends on I2C
@@ -1840,6 +1852,7 @@ config MFD_WM97xx
 	  support for the WM97xx, in order to use the actual functionaltiy of
 	  the device other drivers must be enabled.
 
+<<<<<<< HEAD
 config MFD_CS35L41
 	tristate "Cirrus Logic CS35L41 codec"
 	select MFD_CORE
@@ -1858,6 +1871,8 @@ config MFD_CS35L41_I2C
 	select REGMAP_IRQ
 	depends on I2C
 
+=======
+>>>>>>> rebase
 config MFD_STW481X
 	tristate "Support for ST Microelectronics STw481x"
 	depends on I2C && (ARCH_NOMADIK || COMPILE_TEST)

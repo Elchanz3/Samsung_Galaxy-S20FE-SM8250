@@ -241,6 +241,7 @@ int ecryptfs_initialize_file(struct dentry *ecryptfs_dentry,
 			ecryptfs_dentry, rc);
 		goto out;
 	}
+<<<<<<< HEAD
 #ifdef CONFIG_WTL_ENCRYPTION_FILTER
 	mutex_lock(&crypt_stat->cs_mutex);
 	if (crypt_stat->flags & ECRYPTFS_ENCRYPTED) {
@@ -274,11 +275,16 @@ int ecryptfs_initialize_file(struct dentry *ecryptfs_dentry,
 	}
 	mutex_unlock(&crypt_stat->cs_mutex);
 #else
+=======
+>>>>>>> rebase
 	rc = ecryptfs_write_metadata(ecryptfs_dentry, ecryptfs_inode);
 	if (rc)
 		printk(KERN_ERR "Error writing headers; rc = [%d]\n", rc);
 	ecryptfs_put_lower_file(ecryptfs_inode);
+<<<<<<< HEAD
 #endif
+=======
+>>>>>>> rebase
 out:
 	return rc;
 }

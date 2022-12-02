@@ -10,7 +10,10 @@
  */
 
 #include <linux/linkage.h>
+<<<<<<< HEAD
 #include <asm/assembler.h>
+=======
+>>>>>>> rebase
 #include <asm/cache.h>
 
 	.text
@@ -42,7 +45,11 @@
 	.endif
 	.endm
 
+<<<<<<< HEAD
 	.macro		__hround, out0, out1, in0, in1, in2, in3, t3, t4, enc, sz, op, oldcpsr
+=======
+	.macro		__hround, out0, out1, in0, in1, in2, in3, t3, t4, enc, sz, op
+>>>>>>> rebase
 	__select	\out0, \in0, 0
 	__select	t0, \in1, 1
 	__load		\out0, \out0, 0, \sz, \op
@@ -74,6 +81,7 @@
 	__load		t0, t0, 3, \sz, \op
 	__load		\t4, \t4, 3, \sz, \op
 
+<<<<<<< HEAD
 	.ifnb		\oldcpsr
 	/*
 	 * This is the final round and we're done with all data-dependent table
@@ -82,6 +90,8 @@
 	restore_irqs	\oldcpsr
 	.endif
 
+=======
+>>>>>>> rebase
 	eor		\out1, \out1, t1, ror #24
 	eor		\out0, \out0, t2, ror #16
 	ldm		rk!, {t1, t2}
@@ -92,6 +102,7 @@
 	eor		\out1, \out1, t2
 	.endm
 
+<<<<<<< HEAD
 	.macro		fround, out0, out1, out2, out3, in0, in1, in2, in3, sz=2, op, oldcpsr
 	__hround	\out0, \out1, \in0, \in1, \in2, \in3, \out2, \out3, 1, \sz, \op
 	__hround	\out2, \out3, \in2, \in3, \in0, \in1, \in1, \in2, 1, \sz, \op, \oldcpsr
@@ -100,6 +111,16 @@
 	.macro		iround, out0, out1, out2, out3, in0, in1, in2, in3, sz=2, op, oldcpsr
 	__hround	\out0, \out1, \in0, \in3, \in2, \in1, \out2, \out3, 0, \sz, \op
 	__hround	\out2, \out3, \in2, \in1, \in0, \in3, \in1, \in0, 0, \sz, \op, \oldcpsr
+=======
+	.macro		fround, out0, out1, out2, out3, in0, in1, in2, in3, sz=2, op
+	__hround	\out0, \out1, \in0, \in1, \in2, \in3, \out2, \out3, 1, \sz, \op
+	__hround	\out2, \out3, \in2, \in3, \in0, \in1, \in1, \in2, 1, \sz, \op
+	.endm
+
+	.macro		iround, out0, out1, out2, out3, in0, in1, in2, in3, sz=2, op
+	__hround	\out0, \out1, \in0, \in3, \in2, \in1, \out2, \out3, 0, \sz, \op
+	__hround	\out2, \out3, \in2, \in1, \in0, \in3, \in1, \in0, 0, \sz, \op
+>>>>>>> rebase
 	.endm
 
 	.macro		__rev, out, in
@@ -127,14 +148,22 @@
 	.macro		do_crypt, round, ttab, ltab, bsz
 	push		{r3-r11, lr}
 
+<<<<<<< HEAD
 	// Load keys first, to reduce latency in case they're not cached yet.
 	ldm		rk!, {r8-r11}
 
+=======
+>>>>>>> rebase
 	ldr		r4, [in]
 	ldr		r5, [in, #4]
 	ldr		r6, [in, #8]
 	ldr		r7, [in, #12]
 
+<<<<<<< HEAD
+=======
+	ldm		rk!, {r8-r11}
+
+>>>>>>> rebase
 #ifdef CONFIG_CPU_BIG_ENDIAN
 	__rev		r4, r4
 	__rev		r5, r5
@@ -148,6 +177,7 @@
 	eor		r7, r7, r11
 
 	__adrl		ttab, \ttab
+<<<<<<< HEAD
 	/*
 	 * Disable interrupts and prefetch the 1024-byte 'ft' or 'it' table into
 	 * L1 cache, assuming cacheline size >= 32.  This is a hardening measure
@@ -167,6 +197,8 @@
 	.set		i, i + 128
 	.endr
 	push		{t0}		// oldcpsr
+=======
+>>>>>>> rebase
 
 	tst		rounds, #2
 	bne		1f
@@ -180,6 +212,7 @@
 	\round		r4, r5, r6, r7, r8, r9, r10, r11
 	b		0b
 
+<<<<<<< HEAD
 2:	.ifb		\ltab
 	add		ttab, ttab, #1
 	.else
@@ -195,6 +228,10 @@
 
 	pop		{rounds}	// oldcpsr
 	\round		r4, r5, r6, r7, r8, r9, r10, r11, \bsz, b, rounds
+=======
+2:	__adrl		ttab, \ltab
+	\round		r4, r5, r6, r7, r8, r9, r10, r11, \bsz, b
+>>>>>>> rebase
 
 #ifdef CONFIG_CPU_BIG_ENDIAN
 	__rev		r4, r4
@@ -217,7 +254,11 @@
 	.endm
 
 ENTRY(__aes_arm_encrypt)
+<<<<<<< HEAD
 	do_crypt	fround, crypto_ft_tab,, 2
+=======
+	do_crypt	fround, crypto_ft_tab, crypto_ft_tab + 1, 2
+>>>>>>> rebase
 ENDPROC(__aes_arm_encrypt)
 
 	.align		5

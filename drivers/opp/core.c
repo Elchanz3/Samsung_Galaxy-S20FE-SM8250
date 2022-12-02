@@ -884,9 +884,17 @@ void _opp_free(struct dev_pm_opp *opp)
 	kfree(opp);
 }
 
+<<<<<<< HEAD
 static void _opp_kref_release(struct dev_pm_opp *opp,
 			      struct opp_table *opp_table)
 {
+=======
+static void _opp_kref_release(struct kref *kref)
+{
+	struct dev_pm_opp *opp = container_of(kref, struct dev_pm_opp, kref);
+	struct opp_table *opp_table = opp->opp_table;
+
+>>>>>>> rebase
 	/*
 	 * Notify the changes in the availability of the operable
 	 * frequency/voltage list.
@@ -895,6 +903,7 @@ static void _opp_kref_release(struct dev_pm_opp *opp,
 	opp_debug_remove_one(opp);
 	list_del(&opp->node);
 	kfree(opp);
+<<<<<<< HEAD
 }
 
 static void _opp_kref_release_unlocked(struct kref *kref)
@@ -911,6 +920,9 @@ static void _opp_kref_release_locked(struct kref *kref)
 	struct opp_table *opp_table = opp->opp_table;
 
 	_opp_kref_release(opp, opp_table);
+=======
+
+>>>>>>> rebase
 	mutex_unlock(&opp_table->lock);
 	dev_pm_opp_put_opp_table(opp_table);
 }
@@ -922,6 +934,7 @@ void dev_pm_opp_get(struct dev_pm_opp *opp)
 
 void dev_pm_opp_put(struct dev_pm_opp *opp)
 {
+<<<<<<< HEAD
 	kref_put_mutex(&opp->kref, _opp_kref_release_locked,
 		       &opp->opp_table->lock);
 }
@@ -932,6 +945,12 @@ static void dev_pm_opp_put_unlocked(struct dev_pm_opp *opp)
 	kref_put(&opp->kref, _opp_kref_release_unlocked);
 }
 
+=======
+	kref_put_mutex(&opp->kref, _opp_kref_release, &opp->opp_table->lock);
+}
+EXPORT_SYMBOL_GPL(dev_pm_opp_put);
+
+>>>>>>> rebase
 /**
  * dev_pm_opp_remove()  - Remove an OPP from OPP table
  * @dev:	device for which we do this operation
@@ -971,6 +990,7 @@ void dev_pm_opp_remove(struct device *dev, unsigned long freq)
 }
 EXPORT_SYMBOL_GPL(dev_pm_opp_remove);
 
+<<<<<<< HEAD
 /**
  * dev_pm_opp_remove_all_dynamic() - Remove all dynamically created OPPs
  * @dev:	device for which we do this operation
@@ -1005,6 +1025,8 @@ void dev_pm_opp_remove_all_dynamic(struct device *dev)
 }
 EXPORT_SYMBOL_GPL(dev_pm_opp_remove_all_dynamic);
 
+=======
+>>>>>>> rebase
 struct dev_pm_opp *_opp_allocate(struct opp_table *table)
 {
 	struct dev_pm_opp *opp;

@@ -57,7 +57,10 @@ static noinline void execute_location(void *dst, bool write)
 	}
 	pr_info("attempting bad execution at %px\n", func);
 	func();
+<<<<<<< HEAD
 	pr_err("FAIL: func returned\n");
+=======
+>>>>>>> rebase
 }
 
 static void execute_user_location(void *dst)
@@ -76,22 +79,37 @@ static void execute_user_location(void *dst)
 		return;
 	pr_info("attempting bad execution at %px\n", func);
 	func();
+<<<<<<< HEAD
 	pr_err("FAIL: func returned\n");
+=======
+>>>>>>> rebase
 }
 
 void lkdtm_WRITE_RO(void)
 {
+<<<<<<< HEAD
 	/* Explicitly cast away "const" for the test and make volatile. */
 	volatile unsigned long *ptr = (unsigned long *)&rodata;
 
 	pr_info("attempting bad rodata write at %px\n", ptr);
 	*ptr ^= 0xabcd1234;
 	pr_err("FAIL: survived bad write\n");
+=======
+	/* Explicitly cast away "const" for the test. */
+	unsigned long *ptr = (unsigned long *)&rodata;
+
+	pr_info("attempting bad rodata write at %px\n", ptr);
+	*ptr ^= 0xabcd1234;
+>>>>>>> rebase
 }
 
 void lkdtm_WRITE_RO_AFTER_INIT(void)
 {
+<<<<<<< HEAD
 	volatile unsigned long *ptr = &ro_after_init;
+=======
+	unsigned long *ptr = &ro_after_init;
+>>>>>>> rebase
 
 	/*
 	 * Verify we were written to during init. Since an Oops
@@ -105,12 +123,16 @@ void lkdtm_WRITE_RO_AFTER_INIT(void)
 
 	pr_info("attempting bad ro_after_init write at %px\n", ptr);
 	*ptr ^= 0xabcd1234;
+<<<<<<< HEAD
 	pr_err("FAIL: survived bad write\n");
+=======
+>>>>>>> rebase
 }
 
 void lkdtm_WRITE_KERN(void)
 {
 	size_t size;
+<<<<<<< HEAD
 	volatile unsigned char *ptr;
 
 	if ((unsigned long)do_overwritten < (unsigned long)do_nothing)
@@ -125,6 +147,16 @@ void lkdtm_WRITE_KERN(void)
 	memcpy((void *)ptr, (unsigned char *)do_nothing, size);
 	flush_icache_range((unsigned long)ptr, (unsigned long)(ptr + size));
 	pr_err("FAIL: survived bad write\n");
+=======
+	unsigned char *ptr;
+
+	size = (unsigned long)do_overwritten - (unsigned long)do_nothing;
+	ptr = (unsigned char *)do_overwritten;
+
+	pr_info("attempting bad %zu byte write at %px\n", size, ptr);
+	memcpy(ptr, (unsigned char *)do_nothing, size);
+	flush_icache_range((unsigned long)ptr, (unsigned long)(ptr + size));
+>>>>>>> rebase
 
 	do_overwritten();
 }
@@ -203,11 +235,17 @@ void lkdtm_ACCESS_USERSPACE(void)
 	pr_info("attempting bad read at %px\n", ptr);
 	tmp = *ptr;
 	tmp += 0xc0dec0de;
+<<<<<<< HEAD
 	pr_err("FAIL: survived bad read\n");
 
 	pr_info("attempting bad write at %px\n", ptr);
 	*ptr = tmp;
 	pr_err("FAIL: survived bad write\n");
+=======
+
+	pr_info("attempting bad write at %px\n", ptr);
+	*ptr = tmp;
+>>>>>>> rebase
 
 	vm_munmap(user_addr, PAGE_SIZE);
 }
@@ -215,20 +253,34 @@ void lkdtm_ACCESS_USERSPACE(void)
 void lkdtm_ACCESS_NULL(void)
 {
 	unsigned long tmp;
+<<<<<<< HEAD
 	volatile unsigned long *ptr = (unsigned long *)NULL;
+=======
+	unsigned long *ptr = (unsigned long *)NULL;
+>>>>>>> rebase
 
 	pr_info("attempting bad read at %px\n", ptr);
 	tmp = *ptr;
 	tmp += 0xc0dec0de;
+<<<<<<< HEAD
 	pr_err("FAIL: survived bad read\n");
 
 	pr_info("attempting bad write at %px\n", ptr);
 	*ptr = tmp;
 	pr_err("FAIL: survived bad write\n");
+=======
+
+	pr_info("attempting bad write at %px\n", ptr);
+	*ptr = tmp;
+>>>>>>> rebase
 }
 
 void __init lkdtm_perms_init(void)
 {
 	/* Make sure we can write to __ro_after_init values during __init */
 	ro_after_init |= 0xAA;
+<<<<<<< HEAD
+=======
+
+>>>>>>> rebase
 }

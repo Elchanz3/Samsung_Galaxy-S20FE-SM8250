@@ -42,6 +42,10 @@
 	.hidden _ebss
 	.hidden _got
 	.hidden _egot
+<<<<<<< HEAD
+=======
+	.hidden _end
+>>>>>>> rebase
 
 	__HEAD
 	.code32
@@ -106,7 +110,11 @@ ENTRY(startup_32)
 	notl	%eax
 	andl	%eax, %ebx
 	cmpl	$LOAD_PHYSICAL_ADDR, %ebx
+<<<<<<< HEAD
 	jge	1f
+=======
+	jae	1f
+>>>>>>> rebase
 #endif
 	movl	$LOAD_PHYSICAL_ADDR, %ebx
 1:
@@ -297,7 +305,11 @@ ENTRY(startup_64)
 	notq	%rax
 	andq	%rax, %rbp
 	cmpq	$LOAD_PHYSICAL_ADDR, %rbp
+<<<<<<< HEAD
 	jge	1f
+=======
+	jae	1f
+>>>>>>> rebase
 #endif
 	movq	$LOAD_PHYSICAL_ADDR, %rbp
 1:

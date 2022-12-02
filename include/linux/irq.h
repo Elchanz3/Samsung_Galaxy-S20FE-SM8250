@@ -210,6 +210,11 @@ struct irq_data {
  * IRQD_CAN_RESERVE		- Can use reservation mode
  * IRQD_MSI_NOMASK_QUIRK	- Non-maskable MSI quirk for affinity change
  *				  required
+<<<<<<< HEAD
+=======
+ * IRQD_AFFINITY_ON_ACTIVATE	- Affinity is set on activation. Don't call
+ *				  irq_chip::irq_set_affinity() when deactivated.
+>>>>>>> rebase
  */
 enum {
 	IRQD_TRIGGER_MASK		= 0xf,
@@ -233,6 +238,10 @@ enum {
 	IRQD_DEFAULT_TRIGGER_SET	= (1 << 25),
 	IRQD_CAN_RESERVE		= (1 << 26),
 	IRQD_MSI_NOMASK_QUIRK		= (1 << 27),
+<<<<<<< HEAD
+=======
+	IRQD_AFFINITY_ON_ACTIVATE	= (1 << 29),
+>>>>>>> rebase
 };
 
 #define __irqd_to_state(d) ACCESS_PRIVATE((d)->common, state_use_accessors)
@@ -407,6 +416,19 @@ static inline bool irqd_msi_nomask_quirk(struct irq_data *d)
 	return __irqd_to_state(d) & IRQD_MSI_NOMASK_QUIRK;
 }
 
+<<<<<<< HEAD
+=======
+static inline void irqd_set_affinity_on_activate(struct irq_data *d)
+{
+	__irqd_to_state(d) |= IRQD_AFFINITY_ON_ACTIVATE;
+}
+
+static inline bool irqd_affinity_on_activate(struct irq_data *d)
+{
+	return __irqd_to_state(d) & IRQD_AFFINITY_ON_ACTIVATE;
+}
+
+>>>>>>> rebase
 #undef __irqd_to_state
 
 static inline irq_hw_number_t irqd_to_hwirq(struct irq_data *d)
@@ -522,6 +544,10 @@ struct irq_chip {
  * IRQCHIP_ONESHOT_SAFE:	One shot does not require mask/unmask
  * IRQCHIP_EOI_THREADED:	Chip requires eoi() on unmask in threaded mode
  * IRQCHIP_SUPPORTS_LEVEL_MSI	Chip can provide two doorbells for Level MSIs
+<<<<<<< HEAD
+=======
+ * IRQCHIP_AFFINITY_PRE_STARTUP:      Default affinity update before startup
+>>>>>>> rebase
  */
 enum {
 	IRQCHIP_SET_TYPE_MASKED		= (1 <<  0),
@@ -532,6 +558,10 @@ enum {
 	IRQCHIP_ONESHOT_SAFE		= (1 <<  5),
 	IRQCHIP_EOI_THREADED		= (1 <<  6),
 	IRQCHIP_SUPPORTS_LEVEL_MSI	= (1 <<  7),
+<<<<<<< HEAD
+=======
+	IRQCHIP_AFFINITY_PRE_STARTUP	= (1 << 10),
+>>>>>>> rebase
 };
 
 #include <linux/irqdesc.h>
@@ -617,12 +647,15 @@ extern int irq_chip_pm_put(struct irq_data *data);
 #ifdef	CONFIG_IRQ_DOMAIN_HIERARCHY
 extern void handle_fasteoi_ack_irq(struct irq_desc *desc);
 extern void handle_fasteoi_mask_irq(struct irq_desc *desc);
+<<<<<<< HEAD
 extern int irq_chip_set_parent_state(struct irq_data *data,
 				     enum irqchip_irq_state which,
 				     bool val);
 extern int irq_chip_get_parent_state(struct irq_data *data,
 				     enum irqchip_irq_state which,
 				     bool *state);
+=======
+>>>>>>> rebase
 extern void irq_chip_enable_parent(struct irq_data *data);
 extern void irq_chip_disable_parent(struct irq_data *data);
 extern void irq_chip_ack_parent(struct irq_data *data);

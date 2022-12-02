@@ -37,10 +37,13 @@
 #include <asm/asm-uaccess.h>
 #include <asm/unistd.h>
 
+<<<<<<< HEAD
 #ifdef CONFIG_CFP_ROPP
 #include <asm/cfp.h>
 #endif
 
+=======
+>>>>>>> rebase
 /*
  * Context tracking subsystem.  Used to instrument transitions
  * between user and kernel mode.
@@ -74,18 +77,33 @@
 
 	.macro kernel_ventry, el, label, regsize = 64
 	.align 7
+<<<<<<< HEAD
 #ifdef CONFIG_UNMAP_KERNEL_AT_EL0
 alternative_if ARM64_UNMAP_KERNEL_AT_EL0
 	.if	\el == 0
+=======
+.Lventry_start\@:
+	.if	\el == 0
+	/*
+	 * This must be the first instruction of the EL0 vector entries. It is
+	 * skipped by the trampoline vectors, to trigger the cleanup.
+	 */
+	b	.Lskip_tramp_vectors_cleanup\@
+>>>>>>> rebase
 	.if	\regsize == 64
 	mrs	x30, tpidrro_el0
 	msr	tpidrro_el0, xzr
 	.else
 	mov	x30, xzr
 	.endif
+<<<<<<< HEAD
 	.endif
 alternative_else_nop_endif
 #endif
+=======
+.Lskip_tramp_vectors_cleanup\@:
+	.endif
+>>>>>>> rebase
 
 	sub	sp, sp, #S_FRAME_SIZE
 #ifdef CONFIG_VMAP_STACK
@@ -131,11 +149,23 @@ alternative_else_nop_endif
 	mrs	x0, tpidrro_el0
 #endif
 	b	el\()\el\()_\label
+<<<<<<< HEAD
 	.endm
 
 	.macro tramp_alias, dst, sym
 	mov_q	\dst, TRAMP_VALIAS
 	add	\dst, \dst, #(\sym - .entry.tramp.text)
+=======
+.org .Lventry_start\@ + 128	// Did we overflow the ventry slot?
+	.endm
+
+	.macro tramp_alias, dst, sym, tmp
+	mov_q	\dst, TRAMP_VALIAS
+	adr_l	\tmp, \sym
+	add	\dst, \dst, \tmp
+	adr_l	\tmp, .entry.tramp.text
+	sub	\dst, \dst, \tmp
+>>>>>>> rebase
 	.endm
 
 	// This macro corrupts x0-x3. It is the caller's duty
@@ -170,11 +200,14 @@ alternative_cb_end
 	stp	x10, x11, [sp, #16 * 5]
 	stp	x12, x13, [sp, #16 * 6]
 	stp	x14, x15, [sp, #16 * 7]
+<<<<<<< HEAD
 #if (defined CONFIG_CFP_ROPP) && (!defined CONFIG_CFP_TEST)
 	.if	\el == 1
 	mov	RRK, xzr
 	.endif
 #endif
+=======
+>>>>>>> rebase
 	stp	x16, x17, [sp, #16 * 8]
 	stp	x18, x19, [sp, #16 * 9]
 	stp	x20, x21, [sp, #16 * 10]
@@ -183,28 +216,37 @@ alternative_cb_end
 	stp	x26, x27, [sp, #16 * 13]
 	stp	x28, x29, [sp, #16 * 14]
 
+<<<<<<< HEAD
 	str lr, [sp, #S_LR]
 	mrs x22, elr_el1
  	mrs x23, spsr_el1
  	stp x22, x23, [sp, #S_PC]
 
 
+=======
+>>>>>>> rebase
 	.if	\el == 0
 	clear_gp_regs
 	mrs	x21, sp_el0
 	ldr_this_cpu	tsk, __entry_task, x20	// Ensure MDSCR_EL1.SS is clear,
 	ldr	x19, [tsk, #TSK_TI_FLAGS]	// since we can unmask debug
+<<<<<<< HEAD
 #ifdef CONFIG_CFP_ROPP
 	ropp_new_key	tsk
 #endif
+=======
+>>>>>>> rebase
 	disable_step_tsk x19, x20		// exceptions when scheduling.
 
 	apply_ssbd 1, x22, x23
 
+<<<<<<< HEAD
 #ifdef CONFIG_SHADOW_CALL_STACK
 	ldr	x18, [tsk, #TSK_TI_SCS]		// Restore shadow call stack
 	str	xzr, [tsk, #TSK_TI_SCS]		// Limit visibility of saved SCS
 #endif
+=======
+>>>>>>> rebase
 	.else
 	add	x21, sp, #S_FRAME_SIZE
 	get_thread_info tsk
@@ -214,9 +256,12 @@ alternative_cb_end
 	mov	x20, #USER_DS
 	str	x20, [tsk, #TSK_TI_ADDR_LIMIT]
 	/* No need to reset PSTATE.UAO, hardware's already set it to 0 for us */
+<<<<<<< HEAD
 #ifdef CONFIG_CFP_ROPP
 	ropp_load_key 	tsk
 #endif
+=======
+>>>>>>> rebase
 	.endif /* \el == 0 */
 	mrs	x22, elr_el1
 	mrs	x23, spsr_el1
@@ -299,12 +344,15 @@ alternative_else_nop_endif
 	ct_user_enter
 	.endif
 
+<<<<<<< HEAD
 #ifdef CONFIG_SHADOW_CALL_STACK
 	.if	\el == 0
 	str	x18, [tsk, #TSK_TI_SCS]		// Save shadow call stack
 	.endif
 #endif
 
+=======
+>>>>>>> rebase
 #ifdef CONFIG_ARM64_SW_TTBR0_PAN
 	/*
 	 * Restore access to TTBR0_EL1. If returning to EL0, no need for SPSR
@@ -367,6 +415,7 @@ alternative_else_nop_endif
 	ldp	x12, x13, [sp, #16 * 6]
 	ldp	x14, x15, [sp, #16 * 7]
 	ldp	x16, x17, [sp, #16 * 8]
+<<<<<<< HEAD
 #ifdef CONFIG_CFP_ROPP
 	.if	\el == 1
 	/* Might be having an interrupt right after smc call, before any RRK loading code */
@@ -374,20 +423,26 @@ alternative_else_nop_endif
 	ropp_load_key 	x19
 	.endif
 #endif
+=======
+>>>>>>> rebase
 	ldp	x18, x19, [sp, #16 * 9]
 	ldp	x20, x21, [sp, #16 * 10]
 	ldp	x22, x23, [sp, #16 * 11]
 	ldp	x24, x25, [sp, #16 * 12]
 	ldp	x26, x27, [sp, #16 * 13]
 	ldp	x28, x29, [sp, #16 * 14]
+<<<<<<< HEAD
 	ldr	lr, [sp, #S_LR]
 	add	sp, sp, #S_FRAME_SIZE		// restore sp
+=======
+>>>>>>> rebase
 	/*
 	 * ARCH_HAS_MEMBARRIER_SYNC_CORE rely on eret context synchronization
 	 * when returning from IPI handler, and when returning to user-space.
 	 */
 
 	.if	\el == 0
+<<<<<<< HEAD
 alternative_insn eret, nop, ARM64_UNMAP_KERNEL_AT_EL0
 #ifdef CONFIG_UNMAP_KERNEL_AT_EL0
 	bne	4f
@@ -399,15 +454,37 @@ alternative_insn eret, nop, ARM64_UNMAP_KERNEL_AT_EL0
 	br	x30
 #endif
 	.else
+=======
+alternative_if_not ARM64_UNMAP_KERNEL_AT_EL0
+	ldr	lr, [sp, #S_LR]
+	add	sp, sp, #S_FRAME_SIZE		// restore sp
+	eret
+alternative_else_nop_endif
+#ifdef CONFIG_UNMAP_KERNEL_AT_EL0
+	bne	4f
+	msr	far_el1, x29
+	tramp_alias	x30, tramp_exit_native, x29
+	br	x30
+4:
+	tramp_alias	x30, tramp_exit_compat, x29
+	br	x30
+#endif
+	.else
+	ldr	lr, [sp, #S_LR]
+	add	sp, sp, #S_FRAME_SIZE		// restore sp
+>>>>>>> rebase
 	eret
 	.endif
 	.endm
 
 	.macro	irq_stack_entry
 	mov	x19, sp			// preserve the original sp
+<<<<<<< HEAD
 #ifdef CONFIG_SHADOW_CALL_STACK
 	mov	x20, x18		// preserve the original shadow stack
 #endif
+=======
+>>>>>>> rebase
 
 	/*
 	 * Compare sp with the base of the task stack.
@@ -425,16 +502,20 @@ alternative_insn eret, nop, ARM64_UNMAP_KERNEL_AT_EL0
 
 	/* switch to the irq stack */
 	mov	sp, x26
+<<<<<<< HEAD
 
 #ifdef CONFIG_SHADOW_CALL_STACK
 	/* also switch to the irq shadow stack */
 	ldr_this_cpu x18, irq_shadow_call_stack_ptr, x26
 #endif
 
+=======
+>>>>>>> rebase
 9998:
 	.endm
 
 	/*
+<<<<<<< HEAD
 	 * The callee-saved regs (x19-x29) should be preserved between
 	 * irq_stack_entry and irq_stack_exit.
 	 */
@@ -443,6 +524,13 @@ alternative_insn eret, nop, ARM64_UNMAP_KERNEL_AT_EL0
 #ifdef CONFIG_SHADOW_CALL_STACK
 	mov	x18, x20
 #endif
+=======
+	 * x19 should be preserved between irq_stack_entry and
+	 * irq_stack_exit.
+	 */
+	.macro	irq_stack_exit
+	mov	sp, x19
+>>>>>>> rebase
 	.endm
 
 /*
@@ -618,7 +706,11 @@ el1_da:
 	 */
 	mrs	x3, far_el1
 	inherit_daif	pstate=x23, tmp=x2
+<<<<<<< HEAD
 	untagged_addr x0, x3
+=======
+	clear_address_tag x0, x3
+>>>>>>> rebase
 	mov	x2, sp				// struct pt_regs
 	bl	do_mem_abort
 
@@ -747,9 +839,15 @@ el0_sync_compat:
 	cmp	x24, #ESR_ELx_EC_UNKNOWN	// unknown exception in EL0
 	b.eq	el0_undef
 	cmp	x24, #ESR_ELx_EC_CP15_32	// CP15 MRC/MCR trap
+<<<<<<< HEAD
 	b.eq	el0_cp15
 	cmp	x24, #ESR_ELx_EC_CP15_64	// CP15 MRRC/MCRR trap
 	b.eq	el0_cp15
+=======
+	b.eq	el0_undef
+	cmp	x24, #ESR_ELx_EC_CP15_64	// CP15 MRRC/MCRR trap
+	b.eq	el0_undef
+>>>>>>> rebase
 	cmp	x24, #ESR_ELx_EC_CP14_MR	// CP14 MRC/MCR trap
 	b.eq	el0_undef
 	cmp	x24, #ESR_ELx_EC_CP14_LS	// CP14 LDC/STC trap
@@ -772,6 +870,7 @@ el0_irq_compat:
 el0_error_compat:
 	kernel_entry 0, 32
 	b	el0_error_naked
+<<<<<<< HEAD
 
 el0_cp15:
 	/*
@@ -783,6 +882,8 @@ el0_cp15:
 	mov	x1, sp
 	bl	do_cp15instr
 	b	ret_to_user
+=======
+>>>>>>> rebase
 #endif
 
 el0_da:
@@ -792,7 +893,11 @@ el0_da:
 	mrs	x26, far_el1
 	enable_daif
 	ct_user_exit
+<<<<<<< HEAD
 	untagged_addr x0, x26
+=======
+	clear_address_tag x0, x26
+>>>>>>> rebase
 	mov	x1, x25
 	mov	x2, sp
 	bl	do_mem_abort
@@ -981,12 +1086,16 @@ ENDPROC(el0_svc)
 
 	.popsection				// .entry.text
 
+<<<<<<< HEAD
 #ifdef CONFIG_UNMAP_KERNEL_AT_EL0
 /*
  * Exception vectors trampoline.
  */
 	.pushsection ".entry.tramp.text", "ax"
 
+=======
+	// Move from tramp_pg_dir to swapper_pg_dir
+>>>>>>> rebase
 	.macro tramp_map_kernel, tmp
 	mrs	\tmp, ttbr1_el1
 	add	\tmp, \tmp, #(PAGE_SIZE + RESERVED_TTBR0_SIZE)
@@ -1018,12 +1127,54 @@ alternative_else_nop_endif
 	 */
 	.endm
 
+<<<<<<< HEAD
 	.macro tramp_ventry, regsize = 64
+=======
+	.macro tramp_data_page	dst
+	adr_l	\dst, .entry.tramp.text
+	sub	\dst, \dst, PAGE_SIZE
+	.endm
+
+	.macro tramp_data_read_var	dst, var
+#ifdef CONFIG_RANDOMIZE_BASE
+	tramp_data_page		\dst
+	add	\dst, \dst, #:lo12:__entry_tramp_data_\var
+	ldr	\dst, [\dst]
+#else
+	ldr	\dst, =\var
+#endif
+	.endm
+
+#define BHB_MITIGATION_NONE	0
+#define BHB_MITIGATION_LOOP	1
+#define BHB_MITIGATION_FW	2
+#define BHB_MITIGATION_INSN	3
+
+	.macro tramp_ventry, vector_start, regsize, kpti, bhb
+>>>>>>> rebase
 	.align	7
 1:
 	.if	\regsize == 64
 	msr	tpidrro_el0, x30	// Restored in kernel_ventry
 	.endif
+<<<<<<< HEAD
+=======
+
+	.if	\bhb == BHB_MITIGATION_LOOP
+	/*
+	 * This sequence must appear before the first indirect branch. i.e. the
+	 * ret out of tramp_ventry. It appears here because x30 is free.
+	 */
+	__mitigate_spectre_bhb_loop	x30
+	.endif // \bhb == BHB_MITIGATION_LOOP
+
+	.if	\bhb == BHB_MITIGATION_INSN
+	clearbhb
+	isb
+	.endif // \bhb == BHB_MITIGATION_INSN
+
+	.if	\kpti == 1
+>>>>>>> rebase
 	/*
 	 * Defend against branch aliasing attacks by pushing a dummy
 	 * entry onto the return stack and using a RET instruction to
@@ -1033,6 +1184,7 @@ alternative_else_nop_endif
 	b	.
 2:
 	tramp_map_kernel	x30
+<<<<<<< HEAD
 #ifdef CONFIG_RANDOMIZE_BASE
 	adr	x30, tramp_vectors + PAGE_SIZE
 alternative_insn isb, nop, ARM64_WORKAROUND_QCOM_FALKOR_E1003
@@ -1070,6 +1222,77 @@ ENTRY(tramp_vectors)
 	tramp_ventry	32
 	tramp_ventry	32
 	tramp_ventry	32
+=======
+alternative_insn isb, nop, ARM64_WORKAROUND_QCOM_FALKOR_E1003
+	tramp_data_read_var	x30, vectors
+	prfm	plil1strm, [x30, #(1b - \vector_start)]
+	msr	vbar_el1, x30
+	isb
+	.else
+	ldr	x30, =vectors
+	.endif // \kpti == 1
+
+	.if	\bhb == BHB_MITIGATION_FW
+	/*
+	 * The firmware sequence must appear before the first indirect branch.
+	 * i.e. the ret out of tramp_ventry. But it also needs the stack to be
+	 * mapped to save/restore the registers the SMC clobbers.
+	 */
+	__mitigate_spectre_bhb_fw
+	.endif // \bhb == BHB_MITIGATION_FW
+
+	add	x30, x30, #(1b - \vector_start + 4)
+	ret
+.org 1b + 128	// Did we overflow the ventry slot?
+	.endm
+
+	.macro tramp_exit, regsize = 64
+	tramp_data_read_var	x30, this_cpu_vector
+alternative_if_not ARM64_HAS_VIRT_HOST_EXTN
+	mrs	x29, tpidr_el1
+alternative_else
+	mrs	x29, tpidr_el2
+alternative_endif
+	ldr	x30, [x30, x29]
+
+	msr	vbar_el1, x30
+	ldr	lr, [sp, #S_LR]
+	tramp_unmap_kernel	x29
+	.if	\regsize == 64
+	mrs	x29, far_el1
+	.endif
+	add	sp, sp, #S_FRAME_SIZE		// restore sp
+	eret
+	.endm
+
+	.macro	generate_tramp_vector,	kpti, bhb
+.Lvector_start\@:
+	.space	0x400
+
+	.rept	4
+	tramp_ventry	.Lvector_start\@, 64, \kpti, \bhb
+	.endr
+	.rept	4
+	tramp_ventry	.Lvector_start\@, 32, \kpti, \bhb
+	.endr
+	.endm
+
+#ifdef CONFIG_UNMAP_KERNEL_AT_EL0
+/*
+ * Exception vectors trampoline.
+ * The order must match __bp_harden_el1_vectors and the
+ * arm64_bp_harden_el1_vectors enum.
+ */
+	.pushsection ".entry.tramp.text", "ax"
+	.align	11
+ENTRY(tramp_vectors)
+#ifdef CONFIG_MITIGATE_SPECTRE_BRANCH_HISTORY
+	generate_tramp_vector	kpti=1, bhb=BHB_MITIGATION_LOOP
+	generate_tramp_vector	kpti=1, bhb=BHB_MITIGATION_FW
+	generate_tramp_vector	kpti=1, bhb=BHB_MITIGATION_INSN
+#endif /* CONFIG_MITIGATE_SPECTRE_BRANCH_HISTORY */
+	generate_tramp_vector	kpti=1, bhb=BHB_MITIGATION_NONE
+>>>>>>> rebase
 END(tramp_vectors)
 
 ENTRY(tramp_exit_native)
@@ -1087,12 +1310,63 @@ END(tramp_exit_compat)
 	.align PAGE_SHIFT
 	.globl	__entry_tramp_data_start
 __entry_tramp_data_start:
+<<<<<<< HEAD
 	.quad	vectors
+=======
+__entry_tramp_data_vectors:
+	.quad	vectors
+#ifdef CONFIG_ARM_SDE_INTERFACE
+__entry_tramp_data___sdei_asm_handler:
+	.quad	__sdei_asm_handler
+#endif /* CONFIG_ARM_SDE_INTERFACE */
+__entry_tramp_data_this_cpu_vector:
+	.quad	this_cpu_vector
+>>>>>>> rebase
 	.popsection				// .rodata
 #endif /* CONFIG_RANDOMIZE_BASE */
 #endif /* CONFIG_UNMAP_KERNEL_AT_EL0 */
 
 /*
+<<<<<<< HEAD
+=======
+ * Exception vectors for spectre mitigations on entry from EL1 when
+ * kpti is not in use.
+ */
+	.macro generate_el1_vector, bhb
+.Lvector_start\@:
+	kernel_ventry	1, sync_invalid			// Synchronous EL1t
+	kernel_ventry	1, irq_invalid			// IRQ EL1t
+	kernel_ventry	1, fiq_invalid			// FIQ EL1t
+	kernel_ventry	1, error_invalid		// Error EL1t
+
+	kernel_ventry	1, sync				// Synchronous EL1h
+	kernel_ventry	1, irq				// IRQ EL1h
+	kernel_ventry	1, fiq_invalid			// FIQ EL1h
+	kernel_ventry	1, error			// Error EL1h
+
+	.rept	4
+	tramp_ventry	.Lvector_start\@, 64, 0, \bhb
+	.endr
+	.rept 4
+	tramp_ventry	.Lvector_start\@, 32, 0, \bhb
+	.endr
+	.endm
+
+/* The order must match tramp_vecs and the arm64_bp_harden_el1_vectors enum. */
+	.pushsection ".entry.text", "ax"
+	.align	11
+ENTRY(__bp_harden_el1_vectors)
+#ifdef CONFIG_MITIGATE_SPECTRE_BRANCH_HISTORY
+	generate_el1_vector	bhb=BHB_MITIGATION_LOOP
+	generate_el1_vector	bhb=BHB_MITIGATION_FW
+	generate_el1_vector	bhb=BHB_MITIGATION_INSN
+#endif /* CONFIG_MITIGATE_SPECTRE_BRANCH_HISTORY */
+END(__bp_harden_el1_vectors)
+	.popsection
+
+
+/*
+>>>>>>> rebase
  * Register switch for AArch64. The callee-saved registers need to be saved
  * and restored. On entry:
  *   x0 = previous task_struct (must be preserved across the switch)
@@ -1121,6 +1395,7 @@ ENTRY(cpu_switch_to)
 	ldr	lr, [x8]
 	mov	sp, x9
 	msr	sp_el0, x1
+<<<<<<< HEAD
 #ifdef CONFIG_CFP_ROPP
 	/*
 	 * Must be after sp updated
@@ -1133,6 +1408,8 @@ ENTRY(cpu_switch_to)
 	ldr	x18, [x1, #TSK_TI_SCS]
 	str	xzr, [x1, #TSK_TI_SCS]		// limit visibility of saved SCS
 #endif
+=======
+>>>>>>> rebase
 	ret
 ENDPROC(cpu_switch_to)
 NOKPROBE(cpu_switch_to)
@@ -1190,6 +1467,7 @@ ENTRY(__sdei_asm_entry_trampoline)
 	 */
 1:	str	x4, [x1, #(SDEI_EVENT_INTREGS + S_ORIG_ADDR_LIMIT)]
 
+<<<<<<< HEAD
 #ifdef CONFIG_RANDOMIZE_BASE
 	adr	x4, tramp_vectors + PAGE_SIZE
 	add	x4, x4, #:lo12:__sdei_asm_trampoline_next_handler
@@ -1197,6 +1475,9 @@ ENTRY(__sdei_asm_entry_trampoline)
 #else
 	ldr	x4, =__sdei_asm_handler
 #endif
+=======
+	tramp_data_read_var     x4, __sdei_asm_handler
+>>>>>>> rebase
 	br	x4
 ENDPROC(__sdei_asm_entry_trampoline)
 NOKPROBE(__sdei_asm_entry_trampoline)
@@ -1219,12 +1500,15 @@ ENDPROC(__sdei_asm_exit_trampoline)
 NOKPROBE(__sdei_asm_exit_trampoline)
 	.ltorg
 .popsection		// .entry.tramp.text
+<<<<<<< HEAD
 #ifdef CONFIG_RANDOMIZE_BASE
 .pushsection ".rodata", "a"
 __sdei_asm_trampoline_next_handler:
 	.quad	__sdei_asm_handler
 .popsection		// .rodata
 #endif /* CONFIG_RANDOMIZE_BASE */
+=======
+>>>>>>> rebase
 #endif /* CONFIG_UNMAP_KERNEL_AT_EL0 */
 
 /*
@@ -1320,7 +1604,11 @@ alternative_if_not ARM64_UNMAP_KERNEL_AT_EL0
 alternative_else_nop_endif
 
 #ifdef CONFIG_UNMAP_KERNEL_AT_EL0
+<<<<<<< HEAD
 	tramp_alias	dst=x5, sym=__sdei_asm_exit_trampoline
+=======
+	tramp_alias	dst=x5, sym=__sdei_asm_exit_trampoline, tmp=x3
+>>>>>>> rebase
 	br	x5
 #endif
 ENDPROC(__sdei_asm_handler)

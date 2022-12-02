@@ -55,6 +55,11 @@
 
 &mcbsp2 {
 	status = "okay";
+<<<<<<< HEAD
+=======
+	pinctrl-names = "default";
+	pinctrl-0 = <&mcbsp2_pins>;
+>>>>>>> rebase
 };
 
 &charger {

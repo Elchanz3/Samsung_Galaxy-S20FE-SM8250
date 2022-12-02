@@ -142,7 +142,11 @@ MODULE_DEVICE_TABLE(of, dir685_tk_of_match);
 
 static struct i2c_driver dir685_tk_i2c_driver = {
 	.driver = {
+<<<<<<< HEAD
 		.name	= "dlin-dir685-touchkeys",
+=======
+		.name	= "dlink-dir685-touchkeys",
+>>>>>>> rebase
 		.of_match_table = of_match_ptr(dir685_tk_of_match),
 	},
 	.probe		= dir685_tk_probe,

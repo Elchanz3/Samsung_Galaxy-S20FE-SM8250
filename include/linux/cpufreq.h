@@ -212,6 +212,7 @@ static inline unsigned int cpufreq_quick_get_max(unsigned int cpu)
 static inline void disable_cpufreq(void) { }
 #endif
 
+<<<<<<< HEAD
 #if defined(CONFIG_CPU_FREQ_LIMIT_USERSPACE)
 enum {
 	DVFS_NO_ID			= 0,
@@ -232,6 +233,8 @@ enum {
 int set_freq_limit(unsigned long id, unsigned int freq);
 #endif
 
+=======
+>>>>>>> rebase
 #ifdef CONFIG_CPU_FREQ_STAT
 void cpufreq_stats_create_table(struct cpufreq_policy *policy);
 void cpufreq_stats_free_table(struct cpufreq_policy *policy);
@@ -242,10 +245,13 @@ static inline void cpufreq_stats_create_table(struct cpufreq_policy *policy) { }
 static inline void cpufreq_stats_free_table(struct cpufreq_policy *policy) { }
 static inline void cpufreq_stats_record_transition(struct cpufreq_policy *policy,
 						   unsigned int new_freq) { }
+<<<<<<< HEAD
 static inline int cpufreq_stats_on_check(struct cpufreq_policy *policy)
 {
 	return 0;
 }
+=======
+>>>>>>> rebase
 #endif /* CONFIG_CPU_FREQ_STAT */
 
 /*********************************************************************
@@ -453,7 +459,10 @@ static inline void cpufreq_resume(void) {}
 /* Policy Notifiers  */
 #define CPUFREQ_ADJUST			(0)
 #define CPUFREQ_NOTIFY			(1)
+<<<<<<< HEAD
 #define CPUFREQ_INCOMPATIBLE	(6)
+=======
+>>>>>>> rebase
 
 #ifdef CONFIG_CPU_FREQ
 int cpufreq_register_notifier(struct notifier_block *nb, unsigned int list);
@@ -956,6 +965,7 @@ static inline bool policy_has_boost_freq(struct cpufreq_policy *policy)
 }
 #endif
 
+<<<<<<< HEAD
 #if defined(CONFIG_ENERGY_MODEL) && defined(CONFIG_CPU_FREQ_GOV_SCHEDUTIL)
 void sched_cpufreq_governor_change(struct cpufreq_policy *policy,
 			struct cpufreq_governor *old_gov);
@@ -964,13 +974,18 @@ static inline void sched_cpufreq_governor_change(struct cpufreq_policy *policy,
 			struct cpufreq_governor *old_gov) { }
 #endif
 
+=======
+>>>>>>> rebase
 extern void arch_freq_prepare_all(void);
 extern unsigned int arch_freq_get_on_cpu(int cpu);
 
 extern void arch_set_freq_scale(struct cpumask *cpus, unsigned long cur_freq,
 				unsigned long max_freq);
+<<<<<<< HEAD
 extern void arch_set_max_freq_scale(struct cpumask *cpus,
 				    unsigned long policy_max_freq);
+=======
+>>>>>>> rebase
 
 /* the following are really really optional */
 extern struct freq_attr cpufreq_freq_attr_scaling_available_freqs;
@@ -982,6 +997,9 @@ unsigned int cpufreq_generic_get(unsigned int cpu);
 int cpufreq_generic_init(struct cpufreq_policy *policy,
 		struct cpufreq_frequency_table *table,
 		unsigned int transition_latency);
+<<<<<<< HEAD
 
 extern unsigned int cpuinfo_max_freq_cached;
+=======
+>>>>>>> rebase
 #endif /* _LINUX_CPUFREQ_H */

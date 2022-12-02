@@ -26,10 +26,15 @@
 #include <linux/module.h>
 #include <linux/irq_work.h>
 #include <linux/posix-timers.h>
+<<<<<<< HEAD
 #include <linux/timer.h>
 #include <linux/context_tracking.h>
 #include <linux/mm.h>
 #include <linux/rq_stats.h>
+=======
+#include <linux/context_tracking.h>
+#include <linux/mm.h>
+>>>>>>> rebase
 
 #include <asm/irq_regs.h>
 
@@ -37,10 +42,13 @@
 
 #include <trace/events/timer.h>
 
+<<<<<<< HEAD
 struct rq_data rq_info;
 struct workqueue_struct *rq_wq;
 spinlock_t rq_lock;
 
+=======
+>>>>>>> rebase
 /*
  * Per-CPU nohz control structure
  */
@@ -930,11 +938,14 @@ static void __tick_nohz_idle_stop_tick(struct tick_sched *ts)
 	ktime_t expires;
 	int cpu = smp_processor_id();
 
+<<<<<<< HEAD
 #ifdef CONFIG_SMP
 	if (check_pending_deferrable_timers(cpu))
 		raise_softirq_irqoff(TIMER_SOFTIRQ);
 #endif
 
+=======
+>>>>>>> rebase
 	/*
 	 * If tick_nohz_get_sleep_length() ran tick_nohz_next_event(), the
 	 * tick timer expiration time is known already.
@@ -1268,6 +1279,7 @@ void tick_irq_enter(void)
  * High resolution timer specific code
  */
 #ifdef CONFIG_HIGH_RES_TIMERS
+<<<<<<< HEAD
 static void wakeup_user(void)
 {
 	unsigned long jiffy_gap;
@@ -1279,6 +1291,8 @@ static void wakeup_user(void)
 	}
 }
 
+=======
+>>>>>>> rebase
 /*
  * We rearm the timer until we get disabled by the idle code.
  * Called with interrupts disabled.
@@ -1296,6 +1310,7 @@ static enum hrtimer_restart tick_sched_timer(struct hrtimer *timer)
 	 * Do not call, when we are not in irq context and have
 	 * no valid regs pointer
 	 */
+<<<<<<< HEAD
 	if (regs) {
 		tick_sched_handle(ts, regs);
 		if (rq_info.init == 1 &&
@@ -1306,6 +1321,10 @@ static enum hrtimer_restart tick_sched_timer(struct hrtimer *timer)
 			wakeup_user();
 		}
 	}
+=======
+	if (regs)
+		tick_sched_handle(ts, regs);
+>>>>>>> rebase
 	else
 		ts->next_tick = 0;
 
@@ -1421,6 +1440,7 @@ int tick_check_oneshot_change(int allow_nohz)
 	tick_nohz_switch_to_nohz();
 	return 0;
 }
+<<<<<<< HEAD
 
 ktime_t *get_next_event_cpu(unsigned int cpu)
 {
@@ -1449,3 +1469,5 @@ void restore_pcpu_tick(int cpu)
 	ts->idle_calls = saved_pcpu_ts[cpu].idle_calls;
 }
 EXPORT_SYMBOL(restore_pcpu_tick);
+=======
+>>>>>>> rebase

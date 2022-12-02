@@ -314,7 +314,11 @@ static int tunnel_key_init(struct net *net, struct nlattr *nla,
 
 			metadata = __ipv6_tun_set_dst(&saddr, &daddr, tos, ttl, dst_port,
 						      0, flags,
+<<<<<<< HEAD
 						      key_id, 0);
+=======
+						      key_id, opts_len);
+>>>>>>> rebase
 		} else {
 			NL_SET_ERR_MSG(extack, "Missing either ipv4 or ipv6 src and dst");
 			ret = -EINVAL;

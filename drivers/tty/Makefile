@@ -35,4 +35,7 @@ obj-$(CONFIG_MIPS_EJTAG_FDC_TTY) += mips_ejtag_fdc.o
 obj-$(CONFIG_VCC)		+= vcc.o
 
 obj-y += ipwireless/
+<<<<<<< HEAD
 obj-$(CONFIG_OKL4_VTTY)		+= okl4_vtty.o
+=======
+>>>>>>> rebase

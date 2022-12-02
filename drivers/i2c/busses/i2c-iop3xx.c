@@ -456,16 +456,25 @@ iop3xx_i2c_probe(struct platform_device *pdev)
 
 	irq = platform_get_irq(pdev, 0);
 	if (irq < 0) {
+<<<<<<< HEAD
 		ret = -ENXIO;
+=======
+		ret = irq;
+>>>>>>> rebase
 		goto unmap;
 	}
 	ret = request_irq(irq, iop3xx_i2c_irq_handler, 0,
 				pdev->name, adapter_data);
 
+<<<<<<< HEAD
 	if (ret) {
 		ret = -EIO;
 		goto unmap;
 	}
+=======
+	if (ret)
+		goto unmap;
+>>>>>>> rebase
 
 	memcpy(new_adapter->name, pdev->name, strlen(pdev->name));
 	new_adapter->owner = THIS_MODULE;

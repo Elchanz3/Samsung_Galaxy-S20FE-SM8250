@@ -63,7 +63,12 @@ static inline int stack_map_data_size(struct bpf_map *map)
 
 static int prealloc_elems_and_freelist(struct bpf_stack_map *smap)
 {
+<<<<<<< HEAD
 	u32 elem_size = sizeof(struct stack_map_bucket) + smap->map.value_size;
+=======
+	u64 elem_size = sizeof(struct stack_map_bucket) +
+			(u64)smap->map.value_size;
+>>>>>>> rebase
 	int err;
 
 	smap->elems = bpf_map_area_alloc(elem_size * smap->map.max_entries,
@@ -114,6 +119,11 @@ static struct bpf_map *stack_map_alloc(union bpf_attr *attr)
 
 	/* hash table size must be power of 2 */
 	n_buckets = roundup_pow_of_two(attr->max_entries);
+<<<<<<< HEAD
+=======
+	if (!n_buckets)
+		return ERR_PTR(-E2BIG);
+>>>>>>> rebase
 
 	cost = n_buckets * sizeof(struct stack_map_bucket *) + sizeof(*smap);
 	if (cost >= U32_MAX - PAGE_SIZE)

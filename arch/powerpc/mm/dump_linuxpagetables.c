@@ -28,6 +28,11 @@
 #include <asm/page.h>
 #include <asm/pgalloc.h>
 
+<<<<<<< HEAD
+=======
+#include "dump_linuxpagetables.h"
+
+>>>>>>> rebase
 #ifdef CONFIG_PPC32
 #define KERN_VIRT_START	0
 #endif
@@ -102,6 +107,7 @@ static struct addr_marker address_markers[] = {
 	{ -1,	NULL },
 };
 
+<<<<<<< HEAD
 struct flag_info {
 	u64		mask;
 	u64		val;
@@ -255,6 +261,8 @@ static struct pgtable_level pg_level[] = {
 	},
 };
 
+=======
+>>>>>>> rebase
 static void dump_flag_info(struct pg_state *st, const struct flag_info
 		*flag, u64 pte, int num)
 {

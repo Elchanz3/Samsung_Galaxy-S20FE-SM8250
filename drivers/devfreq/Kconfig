@@ -73,6 +73,7 @@ config DEVFREQ_GOV_PASSIVE
 	  through sysfs entries. The passive governor recommends that
 	  devfreq device uses the OPP table to get the frequency/voltage.
 
+<<<<<<< HEAD
 config QCOM_BIMC_BWMON
 	tristate "QCOM BIMC Bandwidth monitor hardware"
 	depends on ARCH_QCOM
@@ -149,6 +150,10 @@ config DEVFREQ_GOV_QCOM_GPUBW_MON
 	  This governor is unlikely to be useful for non-Adreno
 	  devices.
 
+=======
+comment "DEVFREQ Drivers"
+
+>>>>>>> rebase
 config ARM_EXYNOS_BUS_DEVFREQ
 	tristate "ARM EXYNOS Generic Memory Bus DEVFREQ Driver"
 	depends on ARCH_EXYNOS || COMPILE_TEST
@@ -188,6 +193,7 @@ config ARM_RK3399_DMC_DEVFREQ
           It sets the frequency for the memory controller and reads the usage counts
           from hardware.
 
+<<<<<<< HEAD
 config ARM_QCOM_DEVFREQ_FW
 	bool "Qualcomm Technologies Inc. DEVFREQ FW driver"
 	depends on ARCH_QCOM
@@ -247,6 +253,8 @@ config DEVFREQ_GOV_STATICMAP
 	  This governor votes for the DDR BW based on the device's clock rate
 	  change.
 
+=======
+>>>>>>> rebase
 source "drivers/devfreq/event/Kconfig"
 
 endif # PM_DEVFREQ

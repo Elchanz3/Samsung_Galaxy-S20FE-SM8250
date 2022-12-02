@@ -28,6 +28,7 @@ config SUSPEND_SKIP_SYNC
 	  of suspend, or they are content with invoking sync() from
 	  user-space before invoking suspend.  Say Y if that's your case.
 
+<<<<<<< HEAD
 config CPU_FREQ_LIMIT_USERSPACE
 	bool "User space cpufreq limit interface"
 	depends on CPU_FREQ_LIMIT
@@ -45,6 +46,8 @@ config FOTA_LIMIT
 	  Add sysfs to notify limit information to recovery module
 	  /sys/power/fota_limit
 
+=======
+>>>>>>> rebase
 config HIBERNATE_CALLBACKS
 	bool
 
@@ -315,6 +318,7 @@ config PM_GENERIC_DOMAINS_OF
 
 config CPU_PM
 	bool
+<<<<<<< HEAD
 
 config ENERGY_MODEL
 	bool "Energy Model for CPUs"
@@ -330,3 +334,5 @@ config ENERGY_MODEL
 	  The exact usage of the energy model is subsystem-dependent.
 
 	  If in doubt, say N.
+=======
+>>>>>>> rebase

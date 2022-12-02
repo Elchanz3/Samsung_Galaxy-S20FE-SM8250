@@ -170,6 +170,11 @@ NOKPROBE_SYMBOL(skip_prefixes);
 int can_boost(struct insn *insn, void *addr)
 {
 	kprobe_opcode_t opcode;
+<<<<<<< HEAD
+=======
+	insn_byte_t prefix;
+	int i;
+>>>>>>> rebase
 
 	if (search_exception_tables((unsigned long)addr))
 		return 0;	/* Page fault may occur on this address. */
@@ -182,9 +187,20 @@ int can_boost(struct insn *insn, void *addr)
 	if (insn->opcode.nbytes != 1)
 		return 0;
 
+<<<<<<< HEAD
 	/* Can't boost Address-size override prefix */
 	if (unlikely(inat_is_address_size_prefix(insn->attr)))
 		return 0;
+=======
+	for_each_insn_prefix(insn, i, prefix) {
+		insn_attr_t attr;
+
+		attr = inat_get_opcode_attribute(prefix);
+		/* Can't boost Address-size override prefix and CS override prefix */
+		if (prefix == 0x2e || inat_is_address_size_prefix(attr))
+			return 0;
+	}
+>>>>>>> rebase
 
 	opcode = insn->opcode.bytes[0];
 
@@ -209,8 +225,13 @@ int can_boost(struct insn *insn, void *addr)
 		/* clear and set flags are boostable */
 		return (opcode == 0xf5 || (0xf7 < opcode && opcode < 0xfe));
 	default:
+<<<<<<< HEAD
 		/* CS override prefix and call are not boostable */
 		return (opcode != 0x2e && opcode != 0x9a);
+=======
+		/* call is not boostable */
+		return opcode != 0x9a;
+>>>>>>> rebase
 	}
 }
 
@@ -765,16 +786,22 @@ asm(
 NOKPROBE_SYMBOL(kretprobe_trampoline);
 STACK_FRAME_NON_STANDARD(kretprobe_trampoline);
 
+<<<<<<< HEAD
 static struct kprobe kretprobe_kprobe = {
 	.addr = (void *)kretprobe_trampoline,
 };
 
+=======
+>>>>>>> rebase
 /*
  * Called from kretprobe_trampoline
  */
 __visible __used void *trampoline_handler(struct pt_regs *regs)
 {
+<<<<<<< HEAD
 	struct kprobe_ctlblk *kcb;
+=======
+>>>>>>> rebase
 	struct kretprobe_instance *ri = NULL;
 	struct hlist_head *head, empty_rp;
 	struct hlist_node *tmp;
@@ -784,16 +811,23 @@ __visible __used void *trampoline_handler(struct pt_regs *regs)
 	void *frame_pointer;
 	bool skipped = false;
 
+<<<<<<< HEAD
 	preempt_disable();
 
+=======
+>>>>>>> rebase
 	/*
 	 * Set a dummy kprobe for avoiding kretprobe recursion.
 	 * Since kretprobe never run in kprobe handler, kprobe must not
 	 * be running at this point.
 	 */
+<<<<<<< HEAD
 	kcb = get_kprobe_ctlblk();
 	__this_cpu_write(current_kprobe, &kretprobe_kprobe);
 	kcb->kprobe_status = KPROBE_HIT_ACTIVE;
+=======
+	kprobe_busy_begin();
+>>>>>>> rebase
 
 	INIT_HLIST_HEAD(&empty_rp);
 	kretprobe_hash_lock(current, &head, &flags);
@@ -872,7 +906,11 @@ __visible __used void *trampoline_handler(struct pt_regs *regs)
 			__this_cpu_write(current_kprobe, &ri->rp->kp);
 			ri->ret_addr = correct_ret_addr;
 			ri->rp->handler(ri, regs);
+<<<<<<< HEAD
 			__this_cpu_write(current_kprobe, &kretprobe_kprobe);
+=======
+			__this_cpu_write(current_kprobe, &kprobe_busy);
+>>>>>>> rebase
 		}
 
 		recycle_rp_inst(ri, &empty_rp);
@@ -888,8 +926,12 @@ __visible __used void *trampoline_handler(struct pt_regs *regs)
 
 	kretprobe_hash_unlock(current, &flags);
 
+<<<<<<< HEAD
 	__this_cpu_write(current_kprobe, NULL);
 	preempt_enable();
+=======
+	kprobe_busy_end();
+>>>>>>> rebase
 
 	hlist_for_each_entry_safe(ri, tmp, &empty_rp, hlist) {
 		hlist_del(&ri->hlist);
@@ -1051,6 +1093,14 @@ int kprobe_fault_handler(struct pt_regs *regs, int trapnr)
 		 * So clear it by resetting the current kprobe:
 		 */
 		regs->flags &= ~X86_EFLAGS_TF;
+<<<<<<< HEAD
+=======
+		/*
+		 * Since the single step (trap) has been cancelled,
+		 * we need to restore BTF here.
+		 */
+		restore_btf();
+>>>>>>> rebase
 
 		/*
 		 * If the TF flag was set before the kprobe hit,

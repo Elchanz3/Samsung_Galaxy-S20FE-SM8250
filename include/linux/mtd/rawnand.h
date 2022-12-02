@@ -24,6 +24,7 @@
 #include <linux/of.h>
 #include <linux/types.h>
 
+<<<<<<< HEAD
 struct nand_flash_dev;
 
 /* Scan and identify a NAND device */
@@ -33,6 +34,18 @@ int nand_scan_with_ids(struct mtd_info *mtd, int max_chips,
 static inline int nand_scan(struct mtd_info *mtd, int max_chips)
 {
 	return nand_scan_with_ids(mtd, max_chips, NULL);
+=======
+struct nand_chip;
+struct nand_flash_dev;
+
+/* Scan and identify a NAND device */
+int nand_scan_with_ids(struct nand_chip *chip, int max_chips,
+		       struct nand_flash_dev *ids);
+
+static inline int nand_scan(struct nand_chip *chip, int max_chips)
+{
+	return nand_scan_with_ids(chip, max_chips, NULL);
+>>>>>>> rebase
 }
 
 /* Internal helper for board drivers which need to override command function */
@@ -1740,7 +1753,11 @@ int nand_write_data_op(struct nand_chip *chip, const void *buf,
  */
 void nand_cleanup(struct nand_chip *chip);
 /* Unregister the MTD device and calls nand_cleanup() */
+<<<<<<< HEAD
 void nand_release(struct mtd_info *mtd);
+=======
+void nand_release(struct nand_chip *chip);
+>>>>>>> rebase
 
 /* Default extended ID decoding function */
 void nand_decode_ext_id(struct nand_chip *chip);

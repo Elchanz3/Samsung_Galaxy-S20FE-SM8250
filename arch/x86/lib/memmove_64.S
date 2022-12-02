@@ -25,8 +25,13 @@
  * rax: dest
  */
 .weak memmove
+<<<<<<< HEAD
 
 ENTRY(memmove)
+=======
+.p2align 4, 0x90
+memmove:
+>>>>>>> rebase
 ENTRY(__memmove)
 
 	/* Handle more 32 bytes in loop */

@@ -32,7 +32,10 @@ available subsections can be seen below.
    pci
    spi
    i2c
+<<<<<<< HEAD
    i3c/index
+=======
+>>>>>>> rebase
    hsi
    edac
    scsi

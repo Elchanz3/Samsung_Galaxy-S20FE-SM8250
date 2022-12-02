@@ -240,6 +240,11 @@ static void net_prio_attach(struct cgroup_taskset *tset)
 	struct task_struct *p;
 	struct cgroup_subsys_state *css;
 
+<<<<<<< HEAD
+=======
+	cgroup_sk_alloc_disable();
+
+>>>>>>> rebase
 	cgroup_taskset_for_each(p, css, tset) {
 		void *v = (void *)(unsigned long)css->cgroup->id;
 

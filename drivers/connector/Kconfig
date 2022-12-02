@@ -19,6 +19,7 @@ config PROC_EVENTS
 	  Provide a connector that reports process events to userspace. Send
 	  events such as fork, exec, id change (uid, gid, suid, etc), and exit.
 
+<<<<<<< HEAD
 config PROC_CONNECTOR_SELECT_EVENTS
 	bool "Let client select which process events to receive"
 	depends on PROC_EVENTS=y
@@ -27,4 +28,6 @@ config PROC_CONNECTOR_SELECT_EVENTS
 	  By enabling this config, kernel stops sending unnecessary process
 	  events to userspace clients.
 
+=======
+>>>>>>> rebase
 endif # CONNECTOR

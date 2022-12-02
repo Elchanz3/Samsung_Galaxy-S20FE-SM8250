@@ -350,8 +350,15 @@ static int img_i2s_out_set_fmt(struct snd_soc_dai *dai, unsigned int fmt)
 	chan_control_mask = IMG_I2S_OUT_CHAN_CTL_CLKT_MASK;
 
 	ret = pm_runtime_get_sync(i2s->dev);
+<<<<<<< HEAD
 	if (ret < 0)
 		return ret;
+=======
+	if (ret < 0) {
+		pm_runtime_put_noidle(i2s->dev);
+		return ret;
+	}
+>>>>>>> rebase
 
 	img_i2s_out_disable(i2s);
 
@@ -491,8 +498,15 @@ static int img_i2s_out_probe(struct platform_device *pdev)
 			goto err_pm_disable;
 	}
 	ret = pm_runtime_get_sync(&pdev->dev);
+<<<<<<< HEAD
 	if (ret < 0)
 		goto err_suspend;
+=======
+	if (ret < 0) {
+		pm_runtime_put_noidle(&pdev->dev);
+		goto err_suspend;
+	}
+>>>>>>> rebase
 
 	reg = IMG_I2S_OUT_CTL_FRM_SIZE_MASK;
 	img_i2s_out_writel(i2s, reg, IMG_I2S_OUT_CTL);

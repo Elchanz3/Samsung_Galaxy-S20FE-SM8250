@@ -363,9 +363,12 @@ static ssize_t dev_attribute_show(struct device *dev,
 	 * we still can use 'ubi->ubi_num'.
 	 */
 	ubi = container_of(dev, struct ubi_device, dev);
+<<<<<<< HEAD
 	ubi = ubi_get_device(ubi->ubi_num);
 	if (!ubi)
 		return -ENODEV;
+=======
+>>>>>>> rebase
 
 	if (attr == &dev_eraseblock_size)
 		ret = sprintf(buf, "%d\n", ubi->leb_size);
@@ -394,7 +397,10 @@ static ssize_t dev_attribute_show(struct device *dev,
 	else
 		ret = -EINVAL;
 
+<<<<<<< HEAD
 	ubi_put_device(ubi);
+=======
+>>>>>>> rebase
 	return ret;
 }
 
@@ -969,9 +975,12 @@ int ubi_attach_mtd_dev(struct mtd_info *mtd, int ubi_num,
 			goto out_detach;
 	}
 
+<<<<<<< HEAD
 	/* Make device "available" before it becomes accessible via sysfs */
 	ubi_devices[ubi_num] = ubi;
 
+=======
+>>>>>>> rebase
 	err = uif_init(ubi);
 	if (err)
 		goto out_detach;
@@ -1016,6 +1025,10 @@ int ubi_attach_mtd_dev(struct mtd_info *mtd, int ubi_num,
 	wake_up_process(ubi->bgt_thread);
 	spin_unlock(&ubi->wl_lock);
 
+<<<<<<< HEAD
+=======
+	ubi_devices[ubi_num] = ubi;
+>>>>>>> rebase
 	ubi_notify_all(ubi, UBI_VOLUME_ADDED, NULL);
 	return ubi_num;
 
@@ -1024,7 +1037,10 @@ out_debugfs:
 out_uif:
 	uif_close(ubi);
 out_detach:
+<<<<<<< HEAD
 	ubi_devices[ubi_num] = NULL;
+=======
+>>>>>>> rebase
 	ubi_wl_close(ubi);
 	ubi_free_internal_volumes(ubi);
 	vfree(ubi->vtbl);

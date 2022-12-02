@@ -7,6 +7,15 @@
 #include <linux/sched/idle.h>
 
 /*
+<<<<<<< HEAD
+=======
+ * Increase resolution of cpu_capacity calculations
+ */
+#define SCHED_CAPACITY_SHIFT	SCHED_FIXEDPOINT_SHIFT
+#define SCHED_CAPACITY_SCALE	(1L << SCHED_CAPACITY_SHIFT)
+
+/*
+>>>>>>> rebase
  * sched-domains (multiprocessor balancing) declarations:
  */
 #ifdef CONFIG_SMP
@@ -17,10 +26,17 @@
 #define SD_BALANCE_FORK		0x0008	/* Balance on fork, clone */
 #define SD_BALANCE_WAKE		0x0010  /* Balance on wakeup */
 #define SD_WAKE_AFFINE		0x0020	/* Wake task to waking CPU */
+<<<<<<< HEAD
 #define SD_ASYM_CPUCAPACITY	0x0040  /* Domain members have different CPU capacities */
 #define SD_SHARE_CPUCAPACITY	0x0080	/* Domain members share CPU capacity */
 #define SD_SHARE_POWERDOMAIN	0x0100	/* Domain members share power domain */
 #define SD_SHARE_PKG_RESOURCES	0x0200	/* Domain members share CPU pkg resources */
+=======
+#define SD_ASYM_CPUCAPACITY	0x0040  /* Groups have different max cpu capacities */
+#define SD_SHARE_CPUCAPACITY	0x0080	/* Domain members share cpu capacity */
+#define SD_SHARE_POWERDOMAIN	0x0100	/* Domain members share power domain */
+#define SD_SHARE_PKG_RESOURCES	0x0200	/* Domain members share cpu pkg resources */
+>>>>>>> rebase
 #define SD_SERIALIZE		0x0400	/* Only a single load balancing instance */
 #define SD_ASYM_PACKING		0x0800  /* Place busy groups earlier in the domain */
 #define SD_PREFER_SIBLING	0x1000	/* Prefer to place tasks in a sibling domain */
@@ -60,16 +76,22 @@ struct sched_domain_attr {
 
 extern int sched_domain_level_max;
 
+<<<<<<< HEAD
 unsigned long capacity_curr_of(int cpu);
 
+=======
+>>>>>>> rebase
 struct sched_group;
 
 struct sched_domain_shared {
 	atomic_t	ref;
 	atomic_t	nr_busy_cpus;
 	int		has_idle_cores;
+<<<<<<< HEAD
 
 	bool            overutilized;
+=======
+>>>>>>> rebase
 };
 
 struct sched_domain {
@@ -200,6 +222,7 @@ extern void set_sched_topology(struct sched_domain_topology_level *tl);
 # define SD_INIT_NAME(type)
 #endif
 
+<<<<<<< HEAD
 #ifndef arch_scale_cpu_capacity
 static __always_inline
 unsigned long arch_scale_cpu_capacity(struct sched_domain *sd, int cpu)
@@ -211,6 +234,8 @@ unsigned long arch_scale_cpu_capacity(struct sched_domain *sd, int cpu)
 }
 #endif
 
+=======
+>>>>>>> rebase
 #else /* CONFIG_SMP */
 
 struct sched_domain_attr;
@@ -226,6 +251,7 @@ static inline bool cpus_share_cache(int this_cpu, int that_cpu)
 	return true;
 }
 
+<<<<<<< HEAD
 #ifndef arch_scale_cpu_capacity
 static __always_inline
 unsigned long arch_scale_cpu_capacity(void __always_unused *sd, int cpu)
@@ -234,6 +260,8 @@ unsigned long arch_scale_cpu_capacity(void __always_unused *sd, int cpu)
 }
 #endif
 
+=======
+>>>>>>> rebase
 #endif	/* !CONFIG_SMP */
 
 static inline int task_node(const struct task_struct *p)

@@ -1,6 +1,10 @@
 // SPDX-License-Identifier: GPL-2.0
 /*
+<<<<<<< HEAD
  * Copyright (c) 2014,2016,2018, The Linux Foundation. All rights reserved.
+=======
+ * Copyright (c) 2014, The Linux Foundation. All rights reserved.
+>>>>>>> rebase
  */
 
 #include <linux/kernel.h>
@@ -18,17 +22,25 @@
 #include <linux/stat.h>
 #include <linux/clk.h>
 #include <linux/cpu.h>
+<<<<<<< HEAD
 #include <linux/cpu_pm.h>
 #include <linux/coresight.h>
 #include <linux/coresight-pmu.h>
 #include <linux/of.h>
+=======
+#include <linux/coresight.h>
+#include <linux/coresight-pmu.h>
+>>>>>>> rebase
 #include <linux/pm_wakeup.h>
 #include <linux/amba/bus.h>
 #include <linux/seq_file.h>
 #include <linux/uaccess.h>
 #include <linux/perf_event.h>
 #include <linux/pm_runtime.h>
+<<<<<<< HEAD
 #include <linux/property.h>
+=======
+>>>>>>> rebase
 #include <asm/sections.h>
 #include <asm/local.h>
 #include <asm/virt.h>
@@ -39,6 +51,7 @@
 static int boot_enable;
 module_param_named(boot_enable, boot_enable, int, S_IRUGO);
 
+<<<<<<< HEAD
 #define PARAM_PM_SAVE_FIRMWARE	  0 /* save self-hosted state as per firmware */
 #define PARAM_PM_SAVE_NEVER	  1 /* never save any state */
 #define PARAM_PM_SAVE_SELF_HOSTED 2 /* save self-hosted state only */
@@ -48,6 +61,8 @@ module_param(pm_save_enable, int, 0444);
 MODULE_PARM_DESC(pm_save_enable,
 	"Save/restore state on power down: 1 = never, 2 = self-hosted");
 
+=======
+>>>>>>> rebase
 /* The number of ETMv4 currently registered */
 static int etm4_count;
 static struct etmv4_drvdata *etmdrvdata[NR_CPUS];
@@ -65,6 +80,7 @@ static void etm4_os_unlock(struct etmv4_drvdata *drvdata)
 	isb();
 }
 
+<<<<<<< HEAD
 static void etm4_os_lock(struct etmv4_drvdata *drvdata)
 {
 	/* Writing 0x1 to TRCOSLAR locks the trace registers */
@@ -77,6 +93,13 @@ static bool etm4_arch_supported(u8 arch)
 {
 	switch (arch) {
 	case ETM_ARCH_MAJOR_V4:
+=======
+static bool etm4_arch_supported(u8 arch)
+{
+	/* Mask out the minor version number */
+	switch (arch & 0xf0) {
+	case ETM_ARCH_V4:
+>>>>>>> rebase
 		break;
 	default:
 		return false;
@@ -98,6 +121,7 @@ static int etm4_trace_id(struct coresight_device *csdev)
 	return drvdata->trcid;
 }
 
+<<<<<<< HEAD
 struct etm4_enable_arg {
 	struct etmv4_drvdata *drvdata;
 	int rc;
@@ -106,16 +130,25 @@ struct etm4_enable_arg {
 static int etm4_enable_hw(struct etmv4_drvdata *drvdata)
 {
 	int i, rc;
+=======
+static void etm4_enable_hw(void *info)
+{
+	int i;
+	struct etmv4_drvdata *drvdata = info;
+>>>>>>> rebase
 	struct etmv4_config *config = &drvdata->config;
 
 	CS_UNLOCK(drvdata->base);
 
 	etm4_os_unlock(drvdata);
 
+<<<<<<< HEAD
 	rc = coresight_claim_device_unlocked(drvdata->base);
 	if (rc)
 		goto done;
 
+=======
+>>>>>>> rebase
 	/* Disable the trace unit before programming trace registers */
 	writel_relaxed(0, drvdata->base + TRCPRGCTLR);
 
@@ -157,11 +190,16 @@ static int etm4_enable_hw(struct etmv4_drvdata *drvdata)
 			       drvdata->base + TRCCNTVRn(i));
 	}
 
+<<<<<<< HEAD
 	/*
 	 * Resource selector pair 0 is always implemented and reserved.  As
 	 * such start at 2.
 	 */
 	for (i = 2; i < drvdata->nr_resource * 2; i++)
+=======
+	/* Resource selector pair 0 is always implemented and reserved */
+	for (i = 0; i < drvdata->nr_resource * 2; i++)
+>>>>>>> rebase
 		writel_relaxed(config->res_ctrl[i],
 			       drvdata->base + TRCRSCTLRn(i));
 
@@ -191,6 +229,7 @@ static int etm4_enable_hw(struct etmv4_drvdata *drvdata)
 	writel_relaxed(config->vmid_mask0, drvdata->base + TRCVMIDCCTLR0);
 	writel_relaxed(config->vmid_mask1, drvdata->base + TRCVMIDCCTLR1);
 
+<<<<<<< HEAD
 	if (!drvdata->tupwr_disable) {
 		/*
 		 * Request to keep the trace unit powered and also
@@ -199,6 +238,14 @@ static int etm4_enable_hw(struct etmv4_drvdata *drvdata)
 		writel_relaxed(readl_relaxed(drvdata->base + TRCPDCR)
 				| TRCPDCR_PU, drvdata->base + TRCPDCR);
 	}
+=======
+	/*
+	 * Request to keep the trace unit powered and also
+	 * emulation of powerdown
+	 */
+	writel_relaxed(readl_relaxed(drvdata->base + TRCPDCR) | TRCPDCR_PU,
+		       drvdata->base + TRCPDCR);
+>>>>>>> rebase
 
 	/* Enable the trace unit */
 	writel_relaxed(1, drvdata->base + TRCPRGCTLR);
@@ -214,6 +261,7 @@ static int etm4_enable_hw(struct etmv4_drvdata *drvdata)
 	dsb(sy);
 	isb();
 
+<<<<<<< HEAD
 done:
 	CS_LOCK(drvdata->base);
 
@@ -314,6 +362,11 @@ static int etm4_config_timestamp_event(struct etmv4_drvdata *drvdata)
 	ret = 0;
 out:
 	return ret;
+=======
+	CS_LOCK(drvdata->base);
+
+	dev_dbg(drvdata->dev, "cpu: %d enable smp call done\n", drvdata->cpu);
+>>>>>>> rebase
 }
 
 static int etm4_parse_event_config(struct etmv4_drvdata *drvdata,
@@ -351,6 +404,7 @@ static int etm4_parse_event_config(struct etmv4_drvdata *drvdata,
 		/* TRM: Must program this for cycacc to work */
 		config->ccctlr = ETM_CYC_THRESHOLD_DEFAULT;
 	}
+<<<<<<< HEAD
 	if (attr->config & BIT(ETM_OPT_TS)) {
 		/*
 		 * Configure timestamps to be emitted at regular intervals in
@@ -374,6 +428,11 @@ static int etm4_parse_event_config(struct etmv4_drvdata *drvdata,
 		/* bit[6], Context ID tracing bit */
 		config->cfg |= BIT(ETM4_CFG_BIT_CTXTID);
 
+=======
+	if (attr->config & BIT(ETM_OPT_TS))
+		/* bit[11], Global timestamp tracing bit */
+		config->cfg |= BIT(11);
+>>>>>>> rebase
 	/* return stack - enable if selected and supported */
 	if ((attr->config & BIT(ETM_OPT_RETSTK)) && drvdata->retstack)
 		/* bit[12], Return stack enable bit */
@@ -399,7 +458,11 @@ static int etm4_enable_perf(struct coresight_device *csdev,
 	if (ret)
 		goto out;
 	/* And enable it */
+<<<<<<< HEAD
 	ret = etm4_enable_hw(drvdata);
+=======
+	etm4_enable_hw(drvdata);
+>>>>>>> rebase
 
 out:
 	return ret;
@@ -408,7 +471,10 @@ out:
 static int etm4_enable_sysfs(struct coresight_device *csdev)
 {
 	struct etmv4_drvdata *drvdata = dev_get_drvdata(csdev->dev.parent);
+<<<<<<< HEAD
 	struct etm4_enable_arg arg = { 0 };
+=======
+>>>>>>> rebase
 	int ret;
 
 	spin_lock(&drvdata->spinlock);
@@ -417,6 +483,7 @@ static int etm4_enable_sysfs(struct coresight_device *csdev)
 	 * Executing etm4_enable_hw on the cpu whose ETM is being enabled
 	 * ensures that register writes occur when cpu is powered.
 	 */
+<<<<<<< HEAD
 	arg.drvdata = drvdata;
 	ret = smp_call_function_single(drvdata->cpu,
 				       etm4_enable_hw_smp_call, &arg, 1);
@@ -428,6 +495,21 @@ static int etm4_enable_sysfs(struct coresight_device *csdev)
 
 	if (!ret)
 		dev_dbg(drvdata->dev, "ETM tracing enabled\n");
+=======
+	ret = smp_call_function_single(drvdata->cpu,
+				       etm4_enable_hw, drvdata, 1);
+	if (ret)
+		goto err;
+
+	drvdata->sticky_enable = true;
+	spin_unlock(&drvdata->spinlock);
+
+	dev_info(drvdata->dev, "ETM tracing enabled\n");
+	return 0;
+
+err:
+	spin_unlock(&drvdata->spinlock);
+>>>>>>> rebase
 	return ret;
 }
 
@@ -469,12 +551,19 @@ static void etm4_disable_hw(void *info)
 
 	CS_UNLOCK(drvdata->base);
 
+<<<<<<< HEAD
 	if (!drvdata->tupwr_disable) {
 		/* power can be removed from the trace unit now */
 		control = readl_relaxed(drvdata->base + TRCPDCR);
 		control &= ~TRCPDCR_PU;
 		writel_relaxed(control, drvdata->base + TRCPDCR);
 	}
+=======
+	/* power can be removed from the trace unit now */
+	control = readl_relaxed(drvdata->base + TRCPDCR);
+	control &= ~TRCPDCR_PU;
+	writel_relaxed(control, drvdata->base + TRCPDCR);
+>>>>>>> rebase
 
 	control = readl_relaxed(drvdata->base + TRCPRGCTLR);
 
@@ -490,8 +579,11 @@ static void etm4_disable_hw(void *info)
 	isb();
 	writel_relaxed(control, drvdata->base + TRCPRGCTLR);
 
+<<<<<<< HEAD
 	coresight_disclaim_device_unlocked(drvdata->base);
 
+=======
+>>>>>>> rebase
 	CS_LOCK(drvdata->base);
 
 	dev_dbg(drvdata->dev, "cpu: %d disable smp call done\n", drvdata->cpu);
@@ -544,7 +636,11 @@ static void etm4_disable_sysfs(struct coresight_device *csdev)
 	spin_unlock(&drvdata->spinlock);
 	cpus_read_unlock();
 
+<<<<<<< HEAD
 	dev_dbg(drvdata->dev, "ETM tracing disabled\n");
+=======
+	dev_info(drvdata->dev, "ETM tracing disabled\n");
+>>>>>>> rebase
 }
 
 static void etm4_disable(struct coresight_device *csdev,
@@ -647,7 +743,11 @@ static void etm4_init_arch_data(void *info)
 	 * TRCARCHMIN, bits[7:4] architecture the minor version number
 	 * TRCARCHMAJ, bits[11:8] architecture major versin number
 	 */
+<<<<<<< HEAD
 	drvdata->arch = BMVAL(etmidr1, 8, 11);
+=======
+	drvdata->arch = BMVAL(etmidr1, 4, 11);
+>>>>>>> rebase
 
 	/* maximum size of resources */
 	etmidr2 = readl_relaxed(drvdata->base + TRCIDR2);
@@ -693,8 +793,13 @@ static void etm4_init_arch_data(void *info)
 	else
 		drvdata->sysstall = false;
 
+<<<<<<< HEAD
 	/* NUMPROC, bits[13:12, 30:28] the number of PEs available for trace */
 	drvdata->nr_pe = (BMVAL(etmidr3, 12, 13) << 3) | BMVAL(etmidr3, 28, 30);
+=======
+	/* NUMPROC, bits[30:28] the number of PEs available for tracing */
+	drvdata->nr_pe = BMVAL(etmidr3, 28, 30);
+>>>>>>> rebase
 
 	/* NOOVERFLOW, bit[31] is trace overflow prevention supported */
 	if (BMVAL(etmidr3, 31, 31))
@@ -1106,6 +1211,7 @@ static void etm4_init_trace_id(struct etmv4_drvdata *drvdata)
 	drvdata->trcid = coresight_get_trace_id(drvdata->cpu);
 }
 
+<<<<<<< HEAD
 #ifdef CONFIG_CPU_PM
 static int etm4_cpu_save(struct etmv4_drvdata *drvdata)
 {
@@ -1388,6 +1494,8 @@ static int etm4_cpu_pm_register(void) { return 0; }
 static void etm4_cpu_pm_unregister(void) { }
 #endif
 
+=======
+>>>>>>> rebase
 static int etm4_probe(struct amba_device *adev, const struct amba_id *id)
 {
 	int ret;
@@ -1413,6 +1521,7 @@ static int etm4_probe(struct amba_device *adev, const struct amba_id *id)
 	drvdata->dev = &adev->dev;
 	dev_set_drvdata(dev, drvdata);
 
+<<<<<<< HEAD
 	if (pm_save_enable == PARAM_PM_SAVE_FIRMWARE)
 		pm_save_enable = coresight_loses_context_with_cpu(dev) ?
 			       PARAM_PM_SAVE_SELF_HOSTED : PARAM_PM_SAVE_NEVER;
@@ -1424,6 +1533,8 @@ static int etm4_probe(struct amba_device *adev, const struct amba_id *id)
 			return -ENOMEM;
 	}
 
+=======
+>>>>>>> rebase
 	/* Validity for the resource is already checked by the AMBA core */
 	base = devm_ioremap_resource(dev, res);
 	if (IS_ERR(base))
@@ -1433,6 +1544,7 @@ static int etm4_probe(struct amba_device *adev, const struct amba_id *id)
 
 	spin_lock_init(&drvdata->spinlock);
 
+<<<<<<< HEAD
 	drvdata->cpu = pdata ? pdata->cpu : -ENODEV;
 	if (drvdata->cpu == -ENODEV) {
 		dev_info(dev, "CPU not available\n");
@@ -1450,6 +1562,17 @@ static int etm4_probe(struct amba_device *adev, const struct amba_id *id)
 		cpus_read_unlock();
 		return -EINVAL;
 	}
+=======
+	drvdata->cpu = pdata ? pdata->cpu : 0;
+
+	cpus_read_lock();
+	etmdrvdata[drvdata->cpu] = drvdata;
+
+	if (smp_call_function_single(drvdata->cpu,
+				etm4_init_arch_data,  drvdata, 1))
+		dev_err(dev, "ETM arch init failed\n");
+
+>>>>>>> rebase
 	if (!etm4_count++) {
 		cpuhp_setup_state_nocalls_cpuslocked(CPUHP_AP_ARM_CORESIGHT_STARTING,
 						     "arm/coresight4:starting",
@@ -1460,14 +1583,25 @@ static int etm4_probe(struct amba_device *adev, const struct amba_id *id)
 		if (ret < 0)
 			goto err_arch_supported;
 		hp_online = ret;
+<<<<<<< HEAD
 
 		ret = etm4_cpu_pm_register();
 		if (ret)
 			goto err_arch_supported;
+=======
+>>>>>>> rebase
 	}
 
 	cpus_read_unlock();
 
+<<<<<<< HEAD
+=======
+	if (etm4_arch_supported(drvdata->arch) == false) {
+		ret = -EINVAL;
+		goto err_arch_supported;
+	}
+
+>>>>>>> rebase
 	etm4_init_trace_id(drvdata);
 	etm4_set_default(&drvdata->config);
 
@@ -1490,6 +1624,7 @@ static int etm4_probe(struct amba_device *adev, const struct amba_id *id)
 	}
 
 	pm_runtime_put(&adev->dev);
+<<<<<<< HEAD
 	etmdrvdata[drvdata->cpu] = drvdata;
 	dev_info(dev, "CPU%d: ETM v%d.%d initialized\n",
 		 drvdata->cpu, drvdata->arch >> 4, drvdata->arch & 0xf);
@@ -1500,6 +1635,11 @@ static int etm4_probe(struct amba_device *adev, const struct amba_id *id)
 	dev_info(dev, "CPU%d: %s initialized\n",
 			drvdata->cpu, (char *)id->data);
 
+=======
+	dev_info(dev, "CPU%d: ETM v%d.%d initialized\n",
+		 drvdata->cpu, drvdata->arch >> 4, drvdata->arch & 0xf);
+
+>>>>>>> rebase
 	if (boot_enable) {
 		coresight_enable(drvdata->csdev);
 		drvdata->boot_enable = true;
@@ -1509,8 +1649,11 @@ static int etm4_probe(struct amba_device *adev, const struct amba_id *id)
 
 err_arch_supported:
 	if (--etm4_count == 0) {
+<<<<<<< HEAD
 		etm4_cpu_pm_unregister();
 
+=======
+>>>>>>> rebase
 		cpuhp_remove_state_nocalls(CPUHP_AP_ARM_CORESIGHT_STARTING);
 		if (hp_online)
 			cpuhp_remove_state_nocalls(hp_online);

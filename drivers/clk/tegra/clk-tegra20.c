@@ -1152,6 +1152,10 @@ static void __init tegra20_clock_init(struct device_node *np)
 	}
 
 	pmc_base = of_iomap(node, 0);
+<<<<<<< HEAD
+=======
+	of_node_put(node);
+>>>>>>> rebase
 	if (!pmc_base) {
 		pr_err("Can't map pmc registers\n");
 		BUG();

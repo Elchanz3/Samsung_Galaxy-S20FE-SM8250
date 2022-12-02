@@ -46,17 +46,32 @@ static int tcf_connmark_act(struct sk_buff *skb, const struct tc_action *a,
 	tcf_lastuse_update(&ca->tcf_tm);
 	bstats_update(&ca->tcf_bstats, skb);
 
+<<<<<<< HEAD
 	if (skb->protocol == htons(ETH_P_IP)) {
+=======
+	switch (skb_protocol(skb, true)) {
+	case htons(ETH_P_IP):
+>>>>>>> rebase
 		if (skb->len < sizeof(struct iphdr))
 			goto out;
 
 		proto = NFPROTO_IPV4;
+<<<<<<< HEAD
 	} else if (skb->protocol == htons(ETH_P_IPV6)) {
+=======
+		break;
+	case htons(ETH_P_IPV6):
+>>>>>>> rebase
 		if (skb->len < sizeof(struct ipv6hdr))
 			goto out;
 
 		proto = NFPROTO_IPV6;
+<<<<<<< HEAD
 	} else {
+=======
+		break;
+	default:
+>>>>>>> rebase
 		goto out;
 	}
 

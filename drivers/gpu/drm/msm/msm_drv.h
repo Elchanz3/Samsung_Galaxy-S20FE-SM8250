@@ -1,5 +1,9 @@
 /*
+<<<<<<< HEAD
  * Copyright (c) 2016-2019, The Linux Foundation. All rights reserved.
+=======
+ * Copyright (c) 2016-2018, The Linux Foundation. All rights reserved.
+>>>>>>> rebase
  * Copyright (C) 2013 Red Hat
  * Author: Rob Clark <robdclark@gmail.com>
  *
@@ -331,10 +335,13 @@ struct drm_framebuffer * msm_alloc_stolen_fb(struct drm_device *dev,
 struct drm_fb_helper *msm_fbdev_init(struct drm_device *dev);
 void msm_fbdev_free(struct drm_device *dev);
 
+<<<<<<< HEAD
 #if defined(CONFIG_DISPLAY_SAMSUNG)
 int __msm_drm_notifier_call_chain(unsigned long event, void *data);
 #endif
 
+=======
+>>>>>>> rebase
 struct hdmi;
 int msm_hdmi_modeset_init(struct hdmi *hdmi, struct drm_device *dev,
 		struct drm_encoder *encoder);

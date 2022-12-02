@@ -19,6 +19,12 @@ struct dyn_arch_ftrace {
 #ifdef CONFIG_OLD_MCOUNT
 	bool	old_mcount;
 #endif
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_ARM_MODULE_PLTS
+	struct module *mod;
+#endif
+>>>>>>> rebase
 };
 
 static inline unsigned long ftrace_call_adjust(unsigned long addr)

@@ -1,5 +1,8 @@
+<<<<<<< HEAD
 source "drivers/clk/qcom/mdss/Kconfig"
 
+=======
+>>>>>>> rebase
 config QCOM_GDSC
 	bool
 	select PM_GENERIC_DOMAINS if PM
@@ -274,6 +277,7 @@ config SPMI_PMIC_CLKDIV
 	  Technologies, Inc. SPMI PMIC. It configures the frequency of
 	  clkdiv outputs of the PMIC. These clocks are typically wired
 	  through alternate functions on GPIO pins.
+<<<<<<< HEAD
 
 config MSM_CLK_AOP_QMP
 	tristate "AOP QMP Clock Driver"
@@ -584,3 +588,5 @@ config CLOCK_CPU_OSM_660
 	 frequency and voltage requests for multiple clusters via the
 	 existence of multiple OSM domains.
 	 Say Y if you want to support OSM clocks.
+=======
+>>>>>>> rebase

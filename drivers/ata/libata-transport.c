@@ -196,7 +196,11 @@ static struct {
 	{ XFER_PIO_0,			"XFER_PIO_0" },
 	{ XFER_PIO_SLOW,		"XFER_PIO_SLOW" }
 };
+<<<<<<< HEAD
 ata_bitfield_name_match(xfer,ata_xfer_names)
+=======
+ata_bitfield_name_search(xfer, ata_xfer_names)
+>>>>>>> rebase
 
 /*
  * ATA Port attributes

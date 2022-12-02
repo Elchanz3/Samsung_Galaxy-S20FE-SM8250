@@ -40,6 +40,7 @@ const struct cred *ovl_override_creds(struct super_block *sb)
 {
 	struct ovl_fs *ofs = sb->s_fs_info;
 
+<<<<<<< HEAD
 	if (!ofs->config.override_creds)
 		return NULL;
 	return override_creds(ofs->creator_cred);
@@ -57,6 +58,11 @@ ssize_t ovl_vfs_getxattr(struct dentry *dentry, const char *name, void *buf,
 	return __vfs_getxattr(dentry, d_inode(dentry), name, buf, size);
 }
 
+=======
+	return override_creds(ofs->creator_cred);
+}
+
+>>>>>>> rebase
 struct super_block *ovl_same_sb(struct super_block *sb)
 {
 	struct ovl_fs *ofs = sb->s_fs_info;
@@ -493,6 +499,7 @@ bool ovl_is_whiteout(struct dentry *dentry)
 
 struct file *ovl_path_open(struct path *path, int flags)
 {
+<<<<<<< HEAD
 	struct inode *inode = d_inode(path->dentry);
 	int err, acc_mode;
 
@@ -519,6 +526,9 @@ struct file *ovl_path_open(struct path *path, int flags)
 		flags |= O_NOATIME;
 
 	return dentry_open(path, flags, current_cred());
+=======
+	return dentry_open(path, flags | O_NOATIME, current_cred());
+>>>>>>> rebase
 }
 
 /* Caller should hold ovl_inode->lock */
@@ -580,9 +590,15 @@ void ovl_copy_up_end(struct dentry *dentry)
 
 bool ovl_check_origin_xattr(struct dentry *dentry)
 {
+<<<<<<< HEAD
 	ssize_t res;
 
 	res = ovl_vfs_getxattr(dentry, OVL_XATTR_ORIGIN, NULL, 0);
+=======
+	int res;
+
+	res = vfs_getxattr(dentry, OVL_XATTR_ORIGIN, NULL, 0);
+>>>>>>> rebase
 
 	/* Zero size value means "copied up but origin unknown" */
 	if (res >= 0)
@@ -593,13 +609,21 @@ bool ovl_check_origin_xattr(struct dentry *dentry)
 
 bool ovl_check_dir_xattr(struct dentry *dentry, const char *name)
 {
+<<<<<<< HEAD
 	ssize_t res;
+=======
+	int res;
+>>>>>>> rebase
 	char val;
 
 	if (!d_is_dir(dentry))
 		return false;
 
+<<<<<<< HEAD
 	res = ovl_vfs_getxattr(dentry, name, &val, 1);
+=======
+	res = vfs_getxattr(dentry, name, &val, 1);
+>>>>>>> rebase
 	if (res == 1 && val == 'y')
 		return true;
 
@@ -834,7 +858,11 @@ int ovl_nlink_start(struct dentry *dentry, bool *locked)
 	 * value relative to the upper inode nlink in an upper inode xattr.
 	 */
 	err = ovl_set_nlink_upper(dentry);
+<<<<<<< HEAD
 	ovl_revert_creds(old_cred);
+=======
+	revert_creds(old_cred);
+>>>>>>> rebase
 
 out:
 	if (err)
@@ -854,7 +882,11 @@ void ovl_nlink_end(struct dentry *dentry, bool locked)
 
 			old_cred = ovl_override_creds(dentry->d_sb);
 			ovl_cleanup_index(dentry);
+<<<<<<< HEAD
 			ovl_revert_creds(old_cred);
+=======
+			revert_creds(old_cred);
+>>>>>>> rebase
 		}
 
 		mutex_unlock(&OVL_I(d_inode(dentry))->lock);
@@ -883,13 +915,21 @@ err:
 /* err < 0, 0 if no metacopy xattr, 1 if metacopy xattr found */
 int ovl_check_metacopy_xattr(struct dentry *dentry)
 {
+<<<<<<< HEAD
 	ssize_t res;
+=======
+	int res;
+>>>>>>> rebase
 
 	/* Only regular files can have metacopy xattr */
 	if (!S_ISREG(d_inode(dentry)->i_mode))
 		return 0;
 
+<<<<<<< HEAD
 	res = ovl_vfs_getxattr(dentry, OVL_XATTR_METACOPY, NULL, 0);
+=======
+	res = vfs_getxattr(dentry, OVL_XATTR_METACOPY, NULL, 0);
+>>>>>>> rebase
 	if (res < 0) {
 		if (res == -ENODATA || res == -EOPNOTSUPP)
 			return 0;
@@ -898,7 +938,11 @@ int ovl_check_metacopy_xattr(struct dentry *dentry)
 
 	return 1;
 out:
+<<<<<<< HEAD
 	pr_warn_ratelimited("overlayfs: failed to get metacopy (%zi)\n", res);
+=======
+	pr_warn_ratelimited("overlayfs: failed to get metacopy (%i)\n", res);
+>>>>>>> rebase
 	return res;
 }
 
@@ -924,7 +968,11 @@ ssize_t ovl_getxattr(struct dentry *dentry, char *name, char **value,
 	ssize_t res;
 	char *buf = NULL;
 
+<<<<<<< HEAD
 	res = ovl_vfs_getxattr(dentry, name, NULL, 0);
+=======
+	res = vfs_getxattr(dentry, name, NULL, 0);
+>>>>>>> rebase
 	if (res < 0) {
 		if (res == -ENODATA || res == -EOPNOTSUPP)
 			return -ENODATA;
@@ -936,7 +984,11 @@ ssize_t ovl_getxattr(struct dentry *dentry, char *name, char **value,
 		if (!buf)
 			return -ENOMEM;
 
+<<<<<<< HEAD
 		res = ovl_vfs_getxattr(dentry, name, buf, res);
+=======
+		res = vfs_getxattr(dentry, name, buf, res);
+>>>>>>> rebase
 		if (res < 0)
 			goto fail;
 	}

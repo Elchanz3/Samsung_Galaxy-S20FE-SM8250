@@ -5,8 +5,15 @@ FILES=                                          \
          test-bionic.bin                        \
          test-dwarf.bin                         \
          test-dwarf_getlocations.bin            \
+<<<<<<< HEAD
          test-fortify-source.bin                \
          test-sync-compare-and-swap.bin         \
+=======
+         test-eventfd.bin                       \
+         test-fortify-source.bin                \
+         test-sync-compare-and-swap.bin         \
+         test-get_current_dir_name.bin          \
+>>>>>>> rebase
          test-glibc.bin                         \
          test-gtk2.bin                          \
          test-gtk2-infobar.bin                  \
@@ -27,7 +34,10 @@ FILES=                                          \
          test-numa_num_possible_cpus.bin        \
          test-libperl.bin                       \
          test-libpython.bin                     \
+<<<<<<< HEAD
          test-libpython-version.bin             \
+=======
+>>>>>>> rebase
          test-libslang.bin                      \
          test-libcrypto.bin                     \
          test-libunwind.bin                     \
@@ -52,6 +62,10 @@ FILES=                                          \
          test-get_cpuid.bin                     \
          test-sdt.bin                           \
          test-cxx.bin                           \
+<<<<<<< HEAD
+=======
+         test-gettid.bin			\
+>>>>>>> rebase
          test-jvmti.bin				\
          test-sched_getcpu.bin			\
          test-setns.bin				\
@@ -62,8 +76,11 @@ FILES=                                          \
 
 FILES := $(addprefix $(OUTPUT),$(FILES))
 
+<<<<<<< HEAD
 CC ?= $(CROSS_COMPILE)gcc
 CXX ?= $(CROSS_COMPILE)g++
+=======
+>>>>>>> rebase
 PKG_CONFIG ?= $(CROSS_COMPILE)pkg-config
 LLVM_CONFIG ?= llvm-config
 
@@ -101,6 +118,15 @@ $(OUTPUT)test-bionic.bin:
 $(OUTPUT)test-libelf.bin:
 	$(BUILD) -lelf
 
+<<<<<<< HEAD
+=======
+$(OUTPUT)test-eventfd.bin:
+	$(BUILD)
+
+$(OUTPUT)test-get_current_dir_name.bin:
+	$(BUILD)
+
+>>>>>>> rebase
 $(OUTPUT)test-glibc.bin:
 	$(BUILD)
 
@@ -187,18 +213,34 @@ strip-libs = $(filter-out -l%,$(1))
 PERL_EMBED_LDOPTS = $(shell perl -MExtUtils::Embed -e ldopts 2>/dev/null)
 PERL_EMBED_LDFLAGS = $(call strip-libs,$(PERL_EMBED_LDOPTS))
 PERL_EMBED_LIBADD = $(call grep-libs,$(PERL_EMBED_LDOPTS))
+<<<<<<< HEAD
 PERL_EMBED_CCOPTS = `perl -MExtUtils::Embed -e ccopts 2>/dev/null`
 FLAGS_PERL_EMBED=$(PERL_EMBED_CCOPTS) $(PERL_EMBED_LDOPTS)
 
+=======
+PERL_EMBED_CCOPTS = $(shell perl -MExtUtils::Embed -e ccopts 2>/dev/null)
+FLAGS_PERL_EMBED=$(PERL_EMBED_CCOPTS) $(PERL_EMBED_LDOPTS)
+
+ifeq ($(CC_NO_CLANG), 0)
+  PERL_EMBED_LDOPTS := $(filter-out -specs=%,$(PERL_EMBED_LDOPTS))
+  PERL_EMBED_CCOPTS := $(filter-out -flto=auto -ffat-lto-objects, $(PERL_EMBED_CCOPTS))
+  PERL_EMBED_CCOPTS := $(filter-out -specs=%,$(PERL_EMBED_CCOPTS))
+  FLAGS_PERL_EMBED += -Wno-compound-token-split-by-macro
+endif
+
+>>>>>>> rebase
 $(OUTPUT)test-libperl.bin:
 	$(BUILD) $(FLAGS_PERL_EMBED)
 
 $(OUTPUT)test-libpython.bin:
 	$(BUILD) $(FLAGS_PYTHON_EMBED)
 
+<<<<<<< HEAD
 $(OUTPUT)test-libpython-version.bin:
 	$(BUILD)
 
+=======
+>>>>>>> rebase
 $(OUTPUT)test-libbfd.bin:
 	$(BUILD) -DPACKAGE='"perf"' -lbfd -ldl
 
@@ -256,6 +298,12 @@ $(OUTPUT)test-sdt.bin:
 $(OUTPUT)test-cxx.bin:
 	$(BUILDXX) -std=gnu++11
 
+<<<<<<< HEAD
+=======
+$(OUTPUT)test-gettid.bin:
+	$(BUILD)
+
+>>>>>>> rebase
 $(OUTPUT)test-jvmti.bin:
 	$(BUILD)
 

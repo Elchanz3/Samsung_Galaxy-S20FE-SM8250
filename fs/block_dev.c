@@ -1793,6 +1793,19 @@ static void __blkdev_put(struct block_device *bdev, fmode_t mode, int for_part)
 	struct gendisk *disk = bdev->bd_disk;
 	struct block_device *victim = NULL;
 
+<<<<<<< HEAD
+=======
+	/*
+	 * Sync early if it looks like we're the last one.  If someone else
+	 * opens the block device between now and the decrement of bd_openers
+	 * then we did a sync that we didn't need to, but that's not the end
+	 * of the world and we want to avoid long (could be several minute)
+	 * syncs while holding the mutex.
+	 */
+	if (bdev->bd_openers == 1)
+		sync_blockdev(bdev);
+
+>>>>>>> rebase
 	mutex_lock_nested(&bdev->bd_mutex, for_part);
 	if (for_part)
 		bdev->bd_part_count--;
@@ -1909,14 +1922,21 @@ ssize_t blkdev_write_iter(struct kiocb *iocb, struct iov_iter *from)
 	struct inode *bd_inode = bdev_file_inode(file);
 	loff_t size = i_size_read(bd_inode);
 	struct blk_plug plug;
+<<<<<<< HEAD
+=======
+	size_t shorted = 0;
+>>>>>>> rebase
 	ssize_t ret;
 
 	if (bdev_read_only(I_BDEV(bd_inode)))
 		return -EPERM;
 
+<<<<<<< HEAD
 	if (IS_SWAPFILE(bd_inode))
 		return -ETXTBSY;
 
+=======
+>>>>>>> rebase
 	if (!iov_iter_count(from))
 		return 0;
 
@@ -1926,12 +1946,24 @@ ssize_t blkdev_write_iter(struct kiocb *iocb, struct iov_iter *from)
 	if ((iocb->ki_flags & (IOCB_NOWAIT | IOCB_DIRECT)) == IOCB_NOWAIT)
 		return -EOPNOTSUPP;
 
+<<<<<<< HEAD
 	iov_iter_truncate(from, size - iocb->ki_pos);
+=======
+	size -= iocb->ki_pos;
+	if (iov_iter_count(from) > size) {
+		shorted = iov_iter_count(from) - size;
+		iov_iter_truncate(from, size);
+	}
+>>>>>>> rebase
 
 	blk_start_plug(&plug);
 	ret = __generic_file_write_iter(iocb, from);
 	if (ret > 0)
 		ret = generic_write_sync(iocb, ret);
+<<<<<<< HEAD
+=======
+	iov_iter_reexpand(from, iov_iter_count(from) + shorted);
+>>>>>>> rebase
 	blk_finish_plug(&plug);
 	return ret;
 }
@@ -1943,13 +1975,29 @@ ssize_t blkdev_read_iter(struct kiocb *iocb, struct iov_iter *to)
 	struct inode *bd_inode = bdev_file_inode(file);
 	loff_t size = i_size_read(bd_inode);
 	loff_t pos = iocb->ki_pos;
+<<<<<<< HEAD
+=======
+	size_t shorted = 0;
+	ssize_t ret;
+>>>>>>> rebase
 
 	if (pos >= size)
 		return 0;
 
 	size -= pos;
+<<<<<<< HEAD
 	iov_iter_truncate(to, size);
 	return generic_file_read_iter(iocb, to);
+=======
+	if (iov_iter_count(to) > size) {
+		shorted = iov_iter_count(to) - size;
+		iov_iter_truncate(to, size);
+	}
+
+	ret = generic_file_read_iter(iocb, to);
+	iov_iter_reexpand(to, iov_iter_count(to) + shorted);
+	return ret;
+>>>>>>> rebase
 }
 EXPORT_SYMBOL_GPL(blkdev_read_iter);
 

@@ -719,8 +719,12 @@ trace_event_raw_event_##call(void *__data, proto)			\
 									\
 	{ assign; }							\
 									\
+<<<<<<< HEAD
 	trace_event_buffer_commit(&fbuffer,				\
 				  sizeof(*entry) + __data_size);	\
+=======
+	trace_event_buffer_commit(&fbuffer);				\
+>>>>>>> rebase
 }
 /*
  * The ftrace_test_probe is compiled out, it is only here as a build time check

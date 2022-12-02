@@ -131,6 +131,13 @@ struct menu_device {
 	int		interval_ptr;
 };
 
+<<<<<<< HEAD
+=======
+
+#define LOAD_INT(x) ((x) >> FSHIFT)
+#define LOAD_FRAC(x) LOAD_INT(((x) & (FIXED_1-1)) * 100)
+
+>>>>>>> rebase
 static inline int get_loadavg(unsigned long load)
 {
 	return LOAD_INT(load) * 10 + LOAD_FRAC(load) / 10;
@@ -175,12 +182,16 @@ static inline int performance_multiplier(unsigned long nr_iowaiters, unsigned lo
 
 	/* for higher loadavg, we are more reluctant */
 
+<<<<<<< HEAD
 	/*
 	 * this doesn't work as intended - it is almost always 0, but can
 	 * sometimes, depending on workload, spike very high into the hundreds
 	 * even when the average cpu load is under 10%.
 	 */
 	/* mult += 2 * get_loadavg(); */
+=======
+	mult += 2 * get_loadavg(load);
+>>>>>>> rebase
 
 	/* for IO wait tasks (per cpu!) we add 5x each */
 	mult += 10 * nr_iowaiters;

@@ -144,6 +144,7 @@ struct ftrace_likely_data {
 #define __visible
 #endif
 
+<<<<<<< HEAD
 #ifndef __nocfi
 #define __nocfi
 #endif
@@ -152,6 +153,8 @@ struct ftrace_likely_data {
 # define __noscs
 #endif
 
+=======
+>>>>>>> rebase
 /*
  * Assume alignment of return value.
  */
@@ -214,6 +217,10 @@ struct ftrace_likely_data {
  */
 #define __pure			__attribute__((pure))
 #define __aligned(x)		__attribute__((aligned(x)))
+<<<<<<< HEAD
+=======
+#define __aligned_largest	__attribute__((aligned))
+>>>>>>> rebase
 #define __printf(a, b)		__attribute__((format(printf, a, b)))
 #define __scanf(a, b)		__attribute__((format(scanf, a, b)))
 #define __maybe_unused		__attribute__((unused))
@@ -241,6 +248,15 @@ struct ftrace_likely_data {
 #define notrace			__attribute__((no_instrument_function))
 #endif
 
+<<<<<<< HEAD
+=======
+#if defined(__KERNEL__) && !defined(__ASSEMBLY__)
+/* Section for code which can't be instrumented at all */
+#define noinstr								\
+	noinline notrace __attribute((__section__(".noinstr.text")))
+#endif
+
+>>>>>>> rebase
 /*
  * it doesn't make sense on ARM (currently the only user of __naked)
  * to trace naked functions because then mcount is called without
@@ -263,6 +279,7 @@ struct ftrace_likely_data {
 # define __gnu_inline
 #endif
 
+<<<<<<< HEAD
 #ifndef __norecordmcount
 #define __norecordmcount
 #endif
@@ -271,6 +288,8 @@ struct ftrace_likely_data {
 #define __nocfi
 #endif
 
+=======
+>>>>>>> rebase
 /*
  * Force always-inline if the user requests it so via the .config.
  * GCC does not warn about unused static inline functions for

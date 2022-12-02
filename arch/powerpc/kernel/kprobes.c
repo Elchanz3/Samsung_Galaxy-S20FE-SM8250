@@ -277,6 +277,13 @@ int kprobe_handler(struct pt_regs *regs)
 	if (user_mode(regs))
 		return 0;
 
+<<<<<<< HEAD
+=======
+	if (!IS_ENABLED(CONFIG_BOOKE) &&
+	    (!(regs->msr & MSR_IR) || !(regs->msr & MSR_DR)))
+		return 0;
+
+>>>>>>> rebase
 	/*
 	 * We don't want to be preempted for the entire
 	 * duration of kprobe processing

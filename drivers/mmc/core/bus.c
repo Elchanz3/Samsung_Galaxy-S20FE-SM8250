@@ -28,12 +28,15 @@
 #include "sdio_cis.h"
 #include "bus.h"
 
+<<<<<<< HEAD
 #ifdef CONFIG_MMC_SUPPORT_STLOG
 #include <linux/fslog.h>
 #else
 #define ST_LOG(fmt, ...)
 #endif
 
+=======
+>>>>>>> rebase
 #define to_mmc_driver(d)	container_of(d, struct mmc_driver, drv)
 
 static ssize_t type_show(struct device *dev,
@@ -140,6 +143,7 @@ static void mmc_bus_shutdown(struct device *dev)
 	struct mmc_host *host = card->host;
 	int ret;
 
+<<<<<<< HEAD
 	if (!drv) {
 		pr_debug("%s: %s: drv is NULL\n", dev_name(dev), __func__);
 		return;
@@ -157,6 +161,8 @@ static void mmc_bus_shutdown(struct device *dev)
 	SEC_mmc_pm_state_set_system_suspend(host);
 #endif
 
+=======
+>>>>>>> rebase
 	if (dev->driver && drv->shutdown)
 		drv->shutdown(card);
 
@@ -179,12 +185,15 @@ static int mmc_bus_suspend(struct device *dev)
 	if (ret)
 		return ret;
 
+<<<<<<< HEAD
 	if (mmc_bus_needs_resume(host))
 		return 0;
 
 #ifndef CONFIG_MMC_CLKGATE
 	SEC_mmc_pm_state_set_system_suspend(host);
 #endif
+=======
+>>>>>>> rebase
 	ret = host->bus_ops->suspend(host);
 	if (ret)
 		pm_generic_resume(dev);
@@ -198,20 +207,26 @@ static int mmc_bus_resume(struct device *dev)
 	struct mmc_host *host = card->host;
 	int ret;
 
+<<<<<<< HEAD
 	if (mmc_bus_manual_resume(host)) {
 		host->bus_resume_flags |= MMC_BUSRESUME_NEEDS_RESUME;
 		goto skip_full_resume;
 	}
 
+=======
+>>>>>>> rebase
 	ret = host->bus_ops->resume(host);
 	if (ret)
 		pr_warn("%s: error %d during resume (card was removed?)\n",
 			mmc_hostname(host), ret);
 
+<<<<<<< HEAD
 skip_full_resume:
 #ifndef CONFIG_MMC_CLKGATE
 	SEC_mmc_pm_state_set_active(host);
 #endif
+=======
+>>>>>>> rebase
 	ret = pm_generic_resume(dev);
 	return ret;
 }
@@ -223,12 +238,15 @@ static int mmc_runtime_suspend(struct device *dev)
 	struct mmc_card *card = mmc_dev_to_card(dev);
 	struct mmc_host *host = card->host;
 
+<<<<<<< HEAD
 	if (mmc_bus_needs_resume(host))
 		return 0;
 
 #ifndef CONFIG_MMC_CLKGATE
 	SEC_mmc_pm_state_set_runtime_suspend(host);
 #endif
+=======
+>>>>>>> rebase
 	return host->bus_ops->runtime_suspend(host);
 }
 
@@ -236,6 +254,7 @@ static int mmc_runtime_resume(struct device *dev)
 {
 	struct mmc_card *card = mmc_dev_to_card(dev);
 	struct mmc_host *host = card->host;
+<<<<<<< HEAD
 #ifndef CONFIG_MMC_CLKGATE
 	int ret = 0;
 #endif
@@ -251,6 +270,10 @@ static int mmc_runtime_resume(struct device *dev)
 #else
 	return host->bus_ops->runtime_resume(host);
 #endif
+=======
+
+	return host->bus_ops->runtime_resume(host);
+>>>>>>> rebase
 }
 #endif /* !CONFIG_PM */
 
@@ -307,15 +330,21 @@ EXPORT_SYMBOL(mmc_unregister_driver);
 static void mmc_release_card(struct device *dev)
 {
 	struct mmc_card *card = mmc_dev_to_card(dev);
+<<<<<<< HEAD
 	struct mmc_host *host = card->host;
+=======
+>>>>>>> rebase
 
 	sdio_free_common_cis(card);
 
 	kfree(card->info);
 
 	kfree(card);
+<<<<<<< HEAD
 	if (host)
 		host->card = NULL;
+=======
+>>>>>>> rebase
 }
 
 /*
@@ -406,6 +435,7 @@ int mmc_add_card(struct mmc_card *card)
 			mmc_card_hs400es(card) ? "Enhanced strobe " : "",
 			mmc_card_ddr52(card) ? "DDR " : "",
 			uhs_bus_speed_mode, type, card->rca);
+<<<<<<< HEAD
 		ST_LOG("%s: new %s%s%s%s%s card at address %04x\n",
 			mmc_hostname(card->host),
 			mmc_card_uhs(card) ? "ultra high speed " :
@@ -414,6 +444,8 @@ int mmc_add_card(struct mmc_card *card)
 			(mmc_card_hs200(card) ? "HS200 " : ""),
 			mmc_card_ddr52(card) ? "DDR " : "",
 			uhs_bus_speed_mode, type, card->rca);
+=======
+>>>>>>> rebase
 	}
 
 #ifdef CONFIG_DEBUG_FS
@@ -444,11 +476,14 @@ void mmc_remove_card(struct mmc_card *card)
 	mmc_remove_card_debugfs(card);
 #endif
 
+<<<<<<< HEAD
 	if (host->cqe_enabled) {
 		host->cqe_ops->cqe_disable(host);
 		host->cqe_enabled = false;
 	}
 
+=======
+>>>>>>> rebase
 	if (mmc_card_present(card)) {
 		if (mmc_host_is_spi(card->host)) {
 			pr_info("%s: SPI card removed\n",
@@ -456,15 +491,29 @@ void mmc_remove_card(struct mmc_card *card)
 		} else {
 			pr_info("%s: card %04x removed\n",
 				mmc_hostname(card->host), card->rca);
+<<<<<<< HEAD
 			ST_LOG("%s: card %04x removed\n",
 				mmc_hostname(card->host), card->rca);
+=======
+>>>>>>> rebase
 		}
 		device_del(&card->dev);
 		of_node_put(card->dev.of_node);
 	}
+<<<<<<< HEAD
 	if (host->ops->exit_dbg_mode)
 		host->ops->exit_dbg_mode(host);
 
 	put_device(&card->dev);
 }
 
+=======
+
+	if (host->cqe_enabled) {
+		host->cqe_ops->cqe_disable(host);
+		host->cqe_enabled = false;
+	}
+
+	put_device(&card->dev);
+}
+>>>>>>> rebase

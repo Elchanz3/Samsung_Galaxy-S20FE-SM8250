@@ -629,6 +629,7 @@ static int spinand_mtd_write(struct mtd_info *mtd, loff_t to,
 static bool spinand_isbad(struct nand_device *nand, const struct nand_pos *pos)
 {
 	struct spinand_device *spinand = nand_to_spinand(nand);
+<<<<<<< HEAD
 	struct nand_page_io_req req = {
 		.pos = *pos,
 		.ooblen = 2,
@@ -641,6 +642,20 @@ static bool spinand_isbad(struct nand_device *nand, const struct nand_pos *pos)
 	spinand_select_target(spinand, pos->target);
 	spinand_read_page(spinand, &req, false);
 	if (spinand->oobbuf[0] != 0xff || spinand->oobbuf[1] != 0xff)
+=======
+	u8 marker[2] = { };
+	struct nand_page_io_req req = {
+		.pos = *pos,
+		.ooblen = sizeof(marker),
+		.ooboffs = 0,
+		.oobbuf.in = marker,
+		.mode = MTD_OPS_RAW,
+	};
+
+	spinand_select_target(spinand, pos->target);
+	spinand_read_page(spinand, &req, false);
+	if (marker[0] != 0xff || marker[1] != 0xff)
+>>>>>>> rebase
 		return true;
 
 	return false;
@@ -664,6 +679,7 @@ static int spinand_mtd_block_isbad(struct mtd_info *mtd, loff_t offs)
 static int spinand_markbad(struct nand_device *nand, const struct nand_pos *pos)
 {
 	struct spinand_device *spinand = nand_to_spinand(nand);
+<<<<<<< HEAD
 	struct nand_page_io_req req = {
 		.pos = *pos,
 		.ooboffs = 0,
@@ -673,6 +689,18 @@ static int spinand_markbad(struct nand_device *nand, const struct nand_pos *pos)
 	int ret;
 
 	/* Erase block before marking it bad. */
+=======
+	u8 marker[2] = { };
+	struct nand_page_io_req req = {
+		.pos = *pos,
+		.ooboffs = 0,
+		.ooblen = sizeof(marker),
+		.oobbuf.out = marker,
+		.mode = MTD_OPS_RAW,
+	};
+	int ret;
+
+>>>>>>> rebase
 	ret = spinand_select_target(spinand, pos->target);
 	if (ret)
 		return ret;
@@ -681,9 +709,12 @@ static int spinand_markbad(struct nand_device *nand, const struct nand_pos *pos)
 	if (ret)
 		return ret;
 
+<<<<<<< HEAD
 	spinand_erase_op(spinand, pos);
 
 	memset(spinand->oobbuf, 0, 2);
+=======
+>>>>>>> rebase
 	return spinand_write_page(spinand, &req);
 }
 
@@ -1047,6 +1078,13 @@ static int spinand_init(struct spinand_device *spinand)
 
 	mtd->oobavail = ret;
 
+<<<<<<< HEAD
+=======
+	/* Propagate ECC information to mtd_info */
+	mtd->ecc_strength = nand->eccreq.strength;
+	mtd->ecc_step_size = nand->eccreq.step_size;
+
+>>>>>>> rebase
 	return 0;
 
 err_cleanup_nanddev:
@@ -1127,12 +1165,20 @@ static const struct spi_device_id spinand_ids[] = {
 	{ .name = "spi-nand" },
 	{ /* sentinel */ },
 };
+<<<<<<< HEAD
+=======
+MODULE_DEVICE_TABLE(spi, spinand_ids);
+>>>>>>> rebase
 
 #ifdef CONFIG_OF
 static const struct of_device_id spinand_of_ids[] = {
 	{ .compatible = "spi-nand" },
 	{ /* sentinel */ },
 };
+<<<<<<< HEAD
+=======
+MODULE_DEVICE_TABLE(of, spinand_of_ids);
+>>>>>>> rebase
 #endif
 
 static struct spi_mem_driver spinand_drv = {

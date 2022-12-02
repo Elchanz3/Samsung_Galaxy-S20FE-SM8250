@@ -90,7 +90,11 @@ static LIST_HEAD(gtms);
  */
 struct gtm_timer *gtm_get_timer16(void)
 {
+<<<<<<< HEAD
 	struct gtm *gtm = NULL;
+=======
+	struct gtm *gtm;
+>>>>>>> rebase
 	int i;
 
 	list_for_each_entry(gtm, &gtms, list_node) {
@@ -107,7 +111,11 @@ struct gtm_timer *gtm_get_timer16(void)
 		spin_unlock_irq(&gtm->lock);
 	}
 
+<<<<<<< HEAD
 	if (gtm)
+=======
+	if (!list_empty(&gtms))
+>>>>>>> rebase
 		return ERR_PTR(-EBUSY);
 	return ERR_PTR(-ENODEV);
 }

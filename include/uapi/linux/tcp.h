@@ -18,6 +18,7 @@
 #ifndef _UAPI_LINUX_TCP_H
 #define _UAPI_LINUX_TCP_H
 
+<<<<<<< HEAD
 #ifndef CONFIG_MPTCP
 #include <linux/types.h>
 #endif
@@ -29,6 +30,9 @@
 	#include <linux/in6.h>
 	#include <linux/types.h>
 #endif
+=======
+#include <linux/types.h>
+>>>>>>> rebase
 #include <asm/byteorder.h>
 #include <linux/socket.h>
 
@@ -140,6 +144,7 @@ enum {
 #define TCP_REPAIR_ON		1
 #define TCP_REPAIR_OFF		0
 #define TCP_REPAIR_OFF_NO_WP	-1	/* Turn off without window probes */
+<<<<<<< HEAD
 #ifdef CONFIG_MPTCP
 #define MPTCP_ENABLED		42
 #define MPTCP_SCHEDULER		43
@@ -148,6 +153,8 @@ enum {
 
 #define MPTCP_INFO_FLAG_SAVE_MASTER	0x01
 #endif
+=======
+>>>>>>> rebase
 
 struct tcp_repair_opt {
 	__u32	opt_code;
@@ -286,6 +293,7 @@ enum {
 	TCP_NLA_REORD_SEEN,	/* reordering events seen */
 };
 
+<<<<<<< HEAD
 #ifdef CONFIG_MPTCP
 struct mptcp_meta_info {
 	__u8	mptcpi_state;
@@ -334,6 +342,8 @@ struct mptcp_info {
 	struct mptcp_sub_info	*subflow_info;
 };
 #endif
+=======
+>>>>>>> rebase
 /* for TCP_MD5SIG socket option */
 #define TCP_MD5SIG_MAXKEYLEN	80
 

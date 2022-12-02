@@ -30,8 +30,12 @@ struct msm_framebuffer {
 #define to_msm_framebuffer(x) container_of(x, struct msm_framebuffer, base)
 
 static struct drm_framebuffer *msm_framebuffer_init(struct drm_device *dev,
+<<<<<<< HEAD
 		const struct drm_mode_fb_cmd2 *mode_cmd,
 		struct drm_gem_object **bos);
+=======
+		const struct drm_mode_fb_cmd2 *mode_cmd, struct drm_gem_object **bos);
+>>>>>>> rebase
 
 static const struct drm_framebuffer_funcs msm_framebuffer_funcs = {
 	.create_handle = drm_gem_fb_create_handle,
@@ -101,7 +105,10 @@ struct drm_gem_object *msm_framebuffer_bo(struct drm_framebuffer *fb, int plane)
 const struct msm_format *msm_framebuffer_format(struct drm_framebuffer *fb)
 {
 	struct msm_framebuffer *msm_fb = to_msm_framebuffer(fb);
+<<<<<<< HEAD
 
+=======
+>>>>>>> rebase
 	return msm_fb->format;
 }
 
@@ -135,8 +142,12 @@ out_unref:
 }
 
 static struct drm_framebuffer *msm_framebuffer_init(struct drm_device *dev,
+<<<<<<< HEAD
 		const struct drm_mode_fb_cmd2 *mode_cmd,
 		struct drm_gem_object **bos)
+=======
+		const struct drm_mode_fb_cmd2 *mode_cmd, struct drm_gem_object **bos)
+>>>>>>> rebase
 {
 	struct msm_drm_private *priv = dev->dev_private;
 	struct msm_kms *kms = priv->kms;
@@ -184,8 +195,13 @@ static struct drm_framebuffer *msm_framebuffer_init(struct drm_device *dev,
 		unsigned int min_size;
 
 		min_size = (height - 1) * mode_cmd->pitches[i]
+<<<<<<< HEAD
 			 + width * drm_format_plane_cpp(mode_cmd->pixel_format,
 					 i) + mode_cmd->offsets[i];
+=======
+			 + width * drm_format_plane_cpp(mode_cmd->pixel_format, i)
+			 + mode_cmd->offsets[i];
+>>>>>>> rebase
 
 		if (bos[i]->size < min_size) {
 			ret = -EINVAL;
@@ -214,8 +230,12 @@ fail:
 }
 
 struct drm_framebuffer *
+<<<<<<< HEAD
 msm_alloc_stolen_fb(struct drm_device *dev, int w, int h,
 				int p, uint32_t format)
+=======
+msm_alloc_stolen_fb(struct drm_device *dev, int w, int h, int p, uint32_t format)
+>>>>>>> rebase
 {
 	struct drm_mode_fb_cmd2 mode_cmd = {
 		.pixel_format = format,

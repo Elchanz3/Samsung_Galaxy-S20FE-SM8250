@@ -30,6 +30,11 @@
 
 #ifndef __ASSEMBLY__
 
+<<<<<<< HEAD
+=======
+#include <asm/barrier.h>
+
+>>>>>>> rebase
 struct task_struct;
 struct pt_regs;
 

@@ -71,12 +71,21 @@ static ssize_t evm_read_key(struct file *filp, char __user *buf,
 static ssize_t evm_write_key(struct file *file, const char __user *buf,
 			     size_t count, loff_t *ppos)
 {
+<<<<<<< HEAD
 	int i, ret;
+=======
+	unsigned int i;
+	int ret;
+>>>>>>> rebase
 
 	if (!capable(CAP_SYS_ADMIN) || (evm_initialized & EVM_SETUP_COMPLETE))
 		return -EPERM;
 
+<<<<<<< HEAD
 	ret = kstrtoint_from_user(buf, count, 0, &i);
+=======
+	ret = kstrtouint_from_user(buf, count, 0, &i);
+>>>>>>> rebase
 
 	if (ret)
 		return ret;
@@ -85,12 +94,21 @@ static ssize_t evm_write_key(struct file *file, const char __user *buf,
 	if (!i || (i & ~EVM_INIT_MASK) != 0)
 		return -EINVAL;
 
+<<<<<<< HEAD
 	/* Don't allow a request to freshly enable metadata writes if
 	 * keys are loaded.
 	 */
 	if ((i & EVM_ALLOW_METADATA_WRITES) &&
 	    ((evm_initialized & EVM_KEY_MASK) != 0) &&
 	    !(evm_initialized & EVM_ALLOW_METADATA_WRITES))
+=======
+	/*
+	 * Don't allow a request to enable metadata writes if
+	 * an HMAC key is loaded.
+	 */
+	if ((i & EVM_ALLOW_METADATA_WRITES) &&
+	    (evm_initialized & EVM_INIT_HMAC) != 0)
+>>>>>>> rebase
 		return -EPERM;
 
 	if (i & EVM_INIT_HMAC) {
@@ -237,7 +255,18 @@ static ssize_t evm_write_xattrs(struct file *file, const char __user *buf,
 		goto out;
 	}
 
+<<<<<<< HEAD
 	/* Guard against races in evm_read_xattrs */
+=======
+	/*
+	 * xattr_list_mutex guards against races in evm_read_xattrs().
+	 * Entries are only added to the evm_config_xattrnames list
+	 * and never deleted. Therefore, the list is traversed
+	 * using list_for_each_entry_lockless() without holding
+	 * the mutex in evm_calc_hmac_or_hash(), evm_find_protected_xattrs()
+	 * and evm_protected_xattr().
+	 */
+>>>>>>> rebase
 	mutex_lock(&xattr_list_mutex);
 	list_for_each_entry(tmp, &evm_config_xattrnames, list) {
 		if (strcmp(xattr->name, tmp->name) == 0) {

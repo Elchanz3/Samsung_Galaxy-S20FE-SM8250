@@ -31,7 +31,11 @@ static bool rtas_hp_event;
 unsigned long pseries_memory_block_size(void)
 {
 	struct device_node *np;
+<<<<<<< HEAD
 	unsigned int memblock_size = MIN_MEMORY_BLOCK_SIZE;
+=======
+	u64 memblock_size = MIN_MEMORY_BLOCK_SIZE;
+>>>>>>> rebase
 	struct resource r;
 
 	np = of_find_node_by_path("/ibm,dynamic-reconfiguration-memory");
@@ -227,7 +231,11 @@ static int get_lmb_range(u32 drc_index, int n_lmbs,
 			 struct drmem_lmb **end_lmb)
 {
 	struct drmem_lmb *lmb, *start, *end;
+<<<<<<< HEAD
 	struct drmem_lmb *last_lmb;
+=======
+	struct drmem_lmb *limit;
+>>>>>>> rebase
 
 	start = NULL;
 	for_each_drmem_lmb(lmb) {
@@ -240,10 +248,17 @@ static int get_lmb_range(u32 drc_index, int n_lmbs,
 	if (!start)
 		return -EINVAL;
 
+<<<<<<< HEAD
 	end = &start[n_lmbs - 1];
 
 	last_lmb = &drmem_info->lmbs[drmem_info->n_lmbs - 1];
 	if (end > last_lmb)
+=======
+	end = &start[n_lmbs];
+
+	limit = &drmem_info->lmbs[drmem_info->n_lmbs];
+	if (end > limit)
+>>>>>>> rebase
 		return -EINVAL;
 
 	*start_lmb = start;

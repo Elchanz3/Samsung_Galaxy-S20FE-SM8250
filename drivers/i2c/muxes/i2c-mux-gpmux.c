@@ -141,6 +141,10 @@ static int i2c_mux_probe(struct platform_device *pdev)
 	return 0;
 
 err_children:
+<<<<<<< HEAD
+=======
+	of_node_put(child);
+>>>>>>> rebase
 	i2c_mux_del_adapters(muxc);
 err_parent:
 	i2c_put_adapter(parent);

@@ -12,11 +12,15 @@ platforms.
 		    "qcom,msm8996-apcs-hmss-global"
 		    "qcom,msm8998-apcs-hmss-global"
 		    "qcom,sdm845-apss-shared"
+<<<<<<< HEAD
 		    "qcom,sm8150-apcs-hmss-global"
 		    "qcom,sm8150-spcs-global"
 		    "qcom,kona-spcs-global"
 		    "qcom,bengal-apcs-hmss-global"
 		    "qcom,scuba-apcs-hmss-global"
+=======
+
+>>>>>>> rebase
 - reg:
 	Usage: required
 	Value type: <prop-encoded-array>

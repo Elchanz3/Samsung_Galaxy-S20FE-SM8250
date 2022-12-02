@@ -13,13 +13,21 @@
  */
 
 #include <linux/errno.h>
+<<<<<<< HEAD
 #include <linux/jiffies.h>
+=======
+>>>>>>> rebase
 #include <linux/kernel.h>
 #include <linux/param.h>
 #include <linux/string.h>
 #include <linux/mm.h>
 #include <linux/interrupt.h>
 #include <linux/init.h>
+<<<<<<< HEAD
+=======
+#include <linux/delay.h>
+#include <linux/workqueue.h>
+>>>>>>> rebase
 
 #include <asm/io.h>
 #include <asm/reg.h>
@@ -39,9 +47,13 @@ static struct tau_temp
 	unsigned char grew;
 } tau[NR_CPUS];
 
+<<<<<<< HEAD
 struct timer_list tau_timer;
 
 #undef DEBUG
+=======
+static bool tau_int_enable;
+>>>>>>> rebase
 
 /* TODO: put these in a /proc interface, with some sanity checks, and maybe
  * dynamic adjustment to minimize # of interrupts */
@@ -50,11 +62,16 @@ struct timer_list tau_timer;
 #define step_size		2	/* step size when temp goes out of range */
 #define window_expand		1	/* expand the window by this much */
 /* configurable values for shrinking the window */
+<<<<<<< HEAD
 #define shrink_timer	2*HZ	/* period between shrinking the window */
+=======
+#define shrink_timer	2000	/* period between shrinking the window */
+>>>>>>> rebase
 #define min_window	2	/* minimum window size, degrees C */
 
 static void set_thresholds(unsigned long cpu)
 {
+<<<<<<< HEAD
 #ifdef CONFIG_TAU_INT
 	/*
 	 * setup THRM1,
@@ -71,10 +88,20 @@ static void set_thresholds(unsigned long cpu)
 	mtspr(SPRN_THRM1, THRM1_THRES(tau[cpu].low) | THRM1_V | THRM1_TID);
 	mtspr(SPRN_THRM2, THRM1_THRES(tau[cpu].high) | THRM1_V);
 #endif
+=======
+	u32 maybe_tie = tau_int_enable ? THRM1_TIE : 0;
+
+	/* setup THRM1, threshold, valid bit, interrupt when below threshold */
+	mtspr(SPRN_THRM1, THRM1_THRES(tau[cpu].low) | THRM1_V | maybe_tie | THRM1_TID);
+
+	/* setup THRM2, threshold, valid bit, interrupt when above threshold */
+	mtspr(SPRN_THRM2, THRM1_THRES(tau[cpu].high) | THRM1_V | maybe_tie);
+>>>>>>> rebase
 }
 
 static void TAUupdate(int cpu)
 {
+<<<<<<< HEAD
 	unsigned thrm;
 
 #ifdef DEBUG
@@ -116,6 +143,35 @@ static void TAUupdate(int cpu)
 	set_thresholds(cpu);
 #endif
 
+=======
+	u32 thrm;
+	u32 bits = THRM1_TIV | THRM1_TIN | THRM1_V;
+
+	/* if both thresholds are crossed, the step_sizes cancel out
+	 * and the window winds up getting expanded twice. */
+	thrm = mfspr(SPRN_THRM1);
+	if ((thrm & bits) == bits) {
+		mtspr(SPRN_THRM1, 0);
+
+		if (tau[cpu].low >= step_size) {
+			tau[cpu].low -= step_size;
+			tau[cpu].high -= (step_size - window_expand);
+		}
+		tau[cpu].grew = 1;
+		pr_debug("%s: low threshold crossed\n", __func__);
+	}
+	thrm = mfspr(SPRN_THRM2);
+	if ((thrm & bits) == bits) {
+		mtspr(SPRN_THRM2, 0);
+
+		if (tau[cpu].high <= 127 - step_size) {
+			tau[cpu].low += (step_size - window_expand);
+			tau[cpu].high += step_size;
+		}
+		tau[cpu].grew = 1;
+		pr_debug("%s: high threshold crossed\n", __func__);
+	}
+>>>>>>> rebase
 }
 
 #ifdef CONFIG_TAU_INT
@@ -140,6 +196,7 @@ void TAUException(struct pt_regs * regs)
 static void tau_timeout(void * info)
 {
 	int cpu;
+<<<<<<< HEAD
 	unsigned long flags;
 	int size;
 	int shrink;
@@ -151,6 +208,18 @@ static void tau_timeout(void * info)
 #ifndef CONFIG_TAU_INT
 	TAUupdate(cpu);
 #endif
+=======
+	int size;
+	int shrink;
+
+	cpu = smp_processor_id();
+
+	if (!tau_int_enable)
+		TAUupdate(cpu);
+
+	/* Stop thermal sensor comparisons and interrupts */
+	mtspr(SPRN_THRM3, 0);
+>>>>>>> rebase
 
 	size = tau[cpu].high - tau[cpu].low;
 	if (size > min_window && ! tau[cpu].grew) {
@@ -173,6 +242,7 @@ static void tau_timeout(void * info)
 
 	set_thresholds(cpu);
 
+<<<<<<< HEAD
 	/*
 	 * Do the enable every time, since otherwise a bunch of (relatively)
 	 * complex sleep code needs to be added. One mtspr every time
@@ -199,6 +269,28 @@ static void tau_timeout_smp(struct timer_list *unused)
 	on_each_cpu(tau_timeout, NULL, 0);
 }
 
+=======
+	/* Restart thermal sensor comparisons and interrupts.
+	 * The "PowerPC 740 and PowerPC 750 Microprocessor Datasheet"
+	 * recommends that "the maximum value be set in THRM3 under all
+	 * conditions."
+	 */
+	mtspr(SPRN_THRM3, THRM3_SITV(0x1fff) | THRM3_E);
+}
+
+static struct workqueue_struct *tau_workq;
+
+static void tau_work_func(struct work_struct *work)
+{
+	msleep(shrink_timer);
+	on_each_cpu(tau_timeout, NULL, 0);
+	/* schedule ourselves to be run again */
+	queue_work(tau_workq, work);
+}
+
+DECLARE_WORK(tau_work, tau_work_func);
+
+>>>>>>> rebase
 /*
  * setup the TAU
  *
@@ -231,6 +323,7 @@ static int __init TAU_init(void)
 		return 1;
 	}
 
+<<<<<<< HEAD
 
 	/* first, set up the window shrinking timer */
 	timer_setup(&tau_timer, tau_timeout_smp, 0);
@@ -246,6 +339,21 @@ static int __init TAU_init(void)
 	printk("using timers, ");
 #endif
 	printk("shrink_timer: %d jiffies\n", shrink_timer);
+=======
+	tau_int_enable = IS_ENABLED(CONFIG_TAU_INT) &&
+			 !strcmp(cur_cpu_spec->platform, "ppc750");
+
+	tau_workq = alloc_workqueue("tau", WQ_UNBOUND, 1);
+	if (!tau_workq)
+		return -ENOMEM;
+
+	on_each_cpu(TAU_init_smp, NULL, 0);
+
+	queue_work(tau_workq, &tau_work);
+
+	pr_info("Thermal assist unit using %s, shrink_timer: %d ms\n",
+		tau_int_enable ? "interrupts" : "workqueue", shrink_timer);
+>>>>>>> rebase
 	tau_initialized = 1;
 
 	return 0;

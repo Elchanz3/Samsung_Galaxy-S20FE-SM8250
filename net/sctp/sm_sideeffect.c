@@ -434,7 +434,11 @@ void sctp_generate_proto_unreach_event(struct timer_list *t)
 		/* Try again later.  */
 		if (!mod_timer(&transport->proto_unreach_timer,
 				jiffies + (HZ/20)))
+<<<<<<< HEAD
 			sctp_association_hold(asoc);
+=======
+			sctp_transport_hold(transport);
+>>>>>>> rebase
 		goto out_unlock;
 	}
 
@@ -450,7 +454,11 @@ void sctp_generate_proto_unreach_event(struct timer_list *t)
 
 out_unlock:
 	bh_unlock_sock(sk);
+<<<<<<< HEAD
 	sctp_association_put(asoc);
+=======
+	sctp_transport_put(transport);
+>>>>>>> rebase
 }
 
  /* Handle the timeout of the RE-CONFIG timer. */
@@ -473,6 +481,13 @@ void sctp_generate_reconf_event(struct timer_list *t)
 		goto out_unlock;
 	}
 
+<<<<<<< HEAD
+=======
+	/* This happens when the response arrives after the timer is triggered. */
+	if (!asoc->strreset_chunk)
+		goto out_unlock;
+
+>>>>>>> rebase
 	error = sctp_do_sm(net, SCTP_EVENT_T_TIMEOUT,
 			   SCTP_ST_TIMEOUT(SCTP_EVENT_TIMEOUT_RECONF),
 			   asoc->state, asoc->ep, asoc,
@@ -1537,9 +1552,23 @@ static int sctp_cmd_interpreter(enum sctp_event event_type,
 			timeout = asoc->timeouts[cmd->obj.to];
 			BUG_ON(!timeout);
 
+<<<<<<< HEAD
 			timer->expires = jiffies + timeout;
 			sctp_association_hold(asoc);
 			add_timer(timer);
+=======
+			/*
+			 * SCTP has a hard time with timer starts.  Because we process
+			 * timer starts as side effects, it can be hard to tell if we
+			 * have already started a timer or not, which leads to BUG
+			 * halts when we call add_timer. So here, instead of just starting
+			 * a timer, if the timer is already started, and just mod
+			 * the timer with the shorter of the two expiration times
+			 */
+			if (!timer_pending(timer))
+				sctp_association_hold(asoc);
+			timer_reduce(timer, jiffies + timeout);
+>>>>>>> rebase
 			break;
 
 		case SCTP_CMD_TIMER_RESTART:
@@ -1607,12 +1636,20 @@ static int sctp_cmd_interpreter(enum sctp_event event_type,
 			break;
 
 		case SCTP_CMD_INIT_FAILED:
+<<<<<<< HEAD
 			sctp_cmd_init_failed(commands, asoc, cmd->obj.u32);
+=======
+			sctp_cmd_init_failed(commands, asoc, cmd->obj.u16);
+>>>>>>> rebase
 			break;
 
 		case SCTP_CMD_ASSOC_FAILED:
 			sctp_cmd_assoc_failed(commands, asoc, event_type,
+<<<<<<< HEAD
 					      subtype, chunk, cmd->obj.u32);
+=======
+					      subtype, chunk, cmd->obj.u16);
+>>>>>>> rebase
 			break;
 
 		case SCTP_CMD_INIT_COUNTER_INC:

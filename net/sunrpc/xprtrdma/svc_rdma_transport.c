@@ -71,7 +71,10 @@ static struct svc_xprt *svc_rdma_create(struct svc_serv *serv,
 					struct sockaddr *sa, int salen,
 					int flags);
 static struct svc_xprt *svc_rdma_accept(struct svc_xprt *xprt);
+<<<<<<< HEAD
 static void svc_rdma_release_rqst(struct svc_rqst *);
+=======
+>>>>>>> rebase
 static void svc_rdma_detach(struct svc_xprt *xprt);
 static void svc_rdma_free(struct svc_xprt *xprt);
 static int svc_rdma_has_wspace(struct svc_xprt *xprt);
@@ -616,10 +619,13 @@ static struct svc_xprt *svc_rdma_accept(struct svc_xprt *xprt)
 	return NULL;
 }
 
+<<<<<<< HEAD
 static void svc_rdma_release_rqst(struct svc_rqst *rqstp)
 {
 }
 
+=======
+>>>>>>> rebase
 /*
  * When connected, an svc_xprt has at least two references:
  *

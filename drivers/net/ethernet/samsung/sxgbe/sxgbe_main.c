@@ -2280,18 +2280,32 @@ static int __init sxgbe_cmdline_opt(char *str)
 	char *opt;
 
 	if (!str || !*str)
+<<<<<<< HEAD
 		return -EINVAL;
 	while ((opt = strsep(&str, ",")) != NULL) {
 		if (!strncmp(opt, "eee_timer:", 6)) {
+=======
+		return 1;
+	while ((opt = strsep(&str, ",")) != NULL) {
+		if (!strncmp(opt, "eee_timer:", 10)) {
+>>>>>>> rebase
 			if (kstrtoint(opt + 10, 0, &eee_timer))
 				goto err;
 		}
 	}
+<<<<<<< HEAD
 	return 0;
 
 err:
 	pr_err("%s: ERROR broken module parameter conversion\n", __func__);
 	return -EINVAL;
+=======
+	return 1;
+
+err:
+	pr_err("%s: ERROR broken module parameter conversion\n", __func__);
+	return 1;
+>>>>>>> rebase
 }
 
 __setup("sxgbeeth=", sxgbe_cmdline_opt);

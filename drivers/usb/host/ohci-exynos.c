@@ -156,9 +156,14 @@ static int exynos_ohci_probe(struct platform_device *pdev)
 	hcd->rsrc_len = resource_size(res);
 
 	irq = platform_get_irq(pdev, 0);
+<<<<<<< HEAD
 	if (!irq) {
 		dev_err(&pdev->dev, "Failed to get IRQ\n");
 		err = -ENODEV;
+=======
+	if (irq < 0) {
+		err = irq;
+>>>>>>> rebase
 		goto fail_io;
 	}
 

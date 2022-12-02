@@ -26,10 +26,16 @@
 
 #include <linux/sched.h>
 #include "sched.h"
+<<<<<<< HEAD
 #include "pelt.h"
 
 #include <trace/events/sched.h>
 
+=======
+#include "sched-pelt.h"
+#include "pelt.h"
+
+>>>>>>> rebase
 /*
  * Approximate:
  *   val * y^n,    where y^32 ~= 0.5 (~1 scheduling period)
@@ -107,12 +113,25 @@ static u32 __accumulate_pelt_segments(u64 periods, u32 d1, u32 d3)
  *                     n=1
  */
 static __always_inline u32
+<<<<<<< HEAD
 accumulate_sum(u64 delta, struct sched_avg *sa,
 	       unsigned long load, unsigned long runnable, int running)
 {
 	u32 contrib = (u32)delta; /* p == 0 -> delta < 1024 */
 	u64 periods;
 
+=======
+accumulate_sum(u64 delta, int cpu, struct sched_avg *sa,
+	       unsigned long load, unsigned long runnable, int running)
+{
+	unsigned long scale_freq, scale_cpu;
+	u32 contrib = (u32)delta; /* p == 0 -> delta < 1024 */
+	u64 periods;
+
+	scale_freq = arch_scale_freq_capacity(cpu);
+	scale_cpu = arch_scale_cpu_capacity(NULL, cpu);
+
+>>>>>>> rebase
 	delta += sa->period_contrib;
 	periods = delta / 1024; /* A period is 1024us (~1ms) */
 
@@ -134,12 +153,20 @@ accumulate_sum(u64 delta, struct sched_avg *sa,
 	}
 	sa->period_contrib = delta;
 
+<<<<<<< HEAD
+=======
+	contrib = cap_scale(contrib, scale_freq);
+>>>>>>> rebase
 	if (load)
 		sa->load_sum += load * contrib;
 	if (runnable)
 		sa->runnable_load_sum += runnable * contrib;
 	if (running)
+<<<<<<< HEAD
 		sa->util_sum += contrib << SCHED_CAPACITY_SHIFT;
+=======
+		sa->util_sum += contrib * scale_cpu;
+>>>>>>> rebase
 
 	return periods;
 }
@@ -173,7 +200,11 @@ accumulate_sum(u64 delta, struct sched_avg *sa,
  *            = u_0 + u_1*y + u_2*y^2 + ... [re-labeling u_i --> u_{i+1}]
  */
 static __always_inline int
+<<<<<<< HEAD
 ___update_load_sum(u64 now, struct sched_avg *sa,
+=======
+___update_load_sum(u64 now, int cpu, struct sched_avg *sa,
+>>>>>>> rebase
 		  unsigned long load, unsigned long runnable, int running)
 {
 	u64 delta;
@@ -217,7 +248,11 @@ ___update_load_sum(u64 now, struct sched_avg *sa,
 	 * Step 1: accumulate *_sum since last_update_time. If we haven't
 	 * crossed period boundaries, finish.
 	 */
+<<<<<<< HEAD
 	if (!accumulate_sum(delta, sa, load, runnable, running))
+=======
+	if (!accumulate_sum(delta, cpu, sa, load, runnable, running))
+>>>>>>> rebase
 		return 0;
 
 	return 1;
@@ -263,6 +298,7 @@ ___update_load_avg(struct sched_avg *sa, unsigned long load, unsigned long runna
  *   runnable_load_avg = \Sum se->avg.runable_load_avg
  */
 
+<<<<<<< HEAD
 int __update_load_avg_blocked_se(u64 now, struct sched_entity *se)
 {
 	if (___update_load_sum(now, &se->avg, 0, 0, 0)) {
@@ -270,39 +306,69 @@ int __update_load_avg_blocked_se(u64 now, struct sched_entity *se)
 
 		trace_sched_load_se(se);
 
+=======
+int __update_load_avg_blocked_se(u64 now, int cpu, struct sched_entity *se)
+{
+	if (entity_is_task(se))
+		se->runnable_weight = se->load.weight;
+
+	if (___update_load_sum(now, cpu, &se->avg, 0, 0, 0)) {
+		___update_load_avg(&se->avg, se_weight(se), se_runnable(se));
+>>>>>>> rebase
 		return 1;
 	}
 
 	return 0;
 }
 
+<<<<<<< HEAD
 int __update_load_avg_se(u64 now, struct cfs_rq *cfs_rq, struct sched_entity *se)
 {
 	if (___update_load_sum(now, &se->avg, !!se->on_rq, !!se->on_rq,
+=======
+int __update_load_avg_se(u64 now, int cpu, struct cfs_rq *cfs_rq, struct sched_entity *se)
+{
+	if (entity_is_task(se))
+		se->runnable_weight = se->load.weight;
+
+	if (___update_load_sum(now, cpu, &se->avg, !!se->on_rq, !!se->on_rq,
+>>>>>>> rebase
 				cfs_rq->curr == se)) {
 
 		___update_load_avg(&se->avg, se_weight(se), se_runnable(se));
 		cfs_se_util_change(&se->avg);
+<<<<<<< HEAD
 
 		trace_sched_load_se(se);
 
+=======
+>>>>>>> rebase
 		return 1;
 	}
 
 	return 0;
 }
 
+<<<<<<< HEAD
 int __update_load_avg_cfs_rq(u64 now, struct cfs_rq *cfs_rq)
 {
 	if (___update_load_sum(now, &cfs_rq->avg,
+=======
+int __update_load_avg_cfs_rq(u64 now, int cpu, struct cfs_rq *cfs_rq)
+{
+	if (___update_load_sum(now, cpu, &cfs_rq->avg,
+>>>>>>> rebase
 				scale_load_down(cfs_rq->load.weight),
 				scale_load_down(cfs_rq->runnable_weight),
 				cfs_rq->curr != NULL)) {
 
 		___update_load_avg(&cfs_rq->avg, 1, 1);
+<<<<<<< HEAD
 
 		trace_sched_load_cfs_rq(cfs_rq);
 
+=======
+>>>>>>> rebase
 		return 1;
 	}
 
@@ -322,15 +388,22 @@ int __update_load_avg_cfs_rq(u64 now, struct cfs_rq *cfs_rq)
 
 int update_rt_rq_load_avg(u64 now, struct rq *rq, int running)
 {
+<<<<<<< HEAD
 	if (___update_load_sum(now, &rq->avg_rt,
+=======
+	if (___update_load_sum(now, rq->cpu, &rq->avg_rt,
+>>>>>>> rebase
 				running,
 				running,
 				running)) {
 
 		___update_load_avg(&rq->avg_rt, 1, 1);
+<<<<<<< HEAD
 
 		trace_sched_load_rt_rq(rq);
 
+=======
+>>>>>>> rebase
 		return 1;
 	}
 
@@ -348,7 +421,11 @@ int update_rt_rq_load_avg(u64 now, struct rq *rq, int running)
 
 int update_dl_rq_load_avg(u64 now, struct rq *rq, int running)
 {
+<<<<<<< HEAD
 	if (___update_load_sum(now, &rq->avg_dl,
+=======
+	if (___update_load_sum(now, rq->cpu, &rq->avg_dl,
+>>>>>>> rebase
 				running,
 				running,
 				running)) {
@@ -373,6 +450,7 @@ int update_dl_rq_load_avg(u64 now, struct rq *rq, int running)
 int update_irq_load_avg(struct rq *rq, u64 running)
 {
 	int ret = 0;
+<<<<<<< HEAD
 
 	/*
 	 * We can't use clock_pelt because irq time is not accounted in
@@ -382,22 +460,36 @@ int update_irq_load_avg(struct rq *rq, u64 running)
 	running = cap_scale(running, arch_scale_freq_capacity(cpu_of(rq)));
 	running = cap_scale(running, arch_scale_cpu_capacity(NULL, cpu_of(rq)));
 
+=======
+>>>>>>> rebase
 	/*
 	 * We know the time that has been used by interrupt since last update
 	 * but we don't when. Let be pessimistic and assume that interrupt has
 	 * happened just before the update. This is not so far from reality
 	 * because interrupt will most probably wake up task and trig an update
+<<<<<<< HEAD
 	 * of rq clock during which the metric is updated.
+=======
+	 * of rq clock during which the metric si updated.
+>>>>>>> rebase
 	 * We start to decay with normal context time and then we add the
 	 * interrupt context time.
 	 * We can safely remove running from rq->clock because
 	 * rq->clock += delta with delta >= running
 	 */
+<<<<<<< HEAD
 	ret = ___update_load_sum(rq->clock - running, &rq->avg_irq,
 				0,
 				0,
 				0);
 	ret += ___update_load_sum(rq->clock, &rq->avg_irq,
+=======
+	ret = ___update_load_sum(rq->clock - running, rq->cpu, &rq->avg_irq,
+				0,
+				0,
+				0);
+	ret += ___update_load_sum(rq->clock, rq->cpu, &rq->avg_irq,
+>>>>>>> rebase
 				1,
 				1,
 				1);

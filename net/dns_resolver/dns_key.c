@@ -41,11 +41,15 @@ unsigned int dns_resolver_debug;
 module_param_named(debug, dns_resolver_debug, uint, 0644);
 MODULE_PARM_DESC(debug, "DNS Resolver debugging mask");
 
+<<<<<<< HEAD
 #ifdef CONFIG_KDP_CRED
 struct cred *dns_resolver_cache;
 #else
 const struct cred *dns_resolver_cache;
 #endif
+=======
+const struct cred *dns_resolver_cache;
+>>>>>>> rebase
 
 #define	DNS_ERRORNO_OPTION	"dnserror"
 
@@ -245,7 +249,11 @@ static void dns_resolver_describe(const struct key *key, struct seq_file *m)
  * - the key's semaphore is read-locked
  */
 static long dns_resolver_read(const struct key *key,
+<<<<<<< HEAD
 			      char __user *buffer, size_t buflen)
+=======
+			      char *buffer, size_t buflen)
+>>>>>>> rebase
 {
 	int err = PTR_ERR(key->payload.data[dns_key_error]);
 

@@ -142,6 +142,7 @@ config THERMAL_GOV_USER_SPACE
 	help
 	  Enable this to let the user space manage the platform thermals.
 
+<<<<<<< HEAD
 config THERMAL_GOV_LOW_LIMITS
 	bool "Low limits mitigation governor"
 	help
@@ -152,6 +153,8 @@ config THERMAL_GOV_LOW_LIMITS
 	  This governor will monitor the limits going below a
 	  trip threshold to trigger a floor mitigation.
 
+=======
+>>>>>>> rebase
 config THERMAL_GOV_POWER_ALLOCATOR
 	bool "Power allocator thermal governor"
 	help
@@ -478,6 +481,7 @@ config GENERIC_ADC_THERMAL
 	  to this driver. This driver reports the temperature by reading ADC
 	  channel and converts it to temperature based on lookup table.
 
+<<<<<<< HEAD
 config THERMAL_TSENS
 	tristate "Qualcomm Technologies Inc. TSENS Temperature driver"
 	depends on THERMAL
@@ -488,6 +492,8 @@ config THERMAL_TSENS
 	  thermal userspace client when a threshold is reached. Warm/Cool
 	  temperature thresholds can be set independently for each sensor.
 
+=======
+>>>>>>> rebase
 menu "Qualcomm thermal drivers"
 depends on (ARCH_QCOM && OF) || COMPILE_TEST
 source "drivers/thermal/qcom/Kconfig"

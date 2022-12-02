@@ -26,6 +26,7 @@
 # define DEBUG_RWSEMS_WARN_ON(c)
 #endif
 
+<<<<<<< HEAD
 enum rwsem_waiter_type {
 	RWSEM_WAITING_FOR_WRITE,
 	RWSEM_WAITING_FOR_READ
@@ -37,6 +38,8 @@ struct rwsem_waiter {
 	enum rwsem_waiter_type type;
 };
 
+=======
+>>>>>>> rebase
 #ifdef CONFIG_RWSEM_SPIN_ON_OWNER
 /*
  * All writes to owner are protected by WRITE_ONCE() to make sure that
@@ -96,6 +99,7 @@ static inline void rwsem_set_reader_owned(struct rw_semaphore *sem)
 {
 }
 #endif
+<<<<<<< HEAD
 
 #ifdef CONFIG_FAST_TRACK
 #include <cpu/ftt/ftt.h>
@@ -177,3 +181,5 @@ static inline bool rwsem_list_add_per_prio(struct rwsem_waiter *waiter_in,
 	return false;
 }
 #endif
+=======
+>>>>>>> rebase

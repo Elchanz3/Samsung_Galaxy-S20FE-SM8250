@@ -1,6 +1,10 @@
 // SPDX-License-Identifier: GPL-2.0
 /*
+<<<<<<< HEAD
  * Copyright (c) 2018-2020, The Linux Foundation. All rights reserved.
+=======
+ * Copyright (c) 2018, The Linux Foundation. All rights reserved.
+>>>>>>> rebase
  */
 
 #include <linux/clk-provider.h>
@@ -36,7 +40,10 @@ struct clk_rpmh {
 	struct clk_hw hw;
 	const char *res_name;
 	u8 div;
+<<<<<<< HEAD
 	bool optional;
+=======
+>>>>>>> rebase
 	u32 res_addr;
 	u32 res_on_val;
 	u32 state;
@@ -55,14 +62,21 @@ struct clk_rpmh_desc {
 static DEFINE_MUTEX(rpmh_clk_lock);
 
 #define __DEFINE_CLK_RPMH(_platform, _name, _name_active, _res_name,	\
+<<<<<<< HEAD
 			  _res_en_offset, _res_on, _div, _optional)	\
+=======
+			  _res_en_offset, _res_on, _div)		\
+>>>>>>> rebase
 	static struct clk_rpmh _platform##_##_name_active;		\
 	static struct clk_rpmh _platform##_##_name = {			\
 		.res_name = _res_name,					\
 		.res_addr = _res_en_offset,				\
 		.res_on_val = _res_on,					\
 		.div = _div,						\
+<<<<<<< HEAD
 		.optional = _optional,					\
+=======
+>>>>>>> rebase
 		.peer = &_platform##_##_name_active,			\
 		.valid_state_mask = (BIT(RPMH_WAKE_ONLY_STATE) |	\
 				      BIT(RPMH_ACTIVE_ONLY_STATE) |	\
@@ -79,7 +93,10 @@ static DEFINE_MUTEX(rpmh_clk_lock);
 		.res_addr = _res_en_offset,				\
 		.res_on_val = _res_on,					\
 		.div = _div,						\
+<<<<<<< HEAD
 		.optional = _optional,					\
+=======
+>>>>>>> rebase
 		.peer = &_platform##_##_name,				\
 		.valid_state_mask = (BIT(RPMH_WAKE_ONLY_STATE) |	\
 					BIT(RPMH_ACTIVE_ONLY_STATE)),	\
@@ -94,11 +111,16 @@ static DEFINE_MUTEX(rpmh_clk_lock);
 #define DEFINE_CLK_RPMH_ARC(_platform, _name, _name_active, _res_name,	\
 			    _res_on, _div)				\
 	__DEFINE_CLK_RPMH(_platform, _name, _name_active, _res_name,	\
+<<<<<<< HEAD
 			  CLK_RPMH_ARC_EN_OFFSET, _res_on, _div, false)
+=======
+			  CLK_RPMH_ARC_EN_OFFSET, _res_on, _div)
+>>>>>>> rebase
 
 #define DEFINE_CLK_RPMH_VRM(_platform, _name, _name_active, _res_name,	\
 				_div)					\
 	__DEFINE_CLK_RPMH(_platform, _name, _name_active, _res_name,	\
+<<<<<<< HEAD
 			  CLK_RPMH_VRM_EN_OFFSET, 1, _div, false)
 
 #define DEFINE_CLK_RPMH_VRM_OPT(_platform, _name, _name_active,		\
@@ -107,6 +129,9 @@ static DEFINE_MUTEX(rpmh_clk_lock);
 			  CLK_RPMH_VRM_EN_OFFSET, 1, _div, true)
 
 
+=======
+			  CLK_RPMH_VRM_EN_OFFSET, 1, _div)
+>>>>>>> rebase
 
 static inline struct clk_rpmh *to_clk_rpmh(struct clk_hw *_hw)
 {
@@ -248,6 +273,7 @@ static const struct clk_rpmh_desc clk_rpmh_sdm845 = {
 	.num_clks = ARRAY_SIZE(sdm845_rpmh_clocks),
 };
 
+<<<<<<< HEAD
 DEFINE_CLK_RPMH_ARC(kona, bi_tcxo, bi_tcxo_ao, "xo.lvl", 0x3, 2);
 DEFINE_CLK_RPMH_VRM(kona, ln_bb_clk1, ln_bb_clk1_ao, "lnbclka1", 2);
 DEFINE_CLK_RPMH_VRM(kona, ln_bb_clk2, ln_bb_clk2_ao, "lnbclka2", 2);
@@ -332,18 +358,24 @@ static const struct clk_rpmh_desc clk_rpmh_lagoon = {
 	.num_clks = ARRAY_SIZE(lagoon_rpmh_clocks),
 };
 
+=======
+>>>>>>> rebase
 static struct clk_hw *of_clk_rpmh_hw_get(struct of_phandle_args *clkspec,
 					 void *data)
 {
 	struct clk_rpmh_desc *rpmh = data;
 	unsigned int idx = clkspec->args[0];
+<<<<<<< HEAD
 	struct clk_rpmh *c;
+=======
+>>>>>>> rebase
 
 	if (idx >= rpmh->num_clks) {
 		pr_err("%s: invalid index %u\n", __func__, idx);
 		return ERR_PTR(-EINVAL);
 	}
 
+<<<<<<< HEAD
 	if (!rpmh->clks[idx])
 		return ERR_PTR(-ENOENT);
 
@@ -351,6 +383,8 @@ static struct clk_hw *of_clk_rpmh_hw_get(struct of_phandle_args *clkspec,
 	if (!c->res_addr)
 		return ERR_PTR(-ENODEV);
 
+=======
+>>>>>>> rebase
 	return rpmh->clks[idx];
 }
 
@@ -370,6 +404,7 @@ static int clk_rpmh_probe(struct platform_device *pdev)
 	for (i = 0; i < desc->num_clks; i++) {
 		u32 res_addr;
 
+<<<<<<< HEAD
 		if (!hw_clks[i])
 			continue;
 
@@ -378,6 +413,11 @@ static int clk_rpmh_probe(struct platform_device *pdev)
 		if (!res_addr) {
 			if (rpmh_clk->optional)
 				continue;
+=======
+		rpmh_clk = to_clk_rpmh(hw_clks[i]);
+		res_addr = cmd_db_read_addr(rpmh_clk->res_name);
+		if (!res_addr) {
+>>>>>>> rebase
 			dev_err(&pdev->dev, "missing RPMh resource address for %s\n",
 				rpmh_clk->res_name);
 			return -ENODEV;
@@ -408,9 +448,12 @@ static int clk_rpmh_probe(struct platform_device *pdev)
 
 static const struct of_device_id clk_rpmh_match_table[] = {
 	{ .compatible = "qcom,sdm845-rpmh-clk", .data = &clk_rpmh_sdm845},
+<<<<<<< HEAD
 	{ .compatible = "qcom,kona-rpmh-clk", .data = &clk_rpmh_kona},
 	{ .compatible = "qcom,lito-rpmh-clk", .data = &clk_rpmh_lito},
 	{ .compatible = "qcom,lagoon-rpmh-clk", .data = &clk_rpmh_lagoon},
+=======
+>>>>>>> rebase
 	{ }
 };
 MODULE_DEVICE_TABLE(of, clk_rpmh_match_table);

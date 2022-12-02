@@ -6913,7 +6913,12 @@ static int snd_hdspm_free(struct hdspm * hdspm)
 	if (hdspm->port)
 		pci_release_regions(hdspm->pci);
 
+<<<<<<< HEAD
 	pci_disable_device(hdspm->pci);
+=======
+	if (pci_is_enabled(hdspm->pci))
+		pci_disable_device(hdspm->pci);
+>>>>>>> rebase
 	return 0;
 }
 

@@ -3270,6 +3270,7 @@ int drm_fbdev_generic_setup(struct drm_device *dev, unsigned int preferred_bpp)
 	return 0;
 }
 EXPORT_SYMBOL(drm_fbdev_generic_setup);
+<<<<<<< HEAD
 
 /* The Kconfig DRM_KMS_HELPER selects FRAMEBUFFER_CONSOLE (if !EXPERT)
  * but the module doesn't depend on any fb console symbols.  At least
@@ -3291,3 +3292,5 @@ int __init drm_fb_helper_modinit(void)
 	return 0;
 }
 EXPORT_SYMBOL(drm_fb_helper_modinit);
+=======
+>>>>>>> rebase

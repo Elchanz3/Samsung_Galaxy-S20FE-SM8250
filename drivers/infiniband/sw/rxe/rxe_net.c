@@ -154,10 +154,19 @@ static struct dst_entry *rxe_find_route6(struct net_device *ndev,
 	memcpy(&fl6.daddr, daddr, sizeof(*daddr));
 	fl6.flowi6_proto = IPPROTO_UDP;
 
+<<<<<<< HEAD
 	if (unlikely(ipv6_stub->ipv6_dst_lookup(sock_net(recv_sockets.sk6->sk),
 						recv_sockets.sk6->sk, &ndst, &fl6))) {
 		pr_err_ratelimited("no route to %pI6\n", daddr);
 		goto put;
+=======
+	ndst = ipv6_stub->ipv6_dst_lookup_flow(sock_net(recv_sockets.sk6->sk),
+					       recv_sockets.sk6->sk, &fl6,
+					       NULL);
+	if (unlikely(IS_ERR(ndst))) {
+		pr_err_ratelimited("no route to %pI6\n", daddr);
+		return NULL;
+>>>>>>> rebase
 	}
 
 	if (unlikely(ndst->error)) {
@@ -288,10 +297,15 @@ static struct socket *rxe_setup_udp_tunnel(struct net *net, __be16 port,
 
 	/* Create UDP socket */
 	err = udp_sock_create(net, &udp_cfg, &sock);
+<<<<<<< HEAD
 	if (err < 0) {
 		pr_err("failed to create udp socket. err = %d\n", err);
 		return ERR_PTR(err);
 	}
+=======
+	if (err < 0)
+		return ERR_PTR(err);
+>>>>>>> rebase
 
 	tnl_cfg.encap_type = 1;
 	tnl_cfg.encap_rcv = rxe_udp_encap_recv;
@@ -498,6 +512,14 @@ int rxe_send(struct rxe_pkt_info *pkt, struct sk_buff *skb)
 
 void rxe_loopback(struct sk_buff *skb)
 {
+<<<<<<< HEAD
+=======
+	if (skb->protocol == htons(ETH_P_IP))
+		skb_pull(skb, sizeof(struct iphdr));
+	else
+		skb_pull(skb, sizeof(struct ipv6hdr));
+
+>>>>>>> rebase
 	rxe_rcv(skb);
 }
 
@@ -710,6 +732,15 @@ static int rxe_net_ipv6_init(void)
 
 	recv_sockets.sk6 = rxe_setup_udp_tunnel(&init_net,
 						htons(ROCE_V2_UDP_DPORT), true);
+<<<<<<< HEAD
+=======
+	if (PTR_ERR(recv_sockets.sk6) == -EAFNOSUPPORT) {
+		recv_sockets.sk6 = NULL;
+		pr_warn("IPv6 is not supported, can not create a UDPv6 socket\n");
+		return 0;
+	}
+
+>>>>>>> rebase
 	if (IS_ERR(recv_sockets.sk6)) {
 		recv_sockets.sk6 = NULL;
 		pr_err("Failed to create IPv6 UDP tunnel\n");

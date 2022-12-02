@@ -476,6 +476,10 @@
 					     "dsi0_ddr2",
 					     "dsi0_ddr";
 
+<<<<<<< HEAD
+=======
+			status = "disabled";
+>>>>>>> rebase
 		};
 
 		thermal: thermal@7e212000 {

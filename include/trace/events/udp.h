@@ -27,6 +27,7 @@ TRACE_EVENT(udp_fail_queue_rcv_skb,
 	TP_printk("rc=%d port=%hu", __entry->rc, __entry->lport)
 );
 
+<<<<<<< HEAD
 TRACE_EVENT(udpv4_fail_rcv_buf_errors,
 
 	TP_PROTO(struct sk_buff *skb),
@@ -75,6 +76,8 @@ TRACE_EVENT(udpv6_fail_rcv_buf_errors,
 		  __entry->sport, __entry->daddr, __entry->dport)
 );
 
+=======
+>>>>>>> rebase
 #endif /* _TRACE_UDP_H */
 
 /* This part must be outside protection */

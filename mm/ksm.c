@@ -778,6 +778,10 @@ static void remove_rmap_item_from_tree(struct rmap_item *rmap_item)
 		stable_node->rmap_hlist_len--;
 
 		put_anon_vma(rmap_item->anon_vma);
+<<<<<<< HEAD
+=======
+		rmap_item->head = NULL;
+>>>>>>> rebase
 		rmap_item->address &= PAGE_MASK;
 
 	} else if (rmap_item->address & UNSTABLE_FLAG) {
@@ -2106,8 +2110,21 @@ static void cmp_and_merge_page(struct page *page, struct rmap_item *rmap_item)
 
 		down_read(&mm->mmap_sem);
 		vma = find_mergeable_vma(mm, rmap_item->address);
+<<<<<<< HEAD
 		err = try_to_merge_one_page(vma, page,
 					    ZERO_PAGE(rmap_item->address));
+=======
+		if (vma) {
+			err = try_to_merge_one_page(vma, page,
+					ZERO_PAGE(rmap_item->address));
+		} else {
+			/*
+			 * If the vma is out of date, we do not need to
+			 * continue.
+			 */
+			err = 0;
+		}
+>>>>>>> rebase
 		up_read(&mm->mmap_sem);
 		/*
 		 * In case of failure, the page was not really empty, so we
@@ -2593,7 +2610,10 @@ void rmap_walk_ksm(struct page *page, struct rmap_walk_control *rwc)
 	stable_node = page_stable_node(page);
 	if (!stable_node)
 		return;
+<<<<<<< HEAD
 
+=======
+>>>>>>> rebase
 again:
 	hlist_for_each_entry(rmap_item, &stable_node->hlist, hlist) {
 		struct anon_vma *anon_vma = rmap_item->anon_vma;

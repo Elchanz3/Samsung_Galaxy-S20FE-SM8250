@@ -23,6 +23,7 @@ config MMU
 	default y
 
 config NO_IOMEM
+<<<<<<< HEAD
 	bool
 	default y if !KUNIT
 
@@ -30,6 +31,9 @@ config HAS_IOMEM
 	bool "Turns on fake IOMEM support for KUnit"
 	depends on KUNIT
 	select MOCK_IOMEM
+=======
+	def_bool y
+>>>>>>> rebase
 
 config ISA
 	bool
@@ -191,11 +195,14 @@ config SECCOMP
 
 	  If unsure, say Y.
 
+<<<<<<< HEAD
 config PLATFORM_MOCK
 	bool "Enable a mock architecture used for unit testing."
 	depends on KUNIT && OF
 	default n
 
+=======
+>>>>>>> rebase
 endmenu
 
 source "arch/um/drivers/Kconfig"

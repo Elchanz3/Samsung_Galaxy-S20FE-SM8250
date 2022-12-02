@@ -69,10 +69,13 @@ struct gether {
 	bool				is_fixed;
 	u32				fixed_out_len;
 	u32				fixed_in_len;
+<<<<<<< HEAD
 	unsigned int			ul_max_pkts_per_xfer;
 /* Max number of SKB packets to be used to create Multi Packet RNDIS */
 #define TX_SKB_HOLD_THRESHOLD		3
 	bool				multi_pkt_xfer;
+=======
+>>>>>>> rebase
 	bool				supports_multi_frame;
 	struct sk_buff			*(*wrap)(struct gether *port,
 						struct sk_buff *skb);
@@ -248,6 +251,7 @@ unsigned gether_get_qmult(struct net_device *net);
  */
 int gether_get_ifname(struct net_device *net, char *name, int len);
 
+<<<<<<< HEAD
 /**
  * gether_get_ul_max_pkts_per_xfer - get max pks/xfer for UL aggrregarion
  * @net: device representing this link
@@ -261,6 +265,8 @@ unsigned int gether_get_ul_max_pkts_per_xfer(struct net_device *net);
  */
 int gether_set_ul_max_pkts_per_xfer(struct net_device *net, unsigned int max);
 
+=======
+>>>>>>> rebase
 void gether_cleanup(struct eth_dev *dev);
 
 /* connect/disconnect is handled by individual functions */

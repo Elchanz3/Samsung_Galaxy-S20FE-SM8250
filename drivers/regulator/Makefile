@@ -9,7 +9,10 @@ obj-$(CONFIG_OF) += of_regulator.o
 obj-$(CONFIG_REGULATOR_FIXED_VOLTAGE) += fixed.o
 obj-$(CONFIG_REGULATOR_VIRTUAL_CONSUMER) += virtual.o
 obj-$(CONFIG_REGULATOR_USERSPACE_CONSUMER) += userspace-consumer.o
+<<<<<<< HEAD
 obj-$(CONFIG_REGULATOR_PROXY_CONSUMER) += proxy-consumer.o
+=======
+>>>>>>> rebase
 
 obj-$(CONFIG_REGULATOR_88PG86X) += 88pg86x.o
 obj-$(CONFIG_REGULATOR_88PM800) += 88pm800-regulator.o
@@ -81,6 +84,7 @@ obj-$(CONFIG_REGULATOR_MT6397)	+= mt6397-regulator.o
 obj-$(CONFIG_REGULATOR_QCOM_RPM) += qcom_rpm-regulator.o
 obj-$(CONFIG_REGULATOR_QCOM_RPMH) += qcom-rpmh-regulator.o
 obj-$(CONFIG_REGULATOR_QCOM_SMD_RPM) += qcom_smd-regulator.o
+<<<<<<< HEAD
 obj-$(CONFIG_REGULATOR_RPM_SMD) += rpm-smd-regulator.o
 obj-$(CONFIG_REGULATOR_PM8008) += qcom_pm8008-regulator.o
 obj-$(CONFIG_REGULATOR_QCOM_SPMI) += qcom_spmi-regulator.o
@@ -88,6 +92,9 @@ obj-$(CONFIG_REGULATOR_QPNP_LABIBB) += qpnp-labibb-regulator.o
 obj-$(CONFIG_REGULATOR_QPNP_LCDB) += qpnp-lcdb-regulator.o
 obj-$(CONFIG_REGULATOR_QPNP_AMOLED) += qpnp-amoled-regulator.o
 obj-$(CONFIG_REGULATOR_QPNP_OLEDB) += qpnp-oledb-regulator.o
+=======
+obj-$(CONFIG_REGULATOR_QCOM_SPMI) += qcom_spmi-regulator.o
+>>>>>>> rebase
 obj-$(CONFIG_REGULATOR_PALMAS) += palmas-regulator.o
 obj-$(CONFIG_REGULATOR_PFUZE100) += pfuze100-regulator.o
 obj-$(CONFIG_REGULATOR_PV88060) += pv88060-regulator.o
@@ -104,6 +111,7 @@ obj-$(CONFIG_REGULATOR_RN5T618) += rn5t618-regulator.o
 obj-$(CONFIG_REGULATOR_RT5033)	+= rt5033-regulator.o
 obj-$(CONFIG_REGULATOR_S2MPA01) += s2mpa01.o
 obj-$(CONFIG_REGULATOR_S2MPS11) += s2mps11.o
+<<<<<<< HEAD
 obj-$(CONFIG_DRV_SAMSUNG_PMIC) += pmic_class.o
 obj-$(CONFIG_REGULATOR_S5M8767) += s5m8767.o
 obj-$(CONFIG_REGULATOR_S2MPB02) += s2mpb02-regulator.o
@@ -112,6 +120,9 @@ obj-$(CONFIG_REGULATOR_S2DOS03) += s2dos03-regulator.o
 obj-$(CONFIG_REGULATOR_S2DOS05) += s2dos05.o s2dos05_powermeter.o
 obj-$(CONFIG_REGULATOR_S2DOS06) += s2dos06.o s2dos06_powermeter.o
 obj-$(CONFIG_REGULATOR_S2ABB01) += s2abb01.o
+=======
+obj-$(CONFIG_REGULATOR_S5M8767) += s5m8767.o
+>>>>>>> rebase
 obj-$(CONFIG_REGULATOR_SC2731) += sc2731-regulator.o
 obj-$(CONFIG_REGULATOR_SKY81452) += sky81452-regulator.o
 obj-$(CONFIG_REGULATOR_STM32_VREFBUF) += stm32-vrefbuf.o
@@ -142,6 +153,7 @@ obj-$(CONFIG_REGULATOR_WM831X) += wm831x-ldo.o
 obj-$(CONFIG_REGULATOR_WM8350) += wm8350-regulator.o
 obj-$(CONFIG_REGULATOR_WM8400) += wm8400-regulator.o
 obj-$(CONFIG_REGULATOR_WM8994) += wm8994-regulator.o
+<<<<<<< HEAD
 obj-$(CONFIG_REGULATOR_MEM_ACC) += mem-acc-regulator.o
 obj-$(CONFIG_REGULATOR_MSM_GFX_LDO) += msm_gfx_ldo.o
 obj-$(CONFIG_REGULATOR_CPR3) += cpr3-regulator.o cpr3-util.o
@@ -155,3 +167,7 @@ obj-$(CONFIG_REGULATOR_STUB) += stub-regulator.o
 ccflags-$(CONFIG_REGULATOR_DEBUG) += -DDEBUG
 
 subdir-ccflags-y += -Wformat
+=======
+
+ccflags-$(CONFIG_REGULATOR_DEBUG) += -DDEBUG
+>>>>>>> rebase

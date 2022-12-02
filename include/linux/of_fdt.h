@@ -47,9 +47,12 @@ extern char __dtb_end[];
 /* Other Prototypes */
 extern u64 of_flat_dt_translate_address(unsigned long node);
 extern void of_fdt_limit_memory(int limit);
+<<<<<<< HEAD
 extern int of_fdt_get_ddrtype(void);
 extern int of_fdt_get_ddrrank(int channel);
 extern int of_fdt_get_ddrhbb(int channel, int rank);
+=======
+>>>>>>> rebase
 #endif /* CONFIG_OF_FLATTREE */
 
 #ifdef CONFIG_OF_EARLY_FLATTREE
@@ -72,6 +75,7 @@ extern unsigned long of_get_flat_dt_root(void);
 extern int of_get_flat_dt_size(void);
 extern uint32_t of_get_flat_dt_phandle(unsigned long node);
 
+<<<<<<< HEAD
 /*
  * early_init_dt_scan_chosen - scan the device tree for ramdisk and bootargs
  *
@@ -93,6 +97,8 @@ extern uint32_t of_get_flat_dt_phandle(unsigned long node);
  * - CMDLINE_FROM_BOOTLOADER=true, dt bootargs=empty, @data is empty string
  *     CONFIG_CMDLINE (or "" if that's not defined)
  */
+=======
+>>>>>>> rebase
 extern int early_init_dt_scan_chosen(unsigned long node, const char *uname,
 				     int depth, void *data);
 extern int early_init_dt_scan_memory(unsigned long node, const char *uname,

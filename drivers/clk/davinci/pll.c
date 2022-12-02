@@ -491,7 +491,11 @@ struct clk *davinci_pll_clk_register(struct device *dev,
 		parent_name = postdiv_name;
 	}
 
+<<<<<<< HEAD
 	pllen = kzalloc(sizeof(*pllout), GFP_KERNEL);
+=======
+	pllen = kzalloc(sizeof(*pllen), GFP_KERNEL);
+>>>>>>> rebase
 	if (!pllen) {
 		ret = -ENOMEM;
 		goto err_unregister_postdiv;

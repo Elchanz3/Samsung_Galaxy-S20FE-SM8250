@@ -16,8 +16,11 @@ Required properties :
 			"qcom,rpmcc-msm8974", "qcom,rpmcc"
 			"qcom,rpmcc-apq8064", "qcom,rpmcc"
 			"qcom,rpmcc-msm8996", "qcom,rpmcc"
+<<<<<<< HEAD
 			"qcom,rpmcc-bengal", "qcom,rpmcc"
 			"qcom,rpmcc-scuba", "qcom,rpmcc"
+=======
+>>>>>>> rebase
 
 - #clock-cells : shall contain 1
 

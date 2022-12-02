@@ -42,9 +42,12 @@ its hardware characteristcs.
 		- Coresight Address Translation Unit (CATU)
 			"arm,coresight-catu", "arm,primecell";
 
+<<<<<<< HEAD
 		- Trigger Generation Unit:
 			"arm,primecell";
 
+=======
+>>>>>>> rebase
 	* reg: physical base address and length of the register
 	  set(s) of the component.
 
@@ -61,8 +64,11 @@ its hardware characteristcs.
 	  layout using the generic DT graph presentation found in
 	  "bindings/graph.txt".
 
+<<<<<<< HEAD
 	* coresight-name: unique descriptive name of the component.
 
+=======
+>>>>>>> rebase
 * Additional required properties for System Trace Macrocells (STM):
 	* reg: along with the physical base address and length of the register
 	  set as described above, another entry is required to describe the
@@ -77,6 +83,7 @@ its hardware characteristcs.
 	* compatible: Currently supported value is (note the absence of the
 	  AMBA markee):
 		- "arm,coresight-replicator"
+<<<<<<< HEAD
 		- "arm,coresight-cti"
 		- "qcom,coresight-tpda"
 		- "qcom,coresight-tpdm"
@@ -106,6 +113,11 @@ its hardware characteristcs.
 
 	* qcom,proxy-clks: List of additional clocks required.
 
+=======
+
+	* port or ports: same as above.
+
+>>>>>>> rebase
 * Optional properties for ETM/PTMs:
 
 	* arm,cp14: must be present if the system accesses ETM/PTM management
@@ -114,9 +126,12 @@ its hardware characteristcs.
 	* cpu: the cpu phandle this ETM/PTM is affined to. When omitted the
 	  source is considered to belong to CPU0.
 
+<<<<<<< HEAD
 	* qcom,tupwr-disable: For ETM, don't keep trace unit powered across power
 	  collapse.
 
+=======
+>>>>>>> rebase
 * Optional property for TMC:
 
 	* arm,buffer-size: size of contiguous buffer space for TMC ETR
@@ -126,6 +141,7 @@ its hardware characteristcs.
 	* arm,scatter-gather: boolean. Indicates that the TMC-ETR can safely
 	  use the SG mode on this system.
 
+<<<<<<< HEAD
 	* arm,default-sink: represents the default compile time CoreSight sink
 
 	* coresight-ctis: represents flush and reset CTIs for TMC buffer
@@ -137,10 +153,13 @@ its hardware characteristcs.
 	* arm,sg-enable : indicates whether scatter gather feature is enabled
 	  by default for TMC ETR configuration.
 
+=======
+>>>>>>> rebase
 * Optional property for CATU :
 	* interrupts : Exactly one SPI may be listed for reporting the address
 	  error
 
+<<<<<<< HEAD
 * Required property for TPDAs:
 
 	* qcom,tpda-atid: must be present. Specifies the ATID for TPDA.
@@ -213,6 +232,8 @@ its hardware characteristcs.
 	* reg-names: funnel-base-real: actual register space for the
 	  duplicate funnel.
 
+=======
+>>>>>>> rebase
 Example:
 
 1. Sinks
@@ -357,6 +378,7 @@ Example:
 		};
 	};
 
+<<<<<<< HEAD
 	tpda_mss: tpda@7043000 {
 		compatible = "qcom,coresight-tpda", "arm,primecell";
 		reg = <0x7043000 0x1000>;
@@ -391,6 +413,8 @@ Example:
 			};
 		};
 	};
+=======
+>>>>>>> rebase
 3. Sources
 	ptm@2201c000 {
 		compatible = "arm,coresight-etm3x", "arm,primecell";
@@ -454,6 +478,7 @@ Example:
 		};
 	};
 
+<<<<<<< HEAD
 	tpdm_mss: tpdm@7042000 {
 		compatible = "qcom,coresight-tpdm", "arm,primecell";
 		reg = <0x7042000 0x1000>;
@@ -487,5 +512,7 @@ Example:
 		clocks = <&clock_aop QDSS_CLK>;
 		clock-names = "apb_pclk";
 	};
+=======
+>>>>>>> rebase
 [1]. There is currently two version of STM: STM32 and STM500.  Both
 have the same HW interface and as such don't need an explicit binding name.

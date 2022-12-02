@@ -422,7 +422,11 @@ static void process_interval(void)
 	}
 
 	init_stats(&walltime_nsecs_stats);
+<<<<<<< HEAD
 	update_stats(&walltime_nsecs_stats, stat_config.interval * 1000000);
+=======
+	update_stats(&walltime_nsecs_stats, stat_config.interval * 1000000ULL);
+>>>>>>> rebase
 	print_counters(&rs, 0, NULL);
 }
 

@@ -53,9 +53,12 @@ enum {
 	CS_ETMV4_PRIV_MAX,
 };
 
+<<<<<<< HEAD
 /* RB tree for quick conversion between traceID and CPUs */
 struct intlist *traceid_list;
 
+=======
+>>>>>>> rebase
 #define KiB(x) ((x) * 1024)
 #define MiB(x) ((x) * 1024 * 1024)
 
@@ -69,6 +72,10 @@ static const u64 __perf_cs_etmv4_magic   = 0x4040404040404040ULL;
 #ifdef HAVE_CSTRACE_SUPPORT
 int cs_etm__process_auxtrace_info(union perf_event *event,
 				  struct perf_session *session);
+<<<<<<< HEAD
+=======
+int cs_etm__get_cpu(u8 trace_chan_id, int *cpu);
+>>>>>>> rebase
 #else
 static inline int
 cs_etm__process_auxtrace_info(union perf_event *event __maybe_unused,
@@ -76,6 +83,15 @@ cs_etm__process_auxtrace_info(union perf_event *event __maybe_unused,
 {
 	return -1;
 }
+<<<<<<< HEAD
+=======
+
+static inline int cs_etm__get_cpu(u8 trace_chan_id __maybe_unused,
+				  int *cpu __maybe_unused)
+{
+	return -1;
+}
+>>>>>>> rebase
 #endif
 
 #endif

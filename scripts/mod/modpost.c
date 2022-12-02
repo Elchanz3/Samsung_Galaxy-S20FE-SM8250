@@ -145,9 +145,12 @@ static struct module *new_module(const char *modname)
 		p[strlen(p) - 2] = '\0';
 		mod->is_dot_o = 1;
 	}
+<<<<<<< HEAD
 	/* strip trailing .lto */
 	if (strends(p, ".lto"))
 		p[strlen(p) - 4] = '\0';
+=======
+>>>>>>> rebase
 
 	/* add to list */
 	mod->name = p;
@@ -898,7 +901,11 @@ static void check_section(const char *modname, struct elf_info *elf,
 
 #define DATA_SECTIONS ".data", ".data.rel"
 #define TEXT_SECTIONS ".text", ".text.unlikely", ".sched.text", \
+<<<<<<< HEAD
 		".kprobes.text", ".cpuidle.text"
+=======
+		".kprobes.text", ".cpuidle.text", ".noinstr.text"
+>>>>>>> rebase
 #define OTHER_TEXT_SECTIONS ".ref.text", ".head.text", ".spinlock.text", \
 		".fixup", ".entry.text", ".exception.text", ".text.*", \
 		".coldtext"
@@ -945,7 +952,10 @@ static const char *const head_sections[] = { ".head.text*", NULL };
 static const char *const linker_symbols[] =
 	{ "__init_begin", "_sinittext", "_einittext", NULL };
 static const char *const optim_symbols[] = { "*.constprop.*", NULL };
+<<<<<<< HEAD
 static const char *const cfi_symbols[] = { "*.cfi", NULL };
+=======
+>>>>>>> rebase
 
 enum mismatch {
 	TEXT_TO_ANY_INIT,
@@ -1070,7 +1080,11 @@ static const struct sectioncheck sectioncheck[] = {
 },
 /* Do not export init/exit functions or data */
 {
+<<<<<<< HEAD
 	.fromsec = { "__ksymtab*", NULL },
+=======
+	.fromsec = { "___ksymtab*", NULL },
+>>>>>>> rebase
 	.bad_tosec = { INIT_SECTIONS, EXIT_SECTIONS, NULL },
 	.mismatch = EXPORT_TO_INIT_EXIT,
 	.symbol_white_list = { DEFAULT_SYMBOL_WHITE_LIST, NULL },
@@ -1175,6 +1189,7 @@ static const struct sectioncheck *section_mismatch(
  *   whitelisting, which relies on pattern-matching against symbol
  *   names to work.  (One situation where gcc can autogenerate ELF
  *   local symbols is when "-fsection-anchors" is used.)
+<<<<<<< HEAD
  *
  * Pattern 7:
  *   With CONFIG_CFI_CLANG, clang appends .cfi to all indirectly called
@@ -1186,6 +1201,8 @@ static const struct sectioncheck *section_mismatch(
  *   fromsec = text section
  *   tosym   = *.cfi
  *
+=======
+>>>>>>> rebase
  **/
 static int secref_whitelist(const struct sectioncheck *mismatch,
 			    const char *fromsec, const char *fromsym,
@@ -1228,18 +1245,26 @@ static int secref_whitelist(const struct sectioncheck *mismatch,
 	if (strstarts(fromsym, ".L"))
 		return 0;
 
+<<<<<<< HEAD
 	/* Check for pattern 7 */
 	if (match(fromsec, text_sections) &&
 	    match(tosec, init_exit_sections) &&
 	    match(tosym, cfi_symbols))
 		return 0;
 
+=======
+>>>>>>> rebase
 	return 1;
 }
 
 static inline int is_arm_mapping_symbol(const char *str)
 {
+<<<<<<< HEAD
 	return str[0] == '$' && strchr("axtd", str[1])
+=======
+	return str[0] == '$' &&
+	       (str[1] == 'a' || str[1] == 'd' || str[1] == 't' || str[1] == 'x')
+>>>>>>> rebase
 	       && (str[2] == '\0' || str[2] == '.');
 }
 
@@ -1958,12 +1983,17 @@ static char *remove_dot(char *s)
 
 	if (n && s[n]) {
 		size_t m = strspn(s + n + 1, "0123456789");
+<<<<<<< HEAD
 		if (m && (s[n + m] == '.' || s[n + m] == 0))
 			s[n] = 0;
 
 		/* strip trailing .lto */
 		if (strends(s, ".lto"))
 			s[strlen(s) - 4] = '\0';
+=======
+		if (m && (s[n + m + 1] == '.' || s[n + m + 1] == 0))
+			s[n] = 0;
+>>>>>>> rebase
 	}
 	return s;
 }

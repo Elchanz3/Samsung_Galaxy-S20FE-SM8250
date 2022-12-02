@@ -25,8 +25,11 @@
 #include <linux/iommu.h>
 #include <linux/msi.h>
 
+<<<<<<< HEAD
 struct iova_domain;
 
+=======
+>>>>>>> rebase
 int iommu_dma_init(void);
 
 /* Domain management interface for IOMMU drivers */
@@ -58,11 +61,14 @@ dma_addr_t iommu_dma_map_page(struct device *dev, struct page *page,
 		unsigned long offset, size_t size, int prot);
 int iommu_dma_map_sg(struct device *dev, struct scatterlist *sg,
 		int nents, int prot);
+<<<<<<< HEAD
 size_t iommu_dma_prepare_map_sg(struct device *dev, struct iova_domain *iovad,
 				struct scatterlist *sg, int nents);
 int iommu_dma_finalise_sg(struct device *dev, struct scatterlist *sg,
 		int nents, dma_addr_t dma_addr);
 void iommu_dma_invalidate_sg(struct scatterlist *sg, int nents);
+=======
+>>>>>>> rebase
 
 /*
  * Arch code with no special attribute handling may use these
@@ -82,11 +88,14 @@ int iommu_dma_mapping_error(struct device *dev, dma_addr_t dma_addr);
 void iommu_dma_map_msi_msg(int irq, struct msi_msg *msg);
 void iommu_dma_get_resv_regions(struct device *dev, struct list_head *list);
 
+<<<<<<< HEAD
 int iommu_dma_reserve_iova(struct device *dev, dma_addr_t base,
 			   u64 size);
 
 int iommu_dma_enable_best_fit_algo(struct device *dev);
 
+=======
+>>>>>>> rebase
 #else
 
 struct iommu_domain;
@@ -120,6 +129,7 @@ static inline void iommu_dma_get_resv_regions(struct device *dev, struct list_he
 {
 }
 
+<<<<<<< HEAD
 static inline int iommu_dma_reserve_iova(struct device *dev, dma_addr_t base,
 					 u64 size)
 {
@@ -131,6 +141,8 @@ static inline int iommu_dma_enable_best_fit_algo(struct device *dev)
 	return -ENODEV;
 }
 
+=======
+>>>>>>> rebase
 #endif	/* CONFIG_IOMMU_DMA */
 #endif	/* __KERNEL__ */
 #endif	/* __DMA_IOMMU_H */

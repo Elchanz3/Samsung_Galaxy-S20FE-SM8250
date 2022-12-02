@@ -250,7 +250,11 @@ High-level taskfile hooks
 
 ::
 
+<<<<<<< HEAD
     void (*qc_prep) (struct ata_queued_cmd *qc);
+=======
+    enum ata_completion_errors (*qc_prep) (struct ata_queued_cmd *qc);
+>>>>>>> rebase
     int (*qc_issue) (struct ata_queued_cmd *qc);
 
 

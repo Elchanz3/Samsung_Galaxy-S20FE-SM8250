@@ -20,9 +20,14 @@
 #include <linux/of_reserved_mem.h>
 #include <linux/sort.h>
 #include <linux/slab.h>
+<<<<<<< HEAD
 #include <linux/kmemleak.h>
 
 #define MAX_RESERVED_REGIONS	64
+=======
+
+#define MAX_RESERVED_REGIONS	32
+>>>>>>> rebase
 static struct reserved_mem reserved_mem[MAX_RESERVED_REGIONS];
 static int reserved_mem_count;
 
@@ -51,10 +56,15 @@ int __init __weak early_init_dt_alloc_reserved_memory_arch(phys_addr_t size,
 	}
 
 	*res_base = base;
+<<<<<<< HEAD
 	if (nomap) {
 		kmemleak_ignore_phys(base);
 		return memblock_remove(base, size);
 	}
+=======
+	if (nomap)
+		return memblock_remove(base, size);
+>>>>>>> rebase
 	return 0;
 }
 #else
@@ -68,6 +78,7 @@ int __init __weak early_init_dt_alloc_reserved_memory_arch(phys_addr_t size,
 }
 #endif
 
+<<<<<<< HEAD
 static bool __init need_memsize_skip(unsigned long node, const char *uname)
 {
 	if (!strncmp(uname, "disp_rdump_region", 17))
@@ -75,6 +86,8 @@ static bool __init need_memsize_skip(unsigned long node, const char *uname)
 	return false;
 }
 
+=======
+>>>>>>> rebase
 /**
  * res_mem_save_node() - save fdt node for second pass initialization
  */
@@ -83,9 +96,12 @@ void __init fdt_reserved_mem_save_node(unsigned long node, const char *uname,
 {
 	struct reserved_mem *rmem = &reserved_mem[reserved_mem_count];
 
+<<<<<<< HEAD
 	if (need_memsize_skip(node, uname))
 		return;
 
+=======
+>>>>>>> rebase
 	if (reserved_mem_count == ARRAY_SIZE(reserved_mem)) {
 		pr_err("not enough space all defined regions.\n");
 		return;
@@ -125,6 +141,7 @@ static int __init __reserved_mem_alloc_size(unsigned long node,
 	}
 	size = dt_mem_next_cell(dt_root_size_cells, &prop);
 
+<<<<<<< HEAD
 #ifdef CONFIG_ION_RBIN_HEAP_EXCEPTION
 	if (of_get_flat_dt_prop(node, "ion,recyclable", NULL) &&
 			need_ion_rbin_heap()) {
@@ -134,6 +151,8 @@ static int __init __reserved_mem_alloc_size(unsigned long node,
 		pr_info("%s rbin_size %llx", __func__, size);
 	}
 #endif
+=======
+>>>>>>> rebase
 	nomap = of_get_flat_dt_prop(node, "no-map", NULL) != NULL;
 
 	prop = of_get_flat_dt_prop(node, "alignment", &len);
@@ -176,9 +195,15 @@ static int __init __reserved_mem_alloc_size(unsigned long node,
 			ret = early_init_dt_alloc_reserved_memory_arch(size,
 					align, start, end, nomap, &base);
 			if (ret == 0) {
+<<<<<<< HEAD
 				pr_debug("allocated memory for '%s' node: base %pa, size %ld MiB\n",
 					uname, &base,
 					(unsigned long)size / SZ_1M);
+=======
+				pr_debug("allocated memory for '%s' node: base %pa, size %lu MiB\n",
+					uname, &base,
+					(unsigned long)(size / SZ_1M));
+>>>>>>> rebase
 				break;
 			}
 			len -= t_len;
@@ -188,8 +213,13 @@ static int __init __reserved_mem_alloc_size(unsigned long node,
 		ret = early_init_dt_alloc_reserved_memory_arch(size, align,
 							0, 0, nomap, &base);
 		if (ret == 0)
+<<<<<<< HEAD
 			pr_debug("allocated memory for '%s' node: base %pa, size %ld MiB\n",
 				uname, &base, (unsigned long)size / SZ_1M);
+=======
+			pr_debug("allocated memory for '%s' node: base %pa, size %lu MiB\n",
+				uname, &base, (unsigned long)(size / SZ_1M));
+>>>>>>> rebase
 	}
 
 	if (base == 0) {
@@ -240,6 +270,19 @@ static int __init __rmem_cmp(const void *a, const void *b)
 	if (ra->base > rb->base)
 		return 1;
 
+<<<<<<< HEAD
+=======
+	/*
+	 * Put the dynamic allocations (address == 0, size == 0) before static
+	 * allocations at address 0x0 so that overlap detection works
+	 * correctly.
+	 */
+	if (ra->size < rb->size)
+		return -1;
+	if (ra->size > rb->size)
+		return 1;
+
+>>>>>>> rebase
 	return 0;
 }
 
@@ -257,8 +300,12 @@ static void __init __rmem_check_for_overlap(void)
 
 		this = &reserved_mem[i];
 		next = &reserved_mem[i + 1];
+<<<<<<< HEAD
 		if (!(this->base && next->base))
 			continue;
+=======
+
+>>>>>>> rebase
 		if (this->base + this->size > next->base) {
 			phys_addr_t this_end, next_end;
 
@@ -287,7 +334,10 @@ void __init fdt_init_reserved_mem(void)
 		int len;
 		const __be32 *prop;
 		int err = 0;
+<<<<<<< HEAD
 		bool nomap;
+=======
+>>>>>>> rebase
 
 		prop = of_get_flat_dt_prop(node, "phandle", &len);
 		if (!prop)
@@ -298,6 +348,7 @@ void __init fdt_init_reserved_mem(void)
 		if (rmem->size == 0)
 			err = __reserved_mem_alloc_size(node, rmem->name,
 						 &rmem->base, &rmem->size);
+<<<<<<< HEAD
 		if (err == 0) {
 			__reserved_mem_init_node(rmem);
 			nomap = of_get_flat_dt_prop(node, "no-map", NULL) != NULL;
@@ -310,6 +361,10 @@ void __init fdt_init_reserved_mem(void)
 						rmem->size, nomap,
 						rmem->reusable);
 		}
+=======
+		if (err == 0)
+			__reserved_mem_init_node(rmem);
+>>>>>>> rebase
 	}
 }
 

@@ -449,10 +449,26 @@ static void hif_usb_stop(void *hif_handle)
 	spin_unlock_irqrestore(&hif_dev->tx.tx_lock, flags);
 
 	/* The pending URBs have to be canceled. */
+<<<<<<< HEAD
 	list_for_each_entry_safe(tx_buf, tx_buf_tmp,
 				 &hif_dev->tx.tx_pending, list) {
 		usb_kill_urb(tx_buf->urb);
 	}
+=======
+	spin_lock_irqsave(&hif_dev->tx.tx_lock, flags);
+	list_for_each_entry_safe(tx_buf, tx_buf_tmp,
+				 &hif_dev->tx.tx_pending, list) {
+		usb_get_urb(tx_buf->urb);
+		spin_unlock_irqrestore(&hif_dev->tx.tx_lock, flags);
+		usb_kill_urb(tx_buf->urb);
+		list_del(&tx_buf->list);
+		usb_free_urb(tx_buf->urb);
+		kfree(tx_buf->buf);
+		kfree(tx_buf);
+		spin_lock_irqsave(&hif_dev->tx.tx_lock, flags);
+	}
+	spin_unlock_irqrestore(&hif_dev->tx.tx_lock, flags);
+>>>>>>> rebase
 
 	usb_kill_anchored_urbs(&hif_dev->mgmt_submitted);
 }
@@ -581,6 +597,16 @@ static void ath9k_hif_usb_rx_stream(struct hif_device_usb *hif_dev,
 			return;
 		}
 
+<<<<<<< HEAD
+=======
+		if (pkt_len > 2 * MAX_RX_BUF_SIZE) {
+			dev_err(&hif_dev->udev->dev,
+				"ath9k_htc: invalid pkt_len (%x)\n", pkt_len);
+			RX_STAT_INC(skb_dropped);
+			return;
+		}
+
+>>>>>>> rebase
 		pad_len = 4 - (pkt_len & 0x3);
 		if (pad_len == 4)
 			pad_len = 0;
@@ -612,6 +638,14 @@ static void ath9k_hif_usb_rx_stream(struct hif_device_usb *hif_dev,
 			hif_dev->remain_skb = nskb;
 			spin_unlock(&hif_dev->rx_lock);
 		} else {
+<<<<<<< HEAD
+=======
+			if (pool_index == MAX_PKT_NUM_IN_TRANSFER) {
+				dev_err(&hif_dev->udev->dev,
+					"ath9k_htc: over RX MAX_PKT_NUM\n");
+				goto err;
+			}
+>>>>>>> rebase
 			nskb = __dev_alloc_skb(pkt_len + 32, GFP_ATOMIC);
 			if (!nskb) {
 				dev_err(&hif_dev->udev->dev,
@@ -638,9 +672,15 @@ err:
 
 static void ath9k_hif_usb_rx_cb(struct urb *urb)
 {
+<<<<<<< HEAD
 	struct sk_buff *skb = (struct sk_buff *) urb->context;
 	struct hif_device_usb *hif_dev =
 		usb_get_intfdata(usb_ifnum_to_if(urb->dev, 0));
+=======
+	struct rx_buf *rx_buf = (struct rx_buf *)urb->context;
+	struct hif_device_usb *hif_dev = rx_buf->hif_dev;
+	struct sk_buff *skb = rx_buf->skb;
+>>>>>>> rebase
 	int ret;
 
 	if (!skb)
@@ -680,14 +720,25 @@ resubmit:
 	return;
 free:
 	kfree_skb(skb);
+<<<<<<< HEAD
+=======
+	kfree(rx_buf);
+>>>>>>> rebase
 }
 
 static void ath9k_hif_usb_reg_in_cb(struct urb *urb)
 {
+<<<<<<< HEAD
 	struct sk_buff *skb = (struct sk_buff *) urb->context;
 	struct sk_buff *nskb;
 	struct hif_device_usb *hif_dev =
 		usb_get_intfdata(usb_ifnum_to_if(urb->dev, 0));
+=======
+	struct rx_buf *rx_buf = (struct rx_buf *)urb->context;
+	struct hif_device_usb *hif_dev = rx_buf->hif_dev;
+	struct sk_buff *skb = rx_buf->skb;
+	struct sk_buff *nskb;
+>>>>>>> rebase
 	int ret;
 
 	if (!skb)
@@ -727,11 +778,20 @@ static void ath9k_hif_usb_reg_in_cb(struct urb *urb)
 			return;
 		}
 
+<<<<<<< HEAD
+=======
+		rx_buf->skb = nskb;
+
+>>>>>>> rebase
 		usb_fill_int_urb(urb, hif_dev->udev,
 				 usb_rcvintpipe(hif_dev->udev,
 						 USB_REG_IN_PIPE),
 				 nskb->data, MAX_REG_IN_BUF_SIZE,
+<<<<<<< HEAD
 				 ath9k_hif_usb_reg_in_cb, nskb, 1);
+=======
+				 ath9k_hif_usb_reg_in_cb, rx_buf, 1);
+>>>>>>> rebase
 	}
 
 resubmit:
@@ -745,6 +805,10 @@ resubmit:
 	return;
 free:
 	kfree_skb(skb);
+<<<<<<< HEAD
+=======
+	kfree(rx_buf);
+>>>>>>> rebase
 	urb->context = NULL;
 }
 
@@ -753,27 +817,55 @@ static void ath9k_hif_usb_dealloc_tx_urbs(struct hif_device_usb *hif_dev)
 	struct tx_buf *tx_buf = NULL, *tx_buf_tmp = NULL;
 	unsigned long flags;
 
+<<<<<<< HEAD
 	list_for_each_entry_safe(tx_buf, tx_buf_tmp,
 				 &hif_dev->tx.tx_buf, list) {
+=======
+	spin_lock_irqsave(&hif_dev->tx.tx_lock, flags);
+	list_for_each_entry_safe(tx_buf, tx_buf_tmp,
+				 &hif_dev->tx.tx_buf, list) {
+		usb_get_urb(tx_buf->urb);
+		spin_unlock_irqrestore(&hif_dev->tx.tx_lock, flags);
+>>>>>>> rebase
 		usb_kill_urb(tx_buf->urb);
 		list_del(&tx_buf->list);
 		usb_free_urb(tx_buf->urb);
 		kfree(tx_buf->buf);
 		kfree(tx_buf);
+<<<<<<< HEAD
 	}
+=======
+		spin_lock_irqsave(&hif_dev->tx.tx_lock, flags);
+	}
+	spin_unlock_irqrestore(&hif_dev->tx.tx_lock, flags);
+>>>>>>> rebase
 
 	spin_lock_irqsave(&hif_dev->tx.tx_lock, flags);
 	hif_dev->tx.flags |= HIF_USB_TX_FLUSH;
 	spin_unlock_irqrestore(&hif_dev->tx.tx_lock, flags);
 
+<<<<<<< HEAD
 	list_for_each_entry_safe(tx_buf, tx_buf_tmp,
 				 &hif_dev->tx.tx_pending, list) {
+=======
+	spin_lock_irqsave(&hif_dev->tx.tx_lock, flags);
+	list_for_each_entry_safe(tx_buf, tx_buf_tmp,
+				 &hif_dev->tx.tx_pending, list) {
+		usb_get_urb(tx_buf->urb);
+		spin_unlock_irqrestore(&hif_dev->tx.tx_lock, flags);
+>>>>>>> rebase
 		usb_kill_urb(tx_buf->urb);
 		list_del(&tx_buf->list);
 		usb_free_urb(tx_buf->urb);
 		kfree(tx_buf->buf);
 		kfree(tx_buf);
+<<<<<<< HEAD
 	}
+=======
+		spin_lock_irqsave(&hif_dev->tx.tx_lock, flags);
+	}
+	spin_unlock_irqrestore(&hif_dev->tx.tx_lock, flags);
+>>>>>>> rebase
 
 	usb_kill_anchored_urbs(&hif_dev->mgmt_submitted);
 }
@@ -790,7 +882,11 @@ static int ath9k_hif_usb_alloc_tx_urbs(struct hif_device_usb *hif_dev)
 	init_usb_anchor(&hif_dev->mgmt_submitted);
 
 	for (i = 0; i < MAX_TX_URB_NUM; i++) {
+<<<<<<< HEAD
 		tx_buf = kzalloc(sizeof(struct tx_buf), GFP_KERNEL);
+=======
+		tx_buf = kzalloc(sizeof(*tx_buf), GFP_KERNEL);
+>>>>>>> rebase
 		if (!tx_buf)
 			goto err;
 
@@ -827,8 +923,14 @@ static void ath9k_hif_usb_dealloc_rx_urbs(struct hif_device_usb *hif_dev)
 
 static int ath9k_hif_usb_alloc_rx_urbs(struct hif_device_usb *hif_dev)
 {
+<<<<<<< HEAD
 	struct urb *urb = NULL;
 	struct sk_buff *skb = NULL;
+=======
+	struct rx_buf *rx_buf = NULL;
+	struct sk_buff *skb = NULL;
+	struct urb *urb = NULL;
+>>>>>>> rebase
 	int i, ret;
 
 	init_usb_anchor(&hif_dev->rx_submitted);
@@ -836,6 +938,15 @@ static int ath9k_hif_usb_alloc_rx_urbs(struct hif_device_usb *hif_dev)
 
 	for (i = 0; i < MAX_RX_URB_NUM; i++) {
 
+<<<<<<< HEAD
+=======
+		rx_buf = kzalloc(sizeof(*rx_buf), GFP_KERNEL);
+		if (!rx_buf) {
+			ret = -ENOMEM;
+			goto err_rxb;
+		}
+
+>>>>>>> rebase
 		/* Allocate URB */
 		urb = usb_alloc_urb(0, GFP_KERNEL);
 		if (urb == NULL) {
@@ -850,11 +961,21 @@ static int ath9k_hif_usb_alloc_rx_urbs(struct hif_device_usb *hif_dev)
 			goto err_skb;
 		}
 
+<<<<<<< HEAD
+=======
+		rx_buf->hif_dev = hif_dev;
+		rx_buf->skb = skb;
+
+>>>>>>> rebase
 		usb_fill_bulk_urb(urb, hif_dev->udev,
 				  usb_rcvbulkpipe(hif_dev->udev,
 						  USB_WLAN_RX_PIPE),
 				  skb->data, MAX_RX_BUF_SIZE,
+<<<<<<< HEAD
 				  ath9k_hif_usb_rx_cb, skb);
+=======
+				  ath9k_hif_usb_rx_cb, rx_buf);
+>>>>>>> rebase
 
 		/* Anchor URB */
 		usb_anchor_urb(urb, &hif_dev->rx_submitted);
@@ -880,6 +1001,11 @@ err_submit:
 err_skb:
 	usb_free_urb(urb);
 err_urb:
+<<<<<<< HEAD
+=======
+	kfree(rx_buf);
+err_rxb:
+>>>>>>> rebase
 	ath9k_hif_usb_dealloc_rx_urbs(hif_dev);
 	return ret;
 }
@@ -891,14 +1017,29 @@ static void ath9k_hif_usb_dealloc_reg_in_urbs(struct hif_device_usb *hif_dev)
 
 static int ath9k_hif_usb_alloc_reg_in_urbs(struct hif_device_usb *hif_dev)
 {
+<<<<<<< HEAD
 	struct urb *urb = NULL;
 	struct sk_buff *skb = NULL;
+=======
+	struct rx_buf *rx_buf = NULL;
+	struct sk_buff *skb = NULL;
+	struct urb *urb = NULL;
+>>>>>>> rebase
 	int i, ret;
 
 	init_usb_anchor(&hif_dev->reg_in_submitted);
 
 	for (i = 0; i < MAX_REG_IN_URB_NUM; i++) {
 
+<<<<<<< HEAD
+=======
+		rx_buf = kzalloc(sizeof(*rx_buf), GFP_KERNEL);
+		if (!rx_buf) {
+			ret = -ENOMEM;
+			goto err_rxb;
+		}
+
+>>>>>>> rebase
 		/* Allocate URB */
 		urb = usb_alloc_urb(0, GFP_KERNEL);
 		if (urb == NULL) {
@@ -913,11 +1054,21 @@ static int ath9k_hif_usb_alloc_reg_in_urbs(struct hif_device_usb *hif_dev)
 			goto err_skb;
 		}
 
+<<<<<<< HEAD
+=======
+		rx_buf->hif_dev = hif_dev;
+		rx_buf->skb = skb;
+
+>>>>>>> rebase
 		usb_fill_int_urb(urb, hif_dev->udev,
 				  usb_rcvintpipe(hif_dev->udev,
 						  USB_REG_IN_PIPE),
 				  skb->data, MAX_REG_IN_BUF_SIZE,
+<<<<<<< HEAD
 				  ath9k_hif_usb_reg_in_cb, skb, 1);
+=======
+				  ath9k_hif_usb_reg_in_cb, rx_buf, 1);
+>>>>>>> rebase
 
 		/* Anchor URB */
 		usb_anchor_urb(urb, &hif_dev->reg_in_submitted);
@@ -943,6 +1094,11 @@ err_submit:
 err_skb:
 	usb_free_urb(urb);
 err_urb:
+<<<<<<< HEAD
+=======
+	kfree(rx_buf);
+err_rxb:
+>>>>>>> rebase
 	ath9k_hif_usb_dealloc_reg_in_urbs(hif_dev);
 	return ret;
 }
@@ -973,7 +1129,11 @@ err:
 	return -ENOMEM;
 }
 
+<<<<<<< HEAD
 static void ath9k_hif_usb_dealloc_urbs(struct hif_device_usb *hif_dev)
+=======
+void ath9k_hif_usb_dealloc_urbs(struct hif_device_usb *hif_dev)
+>>>>>>> rebase
 {
 	usb_kill_anchored_urbs(&hif_dev->regout_submitted);
 	ath9k_hif_usb_dealloc_reg_in_urbs(hif_dev);
@@ -1341,8 +1501,14 @@ static void ath9k_hif_usb_disconnect(struct usb_interface *interface)
 
 	if (hif_dev->flags & HIF_USB_READY) {
 		ath9k_htc_hw_deinit(hif_dev->htc_handle, unplugged);
+<<<<<<< HEAD
 		ath9k_htc_hw_free(hif_dev->htc_handle);
 		ath9k_hif_usb_dev_deinit(hif_dev);
+=======
+		ath9k_hif_usb_dev_deinit(hif_dev);
+		ath9k_destoy_wmi(hif_dev->htc_handle->drv_priv);
+		ath9k_htc_hw_free(hif_dev->htc_handle);
+>>>>>>> rebase
 	}
 
 	usb_set_intfdata(interface, NULL);

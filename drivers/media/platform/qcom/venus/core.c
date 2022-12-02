@@ -321,8 +321,15 @@ static int venus_probe(struct platform_device *pdev)
 		goto err_dev_unregister;
 
 	ret = pm_runtime_put_sync(dev);
+<<<<<<< HEAD
 	if (ret)
 		goto err_dev_unregister;
+=======
+	if (ret) {
+		pm_runtime_get_noresume(dev);
+		goto err_dev_unregister;
+	}
+>>>>>>> rebase
 
 	return 0;
 
@@ -333,6 +340,10 @@ err_core_deinit:
 err_venus_shutdown:
 	venus_shutdown(dev);
 err_runtime_disable:
+<<<<<<< HEAD
+=======
+	pm_runtime_put_noidle(dev);
+>>>>>>> rebase
 	pm_runtime_set_suspended(dev);
 	pm_runtime_disable(dev);
 	hfi_destroy(core);

@@ -12,8 +12,11 @@
 #ifndef DM_VERITY_FEC_H
 #define DM_VERITY_FEC_H
 
+<<<<<<< HEAD
 #include "dm.h"
 #include "dm-core.h"
+=======
+>>>>>>> rebase
 #include "dm-verity.h"
 #include <linux/rslib.h>
 
@@ -42,6 +45,10 @@ struct dm_verity_fec {
 	struct dm_dev *dev;	/* parity data device */
 	struct dm_bufio_client *data_bufio;	/* for data dev access */
 	struct dm_bufio_client *bufio;		/* for parity data access */
+<<<<<<< HEAD
+=======
+	size_t io_size;		/* IO size for roots */
+>>>>>>> rebase
 	sector_t start;		/* parity data start in blocks */
 	sector_t blocks;	/* number of blocks covered */
 	sector_t rounds;	/* number of interleaving rounds */
@@ -53,8 +60,11 @@ struct dm_verity_fec {
 	mempool_t extra_pool;	/* mempool for extra buffers */
 	mempool_t output_pool;	/* mempool for output */
 	struct kmem_cache *cache;	/* cache for buffers */
+<<<<<<< HEAD
 	atomic_t corrected;		/* corrected errors */
 	struct dm_kobject_holder kobj_holder;	/* for sysfs attributes */
+=======
+>>>>>>> rebase
 };
 
 /* per-bio data */

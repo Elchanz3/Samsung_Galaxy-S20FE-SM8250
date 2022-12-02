@@ -9,7 +9,13 @@ ifneq ($(CONFIG_SND_PROC_FS),)
 snd-y += info.o
 snd-$(CONFIG_SND_OSSEMUL) += info_oss.o
 endif
+<<<<<<< HEAD
 snd-$(CONFIG_ISA_DMA_API) += isadma.o
+=======
+ifneq ($(CONFIG_M68K),y)
+snd-$(CONFIG_ISA_DMA_API) += isadma.o
+endif
+>>>>>>> rebase
 snd-$(CONFIG_SND_OSSEMUL) += sound_oss.o
 snd-$(CONFIG_SND_VMASTER) += vmaster.o
 snd-$(CONFIG_SND_JACK)	  += ctljack.o jack.o

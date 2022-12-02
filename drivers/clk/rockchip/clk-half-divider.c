@@ -166,7 +166,11 @@ struct clk *rockchip_clk_register_halfdiv(const char *name,
 					  unsigned long flags,
 					  spinlock_t *lock)
 {
+<<<<<<< HEAD
 	struct clk *clk;
+=======
+	struct clk *clk = ERR_PTR(-ENOMEM);
+>>>>>>> rebase
 	struct clk_mux *mux = NULL;
 	struct clk_gate *gate = NULL;
 	struct clk_divider *div = NULL;

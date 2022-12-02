@@ -811,7 +811,11 @@ static int hisi_nfc_probe(struct platform_device *pdev)
 	}
 
 	chip->dummy_controller.ops = &hisi_nfc_controller_ops;
+<<<<<<< HEAD
 	ret = nand_scan(mtd, max_chips);
+=======
+	ret = nand_scan(chip, max_chips);
+>>>>>>> rebase
 	if (ret)
 		return ret;
 
@@ -828,9 +832,14 @@ static int hisi_nfc_probe(struct platform_device *pdev)
 static int hisi_nfc_remove(struct platform_device *pdev)
 {
 	struct hinfc_host *host = platform_get_drvdata(pdev);
+<<<<<<< HEAD
 	struct mtd_info *mtd = nand_to_mtd(&host->chip);
 
 	nand_release(mtd);
+=======
+
+	nand_release(&host->chip);
+>>>>>>> rebase
 
 	return 0;
 }

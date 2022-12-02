@@ -470,12 +470,15 @@ static void qeth_cleanup_handled_pending(struct qeth_qdio_out_q *q, int bidx,
 
 		}
 	}
+<<<<<<< HEAD
 	if (forced_cleanup && (atomic_read(&(q->bufs[bidx]->state)) ==
 					QETH_QDIO_BUF_HANDLED_DELAYED)) {
 		/* for recovery situations */
 		qeth_init_qdio_out_buf(q, bidx);
 		QETH_CARD_TEXT(q->card, 2, "clprecov");
 	}
+=======
+>>>>>>> rebase
 }
 
 
@@ -2811,12 +2814,20 @@ static int qeth_init_input_buffer(struct qeth_card *card,
 		buf->rx_skb = netdev_alloc_skb(card->dev,
 					       QETH_RX_PULL_LEN + ETH_HLEN);
 		if (!buf->rx_skb)
+<<<<<<< HEAD
 			return 1;
+=======
+			return -ENOMEM;
+>>>>>>> rebase
 	}
 
 	pool_entry = qeth_find_free_buffer_pool_entry(card);
 	if (!pool_entry)
+<<<<<<< HEAD
 		return 1;
+=======
+		return -ENOBUFS;
+>>>>>>> rebase
 
 	/*
 	 * since the buffer is accessed only from the input_tasklet
@@ -2848,10 +2859,22 @@ int qeth_init_qdio_queues(struct qeth_card *card)
 	/* inbound queue */
 	qdio_reset_buffers(card->qdio.in_q->qdio_bufs, QDIO_MAX_BUFFERS_PER_Q);
 	memset(&card->rx, 0, sizeof(struct qeth_rx));
+<<<<<<< HEAD
 	qeth_initialize_working_pool_list(card);
 	/*give only as many buffers to hardware as we have buffer pool entries*/
 	for (i = 0; i < card->qdio.in_buf_pool.buf_count - 1; ++i)
 		qeth_init_input_buffer(card, &card->qdio.in_q->bufs[i]);
+=======
+
+	qeth_initialize_working_pool_list(card);
+	/*give only as many buffers to hardware as we have buffer pool entries*/
+	for (i = 0; i < card->qdio.in_buf_pool.buf_count - 1; i++) {
+		rc = qeth_init_input_buffer(card, &card->qdio.in_q->bufs[i]);
+		if (rc)
+			return rc;
+	}
+
+>>>>>>> rebase
 	card->qdio.in_q->next_buf_to_init =
 		card->qdio.in_buf_pool.buf_count - 1;
 	rc = do_QDIO(CARD_DDEV(card), QDIO_FLAG_SYNC_INPUT, 0, 0,

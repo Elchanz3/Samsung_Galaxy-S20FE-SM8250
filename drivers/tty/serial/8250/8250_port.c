@@ -132,7 +132,12 @@ static const struct serial8250_config uart_config[] = {
 		.name		= "16C950/954",
 		.fifo_size	= 128,
 		.tx_loadsz	= 128,
+<<<<<<< HEAD
 		.fcr		= UART_FCR_ENABLE_FIFO | UART_FCR_R_TRIG_10,
+=======
+		.fcr		= UART_FCR_ENABLE_FIFO | UART_FCR_R_TRIG_01,
+		.rxtrig_bytes	= {16, 32, 112, 120},
+>>>>>>> rebase
 		/* UART_CAP_EFR breaks billionon CF bluetooth card. */
 		.flags		= UART_CAP_FIFO | UART_CAP_SLEEP,
 	},
@@ -313,7 +318,15 @@ static const struct serial8250_config uart_config[] = {
 /* Uart divisor latch read */
 static int default_serial_dl_read(struct uart_8250_port *up)
 {
+<<<<<<< HEAD
 	return serial_in(up, UART_DLL) | serial_in(up, UART_DLM) << 8;
+=======
+	/* Assign these in pieces to truncate any bits above 7.  */
+	unsigned char dll = serial_in(up, UART_DLL);
+	unsigned char dlm = serial_in(up, UART_DLM);
+
+	return dll | dlm << 8;
+>>>>>>> rebase
 }
 
 /* Uart divisor latch write */
@@ -1301,9 +1314,17 @@ static void autoconfig(struct uart_8250_port *up)
 	serial_out(up, UART_LCR, 0);
 
 	serial_out(up, UART_FCR, UART_FCR_ENABLE_FIFO);
+<<<<<<< HEAD
 	scratch = serial_in(up, UART_IIR) >> 6;
 
 	switch (scratch) {
+=======
+
+	/* Assign this as it is to truncate any bits above 7.  */
+	scratch = serial_in(up, UART_IIR);
+
+	switch (scratch >> 6) {
+>>>>>>> rebase
 	case 0:
 		autoconfig_8250(up);
 		break;
@@ -1515,6 +1536,11 @@ static inline void __stop_tx(struct uart_8250_port *p)
 
 	if (em485) {
 		unsigned char lsr = serial_in(p, UART_LSR);
+<<<<<<< HEAD
+=======
+		p->lsr_saved_flags |= lsr & LSR_SAVE_FLAGS;
+
+>>>>>>> rebase
 		/*
 		 * To provide required timeing and allow FIFO transfer,
 		 * __stop_tx_rs485() must be called only when both FIFO and
@@ -1587,6 +1613,21 @@ static inline void start_tx_rs485(struct uart_port *port)
 	if (!(up->port.rs485.flags & SER_RS485_RX_DURING_TX))
 		serial8250_stop_rx(&up->port);
 
+<<<<<<< HEAD
+=======
+	/*
+	 * While serial8250_em485_handle_stop_tx() is a noop if
+	 * em485->active_timer != &em485->stop_tx_timer, it might happen that
+	 * the timer is still armed and triggers only after the current bunch of
+	 * chars is send and em485->active_timer == &em485->stop_tx_timer again.
+	 * So cancel the timer. There is still a theoretical race condition if
+	 * the timer is already running and only comes around to check for
+	 * em485->active_timer when &em485->stop_tx_timer is armed again.
+	 */
+	if (em485->active_timer == &em485->stop_tx_timer)
+		hrtimer_try_to_cancel(&em485->stop_tx_timer);
+
+>>>>>>> rebase
 	em485->active_timer = NULL;
 
 	mcr = serial8250_in_MCR(up);
@@ -1861,6 +1902,10 @@ int serial8250_handle_irq(struct uart_port *port, unsigned int iir)
 	unsigned char status;
 	unsigned long flags;
 	struct uart_8250_port *up = up_to_u8250p(port);
+<<<<<<< HEAD
+=======
+	bool skip_rx = false;
+>>>>>>> rebase
 
 	if (iir & UART_IIR_NO_INT)
 		return 0;
@@ -1869,7 +1914,24 @@ int serial8250_handle_irq(struct uart_port *port, unsigned int iir)
 
 	status = serial_port_in(port, UART_LSR);
 
+<<<<<<< HEAD
 	if (status & (UART_LSR_DR | UART_LSR_BI)) {
+=======
+	/*
+	 * If port is stopped and there are no error conditions in the
+	 * FIFO, then don't drain the FIFO, as this may lead to TTY buffer
+	 * overflow. Not servicing, RX FIFO would trigger auto HW flow
+	 * control when FIFO occupancy reaches preset threshold, thus
+	 * halting RX. This only works when auto HW flow control is
+	 * available.
+	 */
+	if (!(status & (UART_LSR_FIFOE | UART_LSR_BRK_ERROR_BITS)) &&
+	    (port->status & (UPSTAT_AUTOCTS | UPSTAT_AUTORTS)) &&
+	    !(port->read_status_mask & UART_LSR_DR))
+		skip_rx = true;
+
+	if (status & (UART_LSR_DR | UART_LSR_BI) && !skip_rx) {
+>>>>>>> rebase
 		if (!up->dma || handle_rx_dma(up, iir))
 			status = serial8250_rx_chars(up, status);
 	}
@@ -2259,6 +2321,13 @@ int serial8250_do_startup(struct uart_port *port)
 
 	if (port->irq && !(up->port.flags & UPF_NO_THRE_TEST)) {
 		unsigned char iir1;
+<<<<<<< HEAD
+=======
+
+		if (port->irqflags & IRQF_SHARED)
+			disable_irq_nosync(port->irq);
+
+>>>>>>> rebase
 		/*
 		 * Test for UARTs that do not reassert THRE when the
 		 * transmitter is idle and the interrupt has already
@@ -2268,8 +2337,11 @@ int serial8250_do_startup(struct uart_port *port)
 		 * allow register changes to become visible.
 		 */
 		spin_lock_irqsave(&port->lock, flags);
+<<<<<<< HEAD
 		if (up->port.irqflags & IRQF_SHARED)
 			disable_irq_nosync(port->irq);
+=======
+>>>>>>> rebase
 
 		wait_for_xmitr(up, UART_LSR_THRE);
 		serial_port_out_sync(port, UART_IER, UART_IER_THRI);
@@ -2281,9 +2353,16 @@ int serial8250_do_startup(struct uart_port *port)
 		iir = serial_port_in(port, UART_IIR);
 		serial_port_out(port, UART_IER, 0);
 
+<<<<<<< HEAD
 		if (port->irqflags & IRQF_SHARED)
 			enable_irq(port->irq);
 		spin_unlock_irqrestore(&port->lock, flags);
+=======
+		spin_unlock_irqrestore(&port->lock, flags);
+
+		if (port->irqflags & IRQF_SHARED)
+			enable_irq(port->irq);
+>>>>>>> rebase
 
 		/*
 		 * If the interrupt is not reasserted, or we otherwise
@@ -2628,15 +2707,39 @@ static unsigned int serial8250_get_baud_rate(struct uart_port *port,
 					     struct ktermios *termios,
 					     struct ktermios *old)
 {
+<<<<<<< HEAD
+=======
+	unsigned int tolerance = port->uartclk / 100;
+	unsigned int min;
+	unsigned int max;
+
+	/*
+	 * Handle magic divisors for baud rates above baud_base on SMSC
+	 * Super I/O chips.  Enable custom rates of clk/4 and clk/8, but
+	 * disable divisor values beyond 32767, which are unavailable.
+	 */
+	if (port->flags & UPF_MAGIC_MULTIPLIER) {
+		min = port->uartclk / 16 / UART_DIV_MAX >> 1;
+		max = (port->uartclk + tolerance) / 4;
+	} else {
+		min = port->uartclk / 16 / UART_DIV_MAX;
+		max = (port->uartclk + tolerance) / 16;
+	}
+
+>>>>>>> rebase
 	/*
 	 * Ask the core to calculate the divisor for us.
 	 * Allow 1% tolerance at the upper limit so uart clks marginally
 	 * slower than nominal still match standard baud rates without
 	 * causing transmission errors.
 	 */
+<<<<<<< HEAD
 	return uart_get_baud_rate(port, termios, old,
 				  port->uartclk / 16 / UART_DIV_MAX,
 				  port->uartclk);
+=======
+	return uart_get_baud_rate(port, termios, old, min, max);
+>>>>>>> rebase
 }
 
 void
@@ -2864,8 +2967,15 @@ static int serial8250_request_std_resource(struct uart_8250_port *up)
 	case UPIO_MEM32BE:
 	case UPIO_MEM16:
 	case UPIO_MEM:
+<<<<<<< HEAD
 		if (!port->mapbase)
 			break;
+=======
+		if (!port->mapbase) {
+			ret = -EINVAL;
+			break;
+		}
+>>>>>>> rebase
 
 		if (!request_mem_region(port->mapbase, size, "serial")) {
 			ret = -EBUSY;
@@ -3214,15 +3324,29 @@ static void serial8250_console_restore(struct uart_8250_port *up)
 	unsigned int baud, quot, frac = 0;
 
 	termios.c_cflag = port->cons->cflag;
+<<<<<<< HEAD
 	if (port->state->port.tty && termios.c_cflag == 0)
 		termios.c_cflag = port->state->port.tty->termios.c_cflag;
+=======
+	termios.c_ispeed = port->cons->ispeed;
+	termios.c_ospeed = port->cons->ospeed;
+	if (port->state->port.tty && termios.c_cflag == 0) {
+		termios.c_cflag = port->state->port.tty->termios.c_cflag;
+		termios.c_ispeed = port->state->port.tty->termios.c_ispeed;
+		termios.c_ospeed = port->state->port.tty->termios.c_ospeed;
+	}
+>>>>>>> rebase
 
 	baud = serial8250_get_baud_rate(port, &termios, NULL);
 	quot = serial8250_get_divisor(port, baud, &frac);
 
 	serial8250_set_divisor(port, baud, quot, frac);
 	serial_port_out(port, UART_LCR, up->lcr);
+<<<<<<< HEAD
 	serial8250_out_MCR(up, UART_MCR_DTR | UART_MCR_RTS);
+=======
+	serial8250_out_MCR(up, up->mcr | UART_MCR_DTR | UART_MCR_RTS);
+>>>>>>> rebase
 }
 
 /*

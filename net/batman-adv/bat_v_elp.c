@@ -132,6 +132,7 @@ static u32 batadv_v_elp_get_throughput(struct batadv_hardif_neigh_node *neigh)
 	rtnl_lock();
 	ret = __ethtool_get_link_ksettings(hard_iface->net_dev, &link_settings);
 	rtnl_unlock();
+<<<<<<< HEAD
 
 	/* Virtual interface drivers such as tun / tap interfaces, VLAN, etc
 	 * tend to initialize the interface throughput with some value for the
@@ -146,6 +147,9 @@ static u32 batadv_v_elp_get_throughput(struct batadv_hardif_neigh_node *neigh)
 	 * and placeholders installed by virtual interfaces.
 	 */
 	if (ret == 0 && link_settings.base.autoneg == AUTONEG_ENABLE) {
+=======
+	if (ret == 0) {
+>>>>>>> rebase
 		/* link characteristics might change over time */
 		if (link_settings.base.duplex == DUPLEX_FULL)
 			hard_iface->bat_v.flags |= BATADV_FULL_DUPLEX;

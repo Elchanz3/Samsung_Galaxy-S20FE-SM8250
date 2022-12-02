@@ -1322,17 +1322,27 @@ DECLARE_EVENT_CLASS(svcrdma_sendcomp_event,
 
 TRACE_EVENT(svcrdma_post_send,
 	TP_PROTO(
+<<<<<<< HEAD
 		const struct ib_send_wr *wr,
 		int status
 	),
 
 	TP_ARGS(wr, status),
+=======
+		const struct ib_send_wr *wr
+	),
+
+	TP_ARGS(wr),
+>>>>>>> rebase
 
 	TP_STRUCT__entry(
 		__field(const void *, cqe)
 		__field(unsigned int, num_sge)
 		__field(u32, inv_rkey)
+<<<<<<< HEAD
 		__field(int, status)
+=======
+>>>>>>> rebase
 	),
 
 	TP_fast_assign(
@@ -1340,12 +1350,20 @@ TRACE_EVENT(svcrdma_post_send,
 		__entry->num_sge = wr->num_sge;
 		__entry->inv_rkey = (wr->opcode == IB_WR_SEND_WITH_INV) ?
 					wr->ex.invalidate_rkey : 0;
+<<<<<<< HEAD
 		__entry->status = status;
 	),
 
 	TP_printk("cqe=%p num_sge=%u inv_rkey=0x%08x status=%d",
 		__entry->cqe, __entry->num_sge,
 		__entry->inv_rkey, __entry->status
+=======
+	),
+
+	TP_printk("cqe=%p num_sge=%u inv_rkey=0x%08x",
+		__entry->cqe, __entry->num_sge,
+		__entry->inv_rkey
+>>>>>>> rebase
 	)
 );
 
@@ -1410,26 +1428,43 @@ TRACE_EVENT(svcrdma_wc_receive,
 TRACE_EVENT(svcrdma_post_rw,
 	TP_PROTO(
 		const void *cqe,
+<<<<<<< HEAD
 		int sqecount,
 		int status
 	),
 
 	TP_ARGS(cqe, sqecount, status),
+=======
+		int sqecount
+	),
+
+	TP_ARGS(cqe, sqecount),
+>>>>>>> rebase
 
 	TP_STRUCT__entry(
 		__field(const void *, cqe)
 		__field(int, sqecount)
+<<<<<<< HEAD
 		__field(int, status)
+=======
+>>>>>>> rebase
 	),
 
 	TP_fast_assign(
 		__entry->cqe = cqe;
 		__entry->sqecount = sqecount;
+<<<<<<< HEAD
 		__entry->status = status;
 	),
 
 	TP_printk("cqe=%p sqecount=%d status=%d",
 		__entry->cqe, __entry->sqecount, __entry->status
+=======
+	),
+
+	TP_printk("cqe=%p sqecount=%d",
+		__entry->cqe, __entry->sqecount
+>>>>>>> rebase
 	)
 );
 
@@ -1525,6 +1560,37 @@ DECLARE_EVENT_CLASS(svcrdma_sendqueue_event,
 DEFINE_SQ_EVENT(full);
 DEFINE_SQ_EVENT(retry);
 
+<<<<<<< HEAD
+=======
+TRACE_EVENT(svcrdma_sq_post_err,
+	TP_PROTO(
+		const struct svcxprt_rdma *rdma,
+		int status
+	),
+
+	TP_ARGS(rdma, status),
+
+	TP_STRUCT__entry(
+		__field(int, avail)
+		__field(int, depth)
+		__field(int, status)
+		__string(addr, rdma->sc_xprt.xpt_remotebuf)
+	),
+
+	TP_fast_assign(
+		__entry->avail = atomic_read(&rdma->sc_sq_avail);
+		__entry->depth = rdma->sc_sq_depth;
+		__entry->status = status;
+		__assign_str(addr, rdma->sc_xprt.xpt_remotebuf);
+	),
+
+	TP_printk("addr=%s sc_sq_avail=%d/%d status=%d",
+		__get_str(addr), __entry->avail, __entry->depth,
+		__entry->status
+	)
+);
+
+>>>>>>> rebase
 #endif /* _TRACE_RPCRDMA_H */
 
 #include <trace/define_trace.h>

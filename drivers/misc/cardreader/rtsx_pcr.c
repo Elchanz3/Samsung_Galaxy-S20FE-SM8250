@@ -155,6 +155,12 @@ static void rtsx_comm_pm_full_on(struct rtsx_pcr *pcr)
 
 	rtsx_disable_aspm(pcr);
 
+<<<<<<< HEAD
+=======
+	/* Fixes DMA transfer timout issue after disabling ASPM on RTS5260 */
+	msleep(1);
+
+>>>>>>> rebase
 	if (option->ltr_enabled)
 		rtsx_set_ltr_latency(pcr, option->ltr_active_latency);
 
@@ -1476,7 +1482,11 @@ static int rtsx_pci_probe(struct pci_dev *pcidev,
 	pcr->remap_addr = ioremap_nocache(base, len);
 	if (!pcr->remap_addr) {
 		ret = -ENOMEM;
+<<<<<<< HEAD
 		goto free_handle;
+=======
+		goto free_idr;
+>>>>>>> rebase
 	}
 
 	pcr->rtsx_resv_buf = dma_alloc_coherent(&(pcidev->dev),
@@ -1521,12 +1531,21 @@ static int rtsx_pci_probe(struct pci_dev *pcidev,
 	ret = mfd_add_devices(&pcidev->dev, pcr->id, rtsx_pcr_cells,
 			ARRAY_SIZE(rtsx_pcr_cells), NULL, 0, NULL);
 	if (ret < 0)
+<<<<<<< HEAD
 		goto disable_irq;
+=======
+		goto free_slots;
+>>>>>>> rebase
 
 	schedule_delayed_work(&pcr->idle_work, msecs_to_jiffies(200));
 
 	return 0;
 
+<<<<<<< HEAD
+=======
+free_slots:
+	kfree(pcr->slots);
+>>>>>>> rebase
 disable_irq:
 	free_irq(pcr->irq, (void *)pcr);
 disable_msi:
@@ -1536,6 +1555,13 @@ disable_msi:
 			pcr->rtsx_resv_buf, pcr->rtsx_resv_buf_addr);
 unmap:
 	iounmap(pcr->remap_addr);
+<<<<<<< HEAD
+=======
+free_idr:
+	spin_lock(&rtsx_pci_lock);
+	idr_remove(&rtsx_pci_idr, pcr->id);
+	spin_unlock(&rtsx_pci_lock);
+>>>>>>> rebase
 free_handle:
 	kfree(handle);
 free_pcr:

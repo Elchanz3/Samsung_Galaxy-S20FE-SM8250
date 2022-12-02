@@ -1453,7 +1453,11 @@ ath10k_ce_alloc_src_ring(struct ath10k *ar, unsigned int ce_id,
 		ret = ath10k_ce_alloc_shadow_base(ar, src_ring, nentries);
 		if (ret) {
 			dma_free_coherent(ar->dev,
+<<<<<<< HEAD
 					  (nentries * sizeof(struct ce_desc_64) +
+=======
+					  (nentries * sizeof(struct ce_desc) +
+>>>>>>> rebase
 					   CE_DESC_RING_ALIGN),
 					  src_ring->base_addr_owner_space_unaligned,
 					  base_addr);

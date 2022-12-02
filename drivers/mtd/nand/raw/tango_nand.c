@@ -588,7 +588,11 @@ static int chip_init(struct device *dev, struct device_node *np)
 	mtd_set_ooblayout(mtd, &tango_nand_ooblayout_ops);
 	mtd->dev.parent = dev;
 
+<<<<<<< HEAD
 	err = nand_scan(mtd, 1);
+=======
+	err = nand_scan(chip, 1);
+>>>>>>> rebase
 	if (err)
 		return err;
 
@@ -617,7 +621,11 @@ static int tango_nand_remove(struct platform_device *pdev)
 
 	for (cs = 0; cs < MAX_CS; ++cs) {
 		if (nfc->chips[cs])
+<<<<<<< HEAD
 			nand_release(nand_to_mtd(&nfc->chips[cs]->nand_chip));
+=======
+			nand_release(&nfc->chips[cs]->nand_chip);
+>>>>>>> rebase
 	}
 
 	return 0;

@@ -32,6 +32,7 @@
 #include <linux/spinlock.h>
 #include <dt-bindings/input/gpio-keys.h>
 
+<<<<<<< HEAD
 struct device *sec_key;
 EXPORT_SYMBOL(sec_key);
 
@@ -52,6 +53,10 @@ extern int pkey_pressed_count(int clear);
 #endif
 struct gpio_button_data {
 	struct gpio_keys_button *button;
+=======
+struct gpio_button_data {
+	const struct gpio_keys_button *button;
+>>>>>>> rebase
 	struct input_dev *input;
 	struct gpio_desc *gpiod;
 
@@ -69,8 +74,11 @@ struct gpio_button_data {
 	bool disabled;
 	bool key_pressed;
 	bool suspended;
+<<<<<<< HEAD
 	bool key_state;
 	int key_press_count;
+=======
+>>>>>>> rebase
 };
 
 struct gpio_keys_drvdata {
@@ -379,6 +387,7 @@ static const struct attribute_group gpio_keys_attr_group = {
 	.attrs = gpio_keys_attrs,
 };
 
+<<<<<<< HEAD
 static ssize_t sysfs_key_onoff_show(struct device *dev,
 		struct device_attribute *attr, char *buf)
 {
@@ -583,6 +592,8 @@ static struct attribute *sec_key_attrs[] = {
 static struct attribute_group sec_key_attr_group = {
 	.attrs = sec_key_attrs,
 };
+=======
+>>>>>>> rebase
 static void gpio_keys_gpio_report_event(struct gpio_button_data *bdata)
 {
 	const struct gpio_keys_button *button = bdata->button;
@@ -601,6 +612,7 @@ static void gpio_keys_gpio_report_event(struct gpio_button_data *bdata)
 		if (state)
 			input_event(input, type, button->code, button->value);
 	} else {
+<<<<<<< HEAD
 		bdata->key_state = state;
 		input_event(input, type, *bdata->code, state);
 	}
@@ -609,6 +621,11 @@ static void gpio_keys_gpio_report_event(struct gpio_button_data *bdata)
 	if (state)
 		bdata->key_press_count++;
 	pr_info("%s %s: %d, %d, %d\n", SECLOG, __func__, button->code, button->value, state);
+=======
+		input_event(input, type, *bdata->code, state);
+	}
+	input_sync(input);
+>>>>>>> rebase
 }
 
 static void gpio_keys_gpio_work_func(struct work_struct *work)
@@ -640,6 +657,7 @@ static irqreturn_t gpio_keys_gpio_isr(int irq, void *dev_id)
 			 * handler to run.
 			 */
 			input_report_key(bdata->input, button->code, 1);
+<<<<<<< HEAD
 			pr_info("%s %s: %d (%d)\n", SECLOG, __func__, button->code, 1);
 		}
 	}
@@ -651,6 +669,14 @@ static irqreturn_t gpio_keys_gpio_isr(int irq, void *dev_id)
 	} else {
 		gpio_keys_gpio_work_func(&bdata->work.work);
 	}
+=======
+		}
+	}
+
+	mod_delayed_work(system_wq,
+			 &bdata->work,
+			 msecs_to_jiffies(bdata->software_debounce));
+>>>>>>> rebase
 
 	return IRQ_HANDLED;
 }
@@ -717,7 +743,11 @@ static void gpio_keys_quiesce_key(void *data)
 static int gpio_keys_setup_key(struct platform_device *pdev,
 				struct input_dev *input,
 				struct gpio_keys_drvdata *ddata,
+<<<<<<< HEAD
 				struct gpio_keys_button *button,
+=======
+				const struct gpio_keys_button *button,
+>>>>>>> rebase
 				int idx,
 				struct fwnode_handle *child)
 {
@@ -953,7 +983,10 @@ gpio_keys_get_devtree_pdata(struct device *dev)
 	pdata->nbuttons = nbuttons;
 
 	pdata->rep = device_property_read_bool(dev, "autorepeat");
+<<<<<<< HEAD
 	pdata->wakeup_enable = device_property_read_bool(dev, "gpio-key,wakeup_enable");
+=======
+>>>>>>> rebase
 
 	device_property_read_string(dev, "label", &pdata->name);
 
@@ -980,8 +1013,11 @@ gpio_keys_get_devtree_pdata(struct device *dev)
 			/* legacy name */
 			fwnode_property_read_bool(child, "gpio-key,wakeup");
 
+<<<<<<< HEAD
 			button->wakeup_default = button->wakeup;
 
+=======
+>>>>>>> rebase
 		fwnode_property_read_u32(child, "wakeup-event-action",
 					 &button->wakeup_event_action);
 
@@ -1068,7 +1104,11 @@ static int gpio_keys_probe(struct platform_device *pdev)
 		__set_bit(EV_REP, input->evbit);
 
 	for (i = 0; i < pdata->nbuttons; i++) {
+<<<<<<< HEAD
 		struct gpio_keys_button *button = &pdata->buttons[i];
+=======
+		const struct gpio_keys_button *button = &pdata->buttons[i];
+>>>>>>> rebase
 
 		if (!dev_get_platdata(dev)) {
 			child = device_get_next_child_node(dev, child);
@@ -1107,6 +1147,7 @@ static int gpio_keys_probe(struct platform_device *pdev)
 		return error;
 	}
 
+<<<<<<< HEAD
 	if (pdata->wakeup_enable)
 		wakeup = 1;
 
@@ -1124,6 +1165,8 @@ static int gpio_keys_probe(struct platform_device *pdev)
 			error);
 	}
 	dev_set_drvdata(sec_key, ddata);
+=======
+>>>>>>> rebase
 	device_init_wakeup(dev, wakeup);
 
 	return 0;
@@ -1288,7 +1331,11 @@ static void __exit gpio_keys_exit(void)
 	platform_driver_unregister(&gpio_keys_device_driver);
 }
 
+<<<<<<< HEAD
 module_init(gpio_keys_init);
+=======
+late_initcall(gpio_keys_init);
+>>>>>>> rebase
 module_exit(gpio_keys_exit);
 
 MODULE_LICENSE("GPL");

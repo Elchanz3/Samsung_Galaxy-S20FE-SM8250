@@ -904,6 +904,10 @@ batadv_tt_prepare_tvlv_global_data(struct batadv_orig_node *orig_node,
 	hlist_for_each_entry_rcu(vlan, &orig_node->vlan_list, list) {
 		tt_vlan->vid = htons(vlan->vid);
 		tt_vlan->crc = htonl(vlan->tt.crc);
+<<<<<<< HEAD
+=======
+		tt_vlan->reserved = 0;
+>>>>>>> rebase
 
 		tt_vlan++;
 	}
@@ -987,6 +991,10 @@ batadv_tt_prepare_tvlv_local_data(struct batadv_priv *bat_priv,
 
 		tt_vlan->vid = htons(vlan->vid);
 		tt_vlan->crc = htonl(vlan->tt.crc);
+<<<<<<< HEAD
+=======
+		tt_vlan->reserved = 0;
+>>>>>>> rebase
 
 		tt_vlan++;
 	}
@@ -4411,8 +4419,15 @@ int batadv_tt_init(struct batadv_priv *bat_priv)
 		return ret;
 
 	ret = batadv_tt_global_init(bat_priv);
+<<<<<<< HEAD
 	if (ret < 0)
 		return ret;
+=======
+	if (ret < 0) {
+		batadv_tt_local_table_free(bat_priv);
+		return ret;
+	}
+>>>>>>> rebase
 
 	batadv_tvlv_handler_register(bat_priv, batadv_tt_tvlv_ogm_handler_v1,
 				     batadv_tt_tvlv_unicast_handler_v1,

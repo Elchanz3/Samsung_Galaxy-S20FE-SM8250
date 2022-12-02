@@ -201,6 +201,7 @@ sd_parent_degenerate(struct sched_domain *sd, struct sched_domain *parent)
 	return 1;
 }
 
+<<<<<<< HEAD
 DEFINE_STATIC_KEY_FALSE(sched_energy_present);
 #ifdef CONFIG_ENERGY_MODEL
 unsigned int sysctl_sched_energy_aware = 1;
@@ -406,6 +407,8 @@ free:
 static void free_pd(struct perf_domain *pd) { }
 #endif /* CONFIG_ENERGY_MODEL */
 
+=======
+>>>>>>> rebase
 static void free_rootdomain(struct rcu_head *rcu)
 {
 	struct root_domain *rd = container_of(rcu, struct root_domain, rcu);
@@ -416,7 +419,10 @@ static void free_rootdomain(struct rcu_head *rcu)
 	free_cpumask_var(rd->rto_mask);
 	free_cpumask_var(rd->online);
 	free_cpumask_var(rd->span);
+<<<<<<< HEAD
 	free_pd(rd->pd);
+=======
+>>>>>>> rebase
 	kfree(rd);
 }
 
@@ -493,12 +499,15 @@ static int init_rootdomain(struct root_domain *rd)
 
 	if (cpupri_init(&rd->cpupri) != 0)
 		goto free_cpudl;
+<<<<<<< HEAD
 
 	rd->max_cap_orig_cpu = rd->min_cap_orig_cpu = -1;
 	rd->mid_cap_orig_cpu = -1;
 
 	init_max_cpu_capacity(&rd->max_cpu_capacity);
 
+=======
+>>>>>>> rebase
 	return 0;
 
 free_cpudl:
@@ -609,9 +618,13 @@ DEFINE_PER_CPU(int, sd_llc_size);
 DEFINE_PER_CPU(int, sd_llc_id);
 DEFINE_PER_CPU(struct sched_domain_shared *, sd_llc_shared);
 DEFINE_PER_CPU(struct sched_domain *, sd_numa);
+<<<<<<< HEAD
 DEFINE_PER_CPU(struct sched_domain *, sd_asym_packing);
 DEFINE_PER_CPU(struct sched_domain *, sd_asym_cpucapacity);
 DEFINE_STATIC_KEY_FALSE(sched_asym_cpucapacity);
+=======
+DEFINE_PER_CPU(struct sched_domain *, sd_asym);
+>>>>>>> rebase
 
 static void update_top_cache_domain(int cpu)
 {
@@ -636,6 +649,7 @@ static void update_top_cache_domain(int cpu)
 	rcu_assign_pointer(per_cpu(sd_numa, cpu), sd);
 
 	sd = highest_flag_domain(cpu, SD_ASYM_PACKING);
+<<<<<<< HEAD
 	rcu_assign_pointer(per_cpu(sd_asym_packing, cpu), sd);
 
 	sd = lowest_flag_domain(cpu, SD_ASYM_CPUCAPACITY);
@@ -656,6 +670,9 @@ static void update_top_cache_domain(int cpu)
 		sd = cpu_rq(cpu)->sd;
 
 	rcu_assign_pointer(per_cpu(sd_asym_cpucapacity, cpu), sd);
+=======
+	rcu_assign_pointer(per_cpu(sd_asym, cpu), sd);
+>>>>>>> rebase
 }
 
 /*
@@ -925,7 +942,10 @@ static void init_overlap_sched_group(struct sched_domain *sd,
 	sg_span = sched_group_span(sg);
 	sg->sgc->capacity = SCHED_CAPACITY_SCALE * cpumask_weight(sg_span);
 	sg->sgc->min_capacity = SCHED_CAPACITY_SCALE;
+<<<<<<< HEAD
 	sg->sgc->max_capacity = SCHED_CAPACITY_SCALE;
+=======
+>>>>>>> rebase
 }
 
 static int
@@ -1085,7 +1105,10 @@ static struct sched_group *get_group(int cpu, struct sd_data *sdd)
 
 	sg->sgc->capacity = SCHED_CAPACITY_SCALE * cpumask_weight(sched_group_span(sg));
 	sg->sgc->min_capacity = SCHED_CAPACITY_SCALE;
+<<<<<<< HEAD
 	sg->sgc->max_capacity = SCHED_CAPACITY_SCALE;
+=======
+>>>>>>> rebase
 
 	return sg;
 }
@@ -1143,19 +1166,29 @@ build_sched_groups(struct sched_domain *sd, int cpu)
  * group having more cpu_capacity will pickup more load compared to the
  * group having less cpu_capacity.
  */
+<<<<<<< HEAD
 void init_sched_groups_capacity(int cpu, struct sched_domain *sd)
 {
 	struct sched_group *sg = sd->groups;
 	cpumask_t avail_mask;
+=======
+static void init_sched_groups_capacity(int cpu, struct sched_domain *sd)
+{
+	struct sched_group *sg = sd->groups;
+>>>>>>> rebase
 
 	WARN_ON(!sg);
 
 	do {
 		int cpu, max_cpu = -1;
 
+<<<<<<< HEAD
 		cpumask_andnot(&avail_mask, sched_group_span(sg),
 							cpu_isolated_mask);
 		sg->group_weight = cpumask_weight(&avail_mask);
+=======
+		sg->group_weight = cpumask_weight(sched_group_span(sg));
+>>>>>>> rebase
 
 		if (!(sd->flags & SD_ASYM_PACKING))
 			goto next;
@@ -1299,6 +1332,10 @@ static struct cpumask		***sched_domains_numa_masks;
  *   SD_SHARE_PKG_RESOURCES - describes shared caches
  *   SD_NUMA                - describes NUMA topologies
  *   SD_SHARE_POWERDOMAIN   - describes shared power domain
+<<<<<<< HEAD
+=======
+ *   SD_ASYM_CPUCAPACITY    - describes mixed capacity topologies
+>>>>>>> rebase
  *
  * Odd one out, which beside describing the topology has a quirk also
  * prescribes the desired behaviour that goes along with it:
@@ -1310,12 +1347,20 @@ static struct cpumask		***sched_domains_numa_masks;
 	 SD_SHARE_PKG_RESOURCES |	\
 	 SD_NUMA		|	\
 	 SD_ASYM_PACKING	|	\
+<<<<<<< HEAD
+=======
+	 SD_ASYM_CPUCAPACITY	|	\
+>>>>>>> rebase
 	 SD_SHARE_POWERDOMAIN)
 
 static struct sched_domain *
 sd_init(struct sched_domain_topology_level *tl,
 	const struct cpumask *cpu_map,
+<<<<<<< HEAD
 	struct sched_domain *child, int dflags, int cpu)
+=======
+	struct sched_domain *child, int cpu)
+>>>>>>> rebase
 {
 	struct sd_data *sdd = &tl->data;
 	struct sched_domain *sd = *per_cpu_ptr(sdd->sd, cpu);
@@ -1334,10 +1379,14 @@ sd_init(struct sched_domain_topology_level *tl,
 		sd_flags = (*tl->sd_flags)();
 	if (WARN_ONCE(sd_flags & ~TOPOLOGY_SD_FLAGS,
 			"wrong sd_flags in topology description\n"))
+<<<<<<< HEAD
 		sd_flags &= ~TOPOLOGY_SD_FLAGS;
 
 	/* Apply detected topology flags */
 	sd_flags |= dflags;
+=======
+		sd_flags &= TOPOLOGY_SD_FLAGS;
+>>>>>>> rebase
 
 	*sd = (struct sched_domain){
 		.min_interval		= sd_weight,
@@ -1361,7 +1410,11 @@ sd_init(struct sched_domain_topology_level *tl,
 					| 0*SD_SHARE_CPUCAPACITY
 					| 0*SD_SHARE_PKG_RESOURCES
 					| 0*SD_SERIALIZE
+<<<<<<< HEAD
 					| 1*SD_PREFER_SIBLING
+=======
+					| 0*SD_PREFER_SIBLING
+>>>>>>> rebase
 					| 0*SD_NUMA
 					| sd_flags
 					,
@@ -1387,21 +1440,32 @@ sd_init(struct sched_domain_topology_level *tl,
 	if (sd->flags & SD_ASYM_CPUCAPACITY) {
 		struct sched_domain *t = sd;
 
+<<<<<<< HEAD
 		/*
 		 * Don't attempt to spread across CPUs of different capacities.
 		 */
 		if (sd->child)
 			sd->child->flags &= ~SD_PREFER_SIBLING;
 
+=======
+>>>>>>> rebase
 		for_each_lower_domain(t)
 			t->flags |= SD_BALANCE_WAKE;
 	}
 
 	if (sd->flags & SD_SHARE_CPUCAPACITY) {
+<<<<<<< HEAD
+=======
+		sd->flags |= SD_PREFER_SIBLING;
+>>>>>>> rebase
 		sd->imbalance_pct = 110;
 		sd->smt_gain = 1178; /* ~15% */
 
 	} else if (sd->flags & SD_SHARE_PKG_RESOURCES) {
+<<<<<<< HEAD
+=======
+		sd->flags |= SD_PREFER_SIBLING;
+>>>>>>> rebase
 		sd->imbalance_pct = 117;
 		sd->cache_nice_tries = 1;
 		sd->busy_idx = 2;
@@ -1412,7 +1476,10 @@ sd_init(struct sched_domain_topology_level *tl,
 		sd->busy_idx = 3;
 		sd->idle_idx = 2;
 
+<<<<<<< HEAD
 		sd->flags &= ~SD_PREFER_SIBLING;
+=======
+>>>>>>> rebase
 		sd->flags |= SD_SERIALIZE;
 		if (sched_domains_numa_distance[tl->numa_level] > RECLAIM_DISTANCE) {
 			sd->flags &= ~(SD_BALANCE_EXEC |
@@ -1422,16 +1489,32 @@ sd_init(struct sched_domain_topology_level *tl,
 
 #endif
 	} else {
+<<<<<<< HEAD
+=======
+		sd->flags |= SD_PREFER_SIBLING;
+>>>>>>> rebase
 		sd->cache_nice_tries = 1;
 		sd->busy_idx = 2;
 		sd->idle_idx = 1;
 	}
 
+<<<<<<< HEAD
 	sd->shared = *per_cpu_ptr(sdd->sds, sd_id);
 	atomic_inc(&sd->shared->ref);
 
 	if (sd->flags & SD_SHARE_PKG_RESOURCES)
 		atomic_set(&sd->shared->nr_busy_cpus, sd_weight);
+=======
+	/*
+	 * For all levels sharing cache; connect a sched_domain_shared
+	 * instance.
+	 */
+	if (sd->flags & SD_SHARE_PKG_RESOURCES) {
+		sd->shared = *per_cpu_ptr(sdd->sds, sd_id);
+		atomic_inc(&sd->shared->ref);
+		atomic_set(&sd->shared->nr_busy_cpus, sd_weight);
+	}
+>>>>>>> rebase
 
 	sd->private = sdd;
 
@@ -1561,6 +1644,7 @@ static void init_numa_topology_type(void)
 	}
 }
 
+<<<<<<< HEAD
 void sched_init_numa(void)
 {
 	int next_distance, curr_distance = node_distance(0, 0);
@@ -1575,10 +1659,22 @@ void sched_init_numa(void)
 	/* Includes NUMA identity node at level 0. */
 	sched_domains_numa_distance[level++] = curr_distance;
 	sched_domains_numa_levels = level;
+=======
+
+#define NR_DISTANCE_VALUES (1 << DISTANCE_BITS)
+
+void sched_init_numa(void)
+{
+	struct sched_domain_topology_level *tl;
+	unsigned long *distance_map;
+	int nr_levels = 0;
+	int i, j;
+>>>>>>> rebase
 
 	/*
 	 * O(nr_nodes^2) deduplicating selection sort -- in order to find the
 	 * unique distances in the node_distance() table.
+<<<<<<< HEAD
 	 *
 	 * Assumes node_distance(0,j) includes all distances in
 	 * node_distance(i,j) in order to avoid cubic time.
@@ -1621,6 +1717,47 @@ void sched_init_numa(void)
 
 	/*
 	 * 'level' contains the number of unique distances
+=======
+	 */
+	distance_map = bitmap_alloc(NR_DISTANCE_VALUES, GFP_KERNEL);
+	if (!distance_map)
+		return;
+
+	bitmap_zero(distance_map, NR_DISTANCE_VALUES);
+	for (i = 0; i < nr_node_ids; i++) {
+		for (j = 0; j < nr_node_ids; j++) {
+			int distance = node_distance(i, j);
+
+			if (distance < LOCAL_DISTANCE || distance >= NR_DISTANCE_VALUES) {
+				sched_numa_warn("Invalid distance value range");
+				return;
+			}
+
+			bitmap_set(distance_map, distance, 1);
+		}
+	}
+	/*
+	 * We can now figure out how many unique distance values there are and
+	 * allocate memory accordingly.
+	 */
+	nr_levels = bitmap_weight(distance_map, NR_DISTANCE_VALUES);
+
+	sched_domains_numa_distance = kcalloc(nr_levels, sizeof(int), GFP_KERNEL);
+	if (!sched_domains_numa_distance) {
+		bitmap_free(distance_map);
+		return;
+	}
+
+	for (i = 0, j = 0; i < nr_levels; i++, j++) {
+		j = find_next_bit(distance_map, NR_DISTANCE_VALUES, j);
+		sched_domains_numa_distance[i] = j;
+	}
+
+	bitmap_free(distance_map);
+
+	/*
+	 * 'nr_levels' contains the number of unique distances
+>>>>>>> rebase
 	 *
 	 * The sched_domains_numa_distance[] array includes the actual distance
 	 * numbers.
@@ -1629,6 +1766,7 @@ void sched_init_numa(void)
 	/*
 	 * Here, we should temporarily reset sched_domains_numa_levels to 0.
 	 * If it fails to allocate memory for array sched_domains_numa_masks[][],
+<<<<<<< HEAD
 	 * the array will contain less then 'level' members. This could be
 	 * dangerous when we use it to iterate array sched_domains_numa_masks[][]
 	 * in other functions.
@@ -1638,6 +1776,17 @@ void sched_init_numa(void)
 	sched_domains_numa_levels = 0;
 
 	sched_domains_numa_masks = kzalloc(sizeof(void *) * level, GFP_KERNEL);
+=======
+	 * the array will contain less then 'nr_levels' members. This could be
+	 * dangerous when we use it to iterate array sched_domains_numa_masks[][]
+	 * in other functions.
+	 *
+	 * We reset it to 'nr_levels' at the end of this function.
+	 */
+	sched_domains_numa_levels = 0;
+
+	sched_domains_numa_masks = kzalloc(sizeof(void *) * nr_levels, GFP_KERNEL);
+>>>>>>> rebase
 	if (!sched_domains_numa_masks)
 		return;
 
@@ -1645,7 +1794,11 @@ void sched_init_numa(void)
 	 * Now for each level, construct a mask per node which contains all
 	 * CPUs of nodes that are that many hops away from us.
 	 */
+<<<<<<< HEAD
 	for (i = 0; i < level; i++) {
+=======
+	for (i = 0; i < nr_levels; i++) {
+>>>>>>> rebase
 		sched_domains_numa_masks[i] =
 			kzalloc(nr_node_ids * sizeof(void *), GFP_KERNEL);
 		if (!sched_domains_numa_masks[i])
@@ -1653,12 +1806,23 @@ void sched_init_numa(void)
 
 		for (j = 0; j < nr_node_ids; j++) {
 			struct cpumask *mask = kzalloc(cpumask_size(), GFP_KERNEL);
+<<<<<<< HEAD
+=======
+			int k;
+
+>>>>>>> rebase
 			if (!mask)
 				return;
 
 			sched_domains_numa_masks[i][j] = mask;
 
 			for_each_node(k) {
+<<<<<<< HEAD
+=======
+				if (sched_debug() && (node_distance(j, k) != node_distance(k, j)))
+					sched_numa_warn("Node-distance not symmetric");
+
+>>>>>>> rebase
 				if (node_distance(j, k) > sched_domains_numa_distance[i])
 					continue;
 
@@ -1670,7 +1834,11 @@ void sched_init_numa(void)
 	/* Compute default topology size */
 	for (i = 0; sched_domain_topology[i].mask; i++);
 
+<<<<<<< HEAD
 	tl = kzalloc((i + level + 1) *
+=======
+	tl = kzalloc((i + nr_levels + 1) *
+>>>>>>> rebase
 			sizeof(struct sched_domain_topology_level), GFP_KERNEL);
 	if (!tl)
 		return;
@@ -1693,7 +1861,11 @@ void sched_init_numa(void)
 	/*
 	 * .. and append 'j' levels of NUMA goodness.
 	 */
+<<<<<<< HEAD
 	for (j = 1; j < level; i++, j++) {
+=======
+	for (j = 1; j < nr_levels; i++, j++) {
+>>>>>>> rebase
 		tl[i] = (struct sched_domain_topology_level){
 			.mask = sd_numa_mask,
 			.sd_flags = cpu_numa_flags,
@@ -1705,8 +1877,13 @@ void sched_init_numa(void)
 
 	sched_domain_topology = tl;
 
+<<<<<<< HEAD
 	sched_domains_numa_levels = level;
 	sched_max_numa_distance = sched_domains_numa_distance[level - 1];
+=======
+	sched_domains_numa_levels = nr_levels;
+	sched_max_numa_distance = sched_domains_numa_distance[nr_levels - 1];
+>>>>>>> rebase
 
 	init_numa_topology_type();
 }
@@ -1843,9 +2020,15 @@ static void __sdt_free(const struct cpumask *cpu_map)
 
 static struct sched_domain *build_sched_domain(struct sched_domain_topology_level *tl,
 		const struct cpumask *cpu_map, struct sched_domain_attr *attr,
+<<<<<<< HEAD
 		struct sched_domain *child, int dflags, int cpu)
 {
 	struct sched_domain *sd = sd_init(tl, cpu_map, child, dflags, cpu);
+=======
+		struct sched_domain *child, int cpu)
+{
+	struct sched_domain *sd = sd_init(tl, cpu_map, child, cpu);
+>>>>>>> rebase
 
 	if (child) {
 		sd->level = child->level + 1;
@@ -1872,6 +2055,7 @@ static struct sched_domain *build_sched_domain(struct sched_domain_topology_leve
 }
 
 /*
+<<<<<<< HEAD
  * Find the sched_domain_topology_level where all CPU capacities are visible
  * for all CPUs.
  */
@@ -1931,6 +2115,8 @@ next_level:
 
 
 /*
+=======
+>>>>>>> rebase
  * Build sched domains for a given set of CPUs and attach the sched domains
  * to the individual CPUs
  */
@@ -1940,22 +2126,31 @@ build_sched_domains(const struct cpumask *cpu_map, struct sched_domain_attr *att
 	enum s_alloc alloc_state;
 	struct sched_domain *sd;
 	struct s_data d;
+<<<<<<< HEAD
 	int i, ret = -ENOMEM;
 	struct sched_domain_topology_level *tl_asym;
 	bool has_asym = false;
+=======
+	struct rq *rq = NULL;
+	int i, ret = -ENOMEM;
+>>>>>>> rebase
 
 	alloc_state = __visit_domain_allocation_hell(&d, cpu_map);
 	if (alloc_state != sa_rootdomain)
 		goto error;
 
+<<<<<<< HEAD
 	tl_asym = asym_cpu_capacity_level(cpu_map);
 
+=======
+>>>>>>> rebase
 	/* Set up domains for CPUs specified by the cpu_map: */
 	for_each_cpu(i, cpu_map) {
 		struct sched_domain_topology_level *tl;
 
 		sd = NULL;
 		for_each_sd_topology(tl) {
+<<<<<<< HEAD
 			int dflags = 0;
 
 			if (tl == tl_asym) {
@@ -1965,6 +2160,9 @@ build_sched_domains(const struct cpumask *cpu_map, struct sched_domain_attr *att
 
 			sd = build_sched_domain(tl, cpu_map, attr, sd, dflags, i);
 
+=======
+			sd = build_sched_domain(tl, cpu_map, attr, sd, i);
+>>>>>>> rebase
 			if (tl == sched_domain_topology)
 				*per_cpu_ptr(d.sd, i) = sd;
 			if (tl->flags & SDTL_OVERLAP)
@@ -2002,6 +2200,7 @@ build_sched_domains(const struct cpumask *cpu_map, struct sched_domain_attr *att
 	/* Attach the domains */
 	rcu_read_lock();
 	for_each_cpu(i, cpu_map) {
+<<<<<<< HEAD
 		int max_cpu = READ_ONCE(d.rd->max_cap_orig_cpu);
 		int min_cpu = READ_ONCE(d.rd->min_cap_orig_cpu);
 
@@ -2047,6 +2246,23 @@ build_sched_domains(const struct cpumask *cpu_map, struct sched_domain_attr *att
 
 	if (has_asym)
 		static_branch_enable_cpuslocked(&sched_asym_cpucapacity);
+=======
+		rq = cpu_rq(i);
+		sd = *per_cpu_ptr(d.sd, i);
+
+		/* Use READ_ONCE()/WRITE_ONCE() to avoid load/store tearing: */
+		if (rq->cpu_capacity_orig > READ_ONCE(d.rd->max_cpu_capacity))
+			WRITE_ONCE(d.rd->max_cpu_capacity, rq->cpu_capacity_orig);
+
+		cpu_attach_domain(sd, d.rd, i);
+	}
+	rcu_read_unlock();
+
+	if (rq && sched_debug_enabled) {
+		pr_info("root domain span: %*pbl (max cpu_capacity = %lu)\n",
+			cpumask_pr_args(cpu_map), rq->rd->max_cpu_capacity);
+	}
+>>>>>>> rebase
 
 	ret = 0;
 error:
@@ -2191,7 +2407,10 @@ static int dattrs_equal(struct sched_domain_attr *cur, int idx_cur,
 void partition_sched_domains(int ndoms_new, cpumask_var_t doms_new[],
 			     struct sched_domain_attr *dattr_new)
 {
+<<<<<<< HEAD
 	bool __maybe_unused has_eas = false;
+=======
+>>>>>>> rebase
 	int i, j, n;
 	int new_topology;
 
@@ -2219,8 +2438,13 @@ void partition_sched_domains(int ndoms_new, cpumask_var_t doms_new[],
 	/* Destroy deleted domains: */
 	for (i = 0; i < ndoms_cur; i++) {
 		for (j = 0; j < n && !new_topology; j++) {
+<<<<<<< HEAD
 			if (cpumask_equal(doms_cur[i], doms_new[j]) &&
 			    dattrs_equal(dattr_cur, i, dattr_new, j))
+=======
+			if (cpumask_equal(doms_cur[i], doms_new[j])
+			    && dattrs_equal(dattr_cur, i, dattr_new, j))
+>>>>>>> rebase
 				goto match1;
 		}
 		/* No match - a current sched domain not in new doms_new[] */
@@ -2240,8 +2464,13 @@ match1:
 	/* Build new domains: */
 	for (i = 0; i < ndoms_new; i++) {
 		for (j = 0; j < n && !new_topology; j++) {
+<<<<<<< HEAD
 			if (cpumask_equal(doms_new[i], doms_cur[j]) &&
 			    dattrs_equal(dattr_new, i, dattr_cur, j))
+=======
+			if (cpumask_equal(doms_new[i], doms_cur[j])
+			    && dattrs_equal(dattr_new, i, dattr_cur, j))
+>>>>>>> rebase
 				goto match2;
 		}
 		/* No match - add a new doms_new */
@@ -2250,6 +2479,7 @@ match2:
 		;
 	}
 
+<<<<<<< HEAD
 #ifdef CONFIG_ENERGY_MODEL
 	/* Build perf. domains: */
 	for (i = 0; i < ndoms_new; i++) {
@@ -2268,6 +2498,8 @@ match3:
 	sched_energy_set(has_eas);
 #endif
 
+=======
+>>>>>>> rebase
 	/* Remember the new sched domains: */
 	if (doms_cur != &fallback_doms)
 		free_sched_domains(doms_cur, ndoms_cur);

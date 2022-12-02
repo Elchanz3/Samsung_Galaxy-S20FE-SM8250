@@ -96,6 +96,10 @@ static int qed_sp_vf_start(struct qed_hwfn *p_hwfn, struct qed_vf_info *p_vf)
 		p_ramrod->personality = PERSONALITY_ETH;
 		break;
 	case QED_PCI_ETH_ROCE:
+<<<<<<< HEAD
+=======
+	case QED_PCI_ETH_IWARP:
+>>>>>>> rebase
 		p_ramrod->personality = PERSONALITY_RDMA_AND_ETH;
 		break;
 	default:
@@ -3001,12 +3005,23 @@ static int qed_iov_pre_update_vport(struct qed_hwfn *hwfn,
 	u8 mask = QED_ACCEPT_UCAST_UNMATCHED | QED_ACCEPT_MCAST_UNMATCHED;
 	struct qed_filter_accept_flags *flags = &params->accept_flags;
 	struct qed_public_vf_info *vf_info;
+<<<<<<< HEAD
+=======
+	u16 tlv_mask;
+
+	tlv_mask = BIT(QED_IOV_VP_UPDATE_ACCEPT_PARAM) |
+		   BIT(QED_IOV_VP_UPDATE_ACCEPT_ANY_VLAN);
+>>>>>>> rebase
 
 	/* Untrusted VFs can't even be trusted to know that fact.
 	 * Simply indicate everything is configured fine, and trace
 	 * configuration 'behind their back'.
 	 */
+<<<<<<< HEAD
 	if (!(*tlvs & BIT(QED_IOV_VP_UPDATE_ACCEPT_PARAM)))
+=======
+	if (!(*tlvs & tlv_mask))
+>>>>>>> rebase
 		return 0;
 
 	vf_info = qed_iov_get_public_vf_info(hwfn, vfid, true);
@@ -3023,6 +3038,16 @@ static int qed_iov_pre_update_vport(struct qed_hwfn *hwfn,
 			flags->tx_accept_filter &= ~mask;
 	}
 
+<<<<<<< HEAD
+=======
+	if (params->update_accept_any_vlan_flg) {
+		vf_info->accept_any_vlan = params->accept_any_vlan;
+
+		if (vf_info->forced_vlan && !vf_info->is_trusted_configured)
+			params->accept_any_vlan = false;
+	}
+
+>>>>>>> rebase
 	return 0;
 }
 
@@ -3799,11 +3824,19 @@ bool qed_iov_mark_vf_flr(struct qed_hwfn *p_hwfn, u32 *p_disabled_vfs)
 	return found;
 }
 
+<<<<<<< HEAD
 static void qed_iov_get_link(struct qed_hwfn *p_hwfn,
 			     u16 vfid,
 			     struct qed_mcp_link_params *p_params,
 			     struct qed_mcp_link_state *p_link,
 			     struct qed_mcp_link_capabilities *p_caps)
+=======
+static int qed_iov_get_link(struct qed_hwfn *p_hwfn,
+			    u16 vfid,
+			    struct qed_mcp_link_params *p_params,
+			    struct qed_mcp_link_state *p_link,
+			    struct qed_mcp_link_capabilities *p_caps)
+>>>>>>> rebase
 {
 	struct qed_vf_info *p_vf = qed_iov_get_vf_info(p_hwfn,
 						       vfid,
@@ -3811,7 +3844,11 @@ static void qed_iov_get_link(struct qed_hwfn *p_hwfn,
 	struct qed_bulletin_content *p_bulletin;
 
 	if (!p_vf)
+<<<<<<< HEAD
 		return;
+=======
+		return -EINVAL;
+>>>>>>> rebase
 
 	p_bulletin = p_vf->bulletin.p_virt;
 
@@ -3821,6 +3858,10 @@ static void qed_iov_get_link(struct qed_hwfn *p_hwfn,
 		__qed_vf_get_link_state(p_hwfn, p_link, p_bulletin);
 	if (p_caps)
 		__qed_vf_get_link_caps(p_hwfn, p_caps, p_bulletin);
+<<<<<<< HEAD
+=======
+	return 0;
+>>>>>>> rebase
 }
 
 static int
@@ -4675,6 +4716,10 @@ static int qed_get_vf_config(struct qed_dev *cdev,
 	struct qed_public_vf_info *vf_info;
 	struct qed_mcp_link_state link;
 	u32 tx_rate;
+<<<<<<< HEAD
+=======
+	int ret;
+>>>>>>> rebase
 
 	/* Sanitize request */
 	if (IS_VF(cdev))
@@ -4688,7 +4733,13 @@ static int qed_get_vf_config(struct qed_dev *cdev,
 
 	vf_info = qed_iov_get_public_vf_info(hwfn, vf_id, true);
 
+<<<<<<< HEAD
 	qed_iov_get_link(hwfn, vf_id, NULL, &link, NULL);
+=======
+	ret = qed_iov_get_link(hwfn, vf_id, NULL, &link, NULL);
+	if (ret)
+		return ret;
+>>>>>>> rebase
 
 	/* Fill information about VF */
 	ivi->vf = vf_id;
@@ -4704,6 +4755,10 @@ static int qed_get_vf_config(struct qed_dev *cdev,
 	tx_rate = vf_info->tx_rate;
 	ivi->max_tx_rate = tx_rate ? tx_rate : link.speed;
 	ivi->min_tx_rate = qed_iov_get_vf_min_rate(hwfn, vf_id);
+<<<<<<< HEAD
+=======
+	ivi->trusted = vf_info->is_trusted_request;
+>>>>>>> rebase
 
 	return 0;
 }
@@ -5134,6 +5189,15 @@ static void qed_iov_handle_trust_change(struct qed_hwfn *hwfn)
 
 		params.update_ctl_frame_check = 1;
 		params.mac_chk_en = !vf_info->is_trusted_configured;
+<<<<<<< HEAD
+=======
+		params.update_accept_any_vlan_flg = 0;
+
+		if (vf_info->accept_any_vlan && vf_info->forced_vlan) {
+			params.update_accept_any_vlan_flg = 1;
+			params.accept_any_vlan = vf_info->accept_any_vlan;
+		}
+>>>>>>> rebase
 
 		if (vf_info->rx_accept_mode & mask) {
 			flags->update_rx_mode_config = 1;
@@ -5149,13 +5213,29 @@ static void qed_iov_handle_trust_change(struct qed_hwfn *hwfn)
 		if (!vf_info->is_trusted_configured) {
 			flags->rx_accept_filter &= ~mask;
 			flags->tx_accept_filter &= ~mask;
+<<<<<<< HEAD
+=======
+			params.accept_any_vlan = false;
+>>>>>>> rebase
 		}
 
 		if (flags->update_rx_mode_config ||
 		    flags->update_tx_mode_config ||
+<<<<<<< HEAD
 		    params.update_ctl_frame_check)
 			qed_sp_vport_update(hwfn, &params,
 					    QED_SPQ_MODE_EBLOCK, NULL);
+=======
+		    params.update_ctl_frame_check ||
+		    params.update_accept_any_vlan_flg) {
+			DP_VERBOSE(hwfn, QED_MSG_IOV,
+				   "vport update config for %s VF[abs 0x%x rel 0x%x]\n",
+				   vf_info->is_trusted_configured ? "trusted" : "untrusted",
+				   vf->abs_vf_id, vf->relative_vf_id);
+			qed_sp_vport_update(hwfn, &params,
+					    QED_SPQ_MODE_EBLOCK, NULL);
+		}
+>>>>>>> rebase
 	}
 }
 

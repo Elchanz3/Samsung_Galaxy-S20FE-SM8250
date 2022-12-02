@@ -6,7 +6,10 @@
 #define _TRACE_CPUHP_H
 
 #include <linux/tracepoint.h>
+<<<<<<< HEAD
 #include <linux/sched/clock.h>
+=======
+>>>>>>> rebase
 
 TRACE_EVENT(cpuhp_enter,
 
@@ -90,6 +93,7 @@ TRACE_EVENT(cpuhp_exit,
 		  __entry->cpu, __entry->state, __entry->idx,  __entry->ret)
 );
 
+<<<<<<< HEAD
 TRACE_EVENT(cpuhp_latency,
 
 	TP_PROTO(unsigned int cpu, unsigned int state,
@@ -118,6 +122,8 @@ TRACE_EVENT(cpuhp_latency,
 
 
 
+=======
+>>>>>>> rebase
 #endif
 
 /* This part must be outside protection */

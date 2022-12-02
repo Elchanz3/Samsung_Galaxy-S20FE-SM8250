@@ -2433,6 +2433,7 @@ static int ena_device_init(struct ena_com_dev *ena_dev, struct pci_dev *pdev,
 		goto err_mmio_read_less;
 	}
 
+<<<<<<< HEAD
 	rc = pci_set_dma_mask(pdev, DMA_BIT_MASK(dma_width));
 	if (rc) {
 		dev_err(dev, "pci_set_dma_mask failed 0x%x\n", rc);
@@ -2443,6 +2444,11 @@ static int ena_device_init(struct ena_com_dev *ena_dev, struct pci_dev *pdev,
 	if (rc) {
 		dev_err(dev, "err_pci_set_consistent_dma_mask failed 0x%x\n",
 			rc);
+=======
+	rc = dma_set_mask_and_coherent(dev, DMA_BIT_MASK(dma_width));
+	if (rc) {
+		dev_err(dev, "dma_set_mask_and_coherent failed %d\n", rc);
+>>>>>>> rebase
 		goto err_mmio_read_less;
 	}
 
@@ -2647,6 +2653,7 @@ static void ena_fw_reset_device(struct work_struct *work)
 {
 	struct ena_adapter *adapter =
 		container_of(work, struct ena_adapter, reset_task);
+<<<<<<< HEAD
 	struct pci_dev *pdev = adapter->pdev;
 
 	if (unlikely(!test_bit(ENA_FLAG_TRIGGER_RESET, &adapter->flags))) {
@@ -2657,6 +2664,16 @@ static void ena_fw_reset_device(struct work_struct *work)
 	rtnl_lock();
 	ena_destroy_device(adapter, false);
 	ena_restore_device(adapter);
+=======
+
+	rtnl_lock();
+
+	if (likely(test_bit(ENA_FLAG_TRIGGER_RESET, &adapter->flags))) {
+		ena_destroy_device(adapter, false);
+		ena_restore_device(adapter);
+	}
+
+>>>>>>> rebase
 	rtnl_unlock();
 }
 
@@ -2738,7 +2755,11 @@ static int check_missing_comp_in_tx_queue(struct ena_adapter *adapter,
 	}
 
 	u64_stats_update_begin(&tx_ring->syncp);
+<<<<<<< HEAD
 	tx_ring->tx_stats.missed_tx = missed_tx;
+=======
+	tx_ring->tx_stats.missed_tx += missed_tx;
+>>>>>>> rebase
 	u64_stats_update_end(&tx_ring->syncp);
 
 	return rc;
@@ -3185,6 +3206,15 @@ static int ena_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
 		return rc;
 	}
 
+<<<<<<< HEAD
+=======
+	rc = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(ENA_MAX_PHYS_ADDR_SIZE_BITS));
+	if (rc) {
+		dev_err(&pdev->dev, "dma_set_mask_and_coherent failed %d\n", rc);
+		goto err_disable_device;
+	}
+
+>>>>>>> rebase
 	pci_set_master(pdev);
 
 	ena_dev = vzalloc(sizeof(*ena_dev));
@@ -3392,8 +3422,16 @@ static void ena_remove(struct pci_dev *pdev)
 		netdev->rx_cpu_rmap = NULL;
 	}
 #endif /* CONFIG_RFS_ACCEL */
+<<<<<<< HEAD
 	del_timer_sync(&adapter->timer_service);
 
+=======
+
+	/* Make sure timer and reset routine won't be called after
+	 * freeing device resources.
+	 */
+	del_timer_sync(&adapter->timer_service);
+>>>>>>> rebase
 	cancel_work_sync(&adapter->reset_task);
 
 	unregister_netdev(netdev);
@@ -3543,6 +3581,12 @@ static void ena_keep_alive_wd(void *adapter_data,
 	rx_drops = ((u64)desc->rx_drops_high << 32) | desc->rx_drops_low;
 
 	u64_stats_update_begin(&adapter->syncp);
+<<<<<<< HEAD
+=======
+	/* These stats are accumulated by the device, so the counters indicate
+	 * all drops since last reset.
+	 */
+>>>>>>> rebase
 	adapter->dev_stats.rx_drops = rx_drops;
 	u64_stats_update_end(&adapter->syncp);
 }

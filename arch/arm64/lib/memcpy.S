@@ -68,9 +68,14 @@
 	stp \ptr, \regB, [\regC], \val
 	.endm
 
+<<<<<<< HEAD
 	.weak memcpy
 ENTRY(__memcpy)
 ENTRY(memcpy)
+=======
+ENTRY(__memcpy)
+WEAK(memcpy)
+>>>>>>> rebase
 #include "copy_template.S"
 	ret
 ENDPIPROC(memcpy)

@@ -17,7 +17,10 @@
 #include <linux/security.h>
 #include <linux/evm.h>
 #include <linux/ima.h>
+<<<<<<< HEAD
 #include <linux/task_integrity.h>
+=======
+>>>>>>> rebase
 
 static bool chown_ok(const struct inode *inode, kuid_t uid)
 {
@@ -135,6 +138,11 @@ EXPORT_SYMBOL(setattr_prepare);
  */
 int inode_newsize_ok(const struct inode *inode, loff_t offset)
 {
+<<<<<<< HEAD
+=======
+	if (offset < 0)
+		return -EINVAL;
+>>>>>>> rebase
 	if (inode->i_size < offset) {
 		unsigned long limit;
 
@@ -224,7 +232,11 @@ EXPORT_SYMBOL(setattr_copy);
  * the file open for write, as there can be no conflicting delegation in
  * that case.
  */
+<<<<<<< HEAD
 int notify_change2(struct vfsmount *mnt, struct dentry * dentry, struct iattr * attr, struct inode **delegated_inode)
+=======
+int notify_change(struct dentry * dentry, struct iattr * attr, struct inode **delegated_inode)
+>>>>>>> rebase
 {
 	struct inode *inode = dentry->d_inode;
 	umode_t mode = inode->i_mode;
@@ -248,7 +260,11 @@ int notify_change2(struct vfsmount *mnt, struct dentry * dentry, struct iattr * 
 			return -EPERM;
 
 		if (!inode_owner_or_capable(inode)) {
+<<<<<<< HEAD
 			error = inode_permission2(mnt, inode, MAY_WRITE);
+=======
+			error = inode_permission(inode, MAY_WRITE);
+>>>>>>> rebase
 			if (error)
 				return error;
 		}
@@ -331,26 +347,36 @@ int notify_change2(struct vfsmount *mnt, struct dentry * dentry, struct iattr * 
 	if (error)
 		return error;
 
+<<<<<<< HEAD
 	if (mnt && inode->i_op->setattr2)
 		error = inode->i_op->setattr2(mnt, dentry, attr);
 	else if (inode->i_op->setattr)
+=======
+	if (inode->i_op->setattr)
+>>>>>>> rebase
 		error = inode->i_op->setattr(dentry, attr);
 	else
 		error = simple_setattr(dentry, attr);
 
 	if (!error) {
 		fsnotify_change(dentry, ia_valid);
+<<<<<<< HEAD
 		five_inode_post_setattr(current, dentry);
+=======
+>>>>>>> rebase
 		ima_inode_post_setattr(dentry);
 		evm_inode_post_setattr(dentry, ia_valid);
 	}
 
 	return error;
 }
+<<<<<<< HEAD
 EXPORT_SYMBOL(notify_change2);
 
 int notify_change(struct dentry * dentry, struct iattr * attr, struct inode **delegated_inode)
 {
 	return notify_change2(NULL, dentry, attr, delegated_inode);
 }
+=======
+>>>>>>> rebase
 EXPORT_SYMBOL(notify_change);

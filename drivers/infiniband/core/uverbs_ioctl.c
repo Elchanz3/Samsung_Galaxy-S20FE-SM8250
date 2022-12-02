@@ -126,7 +126,11 @@ __malloc void *_uverbs_alloc(struct uverbs_attr_bundle *bundle, size_t size,
 	res = (void *)pbundle->internal_buffer + pbundle->internal_used;
 	pbundle->internal_used =
 		ALIGN(new_used, sizeof(*pbundle->internal_buffer));
+<<<<<<< HEAD
 	if (want_init_on_alloc(flags))
+=======
+	if (flags & __GFP_ZERO)
+>>>>>>> rebase
 		memset(res, 0, size);
 	return res;
 }

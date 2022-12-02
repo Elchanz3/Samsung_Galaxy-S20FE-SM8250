@@ -65,6 +65,7 @@ struct mmc_ioc_multi_cmd {
  *	commands in array in sequence to card.
  */
 #define MMC_IOC_MULTI_CMD _IOWR(MMC_BLOCK_MAJOR, 1, struct mmc_ioc_multi_cmd)
+<<<<<<< HEAD
 
 /**
  * There are four request types that are applicable for rpmb accesses- two
@@ -120,6 +121,8 @@ struct mmc_ioc_rpmb {
  */
 #define MMC_IOC_RPMB_CMD _IOWR(MMC_BLOCK_MAJOR, 0, struct mmc_ioc_rpmb)
 
+=======
+>>>>>>> rebase
 /*
  * Since this ioctl is only meant to enhance (and not replace) normal access
  * to the mmc bus device, an upper data transfer limit of MMC_IOC_MAX_BYTES

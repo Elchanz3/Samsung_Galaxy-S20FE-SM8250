@@ -1223,7 +1223,11 @@ static int nicvf_register_misc_interrupt(struct nicvf *nic)
 	if (ret < 0) {
 		netdev_err(nic->netdev,
 			   "Req for #%d msix vectors failed\n", nic->num_vec);
+<<<<<<< HEAD
 		return 1;
+=======
+		return ret;
+>>>>>>> rebase
 	}
 
 	sprintf(nic->irq_name[irq], "%s Mbox", "NICVF");
@@ -1242,7 +1246,11 @@ static int nicvf_register_misc_interrupt(struct nicvf *nic)
 	if (!nicvf_check_pf_ready(nic)) {
 		nicvf_disable_intr(nic, NICVF_INTR_MBOX, 0);
 		nicvf_unregister_interrupts(nic);
+<<<<<<< HEAD
 		return 1;
+=======
+		return -EIO;
+>>>>>>> rebase
 	}
 
 	return 0;
@@ -2015,11 +2023,19 @@ static void nicvf_set_rx_mode_task(struct work_struct *work_arg)
 	/* Save message data locally to prevent them from
 	 * being overwritten by next ndo_set_rx_mode call().
 	 */
+<<<<<<< HEAD
 	spin_lock(&nic->rx_mode_wq_lock);
 	mode = vf_work->mode;
 	mc = vf_work->mc;
 	vf_work->mc = NULL;
 	spin_unlock(&nic->rx_mode_wq_lock);
+=======
+	spin_lock_bh(&nic->rx_mode_wq_lock);
+	mode = vf_work->mode;
+	mc = vf_work->mc;
+	vf_work->mc = NULL;
+	spin_unlock_bh(&nic->rx_mode_wq_lock);
+>>>>>>> rebase
 
 	__nicvf_set_rx_mode_task(mode, mc, nic);
 }

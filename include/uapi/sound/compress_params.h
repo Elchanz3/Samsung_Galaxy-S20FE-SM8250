@@ -54,15 +54,19 @@
 
 #include <linux/types.h>
 
+<<<<<<< HEAD
 /* Maximum PCM channels */
 #define MAX_PCM_DECODE_CHANNELS 32
 
+=======
+>>>>>>> rebase
 /* AUDIO CODECS SUPPORTED */
 #define MAX_NUM_CODECS 32
 #define MAX_NUM_CODEC_DESCRIPTORS 32
 #define MAX_NUM_BITRATES 32
 #define MAX_NUM_SAMPLE_RATES 32
 
+<<<<<<< HEAD
 /* compressed TX */
 #define MAX_NUM_FRAMES_PER_BUFFER 1
 #define COMPRESSED_META_DATA_MODE 0x10
@@ -82,6 +86,8 @@
 /* Bit-1 - 0 : Disable perf mode */
 #define COMPRESSED_PERF_MODE_FLAG 0x0002
 
+=======
+>>>>>>> rebase
 /* Codecs are listed linearly to allow for extensibility */
 #define SND_AUDIOCODEC_PCM                   ((__u32) 0x00000001)
 #define SND_AUDIOCODEC_MP3                   ((__u32) 0x00000002)
@@ -97,6 +103,7 @@
 #define SND_AUDIOCODEC_G723_1                ((__u32) 0x0000000C)
 #define SND_AUDIOCODEC_G729                  ((__u32) 0x0000000D)
 #define SND_AUDIOCODEC_BESPOKE               ((__u32) 0x0000000E)
+<<<<<<< HEAD
 #define SND_AUDIOCODEC_DTS_PASS_THROUGH      ((__u32) 0x0000000F)
 #define SND_AUDIOCODEC_DTS_LBR               ((__u32) 0x00000010)
 #define SND_AUDIOCODEC_DTS_TRANSCODE_LOOPBACK ((__u32) 0x00000011)
@@ -116,6 +123,9 @@
 #define SND_AUDIOCODEC_MAT                   ((__u32) 0x00000025)
 #define SND_AUDIOCODEC_THD                   ((__u32) 0x00000026)
 #define SND_AUDIOCODEC_MAX                   SND_AUDIOCODEC_THD
+=======
+#define SND_AUDIOCODEC_MAX                   SND_AUDIOCODEC_BESPOKE
+>>>>>>> rebase
 
 /*
  * Profile and modes are listed with bit masks. This allows for a
@@ -281,6 +291,7 @@
 
 struct snd_enc_wma {
 	__u32 super_block_align; /* WMA Type-specific data */
+<<<<<<< HEAD
 	__u32 bits_per_sample;
 	__u32 channelmask;
 	__u32 encodeopt;
@@ -290,6 +301,10 @@ struct snd_enc_wma {
 };
 
 #define SND_ENC_WMA_EXTENTED_SUPPORT
+=======
+};
+
+>>>>>>> rebase
 
 /**
  * struct snd_enc_vorbis
@@ -364,6 +379,7 @@ struct snd_enc_generic {
 	__s32 reserved[15];	/* Can be used for SND_AUDIOCODEC_BESPOKE */
 } __attribute__((packed, aligned(4)));
 
+<<<<<<< HEAD
 #define SND_DEC_THD_MAX_PARAMS 8
 struct snd_dec_thd {
 	__u32 params_length;
@@ -438,12 +454,15 @@ struct snd_dec_pcm {
 struct snd_dec_amrwb_plus {
 	__u32 bit_stream_fmt;
 };
+=======
+>>>>>>> rebase
 union snd_codec_options {
 	struct snd_enc_wma wma;
 	struct snd_enc_vorbis vorbis;
 	struct snd_enc_real real;
 	struct snd_enc_flac flac;
 	struct snd_enc_generic generic;
+<<<<<<< HEAD
 	struct snd_dec_flac flac_dec;
 	struct snd_dec_vorbis vorbis_dec;
 	struct snd_dec_alac alac;
@@ -454,6 +473,9 @@ union snd_codec_options {
 	struct snd_dec_amrwb_plus amrwbplus;
 	struct snd_dec_dsd dsd_dec;
 };
+=======
+} __attribute__((packed, aligned(4)));
+>>>>>>> rebase
 
 /** struct snd_codec_desc - description of codec capabilities
  * @max_ch: Maximum number of audio channels
@@ -514,7 +536,10 @@ struct snd_codec_desc {
  * @align: Block alignment in bytes of an audio sample.
  *		Only required for PCM or IEC formats.
  * @options: encoder-specific settings
+<<<<<<< HEAD
  * @compr_passthr: compressed bitstream passthrough
+=======
+>>>>>>> rebase
  * @reserved: reserved for future use
  */
 
@@ -531,6 +556,7 @@ struct snd_codec {
 	__u32 format;
 	__u32 align;
 	union snd_codec_options options;
+<<<<<<< HEAD
 	__u32 compr_passthr;
 	__u32 flags;
 	__u32 reserved[1];
@@ -553,4 +579,9 @@ struct snd_codec_metadata {
 	__u32 reserved[4];
 };
 
+=======
+	__u32 reserved[3];
+} __attribute__((packed, aligned(4)));
+
+>>>>>>> rebase
 #endif

@@ -196,6 +196,10 @@ struct dsa_port {
 	unsigned int		index;
 	const char		*name;
 	const struct dsa_port	*cpu_dp;
+<<<<<<< HEAD
+=======
+	const char		*mac;
+>>>>>>> rebase
 	struct device_node	*dn;
 	unsigned int		ageing_time;
 	u8			stp_state;

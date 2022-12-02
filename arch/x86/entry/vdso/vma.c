@@ -329,7 +329,11 @@ int arch_setup_additional_pages(struct linux_binprm *bprm, int uses_interp)
 static __init int vdso_setup(char *s)
 {
 	vdso64_enabled = simple_strtoul(s, NULL, 0);
+<<<<<<< HEAD
 	return 0;
+=======
+	return 1;
+>>>>>>> rebase
 }
 __setup("vdso=", vdso_setup);
 #endif
@@ -343,7 +347,11 @@ static void vgetcpu_cpu_init(void *arg)
 #ifdef CONFIG_NUMA
 	node = cpu_to_node(cpu);
 #endif
+<<<<<<< HEAD
 	if (static_cpu_has(X86_FEATURE_RDTSCP))
+=======
+	if (boot_cpu_has(X86_FEATURE_RDTSCP) || boot_cpu_has(X86_FEATURE_RDPID))
+>>>>>>> rebase
 		write_rdtscp_aux((node << 12) | cpu);
 
 	/*

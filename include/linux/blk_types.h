@@ -18,7 +18,10 @@ struct block_device;
 struct io_context;
 struct cgroup_subsys_state;
 typedef void (bio_end_io_t) (struct bio *);
+<<<<<<< HEAD
 struct bio_crypt_ctx;
+=======
+>>>>>>> rebase
 
 /*
  * Block error status values.  See block/blk-core:blk_errors for the details.
@@ -183,6 +186,7 @@ struct bio {
 	struct blkcg_gq		*bi_blkg;
 	struct bio_issue	bi_issue;
 #endif
+<<<<<<< HEAD
 
 #ifdef CONFIG_BLK_INLINE_ENCRYPTION
 	struct bio_crypt_ctx	*bi_crypt_context;
@@ -191,6 +195,8 @@ struct bio {
 #endif
 #endif
 
+=======
+>>>>>>> rebase
 	union {
 #if defined(CONFIG_BLK_DEV_INTEGRITY)
 		struct bio_integrity_payload *bi_integrity; /* data integrity */
@@ -229,6 +235,7 @@ struct bio {
 #define BIO_BOUNCED	3	/* bio is a bounce bio */
 #define BIO_USER_MAPPED 4	/* contains user pages */
 #define BIO_NULL_MAPPED 5	/* contains invalid user pages */
+<<<<<<< HEAD
 #define BIO_WORKINGSET	6	/* contains userspace workingset pages */
 #define BIO_QUIET	7	/* Make BIO Quiet */
 #define BIO_CHAIN	8	/* chained bio, ->bi_remaining in effect */
@@ -238,6 +245,16 @@ struct bio {
 #define BIO_TRACE_COMPLETION 11	/* bio_endio() should trace the final completion
 				 * of this bio. */
 #define BIO_QUEUE_ENTERED 12	/* can use blk_queue_enter_live() */
+=======
+#define BIO_QUIET	6	/* Make BIO Quiet */
+#define BIO_CHAIN	7	/* chained bio, ->bi_remaining in effect */
+#define BIO_REFFED	8	/* bio has elevated ->bi_cnt */
+#define BIO_THROTTLED	9	/* This bio has already been subjected to
+				 * throttling rules. Don't do it again. */
+#define BIO_TRACE_COMPLETION 10	/* bio_endio() should trace the final completion
+				 * of this bio. */
+#define BIO_QUEUE_ENTERED 11	/* can use blk_queue_enter_live() */
+>>>>>>> rebase
 
 /* See BVEC_POOL_OFFSET below before adding new flags */
 
@@ -332,17 +349,23 @@ enum req_flag_bits {
 	__REQ_BACKGROUND,	/* background IO */
 	__REQ_NOWAIT,           /* Don't wait if request will block */
 
+<<<<<<< HEAD
 	__REQ_SORTED = __REQ_RAHEAD, /* elevator knows about this request */
 	__REQ_URGENT,		/* urgent request */
+=======
+>>>>>>> rebase
 	/* command specific flags for REQ_OP_WRITE_ZEROES: */
 	__REQ_NOUNMAP,		/* do not free blocks when zeroing */
 
 	/* for driver use */
 	__REQ_DRV,
 	__REQ_SWAP,		/* swapping request. */
+<<<<<<< HEAD
 	
 	/* HPB Flag */
 	__REQ_HPB_PREFER,
+=======
+>>>>>>> rebase
 	__REQ_NR_BITS,		/* stops here */
 };
 
@@ -352,7 +375,10 @@ enum req_flag_bits {
 #define REQ_SYNC		(1ULL << __REQ_SYNC)
 #define REQ_META		(1ULL << __REQ_META)
 #define REQ_PRIO		(1ULL << __REQ_PRIO)
+<<<<<<< HEAD
 #define REQ_URGENT		(1ULL << __REQ_URGENT)
+=======
+>>>>>>> rebase
 #define REQ_NOMERGE		(1ULL << __REQ_NOMERGE)
 #define REQ_IDLE		(1ULL << __REQ_IDLE)
 #define REQ_INTEGRITY		(1ULL << __REQ_INTEGRITY)
@@ -367,8 +393,11 @@ enum req_flag_bits {
 #define REQ_DRV			(1ULL << __REQ_DRV)
 #define REQ_SWAP		(1ULL << __REQ_SWAP)
 
+<<<<<<< HEAD
 #define REQ_HPB_PREFER		(1ULL << __REQ_HPB_PREFER)
 
+=======
+>>>>>>> rebase
 #define REQ_FAILFAST_MASK \
 	(REQ_FAILFAST_DEV | REQ_FAILFAST_TRANSPORT | REQ_FAILFAST_DRIVER)
 

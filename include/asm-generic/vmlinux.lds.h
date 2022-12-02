@@ -66,9 +66,14 @@
  * RODATA_MAIN is not used because existing code already defines .rodata.x
  * sections to be brought in with rodata.
  */
+<<<<<<< HEAD
 #if defined(CONFIG_LD_DEAD_CODE_DATA_ELIMINATION) || defined(CONFIG_LTO_CLANG)
 #define TEXT_MAIN .text .text.[0-9a-zA-Z_]*
 #define TEXT_CFI_MAIN .text.[0-9a-zA-Z_]*.cfi
+=======
+#ifdef CONFIG_LD_DEAD_CODE_DATA_ELIMINATION
+#define TEXT_MAIN .text .text.[0-9a-zA-Z_]*
+>>>>>>> rebase
 #define DATA_MAIN .data .data.[0-9a-zA-Z_]* .data..LPBX*
 #define SDATA_MAIN .sdata .sdata.[0-9a-zA-Z_]*
 #define RODATA_MAIN .rodata .rodata.[0-9a-zA-Z_]*
@@ -76,7 +81,10 @@
 #define SBSS_MAIN .sbss .sbss.[0-9a-zA-Z_]*
 #else
 #define TEXT_MAIN .text
+<<<<<<< HEAD
 #define TEXT_CFI_MAIN .text.cfi
+=======
+>>>>>>> rebase
 #define DATA_MAIN .data
 #define SDATA_MAIN .sdata
 #define RODATA_MAIN .rodata
@@ -281,7 +289,12 @@
 
 #define PAGE_ALIGNED_DATA(page_align)					\
 	. = ALIGN(page_align);						\
+<<<<<<< HEAD
 	*(.data..page_aligned)
+=======
+	*(.data..page_aligned)						\
+	. = ALIGN(page_align);
+>>>>>>> rebase
 
 #define READ_MOSTLY_DATA(align)						\
 	. = ALIGN(align);						\
@@ -308,11 +321,16 @@
  */
 #ifndef RO_AFTER_INIT_DATA
 #define RO_AFTER_INIT_DATA						\
+<<<<<<< HEAD
+=======
+	. = ALIGN(8);							\
+>>>>>>> rebase
 	__start_ro_after_init = .;					\
 	*(.data..ro_after_init)						\
 	__end_ro_after_init = .;
 #endif
 
+<<<<<<< HEAD
 #ifdef CONFIG_UH_RKP
 #define PG_IDMAP							\
 	. = ALIGN(PAGE_SIZE);						\
@@ -367,6 +385,8 @@
 #endif
 
 
+=======
+>>>>>>> rebase
 /*
  * Read only Data
  */
@@ -388,8 +408,11 @@
 		*(.rodata1)						\
 	}								\
 									\
+<<<<<<< HEAD
 	/*CONFIG_RKP_UH*/						\
 	RKP_RO_SECTION							\
+=======
+>>>>>>> rebase
 	/* PCI quirks */						\
 	.pci_fixup        : AT(ADDR(.pci_fixup) - LOAD_OFFSET) {	\
 		__start_pci_fixups_early = .;				\
@@ -419,7 +442,11 @@
 	}								\
 									\
 	/* Built-in firmware blobs */					\
+<<<<<<< HEAD
 	.builtin_fw        : AT(ADDR(.builtin_fw) - LOAD_OFFSET) {	\
+=======
+	.builtin_fw : AT(ADDR(.builtin_fw) - LOAD_OFFSET) ALIGN(8) {	\
+>>>>>>> rebase
 		__start_builtin_fw = .;					\
 		KEEP(*(.builtin_fw))					\
 		__end_builtin_fw = .;					\
@@ -539,6 +566,18 @@
 	}
 
 /*
+<<<<<<< HEAD
+=======
+ * Non-instrumentable text section
+ */
+#define NOINSTR_TEXT							\
+		ALIGN_FUNCTION();					\
+		__noinstr_text_start = .;				\
+		*(.noinstr.text)					\
+		__noinstr_text_end = .;
+
+/*
+>>>>>>> rebase
  * .text section. Map to function alignment to avoid address changes
  * during second ld run in second ld pass when generating System.map
  *
@@ -548,11 +587,22 @@
  */
 #define TEXT_TEXT							\
 		ALIGN_FUNCTION();					\
+<<<<<<< HEAD
 		*(.text.hot TEXT_MAIN .text.fixup .text.unlikely)	\
 		*(TEXT_CFI_MAIN) 					\
 		*(.text..refcount)					\
 		*(.text..ftrace)					\
 		*(.ref.text)						\
+=======
+		*(.text.hot .text.hot.*)				\
+		*(TEXT_MAIN .text.fixup)				\
+		*(.text.unlikely .text.unlikely.*)			\
+		*(.text.unknown .text.unknown.*)			\
+		NOINSTR_TEXT						\
+		*(.text..refcount)					\
+		*(.ref.text)						\
+		*(.text.asan.* .text.tsan.*)				\
+>>>>>>> rebase
 	MEM_KEEP(init.text*)						\
 	MEM_KEEP(exit.text*)						\
 
@@ -710,7 +760,13 @@
 	. = ALIGN(bss_align);						\
 	.bss : AT(ADDR(.bss) - LOAD_OFFSET) {				\
 		BSS_FIRST_SECTIONS					\
+<<<<<<< HEAD
 		*(.bss..page_aligned)					\
+=======
+		. = ALIGN(PAGE_SIZE);					\
+		*(.bss..page_aligned)					\
+		. = ALIGN(PAGE_SIZE);					\
+>>>>>>> rebase
 		*(.dynbss)						\
 		*(BSS_MAIN)						\
 		*(COMMON)						\
@@ -754,8 +810,18 @@
 		/* DWARF 4 */						\
 		.debug_types	0 : { *(.debug_types) }			\
 		/* DWARF 5 */						\
+<<<<<<< HEAD
 		.debug_macro	0 : { *(.debug_macro) }			\
 		.debug_addr	0 : { *(.debug_addr) }
+=======
+		.debug_addr	0 : { *(.debug_addr) }			\
+		.debug_line_str	0 : { *(.debug_line_str) }		\
+		.debug_loclists	0 : { *(.debug_loclists) }		\
+		.debug_macro	0 : { *(.debug_macro) }			\
+		.debug_names	0 : { *(.debug_names) }			\
+		.debug_rnglists	0 : { *(.debug_rnglists) }		\
+		.debug_str_offsets	0 : { *(.debug_str_offsets) }
+>>>>>>> rebase
 
 		/* Stabs debugging sections.  */
 #define STABS_DEBUG							\
@@ -834,6 +900,7 @@
 		KEEP(*(.initcall##level##.init))			\
 		KEEP(*(.initcall##level##s.init))			\
 
+<<<<<<< HEAD
 #ifdef CONFIG_DEFERRED_INITCALLS
 #define DEFERRED_INITCALLS(level)					\
 		__deferred_initcall_start = .;		\
@@ -858,6 +925,8 @@
 		__initcall_end = .;					\
 		DEFERRED_INITCALLS(0)
 #else
+=======
+>>>>>>> rebase
 #define INIT_CALLS							\
 		__initcall_start = .;					\
 		KEEP(*(.initcallearly.init))				\
@@ -871,7 +940,10 @@
 		INIT_CALLS_LEVEL(6)					\
 		INIT_CALLS_LEVEL(7)					\
 		__initcall_end = .;
+<<<<<<< HEAD
 #endif
+=======
+>>>>>>> rebase
 
 #define CON_INITCALL							\
 		__con_initcall_start = .;				\
@@ -883,6 +955,7 @@
 		KEEP(*(.security_initcall.init))			\
 		__security_initcall_end = .;
 
+<<<<<<< HEAD
 #ifdef CONFIG_KUNIT
 /* Alignment must be consistent with (test_module *) in include/test/test.h */
 #define KUNIT_TEST_MODULES						\
@@ -894,6 +967,8 @@
 #define KUNIT_TEST_MODULES
 #endif
 
+=======
+>>>>>>> rebase
 #ifdef CONFIG_BLK_DEV_INITRD
 #define INIT_RAM_FS							\
 	. = ALIGN(4);							\
@@ -916,6 +991,10 @@
 #ifdef CONFIG_AMD_MEM_ENCRYPT
 #define PERCPU_DECRYPTED_SECTION					\
 	. = ALIGN(PAGE_SIZE);						\
+<<<<<<< HEAD
+=======
+	*(.data..decrypted)						\
+>>>>>>> rebase
 	*(.data..percpu..decrypted)					\
 	. = ALIGN(PAGE_SIZE);
 #else
@@ -1062,7 +1141,10 @@
 		CON_INITCALL						\
 		SECURITY_INITCALL					\
 		INIT_RAM_FS						\
+<<<<<<< HEAD
 		KUNIT_TEST_MODULES					\
+=======
+>>>>>>> rebase
 	}
 
 #define BSS_SECTION(sbss_align, bss_align, stop_align)			\

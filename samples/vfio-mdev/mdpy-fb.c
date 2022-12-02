@@ -117,6 +117,7 @@ static int mdpy_fb_probe(struct pci_dev *pdev,
 	if (format != DRM_FORMAT_XRGB8888) {
 		pci_err(pdev, "format mismatch (0x%x != 0x%x)\n",
 			format, DRM_FORMAT_XRGB8888);
+<<<<<<< HEAD
 		return -EINVAL;
 	}
 	if (width < 100	 || width > 10000) {
@@ -126,13 +127,34 @@ static int mdpy_fb_probe(struct pci_dev *pdev,
 	if (height < 100 || height > 10000) {
 		pci_err(pdev, "height (%d) out of range\n", height);
 		return -EINVAL;
+=======
+		ret = -EINVAL;
+		goto err_release_regions;
+	}
+	if (width < 100	 || width > 10000) {
+		pci_err(pdev, "width (%d) out of range\n", width);
+		ret = -EINVAL;
+		goto err_release_regions;
+	}
+	if (height < 100 || height > 10000) {
+		pci_err(pdev, "height (%d) out of range\n", height);
+		ret = -EINVAL;
+		goto err_release_regions;
+>>>>>>> rebase
 	}
 	pci_info(pdev, "mdpy found: %dx%d framebuffer\n",
 		 width, height);
 
 	info = framebuffer_alloc(sizeof(struct mdpy_fb_par), &pdev->dev);
+<<<<<<< HEAD
 	if (!info)
 		goto err_release_regions;
+=======
+	if (!info) {
+		ret = -ENOMEM;
+		goto err_release_regions;
+	}
+>>>>>>> rebase
 	pci_set_drvdata(pdev, info);
 	par = info->par;
 

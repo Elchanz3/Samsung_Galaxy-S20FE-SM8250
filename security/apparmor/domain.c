@@ -464,7 +464,11 @@ restart:
 				 * xattrs, or a longer match
 				 */
 				candidate = profile;
+<<<<<<< HEAD
 				candidate_len = profile->xmatch_len;
+=======
+				candidate_len = max(count, profile->xmatch_len);
+>>>>>>> rebase
 				candidate_xattrs = ret;
 				conflict = false;
 			}
@@ -939,7 +943,12 @@ int apparmor_bprm_set_creds(struct linux_binprm *bprm)
 	 * aways results in a further reduction of permissions.
 	 */
 	if ((bprm->unsafe & LSM_UNSAFE_NO_NEW_PRIVS) &&
+<<<<<<< HEAD
 	    !unconfined(label) && !aa_label_is_subset(new, ctx->nnp)) {
+=======
+	    !unconfined(label) &&
+	    !aa_label_is_unconfined_subset(new, ctx->nnp)) {
+>>>>>>> rebase
 		error = -EPERM;
 		info = "no new privs";
 		goto audit;
@@ -1217,7 +1226,11 @@ int aa_change_hat(const char *hats[], int count, u64 token, int flags)
 		 * reduce restrictions.
 		 */
 		if (task_no_new_privs(current) && !unconfined(label) &&
+<<<<<<< HEAD
 		    !aa_label_is_subset(new, ctx->nnp)) {
+=======
+		    !aa_label_is_unconfined_subset(new, ctx->nnp)) {
+>>>>>>> rebase
 			/* not an apparmor denial per se, so don't log it */
 			AA_DEBUG("no_new_privs - change_hat denied");
 			error = -EPERM;
@@ -1238,7 +1251,11 @@ int aa_change_hat(const char *hats[], int count, u64 token, int flags)
 		 * reduce restrictions.
 		 */
 		if (task_no_new_privs(current) && !unconfined(label) &&
+<<<<<<< HEAD
 		    !aa_label_is_subset(previous, ctx->nnp)) {
+=======
+		    !aa_label_is_unconfined_subset(previous, ctx->nnp)) {
+>>>>>>> rebase
 			/* not an apparmor denial per se, so don't log it */
 			AA_DEBUG("no_new_privs - change_hat denied");
 			error = -EPERM;
@@ -1338,6 +1355,10 @@ int aa_change_profile(const char *fqname, int flags)
 		ctx->nnp = aa_get_label(label);
 
 	if (!fqname || !*fqname) {
+<<<<<<< HEAD
+=======
+		aa_put_label(label);
+>>>>>>> rebase
 		AA_DEBUG("no profile name");
 		return -EINVAL;
 	}
@@ -1356,8 +1377,11 @@ int aa_change_profile(const char *fqname, int flags)
 			op = OP_CHANGE_PROFILE;
 	}
 
+<<<<<<< HEAD
 	label = aa_get_current_label();
 
+=======
+>>>>>>> rebase
 	if (*fqname == '&') {
 		stack = true;
 		/* don't have label_parse() do stacking */
@@ -1434,7 +1458,11 @@ check:
 		 * reduce restrictions.
 		 */
 		if (task_no_new_privs(current) && !unconfined(label) &&
+<<<<<<< HEAD
 		    !aa_label_is_subset(new, ctx->nnp)) {
+=======
+		    !aa_label_is_unconfined_subset(new, ctx->nnp)) {
+>>>>>>> rebase
 			/* not an apparmor denial per se, so don't log it */
 			AA_DEBUG("no_new_privs - change_hat denied");
 			error = -EPERM;

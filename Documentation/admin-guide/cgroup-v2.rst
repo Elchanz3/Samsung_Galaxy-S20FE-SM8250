@@ -694,12 +694,15 @@ Conventions
   informational files on the root cgroup which end up showing global
   information available elsewhere shouldn't exist.
 
+<<<<<<< HEAD
 - The default time unit is microseconds.  If a different unit is ever
   used, an explicit unit suffix must be present.
 
 - A parts-per quantity should use a percentage decimal with at least
   two digit fractional part - e.g. 13.40.
 
+=======
+>>>>>>> rebase
 - If a controller implements weight based resource distribution, its
   interface file should be named "weight" and have the range [1,
   10000] with 100 as the default.  The values are chosen to allow
@@ -913,6 +916,7 @@ controller implements weight and absolute bandwidth limit models for
 normal scheduling policy and absolute bandwidth allocation model for
 realtime scheduling policy.
 
+<<<<<<< HEAD
 In all the above models, cycles distribution is defined only on a temporal
 base and it does not account for the frequency at which tasks are executed.
 The (optional) utilization clamping support allows to hint the schedutil
@@ -920,6 +924,8 @@ cpufreq governor about the minimum desired frequency which should always be
 provided by a CPU, as well as the maximum desired frequency, which should not
 be exceeded by a CPU.
 
+=======
+>>>>>>> rebase
 WARNING: cgroup2 doesn't yet support control of realtime processes and
 the cpu controller can only be enabled when all RT processes are in
 the root cgroup.  Be aware that system management software may already
@@ -979,6 +985,7 @@ All time durations are in microseconds.
 	$PERIOD duration.  "max" for $MAX indicates no limit.  If only
 	one number is written, $MAX is updated.
 
+<<<<<<< HEAD
   cpu.pressure
 	A read-only nested-key file which exists on non-root cgroups.
 
@@ -1012,6 +1019,8 @@ All time durations are in microseconds.
         value is used to clamp the task specific maximum utilization clamp.
 
 
+=======
+>>>>>>> rebase
 
 Memory
 ------
@@ -1317,12 +1326,15 @@ PAGE_SIZE multiple when read back.
 	higher than the limit for an extended period of time.  This
 	reduces the impact on the workload and memory management.
 
+<<<<<<< HEAD
   memory.pressure
 	A read-only nested-key file which exists on non-root cgroups.
 
 	Shows pressure stall information for memory. See
 	Documentation/accounting/psi.txt for details.
 
+=======
+>>>>>>> rebase
 
 Usage Guidelines
 ~~~~~~~~~~~~~~~~
@@ -1460,12 +1472,15 @@ IO Interface Files
 
 	  8:16 rbps=2097152 wbps=max riops=max wiops=max
 
+<<<<<<< HEAD
   io.pressure
 	A read-only nested-key file which exists on non-root cgroups.
 
 	Shows pressure stall information for IO. See
 	Documentation/accounting/psi.txt for details.
 
+=======
+>>>>>>> rebase
 
 Writeback
 ~~~~~~~~~

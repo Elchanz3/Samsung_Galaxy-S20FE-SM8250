@@ -45,6 +45,7 @@ extern Elf64_Dyn _DYNAMIC [];
 
 #endif
 
+<<<<<<< HEAD
 /* Generic helpers for ELF use */
 /* Return first section header */
 static inline struct elf_shdr *elf_sheader(struct elfhdr *hdr)
@@ -78,6 +79,8 @@ static inline char *elf_str_table(struct elfhdr *hdr)
 	return (char *)hdr + elf_section(hdr, hdr->e_shstrndx)->sh_offset;
 }
 
+=======
+>>>>>>> rebase
 /* Optional callbacks to write extra ELF notes. */
 struct file;
 struct coredump_params;

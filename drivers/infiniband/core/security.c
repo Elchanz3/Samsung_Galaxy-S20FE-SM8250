@@ -346,6 +346,7 @@ static struct ib_ports_pkeys *get_new_pps(const struct ib_qp *qp,
 	else if (qp_pps)
 		new_pps->main.pkey_index = qp_pps->main.pkey_index;
 
+<<<<<<< HEAD
 	if ((qp_attr_mask & IB_QP_PKEY_INDEX) && (qp_attr_mask & IB_QP_PORT))
 		new_pps->main.state = IB_PORT_PKEY_VALID;
 
@@ -356,6 +357,13 @@ static struct ib_ports_pkeys *get_new_pps(const struct ib_qp *qp,
 			new_pps->main.state = IB_PORT_PKEY_VALID;
 	}
 
+=======
+	if (((qp_attr_mask & IB_QP_PKEY_INDEX) &&
+	     (qp_attr_mask & IB_QP_PORT)) ||
+	    (qp_pps && qp_pps->main.state != IB_PORT_PKEY_NOT_VALID))
+		new_pps->main.state = IB_PORT_PKEY_VALID;
+
+>>>>>>> rebase
 	if (qp_attr_mask & IB_QP_ALT_PATH) {
 		new_pps->alt.port_num = qp_attr->alt_port_num;
 		new_pps->alt.pkey_index = qp_attr->alt_pkey_index;

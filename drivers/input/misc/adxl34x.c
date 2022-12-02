@@ -696,7 +696,11 @@ struct adxl34x *adxl34x_probe(struct device *dev, int irq,
 	struct input_dev *input_dev;
 	const struct adxl34x_platform_data *pdata;
 	int err, range, i;
+<<<<<<< HEAD
 	unsigned char revid;
+=======
+	int revid;
+>>>>>>> rebase
 
 	if (!irq) {
 		dev_err(dev, "no IRQ?\n");

@@ -2833,6 +2833,15 @@ static int _dasd_requeue_request(struct dasd_ccw_req *cqr)
 
 	if (!block)
 		return -EINVAL;
+<<<<<<< HEAD
+=======
+	/*
+	 * If the request is an ERP request there is nothing to requeue.
+	 * This will be done with the remaining original request.
+	 */
+	if (cqr->refers)
+		return 0;
+>>>>>>> rebase
 	spin_lock_irq(&cqr->dq->lock);
 	req = (struct request *) cqr->callback_data;
 	blk_mq_requeue_request(req, false);
@@ -2934,7 +2943,12 @@ static blk_status_t do_dasd_request(struct blk_mq_hw_ctx *hctx,
 
 	basedev = block->base;
 	spin_lock_irq(&dq->lock);
+<<<<<<< HEAD
 	if (basedev->state < DASD_STATE_READY) {
+=======
+	if (basedev->state < DASD_STATE_READY ||
+	    test_bit(DASD_FLAG_OFFLINE, &basedev->flags)) {
+>>>>>>> rebase
 		DBF_DEV_EVENT(DBF_ERR, basedev,
 			      "device not ready for request %p", req);
 		rc = BLK_STS_IOERR;
@@ -3420,8 +3434,11 @@ void dasd_generic_remove(struct ccw_device *cdev)
 	struct dasd_device *device;
 	struct dasd_block *block;
 
+<<<<<<< HEAD
 	cdev->handler = NULL;
 
+=======
+>>>>>>> rebase
 	device = dasd_device_from_cdev(cdev);
 	if (IS_ERR(device)) {
 		dasd_remove_sysfs_files(cdev);
@@ -3440,6 +3457,10 @@ void dasd_generic_remove(struct ccw_device *cdev)
 	 * no quite down yet.
 	 */
 	dasd_set_target_state(device, DASD_STATE_NEW);
+<<<<<<< HEAD
+=======
+	cdev->handler = NULL;
+>>>>>>> rebase
 	/* dasd_delete_device destroys the device reference. */
 	block = device->block;
 	dasd_delete_device(device);

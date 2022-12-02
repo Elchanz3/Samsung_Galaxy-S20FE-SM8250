@@ -1820,6 +1820,10 @@ static int neo_scan_monitor(struct fb_info *info)
 #else
 		printk(KERN_ERR
 		       "neofb: Only 640x480, 800x600/480 and 1024x768 panels are currently supported\n");
+<<<<<<< HEAD
+=======
+		kfree(info->monspecs.modedb);
+>>>>>>> rebase
 		return -1;
 #endif
 	default:

@@ -204,11 +204,14 @@ static ssize_t brightness_store(struct device *dev,
 	if (rc)
 		return rc;
 
+<<<<<<< HEAD
 	bd->usr_brightness_req = brightness;
 	brightness = (brightness <= bd->thermal_brightness_limit) ?
 				bd->usr_brightness_req :
 				bd->thermal_brightness_limit;
 
+=======
+>>>>>>> rebase
 	rc = backlight_device_set_brightness(bd, brightness);
 
 	return rc ? rc : count;
@@ -320,6 +323,7 @@ void backlight_force_update(struct backlight_device *bd,
 }
 EXPORT_SYMBOL(backlight_force_update);
 
+<<<<<<< HEAD
 static int bd_cdev_get_max_brightness(struct thermal_cooling_device *cdev,
 					unsigned long *state)
 {
@@ -380,6 +384,8 @@ static void backlight_cdev_register(struct device *parent,
 	}
 }
 
+=======
+>>>>>>> rebase
 /**
  * backlight_device_register - create and register a new object of
  *   backlight_device class.
@@ -423,8 +429,11 @@ struct backlight_device *backlight_device_register(const char *name,
 			WARN(1, "%s: invalid backlight type", name);
 			new_bd->props.type = BACKLIGHT_RAW;
 		}
+<<<<<<< HEAD
 		new_bd->thermal_brightness_limit = props->max_brightness;
 		new_bd->usr_brightness_req = props->brightness;
+=======
+>>>>>>> rebase
 	} else {
 		new_bd->props.type = BACKLIGHT_RAW;
 	}
@@ -441,7 +450,10 @@ struct backlight_device *backlight_device_register(const char *name,
 		return ERR_PTR(rc);
 	}
 
+<<<<<<< HEAD
 	backlight_cdev_register(parent, new_bd);
+=======
+>>>>>>> rebase
 	new_bd->ops = ops;
 
 #ifdef CONFIG_PMAC_BACKLIGHT
@@ -678,12 +690,15 @@ struct backlight_device *of_find_backlight(struct device *dev)
 			of_node_put(np);
 			if (!bd)
 				return ERR_PTR(-EPROBE_DEFER);
+<<<<<<< HEAD
 			/*
 			 * Note: gpio_backlight uses brightness as
 			 * power state during probe
 			 */
 			if (!bd->props.brightness)
 				bd->props.brightness = bd->props.max_brightness;
+=======
+>>>>>>> rebase
 		}
 	}
 

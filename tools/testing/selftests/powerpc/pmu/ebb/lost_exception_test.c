@@ -75,7 +75,10 @@ static int test_body(void)
 	ebb_freeze_pmcs();
 	ebb_global_disable();
 
+<<<<<<< HEAD
 	count_pmc(4, sample_period);
+=======
+>>>>>>> rebase
 	mtspr(SPRN_PMC4, 0xdead);
 
 	dump_summary_ebb_state();

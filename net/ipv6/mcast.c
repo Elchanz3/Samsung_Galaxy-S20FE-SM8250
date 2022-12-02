@@ -1606,10 +1606,14 @@ static struct sk_buff *mld_newpack(struct inet6_dev *idev, unsigned int mtu)
 		     IPV6_TLV_PADN, 0 };
 
 	/* we assume size > sizeof(ra) here */
+<<<<<<< HEAD
 	/* limit our allocations to order-0 page */
 	size = min_t(int, size, SKB_MAX_ORDER(0, 0));
 	skb = sock_alloc_send_skb(sk, size, 1, &err);
 
+=======
+	skb = sock_alloc_send_skb(sk, size, 1, &err);
+>>>>>>> rebase
 	if (!skb)
 		return NULL;
 
@@ -2620,6 +2624,10 @@ void ipv6_mc_destroy_dev(struct inet6_dev *idev)
 		idev->mc_list = i->next;
 
 		write_unlock_bh(&idev->lock);
+<<<<<<< HEAD
+=======
+		ip6_mc_clear_src(i);
+>>>>>>> rebase
 		ma_put(i);
 		write_lock_bh(&idev->lock);
 	}

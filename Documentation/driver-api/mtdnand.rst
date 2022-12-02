@@ -246,7 +246,11 @@ necessary information about the device.
         this->eccmode = NAND_ECC_SOFT;
 
         /* Scan to find existence of the device */
+<<<<<<< HEAD
         if (nand_scan (board_mtd, 1)) {
+=======
+        if (nand_scan (this, 1)) {
+>>>>>>> rebase
             err = -ENXIO;
             goto out_ior;
         }
@@ -277,7 +281,11 @@ unregisters the partitions in the MTD layer.
     static void __exit board_cleanup (void)
     {
         /* Release resources, unregister device */
+<<<<<<< HEAD
         nand_release (board_mtd);
+=======
+        nand_release (mtd_to_nand(board_mtd));
+>>>>>>> rebase
 
         /* unmap physical address */
         iounmap(baseaddr);

@@ -778,7 +778,11 @@ static int mpc5121_nfc_probe(struct platform_device *op)
 	}
 
 	/* Detect NAND chips */
+<<<<<<< HEAD
 	retval = nand_scan(mtd, be32_to_cpup(chips_no));
+=======
+	retval = nand_scan(chip, be32_to_cpup(chips_no));
+>>>>>>> rebase
 	if (retval) {
 		dev_err(dev, "NAND Flash not found !\n");
 		goto error;
@@ -828,7 +832,11 @@ static int mpc5121_nfc_remove(struct platform_device *op)
 	struct device *dev = &op->dev;
 	struct mtd_info *mtd = dev_get_drvdata(dev);
 
+<<<<<<< HEAD
 	nand_release(mtd);
+=======
+	nand_release(mtd_to_nand(mtd));
+>>>>>>> rebase
 	mpc5121_nfc_free(dev, mtd);
 
 	return 0;

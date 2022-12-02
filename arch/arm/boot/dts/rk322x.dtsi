@@ -539,7 +539,11 @@
 				  "pp1",
 				  "ppmmu1";
 		clocks = <&cru ACLK_GPU>, <&cru ACLK_GPU>;
+<<<<<<< HEAD
 		clock-names = "core", "bus";
+=======
+		clock-names = "bus", "core";
+>>>>>>> rebase
 		resets = <&cru SRST_GPU_A>;
 		status = "disabled";
 	};
@@ -548,10 +552,16 @@
 		compatible = "rockchip,iommu";
 		reg = <0x20020800 0x100>;
 		interrupts = <GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>;
+<<<<<<< HEAD
 		interrupt-names = "vpu_mmu";
 		clocks = <&cru ACLK_VPU>, <&cru HCLK_VPU>;
 		clock-names = "aclk", "iface";
 		iommu-cells = <0>;
+=======
+		clocks = <&cru ACLK_VPU>, <&cru HCLK_VPU>;
+		clock-names = "aclk", "iface";
+		#iommu-cells = <0>;
+>>>>>>> rebase
 		status = "disabled";
 	};
 
@@ -559,10 +569,16 @@
 		compatible = "rockchip,iommu";
 		reg = <0x20030480 0x40>, <0x200304c0 0x40>;
 		interrupts = <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>;
+<<<<<<< HEAD
 		interrupt-names = "vdec_mmu";
 		clocks = <&cru ACLK_RKVDEC>, <&cru HCLK_RKVDEC>;
 		clock-names = "aclk", "iface";
 		iommu-cells = <0>;
+=======
+		clocks = <&cru ACLK_RKVDEC>, <&cru HCLK_RKVDEC>;
+		clock-names = "aclk", "iface";
+		#iommu-cells = <0>;
+>>>>>>> rebase
 		status = "disabled";
 	};
 
@@ -570,7 +586,10 @@
 		compatible = "rockchip,iommu";
 		reg = <0x20053f00 0x100>;
 		interrupts = <GIC_SPI 32 IRQ_TYPE_LEVEL_HIGH>;
+<<<<<<< HEAD
 		interrupt-names = "vop_mmu";
+=======
+>>>>>>> rebase
 		clocks = <&cru ACLK_VOP>, <&cru HCLK_VOP>;
 		clock-names = "aclk", "iface";
 		iommu-cells = <0>;
@@ -581,10 +600,16 @@
 		compatible = "rockchip,iommu";
 		reg = <0x20070800 0x100>;
 		interrupts = <GIC_SPI 31 IRQ_TYPE_LEVEL_HIGH>;
+<<<<<<< HEAD
 		interrupt-names = "iep_mmu";
 		clocks = <&cru ACLK_IEP>, <&cru HCLK_IEP>;
 		clock-names = "aclk", "iface";
 		iommu-cells = <0>;
+=======
+		clocks = <&cru ACLK_IEP>, <&cru HCLK_IEP>;
+		clock-names = "aclk", "iface";
+		#iommu-cells = <0>;
+>>>>>>> rebase
 		status = "disabled";
 	};
 
@@ -944,7 +969,11 @@
 			};
 		};
 
+<<<<<<< HEAD
 		spi-0 {
+=======
+		spi0 {
+>>>>>>> rebase
 			spi0_clk: spi0-clk {
 				rockchip,pins = <0 9 RK_FUNC_2 &pcfg_pull_up>;
 			};
@@ -962,7 +991,11 @@
 			};
 		};
 
+<<<<<<< HEAD
 		spi-1 {
+=======
+		spi1 {
+>>>>>>> rebase
 			spi1_clk: spi1-clk {
 				rockchip,pins = <0 23 RK_FUNC_2 &pcfg_pull_up>;
 			};

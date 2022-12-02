@@ -3,4 +3,7 @@
 #
 
 obj-$(CONFIG_AQTION) += atlantic/
+<<<<<<< HEAD
 obj-$(CONFIG_AQFWD)  += atlantic-fwd/
+=======
+>>>>>>> rebase

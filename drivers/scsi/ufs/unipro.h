@@ -16,7 +16,10 @@
  * M-TX Configuration Attributes
  */
 #define TX_HIBERN8TIME_CAPABILITY		0x000F
+<<<<<<< HEAD
 #define TX_HSGEAR_CAPABILITY			0x0002
+=======
+>>>>>>> rebase
 #define TX_MODE					0x0021
 #define TX_HSRATE_SERIES			0x0022
 #define TX_HSGEAR				0x0023
@@ -37,7 +40,10 @@
 #define TX_LCC_SEQUENCER			0x0032
 #define TX_MIN_ACTIVATETIME			0x0033
 #define TX_PWM_G6_G7_SYNC_LENGTH		0x0034
+<<<<<<< HEAD
 #define TX_HS_ADAPT_LENGTH			0x003A
+=======
+>>>>>>> rebase
 #define TX_REFCLKFREQ				0x00EB
 #define TX_CFGCLKFREQVAL			0x00EC
 #define	CFGEXTRATTR				0x00F0
@@ -57,7 +63,10 @@
 #define RX_TERMINATION_FORCE_ENABLE		0x00A9
 #define RX_MIN_ACTIVATETIME_CAPABILITY		0x008F
 #define RX_HIBERN8TIME_CAPABILITY		0x0092
+<<<<<<< HEAD
 #define RX_HS_ADAPT_INITIAL_CAPABILITY		0x009F
+=======
+>>>>>>> rebase
 #define RX_REFCLKFREQ				0x00EB
 #define	RX_CFGCLKFREQVAL			0x00EC
 #define CFGWIDEINLN				0x00F0
@@ -71,8 +80,11 @@
 #define CFGRXOVR4				0x00E9
 #define RXSQCTRL				0x00B5
 #define CFGRXOVR6				0x00BF
+<<<<<<< HEAD
 #define MPHY_RX_ATTR_ADDR_START			0x81
 #define MPHY_RX_ATTR_ADDR_END			0xC1
+=======
+>>>>>>> rebase
 
 #define is_mphy_tx_attr(attr)			(attr < RX_MODE)
 #define RX_MIN_ACTIVATETIME_UNIT_US		100
@@ -155,6 +167,7 @@
 #define PA_SLEEPNOCONFIGTIME	0x15A2
 #define PA_STALLNOCONFIGTIME	0x15A3
 #define PA_SAVECONFIGTIME	0x15A4
+<<<<<<< HEAD
 #define PA_PEERRXHSADAPTINITIAL	0x15D3
 #define PA_TXHSADAPTTYPE	0x15D4
 /*
@@ -167,6 +180,8 @@
 #define PA_REFRESH_ADAPT	0x00
 #define PA_INITIAL_ADAPT	0x01
 #define PA_NO_ADAPT		0x03
+=======
+>>>>>>> rebase
 
 #define PA_TACTIVATE_TIME_UNIT_US	10
 #define PA_HIBERN8_TIME_UNIT_US		100
@@ -182,6 +197,7 @@
 /* PHY Adapter Protocol Constants */
 #define PA_MAXDATALANES	4
 
+<<<<<<< HEAD
 #define DL_FC0ProtectionTimeOutVal_Default	8191
 #define DL_TC0ReplayTimeOutVal_Default		65535
 #define DL_AFC0ReqTimeOutVal_Default		32767
@@ -193,6 +209,8 @@
 #define DME_LocalTC0ReplayTimeOutVal		0xD042
 #define DME_LocalAFC0ReqTimeOutVal		0xD043
 
+=======
+>>>>>>> rebase
 /* PA power modes */
 enum {
 	FAST_MODE	= 1,
@@ -224,7 +242,10 @@ enum ufs_hs_gear_tag {
 	UFS_HS_G1,		/* HS Gear 1 (default for reset) */
 	UFS_HS_G2,		/* HS Gear 2 */
 	UFS_HS_G3,		/* HS Gear 3 */
+<<<<<<< HEAD
 	UFS_HS_G4,		/* HS Gear 4 */
+=======
+>>>>>>> rebase
 };
 
 enum ufs_unipro_ver {

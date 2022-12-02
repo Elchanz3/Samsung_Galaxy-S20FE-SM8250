@@ -302,16 +302,28 @@ static int kgdboc_option_setup(char *opt)
 {
 	if (!opt) {
 		pr_err("config string not provided\n");
+<<<<<<< HEAD
 		return -EINVAL;
+=======
+		return 1;
+>>>>>>> rebase
 	}
 
 	if (strlen(opt) >= MAX_CONFIG_LEN) {
 		pr_err("config string too long\n");
+<<<<<<< HEAD
 		return -ENOSPC;
 	}
 	strcpy(config, opt);
 
 	return 0;
+=======
+		return 1;
+	}
+	strcpy(config, opt);
+
+	return 1;
+>>>>>>> rebase
 }
 
 __setup("kgdboc=", kgdboc_option_setup);

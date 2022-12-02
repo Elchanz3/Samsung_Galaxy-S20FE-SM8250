@@ -594,7 +594,11 @@ static void b43_nphy_adjust_lna_gain_table(struct b43_wldev *dev)
 	u16 data[4];
 	s16 gain[2];
 	u16 minmax[2];
+<<<<<<< HEAD
 	static const u16 lna_gain[4] = { -2, 10, 19, 25 };
+=======
+	static const s16 lna_gain[4] = { -2, 10, 19, 25 };
+>>>>>>> rebase
 
 	if (nphy->hang_avoid)
 		b43_nphy_stay_in_carrier_search(dev, 1);
@@ -5320,7 +5324,11 @@ static void b43_nphy_restore_cal(struct b43_wldev *dev)
 
 	for (i = 0; i < 4; i++) {
 		if (dev->phy.rev >= 3)
+<<<<<<< HEAD
 			table[i] = coef[i];
+=======
+			coef[i] = table[i];
+>>>>>>> rebase
 		else
 			coef[i] = 0;
 	}

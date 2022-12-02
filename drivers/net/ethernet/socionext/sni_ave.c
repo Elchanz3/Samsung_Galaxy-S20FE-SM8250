@@ -1196,7 +1196,11 @@ static int ave_init(struct net_device *ndev)
 	ret = regmap_update_bits(priv->regmap, SG_ETPINMODE,
 				 priv->pinmode_mask, priv->pinmode_val);
 	if (ret)
+<<<<<<< HEAD
 		return ret;
+=======
+		goto out_reset_assert;
+>>>>>>> rebase
 
 	ave_global_reset(ndev);
 

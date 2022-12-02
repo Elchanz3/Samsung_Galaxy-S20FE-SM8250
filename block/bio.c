@@ -29,7 +29,10 @@
 #include <linux/workqueue.h>
 #include <linux/cgroup.h>
 #include <linux/blk-cgroup.h>
+<<<<<<< HEAD
 #include <linux/blk-crypto.h>
+=======
+>>>>>>> rebase
 
 #include <trace/events/block.h>
 #include "blk.h"
@@ -246,8 +249,11 @@ fallback:
 void bio_uninit(struct bio *bio)
 {
 	bio_disassociate_task(bio);
+<<<<<<< HEAD
 
 	bio_crypt_free_ctx(bio);
+=======
+>>>>>>> rebase
 }
 EXPORT_SYMBOL(bio_uninit);
 
@@ -317,7 +323,11 @@ static struct bio *__bio_chain_endio(struct bio *bio)
 {
 	struct bio *parent = bio->bi_private;
 
+<<<<<<< HEAD
 	if (!parent->bi_status)
+=======
+	if (bio->bi_status && !parent->bi_status)
+>>>>>>> rebase
 		parent->bi_status = bio->bi_status;
 	bio_put(bio);
 	return parent;
@@ -635,12 +645,24 @@ struct bio *bio_clone_fast(struct bio *bio, gfp_t gfp_mask, struct bio_set *bs)
 
 	__bio_clone_fast(b, bio);
 
+<<<<<<< HEAD
 	bio_crypt_clone(b, bio, gfp_mask);
 
 	if (bio_integrity(bio) &&
 	    bio_integrity_clone(b, bio, gfp_mask) < 0) {
 		bio_put(b);
 		return NULL;
+=======
+	if (bio_integrity(bio)) {
+		int ret;
+
+		ret = bio_integrity_clone(b, bio, gfp_mask);
+
+		if (ret < 0) {
+			bio_put(b);
+			return NULL;
+		}
+>>>>>>> rebase
 	}
 
 	return b;
@@ -803,9 +825,12 @@ void __bio_add_page(struct bio *bio, struct page *page,
 
 	bio->bi_iter.bi_size += len;
 	bio->bi_vcnt++;
+<<<<<<< HEAD
 
 	if (!bio_flagged(bio, BIO_WORKINGSET) && unlikely(PageWorkingset(page)))
 		bio_set_flag(bio, BIO_WORKINGSET);
+=======
+>>>>>>> rebase
 }
 EXPORT_SYMBOL_GPL(__bio_add_page);
 
@@ -953,7 +978,10 @@ void bio_advance(struct bio *bio, unsigned bytes)
 	if (bio_integrity(bio))
 		bio_integrity_advance(bio, bytes);
 
+<<<<<<< HEAD
 	bio_crypt_advance(bio, bytes);
+=======
+>>>>>>> rebase
 	bio_advance_iter(bio, &bio->bi_iter, bytes);
 }
 EXPORT_SYMBOL(bio_advance);
@@ -1532,7 +1560,11 @@ struct bio *bio_copy_kern(struct request_queue *q, void *data, unsigned int len,
 		if (bytes > len)
 			bytes = len;
 
+<<<<<<< HEAD
 		page = alloc_page(q->bounce_gfp | gfp_mask);
+=======
+		page = alloc_page(q->bounce_gfp | __GFP_ZERO | gfp_mask);
+>>>>>>> rebase
 		if (!page)
 			goto cleanup;
 
@@ -1752,10 +1784,13 @@ void bio_endio(struct bio *bio)
 again:
 	if (!bio_remaining_done(bio))
 		return;
+<<<<<<< HEAD
 
 	if (!blk_crypto_endio(bio))
 		return;
 
+=======
+>>>>>>> rebase
 	if (!bio_integrity_endio(bio))
 		return;
 

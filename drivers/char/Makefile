@@ -57,6 +57,7 @@ js-rtc-y = rtc.o
 
 obj-$(CONFIG_XILLYBUS)		+= xillybus/
 obj-$(CONFIG_POWERNV_OP_PANEL)	+= powernv-op-panel.o
+<<<<<<< HEAD
 obj-$(CONFIG_MSM_ADSPRPC)	+= adsprpc.o
 ifdef CONFIG_COMPAT
   obj-$(CONFIG_MSM_ADSPRPC)	+= adsprpc_compat.o
@@ -73,3 +74,6 @@ obj-$(CONFIG_VSERVICES_SERIAL_CLIENT)	+= vs_serial_client.o
 CFLAGS_vs_serial_client.o	 += -Werror
 obj-$(CONFIG_VSERVICES_SERIAL_SERVER)	+= vs_serial_server.o
 CFLAGS_vs_serial_server.o	+= -Werror
+=======
+obj-$(CONFIG_ADI)		+= adi.o
+>>>>>>> rebase

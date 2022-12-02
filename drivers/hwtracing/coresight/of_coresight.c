@@ -1,6 +1,10 @@
 // SPDX-License-Identifier: GPL-2.0
 /*
+<<<<<<< HEAD
  * Copyright (c) 2012,2017-2018,2020 The Linux Foundation. All rights reserved.
+=======
+ * Copyright (c) 2012, The Linux Foundation. All rights reserved.
+>>>>>>> rebase
  */
 
 #include <linux/types.h>
@@ -16,7 +20,11 @@
 #include <linux/coresight.h>
 #include <linux/cpumask.h>
 #include <asm/smp_plat.h>
+<<<<<<< HEAD
 #include <linux/coresight-cti.h>
+=======
+
+>>>>>>> rebase
 
 static int of_dev_node_match(struct device *dev, void *data)
 {
@@ -50,13 +58,17 @@ static void of_coresight_get_ports(const struct device_node *node,
 {
 	struct device_node *ep = NULL;
 	int in = 0, out = 0;
+<<<<<<< HEAD
 	struct of_endpoint endpoint;
+=======
+>>>>>>> rebase
 
 	do {
 		ep = of_graph_get_next_endpoint(node, ep);
 		if (!ep)
 			break;
 
+<<<<<<< HEAD
 		if (of_graph_parse_endpoint(ep, &endpoint))
 			continue;
 
@@ -66,6 +78,12 @@ static void of_coresight_get_ports(const struct device_node *node,
 		else
 			out = (endpoint.port + 1) > out ?
 				endpoint.port + 1 : out;
+=======
+		if (of_property_read_bool(ep, "slave-mode"))
+			in++;
+		else
+			out++;
+>>>>>>> rebase
 
 	} while (ep);
 
@@ -84,12 +102,15 @@ static int of_coresight_alloc_memory(struct device *dev,
 	if (!pdata->outports)
 		return -ENOMEM;
 
+<<<<<<< HEAD
 	pdata->source_names = devm_kzalloc(dev, pdata->nr_outport *
 					  sizeof(*pdata->source_names),
 					  GFP_KERNEL);
 	if (!pdata->source_names)
 		return -ENOMEM;
 
+=======
+>>>>>>> rebase
 	/* Children connected to this component via @outports */
 	pdata->child_names = devm_kcalloc(dev,
 					  pdata->nr_outport,
@@ -115,6 +136,7 @@ int of_coresight_get_cpu(const struct device_node *node)
 	struct device_node *dn;
 
 	dn = of_parse_phandle(node, "cpu", 0);
+<<<<<<< HEAD
 
 	/* Affinity defaults to invalid */
 	if (!dn)
@@ -260,28 +282,55 @@ static int of_coresight_parse_endpoint(struct device *dev,
 	return ret;
 }
 
+=======
+	/* Affinity defaults to CPU0 */
+	if (!dn)
+		return 0;
+	cpu = of_cpu_node_to_id(dn);
+	of_node_put(dn);
+
+	/* Affinity to CPU0 if no cpu nodes are found */
+	return (cpu < 0) ? 0 : cpu;
+}
+EXPORT_SYMBOL_GPL(of_coresight_get_cpu);
+
+>>>>>>> rebase
 struct coresight_platform_data *
 of_get_coresight_platform_data(struct device *dev,
 			       const struct device_node *node)
 {
 	int i = 0, ret = 0;
 	struct coresight_platform_data *pdata;
+<<<<<<< HEAD
 	struct device_node *ep = NULL;
+=======
+	struct of_endpoint endpoint, rendpoint;
+	struct device *rdev;
+	struct device_node *ep = NULL;
+	struct device_node *rparent = NULL;
+	struct device_node *rport = NULL;
+>>>>>>> rebase
 
 	pdata = devm_kzalloc(dev, sizeof(*pdata), GFP_KERNEL);
 	if (!pdata)
 		return ERR_PTR(-ENOMEM);
 
+<<<<<<< HEAD
 	ret = of_property_read_string(node, "coresight-name", &pdata->name);
 	if (ret) {
 		/* Use device name as sysfs handle */
 		pdata->name = dev_name(dev);
 	}
 	pdata->cpu = of_coresight_get_cpu(node);
+=======
+	/* Use device name as sysfs handle */
+	pdata->name = dev_name(dev);
+>>>>>>> rebase
 
 	/* Get the number of input and output port for this component */
 	of_coresight_get_ports(node, &pdata->nr_inport, &pdata->nr_outport);
 
+<<<<<<< HEAD
 	/* If there are no output connections, we are done */
 	if (!pdata->nr_outport)
 		return pdata;
@@ -313,10 +362,66 @@ of_get_coresight_platform_data(struct device *dev,
 	pdata->reg_clk = of_coresight_get_reg_clk(dev, node);
 	if (IS_ERR(pdata->reg_clk))
 		return (void *)(pdata->reg_clk);
+=======
+	if (pdata->nr_outport) {
+		ret = of_coresight_alloc_memory(dev, pdata);
+		if (ret)
+			return ERR_PTR(ret);
+
+		/* Iterate through each port to discover topology */
+		do {
+			/* Get a handle on a port */
+			ep = of_graph_get_next_endpoint(node, ep);
+			if (!ep)
+				break;
+
+			/*
+			 * No need to deal with input ports, processing for as
+			 * processing for output ports will deal with them.
+			 */
+			if (of_find_property(ep, "slave-mode", NULL))
+				continue;
+
+			/* Get a handle on the local endpoint */
+			ret = of_graph_parse_endpoint(ep, &endpoint);
+
+			if (ret)
+				continue;
+
+			/* The local out port number */
+			pdata->outports[i] = endpoint.port;
+
+			/*
+			 * Get a handle on the remote port and parent
+			 * attached to it.
+			 */
+			rparent = of_graph_get_remote_port_parent(ep);
+			rport = of_graph_get_remote_port(ep);
+
+			if (!rparent || !rport)
+				continue;
+
+			if (of_graph_parse_endpoint(rport, &rendpoint))
+				continue;
+
+			rdev = of_coresight_get_endpoint_device(rparent);
+			if (!rdev)
+				return ERR_PTR(-EPROBE_DEFER);
+
+			pdata->child_names[i] = dev_name(rdev);
+			pdata->child_ports[i] = rendpoint.id;
+
+			i++;
+		} while (ep);
+	}
+
+	pdata->cpu = of_coresight_get_cpu(node);
+>>>>>>> rebase
 
 	return pdata;
 }
 EXPORT_SYMBOL_GPL(of_get_coresight_platform_data);
+<<<<<<< HEAD
 
 int of_get_coresight_csr_name(struct device_node *node, const char **csr_name)
 {
@@ -377,3 +482,5 @@ struct coresight_cti_data *of_get_coresight_cti_data(
 	return ctidata;
 }
 EXPORT_SYMBOL(of_get_coresight_cti_data);
+=======
+>>>>>>> rebase

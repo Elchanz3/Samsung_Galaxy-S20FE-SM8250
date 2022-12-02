@@ -373,7 +373,11 @@ static int obex_bind(struct usb_configuration *c, struct usb_function *f)
 	return 0;
 
 fail:
+<<<<<<< HEAD
 	ERROR(cdev, "%s/%pK: can't bind, err %d\n", f->name, f, status);
+=======
+	ERROR(cdev, "%s/%p: can't bind, err %d\n", f->name, f, status);
+>>>>>>> rebase
 
 	return status;
 }

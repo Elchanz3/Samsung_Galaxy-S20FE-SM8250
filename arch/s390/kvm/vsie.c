@@ -1024,6 +1024,10 @@ static int vsie_run(struct kvm_vcpu *vcpu, struct vsie_page *vsie_page)
 		scb_s->iprcc = PGM_ADDRESSING;
 		scb_s->pgmilc = 4;
 		scb_s->gpsw.addr = __rewind_psw(scb_s->gpsw, 4);
+<<<<<<< HEAD
+=======
+		rc = 1;
+>>>>>>> rebase
 	}
 	return rc;
 }

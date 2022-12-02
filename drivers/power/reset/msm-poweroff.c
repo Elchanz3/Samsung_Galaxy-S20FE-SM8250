@@ -1,19 +1,37 @@
+<<<<<<< HEAD
 // SPDX-License-Identifier: GPL-2.0
 /*
  * Copyright (c) 2013-2019, The Linux Foundation. All rights reserved.
+=======
+/* Copyright (c) 2013, The Linux Foundation. All rights reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2 and
+ * only version 2 as published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+>>>>>>> rebase
  */
 
 #include <linux/delay.h>
 #include <linux/err.h>
 #include <linux/init.h>
 #include <linux/kernel.h>
+<<<<<<< HEAD
 
+=======
+>>>>>>> rebase
 #include <linux/io.h>
 #include <linux/of.h>
 #include <linux/platform_device.h>
 #include <linux/module.h>
 #include <linux/reboot.h>
 #include <linux/pm.h>
+<<<<<<< HEAD
 #include <linux/delay.h>
 #include <linux/input/qpnp-power-on.h>
 #include <linux/of_address.h>
@@ -672,10 +690,34 @@ static struct notifier_block dload_reboot_block = {
 };
 #endif
 
+=======
+
+static void __iomem *msm_ps_hold;
+static int deassert_pshold(struct notifier_block *nb, unsigned long action,
+			   void *data)
+{
+	writel(0, msm_ps_hold);
+	mdelay(10000);
+
+	return NOTIFY_DONE;
+}
+
+static struct notifier_block restart_nb = {
+	.notifier_call = deassert_pshold,
+	.priority = 128,
+};
+
+static void do_msm_poweroff(void)
+{
+	deassert_pshold(&restart_nb, 0, NULL);
+}
+
+>>>>>>> rebase
 static int msm_restart_probe(struct platform_device *pdev)
 {
 	struct device *dev = &pdev->dev;
 	struct resource *mem;
+<<<<<<< HEAD
 	struct device_node *np;
 	int ret = 0;
 
@@ -699,10 +741,15 @@ static int msm_restart_probe(struct platform_device *pdev)
 	}
 
 	mem = platform_get_resource_byname(pdev, IORESOURCE_MEM, "pshold-base");
+=======
+
+	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>>>>>>> rebase
 	msm_ps_hold = devm_ioremap_resource(dev, mem);
 	if (IS_ERR(msm_ps_hold))
 		return PTR_ERR(msm_ps_hold);
 
+<<<<<<< HEAD
 	mem = platform_get_resource_byname(pdev, IORESOURCE_MEM,
 					   "tcsr-boot-misc-detect");
 	if (mem)
@@ -729,6 +776,13 @@ static int msm_restart_probe(struct platform_device *pdev)
 err_restart_reason:
 	free_dload_mode_mem();
 	return ret;
+=======
+	register_restart_handler(&restart_nb);
+
+	pm_power_off = do_msm_poweroff;
+
+	return 0;
+>>>>>>> rebase
 }
 
 static const struct of_device_id of_msm_restart_match[] = {
@@ -749,4 +803,8 @@ static int __init msm_restart_init(void)
 {
 	return platform_driver_register(&msm_restart_driver);
 }
+<<<<<<< HEAD
 pure_initcall(msm_restart_init);
+=======
+device_initcall(msm_restart_init);
+>>>>>>> rebase

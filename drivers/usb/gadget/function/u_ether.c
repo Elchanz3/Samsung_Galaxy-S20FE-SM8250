@@ -45,9 +45,16 @@
 #define UETH__VERSION	"29-May-2008"
 
 /* Experiments show that both Linux and Windows hosts allow up to 16k
+<<<<<<< HEAD
  * frame sizes. Set the max size to 15k+52 to prevent allocating 32k
  * blocks and still have efficient handling. */
 #define GETHER_MAX_ETH_FRAME_LEN 15412
+=======
+ * frame sizes. Set the max MTU size to 15k+52 to prevent allocating 32k
+ * blocks and still have efficient handling. */
+#define GETHER_MAX_MTU_SIZE 15412
+#define GETHER_MAX_ETH_FRAME_LEN (GETHER_MAX_MTU_SIZE + ETH_HLEN)
+>>>>>>> rebase
 
 struct eth_dev {
 	/* lock is held while accessing port_usb
@@ -67,7 +74,10 @@ struct eth_dev {
 	unsigned		qmult;
 
 	unsigned		header_len;
+<<<<<<< HEAD
 	unsigned int		ul_max_pkts_per_xfer;
+=======
+>>>>>>> rebase
 	struct sk_buff		*(*wrap)(struct gether *, struct sk_buff *skb);
 	int			(*unwrap)(struct gether *,
 						struct sk_buff *skb,
@@ -94,7 +104,11 @@ struct eth_dev {
 static inline int qlen(struct usb_gadget *gadget, unsigned qmult)
 {
 	if (gadget_is_dualspeed(gadget) && (gadget->speed == USB_SPEED_HIGH ||
+<<<<<<< HEAD
 					    gadget->speed == USB_SPEED_SUPER))
+=======
+					    gadget->speed >= USB_SPEED_SUPER))
+>>>>>>> rebase
 		return qmult * DEFAULT_QLEN;
 	else
 		return DEFAULT_QLEN;
@@ -214,14 +228,20 @@ rx_submit(struct eth_dev *dev, struct usb_request *req, gfp_t gfp_flags)
 		size -= size % out->maxpacket;
 	}
 
+<<<<<<< HEAD
 	if (dev->ul_max_pkts_per_xfer)
 		size *= dev->ul_max_pkts_per_xfer;
 
+=======
+>>>>>>> rebase
 	if (dev->port_usb->is_fixed)
 		size = max_t(size_t, size, dev->port_usb->fixed_out_len);
 	spin_unlock_irqrestore(&dev->lock, flags);
 
+<<<<<<< HEAD
 	DBG(dev, "%s: size: %zd\n", __func__, size);
+=======
+>>>>>>> rebase
 	skb = __netdev_alloc_skb(dev->net, size + NET_IP_ALIGN, gfp_flags);
 	if (skb == NULL) {
 		DBG(dev, "no rx skb\n");
@@ -290,6 +310,7 @@ static void rx_complete(struct usb_ep *ep, struct usb_request *req)
 			if (status < 0
 					|| ETH_HLEN > skb2->len
 					|| skb2->len > GETHER_MAX_ETH_FRAME_LEN) {
+<<<<<<< HEAD
 #ifdef CONFIG_USB_NCM_SUPPORT_MTU_CHANGE
 				/*
 			 	* Need to revisit net->mtu  does not include header size incase of changed MTU
@@ -320,6 +341,14 @@ static void rx_complete(struct usb_ep *ep, struct usb_request *req)
 #ifdef CONFIG_USB_NCM_SUPPORT_MTU_CHANGE
 process_frame:
 #endif
+=======
+				dev->net->stats.rx_errors++;
+				dev->net->stats.rx_length_errors++;
+				DBG(dev, "rx length %d\n", skb2->len);
+				dev_kfree_skb_any(skb2);
+				goto next_frame;
+			}
+>>>>>>> rebase
 			skb2->protocol = eth_type_trans(skb2, dev->net);
 			dev->net->stats.rx_packets++;
 			dev->net->stats.rx_bytes += skb2->len;
@@ -519,8 +548,14 @@ static netdev_tx_t eth_start_xmit(struct sk_buff *skb,
 	}
 	spin_unlock_irqrestore(&dev->lock, flags);
 
+<<<<<<< HEAD
 	if (skb && !in) {
 		dev_kfree_skb_any(skb);
+=======
+	if (!in) {
+		if (skb)
+			dev_kfree_skb_any(skb);
+>>>>>>> rebase
 		return NETDEV_TX_OK;
 	}
 
@@ -576,6 +611,7 @@ static netdev_tx_t eth_start_xmit(struct sk_buff *skb,
 		if (dev->port_usb)
 			skb = dev->wrap(dev->port_usb, skb);
 		spin_unlock_irqrestore(&dev->lock, flags);
+<<<<<<< HEAD
 	}
 	if (!skb) {
 		/* Multi frame CDC protocols may store the frame for
@@ -585,6 +621,17 @@ static netdev_tx_t eth_start_xmit(struct sk_buff *skb,
 				dev->port_usb->supports_multi_frame)
 			goto multiframe;
 		goto drop;
+=======
+		if (!skb) {
+			/* Multi frame CDC protocols may store the frame for
+			 * later which is not a dropped frame.
+			 */
+			if (dev->port_usb &&
+					dev->port_usb->supports_multi_frame)
+				goto multiframe;
+			goto drop;
+		}
+>>>>>>> rebase
 	}
 
 	length = skb->len;
@@ -613,11 +660,15 @@ static netdev_tx_t eth_start_xmit(struct sk_buff *skb,
 	retval = usb_ep_queue(in, req, GFP_ATOMIC);
 	switch (retval) {
 	default:
+<<<<<<< HEAD
 #ifndef CONFIG_USB_NCM_SUPPORT_MTU_CHANGE
 		DBG(dev, "tx queue err %d\n", retval);
 #else
 		INFO(dev, "usb:%s tx queue err %d\n", __func__, retval);
 #endif
+=======
+		DBG(dev, "tx queue err %d\n", retval);
+>>>>>>> rebase
 		break;
 	case 0:
 		netif_trans_update(net);
@@ -803,9 +854,19 @@ struct eth_dev *gether_setup_name(struct usb_gadget *g,
 	dev->qmult = qmult;
 	snprintf(net->name, sizeof(net->name), "%s%%d", netname);
 
+<<<<<<< HEAD
 	if (get_ether_addr(dev_addr, net->dev_addr))
 		dev_warn(&g->dev,
 			"using random %s ethernet address\n", "self");
+=======
+	if (get_ether_addr(dev_addr, net->dev_addr)) {
+		net->addr_assign_type = NET_ADDR_RANDOM;
+		dev_warn(&g->dev,
+			"using random %s ethernet address\n", "self");
+	} else {
+		net->addr_assign_type = NET_ADDR_SET;
+	}
+>>>>>>> rebase
 	if (get_ether_addr(host_addr, dev->host_mac))
 		dev_warn(&g->dev,
 			"using random %s ethernet address\n", "host");
@@ -819,7 +880,11 @@ struct eth_dev *gether_setup_name(struct usb_gadget *g,
 
 	/* MTU range: 14 - 15412 */
 	net->min_mtu = ETH_HLEN;
+<<<<<<< HEAD
 	net->max_mtu = GETHER_MAX_ETH_FRAME_LEN;
+=======
+	net->max_mtu = GETHER_MAX_MTU_SIZE;
+>>>>>>> rebase
 
 	dev->gadget = g;
 	SET_NETDEV_DEV(net, &g->dev);
@@ -862,6 +927,12 @@ struct net_device *gether_setup_name_default(const char *netname)
 	INIT_LIST_HEAD(&dev->tx_reqs);
 	INIT_LIST_HEAD(&dev->rx_reqs);
 
+<<<<<<< HEAD
+=======
+	/* by default we always have a random MAC address */
+	net->addr_assign_type = NET_ADDR_RANDOM;
+
+>>>>>>> rebase
 	skb_queue_head_init(&dev->rx_frames);
 
 	/* network device setup */
@@ -881,7 +952,11 @@ struct net_device *gether_setup_name_default(const char *netname)
 
 	/* MTU range: 14 - 15412 */
 	net->min_mtu = ETH_HLEN;
+<<<<<<< HEAD
 	net->max_mtu = GETHER_MAX_ETH_FRAME_LEN;
+=======
+	net->max_mtu = GETHER_MAX_MTU_SIZE;
+>>>>>>> rebase
 
 	return net;
 }
@@ -891,19 +966,32 @@ int gether_register_netdev(struct net_device *net)
 {
 	struct eth_dev *dev;
 	struct usb_gadget *g;
+<<<<<<< HEAD
 	struct sockaddr sa;
+=======
+>>>>>>> rebase
 	int status;
 
 	if (!net->dev.parent)
 		return -EINVAL;
 	dev = netdev_priv(net);
 	g = dev->gadget;
+<<<<<<< HEAD
+=======
+
+	memcpy(net->dev_addr, dev->dev_mac, ETH_ALEN);
+
+>>>>>>> rebase
 	status = register_netdev(net);
 	if (status < 0) {
 		dev_dbg(&g->dev, "register_netdev failed, %d\n", status);
 		return status;
 	} else {
 		INFO(dev, "HOST MAC %pM\n", dev->host_mac);
+<<<<<<< HEAD
+=======
+		INFO(dev, "MAC %pM\n", dev->dev_mac);
+>>>>>>> rebase
 
 		/* two kinds of host-initiated state changes:
 		 *  - iff DATA transfer is active, carrier is "on"
@@ -911,6 +999,7 @@ int gether_register_netdev(struct net_device *net)
 		 */
 		netif_carrier_off(net);
 	}
+<<<<<<< HEAD
 	sa.sa_family = net->type;
 	memcpy(sa.sa_data, dev->dev_mac, ETH_ALEN);
 	rtnl_lock();
@@ -920,6 +1009,8 @@ int gether_register_netdev(struct net_device *net)
 		pr_warn("cannot set self ethernet address: %d\n", status);
 	else
 		INFO(dev, "MAC %pM\n", dev->dev_mac);
+=======
+>>>>>>> rebase
 
 	return status;
 }
@@ -944,6 +1035,10 @@ int gether_set_dev_addr(struct net_device *net, const char *dev_addr)
 	if (get_ether_addr(dev_addr, new_addr))
 		return -EINVAL;
 	memcpy(dev->dev_mac, new_addr, ETH_ALEN);
+<<<<<<< HEAD
+=======
+	net->addr_assign_type = NET_ADDR_SET;
+>>>>>>> rebase
 	return 0;
 }
 EXPORT_SYMBOL_GPL(gether_set_dev_addr);
@@ -955,7 +1050,11 @@ int gether_get_dev_addr(struct net_device *net, char *dev_addr, int len)
 
 	dev = netdev_priv(net);
 	ret = get_ether_addr_str(dev->dev_mac, dev_addr, len);
+<<<<<<< HEAD
 	if (ret + 1 < len && ret > 0) {
+=======
+	if (ret + 1 < len) {
+>>>>>>> rebase
 		dev_addr[ret++] = '\n';
 		dev_addr[ret] = '\0';
 	}
@@ -984,7 +1083,11 @@ int gether_get_host_addr(struct net_device *net, char *host_addr, int len)
 
 	dev = netdev_priv(net);
 	ret = get_ether_addr_str(dev->host_mac, host_addr, len);
+<<<<<<< HEAD
 	if (ret + 1 < len && ret > 0) {
+=======
+	if (ret + 1 < len) {
+>>>>>>> rebase
 		host_addr[ret++] = '\n';
 		host_addr[ret] = '\0';
 	}
@@ -1045,6 +1148,7 @@ int gether_get_ifname(struct net_device *net, char *name, int len)
 }
 EXPORT_SYMBOL_GPL(gether_get_ifname);
 
+<<<<<<< HEAD
 unsigned int gether_get_ul_max_pkts_per_xfer(struct net_device *net)
 {
 	struct eth_dev *dev;
@@ -1065,6 +1169,8 @@ int gether_set_ul_max_pkts_per_xfer(struct net_device *net, unsigned int max)
 }
 EXPORT_SYMBOL(gether_set_ul_max_pkts_per_xfer);
 
+=======
+>>>>>>> rebase
 /**
  * gether_cleanup - remove Ethernet-over-USB device
  * Context: may sleep
@@ -1134,8 +1240,11 @@ struct net_device *gether_connect(struct gether *link)
 		dev->header_len = link->header_len;
 		dev->unwrap = link->unwrap;
 		dev->wrap = link->wrap;
+<<<<<<< HEAD
 		if (!dev->ul_max_pkts_per_xfer)
 			dev->ul_max_pkts_per_xfer = link->ul_max_pkts_per_xfer;
+=======
+>>>>>>> rebase
 
 		spin_lock(&dev->lock);
 		dev->port_usb = link;

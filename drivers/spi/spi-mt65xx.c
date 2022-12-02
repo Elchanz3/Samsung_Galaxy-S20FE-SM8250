@@ -41,7 +41,10 @@
 #define SPI_CFG0_SCK_LOW_OFFSET           8
 #define SPI_CFG0_CS_HOLD_OFFSET           16
 #define SPI_CFG0_CS_SETUP_OFFSET          24
+<<<<<<< HEAD
 #define SPI_ADJUST_CFG0_SCK_LOW_OFFSET    16
+=======
+>>>>>>> rebase
 #define SPI_ADJUST_CFG0_CS_HOLD_OFFSET    0
 #define SPI_ADJUST_CFG0_CS_SETUP_OFFSET   16
 
@@ -53,6 +56,11 @@
 #define SPI_CFG1_CS_IDLE_MASK             0xff
 #define SPI_CFG1_PACKET_LOOP_MASK         0xff00
 #define SPI_CFG1_PACKET_LENGTH_MASK       0x3ff0000
+<<<<<<< HEAD
+=======
+#define SPI_CFG2_SCK_HIGH_OFFSET          0
+#define SPI_CFG2_SCK_LOW_OFFSET           16
+>>>>>>> rebase
 
 #define SPI_CMD_ACT                  BIT(0)
 #define SPI_CMD_RESUME               BIT(1)
@@ -259,7 +267,11 @@ static void mtk_spi_set_cs(struct spi_device *spi, bool enable)
 static void mtk_spi_prepare_transfer(struct spi_master *master,
 				     struct spi_transfer *xfer)
 {
+<<<<<<< HEAD
 	u32 spi_clk_hz, div, sck_time, cs_time, reg_val = 0;
+=======
+	u32 spi_clk_hz, div, sck_time, cs_time, reg_val;
+>>>>>>> rebase
 	struct mtk_spi *mdata = spi_master_get_devdata(master);
 
 	spi_clk_hz = clk_get_rate(mdata->spi_clk);
@@ -272,18 +284,31 @@ static void mtk_spi_prepare_transfer(struct spi_master *master,
 	cs_time = sck_time * 2;
 
 	if (mdata->dev_comp->enhance_timing) {
+<<<<<<< HEAD
 		reg_val |= (((sck_time - 1) & 0xffff)
 			   << SPI_CFG0_SCK_HIGH_OFFSET);
 		reg_val |= (((sck_time - 1) & 0xffff)
 			   << SPI_ADJUST_CFG0_SCK_LOW_OFFSET);
 		writel(reg_val, mdata->base + SPI_CFG2_REG);
 		reg_val |= (((cs_time - 1) & 0xffff)
+=======
+		reg_val = (((sck_time - 1) & 0xffff)
+			   << SPI_CFG2_SCK_HIGH_OFFSET);
+		reg_val |= (((sck_time - 1) & 0xffff)
+			   << SPI_CFG2_SCK_LOW_OFFSET);
+		writel(reg_val, mdata->base + SPI_CFG2_REG);
+		reg_val = (((cs_time - 1) & 0xffff)
+>>>>>>> rebase
 			   << SPI_ADJUST_CFG0_CS_HOLD_OFFSET);
 		reg_val |= (((cs_time - 1) & 0xffff)
 			   << SPI_ADJUST_CFG0_CS_SETUP_OFFSET);
 		writel(reg_val, mdata->base + SPI_CFG0_REG);
 	} else {
+<<<<<<< HEAD
 		reg_val |= (((sck_time - 1) & 0xff)
+=======
+		reg_val = (((sck_time - 1) & 0xff)
+>>>>>>> rebase
 			   << SPI_CFG0_SCK_HIGH_OFFSET);
 		reg_val |= (((sck_time - 1) & 0xff) << SPI_CFG0_SCK_LOW_OFFSET);
 		reg_val |= (((cs_time - 1) & 0xff) << SPI_CFG0_CS_HOLD_OFFSET);
@@ -390,6 +415,7 @@ static int mtk_spi_fifo_transfer(struct spi_master *master,
 	mtk_spi_prepare_transfer(master, xfer);
 	mtk_spi_setup_packet(master);
 
+<<<<<<< HEAD
 	cnt = xfer->len / 4;
 	iowrite32_rep(mdata->base + SPI_TX_DATA_REG, xfer->tx_buf, cnt);
 
@@ -398,6 +424,17 @@ static int mtk_spi_fifo_transfer(struct spi_master *master,
 		reg_val = 0;
 		memcpy(&reg_val, xfer->tx_buf + (cnt * 4), remainder);
 		writel(reg_val, mdata->base + SPI_TX_DATA_REG);
+=======
+	if (xfer->tx_buf) {
+		cnt = xfer->len / 4;
+		iowrite32_rep(mdata->base + SPI_TX_DATA_REG, xfer->tx_buf, cnt);
+		remainder = xfer->len % 4;
+		if (remainder > 0) {
+			reg_val = 0;
+			memcpy(&reg_val, xfer->tx_buf + (cnt * 4), remainder);
+			writel(reg_val, mdata->base + SPI_TX_DATA_REG);
+		}
+>>>>>>> rebase
 	}
 
 	mtk_spi_enable_transfer(master);
@@ -496,7 +533,11 @@ static irqreturn_t mtk_spi_interrupt(int irq, void *dev_id)
 	else
 		mdata->state = MTK_SPI_IDLE;
 
+<<<<<<< HEAD
 	if (!master->can_dma(master, master->cur_msg->spi, trans)) {
+=======
+	if (!master->can_dma(master, NULL, trans)) {
+>>>>>>> rebase
 		if (trans->rx_buf) {
 			cnt = mdata->xfer_len / 4;
 			ioread32_rep(mdata->base + SPI_RX_DATA_REG,

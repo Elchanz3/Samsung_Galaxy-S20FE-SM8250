@@ -124,6 +124,7 @@ config PSTORE_PMSG
 
 	  If unsure, say N.
 
+<<<<<<< HEAD
 config PSTORE_PMSG_SSPLOG
 	bool "Log user space messages for SS Platform log"
 	depends on PSTORE_PMSG
@@ -138,6 +139,8 @@ config SEC_EVENT_LOG
 	bool "Enable Event log parser"
 	default n
 
+=======
+>>>>>>> rebase
 config PSTORE_FTRACE
 	bool "Persistent function tracer"
 	depends on PSTORE

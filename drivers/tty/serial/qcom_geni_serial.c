@@ -705,7 +705,11 @@ static void qcom_geni_serial_handle_tx(struct uart_port *uport, bool done,
 	avail *= port->tx_bytes_pw;
 
 	tail = xmit->tail;
+<<<<<<< HEAD
 	chunk = min3(avail, pending, (size_t)(UART_XMIT_SIZE - tail));
+=======
+	chunk = min(avail, pending);
+>>>>>>> rebase
 	if (!chunk)
 		goto out_write_wakeup;
 
@@ -727,19 +731,34 @@ static void qcom_geni_serial_handle_tx(struct uart_port *uport, bool done,
 
 		memset(buf, 0, ARRAY_SIZE(buf));
 		tx_bytes = min_t(size_t, remaining, port->tx_bytes_pw);
+<<<<<<< HEAD
 		for (c = 0; c < tx_bytes ; c++)
 			buf[c] = xmit->buf[tail + c];
+=======
+
+		for (c = 0; c < tx_bytes ; c++) {
+			buf[c] = xmit->buf[tail++];
+			tail &= UART_XMIT_SIZE - 1;
+		}
+>>>>>>> rebase
 
 		iowrite32_rep(uport->membase + SE_GENI_TX_FIFOn, buf, 1);
 
 		i += tx_bytes;
+<<<<<<< HEAD
 		tail += tx_bytes;
+=======
+>>>>>>> rebase
 		uport->icount.tx += tx_bytes;
 		remaining -= tx_bytes;
 		port->tx_remaining -= tx_bytes;
 	}
 
+<<<<<<< HEAD
 	xmit->tail = tail & (UART_XMIT_SIZE - 1);
+=======
+	xmit->tail = tail;
+>>>>>>> rebase
 
 	/*
 	 * The tx fifo watermark is level triggered and latched. Though we had
@@ -1048,7 +1067,11 @@ static unsigned int qcom_geni_serial_tx_empty(struct uart_port *uport)
 }
 
 #ifdef CONFIG_SERIAL_QCOM_GENI_CONSOLE
+<<<<<<< HEAD
 static int __init qcom_geni_console_setup(struct console *co, char *options)
+=======
+static int qcom_geni_console_setup(struct console *co, char *options)
+>>>>>>> rebase
 {
 	struct uart_port *uport;
 	struct qcom_geni_serial_port *port;

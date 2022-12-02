@@ -857,7 +857,11 @@ static int vcn_v1_0_set_clockgating_state(void *handle,
 
 	if (enable) {
 		/* wait for STATUS to clear */
+<<<<<<< HEAD
 		if (vcn_v1_0_is_idle(handle))
+=======
+		if (!vcn_v1_0_is_idle(handle))
+>>>>>>> rebase
 			return -EBUSY;
 		vcn_v1_0_enable_clock_gating(adev);
 	} else {

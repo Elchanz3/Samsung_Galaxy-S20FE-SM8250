@@ -90,11 +90,14 @@ config PREVENT_FIRMWARE_BUILD
 
 source "drivers/base/firmware_loader/Kconfig"
 
+<<<<<<< HEAD
 config FW_CACHE
        bool "Enable firmware caching during suspend"
        depends on PM_SLEEP
        default n
 
+=======
+>>>>>>> rebase
 config WANT_DEV_COREDUMP
 	bool
 	help
@@ -179,6 +182,10 @@ source "drivers/base/regmap/Kconfig"
 config DMA_SHARED_BUFFER
 	bool
 	default n
+<<<<<<< HEAD
+=======
+	select ANON_INODES
+>>>>>>> rebase
 	select IRQ_WORK
 	help
 	  This option enables the framework for buffer-sharing between
@@ -280,10 +287,13 @@ config GENERIC_ARCH_TOPOLOGY
 	  appropriate scaling, sysfs interface for changing capacity values at
 	  runtime.
 
+<<<<<<< HEAD
 config CPU_CAPACITY_FIXUP
 	bool
 	default y
 	help
       Enable to avoid that unity set cpuset of its client task to big core only.
 
+=======
+>>>>>>> rebase
 endmenu

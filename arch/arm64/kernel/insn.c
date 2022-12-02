@@ -204,8 +204,13 @@ static int __kprobes aarch64_insn_patch_text_cb(void *arg)
 	int i, ret = 0;
 	struct aarch64_insn_patch *pp = arg;
 
+<<<<<<< HEAD
 	/* The first CPU becomes master */
 	if (atomic_inc_return(&pp->cpu_count) == 1) {
+=======
+	/* The last CPU becomes master */
+	if (atomic_inc_return(&pp->cpu_count) == num_online_cpus()) {
+>>>>>>> rebase
 		for (i = 0; ret == 0 && i < pp->insn_cnt; i++)
 			ret = aarch64_insn_patch_text_nosync(pp->text_addrs[i],
 							     pp->new_insns[i]);
@@ -1490,6 +1495,7 @@ static u32 aarch64_encode_immediate(u64 imm,
 				    u32 insn)
 {
 	unsigned int immr, imms, n, ones, ror, esz, tmp;
+<<<<<<< HEAD
 	u64 mask = ~0UL;
 
 	/* Can't encode full zeroes or full ones */
@@ -1500,6 +1506,12 @@ static u32 aarch64_encode_immediate(u64 imm,
 	case AARCH64_INSN_VARIANT_32BIT:
 		if (upper_32_bits(imm))
 			return AARCH64_BREAK_FAULT;
+=======
+	u64 mask;
+
+	switch (variant) {
+	case AARCH64_INSN_VARIANT_32BIT:
+>>>>>>> rebase
 		esz = 32;
 		break;
 	case AARCH64_INSN_VARIANT_64BIT:
@@ -1511,6 +1523,15 @@ static u32 aarch64_encode_immediate(u64 imm,
 		return AARCH64_BREAK_FAULT;
 	}
 
+<<<<<<< HEAD
+=======
+	mask = GENMASK(esz - 1, 0);
+
+	/* Can't encode full zeroes, full ones, or value wider than the mask */
+	if (!imm || imm == mask || imm & ~mask)
+		return AARCH64_BREAK_FAULT;
+
+>>>>>>> rebase
 	/*
 	 * Inverse of Replicate(). Try to spot a repeating pattern
 	 * with a pow2 stride.

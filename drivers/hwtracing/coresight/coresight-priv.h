@@ -1,6 +1,10 @@
 /* SPDX-License-Identifier: GPL-2.0 */
 /*
+<<<<<<< HEAD
  * Copyright (c) 2011-2012,2018, The Linux Foundation. All rights reserved.
+=======
+ * Copyright (c) 2011-2012, The Linux Foundation. All rights reserved.
+>>>>>>> rebase
  */
 
 #ifndef _CORESIGHT_PRIV_H
@@ -10,7 +14,10 @@
 #include <linux/io.h>
 #include <linux/coresight.h>
 #include <linux/pm_runtime.h>
+<<<<<<< HEAD
 #include "coresight-common.h"
+=======
+>>>>>>> rebase
 
 /*
  * Coresight management registers (0xf00-0xfcc)
@@ -26,6 +33,7 @@
 #define CORESIGHT_DEVID		0xfc8
 #define CORESIGHT_DEVTYPE	0xfcc
 
+<<<<<<< HEAD
 
 /*
  * Coresight device CLAIM protocol.
@@ -33,6 +41,8 @@
  */
 #define CORESIGHT_CLAIM_SELF_HOSTED	BIT(1)
 
+=======
+>>>>>>> rebase
 #define TIMEOUT_US		100
 #define BMVAL(val, lsb, msb)	((val & GENMASK(msb, lsb)) >> lsb)
 
@@ -145,6 +155,7 @@ static inline void coresight_write_reg_pair(void __iomem *addr, u64 val,
 }
 
 void coresight_disable_path(struct list_head *path);
+<<<<<<< HEAD
 int coresight_enable_path(struct list_head *path, u32 mode, void *sink_data);
 struct coresight_device *coresight_get_sink(struct list_head *path);
 struct coresight_device *coresight_get_enabled_sink(bool reset);
@@ -154,6 +165,14 @@ struct list_head *coresight_build_path(struct coresight_device *csdev,
 struct coresight_device *coresight_get_source(struct list_head *path);
 void coresight_release_path(struct coresight_device *csdev,
 			    struct list_head *path);
+=======
+int coresight_enable_path(struct list_head *path, u32 mode);
+struct coresight_device *coresight_get_sink(struct list_head *path);
+struct coresight_device *coresight_get_enabled_sink(bool reset);
+struct list_head *coresight_build_path(struct coresight_device *csdev,
+				       struct coresight_device *sink);
+void coresight_release_path(struct list_head *path);
+>>>>>>> rebase
 
 #ifdef CONFIG_CORESIGHT_SOURCE_ETM3X
 extern int etm_readl_cp14(u32 off, unsigned int *val);

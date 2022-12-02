@@ -89,7 +89,10 @@
 #include <linux/netfilter_ipv4.h>
 #include <linux/random.h>
 #include <linux/slab.h>
+<<<<<<< HEAD
 #include <linux/netfilter/xt_qtaguid.h>
+=======
+>>>>>>> rebase
 
 #include <linux/uaccess.h>
 
@@ -105,9 +108,12 @@
 #include <net/ip_fib.h>
 #include <net/inet_connection_sock.h>
 #include <net/tcp.h>
+<<<<<<< HEAD
 #ifdef CONFIG_MPTCP
 #include <net/mptcp.h>
 #endif
+=======
+>>>>>>> rebase
 #include <net/udp.h>
 #include <net/udplite.h>
 #include <net/ping.h>
@@ -124,6 +130,7 @@
 #include <linux/mroute.h>
 #endif
 #include <net/l3mdev.h>
+<<<<<<< HEAD
 #ifdef CONFIG_NET_ANALYTICS
 #include <net/analytics.h>
 #endif
@@ -146,6 +153,11 @@ static inline int current_has_network(void)
 
 int sysctl_reserved_port_bind __read_mostly = 1;
 
+=======
+
+#include <trace/events/sock.h>
+
+>>>>>>> rebase
 /* The inetsw table contains everything that inet_create needs to
  * build a new socket.
  */
@@ -173,11 +185,14 @@ void inet_sock_destruct(struct sock *sk)
 		return;
 	}
 
+<<<<<<< HEAD
 #ifdef CONFIG_MPTCP
 	if (sock_flag(sk, SOCK_MPTCP))
 		mptcp_disable_static_key();
 #endif
 
+=======
+>>>>>>> rebase
 	WARN_ON(atomic_read(&sk->sk_rmem_alloc));
 	WARN_ON(refcount_read(&sk->sk_wmem_alloc));
 	WARN_ON(sk->sk_wmem_queued);
@@ -185,7 +200,11 @@ void inet_sock_destruct(struct sock *sk)
 
 	kfree(rcu_dereference_protected(inet->inet_opt, 1));
 	dst_release(rcu_dereference_check(sk->sk_dst_cache, 1));
+<<<<<<< HEAD
 	dst_release(sk->sk_rx_dst);
+=======
+	dst_release(rcu_dereference_protected(sk->sk_rx_dst, 1));
+>>>>>>> rebase
 	sk_refcnt_debug_dec(sk);
 }
 EXPORT_SYMBOL(inet_sock_destruct);
@@ -246,7 +265,11 @@ int inet_listen(struct socket *sock, int backlog)
 		 * because the socket was in TCP_LISTEN state previously but
 		 * was shutdown() rather than close().
 		 */
+<<<<<<< HEAD
 		tcp_fastopen = sock_net(sk)->ipv4.sysctl_tcp_fastopen;
+=======
+		tcp_fastopen = READ_ONCE(sock_net(sk)->ipv4.sysctl_tcp_fastopen);
+>>>>>>> rebase
 		if ((tcp_fastopen & TFO_SERVER_WO_SOCKOPT1) &&
 		    (tcp_fastopen & TFO_SERVER_ENABLE) &&
 		    !inet_csk(sk)->icsk_accept_queue.fastopenq.max_qlen) {
@@ -272,12 +295,17 @@ EXPORT_SYMBOL(inet_listen);
  *	Create an inet socket.
  */
 
+<<<<<<< HEAD
 #ifdef CONFIG_MPTCP
 int inet_create(struct net *net, struct socket *sock, int protocol, int kern)
 #else
 static int inet_create(struct net *net, struct socket *sock, int protocol,
 		       int kern)
 #endif
+=======
+static int inet_create(struct net *net, struct socket *sock, int protocol,
+		       int kern)
+>>>>>>> rebase
 {
 	struct sock *sk;
 	struct inet_protosw *answer;
@@ -290,9 +318,12 @@ static int inet_create(struct net *net, struct socket *sock, int protocol,
 	if (protocol < 0 || protocol >= IPPROTO_MAX)
 		return -EINVAL;
 
+<<<<<<< HEAD
 	if (!current_has_network())
 		return -EACCES;
 
+=======
+>>>>>>> rebase
 	sock->state = SS_UNCONNECTED;
 
 	/* Look for the requested type/protocol pair. */
@@ -341,7 +372,12 @@ lookup_protocol:
 	}
 
 	err = -EPERM;
+<<<<<<< HEAD
 	if (sock->type == SOCK_RAW && !kern && !capable(CAP_NET_RAW))
+=======
+	if (sock->type == SOCK_RAW && !kern &&
+	    !ns_capable(net->user_ns, CAP_NET_RAW))
+>>>>>>> rebase
 		goto out_rcu_unlock;
 
 	sock->ops = answer->ops;
@@ -444,9 +480,12 @@ int inet_release(struct socket *sock)
 	if (sk) {
 		long timeout;
 
+<<<<<<< HEAD
 #ifdef CONFIG_NETFILTER_XT_MATCH_QTAGUID
 		qtaguid_untag(sock, true);
 #endif
+=======
+>>>>>>> rebase
 		/* Applications forget to leave groups before exiting */
 		ip_mc_drop_socket(sk);
 
@@ -776,6 +815,7 @@ int inet_accept(struct socket *sock, struct socket *newsock, int flags,
 	lock_sock(sk2);
 
 	sock_rps_record_flow(sk2);
+<<<<<<< HEAD
 #ifdef CONFIG_MPTCP
 	if (sk2->sk_protocol == IPPROTO_TCP && mptcp(tcp_sk(sk2))) {
 		struct mptcp_tcp_sock *mptcp;
@@ -794,6 +834,8 @@ int inet_accept(struct socket *sock, struct socket *newsock, int flags,
 		}
 	}
 #endif
+=======
+>>>>>>> rebase
 	WARN_ON(!((1 << sk2->sk_state) &
 		  (TCPF_ESTABLISHED | TCPF_SYN_RECV |
 		  TCPF_CLOSE_WAIT | TCPF_CLOSE)));
@@ -842,9 +884,12 @@ EXPORT_SYMBOL(inet_getname);
 int inet_sendmsg(struct socket *sock, struct msghdr *msg, size_t size)
 {
 	struct sock *sk = sock->sk;
+<<<<<<< HEAD
 #ifdef CONFIG_NET_ANALYTICS
 	int err;
 #endif
+=======
+>>>>>>> rebase
 
 	sock_rps_record_flow(sk);
 
@@ -853,6 +898,7 @@ int inet_sendmsg(struct socket *sock, struct msghdr *msg, size_t size)
 	    inet_autobind(sk))
 		return -EAGAIN;
 
+<<<<<<< HEAD
 #ifdef CONFIG_NET_ANALYTICS
 	err = sk->sk_prot->sendmsg(sk, msg, size);
 	net_usr_tx(sk, err);
@@ -861,6 +907,9 @@ int inet_sendmsg(struct socket *sock, struct msghdr *msg, size_t size)
 #else
 	return sk->sk_prot->sendmsg(sk, msg, size);
 #endif
+=======
+	return sk->sk_prot->sendmsg(sk, msg, size);
+>>>>>>> rebase
 }
 EXPORT_SYMBOL(inet_sendmsg);
 
@@ -896,11 +945,14 @@ int inet_recvmsg(struct socket *sock, struct msghdr *msg, size_t size,
 				   flags & ~MSG_DONTWAIT, &addr_len);
 	if (err >= 0)
 		msg->msg_namelen = addr_len;
+<<<<<<< HEAD
 
 #ifdef CONFIG_NET_ANALYTICS
 	net_usr_rx(sk, err);
 #endif
 
+=======
+>>>>>>> rebase
 	return err;
 }
 EXPORT_SYMBOL(inet_recvmsg);
@@ -1279,7 +1331,11 @@ static int inet_sk_reselect_saddr(struct sock *sk)
 	if (new_saddr == old_saddr)
 		return 0;
 
+<<<<<<< HEAD
 	if (sock_net(sk)->ipv4.sysctl_ip_dynaddr > 1) {
+=======
+	if (READ_ONCE(sock_net(sk)->ipv4.sysctl_ip_dynaddr) > 1) {
+>>>>>>> rebase
 		pr_info("%s(): shifting inet->saddr from %pI4 to %pI4\n",
 			__func__, &old_saddr, &new_saddr);
 	}
@@ -1334,7 +1390,11 @@ int inet_sk_rebuild_header(struct sock *sk)
 		 * Other protocols have to map its equivalent state to TCP_SYN_SENT.
 		 * DCCP maps its DCCP_REQUESTING state to TCP_SYN_SENT. -acme
 		 */
+<<<<<<< HEAD
 		if (!sock_net(sk)->ipv4.sysctl_ip_dynaddr ||
+=======
+		if (!READ_ONCE(sock_net(sk)->ipv4.sysctl_ip_dynaddr) ||
+>>>>>>> rebase
 		    sk->sk_state != TCP_SYN_SENT ||
 		    (sk->sk_userlocks & SOCK_BINDADDR_LOCK) ||
 		    (err = inet_sk_reselect_saddr(sk)) != 0)
@@ -1408,8 +1468,16 @@ struct sk_buff *inet_gso_segment(struct sk_buff *skb,
 	}
 
 	ops = rcu_dereference(inet_offloads[proto]);
+<<<<<<< HEAD
 	if (likely(ops && ops->callbacks.gso_segment))
 		segs = ops->callbacks.gso_segment(skb, features);
+=======
+	if (likely(ops && ops->callbacks.gso_segment)) {
+		segs = ops->callbacks.gso_segment(skb, features);
+		if (!segs)
+			skb->network_header = skb_mac_header(skb) + nhoff - skb->head;
+	}
+>>>>>>> rebase
 
 	if (IS_ERR_OR_NULL(segs))
 		goto out;
@@ -1498,6 +1566,10 @@ struct sk_buff *inet_gro_receive(struct list_head *head, struct sk_buff *skb)
 
 	list_for_each_entry(p, head, list) {
 		struct iphdr *iph2;
+<<<<<<< HEAD
+=======
+		u16 flush_id;
+>>>>>>> rebase
 
 		if (!NAPI_GRO_CB(p)->same_flow)
 			continue;
@@ -1523,6 +1595,7 @@ struct sk_buff *inet_gro_receive(struct list_head *head, struct sk_buff *skb)
 
 		NAPI_GRO_CB(p)->flush |= flush;
 
+<<<<<<< HEAD
 		/* For non-atomic datagrams we need to save the IP ID offset
 		 * to be included later.  If the frame has the DF bit set
 		 * we must ignore the IP ID value as per RFC 6864.
@@ -1540,6 +1613,36 @@ struct sk_buff *inet_gro_receive(struct list_head *head, struct sk_buff *skb)
 					    (u16)(id - NAPI_GRO_CB(p)->count);
 	}
 
+=======
+		/* We need to store of the IP ID check to be included later
+		 * when we can verify that this packet does in fact belong
+		 * to a given flow.
+		 */
+		flush_id = (u16)(id - ntohs(iph2->id));
+
+		/* This bit of code makes it much easier for us to identify
+		 * the cases where we are doing atomic vs non-atomic IP ID
+		 * checks.  Specifically an atomic check can return IP ID
+		 * values 0 - 0xFFFF, while a non-atomic check can only
+		 * return 0 or 0xFFFF.
+		 */
+		if (!NAPI_GRO_CB(p)->is_atomic ||
+		    !(iph->frag_off & htons(IP_DF))) {
+			flush_id ^= NAPI_GRO_CB(p)->count;
+			flush_id = flush_id ? 0xFFFF : 0;
+		}
+
+		/* If the previous IP ID value was based on an atomic
+		 * datagram we can overwrite the value and ignore it.
+		 */
+		if (NAPI_GRO_CB(skb)->is_atomic)
+			NAPI_GRO_CB(p)->flush_id = flush_id;
+		else
+			NAPI_GRO_CB(p)->flush_id |= flush_id;
+	}
+
+	NAPI_GRO_CB(skb)->is_atomic = !!(iph->frag_off & htons(IP_DF));
+>>>>>>> rebase
 	NAPI_GRO_CB(skb)->flush |= flush;
 	skb_set_network_header(skb, off);
 	/* The above will be needed by the transport layer if there is one
@@ -1733,12 +1836,16 @@ static const struct net_protocol igmp_protocol = {
 };
 #endif
 
+<<<<<<< HEAD
 /* thinking of making this const? Don't.
  * early_demux can change based on sysctl.
  */
 static struct net_protocol tcp_protocol = {
 	.early_demux	=	tcp_v4_early_demux,
 	.early_demux_handler =  tcp_v4_early_demux,
+=======
+static const struct net_protocol tcp_protocol = {
+>>>>>>> rebase
 	.handler	=	tcp_v4_rcv,
 	.err_handler	=	tcp_v4_err,
 	.no_policy	=	1,
@@ -1746,12 +1853,16 @@ static struct net_protocol tcp_protocol = {
 	.icmp_strict_tag_validation = 1,
 };
 
+<<<<<<< HEAD
 /* thinking of making this const? Don't.
  * early_demux can change based on sysctl.
  */
 static struct net_protocol udp_protocol = {
 	.early_demux =	udp_v4_early_demux,
 	.early_demux_handler =	udp_v4_early_demux,
+=======
+static const struct net_protocol udp_protocol = {
+>>>>>>> rebase
 	.handler =	udp_rcv,
 	.err_handler =	udp_err,
 	.no_policy =	1,
@@ -2012,10 +2123,17 @@ static int __init inet_init(void)
 	 */
 
 	ip_init();
+<<<<<<< HEAD
 #ifdef CONFIG_MPTCP
 	/* We must initialize MPTCP before TCP. */
 	mptcp_init();
 #endif
+=======
+
+	/* Initialise per-cpu ipv4 mibs */
+	if (init_ipv4_mibs())
+		panic("%s: Cannot init ipv4 mibs\n", __func__);
+>>>>>>> rebase
 
 	/* Setup TCP slab cache for open requests. */
 	tcp_init();
@@ -2045,12 +2163,15 @@ static int __init inet_init(void)
 
 	if (init_inet_pernet_ops())
 		pr_crit("%s: Cannot init ipv4 inet pernet ops\n", __func__);
+<<<<<<< HEAD
 	/*
 	 *	Initialise per-cpu ipv4 mibs
 	 */
 
 	if (init_ipv4_mibs())
 		pr_crit("%s: Cannot init ipv4 mibs\n", __func__);
+=======
+>>>>>>> rebase
 
 	ipv4_proc_init();
 

@@ -624,6 +624,7 @@ static int azx_pcm_open(struct snd_pcm_substream *substream)
 				     20,
 				     178000000);
 
+<<<<<<< HEAD
 	/* by some reason, the playback stream stalls on PulseAudio with
 	 * tsched=1 when a capture stream triggers.  Until we figure out the
 	 * real cause, disable tsched mode by telling the PCM info flag.
@@ -631,6 +632,8 @@ static int azx_pcm_open(struct snd_pcm_substream *substream)
 	if (chip->driver_caps & AZX_DCAPS_AMD_WORKAROUND)
 		runtime->hw.info |= SNDRV_PCM_INFO_BATCH;
 
+=======
+>>>>>>> rebase
 	if (chip->align_buffer_size)
 		/* constrain buffer sizes to be multiple of 128
 		   bytes. This is more efficient in terms of memory
@@ -1169,16 +1172,33 @@ irqreturn_t azx_interrupt(int irq, void *dev_id)
 		if (snd_hdac_bus_handle_stream_irq(bus, status, stream_update))
 			active = true;
 
+<<<<<<< HEAD
 		/* clear rirb int */
 		status = azx_readb(chip, RIRBSTS);
 		if (status & RIRB_INT_MASK) {
+=======
+		status = azx_readb(chip, RIRBSTS);
+		if (status & RIRB_INT_MASK) {
+			/*
+			 * Clearing the interrupt status here ensures that no
+			 * interrupt gets masked after the RIRB wp is read in
+			 * snd_hdac_bus_update_rirb. This avoids a possible
+			 * race condition where codec response in RIRB may
+			 * remain unserviced by IRQ, eventually falling back
+			 * to polling mode in azx_rirb_get_response.
+			 */
+			azx_writeb(chip, RIRBSTS, RIRB_INT_MASK);
+>>>>>>> rebase
 			active = true;
 			if (status & RIRB_INT_RESPONSE) {
 				if (chip->driver_caps & AZX_DCAPS_CTX_WORKAROUND)
 					udelay(80);
 				snd_hdac_bus_update_rirb(bus);
 			}
+<<<<<<< HEAD
 			azx_writeb(chip, RIRBSTS, RIRB_INT_MASK);
+=======
+>>>>>>> rebase
 		}
 	} while (active && ++repeat < 10);
 

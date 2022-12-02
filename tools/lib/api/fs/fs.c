@@ -90,6 +90,10 @@ struct fs {
 	const char * const	*mounts;
 	char			 path[PATH_MAX];
 	bool			 found;
+<<<<<<< HEAD
+=======
+	bool			 checked;
+>>>>>>> rebase
 	long			 magic;
 };
 
@@ -111,31 +115,55 @@ static struct fs fs__entries[] = {
 		.name	= "sysfs",
 		.mounts	= sysfs__fs_known_mountpoints,
 		.magic	= SYSFS_MAGIC,
+<<<<<<< HEAD
+=======
+		.checked = false,
+>>>>>>> rebase
 	},
 	[FS__PROCFS] = {
 		.name	= "proc",
 		.mounts	= procfs__known_mountpoints,
 		.magic	= PROC_SUPER_MAGIC,
+<<<<<<< HEAD
+=======
+		.checked = false,
+>>>>>>> rebase
 	},
 	[FS__DEBUGFS] = {
 		.name	= "debugfs",
 		.mounts	= debugfs__known_mountpoints,
 		.magic	= DEBUGFS_MAGIC,
+<<<<<<< HEAD
+=======
+		.checked = false,
+>>>>>>> rebase
 	},
 	[FS__TRACEFS] = {
 		.name	= "tracefs",
 		.mounts	= tracefs__known_mountpoints,
 		.magic	= TRACEFS_MAGIC,
+<<<<<<< HEAD
+=======
+		.checked = false,
+>>>>>>> rebase
 	},
 	[FS__HUGETLBFS] = {
 		.name	= "hugetlbfs",
 		.mounts = hugetlbfs__known_mountpoints,
 		.magic	= HUGETLBFS_MAGIC,
+<<<<<<< HEAD
+=======
+		.checked = false,
+>>>>>>> rebase
 	},
 	[FS__BPF_FS] = {
 		.name	= "bpf",
 		.mounts = bpf_fs__known_mountpoints,
 		.magic	= BPF_FS_MAGIC,
+<<<<<<< HEAD
+=======
+		.checked = false,
+>>>>>>> rebase
 	},
 };
 
@@ -158,6 +186,10 @@ static bool fs__read_mounts(struct fs *fs)
 	}
 
 	fclose(fp);
+<<<<<<< HEAD
+=======
+	fs->checked = true;
+>>>>>>> rebase
 	return fs->found = found;
 }
 
@@ -220,6 +252,10 @@ static bool fs__env_override(struct fs *fs)
 		return false;
 
 	fs->found = true;
+<<<<<<< HEAD
+=======
+	fs->checked = true;
+>>>>>>> rebase
 	strncpy(fs->path, override_path, sizeof(fs->path) - 1);
 	fs->path[sizeof(fs->path) - 1] = '\0';
 	return true;
@@ -246,6 +282,17 @@ static const char *fs__mountpoint(int idx)
 	if (fs->found)
 		return (const char *)fs->path;
 
+<<<<<<< HEAD
+=======
+	/* the mount point was already checked for the mount point
+	 * but and did not exist, so return NULL to avoid scanning again.
+	 * This makes the found and not found paths cost equivalent
+	 * in case of multiple calls.
+	 */
+	if (fs->checked)
+		return NULL;
+
+>>>>>>> rebase
 	return fs__get_mountpoint(fs);
 }
 

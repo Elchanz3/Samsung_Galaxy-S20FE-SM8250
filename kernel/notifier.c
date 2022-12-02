@@ -22,10 +22,13 @@ static int notifier_chain_register(struct notifier_block **nl,
 		struct notifier_block *n)
 {
 	while ((*nl) != NULL) {
+<<<<<<< HEAD
 		if (unlikely((*nl) == n)) {
 			WARN(1, "double register detected");
 			return 0;
 		}
+=======
+>>>>>>> rebase
 		if (n->priority > (*nl)->priority)
 			break;
 		nl = &((*nl)->next);

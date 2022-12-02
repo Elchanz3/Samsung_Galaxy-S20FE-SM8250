@@ -599,7 +599,11 @@ static void RxReorderIndicatePacket(struct ieee80211_device *ieee,
 
 	prxbIndicateArray = kmalloc_array(REORDER_WIN_SIZE,
 					  sizeof(struct ieee80211_rxb *),
+<<<<<<< HEAD
 					  GFP_KERNEL);
+=======
+					  GFP_ATOMIC);
+>>>>>>> rebase
 	if (!prxbIndicateArray)
 		return;
 

@@ -39,6 +39,7 @@
 #define __page_aligned_data	__section(.data..page_aligned) __aligned(PAGE_SIZE)
 #define __page_aligned_bss	__section(.bss..page_aligned) __aligned(PAGE_SIZE)
 
+<<<<<<< HEAD
 #ifdef CONFIG_UH_RKP
 #define __page_aligned_rkp_bss	__section(.rkp_bss.page_aligned) __aligned(PAGE_SIZE)
 #define __rkp_ro		__section(.rkp_ro)
@@ -52,6 +53,8 @@
 #define __lsm_ro_after_init_kdp __lsm_ro_after_init
 #endif
 
+=======
+>>>>>>> rebase
 /*
  * For assembly routines.
  *
@@ -97,6 +100,7 @@
 	.globl name ASM_NL \
 	ALIGN ASM_NL \
 	name:
+<<<<<<< HEAD
 
 #ifdef CONFIG_CFP_JOPP
 #define NOP_ENTRY(name) \
@@ -112,6 +116,8 @@
 	b target
 
 #endif /* CONFIG_CFP_JOPP */
+=======
+>>>>>>> rebase
 #endif
 #endif /* LINKER_SCRIPT */
 

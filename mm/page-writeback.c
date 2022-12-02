@@ -70,21 +70,29 @@ static long ratelimit_pages = 32;
 /*
  * Start background writeback (via writeback threads) at this percentage
  */
+<<<<<<< HEAD
 #ifdef CONFIG_LARGE_DIRTY_BUFFER
 int dirty_background_ratio = 5;
 #else
 int dirty_background_ratio;
 #endif
+=======
+int dirty_background_ratio = 10;
+>>>>>>> rebase
 
 /*
  * dirty_background_bytes starts at 0 (disabled) so that it is a function of
  * dirty_background_ratio * the amount of dirtyable memory
  */
+<<<<<<< HEAD
 #ifdef CONFIG_LARGE_DIRTY_BUFFER
 unsigned long dirty_background_bytes;
 #else
 unsigned long dirty_background_bytes = 25 * 1024 * 1024;
 #endif
+=======
+unsigned long dirty_background_bytes;
+>>>>>>> rebase
 
 /*
  * free highmem will not be subtracted from the total free memory
@@ -95,21 +103,29 @@ int vm_highmem_is_dirtyable;
 /*
  * The generator of dirty data starts writeback at this percentage
  */
+<<<<<<< HEAD
 #ifdef CONFIG_LARGE_DIRTY_BUFFER
 int vm_dirty_ratio = 20;
 #else
 int vm_dirty_ratio;
 #endif
+=======
+int vm_dirty_ratio = 20;
+>>>>>>> rebase
 
 /*
  * vm_dirty_bytes starts at 0 (disabled) so that it is a function of
  * vm_dirty_ratio * the amount of dirtyable memory
  */
+<<<<<<< HEAD
 #ifdef CONFIG_LARGE_DIRTY_BUFFER
 unsigned long vm_dirty_bytes;
 #else
 unsigned long vm_dirty_bytes = 50 * 1024 * 1024;
 #endif
+=======
+unsigned long vm_dirty_bytes;
+>>>>>>> rebase
 
 /*
  * The interval between `kupdate'-style writebacks
@@ -407,7 +423,11 @@ static unsigned long global_dirtyable_memory(void)
  */
 static void domain_dirty_limits(struct dirty_throttle_control *dtc)
 {
+<<<<<<< HEAD
 	unsigned long available_memory = dtc->avail;
+=======
+	const unsigned long available_memory = dtc->avail;
+>>>>>>> rebase
 	struct dirty_throttle_control *gdtc = mdtc_gdtc(dtc);
 	unsigned long bytes = vm_dirty_bytes;
 	unsigned long bg_bytes = dirty_background_bytes;
@@ -443,6 +463,7 @@ static void domain_dirty_limits(struct dirty_throttle_control *dtc)
 	else
 		thresh = (ratio * available_memory) / PAGE_SIZE;
 
+<<<<<<< HEAD
 #if defined(CONFIG_MAX_DIRTY_THRESH_PAGES) && (CONFIG_MAX_DIRTY_THRESH_PAGES > 0)
 	if (!bytes && thresh > CONFIG_MAX_DIRTY_THRESH_PAGES) {
 		thresh = CONFIG_MAX_DIRTY_THRESH_PAGES;
@@ -451,6 +472,8 @@ static void domain_dirty_limits(struct dirty_throttle_control *dtc)
 	}
 #endif
 
+=======
+>>>>>>> rebase
 	if (bg_bytes)
 		bg_thresh = DIV_ROUND_UP(bg_bytes, PAGE_SIZE);
 	else
@@ -509,11 +532,14 @@ static unsigned long node_dirty_limit(struct pglist_data *pgdat)
 	else
 		dirty = vm_dirty_ratio * node_memory / 100;
 
+<<<<<<< HEAD
 #if defined(CONFIG_MAX_DIRTY_THRESH_PAGES) && (CONFIG_MAX_DIRTY_THRESH_PAGES > 0)
 	if (!vm_dirty_bytes && dirty > CONFIG_MAX_DIRTY_THRESH_PAGES)
 		dirty = CONFIG_MAX_DIRTY_THRESH_PAGES;
 #endif
 	
+=======
+>>>>>>> rebase
 	if (tsk->flags & PF_LESS_THROTTLE || rt_task(tsk))
 		dirty += dirty / 4;
 
@@ -1579,6 +1605,7 @@ static inline void wb_dirty_limits(struct dirty_throttle_control *dtc)
 	}
 }
 
+<<<<<<< HEAD
 static inline void bdi_fill_sec_debug_bdp(struct backing_dev_info *bdi,
 		unsigned long start_time,
 		struct dirty_throttle_control *dtc) {
@@ -1628,6 +1655,8 @@ static inline void bdi_fill_sec_debug_bdp(struct backing_dev_info *bdi,
 	spin_unlock(&bdp_debug->lock);
 }
 
+=======
+>>>>>>> rebase
 /*
  * balance_dirty_pages() must be called by processes which are generating dirty
  * data.  It looks at the number of dirty pages in the machine and will force
@@ -1635,9 +1664,12 @@ static inline void bdi_fill_sec_debug_bdp(struct backing_dev_info *bdi,
  * If we're over `background_thresh' then the writeback threads are woken to
  * perform some writeout.
  */
+<<<<<<< HEAD
 
 SIO_PATCH_VERSION(prevent_infinite_writeback, 1, 0, "");
 
+=======
+>>>>>>> rebase
 static void balance_dirty_pages(struct bdi_writeback *wb,
 				unsigned long pages_dirtied)
 {
@@ -1659,7 +1691,10 @@ static void balance_dirty_pages(struct bdi_writeback *wb,
 	struct backing_dev_info *bdi = wb->bdi;
 	bool strictlimit = bdi->capabilities & BDI_CAP_STRICTLIMIT;
 	unsigned long start_time = jiffies;
+<<<<<<< HEAD
 	unsigned long logtime_stamp = jiffies;
+=======
+>>>>>>> rebase
 
 	for (;;) {
 		unsigned long now = jiffies;
@@ -1742,7 +1777,10 @@ static void balance_dirty_pages(struct bdi_writeback *wb,
 			if (mdtc)
 				m_intv = dirty_poll_interval(m_dirty, m_thresh);
 			current->nr_dirtied_pause = min(intv, m_intv);
+<<<<<<< HEAD
 			bdi_fill_sec_debug_bdp(bdi, start_time, mdtc ? mdtc : gdtc);
+=======
+>>>>>>> rebase
 			break;
 		}
 
@@ -1836,7 +1874,10 @@ static void balance_dirty_pages(struct bdi_writeback *wb,
 				current->nr_dirtied = 0;
 			} else if (current->nr_dirtied_pause <= pages_dirtied)
 				current->nr_dirtied_pause += pages_dirtied;
+<<<<<<< HEAD
 			bdi_fill_sec_debug_bdp(bdi, start_time, sdtc);
+=======
+>>>>>>> rebase
 			break;
 		}
 		if (unlikely(pause > max_pause)) {
@@ -1858,6 +1899,7 @@ pause:
 					  period,
 					  pause,
 					  start_time);
+<<<<<<< HEAD
 
 		if (bdi->capabilities & BDI_CAP_SEC_DEBUG && pause == max_pause) {
 			unsigned long nr_dirty_pages_in_timelist = 0;  /* # of dirty pages in b_dirty_time list */
@@ -1900,6 +1942,8 @@ pause:
 		bdi->last_nr_dirty = dirty;
 		bdi->paused_total += pause;
 
+=======
+>>>>>>> rebase
 		__set_current_state(TASK_KILLABLE);
 		wb->dirty_sleep = now;
 		io_schedule_timeout(pause);
@@ -2549,7 +2593,10 @@ void account_page_dirtied(struct page *page, struct address_space *mapping)
 		__inc_zone_page_state(page, NR_ZONE_WRITE_PENDING);
 		__inc_node_page_state(page, NR_DIRTIED);
 		inc_wb_stat(wb, WB_RECLAIMABLE);
+<<<<<<< HEAD
 		atomic64_inc(&inode->i_dirty_page_count);
+=======
+>>>>>>> rebase
 		inc_wb_stat(wb, WB_DIRTIED);
 		task_io_account_write(PAGE_SIZE);
 		current->nr_dirtied++;
@@ -2567,12 +2614,18 @@ void account_page_cleaned(struct page *page, struct address_space *mapping,
 			  struct bdi_writeback *wb)
 {
 	if (mapping_cap_account_dirty(mapping)) {
+<<<<<<< HEAD
 		struct inode *inode = mapping->host;
 
 		dec_lruvec_page_state(page, NR_FILE_DIRTY);
 		dec_zone_page_state(page, NR_ZONE_WRITE_PENDING);
 		dec_wb_stat(wb, WB_RECLAIMABLE);
 		atomic64_dec(&inode->i_dirty_page_count);
+=======
+		dec_lruvec_page_state(page, NR_FILE_DIRTY);
+		dec_zone_page_state(page, NR_ZONE_WRITE_PENDING);
+		dec_wb_stat(wb, WB_RECLAIMABLE);
+>>>>>>> rebase
 		task_io_account_cancelled_write(PAGE_SIZE);
 	}
 }
@@ -2829,7 +2882,10 @@ int clear_page_dirty_for_io(struct page *page)
 			dec_lruvec_page_state(page, NR_FILE_DIRTY);
 			dec_zone_page_state(page, NR_ZONE_WRITE_PENDING);
 			dec_wb_stat(wb, WB_RECLAIMABLE);
+<<<<<<< HEAD
 			atomic64_dec(&inode->i_dirty_page_count);
+=======
+>>>>>>> rebase
 			ret = 1;
 		}
 		unlocked_inode_to_wb_end(inode, &cookie);

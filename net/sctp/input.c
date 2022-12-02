@@ -104,6 +104,10 @@ int sctp_rcv(struct sk_buff *skb)
 	struct sctp_chunk *chunk;
 	union sctp_addr src;
 	union sctp_addr dest;
+<<<<<<< HEAD
+=======
+	int bound_dev_if;
+>>>>>>> rebase
 	int family;
 	struct sctp_af *af;
 	struct net *net = dev_net(skb->dev);
@@ -181,7 +185,12 @@ int sctp_rcv(struct sk_buff *skb)
 	 * If a frame arrives on an interface and the receiving socket is
 	 * bound to another interface, via SO_BINDTODEVICE, treat it as OOTB
 	 */
+<<<<<<< HEAD
 	if (sk->sk_bound_dev_if && (sk->sk_bound_dev_if != af->skb_iif(skb))) {
+=======
+	bound_dev_if = READ_ONCE(sk->sk_bound_dev_if);
+	if (bound_dev_if && (bound_dev_if != af->skb_iif(skb))) {
+>>>>>>> rebase
 		if (transport) {
 			sctp_transport_put(transport);
 			asoc = NULL;
@@ -461,7 +470,11 @@ void sctp_icmp_proto_unreachable(struct sock *sk,
 		else {
 			if (!mod_timer(&t->proto_unreach_timer,
 						jiffies + (HZ/20)))
+<<<<<<< HEAD
 				sctp_association_hold(asoc);
+=======
+				sctp_transport_hold(t);
+>>>>>>> rebase
 		}
 	} else {
 		struct net *net = sock_net(sk);
@@ -470,7 +483,11 @@ void sctp_icmp_proto_unreachable(struct sock *sk,
 			 "encountered!\n", __func__);
 
 		if (del_timer(&t->proto_unreach_timer))
+<<<<<<< HEAD
 			sctp_association_put(asoc);
+=======
+			sctp_transport_put(t);
+>>>>>>> rebase
 
 		sctp_do_sm(net, SCTP_EVENT_T_OTHER,
 			   SCTP_ST_OTHER(SCTP_EVENT_ICMP_PROTO_UNREACH),
@@ -687,7 +704,11 @@ static int sctp_rcv_ootb(struct sk_buff *skb)
 		ch = skb_header_pointer(skb, offset, sizeof(*ch), &_ch);
 
 		/* Break out if chunk length is less then minimal. */
+<<<<<<< HEAD
 		if (ntohs(ch->length) < sizeof(_ch))
+=======
+		if (!ch || ntohs(ch->length) < sizeof(_ch))
+>>>>>>> rebase
 			break;
 
 		ch_end = offset + SCTP_PAD4(ntohs(ch->length));

@@ -276,7 +276,11 @@ static int tcindex_alloc_perfect_hash(struct net *net, struct tcindex_data *cp)
 	int i, err = 0;
 
 	cp->perfect = kcalloc(cp->hash, sizeof(struct tcindex_filter_result),
+<<<<<<< HEAD
 			      GFP_KERNEL);
+=======
+			      GFP_KERNEL | __GFP_NOWARN);
+>>>>>>> rebase
 	if (!cp->perfect)
 		return -ENOMEM;
 
@@ -339,9 +343,19 @@ tcindex_set_parms(struct net *net, struct tcf_proto *tp, unsigned long base,
 	if (tb[TCA_TCINDEX_MASK])
 		cp->mask = nla_get_u16(tb[TCA_TCINDEX_MASK]);
 
+<<<<<<< HEAD
 	if (tb[TCA_TCINDEX_SHIFT])
 		cp->shift = nla_get_u32(tb[TCA_TCINDEX_SHIFT]);
 
+=======
+	if (tb[TCA_TCINDEX_SHIFT]) {
+		cp->shift = nla_get_u32(tb[TCA_TCINDEX_SHIFT]);
+		if (cp->shift > 16) {
+			err = -EINVAL;
+			goto errout;
+		}
+	}
+>>>>>>> rebase
 	if (!cp->hash) {
 		/* Hash not specified, use perfect hash if the upper limit
 		 * of the hashing index is below the threshold.
@@ -357,6 +371,10 @@ tcindex_set_parms(struct net *net, struct tcf_proto *tp, unsigned long base,
 
 		if (tcindex_alloc_perfect_hash(net, cp) < 0)
 			goto errout;
+<<<<<<< HEAD
+=======
+		cp->alloc_hash = cp->hash;
+>>>>>>> rebase
 		for (i = 0; i < min(cp->hash, p->hash); i++)
 			cp->perfect[i].res = p->perfect[i].res;
 		balloc = 1;

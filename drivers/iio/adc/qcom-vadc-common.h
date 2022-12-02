@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /* SPDX-License-Identifier: GPL-2.0-only */
+=======
+/* SPDX-License-Identifier: GPL-2.0 */
+>>>>>>> rebase
 /*
  * Code shared between the different Qualcomm PMIC voltage ADCs
  */
@@ -22,6 +26,7 @@
 #define VADC_DEF_HW_SETTLE_TIME			0 /* 0 us */
 #define VADC_DEF_AVG_SAMPLES			0 /* 1 sample */
 #define VADC_DEF_CALIB_TYPE			VADC_CALIB_ABSOLUTE
+<<<<<<< HEAD
 #define VADC_DEF_VBAT_PRESCALING		1 /* 1:3 */
 
 #define VADC_DEF_LUT_INDEX			0 /* Default or no LUT used */
@@ -49,10 +54,21 @@
 
 #define PMIC5_PM2250_S3_DIE_TEMP_SCALE_FACTOR	187263
 #define PMIC5_PM2250_S3_DIE_TEMP_CONSTANT		720100
+=======
+
+#define VADC_DECIMATION_MIN			512
+#define VADC_DECIMATION_MAX			4096
+
+#define VADC_HW_SETTLE_DELAY_MAX		10000
+#define VADC_AVG_SAMPLES_MAX			512
+
+#define KELVINMIL_CELSIUSMIL			273150
+>>>>>>> rebase
 
 #define PMI_CHG_SCALE_1				-138890
 #define PMI_CHG_SCALE_2				391750000000LL
 
+<<<<<<< HEAD
 #define VADC5_MAX_CODE				0x7fff
 #define VADC5_FULL_SCALE_CODE			0x70e4
 #define ADC_USR_DATA_CHECK			0x8000
@@ -94,6 +110,8 @@
 #define DIE_TEMP_ADC7_SCALE_FACTOR			1000
 #define DIE_TEMP_ADC7_MAX				160000
 
+=======
+>>>>>>> rebase
 /**
  * struct vadc_map_pt - Map the graph representation for ADC channel
  * @x: Represent the ADC digitized code.
@@ -149,6 +167,7 @@ struct vadc_prescale_ratio {
  * SCALE_PMIC_THERM: Returns result in milli degree's Centigrade.
  * SCALE_XOTHERM: Returns XO thermistor voltage in millidegC.
  * SCALE_PMI_CHG_TEMP: Conversion for PMI CHG temp
+<<<<<<< HEAD
  * SCALE_HW_CALIB_DEFAULT: Default scaling to convert raw adc code to
  *	voltage (uV) with hardware applied offset/slope values to adc code.
  * SCALE_HW_CALIB_THERM_100K_PULLUP: Returns temperature in millidegC using
@@ -177,6 +196,8 @@ struct vadc_prescale_ratio {
  *	code.
  * SCALE_HW_CALIB_PM2250_S3_DIE_TEMP: Returns result in millidegrees for
  *	S3 die temperature channel on PM2250.
+=======
+>>>>>>> rebase
  */
 enum vadc_scale_fn_type {
 	SCALE_DEFAULT = 0,
@@ -184,6 +205,7 @@ enum vadc_scale_fn_type {
 	SCALE_PMIC_THERM,
 	SCALE_XOTHERM,
 	SCALE_PMI_CHG_TEMP,
+<<<<<<< HEAD
 	SCALE_HW_CALIB_DEFAULT,
 	SCALE_HW_CALIB_THERM_100K_PULLUP,
 	SCALE_HW_CALIB_XOTHERM,
@@ -207,6 +229,8 @@ struct adc_data {
 	const struct adc_channels *adc_chans;
 	unsigned int	*decimation;
 	unsigned int	*hw_settle;
+=======
+>>>>>>> rebase
 };
 
 int qcom_vadc_scale(enum vadc_scale_fn_type scaletype,
@@ -215,6 +239,7 @@ int qcom_vadc_scale(enum vadc_scale_fn_type scaletype,
 		    bool absolute,
 		    u16 adc_code, int *result_mdec);
 
+<<<<<<< HEAD
 int qcom_vadc_hw_scale(enum vadc_scale_fn_type scaletype,
 		    const struct vadc_prescale_ratio *prescale,
 		    const struct adc_data *data, unsigned int lut_index,
@@ -224,4 +249,8 @@ int qcom_vadc_decimation_from_dt(u32 value);
 
 int qcom_adc5_decimation_from_dt(u32 value, const unsigned int *decimation);
 
+=======
+int qcom_vadc_decimation_from_dt(u32 value);
+
+>>>>>>> rebase
 #endif /* QCOM_VADC_COMMON_H */

@@ -108,11 +108,23 @@ static int s3fwrn5_nci_send(struct nci_dev *ndev, struct sk_buff *skb)
 	}
 
 	ret = s3fwrn5_write(info, skb);
+<<<<<<< HEAD
 	if (ret < 0)
 		kfree_skb(skb);
 
 	mutex_unlock(&info->mutex);
 	return ret;
+=======
+	if (ret < 0) {
+		kfree_skb(skb);
+		mutex_unlock(&info->mutex);
+		return ret;
+	}
+
+	consume_skb(skb);
+	mutex_unlock(&info->mutex);
+	return 0;
+>>>>>>> rebase
 }
 
 static int s3fwrn5_nci_post_setup(struct nci_dev *ndev)
@@ -209,6 +221,10 @@ int s3fwrn5_recv_frame(struct nci_dev *ndev, struct sk_buff *skb,
 	case S3FWRN5_MODE_FW:
 		return s3fwrn5_fw_recv_frame(ndev, skb);
 	default:
+<<<<<<< HEAD
+=======
+		kfree_skb(skb);
+>>>>>>> rebase
 		return -ENODEV;
 	}
 }

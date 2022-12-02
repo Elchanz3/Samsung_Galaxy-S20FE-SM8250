@@ -224,8 +224,11 @@ static int stm32_pwm_lp_remove(struct platform_device *pdev)
 {
 	struct stm32_pwm_lp *priv = platform_get_drvdata(pdev);
 
+<<<<<<< HEAD
 	pwm_disable(&priv->chip.pwms[0]);
 
+=======
+>>>>>>> rebase
 	return pwmchip_remove(&priv->chip);
 }
 

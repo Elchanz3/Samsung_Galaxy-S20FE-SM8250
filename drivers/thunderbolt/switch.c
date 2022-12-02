@@ -664,6 +664,7 @@ int tb_switch_reset(struct tb *tb, u64 route)
 	return res.err;
 }
 
+<<<<<<< HEAD
 struct tb_switch *get_switch_at_route(struct tb_switch *sw, u64 route)
 {
 	u8 next_port = route; /*
@@ -682,6 +683,8 @@ struct tb_switch *get_switch_at_route(struct tb_switch *sw, u64 route)
 				   route >> TB_ROUTE_SHIFT);
 }
 
+=======
+>>>>>>> rebase
 /**
  * tb_plug_events_active() - enable/disable plug events on a switch
  *

@@ -13,9 +13,12 @@
 #include <linux/slab.h>
 #include <linux/dmapool.h>
 #include <linux/dma-mapping.h>
+<<<<<<< HEAD
 #if IS_ENABLED(CONFIG_USB_HOST_CERTIFICATION)
 #define MAX_HC_SLOT_LIMIT 15
 #endif
+=======
+>>>>>>> rebase
 
 #include "xhci.h"
 #include "xhci-trace.h"
@@ -653,7 +656,11 @@ struct xhci_stream_info *xhci_alloc_stream_info(struct xhci_hcd *xhci,
 			num_stream_ctxs, &stream_info->ctx_array_dma,
 			mem_flags);
 	if (!stream_info->stream_ctx_array)
+<<<<<<< HEAD
 		goto cleanup_ctx;
+=======
+		goto cleanup_ring_array;
+>>>>>>> rebase
 	memset(stream_info->stream_ctx_array, 0,
 			sizeof(struct xhci_stream_ctx)*num_stream_ctxs);
 
@@ -714,6 +721,14 @@ cleanup_rings:
 	}
 	xhci_free_command(xhci, stream_info->free_streams_command);
 cleanup_ctx:
+<<<<<<< HEAD
+=======
+	xhci_free_stream_ctx(xhci,
+		stream_info->num_stream_ctxs,
+		stream_info->stream_ctx_array,
+		stream_info->ctx_array_dma);
+cleanup_ring_array:
+>>>>>>> rebase
 	kfree(stream_info->stream_rings);
 cleanup_info:
 	kfree(stream_info);
@@ -904,6 +919,7 @@ void xhci_free_virt_device(struct xhci_hcd *xhci, int slot_id)
 		if (dev->eps[i].stream_info)
 			xhci_free_stream_info(xhci,
 					dev->eps[i].stream_info);
+<<<<<<< HEAD
 		/* Endpoints on the TT/root port lists should have been removed
 		 * when usb_disable_device() was called for the device.
 		 * We can't drop them anyway, because the udev might have gone
@@ -913,6 +929,21 @@ void xhci_free_virt_device(struct xhci_hcd *xhci, int slot_id)
 			xhci_warn(xhci, "Slot %u endpoint %u "
 					"not removed from BW list!\n",
 					slot_id, i);
+=======
+		/*
+		 * Endpoints are normally deleted from the bandwidth list when
+		 * endpoints are dropped, before device is freed.
+		 * If host is dying or being removed then endpoints aren't
+		 * dropped cleanly, so delete the endpoint from list here.
+		 * Only applicable for hosts with software bandwidth checking.
+		 */
+
+		if (!list_empty(&dev->eps[i].bw_endpoint_list)) {
+			list_del_init(&dev->eps[i].bw_endpoint_list);
+			xhci_dbg(xhci, "Slot %u endpoint %u not removed from BW list!\n",
+				 slot_id, i);
+		}
+>>>>>>> rebase
 	}
 	/* If this is a hub, free the TT(s) from the TT list */
 	xhci_free_tt_info(xhci, dev, slot_id);
@@ -977,9 +1008,12 @@ int xhci_alloc_virt_device(struct xhci_hcd *xhci, int slot_id,
 {
 	struct xhci_virt_device *dev;
 	int i;
+<<<<<<< HEAD
 #if IS_ENABLED(CONFIG_USB_HOST_CERTIFICATION)
 	int count = 0;
 #endif
+=======
+>>>>>>> rebase
 
 	/* Slot ID 0 is reserved */
 	if (slot_id == 0 || xhci->devs[slot_id]) {
@@ -987,6 +1021,7 @@ int xhci_alloc_virt_device(struct xhci_hcd *xhci, int slot_id,
 		return 0;
 	}
 
+<<<<<<< HEAD
 #if IS_ENABLED(CONFIG_USB_HOST_CERTIFICATION)
 	for (i = 0; i < MAX_HC_SLOTS; i++) {
 		if (xhci->devs[i] && xhci->devs[i]->udev)
@@ -996,6 +1031,8 @@ int xhci_alloc_virt_device(struct xhci_hcd *xhci, int slot_id,
 		goto fail2;
 #endif
 
+=======
+>>>>>>> rebase
 	dev = kzalloc(sizeof(*dev), flags);
 	if (!dev)
 		return 0;
@@ -1050,10 +1087,13 @@ fail:
 		xhci_free_container_ctx(xhci, dev->out_ctx);
 	kfree(dev);
 
+<<<<<<< HEAD
 #if IS_ENABLED(CONFIG_USB_HOST_CERTIFICATION)
 fail2:
 #endif
 
+=======
+>>>>>>> rebase
 	return 0;
 }
 
@@ -1856,6 +1896,7 @@ void xhci_free_erst(struct xhci_hcd *xhci, struct xhci_erst *erst)
 	erst->entries = NULL;
 }
 
+<<<<<<< HEAD
 void xhci_handle_sec_intr_events(struct xhci_hcd *xhci, int intr_num)
 {
 	union xhci_trb *erdp_trb, *current_trb;
@@ -1987,6 +2028,8 @@ void xhci_event_ring_cleanup(struct xhci_hcd *xhci)
 	xhci_dbg_trace(xhci, trace_xhci_dbg_init, "Freed priamry event ring");
 }
 
+=======
+>>>>>>> rebase
 void xhci_mem_cleanup(struct xhci_hcd *xhci)
 {
 	struct device	*dev = xhci_to_hcd(xhci)->self.sysdev;
@@ -1994,7 +2037,16 @@ void xhci_mem_cleanup(struct xhci_hcd *xhci)
 
 	cancel_delayed_work_sync(&xhci->cmd_timer);
 
+<<<<<<< HEAD
 	xhci_event_ring_cleanup(xhci);
+=======
+	xhci_free_erst(xhci, &xhci->erst);
+
+	if (xhci->event_ring)
+		xhci_ring_free(xhci, xhci->event_ring);
+	xhci->event_ring = NULL;
+	xhci_dbg_trace(xhci, trace_xhci_dbg_init, "Freed event ring");
+>>>>>>> rebase
 
 	if (xhci->lpm_command)
 		xhci_free_command(xhci, xhci->lpm_command);
@@ -2074,6 +2126,10 @@ no_bw:
 	xhci->hw_ports = NULL;
 	xhci->rh_bw = NULL;
 	xhci->ext_caps = NULL;
+<<<<<<< HEAD
+=======
+	xhci->port_caps = NULL;
+>>>>>>> rebase
 
 	xhci->page_size = 0;
 	xhci->page_shift = 0;
@@ -2239,6 +2295,33 @@ static int xhci_check_trb_in_td_math(struct xhci_hcd *xhci)
 	return 0;
 }
 
+<<<<<<< HEAD
+=======
+static void xhci_set_hc_event_deq(struct xhci_hcd *xhci)
+{
+	u64 temp;
+	dma_addr_t deq;
+
+	deq = xhci_trb_virt_to_dma(xhci->event_ring->deq_seg,
+			xhci->event_ring->dequeue);
+	if (deq == 0 && !in_interrupt())
+		xhci_warn(xhci, "WARN something wrong with SW event ring "
+				"dequeue ptr.\n");
+	/* Update HC event ring dequeue pointer */
+	temp = xhci_read_64(xhci, &xhci->ir_set->erst_dequeue);
+	temp &= ERST_PTR_MASK;
+	/* Don't clear the EHB bit (which is RW1C) because
+	 * there might be more events to service.
+	 */
+	temp &= ~ERST_EHB;
+	xhci_dbg_trace(xhci, trace_xhci_dbg_init,
+			"// Write event ring dequeue pointer, "
+			"preserving EHB bit");
+	xhci_write_64(xhci, ((u64) deq & (u64) ~ERST_PTR_MASK) | temp,
+			&xhci->ir_set->erst_dequeue);
+}
+
+>>>>>>> rebase
 static void xhci_add_in_port(struct xhci_hcd *xhci, unsigned int num_ports,
 		__le32 __iomem *addr, int max_caps)
 {
@@ -2255,6 +2338,18 @@ static void xhci_add_in_port(struct xhci_hcd *xhci, unsigned int num_ports,
 
 	if (major_revision == 0x03) {
 		rhub = &xhci->usb3_rhub;
+<<<<<<< HEAD
+=======
+		/*
+		 * Some hosts incorrectly use sub-minor version for minor
+		 * version (i.e. 0x02 instead of 0x20 for bcdUSB 0x320 and 0x01
+		 * for bcdUSB 0x310). Since there is no USB release with sub
+		 * minor version 0x301 to 0x309, we can assume that they are
+		 * incorrect and fix it here.
+		 */
+		if (minor_revision > 0x00 && minor_revision < 0x10)
+			minor_revision <<= 4;
+>>>>>>> rebase
 	} else if (major_revision <= 0x02) {
 		rhub = &xhci->usb2_rhub;
 	} else {
@@ -2502,6 +2597,7 @@ static int xhci_setup_port_arrays(struct xhci_hcd *xhci, gfp_t flags)
 	return 0;
 }
 
+<<<<<<< HEAD
 int xhci_event_ring_setup(struct xhci_hcd *xhci, struct xhci_ring **er,
 	struct xhci_intr_reg __iomem *ir_set, struct xhci_erst *erst,
 	unsigned int intr_num, gfp_t flags)
@@ -2650,6 +2746,8 @@ fail:
 	return ret;
 }
 
+=======
+>>>>>>> rebase
 int xhci_mem_init(struct xhci_hcd *xhci, gfp_t flags)
 {
 	dma_addr_t	dma;
@@ -2657,7 +2755,11 @@ int xhci_mem_init(struct xhci_hcd *xhci, gfp_t flags)
 	unsigned int	val, val2;
 	u64		val_64;
 	u32		page_size, temp;
+<<<<<<< HEAD
 	int		i;
+=======
+	int		i, ret;
+>>>>>>> rebase
 
 	INIT_LIST_HEAD(&xhci->cmd_list);
 
@@ -2778,17 +2880,62 @@ int xhci_mem_init(struct xhci_hcd *xhci, gfp_t flags)
 			"// Doorbell array is located at offset 0x%x"
 			" from cap regs base addr", val);
 	xhci->dba = (void __iomem *) xhci->cap_regs + val;
+<<<<<<< HEAD
+=======
+	/* Set ir_set to interrupt register set 0 */
+	xhci->ir_set = &xhci->run_regs->ir_set[0];
+>>>>>>> rebase
 
 	/*
 	 * Event ring setup: Allocate a normal ring, but also setup
 	 * the event ring segment table (ERST).  Section 4.9.3.
 	 */
+<<<<<<< HEAD
 	if (xhci_event_ring_init(xhci, GFP_KERNEL))
 		goto fail;
 
 	if (xhci_check_trb_in_td_math(xhci) < 0)
 		goto fail;
 
+=======
+	xhci_dbg_trace(xhci, trace_xhci_dbg_init, "// Allocating event ring");
+	xhci->event_ring = xhci_ring_alloc(xhci, ERST_NUM_SEGS, 1, TYPE_EVENT,
+					0, flags);
+	if (!xhci->event_ring)
+		goto fail;
+	if (xhci_check_trb_in_td_math(xhci) < 0)
+		goto fail;
+
+	ret = xhci_alloc_erst(xhci, xhci->event_ring, &xhci->erst, flags);
+	if (ret)
+		goto fail;
+
+	/* set ERST count with the number of entries in the segment table */
+	val = readl(&xhci->ir_set->erst_size);
+	val &= ERST_SIZE_MASK;
+	val |= ERST_NUM_SEGS;
+	xhci_dbg_trace(xhci, trace_xhci_dbg_init,
+			"// Write ERST size = %i to ir_set 0 (some bits preserved)",
+			val);
+	writel(val, &xhci->ir_set->erst_size);
+
+	xhci_dbg_trace(xhci, trace_xhci_dbg_init,
+			"// Set ERST entries to point to event ring.");
+	/* set the segment table base address */
+	xhci_dbg_trace(xhci, trace_xhci_dbg_init,
+			"// Set ERST base address for ir_set 0 = 0x%llx",
+			(unsigned long long)xhci->erst.erst_dma_addr);
+	val_64 = xhci_read_64(xhci, &xhci->ir_set->erst_base);
+	val_64 &= ERST_PTR_MASK;
+	val_64 |= (xhci->erst.erst_dma_addr & (u64) ~ERST_PTR_MASK);
+	xhci_write_64(xhci, val_64, &xhci->ir_set->erst_base);
+
+	/* Set the event ring dequeue address */
+	xhci_set_hc_event_deq(xhci);
+	xhci_dbg_trace(xhci, trace_xhci_dbg_init,
+			"Wrote ERST address to ir_set 0.");
+
+>>>>>>> rebase
 	/*
 	 * XXX: Might need to set the Interrupter Moderation Register to
 	 * something other than the default (~1ms minimum between interrupts).
@@ -2821,7 +2968,11 @@ int xhci_mem_init(struct xhci_hcd *xhci, gfp_t flags)
 
 fail:
 	xhci_halt(xhci);
+<<<<<<< HEAD
 	xhci_reset(xhci);
+=======
+	xhci_reset(xhci, XHCI_RESET_SHORT_USEC);
+>>>>>>> rebase
 	xhci_mem_cleanup(xhci);
 	return -ENOMEM;
 }

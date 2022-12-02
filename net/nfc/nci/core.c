@@ -156,12 +156,24 @@ inline int nci_request(struct nci_dev *ndev,
 {
 	int rc;
 
+<<<<<<< HEAD
 	if (!test_bit(NCI_UP, &ndev->flags))
 		return -ENETDOWN;
 
 	/* Serialize all requests */
 	mutex_lock(&ndev->req_lock);
 	rc = __nci_request(ndev, req, opt, timeout);
+=======
+	/* Serialize all requests */
+	mutex_lock(&ndev->req_lock);
+	/* check the state after obtaing the lock against any races
+	 * from nci_close_device when the device gets removed.
+	 */
+	if (test_bit(NCI_UP, &ndev->flags))
+		rc = __nci_request(ndev, req, opt, timeout);
+	else
+		rc = -ENETDOWN;
+>>>>>>> rebase
 	mutex_unlock(&ndev->req_lock);
 
 	return rc;
@@ -482,6 +494,14 @@ static int nci_open_device(struct nci_dev *ndev)
 
 	mutex_lock(&ndev->req_lock);
 
+<<<<<<< HEAD
+=======
+	if (test_bit(NCI_UNREG, &ndev->flags)) {
+		rc = -ENODEV;
+		goto done;
+	}
+
+>>>>>>> rebase
 	if (test_bit(NCI_UP, &ndev->flags)) {
 		rc = -EALREADY;
 		goto done;
@@ -545,9 +565,23 @@ done:
 static int nci_close_device(struct nci_dev *ndev)
 {
 	nci_req_cancel(ndev, ENODEV);
+<<<<<<< HEAD
 	mutex_lock(&ndev->req_lock);
 
 	if (!test_and_clear_bit(NCI_UP, &ndev->flags)) {
+=======
+
+	/* This mutex needs to be held as a barrier for
+	 * caller nci_unregister_device
+	 */
+	mutex_lock(&ndev->req_lock);
+
+	if (!test_and_clear_bit(NCI_UP, &ndev->flags)) {
+		/* Need to flush the cmd wq in case
+		 * there is a queued/running cmd_work
+		 */
+		flush_workqueue(ndev->cmd_wq);
+>>>>>>> rebase
 		del_timer_sync(&ndev->cmd_timer);
 		del_timer_sync(&ndev->data_timer);
 		mutex_unlock(&ndev->req_lock);
@@ -582,8 +616,13 @@ static int nci_close_device(struct nci_dev *ndev)
 	/* Flush cmd wq */
 	flush_workqueue(ndev->cmd_wq);
 
+<<<<<<< HEAD
 	/* Clear flags */
 	ndev->flags = 0;
+=======
+	/* Clear flags except NCI_UNREG */
+	ndev->flags &= BIT(NCI_UNREG);
+>>>>>>> rebase
 
 	mutex_unlock(&ndev->req_lock);
 
@@ -1187,6 +1226,10 @@ EXPORT_SYMBOL(nci_allocate_device);
 void nci_free_device(struct nci_dev *ndev)
 {
 	nfc_free_device(ndev->nfc_dev);
+<<<<<<< HEAD
+=======
+	nci_hci_deallocate(ndev);
+>>>>>>> rebase
 	kfree(ndev);
 }
 EXPORT_SYMBOL(nci_free_device);
@@ -1264,6 +1307,15 @@ void nci_unregister_device(struct nci_dev *ndev)
 {
 	struct nci_conn_info    *conn_info, *n;
 
+<<<<<<< HEAD
+=======
+	/* This set_bit is not protected with specialized barrier,
+	 * However, it is fine because the mutex_lock(&ndev->req_lock);
+	 * in nci_close_device() will help to emit one.
+	 */
+	set_bit(NCI_UNREG, &ndev->flags);
+
+>>>>>>> rebase
 	nci_close_device(ndev);
 
 	destroy_workqueue(ndev->cmd_wq);

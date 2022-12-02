@@ -42,6 +42,7 @@ struct alt_region {
 /*
  * Check if the target PC is within an alternative block.
  */
+<<<<<<< HEAD
 static bool branch_insn_requires_update(struct alt_instr *alt, unsigned long pc)
 {
 	unsigned long replptr;
@@ -58,11 +59,21 @@ static bool branch_insn_requires_update(struct alt_instr *alt, unsigned long pc)
 	 * we're not even trying to fix it up.
 	 */
 	BUG();
+=======
+static __always_inline bool branch_insn_requires_update(struct alt_instr *alt, unsigned long pc)
+{
+	unsigned long replptr = (unsigned long)ALT_REPL_PTR(alt);
+	return !(pc >= replptr && pc <= (replptr + alt->alt_len));
+>>>>>>> rebase
 }
 
 #define align_down(x, a)	((unsigned long)(x) & ~(((unsigned long)(a)) - 1))
 
+<<<<<<< HEAD
 static u32 get_alt_insn(struct alt_instr *alt, __le32 *insnptr, __le32 *altinsnptr)
+=======
+static __always_inline u32 get_alt_insn(struct alt_instr *alt, __le32 *insnptr, __le32 *altinsnptr)
+>>>>>>> rebase
 {
 	u32 insn;
 
@@ -107,7 +118,11 @@ static u32 get_alt_insn(struct alt_instr *alt, __le32 *insnptr, __le32 *altinsnp
 	return insn;
 }
 
+<<<<<<< HEAD
 static void patch_alternative(struct alt_instr *alt,
+=======
+static noinstr void patch_alternative(struct alt_instr *alt,
+>>>>>>> rebase
 			      __le32 *origptr, __le32 *updptr, int nr_inst)
 {
 	__le32 *replptr;
@@ -145,7 +160,11 @@ static void clean_dcache_range_nopatch(u64 start, u64 end)
 	} while (cur += d_size, cur < end);
 }
 
+<<<<<<< HEAD
 static void __nocfi __apply_alternatives(void *alt_region, bool is_module)
+=======
+static void __apply_alternatives(void *alt_region, bool is_module)
+>>>>>>> rebase
 {
 	struct alt_instr *alt;
 	struct alt_region *region = alt_region;

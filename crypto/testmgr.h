@@ -29,7 +29,11 @@
 #define MAX_DIGEST_SIZE		64
 #define MAX_TAP			8
 
+<<<<<<< HEAD
 #define MAX_KEYLEN		1088
+=======
+#define MAX_KEYLEN		160
+>>>>>>> rebase
 #define MAX_IVLEN		32
 
 struct hash_testvec {
@@ -37,10 +41,17 @@ struct hash_testvec {
 	const char *key;
 	const char *plaintext;
 	const char *digest;
+<<<<<<< HEAD
 	unsigned short tap[MAX_TAP];
 	unsigned short np;
 	unsigned short psize;
 	unsigned short ksize;
+=======
+	unsigned char tap[MAX_TAP];
+	unsigned short psize;
+	unsigned char np;
+	unsigned char ksize;
+>>>>>>> rebase
 };
 
 /*
@@ -5637,6 +5648,7 @@ static const struct hash_testvec poly1305_tv_template[] = {
 	}
 };
 
+<<<<<<< HEAD
 /* NHPoly1305 test vectors from https://github.com/google/adiantum */
 static const struct hash_testvec nhpoly1305_tv_template[] = {
 	{
@@ -6869,6 +6881,8 @@ static const struct hash_testvec nhpoly1305_tv_template[] = {
 };
 
 
+=======
+>>>>>>> rebase
 /*
  * DES test vectors.
  */
@@ -32050,6 +32064,7 @@ static const struct cipher_testvec chacha20_tv_template[] = {
 	},
 };
 
+<<<<<<< HEAD
 static const struct cipher_testvec xchacha20_tv_template[] = {
 	{ /* from libsodium test/default/xchacha20.c */
 		.key	= "\x79\xc9\x97\x98\xac\x67\x30\x0b"
@@ -33666,6 +33681,8 @@ static const struct cipher_testvec adiantum_xchacha20_aes_tv_template[] = {
 	}
 };
 
+=======
+>>>>>>> rebase
 /*
  * CTS (Cipher Text Stealing) mode tests
  */

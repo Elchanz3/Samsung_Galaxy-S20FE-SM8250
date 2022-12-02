@@ -195,6 +195,7 @@ void pci_unmap_rom(struct pci_dev *pdev, void __iomem *rom)
 		pci_disable_rom(pdev);
 }
 EXPORT_SYMBOL(pci_unmap_rom);
+<<<<<<< HEAD
 
 /**
  * pci_platform_rom - provides a pointer to any ROM image provided by the
@@ -212,3 +213,5 @@ void __iomem *pci_platform_rom(struct pci_dev *pdev, size_t *size)
 	return NULL;
 }
 EXPORT_SYMBOL(pci_platform_rom);
+=======
+>>>>>>> rebase

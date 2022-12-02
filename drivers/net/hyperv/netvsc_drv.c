@@ -378,7 +378,11 @@ static u16 netvsc_select_queue(struct net_device *ndev, struct sk_buff *skb,
 	}
 	rcu_read_unlock();
 
+<<<<<<< HEAD
 	while (unlikely(txq >= ndev->real_num_tx_queues))
+=======
+	while (txq >= ndev->real_num_tx_queues)
+>>>>>>> rebase
 		txq -= ndev->real_num_tx_queues;
 
 	return txq;
@@ -513,7 +517,11 @@ static int netvsc_vf_xmit(struct net_device *net, struct net_device *vf_netdev,
 	int rc;
 
 	skb->dev = vf_netdev;
+<<<<<<< HEAD
 	skb->queue_mapping = qdisc_skb_cb(skb)->slave_dev_queue_mapping;
+=======
+	skb_record_rx_queue(skb, qdisc_skb_cb(skb)->slave_dev_queue_mapping);
+>>>>>>> rebase
 
 	rc = dev_queue_xmit(skb);
 	if (likely(rc == NET_XMIT_SUCCESS || rc == NET_XMIT_CN)) {
@@ -543,12 +551,22 @@ static int netvsc_start_xmit(struct sk_buff *skb, struct net_device *net)
 	u32 hash;
 	struct hv_page_buffer pb[MAX_PAGE_BUFFER_COUNT];
 
+<<<<<<< HEAD
 	/* if VF is present and up then redirect packets
 	 * already called with rcu_read_lock_bh
 	 */
 	vf_netdev = rcu_dereference_bh(net_device_ctx->vf_netdev);
 	if (vf_netdev && netif_running(vf_netdev) &&
 	    !netpoll_tx_running(net))
+=======
+	/* If VF is present and up then redirect packets to it.
+	 * Skip the VF if it is marked down or has no carrier.
+	 * If netpoll is in uses, then VF can not be used either.
+	 */
+	vf_netdev = rcu_dereference_bh(net_device_ctx->vf_netdev);
+	if (vf_netdev && netif_running(vf_netdev) &&
+	    netif_carrier_ok(vf_netdev) && !netpoll_tx_running(net))
+>>>>>>> rebase
 		return netvsc_vf_xmit(net, vf_netdev, skb);
 
 	/* We will atmost need two pages to describe the rndis
@@ -1453,6 +1471,12 @@ static void netvsc_get_ethtool_stats(struct net_device *dev,
 	pcpu_sum = kvmalloc_array(num_possible_cpus(),
 				  sizeof(struct netvsc_ethtool_pcpu_stats),
 				  GFP_KERNEL);
+<<<<<<< HEAD
+=======
+	if (!pcpu_sum)
+		return;
+
+>>>>>>> rebase
 	netvsc_get_pcpu_stats(dev, pcpu_sum);
 	for_each_present_cpu(cpu) {
 		struct netvsc_ethtool_pcpu_stats *this_sum = &pcpu_sum[cpu];
@@ -2117,6 +2141,10 @@ static struct net_device *get_netvsc_byslot(const struct net_device *vf_netdev)
 {
 	struct device *parent = vf_netdev->dev.parent;
 	struct net_device_context *ndev_ctx;
+<<<<<<< HEAD
+=======
+	struct net_device *ndev;
+>>>>>>> rebase
 	struct pci_dev *pdev;
 	u32 serial;
 
@@ -2143,6 +2171,21 @@ static struct net_device *get_netvsc_byslot(const struct net_device *vf_netdev)
 			return hv_get_drvdata(ndev_ctx->device_ctx);
 	}
 
+<<<<<<< HEAD
+=======
+	/* Fallback path to check synthetic vf with
+	 * help of mac addr
+	 */
+	list_for_each_entry(ndev_ctx, &netvsc_dev_list, list) {
+		ndev = hv_get_drvdata(ndev_ctx->device_ctx);
+		if (ether_addr_equal(vf_netdev->perm_addr, ndev->perm_addr)) {
+			netdev_notice(vf_netdev,
+				      "falling back to mac addr based matching\n");
+			return ndev;
+		}
+	}
+
+>>>>>>> rebase
 	netdev_notice(vf_netdev,
 		      "no netdev found for vf serial:%u\n", serial);
 	return NULL;
@@ -2212,6 +2255,14 @@ static int netvsc_vf_changed(struct net_device *vf_netdev)
 	if (!netvsc_dev)
 		return NOTIFY_DONE;
 
+<<<<<<< HEAD
+=======
+	if (vf_is_up && !net_device_ctx->vf_alloc) {
+		netdev_info(ndev, "Waiting for the VF association from host\n");
+		wait_for_completion(&net_device_ctx->vf_add);
+	}
+
+>>>>>>> rebase
 	netvsc_switch_datapath(ndev, vf_is_up);
 	netdev_info(ndev, "Data path switched %s VF: %s\n",
 		    vf_is_up ? "to" : "from", vf_netdev->name);
@@ -2233,6 +2284,10 @@ static int netvsc_unregister_vf(struct net_device *vf_netdev)
 
 	netdev_info(ndev, "VF unregistering: %s\n", vf_netdev->name);
 
+<<<<<<< HEAD
+=======
+	reinit_completion(&net_device_ctx->vf_add);
+>>>>>>> rebase
 	netdev_rx_handler_unregister(vf_netdev);
 	netdev_upper_dev_unlink(vf_netdev, ndev);
 	RCU_INIT_POINTER(net_device_ctx->vf_netdev, NULL);
@@ -2270,6 +2325,10 @@ static int netvsc_probe(struct hv_device *dev,
 
 	INIT_DELAYED_WORK(&net_device_ctx->dwork, netvsc_link_change);
 
+<<<<<<< HEAD
+=======
+	init_completion(&net_device_ctx->vf_add);
+>>>>>>> rebase
 	spin_lock_init(&net_device_ctx->lock);
 	INIT_LIST_HEAD(&net_device_ctx->reconfig_events);
 	INIT_DELAYED_WORK(&net_device_ctx->vf_takeover, netvsc_vf_setup);

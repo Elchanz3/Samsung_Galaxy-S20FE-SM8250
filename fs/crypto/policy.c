@@ -5,9 +5,14 @@
  * Copyright (C) 2015, Google, Inc.
  * Copyright (C) 2015, Motorola Mobility.
  *
+<<<<<<< HEAD
  * Originally written by Michael Halcrow, 2015.
  * Modified by Jaegeuk Kim, 2015.
  * Modified by Eric Biggers, 2019 for v2 policy support.
+=======
+ * Written by Michael Halcrow, 2015.
+ * Modified by Jaegeuk Kim, 2015.
+>>>>>>> rebase
  */
 
 #include <linux/random.h>
@@ -15,6 +20,7 @@
 #include <linux/mount.h>
 #include "fscrypt_private.h"
 
+<<<<<<< HEAD
 /**
  * fscrypt_policies_equal - check whether two encryption policies are the same
  *
@@ -398,10 +404,52 @@ static int set_encryption_policy(struct inode *inode,
 	ctxsize = fscrypt_new_context_from_policy(&ctx, policy);
 
 	return inode->i_sb->s_cop->set_context(inode, &ctx, ctxsize, NULL);
+=======
+/*
+ * check whether an encryption policy is consistent with an encryption context
+ */
+static bool is_encryption_context_consistent_with_policy(
+				const struct fscrypt_context *ctx,
+				const struct fscrypt_policy *policy)
+{
+	return memcmp(ctx->master_key_descriptor, policy->master_key_descriptor,
+		      FS_KEY_DESCRIPTOR_SIZE) == 0 &&
+		(ctx->flags == policy->flags) &&
+		(ctx->contents_encryption_mode ==
+		 policy->contents_encryption_mode) &&
+		(ctx->filenames_encryption_mode ==
+		 policy->filenames_encryption_mode);
+}
+
+static int create_encryption_context_from_policy(struct inode *inode,
+				const struct fscrypt_policy *policy)
+{
+	struct fscrypt_context ctx;
+
+	ctx.format = FS_ENCRYPTION_CONTEXT_FORMAT_V1;
+	memcpy(ctx.master_key_descriptor, policy->master_key_descriptor,
+					FS_KEY_DESCRIPTOR_SIZE);
+
+	if (!fscrypt_valid_enc_modes(policy->contents_encryption_mode,
+				     policy->filenames_encryption_mode))
+		return -EINVAL;
+
+	if (policy->flags & ~FS_POLICY_FLAGS_VALID)
+		return -EINVAL;
+
+	ctx.contents_encryption_mode = policy->contents_encryption_mode;
+	ctx.filenames_encryption_mode = policy->filenames_encryption_mode;
+	ctx.flags = policy->flags;
+	BUILD_BUG_ON(sizeof(ctx.nonce) != FS_KEY_DERIVATION_NONCE_SIZE);
+	get_random_bytes(ctx.nonce, FS_KEY_DERIVATION_NONCE_SIZE);
+
+	return inode->i_sb->s_cop->set_context(inode, &ctx, sizeof(ctx), NULL);
+>>>>>>> rebase
 }
 
 int fscrypt_ioctl_set_policy(struct file *filp, const void __user *arg)
 {
+<<<<<<< HEAD
 	union fscrypt_policy policy;
 	union fscrypt_policy existing_policy;
 	struct inode *inode = file_inode(filp);
@@ -443,6 +491,21 @@ int fscrypt_ioctl_set_policy(struct file *filp, const void __user *arg)
 			"fscrypt_ioctl_set_policy inode_owner_or_capable failed\n");
 		return -EACCES;
 	}
+=======
+	struct fscrypt_policy policy;
+	struct inode *inode = file_inode(filp);
+	int ret;
+	struct fscrypt_context ctx;
+
+	if (copy_from_user(&policy, arg, sizeof(policy)))
+		return -EFAULT;
+
+	if (!inode_owner_or_capable(inode))
+		return -EACCES;
+
+	if (policy.version != 0)
+		return -EINVAL;
+>>>>>>> rebase
 
 	ret = mnt_want_write_file(filp);
 	if (ret)
@@ -450,7 +513,11 @@ int fscrypt_ioctl_set_policy(struct file *filp, const void __user *arg)
 
 	inode_lock(inode);
 
+<<<<<<< HEAD
 	ret = fscrypt_get_policy(inode, &existing_policy);
+=======
+	ret = inode->i_sb->s_cop->get_context(inode, &ctx, sizeof(ctx));
+>>>>>>> rebase
 	if (ret == -ENODATA) {
 		if (!S_ISDIR(inode->i_mode))
 			ret = -ENOTDIR;
@@ -459,10 +526,21 @@ int fscrypt_ioctl_set_policy(struct file *filp, const void __user *arg)
 		else if (!inode->i_sb->s_cop->empty_dir(inode))
 			ret = -ENOTEMPTY;
 		else
+<<<<<<< HEAD
 			ret = set_encryption_policy(inode, &policy);
 	} else if (ret == -EINVAL ||
 		   (ret == 0 && !fscrypt_policies_equal(&policy,
 							&existing_policy))) {
+=======
+			ret = create_encryption_context_from_policy(inode,
+								    &policy);
+	} else if (ret == sizeof(ctx) &&
+		   is_encryption_context_consistent_with_policy(&ctx,
+								&policy)) {
+		/* The file already uses the same encryption policy. */
+		ret = 0;
+	} else if (ret >= 0 || ret == -ERANGE) {
+>>>>>>> rebase
 		/* The file already uses a different encryption policy. */
 		ret = -EEXIST;
 	}
@@ -470,12 +548,16 @@ int fscrypt_ioctl_set_policy(struct file *filp, const void __user *arg)
 	inode_unlock(inode);
 
 	mnt_drop_write_file(filp);
+<<<<<<< HEAD
 	pr_info("fscrypt_ioctl_set_policy : %s(%d)\n",
 			(filp ?(char *)filp->f_path.dentry->d_name.name : (char *)"Unknown"), ret);
+=======
+>>>>>>> rebase
 	return ret;
 }
 EXPORT_SYMBOL(fscrypt_ioctl_set_policy);
 
+<<<<<<< HEAD
 /* Original ioctl version; can only get the original policy version */
 int fscrypt_ioctl_get_policy(struct file *filp, void __user *arg)
 {
@@ -490,11 +572,40 @@ int fscrypt_ioctl_get_policy(struct file *filp, void __user *arg)
 		return -EINVAL;
 
 	if (copy_to_user(arg, &policy, sizeof(policy.v1)))
+=======
+int fscrypt_ioctl_get_policy(struct file *filp, void __user *arg)
+{
+	struct inode *inode = file_inode(filp);
+	struct fscrypt_context ctx;
+	struct fscrypt_policy policy;
+	int res;
+
+	if (!IS_ENCRYPTED(inode))
+		return -ENODATA;
+
+	res = inode->i_sb->s_cop->get_context(inode, &ctx, sizeof(ctx));
+	if (res < 0 && res != -ERANGE)
+		return res;
+	if (res != sizeof(ctx))
+		return -EINVAL;
+	if (ctx.format != FS_ENCRYPTION_CONTEXT_FORMAT_V1)
+		return -EINVAL;
+
+	policy.version = 0;
+	policy.contents_encryption_mode = ctx.contents_encryption_mode;
+	policy.filenames_encryption_mode = ctx.filenames_encryption_mode;
+	policy.flags = ctx.flags;
+	memcpy(policy.master_key_descriptor, ctx.master_key_descriptor,
+				FS_KEY_DESCRIPTOR_SIZE);
+
+	if (copy_to_user(arg, &policy, sizeof(policy)))
+>>>>>>> rebase
 		return -EFAULT;
 	return 0;
 }
 EXPORT_SYMBOL(fscrypt_ioctl_get_policy);
 
+<<<<<<< HEAD
 /* Extended ioctl version; can get policies of any version */
 int fscrypt_ioctl_get_policy_ex(struct file *filp, void __user *uarg)
 {
@@ -546,6 +657,8 @@ int fscrypt_ioctl_get_nonce(struct file *filp, void __user *arg)
 }
 EXPORT_SYMBOL_GPL(fscrypt_ioctl_get_nonce);
 
+=======
+>>>>>>> rebase
 /**
  * fscrypt_has_permitted_context() - is a file's encryption policy permitted
  *				     within its directory?
@@ -567,8 +680,15 @@ EXPORT_SYMBOL_GPL(fscrypt_ioctl_get_nonce);
  */
 int fscrypt_has_permitted_context(struct inode *parent, struct inode *child)
 {
+<<<<<<< HEAD
 	union fscrypt_policy parent_policy, child_policy;
 	int err;
+=======
+	const struct fscrypt_operations *cops = parent->i_sb->s_cop;
+	const struct fscrypt_info *parent_ci, *child_ci;
+	struct fscrypt_context parent_ctx, child_ctx;
+	int res;
+>>>>>>> rebase
 
 	/* No restrictions on file types which are never encrypted */
 	if (!S_ISREG(child->i_mode) && !S_ISDIR(child->i_mode) &&
@@ -598,6 +718,7 @@ int fscrypt_has_permitted_context(struct inode *parent, struct inode *child)
 	 * In any case, if an unexpected error occurs, fall back to "forbidden".
 	 */
 
+<<<<<<< HEAD
 	err = fscrypt_get_encryption_info(parent);
 	if (err)
 		return 0;
@@ -614,6 +735,42 @@ int fscrypt_has_permitted_context(struct inode *parent, struct inode *child)
 		return 0;
 
 	return fscrypt_policies_equal(&parent_policy, &child_policy);
+=======
+	res = fscrypt_get_encryption_info(parent);
+	if (res)
+		return 0;
+	res = fscrypt_get_encryption_info(child);
+	if (res)
+		return 0;
+	parent_ci = parent->i_crypt_info;
+	child_ci = child->i_crypt_info;
+
+	if (parent_ci && child_ci) {
+		return memcmp(parent_ci->ci_master_key, child_ci->ci_master_key,
+			      FS_KEY_DESCRIPTOR_SIZE) == 0 &&
+			(parent_ci->ci_data_mode == child_ci->ci_data_mode) &&
+			(parent_ci->ci_filename_mode ==
+			 child_ci->ci_filename_mode) &&
+			(parent_ci->ci_flags == child_ci->ci_flags);
+	}
+
+	res = cops->get_context(parent, &parent_ctx, sizeof(parent_ctx));
+	if (res != sizeof(parent_ctx))
+		return 0;
+
+	res = cops->get_context(child, &child_ctx, sizeof(child_ctx));
+	if (res != sizeof(child_ctx))
+		return 0;
+
+	return memcmp(parent_ctx.master_key_descriptor,
+		      child_ctx.master_key_descriptor,
+		      FS_KEY_DESCRIPTOR_SIZE) == 0 &&
+		(parent_ctx.contents_encryption_mode ==
+		 child_ctx.contents_encryption_mode) &&
+		(parent_ctx.filenames_encryption_mode ==
+		 child_ctx.filenames_encryption_mode) &&
+		(parent_ctx.flags == child_ctx.flags);
+>>>>>>> rebase
 }
 EXPORT_SYMBOL(fscrypt_has_permitted_context);
 
@@ -629,8 +786,12 @@ EXPORT_SYMBOL(fscrypt_has_permitted_context);
 int fscrypt_inherit_context(struct inode *parent, struct inode *child,
 						void *fs_data, bool preload)
 {
+<<<<<<< HEAD
 	union fscrypt_context ctx;
 	int ctxsize;
+=======
+	struct fscrypt_context ctx;
+>>>>>>> rebase
 	struct fscrypt_info *ci;
 	int res;
 
@@ -638,6 +799,7 @@ int fscrypt_inherit_context(struct inode *parent, struct inode *child,
 	if (res < 0)
 		return res;
 
+<<<<<<< HEAD
 	ci = READ_ONCE(parent->i_crypt_info);
 	if (ci == NULL)
 		return -ENOKEY;
@@ -664,6 +826,22 @@ int fscrypt_inherit_context(struct inode *parent, struct inode *child,
 #endif
 
 	res = parent->i_sb->s_cop->set_context(child, &ctx, ctxsize, fs_data);
+=======
+	ci = parent->i_crypt_info;
+	if (ci == NULL)
+		return -ENOKEY;
+
+	ctx.format = FS_ENCRYPTION_CONTEXT_FORMAT_V1;
+	ctx.contents_encryption_mode = ci->ci_data_mode;
+	ctx.filenames_encryption_mode = ci->ci_filename_mode;
+	ctx.flags = ci->ci_flags;
+	memcpy(ctx.master_key_descriptor, ci->ci_master_key,
+	       FS_KEY_DESCRIPTOR_SIZE);
+	get_random_bytes(ctx.nonce, FS_KEY_DERIVATION_NONCE_SIZE);
+	BUILD_BUG_ON(sizeof(ctx) != FSCRYPT_SET_CONTEXT_MAX_SIZE);
+	res = parent->i_sb->s_cop->set_context(child, &ctx,
+						sizeof(ctx), fs_data);
+>>>>>>> rebase
 	if (res)
 		return res;
 	return preload ? fscrypt_get_encryption_info(child): 0;

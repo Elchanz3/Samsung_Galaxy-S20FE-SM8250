@@ -112,11 +112,14 @@ int psci_cpu_kill(unsigned int cpu)
 	return 0;
 }
 
+<<<<<<< HEAD
 bool psci_cpu_can_disable(unsigned int cpu)
 {
 	return true;
 }
 
+=======
+>>>>>>> rebase
 #endif
 
 bool __init psci_smp_available(void)
@@ -131,6 +134,9 @@ const struct smp_operations psci_smp_ops __initconst = {
 	.cpu_disable		= psci_cpu_disable,
 	.cpu_die		= psci_cpu_die,
 	.cpu_kill		= psci_cpu_kill,
+<<<<<<< HEAD
 	.cpu_can_disable	= psci_cpu_can_disable,
+=======
+>>>>>>> rebase
 #endif
 };

@@ -466,7 +466,11 @@ static int au1550nd_probe(struct platform_device *pdev)
 	this->write_buf = (pd->devwidth) ? au_write_buf16 : au_write_buf;
 	this->read_buf = (pd->devwidth) ? au_read_buf16 : au_read_buf;
 
+<<<<<<< HEAD
 	ret = nand_scan(mtd, 1);
+=======
+	ret = nand_scan(this, 1);
+>>>>>>> rebase
 	if (ret) {
 		dev_err(&pdev->dev, "NAND scan failed with %d\n", ret);
 		goto out3;
@@ -492,7 +496,11 @@ static int au1550nd_remove(struct platform_device *pdev)
 	struct au1550nd_ctx *ctx = platform_get_drvdata(pdev);
 	struct resource *r = platform_get_resource(pdev, IORESOURCE_MEM, 0);
 
+<<<<<<< HEAD
 	nand_release(nand_to_mtd(&ctx->chip));
+=======
+	nand_release(&ctx->chip);
+>>>>>>> rebase
 	iounmap(ctx->base);
 	release_mem_region(r->start, 0x1000);
 	kfree(ctx);

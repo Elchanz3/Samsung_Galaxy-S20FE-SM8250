@@ -23,7 +23,10 @@
 #include <linux/cpufreq.h>
 #include <linux/cpumask.h>
 #include <linux/cpu_cooling.h>
+<<<<<<< HEAD
 #include <linux/energy_model.h>
+=======
+>>>>>>> rebase
 #include <linux/export.h>
 #include <linux/module.h>
 #include <linux/of_platform.h>
@@ -99,12 +102,19 @@ scpi_get_sharing_cpus(struct device *cpu_dev, struct cpumask *cpumask)
 
 static int scpi_cpufreq_init(struct cpufreq_policy *policy)
 {
+<<<<<<< HEAD
 	int ret, nr_opp;
+=======
+	int ret;
+>>>>>>> rebase
 	unsigned int latency;
 	struct device *cpu_dev;
 	struct scpi_data *priv;
 	struct cpufreq_frequency_table *freq_table;
+<<<<<<< HEAD
 	struct em_data_callback em_cb = EM_DATA_CB(of_dev_pm_opp_get_cpu_power);
+=======
+>>>>>>> rebase
 
 	cpu_dev = get_cpu_device(policy->cpu);
 	if (!cpu_dev) {
@@ -137,7 +147,10 @@ static int scpi_cpufreq_init(struct cpufreq_policy *policy)
 		ret = -EPROBE_DEFER;
 		goto out_free_opp;
 	}
+<<<<<<< HEAD
 	nr_opp = ret;
+=======
+>>>>>>> rebase
 
 	priv = kzalloc(sizeof(*priv), GFP_KERNEL);
 	if (!priv) {
@@ -173,9 +186,12 @@ static int scpi_cpufreq_init(struct cpufreq_policy *policy)
 	policy->cpuinfo.transition_latency = latency;
 
 	policy->fast_switch_possible = false;
+<<<<<<< HEAD
 
 	em_register_perf_domain(policy->cpus, nr_opp, &em_cb);
 
+=======
+>>>>>>> rebase
 	return 0;
 
 out_free_cpufreq_table:
@@ -183,7 +199,11 @@ out_free_cpufreq_table:
 out_free_priv:
 	kfree(priv);
 out_free_opp:
+<<<<<<< HEAD
 	dev_pm_opp_remove_all_dynamic(cpu_dev);
+=======
+	dev_pm_opp_cpumask_remove_table(policy->cpus);
+>>>>>>> rebase
 
 	return ret;
 }
@@ -196,7 +216,11 @@ static int scpi_cpufreq_exit(struct cpufreq_policy *policy)
 	clk_put(priv->clk);
 	dev_pm_opp_free_cpufreq_table(priv->cpu_dev, &policy->freq_table);
 	kfree(priv);
+<<<<<<< HEAD
 	dev_pm_opp_remove_all_dynamic(priv->cpu_dev);
+=======
+	dev_pm_opp_cpumask_remove_table(policy->related_cpus);
+>>>>>>> rebase
 
 	return 0;
 }
@@ -252,6 +276,10 @@ static struct platform_driver scpi_cpufreq_platdrv = {
 };
 module_platform_driver(scpi_cpufreq_platdrv);
 
+<<<<<<< HEAD
+=======
+MODULE_ALIAS("platform:scpi-cpufreq");
+>>>>>>> rebase
 MODULE_AUTHOR("Sudeep Holla <sudeep.holla@arm.com>");
 MODULE_DESCRIPTION("ARM SCPI CPUFreq interface driver");
 MODULE_LICENSE("GPL v2");

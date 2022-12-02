@@ -44,7 +44,10 @@ struct vm_area_struct;
 #else
 #define ___GFP_NOLOCKDEP	0
 #endif
+<<<<<<< HEAD
 #define ___GFP_CMA		0x1000000u
+=======
+>>>>>>> rebase
 /* If the above are modified, __GFP_BITS_SHIFT may need updating */
 
 /*
@@ -58,7 +61,10 @@ struct vm_area_struct;
 #define __GFP_HIGHMEM	((__force gfp_t)___GFP_HIGHMEM)
 #define __GFP_DMA32	((__force gfp_t)___GFP_DMA32)
 #define __GFP_MOVABLE	((__force gfp_t)___GFP_MOVABLE)  /* ZONE_MOVABLE allowed */
+<<<<<<< HEAD
 #define __GFP_CMA	((__force gfp_t)___GFP_CMA)
+=======
+>>>>>>> rebase
 #define GFP_ZONEMASK	(__GFP_DMA|__GFP_HIGHMEM|__GFP_DMA32|__GFP_MOVABLE)
 
 /**
@@ -219,6 +225,7 @@ struct vm_area_struct;
 #define __GFP_NOLOCKDEP ((__force gfp_t)___GFP_NOLOCKDEP)
 
 /* Room for N __GFP_FOO bits */
+<<<<<<< HEAD
 #define __GFP_BITS_SHIFT (25)
 #ifdef CONFIG_LOCKDEP
 #define __GFP_BITS_MASK ((__force gfp_t)((1 << __GFP_BITS_SHIFT) - 1))
@@ -226,6 +233,10 @@ struct vm_area_struct;
 #define __GFP_BITS_MASK (((__force gfp_t)((1 << __GFP_BITS_SHIFT) - 1)) & \
 				~0x800000u)
 #endif
+=======
+#define __GFP_BITS_SHIFT (23 + IS_ENABLED(CONFIG_LOCKDEP))
+#define __GFP_BITS_MASK ((__force gfp_t)((1 << __GFP_BITS_SHIFT) - 1))
+>>>>>>> rebase
 
 /**
  * DOC: Useful GFP flag combinations
@@ -448,6 +459,7 @@ static inline bool gfpflags_normal_context(const gfp_t gfp_flags)
 static inline enum zone_type gfp_zone(gfp_t flags)
 {
 	enum zone_type z;
+<<<<<<< HEAD
 	int bit;
 
 	if (!IS_ENABLED(CONFIG_HIGHMEM)) {
@@ -456,6 +468,9 @@ static inline enum zone_type gfp_zone(gfp_t flags)
 	}
 
 	bit = (__force int) (flags & GFP_ZONEMASK);
+=======
+	int bit = (__force int) (flags & GFP_ZONEMASK);
+>>>>>>> rebase
 
 	z = (GFP_ZONE_TABLE >> (bit * GFP_ZONES_SHIFT)) &
 					 ((1 << GFP_ZONES_SHIFT) - 1);
@@ -537,11 +552,14 @@ static inline struct page *alloc_pages_node(int nid, gfp_t gfp_mask,
 	return __alloc_pages_node(nid, gfp_mask, order);
 }
 
+<<<<<<< HEAD
 #ifdef CONFIG_KZEROD
 extern struct page *alloc_zeroed_page(void);
 extern unsigned long kzerod_get_zeroed_size(void);
 #endif
 
+=======
+>>>>>>> rebase
 #ifdef CONFIG_NUMA
 extern struct page *alloc_pages_current(gfp_t gfp_mask, unsigned order);
 

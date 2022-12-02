@@ -5,6 +5,11 @@
 #include <asm/glue-cache.h>
 
 #ifndef MULTI_CACHE
+<<<<<<< HEAD
+=======
+#define dmac_map_area			__glue(_CACHE,_dma_map_area)
+#define dmac_unmap_area 		__glue(_CACHE,_dma_unmap_area)
+>>>>>>> rebase
 
 /*
  * These are private to the dma-mapping API.  Do not use directly.

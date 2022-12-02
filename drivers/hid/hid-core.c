@@ -1128,6 +1128,12 @@ EXPORT_SYMBOL_GPL(hid_open_report);
 
 static s32 snto32(__u32 value, unsigned n)
 {
+<<<<<<< HEAD
+=======
+	if (!value || !n)
+		return 0;
+
+>>>>>>> rebase
 	switch (n) {
 	case 8:  return ((__s8)value);
 	case 16: return ((__s16)value);
@@ -1424,8 +1430,13 @@ static void hid_output_field(const struct hid_device *hid,
 				  field->value[n]);
 	}
 }
+<<<<<<< HEAD
  
  /*
+=======
+
+/*
+>>>>>>> rebase
  * Compute the size of a report.
  */
 static size_t hid_compute_report_size(struct hid_report *report)
@@ -1820,6 +1831,12 @@ int hid_connect(struct hid_device *hdev, unsigned int connect_mask)
 	case BUS_I2C:
 		bus = "I2C";
 		break;
+<<<<<<< HEAD
+=======
+	case BUS_VIRTUAL:
+		bus = "VIRTUAL";
+		break;
+>>>>>>> rebase
 	default:
 		bus = "<UNKNOWN>";
 	}
@@ -2118,12 +2135,17 @@ static int hid_device_remove(struct device *dev)
 {
 	struct hid_device *hdev = to_hid_device(dev);
 	struct hid_driver *hdrv;
+<<<<<<< HEAD
 	int ret = 0;
 
 	if (down_interruptible(&hdev->driver_input_lock)) {
 		ret = -EINTR;
 		goto end;
 	}
+=======
+
+	down(&hdev->driver_input_lock);
+>>>>>>> rebase
 	hdev->io_started = false;
 
 	hdrv = hdev->driver;
@@ -2138,8 +2160,13 @@ static int hid_device_remove(struct device *dev)
 
 	if (!hdev->io_started)
 		up(&hdev->driver_input_lock);
+<<<<<<< HEAD
 end:
 	return ret;
+=======
+
+	return 0;
+>>>>>>> rebase
 }
 
 static ssize_t modalias_show(struct device *dev, struct device_attribute *a,

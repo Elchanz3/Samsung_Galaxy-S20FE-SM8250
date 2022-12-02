@@ -424,7 +424,11 @@ int __kprobes trampoline_probe_handler(struct kprobe *p, struct pt_regs *regs)
 	struct hlist_node *tmp;
 	unsigned long flags, orig_ret_address = 0;
 	unsigned long trampoline_address =
+<<<<<<< HEAD
 		((struct fnptr *)kretprobe_trampoline)->ip;
+=======
+		(unsigned long)dereference_function_descriptor(kretprobe_trampoline);
+>>>>>>> rebase
 
 	INIT_HLIST_HEAD(&empty_rp);
 	kretprobe_hash_lock(current, &head, &flags);
@@ -500,7 +504,11 @@ void __kprobes arch_prepare_kretprobe(struct kretprobe_instance *ri,
 	ri->ret_addr = (kprobe_opcode_t *)regs->b0;
 
 	/* Replace the return addr with trampoline addr */
+<<<<<<< HEAD
 	regs->b0 = ((struct fnptr *)kretprobe_trampoline)->ip;
+=======
+	regs->b0 = (unsigned long)dereference_function_descriptor(kretprobe_trampoline);
+>>>>>>> rebase
 }
 
 /* Check the instruction in the slot is break */
@@ -1030,14 +1038,22 @@ static struct kprobe trampoline_p = {
 int __init arch_init_kprobes(void)
 {
 	trampoline_p.addr =
+<<<<<<< HEAD
 		(kprobe_opcode_t *)((struct fnptr *)kretprobe_trampoline)->ip;
+=======
+		dereference_function_descriptor(kretprobe_trampoline);
+>>>>>>> rebase
 	return register_kprobe(&trampoline_p);
 }
 
 int __kprobes arch_trampoline_kprobe(struct kprobe *p)
 {
 	if (p->addr ==
+<<<<<<< HEAD
 		(kprobe_opcode_t *)((struct fnptr *)kretprobe_trampoline)->ip)
+=======
+		dereference_function_descriptor(kretprobe_trampoline))
+>>>>>>> rebase
 		return 1;
 
 	return 0;

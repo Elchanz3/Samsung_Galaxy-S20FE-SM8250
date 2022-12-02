@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 #!/usr/bin/python
+=======
+#!/usr/bin/env python
+>>>>>>> rebase
 # SPDX-License-Identifier: GPL-2.0
 #
 # Usage: unwcheck.py FILE

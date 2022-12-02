@@ -130,12 +130,23 @@ static int spi_execute(struct scsi_device *sdev, const void *cmd,
 		sshdr = &sshdr_tmp;
 
 	for(i = 0; i < DV_RETRIES; i++) {
+<<<<<<< HEAD
+=======
+		/*
+		 * The purpose of the RQF_PM flag below is to bypass the
+		 * SDEV_QUIESCE state.
+		 */
+>>>>>>> rebase
 		result = scsi_execute(sdev, cmd, dir, buffer, bufflen, sense,
 				      sshdr, DV_TIMEOUT, /* retries */ 1,
 				      REQ_FAILFAST_DEV |
 				      REQ_FAILFAST_TRANSPORT |
 				      REQ_FAILFAST_DRIVER,
+<<<<<<< HEAD
 				      0, NULL);
+=======
+				      RQF_PM, NULL);
+>>>>>>> rebase
 		if (driver_byte(result) != DRIVER_SENSE ||
 		    sshdr->sense_key != UNIT_ATTENTION)
 			break;
@@ -352,7 +363,11 @@ store_spi_transport_##field(struct device *dev, 			\
 	struct spi_transport_attrs *tp					\
 		= (struct spi_transport_attrs *)&starget->starget_data;	\
 									\
+<<<<<<< HEAD
 	if (i->f->set_##field)						\
+=======
+	if (!i->f->set_##field)						\
+>>>>>>> rebase
 		return -EINVAL;						\
 	val = simple_strtoul(buf, NULL, 0);				\
 	if (val > tp->max_##field)					\
@@ -1018,23 +1033,42 @@ spi_dv_device(struct scsi_device *sdev)
 	 */
 	lock_system_sleep();
 
+<<<<<<< HEAD
 	if (unlikely(spi_dv_in_progress(starget)))
 		goto unlock;
 
 	if (unlikely(scsi_device_get(sdev)))
 		goto unlock;
+=======
+	if (scsi_autopm_get_device(sdev))
+		goto unlock_system_sleep;
+
+	if (unlikely(spi_dv_in_progress(starget)))
+		goto put_autopm;
+
+	if (unlikely(scsi_device_get(sdev)))
+		goto put_autopm;
+>>>>>>> rebase
 
 	spi_dv_in_progress(starget) = 1;
 
 	buffer = kzalloc(len, GFP_KERNEL);
 
 	if (unlikely(!buffer))
+<<<<<<< HEAD
 		goto out_put;
+=======
+		goto put_sdev;
+>>>>>>> rebase
 
 	/* We need to verify that the actual device will quiesce; the
 	 * later target quiesce is just a nice to have */
 	if (unlikely(scsi_device_quiesce(sdev)))
+<<<<<<< HEAD
 		goto out_free;
+=======
+		goto free_buffer;
+>>>>>>> rebase
 
 	scsi_target_quiesce(starget);
 
@@ -1054,12 +1088,25 @@ spi_dv_device(struct scsi_device *sdev)
 
 	spi_initial_dv(starget) = 1;
 
+<<<<<<< HEAD
  out_free:
 	kfree(buffer);
  out_put:
 	spi_dv_in_progress(starget) = 0;
 	scsi_device_put(sdev);
 unlock:
+=======
+free_buffer:
+	kfree(buffer);
+
+put_sdev:
+	spi_dv_in_progress(starget) = 0;
+	scsi_device_put(sdev);
+put_autopm:
+	scsi_autopm_put_device(sdev);
+
+unlock_system_sleep:
+>>>>>>> rebase
 	unlock_system_sleep();
 }
 EXPORT_SYMBOL(spi_dv_device);

@@ -1,5 +1,19 @@
+<<<<<<< HEAD
 // SPDX-License-Identifier: GPL-2.0-only
 /* Copyright (c) 2017-2018, The Linux Foundation. All rights reserved. */
+=======
+/* Copyright (c) 2017, The Linux Foundation. All rights reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2 and
+ * only version 2 as published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ */
+>>>>>>> rebase
 
 #include <linux/bitops.h>
 #include <linux/clk.h>
@@ -203,7 +217,10 @@ static int spmi_pmic_clkdiv_probe(struct platform_device *pdev)
 	struct regmap *regmap;
 	struct device *dev = &pdev->dev;
 	struct device_node *of_node = dev->of_node;
+<<<<<<< HEAD
 	bool use_dt_name = false;
+=======
+>>>>>>> rebase
 	const char *parent_name;
 	int nclks, i, ret, cxo_hz;
 	char name[20];
@@ -245,10 +262,13 @@ static int spmi_pmic_clkdiv_probe(struct platform_device *pdev)
 	}
 	cxo_hz = clk_get_rate(cxo);
 	clk_put(cxo);
+<<<<<<< HEAD
 	if (cxo_hz <= 0) {
 		dev_err(dev, "invalid CXO rate: %d\n", cxo_hz);
 		return -EINVAL;
 	}
+=======
+>>>>>>> rebase
 
 	parent_name = of_clk_get_parent_name(of_node, 0);
 	if (!parent_name) {
@@ -256,15 +276,19 @@ static int spmi_pmic_clkdiv_probe(struct platform_device *pdev)
 		return -ENODEV;
 	}
 
+<<<<<<< HEAD
 	if (of_find_property(of_node, "clock-output-names", NULL))
 		use_dt_name = true;
 
+=======
+>>>>>>> rebase
 	init.name = name;
 	init.parent_names = &parent_name;
 	init.num_parents = 1;
 	init.ops = &clk_spmi_pmic_div_ops;
 
 	for (i = 0, clkdiv = cc->clks; i < nclks; i++) {
+<<<<<<< HEAD
 		if (use_dt_name) {
 			ret = of_property_read_string_index(of_node,
 				"clock-output-names", i, &init.name);
@@ -276,6 +300,9 @@ static int spmi_pmic_clkdiv_probe(struct platform_device *pdev)
 		} else {
 			snprintf(name, sizeof(name), "div_clk%d", i + 1);
 		}
+=======
+		snprintf(name, sizeof(name), "div_clk%d", i + 1);
+>>>>>>> rebase
 
 		spin_lock_init(&clkdiv[i].lock);
 		clkdiv[i].base = start + i * 0x100;

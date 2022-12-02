@@ -113,6 +113,12 @@ int hfi_core_deinit(struct venus_core *core, bool blocking)
 		mutex_lock(&core->lock);
 	}
 
+<<<<<<< HEAD
+=======
+	if (!core->ops)
+		goto unlock;
+
+>>>>>>> rebase
 	ret = core->ops->core_deinit(core);
 
 	if (!ret)

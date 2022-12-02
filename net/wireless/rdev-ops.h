@@ -135,6 +135,7 @@ rdev_set_default_mgmt_key(struct cfg80211_registered_device *rdev,
 	return ret;
 }
 
+<<<<<<< HEAD
 static inline int
 rdev_set_default_beacon_key(struct cfg80211_registered_device *rdev,
 			    struct net_device *netdev, u8 key_index)
@@ -148,6 +149,8 @@ rdev_set_default_beacon_key(struct cfg80211_registered_device *rdev,
 	return ret;
 }
 
+=======
+>>>>>>> rebase
 static inline int rdev_start_ap(struct cfg80211_registered_device *rdev,
 				struct net_device *dev,
 				struct cfg80211_ap_settings *settings)
@@ -1259,6 +1262,7 @@ rdev_external_auth(struct cfg80211_registered_device *rdev,
 	return ret;
 }
 
+<<<<<<< HEAD
 static inline int rdev_update_owe_info(struct cfg80211_registered_device *rdev,
 				       struct net_device *dev,
 				       struct cfg80211_update_owe_info *oweinfo)
@@ -1272,4 +1276,6 @@ static inline int rdev_update_owe_info(struct cfg80211_registered_device *rdev,
 	return ret;
 }
 
+=======
+>>>>>>> rebase
 #endif /* __CFG80211_RDEV_OPS */

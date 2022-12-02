@@ -1,6 +1,10 @@
 /*
  * Copyright (c) 2013, Sony Mobile Communications AB.
+<<<<<<< HEAD
  * Copyright (c) 2013-2020, The Linux Foundation. All rights reserved.
+=======
+ * Copyright (c) 2013, The Linux Foundation. All rights reserved.
+>>>>>>> rebase
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -17,7 +21,10 @@
 #include <linux/io.h>
 #include <linux/module.h>
 #include <linux/of.h>
+<<<<<<< HEAD
 #include <linux/of_irq.h>
+=======
+>>>>>>> rebase
 #include <linux/platform_device.h>
 #include <linux/pinctrl/machine.h>
 #include <linux/pinctrl/pinctrl.h>
@@ -28,18 +35,25 @@
 #include <linux/gpio.h>
 #include <linux/interrupt.h>
 #include <linux/spinlock.h>
+<<<<<<< HEAD
 #include <linux/syscore_ops.h>
 #include <linux/soc/qcom/irq.h>
 #include <linux/reboot.h>
 #include <linux/pm.h>
 #include <linux/log2.h>
 #include <linux/bitmap.h>
+=======
+#include <linux/reboot.h>
+#include <linux/pm.h>
+#include <linux/log2.h>
+>>>>>>> rebase
 
 #include "../core.h"
 #include "../pinconf.h"
 #include "pinctrl-msm.h"
 #include "../pinctrl-utils.h"
 
+<<<<<<< HEAD
 #ifdef CONFIG_SEC_PM_DEBUG
 #include <linux/sec-pinmux.h>
 #ifdef CONFIG_SEC_GPIO_DVS
@@ -55,6 +69,10 @@
 #define MST_GPIO_D_EN 42
 #define MST_GPIO_D_DATA 43
 #endif
+=======
+#define MAX_NR_GPIO 300
+#define PS_HOLD_OFFSET 0x820
+>>>>>>> rebase
 
 /**
  * struct msm_pinctrl - state for a pinctrl-msm device
@@ -80,24 +98,33 @@ struct msm_pinctrl {
 
 	struct irq_chip irq_chip;
 	int irq;
+<<<<<<< HEAD
 	int n_dir_conns;
+=======
+>>>>>>> rebase
 
 	raw_spinlock_t lock;
 
 	DECLARE_BITMAP(dual_edge_irqs, MAX_NR_GPIO);
 	DECLARE_BITMAP(enabled_irqs, MAX_NR_GPIO);
+<<<<<<< HEAD
 	DECLARE_BITMAP(wakeup_masked_irqs, MAX_NR_GPIO);
+=======
+>>>>>>> rebase
 
 	const struct msm_pinctrl_soc_data *soc;
 	void __iomem *regs;
 };
 
+<<<<<<< HEAD
 static struct msm_pinctrl *msm_pinctrl_data;
 #ifdef CONFIG_SEC_PM_DEBUG
 static int total_pin_count = 0;
 static int msm_gpio_chip_base = 0;
 #endif /* CONFIG_SEC_PM_DEBUG */
 
+=======
+>>>>>>> rebase
 static int msm_get_groups_count(struct pinctrl_dev *pctldev)
 {
 	struct msm_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctldev);
@@ -178,9 +205,12 @@ static int msm_pinmux_set_mux(struct pinctrl_dev *pctldev,
 	u32 val, mask;
 	int i;
 
+<<<<<<< HEAD
 	if(!msm_gpio_is_valid(group))
 		return 0;
 
+=======
+>>>>>>> rebase
 	g = &pctrl->soc->groups[group];
 	mask = GENMASK(g->mux_bit + order_base_2(g->nfuncs) - 1, g->mux_bit);
 
@@ -197,10 +227,13 @@ static int msm_pinmux_set_mux(struct pinctrl_dev *pctldev,
 	val = readl(pctrl->regs + g->ctl_reg);
 	val &= ~mask;
 	val |= i << g->mux_bit;
+<<<<<<< HEAD
 	/* Check if egpio present and enable that feature */
 	if (val & BIT(g->egpio_present))
 		val |= BIT(g->egpio_enable);
 
+=======
+>>>>>>> rebase
 	writel(val, pctrl->regs + g->ctl_reg);
 
 	raw_spin_unlock_irqrestore(&pctrl->lock, flags);
@@ -270,9 +303,12 @@ static int msm_config_group_get(struct pinctrl_dev *pctldev,
 	int ret;
 	u32 val;
 
+<<<<<<< HEAD
 	if(!msm_gpio_is_valid(group))
 		return 0;
 
+=======
+>>>>>>> rebase
 	g = &pctrl->soc->groups[group];
 
 	ret = msm_config_reg(pctrl, g, param, &mask, &bit);
@@ -352,9 +388,12 @@ static int msm_config_group_set(struct pinctrl_dev *pctldev,
 	u32 val;
 	int i;
 
+<<<<<<< HEAD
 	if(!msm_gpio_is_valid(group))
 		return 0;
 
+=======
+>>>>>>> rebase
 	g = &pctrl->soc->groups[group];
 
 	for (i = 0; i < num_configs; i++) {
@@ -446,9 +485,12 @@ static int msm_gpio_direction_input(struct gpio_chip *chip, unsigned offset)
 	unsigned long flags;
 	u32 val;
 
+<<<<<<< HEAD
 	if(!msm_gpio_is_valid(offset))
 		return -1;
 
+=======
+>>>>>>> rebase
 	g = &pctrl->soc->groups[offset];
 
 	raw_spin_lock_irqsave(&pctrl->lock, flags);
@@ -469,9 +511,12 @@ static int msm_gpio_direction_output(struct gpio_chip *chip, unsigned offset, in
 	unsigned long flags;
 	u32 val;
 
+<<<<<<< HEAD
 	if(!msm_gpio_is_valid(offset))
 		return -1;
 
+=======
+>>>>>>> rebase
 	g = &pctrl->soc->groups[offset];
 
 	raw_spin_lock_irqsave(&pctrl->lock, flags);
@@ -498,9 +543,12 @@ static int msm_gpio_get_direction(struct gpio_chip *chip, unsigned int offset)
 	const struct msm_pingroup *g;
 	u32 val;
 
+<<<<<<< HEAD
 	if(!msm_gpio_is_valid(offset))
 		return -1;
 
+=======
+>>>>>>> rebase
 	g = &pctrl->soc->groups[offset];
 
 	val = readl(pctrl->regs + g->ctl_reg);
@@ -515,9 +563,12 @@ static int msm_gpio_get(struct gpio_chip *chip, unsigned offset)
 	struct msm_pinctrl *pctrl = gpiochip_get_data(chip);
 	u32 val;
 
+<<<<<<< HEAD
 	if(!msm_gpio_is_valid(offset))
 		return -1;
 
+=======
+>>>>>>> rebase
 	g = &pctrl->soc->groups[offset];
 
 	val = readl(pctrl->regs + g->io_reg);
@@ -531,9 +582,12 @@ static void msm_gpio_set(struct gpio_chip *chip, unsigned offset, int value)
 	unsigned long flags;
 	u32 val;
 
+<<<<<<< HEAD
 	if(!msm_gpio_is_valid(offset))
 		return;
 
+=======
+>>>>>>> rebase
 	g = &pctrl->soc->groups[offset];
 
 	raw_spin_lock_irqsave(&pctrl->lock, flags);
@@ -548,6 +602,7 @@ static void msm_gpio_set(struct gpio_chip *chip, unsigned offset, int value)
 	raw_spin_unlock_irqrestore(&pctrl->lock, flags);
 }
 
+<<<<<<< HEAD
 #ifdef CONFIG_SEC_PM_DEBUG
 int get_msm_gpio_chip_base(void)
 {
@@ -699,6 +754,11 @@ static void inline __msm_gpio_dbg_show_one_wakeup(struct seq_file *s,
 	seq_printf(s, " wakeup-%s", wakeup[type]);
 }
 
+=======
+#ifdef CONFIG_DEBUG_FS
+#include <linux/seq_file.h>
+
+>>>>>>> rebase
 static void msm_gpio_dbg_show_one(struct seq_file *s,
 				  struct pinctrl_dev *pctldev,
 				  struct gpio_chip *chip,
@@ -751,7 +811,10 @@ static void msm_gpio_dbg_show_one(struct seq_file *s,
 		seq_printf(s, " %s", pulls_no_keeper[pull]);
 	else
 		seq_printf(s, " %s", pulls_keeper[pull]);
+<<<<<<< HEAD
 	__msm_gpio_dbg_show_one_wakeup(s, offset);
+=======
+>>>>>>> rebase
 	seq_puts(s, "\n");
 }
 
@@ -760,6 +823,7 @@ static void msm_gpio_dbg_show(struct seq_file *s, struct gpio_chip *chip)
 	unsigned gpio = chip->base;
 	unsigned i;
 
+<<<<<<< HEAD
 	for (i = 0; i < chip->ngpio; i++, gpio++) {
 #ifdef CONFIG_SEC_PM_DEBUG
 		if(!msm_gpio_is_valid(i))
@@ -768,6 +832,10 @@ static void msm_gpio_dbg_show(struct seq_file *s, struct gpio_chip *chip)
 		msm_gpio_dbg_show_one(s, NULL, chip, i, gpio);
 		seq_puts(s, "\n");
 	}
+=======
+	for (i = 0; i < chip->ngpio; i++, gpio++)
+		msm_gpio_dbg_show_one(s, NULL, chip, i, gpio);
+>>>>>>> rebase
 }
 
 #else
@@ -829,6 +897,7 @@ static void msm_gpio_update_dual_edge_pos(struct msm_pinctrl *pctrl,
 		val, val2);
 }
 
+<<<<<<< HEAD
 static bool is_gpio_dual_edge(struct irq_data *d, irq_hw_number_t *irq)
 {
 	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
@@ -849,6 +918,9 @@ static bool is_gpio_dual_edge(struct irq_data *d, irq_hw_number_t *irq)
 }
 
 static void _msm_gpio_irq_mask(struct irq_data *d)
+=======
+static void msm_gpio_irq_mask(struct irq_data *d)
+>>>>>>> rebase
 {
 	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
 	struct msm_pinctrl *pctrl = gpiochip_get_data(gc);
@@ -892,7 +964,11 @@ static void _msm_gpio_irq_mask(struct irq_data *d)
 	raw_spin_unlock_irqrestore(&pctrl->lock, flags);
 }
 
+<<<<<<< HEAD
 static void _msm_gpio_irq_unmask(struct irq_data *d, bool status_clear)
+=======
+static void msm_gpio_irq_unmask(struct irq_data *d)
+>>>>>>> rebase
 {
 	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
 	struct msm_pinctrl *pctrl = gpiochip_get_data(gc);
@@ -904,6 +980,7 @@ static void _msm_gpio_irq_unmask(struct irq_data *d, bool status_clear)
 
 	raw_spin_lock_irqsave(&pctrl->lock, flags);
 
+<<<<<<< HEAD
 	if (status_clear) {
 		/*
 		 * clear the interrupt status bit before unmask to avoid
@@ -915,6 +992,8 @@ static void _msm_gpio_irq_unmask(struct irq_data *d, bool status_clear)
 		writel(val, pctrl->regs + g->intr_status_reg);
 	}
 
+=======
+>>>>>>> rebase
 	val = readl(pctrl->regs + g->intr_cfg_reg);
 	val |= BIT(g->intr_raw_status_bit);
 	val |= BIT(g->intr_enable_bit);
@@ -925,6 +1004,7 @@ static void _msm_gpio_irq_unmask(struct irq_data *d, bool status_clear)
 	raw_spin_unlock_irqrestore(&pctrl->lock, flags);
 }
 
+<<<<<<< HEAD
 static void msm_gpio_irq_mask(struct irq_data *d)
 {
 	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
@@ -1039,6 +1119,8 @@ static void msm_gpio_irq_enable(struct irq_data *d)
 	_msm_gpio_irq_unmask(d, true);
 }
 
+=======
+>>>>>>> rebase
 static void msm_gpio_irq_ack(struct irq_data *d)
 {
 	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
@@ -1047,10 +1129,13 @@ static void msm_gpio_irq_ack(struct irq_data *d)
 	unsigned long flags;
 	u32 val;
 
+<<<<<<< HEAD
 	/* Handled by parent wakeup controller? Do nothing */
 	if (test_bit(d->hwirq, pctrl->wakeup_masked_irqs))
 		return;
 
+=======
+>>>>>>> rebase
 	g = &pctrl->soc->groups[d->hwirq];
 
 	raw_spin_lock_irqsave(&pctrl->lock, flags);
@@ -1068,6 +1153,7 @@ static void msm_gpio_irq_ack(struct irq_data *d)
 	raw_spin_unlock_irqrestore(&pctrl->lock, flags);
 }
 
+<<<<<<< HEAD
 static void msm_dirconn_cfg_reg(struct irq_data *d, u32 offset)
 {
 	u32 val;
@@ -1190,17 +1276,23 @@ static void remove_dirconn_tlmm(struct irq_data *d, irq_hw_number_t irq)
 	dir_conn_data->chip->irq_mask(dir_conn_data);
 }
 
+=======
+>>>>>>> rebase
 static int msm_gpio_irq_set_type(struct irq_data *d, unsigned int type)
 {
 	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
 	struct msm_pinctrl *pctrl = gpiochip_get_data(gc);
 	const struct msm_pingroup *g;
+<<<<<<< HEAD
 	irq_hw_number_t irq = 0;
+=======
+>>>>>>> rebase
 	unsigned long flags;
 	u32 val;
 
 	g = &pctrl->soc->groups[d->hwirq];
 
+<<<<<<< HEAD
 	if (d->parent_data) {
 		if (pctrl->n_dir_conns > 0) {
 			if (type == IRQ_TYPE_EDGE_BOTH)
@@ -1215,6 +1307,8 @@ static int msm_gpio_irq_set_type(struct irq_data *d, unsigned int type)
 	if (test_bit(d->hwirq, pctrl->wakeup_masked_irqs))
 		return 0;
 
+=======
+>>>>>>> rebase
 	raw_spin_lock_irqsave(&pctrl->lock, flags);
 
 	/*
@@ -1305,9 +1399,12 @@ static int msm_gpio_irq_set_wake(struct irq_data *d, unsigned int on)
 	struct msm_pinctrl *pctrl = gpiochip_get_data(gc);
 	unsigned long flags;
 
+<<<<<<< HEAD
 	if (d->parent_data)
 		return irq_chip_set_wake_parent(d, on);
 
+=======
+>>>>>>> rebase
 	raw_spin_lock_irqsave(&pctrl->lock, flags);
 
 	irq_set_irq_wake(pctrl->irq, on);
@@ -1317,6 +1414,7 @@ static int msm_gpio_irq_set_wake(struct irq_data *d, unsigned int on)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int msm_gpio_irq_set_affinity(struct irq_data *d,
 				const struct cpumask *dest, bool force)
 {
@@ -1340,6 +1438,8 @@ static int msm_gpio_irq_set_vcpu_affinity(struct irq_data *d, void *vcpu_info)
 	return 0;
 }
 
+=======
+>>>>>>> rebase
 static void msm_gpio_irq_handler(struct irq_desc *desc)
 {
 	struct gpio_chip *gc = irq_desc_get_handler_data(desc);
@@ -1380,6 +1480,7 @@ static int msm_gpio_init_valid_mask(struct gpio_chip *chip,
 	int ret;
 	unsigned int len, i;
 	unsigned int max_gpios = pctrl->soc->ngpios;
+<<<<<<< HEAD
 	const int *reserved = pctrl->soc->reserved_gpios;
 	u16 *tmp;
 
@@ -1397,6 +1498,10 @@ static int msm_gpio_init_valid_mask(struct gpio_chip *chip,
 		return 0;
 	}
 
+=======
+	u16 *tmp;
+
+>>>>>>> rebase
 	/* The number of GPIOs in the ACPI tables */
 	len = ret = device_property_read_u16_array(pctrl->dev, "gpios", NULL, 0);
 	if (ret < 0)
@@ -1426,6 +1531,7 @@ out:
 
 static bool msm_gpio_needs_valid_mask(struct msm_pinctrl *pctrl)
 {
+<<<<<<< HEAD
 	if (pctrl->soc->reserved_gpios)
 		return true;
 
@@ -1515,12 +1621,20 @@ static const struct irq_domain_ops msm_gpio_domain_ops = {
 	.free      = irq_domain_free_irqs_top,
 };
 
+=======
+	return device_property_read_u16_array(pctrl->dev, "gpios", NULL, 0) > 0;
+}
+
+>>>>>>> rebase
 static int msm_gpio_init(struct msm_pinctrl *pctrl)
 {
 	struct gpio_chip *chip;
 	int ret;
 	unsigned ngpio = pctrl->soc->ngpios;
+<<<<<<< HEAD
 	struct device_node *dn;
+=======
+>>>>>>> rebase
 
 	if (WARN_ON(ngpio > MAX_NR_GPIO))
 		return -EINVAL;
@@ -1535,14 +1649,18 @@ static int msm_gpio_init(struct msm_pinctrl *pctrl)
 	chip->need_valid_mask = msm_gpio_needs_valid_mask(pctrl);
 
 	pctrl->irq_chip.name = "msmgpio";
+<<<<<<< HEAD
 	pctrl->irq_chip.irq_eoi	= irq_chip_eoi_parent;
 	pctrl->irq_chip.irq_enable = msm_gpio_irq_enable;
 	pctrl->irq_chip.irq_disable = msm_gpio_irq_disable;
+=======
+>>>>>>> rebase
 	pctrl->irq_chip.irq_mask = msm_gpio_irq_mask;
 	pctrl->irq_chip.irq_unmask = msm_gpio_irq_unmask;
 	pctrl->irq_chip.irq_ack = msm_gpio_irq_ack;
 	pctrl->irq_chip.irq_set_type = msm_gpio_irq_set_type;
 	pctrl->irq_chip.irq_set_wake = msm_gpio_irq_set_wake;
+<<<<<<< HEAD
 	pctrl->irq_chip.irq_set_affinity = msm_gpio_irq_set_affinity;
 	pctrl->irq_chip.irq_set_vcpu_affinity = msm_gpio_irq_set_vcpu_affinity;
 	pctrl->irq_chip.flags = IRQCHIP_MASK_ON_SUSPEND
@@ -1562,6 +1680,8 @@ static int msm_gpio_init(struct msm_pinctrl *pctrl)
 		chip->to_irq = msm_gpio_to_irq;
 		chip->irq.domain_ops = &msm_gpio_domain_ops;
 	}
+=======
+>>>>>>> rebase
 
 	ret = gpiochip_add_data(&pctrl->chip, pctrl);
 	if (ret) {
@@ -1572,7 +1692,12 @@ static int msm_gpio_init(struct msm_pinctrl *pctrl)
 	ret = msm_gpio_init_valid_mask(chip, pctrl);
 	if (ret) {
 		dev_err(pctrl->dev, "Failed to setup irq valid bits\n");
+<<<<<<< HEAD
 		goto fail;
+=======
+		gpiochip_remove(&pctrl->chip);
+		return ret;
+>>>>>>> rebase
 	}
 
 	/*
@@ -1590,6 +1715,7 @@ static int msm_gpio_init(struct msm_pinctrl *pctrl)
 			dev_name(pctrl->dev), 0, 0, chip->ngpio);
 		if (ret) {
 			dev_err(pctrl->dev, "Failed to add pin range\n");
+<<<<<<< HEAD
 			goto fail;
 		}
 	}
@@ -1603,6 +1729,28 @@ static int msm_gpio_init(struct msm_pinctrl *pctrl)
 fail:
 	gpiochip_remove(&pctrl->chip);
 	return ret;
+=======
+			gpiochip_remove(&pctrl->chip);
+			return ret;
+		}
+	}
+
+	ret = gpiochip_irqchip_add(chip,
+				   &pctrl->irq_chip,
+				   0,
+				   handle_edge_irq,
+				   IRQ_TYPE_NONE);
+	if (ret) {
+		dev_err(pctrl->dev, "Failed to add irqchip to gpiochip\n");
+		gpiochip_remove(&pctrl->chip);
+		return -ENOSYS;
+	}
+
+	gpiochip_set_chained_irqchip(chip, &pctrl->irq_chip, pctrl->irq,
+				     msm_gpio_irq_handler);
+
+	return 0;
+>>>>>>> rebase
 }
 
 static int msm_ps_hold_restart(struct notifier_block *nb, unsigned long action,
@@ -1640,6 +1788,7 @@ static void msm_pinctrl_setup_pm_reset(struct msm_pinctrl *pctrl)
 		}
 }
 
+<<<<<<< HEAD
 #ifdef CONFIG_PM
 static int msm_pinctrl_suspend(void)
 {
@@ -1796,11 +1945,14 @@ static void __msm_gpio_parse_dt_disable_wakeup(struct msm_pinctrl *pctrl)
 	}
 }
 
+=======
+>>>>>>> rebase
 int msm_pinctrl_probe(struct platform_device *pdev,
 		      const struct msm_pinctrl_soc_data *soc_data)
 {
 	struct msm_pinctrl *pctrl;
 	struct resource *res;
+<<<<<<< HEAD
 	int ret, i, num_irq, irq;
 
 	msm_pinctrl_data = pctrl = devm_kzalloc(&pdev->dev,
@@ -1809,6 +1961,14 @@ int msm_pinctrl_probe(struct platform_device *pdev,
 		dev_err(&pdev->dev, "Can't allocate msm_pinctrl\n");
 		return -ENOMEM;
 	}
+=======
+	int ret;
+
+	pctrl = devm_kzalloc(&pdev->dev, sizeof(*pctrl), GFP_KERNEL);
+	if (!pctrl)
+		return -ENOMEM;
+
+>>>>>>> rebase
 	pctrl->dev = &pdev->dev;
 	pctrl->soc = soc_data;
 	pctrl->chip = msm_gpio_template;
@@ -1835,9 +1995,12 @@ int msm_pinctrl_probe(struct platform_device *pdev,
 	pctrl->desc.name = dev_name(&pdev->dev);
 	pctrl->desc.pins = pctrl->soc->pins;
 	pctrl->desc.npins = pctrl->soc->npins;
+<<<<<<< HEAD
 #ifdef CONFIG_SEC_PM_DEBUG
 	total_pin_count = pctrl->desc.npins;
 #endif /* CONFIG_SEC_PM_DEBUG */
+=======
+>>>>>>> rebase
 
 	pctrl->pctrl = devm_pinctrl_register(&pdev->dev, &pctrl->desc, pctrl);
 	if (IS_ERR(pctrl->pctrl)) {
@@ -1849,6 +2012,7 @@ int msm_pinctrl_probe(struct platform_device *pdev,
 	if (ret)
 		return ret;
 
+<<<<<<< HEAD
 	num_irq = platform_irq_count(pdev);
 
 	for (i = 1; i < num_irq; i++) {
@@ -1868,6 +2032,12 @@ int msm_pinctrl_probe(struct platform_device *pdev,
 
 	__msm_gpio_parse_dt_disable_wakeup(pctrl);
 
+=======
+	platform_set_drvdata(pdev, pctrl);
+
+	dev_dbg(&pdev->dev, "Probed Qualcomm pinctrl driver\n");
+
+>>>>>>> rebase
 	return 0;
 }
 EXPORT_SYMBOL(msm_pinctrl_probe);
@@ -1879,7 +2049,10 @@ int msm_pinctrl_remove(struct platform_device *pdev)
 	gpiochip_remove(&pctrl->chip);
 
 	unregister_restart_handler(&pctrl->restart_nb);
+<<<<<<< HEAD
 	unregister_syscore_ops(&msm_pinctrl_pm_ops);
+=======
+>>>>>>> rebase
 
 	return 0;
 }

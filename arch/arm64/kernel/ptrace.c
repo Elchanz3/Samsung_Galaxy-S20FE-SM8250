@@ -1647,12 +1647,32 @@ static void tracehook_report_syscall(struct pt_regs *regs,
 	saved_reg = regs->regs[regno];
 	regs->regs[regno] = dir;
 
+<<<<<<< HEAD
 	if (dir == PTRACE_SYSCALL_EXIT)
 		tracehook_report_syscall_exit(regs, 0);
 	else if (tracehook_report_syscall_entry(regs))
 		forget_syscall(regs);
 
 	regs->regs[regno] = saved_reg;
+=======
+	if (dir == PTRACE_SYSCALL_ENTER) {
+		if (tracehook_report_syscall_entry(regs))
+			forget_syscall(regs);
+		regs->regs[regno] = saved_reg;
+	} else if (!test_thread_flag(TIF_SINGLESTEP)) {
+		tracehook_report_syscall_exit(regs, 0);
+		regs->regs[regno] = saved_reg;
+	} else {
+		regs->regs[regno] = saved_reg;
+
+		/*
+		 * Signal a pseudo-step exception since we are stepping but
+		 * tracer modifications to the registers may have rewound the
+		 * state machine.
+		 */
+		tracehook_report_syscall_exit(regs, 1);
+	}
+>>>>>>> rebase
 }
 
 int syscall_trace_enter(struct pt_regs *regs)
@@ -1675,12 +1695,23 @@ int syscall_trace_enter(struct pt_regs *regs)
 
 void syscall_trace_exit(struct pt_regs *regs)
 {
+<<<<<<< HEAD
 	audit_syscall_exit(regs);
 
 	if (test_thread_flag(TIF_SYSCALL_TRACEPOINT))
 		trace_sys_exit(regs, regs_return_value(regs));
 
 	if (test_thread_flag(TIF_SYSCALL_TRACE))
+=======
+	unsigned long flags = READ_ONCE(current_thread_info()->flags);
+
+	audit_syscall_exit(regs);
+
+	if (flags & _TIF_SYSCALL_TRACEPOINT)
+		trace_sys_exit(regs, regs_return_value(regs));
+
+	if (flags & (_TIF_SYSCALL_TRACE | _TIF_SINGLESTEP))
+>>>>>>> rebase
 		tracehook_report_syscall(regs, PTRACE_SYSCALL_EXIT);
 
 	rseq_syscall(regs);
@@ -1758,8 +1789,13 @@ static int valid_native_regs(struct user_pt_regs *regs)
  */
 int valid_user_regs(struct user_pt_regs *regs, struct task_struct *task)
 {
+<<<<<<< HEAD
 	if (!test_tsk_thread_flag(task, TIF_SINGLESTEP))
 		regs->pstate &= ~DBG_SPSR_SS;
+=======
+	/* https://lore.kernel.org/lkml/20191118131525.GA4180@willie-the-truck */
+	user_regs_reset_single_step(regs, task);
+>>>>>>> rebase
 
 	if (is_compat_thread(task_thread_info(task)))
 		return valid_compat_regs(regs);

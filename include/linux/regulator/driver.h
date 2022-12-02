@@ -20,7 +20,10 @@
 #include <linux/device.h>
 #include <linux/notifier.h>
 #include <linux/regulator/consumer.h>
+<<<<<<< HEAD
 #include <linux/regulator/proxy-consumer.h>
+=======
+>>>>>>> rebase
 
 struct gpio_desc;
 struct regmap;
@@ -94,10 +97,13 @@ struct regulator_linear_range {
  *	if the selector indicates a voltage that is unusable on this system;
  *	or negative errno.  Selectors range from zero to one less than
  *	regulator_desc.n_voltages.  Voltages may be reported in any order.
+<<<<<<< HEAD
  * @list_corner_voltage: Return the maximum voltage in microvolts that
  *	that can be physically configured for the regulator when operating at
  *	the specified voltage corner or a negative errno if the corner value
  *	can't be used on this system.
+=======
+>>>>>>> rebase
  *
  * @set_current_limit: Configure a limit for a current-limited regulator.
  *                     The driver should select the current closest to max_uA.
@@ -154,7 +160,10 @@ struct regulator_ops {
 
 	/* enumerate supported voltages */
 	int (*list_voltage) (struct regulator_dev *, unsigned selector);
+<<<<<<< HEAD
 	int (*list_corner_voltage)(struct regulator_dev *list_reg, int corner);
+=======
+>>>>>>> rebase
 
 	/* get/set regulator voltage */
 	int (*set_voltage) (struct regulator_dev *, int min_uV, int max_uV,
@@ -168,10 +177,14 @@ struct regulator_ops {
 	int (*set_current_limit) (struct regulator_dev *,
 				 int min_uA, int max_uA);
 	int (*get_current_limit) (struct regulator_dev *);
+<<<<<<< HEAD
 #ifdef CONFIG_SEC_PM
 	int (*set_short_detection)(struct regulator_dev *,
 				   bool enable, int lv_uA);
 #endif
+=======
+
+>>>>>>> rebase
 	int (*set_input_current_limit) (struct regulator_dev *, int lim_uA);
 	int (*set_over_current_protection) (struct regulator_dev *);
 	int (*set_active_discharge) (struct regulator_dev *, bool enable);
@@ -449,7 +462,10 @@ struct regulator_dev {
 	int exclusive;
 	u32 use_count;
 	u32 open_count;
+<<<<<<< HEAD
 	u32 open_offset;
+=======
+>>>>>>> rebase
 	u32 bypass_count;
 
 	/* lists we belong to */
@@ -485,8 +501,11 @@ struct regulator_dev {
 
 	/* time when this regulator was disabled last time */
 	unsigned long last_off_jiffy;
+<<<<<<< HEAD
 	struct proxy_consumer *proxy_consumer;
 	struct regulator *debug_consumer;
+=======
+>>>>>>> rebase
 };
 
 struct regulator_dev *

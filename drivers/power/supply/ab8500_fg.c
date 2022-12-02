@@ -2541,8 +2541,15 @@ static int ab8500_fg_sysfs_init(struct ab8500_fg *di)
 	ret = kobject_init_and_add(&di->fg_kobject,
 		&ab8500_fg_ktype,
 		NULL, "battery");
+<<<<<<< HEAD
 	if (ret < 0)
 		dev_err(di->dev, "failed to create sysfs entry\n");
+=======
+	if (ret < 0) {
+		kobject_put(&di->fg_kobject);
+		dev_err(di->dev, "failed to create sysfs entry\n");
+	}
+>>>>>>> rebase
 
 	return ret;
 }
@@ -3221,6 +3228,10 @@ static const struct of_device_id ab8500_fg_match[] = {
 	{ .compatible = "stericsson,ab8500-fg", },
 	{ },
 };
+<<<<<<< HEAD
+=======
+MODULE_DEVICE_TABLE(of, ab8500_fg_match);
+>>>>>>> rebase
 
 static struct platform_driver ab8500_fg_driver = {
 	.probe = ab8500_fg_probe,

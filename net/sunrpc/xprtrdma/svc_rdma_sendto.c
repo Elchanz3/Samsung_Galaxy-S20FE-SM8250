@@ -310,6 +310,7 @@ int svc_rdma_send(struct svcxprt_rdma *rdma, struct ib_send_wr *wr)
 		}
 
 		svc_xprt_get(&rdma->sc_xprt);
+<<<<<<< HEAD
 		ret = ib_post_send(rdma->sc_qp, wr, NULL);
 		trace_svcrdma_post_send(wr, ret);
 		if (ret) {
@@ -319,6 +320,19 @@ int svc_rdma_send(struct svcxprt_rdma *rdma, struct ib_send_wr *wr)
 		}
 		break;
 	}
+=======
+		trace_svcrdma_post_send(wr);
+		ret = ib_post_send(rdma->sc_qp, wr, NULL);
+		if (ret)
+			break;
+		return 0;
+	}
+
+	trace_svcrdma_sq_post_err(rdma, ret);
+	set_bit(XPT_CLOSE, &rdma->sc_xprt.xpt_flags);
+	svc_xprt_put(&rdma->sc_xprt);
+	wake_up(&rdma->sc_send_wait);
+>>>>>>> rebase
 	return ret;
 }
 
@@ -637,10 +651,18 @@ static int svc_rdma_pull_up_reply_msg(struct svcxprt_rdma *rdma,
 		while (remaining) {
 			len = min_t(u32, PAGE_SIZE - pageoff, remaining);
 
+<<<<<<< HEAD
 			memcpy(dst, page_address(*ppages), len);
 			remaining -= len;
 			dst += len;
 			pageoff = 0;
+=======
+			memcpy(dst, page_address(*ppages) + pageoff, len);
+			remaining -= len;
+			dst += len;
+			pageoff = 0;
+			ppages++;
+>>>>>>> rebase
 		}
 	}
 
@@ -906,12 +928,16 @@ int svc_rdma_sendto(struct svc_rqst *rqstp)
 				      wr_lst, rp_ch);
 	if (ret < 0)
 		goto err1;
+<<<<<<< HEAD
 	ret = 0;
 
 out:
 	rqstp->rq_xprt_ctxt = NULL;
 	svc_rdma_recv_ctxt_put(rdma, rctxt);
 	return ret;
+=======
+	return 0;
+>>>>>>> rebase
 
  err2:
 	if (ret != -E2BIG && ret != -EINVAL)
@@ -920,14 +946,22 @@ out:
 	ret = svc_rdma_send_error_msg(rdma, sctxt, rqstp);
 	if (ret < 0)
 		goto err1;
+<<<<<<< HEAD
 	ret = 0;
 	goto out;
+=======
+	return 0;
+>>>>>>> rebase
 
  err1:
 	svc_rdma_send_ctxt_put(rdma, sctxt);
  err0:
 	trace_svcrdma_send_failed(rqstp, ret);
 	set_bit(XPT_CLOSE, &xprt->xpt_flags);
+<<<<<<< HEAD
 	ret = -ENOTCONN;
 	goto out;
+=======
+	return -ENOTCONN;
+>>>>>>> rebase
 }

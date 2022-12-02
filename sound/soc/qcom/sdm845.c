@@ -226,6 +226,10 @@ static int sdm845_snd_platform_probe(struct platform_device *pdev)
 	}
 
 	card->dev = dev;
+<<<<<<< HEAD
+=======
+	card->owner = THIS_MODULE;
+>>>>>>> rebase
 	dev_set_drvdata(dev, card);
 	ret = qcom_snd_parse_of(card);
 	if (ret) {

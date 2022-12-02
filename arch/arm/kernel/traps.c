@@ -31,9 +31,15 @@
 #include <linux/irq.h>
 
 #include <linux/atomic.h>
+<<<<<<< HEAD
 #include <asm/arch_timer.h>
 #include <asm/cacheflush.h>
 #include <asm/exception.h>
+=======
+#include <asm/cacheflush.h>
+#include <asm/exception.h>
+#include <asm/spectre.h>
+>>>>>>> rebase
 #include <asm/unistd.h>
 #include <asm/traps.h>
 #include <asm/ptrace.h>
@@ -68,14 +74,24 @@ static void dump_mem(const char *, const char *, unsigned long, unsigned long);
 
 void dump_backtrace_entry(unsigned long where, unsigned long from, unsigned long frame)
 {
+<<<<<<< HEAD
+=======
+	unsigned long end = frame + 4 + sizeof(struct pt_regs);
+
+>>>>>>> rebase
 #ifdef CONFIG_KALLSYMS
 	printk("[<%08lx>] (%ps) from [<%08lx>] (%pS)\n", where, (void *)where, from, (void *)from);
 #else
 	printk("Function entered at [<%08lx>] from [<%08lx>]\n", where, from);
 #endif
 
+<<<<<<< HEAD
 	if (in_entry_text(from))
 		dump_mem("", "Exception stack", frame + 4, frame + 4 + sizeof(struct pt_regs));
+=======
+	if (in_entry_text(from) && end <= ALIGN(frame, THREAD_SIZE))
+		dump_mem("", "Exception stack", frame + 4, end);
+>>>>>>> rebase
 }
 
 void dump_backtrace_stm(u32 *stack, u32 instruction)
@@ -737,6 +753,7 @@ late_initcall(arm_mrc_hook_init);
 
 #endif
 
+<<<<<<< HEAD
 static int get_timer_count_trap(struct pt_regs *regs, unsigned int instr)
 {
 	u64 cval;
@@ -808,6 +825,8 @@ void get_timer_freq_hook_init(void)
 }
 EXPORT_SYMBOL(get_timer_freq_hook_init);
 
+=======
+>>>>>>> rebase
 /*
  * A data abort trap was taken, but we did not handle the instruction.
  * Try to abort the user program, or panic if it was the kernel.
@@ -900,10 +919,66 @@ static inline void __init kuser_init(void *vectors)
 }
 #endif
 
+<<<<<<< HEAD
 void __init early_trap_init(void *vectors_base)
 {
 #ifndef CONFIG_CPU_V7M
 	unsigned long vectors = (unsigned long)vectors_base;
+=======
+#ifndef CONFIG_CPU_V7M
+static void copy_from_lma(void *vma, void *lma_start, void *lma_end)
+{
+	memcpy(vma, lma_start, lma_end - lma_start);
+}
+
+static void flush_vectors(void *vma, size_t offset, size_t size)
+{
+	unsigned long start = (unsigned long)vma + offset;
+	unsigned long end = start + size;
+
+	flush_icache_range(start, end);
+}
+
+#ifdef CONFIG_HARDEN_BRANCH_HISTORY
+int spectre_bhb_update_vectors(unsigned int method)
+{
+	extern char __vectors_bhb_bpiall_start[], __vectors_bhb_bpiall_end[];
+	extern char __vectors_bhb_loop8_start[], __vectors_bhb_loop8_end[];
+	void *vec_start, *vec_end;
+
+	if (system_state > SYSTEM_SCHEDULING) {
+		pr_err("CPU%u: Spectre BHB workaround too late - system vulnerable\n",
+		       smp_processor_id());
+		return SPECTRE_VULNERABLE;
+	}
+
+	switch (method) {
+	case SPECTRE_V2_METHOD_LOOP8:
+		vec_start = __vectors_bhb_loop8_start;
+		vec_end = __vectors_bhb_loop8_end;
+		break;
+
+	case SPECTRE_V2_METHOD_BPIALL:
+		vec_start = __vectors_bhb_bpiall_start;
+		vec_end = __vectors_bhb_bpiall_end;
+		break;
+
+	default:
+		pr_err("CPU%u: unknown Spectre BHB state %d\n",
+		       smp_processor_id(), method);
+		return SPECTRE_VULNERABLE;
+	}
+
+	copy_from_lma(vectors_page, vec_start, vec_end);
+	flush_vectors(vectors_page, 0, vec_end - vec_start);
+
+	return SPECTRE_MITIGATED;
+}
+#endif
+
+void __init early_trap_init(void *vectors_base)
+{
+>>>>>>> rebase
 	extern char __stubs_start[], __stubs_end[];
 	extern char __vectors_start[], __vectors_end[];
 	unsigned i;
@@ -924,6 +999,7 @@ void __init early_trap_init(void *vectors_base)
 	 * into the vector page, mapped at 0xffff0000, and ensure these
 	 * are visible to the instruction stream.
 	 */
+<<<<<<< HEAD
 	memcpy((void *)vectors, __vectors_start, __vectors_end - __vectors_start);
 	memcpy((void *)vectors + 0x1000, __stubs_start, __stubs_end - __stubs_start);
 
@@ -931,10 +1007,27 @@ void __init early_trap_init(void *vectors_base)
 
 	flush_icache_range(vectors, vectors + PAGE_SIZE * 2);
 #else /* ifndef CONFIG_CPU_V7M */
+=======
+	copy_from_lma(vectors_base, __vectors_start, __vectors_end);
+	copy_from_lma(vectors_base + 0x1000, __stubs_start, __stubs_end);
+
+	kuser_init(vectors_base);
+
+	flush_vectors(vectors_base, 0, PAGE_SIZE * 2);
+}
+#else /* ifndef CONFIG_CPU_V7M */
+void __init early_trap_init(void *vectors_base)
+{
+>>>>>>> rebase
 	/*
 	 * on V7-M there is no need to copy the vector table to a dedicated
 	 * memory area. The address is configurable and so a table in the kernel
 	 * image can be used.
 	 */
+<<<<<<< HEAD
 #endif
 }
+=======
+}
+#endif
+>>>>>>> rebase

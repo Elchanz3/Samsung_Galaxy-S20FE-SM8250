@@ -3933,8 +3933,11 @@ static void niu_xmac_interrupt(struct niu *np)
 		mp->rx_mcasts += RXMAC_MC_FRM_CNT_COUNT;
 	if (val & XRXMAC_STATUS_RXBCAST_CNT_EXP)
 		mp->rx_bcasts += RXMAC_BC_FRM_CNT_COUNT;
+<<<<<<< HEAD
 	if (val & XRXMAC_STATUS_RXBCAST_CNT_EXP)
 		mp->rx_bcasts += RXMAC_BC_FRM_CNT_COUNT;
+=======
+>>>>>>> rebase
 	if (val & XRXMAC_STATUS_RXHIST1_CNT_EXP)
 		mp->rx_hist_cnt1 += RXMAC_HIST_CNT1_COUNT;
 	if (val & XRXMAC_STATUS_RXHIST2_CNT_EXP)
@@ -8147,10 +8150,17 @@ static int niu_pci_vpd_scan_props(struct niu *np, u32 start, u32 end)
 				     "VPD_SCAN: Reading in property [%s] len[%d]\n",
 				     namebuf, prop_len);
 			for (i = 0; i < prop_len; i++) {
+<<<<<<< HEAD
 				err = niu_pci_eeprom_read(np, off + i);
 				if (err >= 0)
 					*prop_buf = err;
 				++prop_buf;
+=======
+				err =  niu_pci_eeprom_read(np, off + i);
+				if (err < 0)
+					return err;
+				*prop_buf++ = err;
+>>>>>>> rebase
 			}
 		}
 
@@ -8161,14 +8171,22 @@ static int niu_pci_vpd_scan_props(struct niu *np, u32 start, u32 end)
 }
 
 /* ESPC_PIO_EN_ENABLE must be set */
+<<<<<<< HEAD
 static void niu_pci_vpd_fetch(struct niu *np, u32 start)
+=======
+static int niu_pci_vpd_fetch(struct niu *np, u32 start)
+>>>>>>> rebase
 {
 	u32 offset;
 	int err;
 
 	err = niu_pci_eeprom_read16_swp(np, start + 1);
 	if (err < 0)
+<<<<<<< HEAD
 		return;
+=======
+		return err;
+>>>>>>> rebase
 
 	offset = err + 3;
 
@@ -8177,12 +8195,23 @@ static void niu_pci_vpd_fetch(struct niu *np, u32 start)
 		u32 end;
 
 		err = niu_pci_eeprom_read(np, here);
+<<<<<<< HEAD
 		if (err != 0x90)
 			return;
 
 		err = niu_pci_eeprom_read16_swp(np, here + 1);
 		if (err < 0)
 			return;
+=======
+		if (err < 0)
+			return err;
+		if (err != 0x90)
+			return -EINVAL;
+
+		err = niu_pci_eeprom_read16_swp(np, here + 1);
+		if (err < 0)
+			return err;
+>>>>>>> rebase
 
 		here = start + offset + 3;
 		end = start + offset + err;
@@ -8190,9 +8219,19 @@ static void niu_pci_vpd_fetch(struct niu *np, u32 start)
 		offset += err;
 
 		err = niu_pci_vpd_scan_props(np, here, end);
+<<<<<<< HEAD
 		if (err < 0 || err == 1)
 			return;
 	}
+=======
+		if (err < 0)
+			return err;
+		/* ret == 1 is not an error */
+		if (err == 1)
+			return 0;
+	}
+	return 0;
+>>>>>>> rebase
 }
 
 /* ESPC_PIO_EN_ENABLE must be set */
@@ -9283,8 +9322,16 @@ static int niu_get_invariants(struct niu *np)
 		offset = niu_pci_vpd_offset(np);
 		netif_printk(np, probe, KERN_DEBUG, np->dev,
 			     "%s() VPD offset [%08x]\n", __func__, offset);
+<<<<<<< HEAD
 		if (offset)
 			niu_pci_vpd_fetch(np, offset);
+=======
+		if (offset) {
+			err = niu_pci_vpd_fetch(np, offset);
+			if (err < 0)
+				return err;
+		}
+>>>>>>> rebase
 		nw64(ESPC_PIO_EN, 0);
 
 		if (np->flags & NIU_FLAGS_VPD_VALID) {

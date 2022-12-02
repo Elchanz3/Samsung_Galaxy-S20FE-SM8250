@@ -55,7 +55,10 @@ struct perf_guest_info_callbacks {
 #include <linux/perf_regs.h>
 #include <linux/workqueue.h>
 #include <linux/cgroup.h>
+<<<<<<< HEAD
 #include <linux/security.h>
+=======
+>>>>>>> rebase
 #include <asm/local.h>
 
 struct perf_callchain_entry {
@@ -268,8 +271,11 @@ struct pmu {
 	atomic_t			exclusive_cnt; /* < 0: cpu; > 0: tsk */
 	int				task_ctx_nr;
 	int				hrtimer_interval_ms;
+<<<<<<< HEAD
 	u32				events_across_hotplug:1,
 					reserved:31;
+=======
+>>>>>>> rebase
 
 	/* number of address filters this PMU can do */
 	unsigned int			nr_addr_filters;
@@ -506,7 +512,10 @@ struct perf_addr_filter_range {
  * enum perf_event_state - the states of an event:
  */
 enum perf_event_state {
+<<<<<<< HEAD
 	PERF_EVENT_STATE_DORMANT	= -5,
+=======
+>>>>>>> rebase
 	PERF_EVENT_STATE_DEAD		= -4,
 	PERF_EVENT_STATE_EXIT		= -3,
 	PERF_EVENT_STATE_ERROR		= -2,
@@ -598,12 +607,15 @@ struct perf_event {
 	int				group_caps;
 
 	struct perf_event		*group_leader;
+<<<<<<< HEAD
 
 	/*
 	 * Protect the pmu, attributes and context of a group leader.
 	 * Note: does not protect the pointer to the group_leader.
 	 */
 	struct mutex			group_leader_mutex;
+=======
+>>>>>>> rebase
 	struct pmu			*pmu;
 	void				*pmu_private;
 
@@ -657,7 +669,10 @@ struct perf_event {
 
 	int				oncpu;
 	int				cpu;
+<<<<<<< HEAD
 	cpumask_t			readable_on_cpus;
+=======
+>>>>>>> rebase
 
 	struct list_head		owner_entry;
 	struct task_struct		*owner;
@@ -715,6 +730,7 @@ struct perf_event {
 	struct perf_cgroup		*cgrp; /* cgroup event is attach to */
 #endif
 
+<<<<<<< HEAD
 #ifdef CONFIG_SECURITY
 	void *security;
 #endif
@@ -728,6 +744,9 @@ struct perf_event {
 	 * CPU wakes up and will be removed from the list after that
 	 */
 	struct list_head		dormant_event_entry;
+=======
+	struct list_head		sb_list;
+>>>>>>> rebase
 #endif /* CONFIG_PERF_EVENTS */
 };
 
@@ -770,6 +789,14 @@ struct perf_event_context {
 	int				nr_stat;
 	int				nr_freq;
 	int				rotate_disable;
+<<<<<<< HEAD
+=======
+	/*
+	 * Set when nr_events != nr_active, except tolerant to events not
+	 * necessary to be active due to scheduling constraints, such as cgroups.
+	 */
+	int				rotate_necessary;
+>>>>>>> rebase
 	atomic_t			refcount;
 	struct task_struct		*task;
 
@@ -1217,6 +1244,7 @@ extern int perf_cpu_time_max_percent_handler(struct ctl_table *table, int write,
 int perf_event_max_stack_handler(struct ctl_table *table, int write,
 				 void __user *buffer, size_t *lenp, loff_t *ppos);
 
+<<<<<<< HEAD
 /* Access to perf_event_open(2) syscall. */
 #define PERF_SECURITY_OPEN		0
 
@@ -1231,10 +1259,14 @@ static inline bool perf_paranoid_any(void)
 }
 
 static inline int perf_is_paranoid(void)
+=======
+static inline bool perf_paranoid_tracepoint_raw(void)
+>>>>>>> rebase
 {
 	return sysctl_perf_event_paranoid > -1;
 }
 
+<<<<<<< HEAD
 static inline int perf_allow_kernel(struct perf_event_attr *attr)
 {
 	if (sysctl_perf_event_paranoid > 1 && !capable(CAP_SYS_ADMIN))
@@ -1257,6 +1289,16 @@ static inline int perf_allow_tracepoint(struct perf_event_attr *attr)
 		return -EPERM;
 
 	return security_perf_event_open(attr, PERF_SECURITY_TRACEPOINT);
+=======
+static inline bool perf_paranoid_cpu(void)
+{
+	return sysctl_perf_event_paranoid > 0;
+}
+
+static inline bool perf_paranoid_kernel(void)
+{
+	return sysctl_perf_event_paranoid > 1;
+>>>>>>> rebase
 }
 
 extern void perf_event_init(void);
@@ -1471,11 +1513,17 @@ static struct device_attribute format_attr_##_name = __ATTR_RO(_name)
 #ifdef CONFIG_PERF_EVENTS
 int perf_event_init_cpu(unsigned int cpu);
 int perf_event_exit_cpu(unsigned int cpu);
+<<<<<<< HEAD
 int perf_event_restart_events(unsigned int cpu);
 #else
 #define perf_event_init_cpu	NULL
 #define perf_event_exit_cpu	NULL
 #define perf_event_restart_events NULL
+=======
+#else
+#define perf_event_init_cpu	NULL
+#define perf_event_exit_cpu	NULL
+>>>>>>> rebase
 #endif
 
 #endif /* _LINUX_PERF_EVENT_H */

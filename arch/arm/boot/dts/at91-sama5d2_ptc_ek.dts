@@ -40,7 +40,11 @@
 
 	ahb {
 		usb0: gadget@300000 {
+<<<<<<< HEAD
 			atmel,vbus-gpio = <&pioA PIN_PA27 GPIO_ACTIVE_HIGH>;
+=======
+			atmel,vbus-gpio = <&pioA PIN_PB11 GPIO_ACTIVE_HIGH>;
+>>>>>>> rebase
 			pinctrl-names = "default";
 			pinctrl-0 = <&pinctrl_usba_vbus>;
 			status = "okay";
@@ -125,8 +129,11 @@
 			bus-width = <8>;
 			pinctrl-names = "default";
 			pinctrl-0 = <&pinctrl_sdmmc0_default>;
+<<<<<<< HEAD
 			non-removable;
 			mmc-ddr-1_8v;
+=======
+>>>>>>> rebase
 			status = "okay";
 		};
 

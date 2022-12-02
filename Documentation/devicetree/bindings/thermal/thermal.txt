@@ -55,8 +55,12 @@ of heat dissipation). For example a fan's cooling states correspond to
 the different fan speeds possible. Cooling states are referred to by
 single unsigned integers, where larger numbers mean greater heat
 dissipation. The precise set of cooling states associated with a device
+<<<<<<< HEAD
 (as referred to by the cooling-min-level and cooling-max-level
 properties) should be defined in a particular device's binding.
+=======
+should be defined in a particular device's binding.
+>>>>>>> rebase
 For more examples of cooling devices, refer to the example sections below.
 
 Required properties:
@@ -69,6 +73,7 @@ Required properties:
 			See Cooling device maps section below for more details
 			on how consumers refer to cooling devices.
 
+<<<<<<< HEAD
 Optional properties:
 - cooling-min-level:	An integer indicating the smallest
   Type: unsigned	cooling state accepted. Typically 0.
@@ -78,6 +83,8 @@ Optional properties:
   Type: unsigned	cooling state accepted.
   Size: one cell
 
+=======
+>>>>>>> rebase
 * Trip points
 
 The trip node is a node to describe a point in the temperature domain
@@ -175,10 +182,13 @@ Optional property:
 			2000mW, while on a 10'' tablet is around
 			4500mW.
 
+<<<<<<< HEAD
 - wake-capable-sensor:	Set to true if thermal zone sensor is wake up capable
   Type: bool		and cooling devices binded to this thermal zone are not
   Size: none		affected during suspend.
 
+=======
+>>>>>>> rebase
 Note: The delay properties are bound to the maximum dT/dt (temperature
 derivative over time) in two situations for a thermal zone:
 (i)  - when passive cooling is activated (polling-delay-passive); and
@@ -230,8 +240,11 @@ cpus {
 			396000  950000
 			198000  850000
 		>;
+<<<<<<< HEAD
 		cooling-min-level = <0>;
 		cooling-max-level = <3>;
+=======
+>>>>>>> rebase
 		#cooling-cells = <2>; /* min followed by max */
 	};
 	...
@@ -245,8 +258,11 @@ cpus {
 	 */
 	fan0: fan@48 {
 		...
+<<<<<<< HEAD
 		cooling-max-level = <9>;
 		cooling-min-level = <0>;
+=======
+>>>>>>> rebase
 		#cooling-cells = <2>; /* min followed by max */
 	};
 };

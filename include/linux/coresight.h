@@ -1,6 +1,10 @@
 /* SPDX-License-Identifier: GPL-2.0 */
 /*
+<<<<<<< HEAD
  * Copyright (c) 2012,2017-2018 The Linux Foundation. All rights reserved.
+=======
+ * Copyright (c) 2012, The Linux Foundation. All rights reserved.
+>>>>>>> rebase
  */
 
 #ifndef _LINUX_CORESIGHT_H
@@ -90,6 +94,7 @@ union coresight_dev_subtype {
 };
 
 /**
+<<<<<<< HEAD
  * struct coresight_reg_clk - regulators and clocks need by coresight
  * @nr_reg:	number of regulators
  * @nr_clk:	number of clocks
@@ -104,30 +109,44 @@ struct coresight_reg_clk {
 };
 
 /**
+=======
+>>>>>>> rebase
  * struct coresight_platform_data - data harvested from the DT specification
  * @cpu:	the CPU a source belongs to. Only applicable for ETM/PTMs.
  * @name:	name of the component as shown under sysfs.
  * @nr_inport:	number of input ports for this component.
  * @outports:	list of remote endpoint port number.
+<<<<<<< HEAD
  * @source_names:name of all source components connected to this device.
+=======
+>>>>>>> rebase
  * @child_names:name of all child components connected to this device.
  * @child_ports:child component port number the current component is
 		connected  to.
  * @nr_outport:	number of output ports for this component.
+<<<<<<< HEAD
  * @clk:	The clock this component is associated to.
  * @reg_clk:	as defined by @coresight_reg_clk.
+=======
+>>>>>>> rebase
  */
 struct coresight_platform_data {
 	int cpu;
 	const char *name;
 	int nr_inport;
 	int *outports;
+<<<<<<< HEAD
 	const char **source_names;
 	const char **child_names;
 	int *child_ports;
 	int nr_outport;
 	struct clk *clk;
 	struct coresight_reg_clk *reg_clk;
+=======
+	const char **child_names;
+	int *child_ports;
+	int nr_outport;
+>>>>>>> rebase
 };
 
 /**
@@ -153,7 +172,10 @@ struct coresight_desc {
 /**
  * struct coresight_connection - representation of a single connection
  * @outport:	a connection's output port number.
+<<<<<<< HEAD
  * @source_name:source component's name.
+=======
+>>>>>>> rebase
  * @chid_name:	remote component's name.
  * @child_port:	remote component's port number @output is connected to.
  * @child_dev:	a @coresight_device representation of the component
@@ -161,7 +183,10 @@ struct coresight_desc {
  */
 struct coresight_connection {
 	int outport;
+<<<<<<< HEAD
 	const char *source_name;
+=======
+>>>>>>> rebase
 	const char *child_name;
 	int child_port;
 	struct coresight_device *child_dev;
@@ -183,9 +208,12 @@ struct coresight_connection {
  * @activated:	'true' only if a _sink_ has been activated.  A sink can be
 		activated but not yet enabled.  Enabling for a _sink_
 		happens when a source has been selected for that it.
+<<<<<<< HEAD
  * @abort:     captures sink trace on abort.
  * @reg_clk:	as defined by @coresight_reg_clk.
  * @ea:		Device attribute for sink representation under PMU directory.
+=======
+>>>>>>> rebase
  */
 struct coresight_device {
 	struct coresight_connection *conns;
@@ -196,6 +224,7 @@ struct coresight_device {
 	const struct coresight_ops *ops;
 	struct device dev;
 	atomic_t *refcnt;
+<<<<<<< HEAD
 	struct coresight_path *node;
 	bool orphan;
 	bool enable;	/* true only if configured as part of a path */
@@ -203,6 +232,11 @@ struct coresight_device {
 	bool activated;	/* true only if a sink is part of a path */
 	struct dev_ext_attribute *ea;
 	struct coresight_reg_clk *reg_clk;
+=======
+	bool orphan;
+	bool enable;	/* true only if configured as part of a path */
+	bool activated;	/* true only if a sink is part of a path */
+>>>>>>> rebase
 };
 
 #define to_coresight_device(d) container_of(d, struct coresight_device, dev)
@@ -219,6 +253,7 @@ struct coresight_device {
  * @disable:		disables the sink.
  * @alloc_buffer:	initialises perf's ring buffer for trace collection.
  * @free_buffer:	release memory allocated in @get_config.
+<<<<<<< HEAD
  * @update_buffer:	update buffer pointers after a trace session.
  */
 struct coresight_ops_sink {
@@ -229,6 +264,25 @@ struct coresight_ops_sink {
 			      int nr_pages, bool overwrite);
 	void (*free_buffer)(void *config);
 	unsigned long (*update_buffer)(struct coresight_device *csdev,
+=======
+ * @set_buffer:		initialises buffer mechanic before a trace session.
+ * @reset_buffer:	finalises buffer mechanic after a trace session.
+ * @update_buffer:	update buffer pointers after a trace session.
+ */
+struct coresight_ops_sink {
+	int (*enable)(struct coresight_device *csdev, u32 mode);
+	void (*disable)(struct coresight_device *csdev);
+	void *(*alloc_buffer)(struct coresight_device *csdev, int cpu,
+			      void **pages, int nr_pages, bool overwrite);
+	void (*free_buffer)(void *config);
+	int (*set_buffer)(struct coresight_device *csdev,
+			  struct perf_output_handle *handle,
+			  void *sink_config);
+	unsigned long (*reset_buffer)(struct coresight_device *csdev,
+				      struct perf_output_handle *handle,
+				      void *sink_config);
+	void (*update_buffer)(struct coresight_device *csdev,
+>>>>>>> rebase
 			      struct perf_output_handle *handle,
 			      void *sink_config);
 };
@@ -292,6 +346,7 @@ extern int coresight_enable(struct coresight_device *csdev);
 extern void coresight_disable(struct coresight_device *csdev);
 extern int coresight_timeout(void __iomem *addr, u32 offset,
 			     int position, int value);
+<<<<<<< HEAD
 extern void coresight_abort(void);
 extern void coresight_disable_reg_clk(struct coresight_device *csdev);
 extern int coresight_enable_reg_clk(struct coresight_device *csdev);
@@ -312,6 +367,8 @@ extern void coresight_disclaim_device(void __iomem *base);
 extern void coresight_disclaim_device_unlocked(void __iomem *base);
 
 extern bool coresight_loses_context_with_cpu(struct device *dev);
+=======
+>>>>>>> rebase
 #else
 static inline struct coresight_device *
 coresight_register(struct coresight_desc *desc) { return NULL; }
@@ -321,6 +378,7 @@ coresight_enable(struct coresight_device *csdev) { return -ENOSYS; }
 static inline void coresight_disable(struct coresight_device *csdev) {}
 static inline int coresight_timeout(void __iomem *addr, u32 offset,
 				     int position, int value) { return 1; }
+<<<<<<< HEAD
 static inline void coresight_abort(void) {}
 static inline void coresight_disable_reg_clk(struct coresight_device *csdev) {}
 static inline int coresight_enable_reg_clk(struct coresight_device *csdev)
@@ -347,24 +405,35 @@ static inline bool coresight_loses_context_with_cpu(struct device *dev)
 #endif
 
 #if defined(CONFIG_OF) && defined(CONFIG_CORESIGHT)
+=======
+#endif
+
+#ifdef CONFIG_OF
+>>>>>>> rebase
 extern int of_coresight_get_cpu(const struct device_node *node);
 extern struct coresight_platform_data *
 of_get_coresight_platform_data(struct device *dev,
 			       const struct device_node *node);
+<<<<<<< HEAD
 extern int of_get_coresight_csr_name(struct device_node *node,
 				const char **csr_name);
 
 extern struct coresight_cti_data *of_get_coresight_cti_data(
 				struct device *dev, struct device_node *node);
+=======
+>>>>>>> rebase
 #else
 static inline int of_coresight_get_cpu(const struct device_node *node)
 { return 0; }
 static inline struct coresight_platform_data *of_get_coresight_platform_data(
 	struct device *dev, const struct device_node *node) { return NULL; }
+<<<<<<< HEAD
 static inline int of_get_coresight_csr_name(struct device_node *node,
 		const char **csr_name){ return -EINVAL; }
 static inline struct coresight_cti_data *of_get_coresight_cti_data(
 		struct device *dev, struct device_node *node) { return NULL; }
+=======
+>>>>>>> rebase
 #endif
 
 #endif

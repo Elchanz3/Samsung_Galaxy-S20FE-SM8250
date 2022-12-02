@@ -25,6 +25,7 @@
 #include <linux/types.h>
 #include <linux/workqueue.h>
 #include <linux/usb/ch9.h>
+<<<<<<< HEAD
 #include <linux/pm_runtime.h>
 
 #define UDC_TRACE_STR_MAX	512
@@ -130,6 +131,13 @@ struct gsi_channel_info {
 	struct usb_gsi_request *ch_req;
 };
 
+=======
+
+#define UDC_TRACE_STR_MAX	512
+
+struct usb_ep;
+
+>>>>>>> rebase
 /**
  * struct usb_request - describes one i/o request
  * @buf: Buffer used for data.  Always provide this; some controllers
@@ -173,7 +181,10 @@ struct gsi_channel_info {
  *	Note that for writes (IN transfers) some data bytes may still
  *	reside in a device-side FIFO when the request is reported as
  *	complete.
+<<<<<<< HEAD
  * @udc_priv: Vendor private data in usage by the UDC.
+=======
+>>>>>>> rebase
  *
  * These are allocated/freed through the endpoint they're used with.  The
  * hardware's driver can add extra per-request data to the memory it returns,
@@ -215,7 +226,10 @@ struct usb_request {
 
 	int			status;
 	unsigned		actual;
+<<<<<<< HEAD
 	unsigned int		udc_priv;
+=======
+>>>>>>> rebase
 };
 
 /*-------------------------------------------------------------------------*/
@@ -246,9 +260,12 @@ struct usb_ep_ops {
 
 	int (*fifo_status) (struct usb_ep *ep);
 	void (*fifo_flush) (struct usb_ep *ep);
+<<<<<<< HEAD
 	int (*gsi_ep_op)(struct usb_ep *ep, void *op_data,
 		enum gsi_ep_op op);
 
+=======
+>>>>>>> rebase
 };
 
 /**
@@ -314,11 +331,14 @@ struct usb_ep_caps {
  *	enabled and remains valid until the endpoint is disabled.
  * @comp_desc: In case of SuperSpeed support, this is the endpoint companion
  *	descriptor that is used to configure the endpoint
+<<<<<<< HEAD
  * @ep_type: Used to specify type of EP eg. normal vs h/w accelerated.
  * @ep_num: Used EP number
  * @ep_intr_num: Interrupter number for EP.
  * @endless: In case where endless transfer is being initiated, this is set
  *      to disable usb event interrupt for few events.
+=======
+>>>>>>> rebase
  *
  * the bus controller driver lists all the general purpose endpoints in
  * gadget->ep_list.  the control endpoint (gadget->ep0) is not in that list,
@@ -342,10 +362,13 @@ struct usb_ep {
 	u8			address;
 	const struct usb_endpoint_descriptor	*desc;
 	const struct usb_ss_ep_comp_descriptor	*comp_desc;
+<<<<<<< HEAD
 	enum ep_type		ep_type;
 	u8			ep_num;
 	u8			ep_intr_num;
 	bool			endless;
+=======
+>>>>>>> rebase
 };
 
 /*-------------------------------------------------------------------------*/
@@ -363,8 +386,11 @@ int usb_ep_clear_halt(struct usb_ep *ep);
 int usb_ep_set_wedge(struct usb_ep *ep);
 int usb_ep_fifo_status(struct usb_ep *ep);
 void usb_ep_fifo_flush(struct usb_ep *ep);
+<<<<<<< HEAD
 int usb_gsi_ep_op(struct usb_ep *ep,
 		struct usb_gsi_request *req, enum gsi_ep_op op);
+=======
+>>>>>>> rebase
 #else
 static inline void usb_ep_set_maxpacket_limit(struct usb_ep *ep,
 		unsigned maxpacket_limit)
@@ -394,10 +420,13 @@ static inline int usb_ep_fifo_status(struct usb_ep *ep)
 { return 0; }
 static inline void usb_ep_fifo_flush(struct usb_ep *ep)
 { }
+<<<<<<< HEAD
 
 static int usb_gsi_ep_op(struct usb_ep *ep,
 		struct usb_gsi_request *req, enum gsi_ep_op op)
 { return 0; }
+=======
+>>>>>>> rebase
 #endif /* USB_GADGET */
 
 /*-------------------------------------------------------------------------*/
@@ -420,7 +449,10 @@ struct usb_udc;
 struct usb_gadget_ops {
 	int	(*get_frame)(struct usb_gadget *);
 	int	(*wakeup)(struct usb_gadget *);
+<<<<<<< HEAD
 	int	(*func_wakeup)(struct usb_gadget *g, int interface_id);
+=======
+>>>>>>> rebase
 	int	(*set_selfpowered) (struct usb_gadget *, int is_selfpowered);
 	int	(*vbus_session) (struct usb_gadget *, int is_active);
 	int	(*vbus_draw) (struct usb_gadget *, unsigned mA);
@@ -435,7 +467,10 @@ struct usb_gadget_ops {
 	struct usb_ep *(*match_ep)(struct usb_gadget *,
 			struct usb_endpoint_descriptor *,
 			struct usb_ss_ep_comp_descriptor *);
+<<<<<<< HEAD
 	int	(*restart)(struct usb_gadget *g);
+=======
+>>>>>>> rebase
 };
 
 /**
@@ -541,7 +576,10 @@ struct usb_gadget {
 	unsigned			deactivated:1;
 	unsigned			connected:1;
 	unsigned			lpm_capable:1;
+<<<<<<< HEAD
 	unsigned			remote_wakeup:1;
+=======
+>>>>>>> rebase
 };
 #define work_to_gadget(w)	(container_of((w), struct usb_gadget, work))
 
@@ -675,7 +713,10 @@ static inline int gadget_is_otg(struct usb_gadget *g)
 #if IS_ENABLED(CONFIG_USB_GADGET)
 int usb_gadget_frame_number(struct usb_gadget *gadget);
 int usb_gadget_wakeup(struct usb_gadget *gadget);
+<<<<<<< HEAD
 int usb_gadget_func_wakeup(struct usb_gadget *gadget, int interface_id);
+=======
+>>>>>>> rebase
 int usb_gadget_set_selfpowered(struct usb_gadget *gadget);
 int usb_gadget_clear_selfpowered(struct usb_gadget *gadget);
 int usb_gadget_vbus_connect(struct usb_gadget *gadget);
@@ -690,8 +731,11 @@ static inline int usb_gadget_frame_number(struct usb_gadget *gadget)
 { return 0; }
 static inline int usb_gadget_wakeup(struct usb_gadget *gadget)
 { return 0; }
+<<<<<<< HEAD
 static int usb_gadget_func_wakeup(struct usb_gadget *gadget, int interface_id)
 { return 0; }
+=======
+>>>>>>> rebase
 static inline int usb_gadget_set_selfpowered(struct usb_gadget *gadget)
 { return 0; }
 static inline int usb_gadget_clear_selfpowered(struct usb_gadget *gadget)
@@ -930,6 +974,7 @@ int usb_otg_descriptor_init(struct usb_gadget *gadget,
 		struct usb_descriptor_header *otg_desc);
 /*-------------------------------------------------------------------------*/
 
+<<<<<<< HEAD
 /**
  * usb_func_ep_queue - queues (submits) an I/O request to a function endpoint.
  * This function is similar to the usb_ep_queue function, but in addition it
@@ -948,6 +993,8 @@ int usb_func_ep_queue(struct usb_function *func, struct usb_ep *ep,
 
 /*-------------------------------------------------------------------------*/
 
+=======
+>>>>>>> rebase
 /* utility to simplify map/unmap of usb_requests to/from DMA */
 
 #ifdef	CONFIG_HAS_DMA
@@ -1012,6 +1059,7 @@ extern int usb_gadget_ep_match_desc(struct usb_gadget *gadget,
 /* utility to update vbus status for udc core, it may be scheduled */
 extern void usb_udc_vbus_handler(struct usb_gadget *gadget, bool status);
 
+<<<<<<< HEAD
 /**
  * usb_gadget_autopm_get - increment PM-usage counter of usb gadget's parent
  * device.
@@ -1135,6 +1183,8 @@ static inline void usb_gadget_autopm_put_no_suspend(struct usb_gadget *gadget)
 		pm_runtime_put_noidle(gadget->dev.parent);
 }
 
+=======
+>>>>>>> rebase
 /*-------------------------------------------------------------------------*/
 
 /* utility wrapping a simple endpoint selection policy */
@@ -1150,6 +1200,7 @@ extern struct usb_ep *usb_ep_autoconfig_ss(struct usb_gadget *,
 extern void usb_ep_autoconfig_release(struct usb_ep *);
 
 extern void usb_ep_autoconfig_reset(struct usb_gadget *);
+<<<<<<< HEAD
 extern struct usb_ep *usb_ep_autoconfig_by_name(struct usb_gadget *gadget,
 			struct usb_endpoint_descriptor *desc,
 			const char *ep_name);
@@ -1183,4 +1234,7 @@ static inline bool msm_dwc3_reset_ep_after_lpm(struct usb_gadget *gadget)
 static inline int msm_dwc3_reset_dbm_ep(struct usb_ep *ep)
 { return -ENODEV; }
 #endif
+=======
+
+>>>>>>> rebase
 #endif /* __LINUX_USB_GADGET_H */

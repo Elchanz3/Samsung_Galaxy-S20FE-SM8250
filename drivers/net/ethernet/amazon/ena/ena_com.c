@@ -2137,6 +2137,12 @@ int ena_com_get_hash_function(struct ena_com_dev *ena_dev,
 		rss->hash_key;
 	int rc;
 
+<<<<<<< HEAD
+=======
+	if (unlikely(!func))
+		return -EINVAL;
+
+>>>>>>> rebase
 	rc = ena_com_get_feature_ex(ena_dev, &get_resp,
 				    ENA_ADMIN_RSS_HASH_FUNCTION,
 				    rss->hash_key_dma_addr,
@@ -2149,8 +2155,12 @@ int ena_com_get_hash_function(struct ena_com_dev *ena_dev,
 	if (rss->hash_func)
 		rss->hash_func--;
 
+<<<<<<< HEAD
 	if (func)
 		*func = rss->hash_func;
+=======
+	*func = rss->hash_func;
+>>>>>>> rebase
 
 	if (key)
 		memcpy(key, hash_key->key, (size_t)(hash_key->keys_num) << 2);

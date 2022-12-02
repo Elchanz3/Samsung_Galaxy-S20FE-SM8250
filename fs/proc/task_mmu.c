@@ -19,20 +19,26 @@
 #include <linux/shmem_fs.h>
 #include <linux/uaccess.h>
 #include <linux/pkeys.h>
+<<<<<<< HEAD
 #include <linux/mm_inline.h>
 #include <linux/freezer.h>
 #include <linux/ctype.h>
+=======
+>>>>>>> rebase
 
 #include <asm/elf.h>
 #include <asm/tlb.h>
 #include <asm/tlbflush.h>
 #include "internal.h"
 
+<<<<<<< HEAD
 #ifdef CONFIG_ZRAM_LRU_WRITEBACK
 #include <linux/delay.h>
 #include "../../drivers/block/zram/zram_drv.h"
 #endif
 
+=======
+>>>>>>> rebase
 #define SEQ_PUT_DEC(str, val) \
 		seq_put_decimal_ull_width(m, str, (val) << (PAGE_SHIFT-10), 8)
 void task_mem(struct seq_file *m, struct mm_struct *mm)
@@ -104,6 +110,7 @@ unsigned long task_statm(struct mm_struct *mm,
 	*resident = *shared + get_mm_counter(mm, MM_ANONPAGES);
 	return mm->total_vm;
 }
+<<<<<<< HEAD
 void task_statlmkd(struct mm_struct *mm, unsigned long *size,
 			 unsigned long *resident, unsigned long *swapresident)
 {
@@ -127,6 +134,9 @@ void task_statlmkd(struct mm_struct *mm, unsigned long *size,
     }
 #endif
 }
+=======
+
+>>>>>>> rebase
 #ifdef CONFIG_NUMA
 /*
  * Save get_task_policy() for show_numa_map().
@@ -153,6 +163,7 @@ static void release_task_mempolicy(struct proc_maps_private *priv)
 }
 #endif
 
+<<<<<<< HEAD
 static void seq_print_vma_name(struct seq_file *m, struct vm_area_struct *vma)
 {
 	const char __user *name = vma_get_anon_name(vma);
@@ -203,6 +214,8 @@ static void seq_print_vma_name(struct seq_file *m, struct vm_area_struct *vma)
 	seq_putc(m, ']');
 }
 
+=======
+>>>>>>> rebase
 static void vma_stop(struct proc_maps_private *priv)
 {
 	struct mm_struct *mm = priv->mm;
@@ -428,6 +441,7 @@ show_map_vma(struct seq_file *m, struct vm_area_struct *vma)
 			goto done;
 		}
 
+<<<<<<< HEAD
 		if (is_stack(vma)) {
 			name = "[stack]";
 			goto done;
@@ -437,6 +451,10 @@ show_map_vma(struct seq_file *m, struct vm_area_struct *vma)
 			seq_pad(m, ' ');
 			seq_print_vma_name(m, vma);
 		}
+=======
+		if (is_stack(vma))
+			name = "[stack]";
+>>>>>>> rebase
 	}
 
 done:
@@ -505,9 +523,12 @@ struct mem_size_stats {
 	unsigned long anonymous_thp;
 	unsigned long shmem_thp;
 	unsigned long swap;
+<<<<<<< HEAD
 #ifdef CONFIG_ZRAM_LRU_WRITEBACK
 	unsigned long writeback;
 #endif
+=======
+>>>>>>> rebase
 	unsigned long shared_hugetlb;
 	unsigned long private_hugetlb;
 	u64 pss;
@@ -603,10 +624,13 @@ static void smaps_pte_entry(pte_t *pte, unsigned long addr,
 			int mapcount;
 
 			mss->swap += PAGE_SIZE;
+<<<<<<< HEAD
 #ifdef CONFIG_ZRAM_LRU_WRITEBACK
 			if (is_writeback_entry(swpent))
 				mss->writeback += PAGE_SIZE;
 #endif
+=======
+>>>>>>> rebase
 			mapcount = swp_swapcount(swpent);
 			if (mapcount >= 2) {
 				u64 pss_delta = (u64)PAGE_SIZE << PSS_SHIFT;
@@ -871,9 +895,12 @@ static void __show_smap(struct seq_file *m, const struct mem_size_stats *mss)
 	SEQ_PUT_DEC(" kB\nSwap:           ", mss->swap);
 	SEQ_PUT_DEC(" kB\nSwapPss:        ",
 					mss->swap_pss >> PSS_SHIFT);
+<<<<<<< HEAD
 #ifdef CONFIG_ZRAM_LRU_WRITEBACK
 	SEQ_PUT_DEC(" kB\nWriteback:      ", mss->writeback);
 #endif
+=======
+>>>>>>> rebase
 	SEQ_PUT_DEC(" kB\nLocked:         ",
 					mss->pss_locked >> PSS_SHIFT);
 	seq_puts(m, " kB\n");
@@ -889,11 +916,14 @@ static int show_smap(struct seq_file *m, void *v)
 	smap_gather_stats(vma, &mss);
 
 	show_map_vma(m, vma);
+<<<<<<< HEAD
 	if (vma_get_anon_name(vma)) {
 		seq_puts(m, "Name:           ");
 		seq_print_vma_name(m, vma);
 		seq_putc(m, '\n');
 	}
+=======
+>>>>>>> rebase
 
 	SEQ_PUT_DEC("Size:           ", vma->vm_end - vma->vm_start);
 	SEQ_PUT_DEC(" kB\nKernelPageSize: ", vma_kernel_pagesize(vma));
@@ -945,7 +975,11 @@ static int show_smaps_rollup(struct seq_file *m, void *v)
 		last_vma_end = vma->vm_end;
 	}
 
+<<<<<<< HEAD
 	show_vma_header_prefix(m, priv->mm->mmap->vm_start,
+=======
+	show_vma_header_prefix(m, priv->mm->mmap ? priv->mm->mmap->vm_start : 0,
+>>>>>>> rebase
 			       last_vma_end, 0, 0, 0, 0);
 	seq_pad(m, ' ');
 	seq_puts(m, "[rollup]\n");
@@ -1272,11 +1306,16 @@ static ssize_t clear_refs_write(struct file *file, const char __user *buf,
 					goto out_mm;
 				}
 				for (vma = mm->mmap; vma; vma = vma->vm_next) {
+<<<<<<< HEAD
 					vm_write_begin(vma);
 					WRITE_ONCE(vma->vm_flags,
 						vma->vm_flags & ~VM_SOFTDIRTY);
 					vma_set_page_prot(vma);
 					vm_write_end(vma);
+=======
+					vma->vm_flags &= ~VM_SOFTDIRTY;
+					vma_set_page_prot(vma);
+>>>>>>> rebase
 				}
 				downgrade_write(&mm->mmap_sem);
 				break;
@@ -1705,6 +1744,7 @@ const struct file_operations proc_pagemap_operations = {
 };
 #endif /* CONFIG_PROC_PAGE_MONITOR */
 
+<<<<<<< HEAD
 #ifdef CONFIG_FREEZING
 static inline bool is_pm_freezing(void)
 {
@@ -2166,6 +2206,8 @@ const struct file_operations proc_reclaim_operations = {
 };
 #endif
 
+=======
+>>>>>>> rebase
 #ifdef CONFIG_NUMA
 
 struct numa_maps {
@@ -2433,6 +2475,7 @@ const struct file_operations proc_pid_numa_maps_operations = {
 };
 
 #endif /* CONFIG_NUMA */
+<<<<<<< HEAD
 
 
 #ifdef CONFIG_PAGE_BOOST
@@ -2614,3 +2657,5 @@ const struct file_operations proc_pid_io_record_operations = {
 };
 #endif
 #endif
+=======
+>>>>>>> rebase

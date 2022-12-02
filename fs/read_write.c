@@ -25,6 +25,7 @@
 #include <linux/uaccess.h>
 #include <asm/unistd.h>
 
+<<<<<<< HEAD
 #ifdef CONFIG_FSCRYPT_SDP
 #include <linux/fscrypto_sdp_cache.h>
 #endif
@@ -33,6 +34,8 @@
 #include <linux/defex.h>
 #endif
 
+=======
+>>>>>>> rebase
 const struct file_operations generic_ro_fops = {
 	.llseek		= generic_file_llseek,
 	.read_iter	= generic_file_read_iter,
@@ -468,8 +471,11 @@ ssize_t vfs_read(struct file *file, char __user *buf, size_t count, loff_t *pos)
 	return ret;
 }
 
+<<<<<<< HEAD
 EXPORT_SYMBOL_GPL(vfs_read);
 
+=======
+>>>>>>> rebase
 static ssize_t new_sync_write(struct file *filp, const char __user *buf, size_t len, loff_t *ppos)
 {
 	struct iovec iov = { .iov_base = (void __user *)buf, .iov_len = len };
@@ -491,6 +497,7 @@ static ssize_t new_sync_write(struct file *filp, const char __user *buf, size_t 
 ssize_t __vfs_write(struct file *file, const char __user *p, size_t count,
 		    loff_t *pos)
 {
+<<<<<<< HEAD
 #ifdef CONFIG_FSCRYPT_SDP
 	ssize_t ret;
 
@@ -507,13 +514,18 @@ ssize_t __vfs_write(struct file *file, const char __user *p, size_t count,
 
 	return ret;
 #else
+=======
+>>>>>>> rebase
 	if (file->f_op->write)
 		return file->f_op->write(file, p, count, pos);
 	else if (file->f_op->write_iter)
 		return new_sync_write(file, p, count, pos);
 	else
 		return -EINVAL;
+<<<<<<< HEAD
 #endif
+=======
+>>>>>>> rebase
 }
 
 ssize_t __kernel_write(struct file *file, const void *buf, size_t count, loff_t *pos)
@@ -570,10 +582,13 @@ ssize_t vfs_write(struct file *file, const char __user *buf, size_t count, loff_
 
 	ret = rw_verify_area(WRITE, file, pos, count);
 	if (!ret) {
+<<<<<<< HEAD
 #ifdef CONFIG_SECURITY_DEFEX
 		if (task_defex_enforce(current, file, -__NR_write))
 			return -EPERM;
 #endif
+=======
+>>>>>>> rebase
 		if (count > MAX_RW_COUNT)
 			count =  MAX_RW_COUNT;
 		file_start_write(file);
@@ -589,8 +604,11 @@ ssize_t vfs_write(struct file *file, const char __user *buf, size_t count, loff_
 	return ret;
 }
 
+<<<<<<< HEAD
 EXPORT_SYMBOL_GPL(vfs_write);
 
+=======
+>>>>>>> rebase
 static inline loff_t file_pos_read(struct file *file)
 {
 	return file->f_mode & FMODE_STREAM ? 0 : file->f_pos;

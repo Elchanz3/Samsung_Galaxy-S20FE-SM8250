@@ -49,9 +49,22 @@ ifeq ($(CONFIG_RISCV_ISA_C),y)
 	KBUILD_ARCH_C = c
 endif
 
+<<<<<<< HEAD
 KBUILD_AFLAGS += -march=$(KBUILD_MARCH)$(KBUILD_ARCH_A)fd$(KBUILD_ARCH_C)
 
 KBUILD_CFLAGS += -march=$(KBUILD_MARCH)$(KBUILD_ARCH_A)$(KBUILD_ARCH_C)
+=======
+# Newer binutils versions default to ISA spec version 20191213 which moves some
+# instructions from the I extension to the Zicsr and Zifencei extensions.
+toolchain-need-zicsr-zifencei := $(call cc-option-yn, -march=$(riscv-march-y)_zicsr_zifencei)
+ifeq ($(toolchain-need-zicsr-zifencei),y)
+	KBUILD_ARCH_ZISCR_ZIFENCEI = _zicsr_zifencei
+endif
+
+KBUILD_AFLAGS += -march=$(KBUILD_MARCH)$(KBUILD_ARCH_A)fd$(KBUILD_ARCH_C)$(KBUILD_ARCH_ZISCR_ZIFENCEI)
+
+KBUILD_CFLAGS += -march=$(KBUILD_MARCH)$(KBUILD_ARCH_A)$(KBUILD_ARCH_C)$(KBUILD_ARCH_ZISCR_ZIFENCEI)
+>>>>>>> rebase
 KBUILD_CFLAGS += -mno-save-restore
 KBUILD_CFLAGS += -DCONFIG_PAGE_OFFSET=$(CONFIG_PAGE_OFFSET)
 
@@ -66,6 +79,10 @@ ifeq ($(CONFIG_MODULE_SECTIONS),y)
 endif
 
 KBUILD_CFLAGS_MODULE += $(call cc-option,-mno-relax)
+<<<<<<< HEAD
+=======
+KBUILD_AFLAGS_MODULE += $(call as-option,-Wa$(comma)-mno-relax)
+>>>>>>> rebase
 
 # GCC versions that support the "-mstrict-align" option default to allowing
 # unaligned accesses.  While unaligned accesses are explicitly allowed in the

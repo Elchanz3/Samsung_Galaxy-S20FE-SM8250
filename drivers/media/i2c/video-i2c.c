@@ -105,7 +105,11 @@ static int amg88xx_xfer(struct video_i2c_data *data, char *buf)
 	return (ret == 2) ? 0 : -EIO;
 }
 
+<<<<<<< HEAD
 #if IS_ENABLED(CONFIG_HWMON)
+=======
+#if IS_REACHABLE(CONFIG_HWMON)
+>>>>>>> rebase
 
 static const u32 amg88xx_temp_config[] = {
 	HWMON_T_INPUT,

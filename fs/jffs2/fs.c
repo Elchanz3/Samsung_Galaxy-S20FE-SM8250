@@ -597,8 +597,14 @@ out_root:
 	jffs2_free_ino_caches(c);
 	jffs2_free_raw_node_refs(c);
 	kvfree(c->blocks);
+<<<<<<< HEAD
  out_inohash:
 	jffs2_clear_xattr_subsystem(c);
+=======
+	jffs2_clear_xattr_subsystem(c);
+	jffs2_sum_exit(c);
+ out_inohash:
+>>>>>>> rebase
 	kfree(c->inocache_list);
  out_wbuf:
 	jffs2_flash_cleanup(c);
@@ -686,7 +692,11 @@ unsigned char *jffs2_gc_fetch_page(struct jffs2_sb_info *c,
 	struct page *pg;
 
 	pg = read_cache_page(inode->i_mapping, offset >> PAGE_SHIFT,
+<<<<<<< HEAD
 			     jffs2_do_readpage_unlock, inode);
+=======
+			     (void *)jffs2_do_readpage_unlock, inode);
+>>>>>>> rebase
 	if (IS_ERR(pg))
 		return (void *)pg;
 

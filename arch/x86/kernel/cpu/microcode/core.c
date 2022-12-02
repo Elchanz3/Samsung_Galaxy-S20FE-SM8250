@@ -627,16 +627,26 @@ static ssize_t reload_store(struct device *dev,
 	if (val != 1)
 		return size;
 
+<<<<<<< HEAD
 	tmp_ret = microcode_ops->request_microcode_fw(bsp, &microcode_pdev->dev, true);
 	if (tmp_ret != UCODE_NEW)
 		return size;
 
+=======
+>>>>>>> rebase
 	get_online_cpus();
 
 	ret = check_online_cpus();
 	if (ret)
 		goto put;
 
+<<<<<<< HEAD
+=======
+	tmp_ret = microcode_ops->request_microcode_fw(bsp, &microcode_pdev->dev, true);
+	if (tmp_ret != UCODE_NEW)
+		goto put;
+
+>>>>>>> rebase
 	mutex_lock(&microcode_mutex);
 	ret = microcode_reload_late();
 	mutex_unlock(&microcode_mutex);
@@ -773,9 +783,15 @@ static struct subsys_interface mc_cpu_interface = {
 };
 
 /**
+<<<<<<< HEAD
  * mc_bp_resume - Update boot CPU microcode during resume.
  */
 static void mc_bp_resume(void)
+=======
+ * microcode_bsp_resume - Update boot CPU microcode during resume.
+ */
+void microcode_bsp_resume(void)
+>>>>>>> rebase
 {
 	int cpu = smp_processor_id();
 	struct ucode_cpu_info *uci = ucode_cpu_info + cpu;
@@ -787,7 +803,11 @@ static void mc_bp_resume(void)
 }
 
 static struct syscore_ops mc_syscore_ops = {
+<<<<<<< HEAD
 	.resume			= mc_bp_resume,
+=======
+	.resume			= microcode_bsp_resume,
+>>>>>>> rebase
 };
 
 static int mc_cpu_starting(unsigned int cpu)

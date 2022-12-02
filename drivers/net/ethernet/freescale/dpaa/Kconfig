@@ -2,6 +2,10 @@ menuconfig FSL_DPAA_ETH
 	tristate "DPAA Ethernet"
 	depends on FSL_DPAA && FSL_FMAN
 	select PHYLIB
+<<<<<<< HEAD
+=======
+	select FIXED_PHY
+>>>>>>> rebase
 	select FSL_FMAN_MAC
 	---help---
 	  Data Path Acceleration Architecture Ethernet driver,

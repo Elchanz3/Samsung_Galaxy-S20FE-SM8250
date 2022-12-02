@@ -1,10 +1,19 @@
+<<<<<<< HEAD
 # SPDX-License-Identifier: GPL-2.0
+=======
+>>>>>>> rebase
 #
 # QCOM Soc drivers
 #
 menu "Qualcomm SoC drivers"
+<<<<<<< HEAD
 config QCOM_COMMAND_DB
 	tristate "Qualcomm Command DB"
+=======
+
+config QCOM_COMMAND_DB
+	bool "Qualcomm Command DB"
+>>>>>>> rebase
 	depends on ARCH_QCOM || COMPILE_TEST
 	depends on OF_RESERVED_MEM
 	help
@@ -13,6 +22,7 @@ config QCOM_COMMAND_DB
 	  resource on a RPM-hardened platform must use this database to get
 	  SoC specific identifier and information for the shared resources.
 
+<<<<<<< HEAD
 config QCOM_MEM_OFFLINE
 	bool "Dynamic Memory Region Offline driver"
 	depends on MEMORY_HOTPLUG
@@ -34,6 +44,8 @@ config BUG_ON_HW_MEM_ONLINE_FAIL
 	  of such memory online failures.
 	  If unsure, say N
 
+=======
+>>>>>>> rebase
 config QCOM_GENI_SE
 	tristate "QCOM GENI Serial Engine Driver"
 	depends on ARCH_QCOM || COMPILE_TEST
@@ -43,6 +55,7 @@ config QCOM_GENI_SE
 	  driver is also used to manage the common aspects of multiple Serial
 	  Engines present in the QUP.
 
+<<<<<<< HEAD
 config OVERRIDE_MEMORY_LIMIT
 	bool "Override memory limit set by the kernel boot parameter"
 	depends on QCOM_MEM_OFFLINE
@@ -53,6 +66,8 @@ config OVERRIDE_MEMORY_LIMIT
 	  hot-plugging.
 	  If unsure, say N
 
+=======
+>>>>>>> rebase
 config QCOM_GLINK_SSR
 	tristate "Qualcomm Glink SSR driver"
 	depends on RPMSG
@@ -62,6 +77,7 @@ config QCOM_GLINK_SSR
 	  implements the SSR protocol for notifying the remote processor about
 	  neighboring subsystems going up or down.
 
+<<<<<<< HEAD
 config QCOM_CPUSS_DUMP
 	bool "CPU Subsystem Dumping support"
 	help
@@ -88,6 +104,8 @@ config MSM_QBT_HANDLER
 	  from the queue. It also creates an input device to send key events such as
 	  KEY_POWER, KEY_HOME.
 
+=======
+>>>>>>> rebase
 config QCOM_GSBI
         tristate "QCOM General Serial Bus Interface"
         depends on ARCH_QCOM
@@ -97,6 +115,7 @@ config QCOM_GSBI
           functions for connecting the underlying serial UART, SPI, and I2C
           devices to the output pins.
 
+<<<<<<< HEAD
 config QCOM_IPCC
 	tristate "Qualcomm Technologies, Inc. IPCC driver"
 	depends on MAILBOX
@@ -108,6 +127,8 @@ config QCOM_IPCC
 	  Say Y here to compile the driver as a part of kernel or M to compile
 	  as a module.
 
+=======
+>>>>>>> rebase
 config QCOM_LLCC
 	tristate "Qualcomm Technologies, Inc. LLCC driver"
 	depends on ARCH_QCOM
@@ -117,6 +138,7 @@ config QCOM_LLCC
 	  to clients that use the LLCC. Say yes here to enable LLCC slice
 	  driver.
 
+<<<<<<< HEAD
 config QCOM_KONA_LLCC
 	tristate "Qualcomm Technologies, Inc. KONA LLCC driver"
 	depends on QCOM_LLCC
@@ -142,6 +164,8 @@ config QCOM_LAGOON_LLCC
 	  data required to configure LLCC so that clients can start using the
 	  LLCC slices.
 
+=======
+>>>>>>> rebase
 config QCOM_SDM845_LLCC
 	tristate "Qualcomm Technologies, Inc. SDM845 LLCC driver"
 	depends on QCOM_LLCC
@@ -150,6 +174,7 @@ config QCOM_SDM845_LLCC
 	  data required to configure LLCC so that clients can start using the
 	  LLCC slices.
 
+<<<<<<< HEAD
 config QCOM_LLCC_PERFMON
 	tristate "Qualcomm Technologies, Inc. LLCC Perfmon driver"
 	depends on QCOM_LLCC
@@ -176,6 +201,11 @@ config QPNP_PBS
 	  RAM on Qualcomm Technologies, Inc. QPNP PMICs. This module provides
 	  the APIs to the client drivers that wants to send the PBS trigger
 	  event to the PBS RAM.
+=======
+config QCOM_MDT_LOADER
+	tristate
+	select QCOM_SCM
+>>>>>>> rebase
 
 config QCOM_PM
 	bool "Qualcomm Power Management"
@@ -188,14 +218,20 @@ config QCOM_PM
 	  low power modes.
 
 config QCOM_QMI_HELPERS
+<<<<<<< HEAD
 	bool "QTI QMI Helpers"
 	depends on QRTR
+=======
+	tristate
+	depends on ARCH_QCOM && NET
+>>>>>>> rebase
 	help
 	  Helper library for handling QMI encoded messages.  QMI encoded
 	  messages are used in communication between the majority of QRTR
 	  clients and this helpers provide the common functionality needed for
 	  doing this from a kernel driver.
 
+<<<<<<< HEAD
 config QCOM_QMI_RMNET
 	bool "QTI QMI Rmnet Helpers"
 	depends on QCOM_QMI_HELPERS
@@ -228,6 +264,8 @@ config QCOM_QMI_POWER_COLLAPSE
 	  If unsure or not use power save feature, say 'N'.
 
 
+=======
+>>>>>>> rebase
 config QCOM_RMTFS_MEM
 	tristate "Qualcomm Remote Filesystem memory driver"
 	depends on ARCH_QCOM
@@ -241,7 +279,11 @@ config QCOM_RMTFS_MEM
 	  Say y here if you intend to boot the modem remoteproc.
 
 config QCOM_RPMH
+<<<<<<< HEAD
 	tristate "Qualcomm RPM-Hardened (RPMH) Communication"
+=======
+	bool "Qualcomm RPM-Hardened (RPMH) Communication"
+>>>>>>> rebase
 	depends on ARCH_QCOM && ARM64 && OF || COMPILE_TEST
 	help
 	  Support for communication with the hardened-RPM blocks in
@@ -274,6 +316,7 @@ config QCOM_SMD_RPM
 	  Say M here if you want to include support for the Qualcomm RPM as a
 	  module. This will build a module called "qcom-smd-rpm".
 
+<<<<<<< HEAD
 config MSM_SPM
         bool "Driver support for SPM and AVS wrapper hardware"
         help
@@ -315,6 +358,8 @@ config QCOM_MEMORY_DUMP_V2
 	  of deadlocks or cpu hangs these dump regions are captured to
 	  give a snapshot of the system at the time of the crash.
 
+=======
+>>>>>>> rebase
 config QCOM_SMEM_STATE
 	bool
 
@@ -343,6 +388,7 @@ config QCOM_WCNSS_CTRL
 	  Client driver for the WCNSS_CTRL SMD channel, used to download nv
 	  firmware to a newly booted WCNSS chip.
 
+<<<<<<< HEAD
 config MSM_PIL_MSS_QDSP6V5
 	tristate "MSS QDSP6v5 (Hexagon) Boot Support"
 	depends on MSM_PIL && MSM_SUBSYSTEM_RESTART
@@ -534,6 +580,8 @@ config MINIDUMP_MAX_ENTRIES
 	  This defines maximum number of entries to be allocated for application
 	  subsytem in Minidump table.
 
+=======
+>>>>>>> rebase
 config QCOM_APR
 	tristate "Qualcomm APR Bus (Asynchronous Packet Router)"
 	depends on ARCH_QCOM
@@ -543,6 +591,7 @@ config QCOM_APR
           application processor and QDSP6. APR is
           used by audio driver to configure QDSP6
           ASM, ADM and AFE modules.
+<<<<<<< HEAD
 
 config MSM_CORE_HANG_DETECT
 	tristate "MSM Core Hang Detection Support"
@@ -965,3 +1014,6 @@ config SEC_CDSP_NOT_CRASH_ENG
 	help
 	  This option provides crash only except ENG Binary.
 
+=======
+endmenu
+>>>>>>> rebase

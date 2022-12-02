@@ -34,89 +34,149 @@ static void rose_idletimer_expiry(struct timer_list *);
 
 void rose_start_heartbeat(struct sock *sk)
 {
+<<<<<<< HEAD
 	del_timer(&sk->sk_timer);
+=======
+	sk_stop_timer(sk, &sk->sk_timer);
+>>>>>>> rebase
 
 	sk->sk_timer.function = rose_heartbeat_expiry;
 	sk->sk_timer.expires  = jiffies + 5 * HZ;
 
+<<<<<<< HEAD
 	add_timer(&sk->sk_timer);
+=======
+	sk_reset_timer(sk, &sk->sk_timer, sk->sk_timer.expires);
+>>>>>>> rebase
 }
 
 void rose_start_t1timer(struct sock *sk)
 {
 	struct rose_sock *rose = rose_sk(sk);
 
+<<<<<<< HEAD
 	del_timer(&rose->timer);
+=======
+	sk_stop_timer(sk, &rose->timer);
+>>>>>>> rebase
 
 	rose->timer.function = rose_timer_expiry;
 	rose->timer.expires  = jiffies + rose->t1;
 
+<<<<<<< HEAD
 	add_timer(&rose->timer);
+=======
+	sk_reset_timer(sk, &rose->timer, rose->timer.expires);
+>>>>>>> rebase
 }
 
 void rose_start_t2timer(struct sock *sk)
 {
 	struct rose_sock *rose = rose_sk(sk);
 
+<<<<<<< HEAD
 	del_timer(&rose->timer);
+=======
+	sk_stop_timer(sk, &rose->timer);
+>>>>>>> rebase
 
 	rose->timer.function = rose_timer_expiry;
 	rose->timer.expires  = jiffies + rose->t2;
 
+<<<<<<< HEAD
 	add_timer(&rose->timer);
+=======
+	sk_reset_timer(sk, &rose->timer, rose->timer.expires);
+>>>>>>> rebase
 }
 
 void rose_start_t3timer(struct sock *sk)
 {
 	struct rose_sock *rose = rose_sk(sk);
 
+<<<<<<< HEAD
 	del_timer(&rose->timer);
+=======
+	sk_stop_timer(sk, &rose->timer);
+>>>>>>> rebase
 
 	rose->timer.function = rose_timer_expiry;
 	rose->timer.expires  = jiffies + rose->t3;
 
+<<<<<<< HEAD
 	add_timer(&rose->timer);
+=======
+	sk_reset_timer(sk, &rose->timer, rose->timer.expires);
+>>>>>>> rebase
 }
 
 void rose_start_hbtimer(struct sock *sk)
 {
 	struct rose_sock *rose = rose_sk(sk);
 
+<<<<<<< HEAD
 	del_timer(&rose->timer);
+=======
+	sk_stop_timer(sk, &rose->timer);
+>>>>>>> rebase
 
 	rose->timer.function = rose_timer_expiry;
 	rose->timer.expires  = jiffies + rose->hb;
 
+<<<<<<< HEAD
 	add_timer(&rose->timer);
+=======
+	sk_reset_timer(sk, &rose->timer, rose->timer.expires);
+>>>>>>> rebase
 }
 
 void rose_start_idletimer(struct sock *sk)
 {
 	struct rose_sock *rose = rose_sk(sk);
 
+<<<<<<< HEAD
 	del_timer(&rose->idletimer);
+=======
+	sk_stop_timer(sk, &rose->idletimer);
+>>>>>>> rebase
 
 	if (rose->idle > 0) {
 		rose->idletimer.function = rose_idletimer_expiry;
 		rose->idletimer.expires  = jiffies + rose->idle;
 
+<<<<<<< HEAD
 		add_timer(&rose->idletimer);
+=======
+		sk_reset_timer(sk, &rose->idletimer, rose->idletimer.expires);
+>>>>>>> rebase
 	}
 }
 
 void rose_stop_heartbeat(struct sock *sk)
 {
+<<<<<<< HEAD
 	del_timer(&sk->sk_timer);
+=======
+	sk_stop_timer(sk, &sk->sk_timer);
+>>>>>>> rebase
 }
 
 void rose_stop_timer(struct sock *sk)
 {
+<<<<<<< HEAD
 	del_timer(&rose_sk(sk)->timer);
+=======
+	sk_stop_timer(sk, &rose_sk(sk)->timer);
+>>>>>>> rebase
 }
 
 void rose_stop_idletimer(struct sock *sk)
 {
+<<<<<<< HEAD
 	del_timer(&rose_sk(sk)->idletimer);
+=======
+	sk_stop_timer(sk, &rose_sk(sk)->idletimer);
+>>>>>>> rebase
 }
 
 static void rose_heartbeat_expiry(struct timer_list *t)
@@ -133,6 +193,10 @@ static void rose_heartbeat_expiry(struct timer_list *t)
 		    (sk->sk_state == TCP_LISTEN && sock_flag(sk, SOCK_DEAD))) {
 			bh_unlock_sock(sk);
 			rose_destroy_socket(sk);
+<<<<<<< HEAD
+=======
+			sock_put(sk);
+>>>>>>> rebase
 			return;
 		}
 		break;
@@ -155,6 +219,10 @@ static void rose_heartbeat_expiry(struct timer_list *t)
 
 	rose_start_heartbeat(sk);
 	bh_unlock_sock(sk);
+<<<<<<< HEAD
+=======
+	sock_put(sk);
+>>>>>>> rebase
 }
 
 static void rose_timer_expiry(struct timer_list *t)
@@ -184,6 +252,10 @@ static void rose_timer_expiry(struct timer_list *t)
 		break;
 	}
 	bh_unlock_sock(sk);
+<<<<<<< HEAD
+=======
+	sock_put(sk);
+>>>>>>> rebase
 }
 
 static void rose_idletimer_expiry(struct timer_list *t)
@@ -208,4 +280,8 @@ static void rose_idletimer_expiry(struct timer_list *t)
 		sock_set_flag(sk, SOCK_DEAD);
 	}
 	bh_unlock_sock(sk);
+<<<<<<< HEAD
+=======
+	sock_put(sk);
+>>>>>>> rebase
 }

@@ -1001,10 +1001,13 @@ static int check_fmt(struct file *file, enum v4l2_buf_type type)
 		if (is_vid && is_rx && ops->vidioc_g_fmt_meta_cap)
 			return 0;
 		break;
+<<<<<<< HEAD
 	case V4L2_BUF_TYPE_PRIVATE:
 		if (ops->vidioc_g_fmt_type_private)
 			return 0;
 		break;
+=======
+>>>>>>> rebase
 	default:
 		break;
 	}
@@ -1299,6 +1302,7 @@ static void v4l_fill_fmtdesc(struct v4l2_fmtdesc *fmt)
 	case V4L2_META_FMT_VSP1_HGO:	descr = "R-Car VSP1 1-D Histogram"; break;
 	case V4L2_META_FMT_VSP1_HGT:	descr = "R-Car VSP1 2-D Histogram"; break;
 	case V4L2_META_FMT_UVC:		descr = "UVC payload header metadata"; break;
+<<<<<<< HEAD
 	case V4L2_PIX_FMT_NV12_UBWC:
 					descr = "NV12 UBWC"; break;
 	case V4L2_PIX_FMT_SDE_Y_CBCR_H2V2_P010_VENUS:
@@ -1383,6 +1387,8 @@ static void v4l_fill_fmtdesc(struct v4l2_fmtdesc *fmt)
 					descr = "Y/CbCr 4:2:0 TP10"; break;
 	case V4L2_PIX_FMT_SDE_Y_CBCR_H2V2_P010:
 					descr = "Y/CbCr 4:2:0 P10"; break;
+=======
+>>>>>>> rebase
 
 	default:
 		/* Compressed formats */
@@ -1426,8 +1432,11 @@ static void v4l_fill_fmtdesc(struct v4l2_fmtdesc *fmt)
 		case V4L2_PIX_FMT_SE401:	descr = "GSPCA SE401"; break;
 		case V4L2_PIX_FMT_S5C_UYVY_JPG:	descr = "S5C73MX interleaved UYVY/JPEG"; break;
 		case V4L2_PIX_FMT_MT21C:	descr = "Mediatek Compressed Format"; break;
+<<<<<<< HEAD
 		case V4L2_PIX_FMT_TME:
 			descr = "TME"; break;
+=======
+>>>>>>> rebase
 		default:
 			WARN(1, "Unknown pixelformat 0x%08x\n", fmt->pixelformat);
 			if (fmt->description[0])
@@ -3029,7 +3038,11 @@ video_usercopy(struct file *file, unsigned int cmd, unsigned long arg,
 	       v4l2_kioctl func)
 {
 	char	sbuf[128];
+<<<<<<< HEAD
 	void    *mbuf = NULL;
+=======
+	void    *mbuf = NULL, *array_buf = NULL;
+>>>>>>> rebase
 	void	*parg = (void *)arg;
 	long	err  = -EINVAL;
 	bool	has_array_args;
@@ -3088,6 +3101,7 @@ video_usercopy(struct file *file, unsigned int cmd, unsigned long arg,
 	has_array_args = err;
 
 	if (has_array_args) {
+<<<<<<< HEAD
 		/*
 		 * When adding new types of array args, make sure that the
 		 * parent argument to ioctl (which contains the pointer to the
@@ -3102,6 +3116,16 @@ video_usercopy(struct file *file, unsigned int cmd, unsigned long arg,
 		if (copy_from_user(mbuf, user_ptr, array_size))
 			goto out_array_args;
 		*kernel_ptr = mbuf;
+=======
+		array_buf = kvmalloc(array_size, GFP_KERNEL);
+		err = -ENOMEM;
+		if (array_buf == NULL)
+			goto out_array_args;
+		err = -EFAULT;
+		if (copy_from_user(array_buf, user_ptr, array_size))
+			goto out_array_args;
+		*kernel_ptr = array_buf;
+>>>>>>> rebase
 	}
 
 	/* Handles IOCTL */
@@ -3120,7 +3144,11 @@ video_usercopy(struct file *file, unsigned int cmd, unsigned long arg,
 
 	if (has_array_args) {
 		*kernel_ptr = (void __force *)user_ptr;
+<<<<<<< HEAD
 		if (copy_to_user(user_ptr, mbuf, array_size))
+=======
+		if (copy_to_user(user_ptr, array_buf, array_size))
+>>>>>>> rebase
 			err = -EFAULT;
 		goto out_array_args;
 	}
@@ -3142,6 +3170,10 @@ out_array_args:
 	}
 
 out:
+<<<<<<< HEAD
+=======
+	kvfree(array_buf);
+>>>>>>> rebase
 	kvfree(mbuf);
 	return err;
 }

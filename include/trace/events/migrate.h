@@ -70,6 +70,7 @@ TRACE_EVENT(mm_migrate_pages,
 		__print_symbolic(__entry->mode, MIGRATE_MODE),
 		__print_symbolic(__entry->reason, MIGRATE_REASON))
 );
+<<<<<<< HEAD
 
 TRACE_EVENT(mm_numa_migrate_ratelimit,
 
@@ -118,6 +119,8 @@ TRACE_EVENT(mm_migrate_pages_start,
 		__print_symbolic(__entry->mode, MIGRATE_MODE),
 		__print_symbolic(__entry->reason, MIGRATE_REASON))
 );
+=======
+>>>>>>> rebase
 #endif /* _TRACE_MIGRATE_H */
 
 /* This part must be outside protection */

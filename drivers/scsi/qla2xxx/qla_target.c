@@ -600,6 +600,7 @@ void qla2x00_async_nack_sp_done(void *s, int res)
 			sp->fcport->login_succ = 1;
 
 			vha->fcport_count++;
+<<<<<<< HEAD
 
 			ql_dbg(ql_dbg_disc, vha, 0x20f3,
 			    "%s %d %8phC post upd_fcport fcp_cnt %d\n",
@@ -608,6 +609,11 @@ void qla2x00_async_nack_sp_done(void *s, int res)
 			    vha->fcport_count);
 			sp->fcport->disc_state = DSC_UPD_FCPORT;
 			qla24xx_post_upd_fcport_work(vha, sp->fcport);
+=======
+			spin_unlock_irqrestore(&vha->hw->tgt.sess_lock, flags);
+			qla24xx_sched_upd_fcport(sp->fcport);
+			spin_lock_irqsave(&vha->hw->tgt.sess_lock, flags);
+>>>>>>> rebase
 		} else {
 			sp->fcport->login_retry = 0;
 			sp->fcport->disc_state = DSC_LOGIN_COMPLETE;
@@ -1227,6 +1233,7 @@ void qlt_schedule_sess_for_deletion(struct fc_port *sess)
 {
 	struct qla_tgt *tgt = sess->tgt;
 	unsigned long flags;
+<<<<<<< HEAD
 
 	if (sess->disc_state == DSC_DELETE_PEND)
 		return;
@@ -1240,6 +1247,41 @@ void qlt_schedule_sess_for_deletion(struct fc_port *sess)
 		if (!sess->plogi_link[QLT_PLOGI_LINK_SAME_WWN] &&
 			!sess->plogi_link[QLT_PLOGI_LINK_CONFLICT])
 			return;
+=======
+	u16 sec;
+
+	switch (sess->disc_state) {
+	case DSC_DELETE_PEND:
+		return;
+	case DSC_DELETED:
+		if (!sess->plogi_link[QLT_PLOGI_LINK_SAME_WWN] &&
+			!sess->plogi_link[QLT_PLOGI_LINK_CONFLICT]) {
+			if (tgt && tgt->tgt_stop && tgt->sess_count == 0)
+				wake_up_all(&tgt->waitQ);
+
+			if (sess->vha->fcport_count == 0)
+				wake_up_all(&sess->vha->fcport_waitQ);
+			return;
+		}
+		break;
+	case DSC_UPD_FCPORT:
+		/*
+		 * This port is not done reporting to upper layer.
+		 * let it finish
+		 */
+		sess->next_disc_state = DSC_DELETE_PEND;
+		sec = jiffies_to_msecs(jiffies -
+		    sess->jiffies_at_registration)/1000;
+		if (sess->sec_since_registration < sec && sec && !(sec % 5)) {
+			sess->sec_since_registration = sec;
+			ql_dbg(ql_dbg_disc, sess->vha, 0xffff,
+			    "%s %8phC : Slow Rport registration(%d Sec)\n",
+			    __func__, sess->port_name, sec);
+		}
+		return;
+	default:
+		break;
+>>>>>>> rebase
 	}
 
 	if (sess->deleted == QLA_SESS_DELETED)
@@ -1556,10 +1598,18 @@ void qlt_stop_phase2(struct qla_tgt *tgt)
 		return;
 	}
 
+<<<<<<< HEAD
+=======
+	mutex_lock(&tgt->ha->optrom_mutex);
+>>>>>>> rebase
 	mutex_lock(&vha->vha_tgt.tgt_mutex);
 	tgt->tgt_stop = 0;
 	tgt->tgt_stopped = 1;
 	mutex_unlock(&vha->vha_tgt.tgt_mutex);
+<<<<<<< HEAD
+=======
+	mutex_unlock(&tgt->ha->optrom_mutex);
+>>>>>>> rebase
 
 	ql_dbg(ql_dbg_tgt_mgt, vha, 0xf00c, "Stop of tgt %p finished\n",
 	    tgt);
@@ -3199,8 +3249,13 @@ int qlt_xmit_response(struct qla_tgt_cmd *cmd, int xmit_type,
 			"RESET-RSP online/active/old-count/new-count = %d/%d/%d/%d.\n",
 			vha->flags.online, qla2x00_reset_active(vha),
 			cmd->reset_count, qpair->chip_reset);
+<<<<<<< HEAD
 		spin_unlock_irqrestore(qpair->qp_lock_ptr, flags);
 		return 0;
+=======
+		res = 0;
+		goto out_unmap_unlock;
+>>>>>>> rebase
 	}
 
 	/* Does F/W have an IOCBs for this request */
@@ -3322,10 +3377,13 @@ int qlt_rdy_to_xfer(struct qla_tgt_cmd *cmd)
 	prm.sg = NULL;
 	prm.req_cnt = 1;
 
+<<<<<<< HEAD
 	/* Calculate number of entries and segments required */
 	if (qlt_pci_map_calc_cnt(&prm) != 0)
 		return -EAGAIN;
 
+=======
+>>>>>>> rebase
 	if (!qpair->fw_started || (cmd->reset_count != qpair->chip_reset) ||
 	    (cmd->sess && cmd->sess->deleted)) {
 		/*
@@ -3341,6 +3399,13 @@ int qlt_rdy_to_xfer(struct qla_tgt_cmd *cmd)
 		return 0;
 	}
 
+<<<<<<< HEAD
+=======
+	/* Calculate number of entries and segments required */
+	if (qlt_pci_map_calc_cnt(&prm) != 0)
+		return -EAGAIN;
+
+>>>>>>> rebase
 	spin_lock_irqsave(qpair->qp_lock_ptr, flags);
 	/* Does F/W have an IOCBs for this request */
 	res = qlt_check_reserve_free_req(qpair, prm.req_cnt);
@@ -3736,6 +3801,12 @@ int qlt_abort_cmd(struct qla_tgt_cmd *cmd)
 
 	spin_lock_irqsave(&cmd->cmd_lock, flags);
 	if (cmd->aborted) {
+<<<<<<< HEAD
+=======
+		if (cmd->sg_mapped)
+			qlt_unmap_sg(vha, cmd);
+
+>>>>>>> rebase
 		spin_unlock_irqrestore(&cmd->cmd_lock, flags);
 		/*
 		 * It's normal to see 2 calls in this path:
@@ -3768,9 +3839,12 @@ void qlt_free_cmd(struct qla_tgt_cmd *cmd)
 
 	BUG_ON(cmd->cmd_in_wq);
 
+<<<<<<< HEAD
 	if (cmd->sg_mapped)
 		qlt_unmap_sg(cmd->vha, cmd);
 
+=======
+>>>>>>> rebase
 	if (!cmd->q_full)
 		qlt_decr_num_pend_cmds(cmd->vha);
 
@@ -4749,6 +4823,35 @@ static int qlt_handle_login(struct scsi_qla_host *vha,
 		goto out;
 	}
 
+<<<<<<< HEAD
+=======
+	if (sess->disc_state == DSC_UPD_FCPORT) {
+		u16 sec;
+
+		/*
+		 * Remote port registration is still going on from
+		 * previous login. Allow it to finish before we
+		 * accept the new login.
+		 */
+		sess->next_disc_state = DSC_DELETE_PEND;
+		sec = jiffies_to_msecs(jiffies -
+		    sess->jiffies_at_registration) / 1000;
+		if (sess->sec_since_registration < sec && sec &&
+		    !(sec % 5)) {
+			sess->sec_since_registration = sec;
+			ql_dbg(ql_dbg_disc, vha, 0xffff,
+			    "%s %8phC - Slow Rport registration (%d Sec)\n",
+			    __func__, sess->port_name, sec);
+		}
+
+		if (!conflict_sess)
+			kmem_cache_free(qla_tgt_plogi_cachep, pla);
+
+		qlt_send_term_imm_notif(vha, iocb, 1);
+		goto out;
+	}
+
+>>>>>>> rebase
 	qlt_plogi_ack_link(vha, pla, sess, QLT_PLOGI_LINK_SAME_WWN);
 	sess->d_id = port_id;
 	sess->login_gen++;
@@ -4908,6 +5011,10 @@ static int qlt_24xx_handle_els(struct scsi_qla_host *vha,
 
 		if (sess != NULL) {
 			bool delete = false;
+<<<<<<< HEAD
+=======
+			int sec;
+>>>>>>> rebase
 			spin_lock_irqsave(&tgt->ha->tgt.sess_lock, flags);
 			switch (sess->fw_login_state) {
 			case DSC_LS_PLOGI_PEND:
@@ -4920,9 +5027,30 @@ static int qlt_24xx_handle_els(struct scsi_qla_host *vha,
 			}
 
 			switch (sess->disc_state) {
+<<<<<<< HEAD
 			case DSC_LOGIN_PEND:
 			case DSC_GPDB:
 			case DSC_UPD_FCPORT:
+=======
+			case DSC_UPD_FCPORT:
+				spin_unlock_irqrestore(&tgt->ha->tgt.sess_lock,
+				    flags);
+
+				sec = jiffies_to_msecs(jiffies -
+				    sess->jiffies_at_registration)/1000;
+				if (sess->sec_since_registration < sec && sec &&
+				    !(sec % 5)) {
+					sess->sec_since_registration = sec;
+					ql_dbg(ql_dbg_disc, sess->vha, 0xffff,
+					    "%s %8phC : Slow Rport registration(%d Sec)\n",
+					    __func__, sess->port_name, sec);
+				}
+				qlt_send_term_imm_notif(vha, iocb, 1);
+				return 0;
+
+			case DSC_LOGIN_PEND:
+			case DSC_GPDB:
+>>>>>>> rebase
 			case DSC_LOGIN_COMPLETE:
 			case DSC_ADISC:
 				delete = false;
@@ -5959,10 +6087,14 @@ static fc_port_t *qlt_get_port_database(struct scsi_qla_host *vha,
 	case MODE_DUAL:
 		if (newfcport) {
 			if (!IS_IIDMA_CAPABLE(vha->hw) || !vha->hw->flags.gpsc_supported) {
+<<<<<<< HEAD
 				ql_dbg(ql_dbg_disc, vha, 0x20fe,
 				   "%s %d %8phC post upd_fcport fcp_cnt %d\n",
 				   __func__, __LINE__, fcport->port_name, vha->fcport_count);
 				qla24xx_post_upd_fcport_work(vha, fcport);
+=======
+				qla24xx_sched_upd_fcport(fcport);
+>>>>>>> rebase
 			} else {
 				ql_dbg(ql_dbg_disc, vha, 0x20ff,
 				   "%s %d %8phC post gpsc fcp_cnt %d\n",

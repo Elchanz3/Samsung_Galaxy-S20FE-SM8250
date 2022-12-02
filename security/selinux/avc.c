@@ -34,12 +34,15 @@
 #include "avc_ss.h"
 #include "classmap.h"
 
+<<<<<<< HEAD
 // [ SEC_SELINUX_PORTING_COMMON
 #ifdef SEC_SELINUX_DEBUG
 #include <linux/signal.h>
 #endif
 // ] SEC_SELINUX_PORTING_COMMON
 
+=======
+>>>>>>> rebase
 #define AVC_CACHE_SLOTS			512
 #define AVC_DEF_CACHE_THRESHOLD		512
 #define AVC_CACHE_RECLAIM		16
@@ -373,7 +376,11 @@ static struct avc_xperms_decision_node
 	struct extended_perms_decision *xpd;
 
 	xpd_node = kmem_cache_zalloc(avc_xperms_decision_cachep,
+<<<<<<< HEAD
 			GFP_NOWAIT | __GFP_NOWARN);
+=======
+				     GFP_NOWAIT | __GFP_NOWARN);
+>>>>>>> rebase
 	if (!xpd_node)
 		return NULL;
 
@@ -420,8 +427,12 @@ static struct avc_xperms_node *avc_xperms_alloc(void)
 {
 	struct avc_xperms_node *xp_node;
 
+<<<<<<< HEAD
 	xp_node = kmem_cache_zalloc(avc_xperms_cachep,
 			GFP_NOWAIT | __GFP_NOWARN);
+=======
+	xp_node = kmem_cache_zalloc(avc_xperms_cachep, GFP_NOWAIT | __GFP_NOWARN);
+>>>>>>> rebase
 	if (!xp_node)
 		return xp_node;
 	INIT_LIST_HEAD(&xp_node->xpd_head);
@@ -719,13 +730,21 @@ static struct avc_node *avc_insert(struct selinux_avc *avc,
 	spin_lock_irqsave(lock, flag);
 	hlist_for_each_entry(pos, head, list) {
 		if (pos->ae.ssid == ssid &&
+<<<<<<< HEAD
 		    pos->ae.tsid == tsid &&
 		    pos->ae.tclass == tclass) {
+=======
+			pos->ae.tsid == tsid &&
+			pos->ae.tclass == tclass) {
+>>>>>>> rebase
 			avc_node_replace(avc, node, pos);
 			goto found;
 		}
 	}
+<<<<<<< HEAD
 
+=======
+>>>>>>> rebase
 	hlist_add_head_rcu(&node->list, head);
 found:
 	spin_unlock_irqrestore(lock, flag);
@@ -905,11 +924,15 @@ static int avc_update_node(struct selinux_avc *avc,
 	if (orig->ae.xp_node) {
 		rc = avc_xperms_populate(node, orig->ae.xp_node);
 		if (rc) {
+<<<<<<< HEAD
 //[SEC_SELINUX_PORTING_COMMON
 // P191014-03912 - avc_cache.active_nodes is not decresed when "avc_alloc_node-success"&"avc_xperms_populate-fail"
 //			kmem_cache_free(avc_node_cachep, node);
 			avc_node_kill(avc, node);
 //]SEC_SELINUX_PORTING_COMMON
+=======
+			avc_node_kill(avc, node);
+>>>>>>> rebase
 			goto out_unlock;
 		}
 	}
@@ -1031,6 +1054,7 @@ static noinline int avc_denied(struct selinux_state *state,
 	if (flags & AVC_STRICT)
 		return -EACCES;
 
+<<<<<<< HEAD
 // [ SEC_SELINUX_PORTING_COMMON
 #ifdef SEC_SELINUX_DEBUG
 	if ((requested & avd->auditallow) && !(avd->flags & AVD_FLAGS_PERMISSIVE)) {
@@ -1081,6 +1105,9 @@ static noinline int avc_denied(struct selinux_state *state,
 // ] SEC_SELINUX_PORTING_COMMON
 
 	if (selinux_enforcing &&
+=======
+	if (enforcing_enabled(state) &&
+>>>>>>> rebase
 	    !(avd->flags & AVD_FLAGS_PERMISSIVE))
 		return -EACCES;
 

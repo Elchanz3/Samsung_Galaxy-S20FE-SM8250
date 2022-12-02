@@ -273,7 +273,11 @@ static int vfio_platform_open(void *device_data)
 
 		ret = pm_runtime_get_sync(vdev->device);
 		if (ret < 0)
+<<<<<<< HEAD
 			goto err_pm;
+=======
+			goto err_rst;
+>>>>>>> rebase
 
 		ret = vfio_platform_call_reset(vdev, &extra_dbg);
 		if (ret && vdev->reset_required) {
@@ -290,13 +294,20 @@ static int vfio_platform_open(void *device_data)
 
 err_rst:
 	pm_runtime_put(vdev->device);
+<<<<<<< HEAD
 err_pm:
+=======
+>>>>>>> rebase
 	vfio_platform_irq_cleanup(vdev);
 err_irq:
 	vfio_platform_regions_cleanup(vdev);
 err_reg:
 	mutex_unlock(&driver_lock);
+<<<<<<< HEAD
 	module_put(THIS_MODULE);
+=======
+	module_put(vdev->parent_module);
+>>>>>>> rebase
 	return ret;
 }
 

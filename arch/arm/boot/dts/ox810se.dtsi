@@ -322,8 +322,13 @@
 					interrupt-controller;
 					reg = <0 0x200>;
 					#interrupt-cells = <1>;
+<<<<<<< HEAD
 					valid-mask = <0xFFFFFFFF>;
 					clear-mask = <0>;
+=======
+					valid-mask = <0xffffffff>;
+					clear-mask = <0xffffffff>;
+>>>>>>> rebase
 				};
 
 				timer0: timer@200 {

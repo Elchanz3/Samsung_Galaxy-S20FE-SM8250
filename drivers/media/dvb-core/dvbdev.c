@@ -241,6 +241,10 @@ static void dvb_media_device_free(struct dvb_device *dvbdev)
 
 	if (dvbdev->adapter->conn) {
 		media_device_unregister_entity(dvbdev->adapter->conn);
+<<<<<<< HEAD
+=======
+		kfree(dvbdev->adapter->conn);
+>>>>>>> rebase
 		dvbdev->adapter->conn = NULL;
 		kfree(dvbdev->adapter->conn_pads);
 		dvbdev->adapter->conn_pads = NULL;

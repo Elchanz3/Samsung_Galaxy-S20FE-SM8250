@@ -14,9 +14,12 @@
 #include <linux/uaccess.h>
 #include <linux/module.h>
 #include <linux/ftrace.h>
+<<<<<<< HEAD
 #include <linux/sched.h>
 #include <linux/sched/clock.h>
 #include <linux/sched/sysctl.h>
+=======
+>>>>>>> rebase
 
 #include "trace.h"
 
@@ -608,6 +611,7 @@ static void irqsoff_tracer_stop(struct trace_array *tr)
 }
 
 #ifdef CONFIG_IRQSOFF_TRACER
+<<<<<<< HEAD
 #ifdef CONFIG_PREEMPTIRQ_EVENTS
 /*
  * irqsoff stack tracing threshold in ns.
@@ -623,12 +627,15 @@ struct irqsoff_store {
 static DEFINE_PER_CPU(struct irqsoff_store, the_irqsoff);
 #endif /* CONFIG_PREEMPTIRQ_EVENTS */
 
+=======
+>>>>>>> rebase
 /*
  * We are only interested in hardirq on/off events:
  */
 void tracer_hardirqs_on(unsigned long a0, unsigned long a1)
 {
 	unsigned int pc = preempt_count();
+<<<<<<< HEAD
 #ifdef CONFIG_PREEMPTIRQ_EVENTS
 	struct irqsoff_store *is;
 	u64 delta;
@@ -645,6 +652,8 @@ void tracer_hardirqs_on(unsigned long a0, unsigned long a1)
 	is->ts = 0;
 	lockdep_on();
 #endif /* CONFIG_PREEMPTIRQ_EVENTS */
+=======
+>>>>>>> rebase
 
 	if (!preempt_trace(pc) && irq_trace())
 		stop_critical_timing(a0, a1, pc);
@@ -653,6 +662,7 @@ void tracer_hardirqs_on(unsigned long a0, unsigned long a1)
 void tracer_hardirqs_off(unsigned long a0, unsigned long a1)
 {
 	unsigned int pc = preempt_count();
+<<<<<<< HEAD
 #ifdef CONFIG_PREEMPTIRQ_EVENTS
 	struct irqsoff_store *is;
 
@@ -666,6 +676,8 @@ void tracer_hardirqs_off(unsigned long a0, unsigned long a1)
 	is->caddr[4] = CALLER_ADDR5;
 	lockdep_on();
 #endif /* CONFIG_PREEMPTIRQ_EVENTS */
+=======
+>>>>>>> rebase
 
 	if (!preempt_trace(pc) && irq_trace())
 		start_critical_timing(a0, a1, pc);
@@ -705,6 +717,7 @@ static struct tracer irqsoff_tracer __read_mostly =
 #endif /*  CONFIG_IRQSOFF_TRACER */
 
 #ifdef CONFIG_PREEMPT_TRACER
+<<<<<<< HEAD
 #ifdef CONFIG_PREEMPTIRQ_EVENTS
 /*
  * preemptoff stack tracing threshold in ns.
@@ -756,6 +769,11 @@ void tracer_preempt_on(unsigned long a0, unsigned long a1)
 	ps->ts = 0;
 	lockdep_on();
 #endif /* CONFIG_PREEMPTIRQ_EVENTS */
+=======
+void tracer_preempt_on(unsigned long a0, unsigned long a1)
+{
+	int pc = preempt_count();
+>>>>>>> rebase
 
 	if (preempt_trace(pc) && !irq_trace())
 		stop_critical_timing(a0, a1, pc);
@@ -764,6 +782,7 @@ void tracer_preempt_on(unsigned long a0, unsigned long a1)
 void tracer_preempt_off(unsigned long a0, unsigned long a1)
 {
 	int pc = preempt_count();
+<<<<<<< HEAD
 #ifdef CONFIG_PREEMPTIRQ_EVENTS
 	struct preempt_store *ps;
 
@@ -780,6 +799,8 @@ void tracer_preempt_off(unsigned long a0, unsigned long a1)
 	ps->ncsw = current->nvcsw + current->nivcsw;
 	lockdep_on();
 #endif /* CONFIG_PREEMPTIRQ_EVENTS */
+=======
+>>>>>>> rebase
 
 	if (preempt_trace(pc) && !irq_trace())
 		start_critical_timing(a0, a1, pc);

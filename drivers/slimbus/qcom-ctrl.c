@@ -515,9 +515,15 @@ static int qcom_slim_probe(struct platform_device *pdev)
 	}
 
 	ctrl->irq = platform_get_irq(pdev, 0);
+<<<<<<< HEAD
 	if (!ctrl->irq) {
 		dev_err(&pdev->dev, "no slimbus IRQ\n");
 		return -ENODEV;
+=======
+	if (ctrl->irq < 0) {
+		dev_err(&pdev->dev, "no slimbus IRQ\n");
+		return ctrl->irq;
+>>>>>>> rebase
 	}
 
 	sctrl = &ctrl->ctrl;

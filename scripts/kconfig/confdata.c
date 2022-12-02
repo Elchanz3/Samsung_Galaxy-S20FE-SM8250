@@ -284,7 +284,11 @@ e_out:
 	return -1;
 }
 
+<<<<<<< HEAD
 int conf_read_simple(const char *name, int def, int sym_init)
+=======
+int conf_read_simple(const char *name, int def)
+>>>>>>> rebase
 {
 	FILE *in = NULL;
 	char   *line = NULL;
@@ -329,10 +333,13 @@ load:
 	conf_warnings = 0;
 
 	def_flags = SYMBOL_DEF << def;
+<<<<<<< HEAD
 
 	if (!sym_init)
 		goto readsym;
 
+=======
+>>>>>>> rebase
 	for_all_symbols(i, sym) {
 		sym->flags |= SYMBOL_CHANGED;
 		sym->flags &= ~(def_flags|SYMBOL_VALID);
@@ -351,7 +358,10 @@ load:
 		}
 	}
 
+<<<<<<< HEAD
 readsym:
+=======
+>>>>>>> rebase
 	while (compat_getline(&line, &line_asize, in) != -1) {
 		conf_lineno++;
 		sym = NULL;
@@ -455,7 +465,11 @@ int conf_read(const char *name)
 
 	sym_set_change_count(0);
 
+<<<<<<< HEAD
 	if (conf_read_simple(name, S_DEF_USER, true)) {
+=======
+	if (conf_read_simple(name, S_DEF_USER)) {
+>>>>>>> rebase
 		sym_calc_value(modules_sym);
 		return 1;
 	}
@@ -925,7 +939,11 @@ static int conf_split_config(void)
 	int res, i, fd;
 
 	name = conf_get_autoconfig_name();
+<<<<<<< HEAD
 	conf_read_simple(name, S_DEF_AUTO, true);
+=======
+	conf_read_simple(name, S_DEF_AUTO);
+>>>>>>> rebase
 	sym_calc_value(modules_sym);
 
 	if (make_parent_dir("include/config/foo.h"))

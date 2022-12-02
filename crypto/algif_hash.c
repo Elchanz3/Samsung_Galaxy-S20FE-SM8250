@@ -239,7 +239,11 @@ static int hash_accept(struct socket *sock, struct socket *newsock, int flags,
 	struct alg_sock *ask = alg_sk(sk);
 	struct hash_ctx *ctx = ask->private;
 	struct ahash_request *req = &ctx->req;
+<<<<<<< HEAD
 	char state[HASH_MAX_STATESIZE];
+=======
+	char state[crypto_ahash_statesize(crypto_ahash_reqtfm(req)) ? : 1];
+>>>>>>> rebase
 	struct sock *sk2;
 	struct alg_sock *ask2;
 	struct hash_ctx *ctx2;
@@ -306,7 +310,11 @@ static int hash_check_key(struct socket *sock)
 	struct alg_sock *ask = alg_sk(sk);
 
 	lock_sock(sk);
+<<<<<<< HEAD
 	if (ask->refcnt)
+=======
+	if (!atomic_read(&ask->nokey_refcnt))
+>>>>>>> rebase
 		goto unlock_child;
 
 	psk = ask->parent;
@@ -318,11 +326,16 @@ static int hash_check_key(struct socket *sock)
 	if (crypto_ahash_get_flags(tfm) & CRYPTO_TFM_NEED_KEY)
 		goto unlock;
 
+<<<<<<< HEAD
 	if (!pask->refcnt++)
 		sock_hold(psk);
 
 	ask->refcnt = 1;
 	sock_put(psk);
+=======
+	atomic_dec(&pask->nokey_refcnt);
+	atomic_set(&ask->nokey_refcnt, 0);
+>>>>>>> rebase
 
 	err = 0;
 

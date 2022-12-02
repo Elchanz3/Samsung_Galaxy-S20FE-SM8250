@@ -145,9 +145,15 @@ extern int npmem_ranges;
 #define __pa(x)			((unsigned long)(x)-PAGE_OFFSET)
 #define __va(x)			((void *)((unsigned long)(x)+PAGE_OFFSET))
 
+<<<<<<< HEAD
 #ifndef CONFIG_SPARSEMEM
 #define pfn_valid(pfn)		((pfn) < max_mapnr)
 #endif
+=======
+#ifndef CONFIG_DISCONTIGMEM
+#define pfn_valid(pfn)		((pfn) < max_mapnr)
+#endif /* CONFIG_DISCONTIGMEM */
+>>>>>>> rebase
 
 #ifdef CONFIG_HUGETLB_PAGE
 #define HPAGE_SHIFT		PMD_SHIFT /* fixed for transparent huge pages */
@@ -179,7 +185,11 @@ extern int npmem_ranges;
 #include <asm-generic/getorder.h>
 #include <asm/pdc.h>
 
+<<<<<<< HEAD
 #define PAGE0   ((struct zeropage *)__PAGE_OFFSET)
+=======
+#define PAGE0   ((struct zeropage *)absolute_pointer(__PAGE_OFFSET))
+>>>>>>> rebase
 
 /* DEFINITION OF THE ZERO-PAGE (PAG0) */
 /* based on work by Jason Eckhardt (jason@equator.com) */

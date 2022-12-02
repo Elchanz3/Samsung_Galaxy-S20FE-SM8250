@@ -27,6 +27,7 @@
 #include <linux/err.h>
 #include <linux/errno.h>
 #include <linux/list.h>
+<<<<<<< HEAD
 #include <linux/notifier.h>
 
 /* A hardware display blank change occurred */
@@ -50,6 +51,8 @@ struct drm_panel_notifier {
 	void *data;
 	uint32_t id;
 };
+=======
+>>>>>>> rebase
 
 struct device_node;
 struct drm_connector;
@@ -108,7 +111,10 @@ struct drm_panel_funcs {
  * @dev: parent device of the panel
  * @funcs: operations that can be performed on the panel
  * @list: panel entry in registry
+<<<<<<< HEAD
  * @nh: panel notifier list head
+=======
+>>>>>>> rebase
  */
 struct drm_panel {
 	struct drm_device *drm;
@@ -118,7 +124,10 @@ struct drm_panel {
 	const struct drm_panel_funcs *funcs;
 
 	struct list_head list;
+<<<<<<< HEAD
 	struct blocking_notifier_head nh;
+=======
+>>>>>>> rebase
 };
 
 /**
@@ -220,6 +229,7 @@ void drm_panel_remove(struct drm_panel *panel);
 int drm_panel_attach(struct drm_panel *panel, struct drm_connector *connector);
 int drm_panel_detach(struct drm_panel *panel);
 
+<<<<<<< HEAD
 int drm_panel_notifier_register(struct drm_panel *panel,
 	struct notifier_block *nb);
 int drm_panel_notifier_unregister(struct drm_panel *panel,
@@ -227,6 +237,8 @@ int drm_panel_notifier_unregister(struct drm_panel *panel,
 int drm_panel_notifier_call_chain(struct drm_panel *panel,
 	unsigned long val, void *v);
 
+=======
+>>>>>>> rebase
 #if defined(CONFIG_OF) && defined(CONFIG_DRM_PANEL)
 struct drm_panel *of_drm_find_panel(const struct device_node *np);
 #else

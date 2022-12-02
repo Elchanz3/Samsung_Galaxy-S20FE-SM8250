@@ -216,6 +216,10 @@ static void ipcomp_free_scratches(void)
 		vfree(*per_cpu_ptr(scratches, i));
 
 	free_percpu(scratches);
+<<<<<<< HEAD
+=======
+	ipcomp_scratches = NULL;
+>>>>>>> rebase
 }
 
 static void * __percpu *ipcomp_alloc_scratches(void)

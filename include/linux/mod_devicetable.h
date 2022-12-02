@@ -299,7 +299,11 @@ struct pcmcia_device_id {
 #define INPUT_DEVICE_ID_LED_MAX		0x0f
 #define INPUT_DEVICE_ID_SND_MAX		0x07
 #define INPUT_DEVICE_ID_FF_MAX		0x7f
+<<<<<<< HEAD
 #define INPUT_DEVICE_ID_SW_MAX		0x20
+=======
+#define INPUT_DEVICE_ID_SW_MAX		0x10
+>>>>>>> rebase
 #define INPUT_DEVICE_ID_PROP_MAX	0x1f
 
 #define INPUT_DEVICE_ID_MATCH_BUS	1
@@ -448,6 +452,7 @@ struct pci_epf_device_id {
 	kernel_ulong_t driver_data;
 };
 
+<<<<<<< HEAD
 /* i3c */
 
 #define I3C_MATCH_DCR			0x1
@@ -465,6 +470,8 @@ struct i3c_device_id {
 	const void *data;
 };
 
+=======
+>>>>>>> rebase
 /* spi */
 
 #define SPI_NAME_SIZE	32
@@ -481,8 +488,16 @@ struct spi_device_id {
 #define SLIMBUS_MODULE_PREFIX	"slim:"
 
 struct slim_device_id {
+<<<<<<< HEAD
 	char name[SLIMBUS_NAME_SIZE];
 	kernel_ulong_t driver_data;     /* Data private to the driver */
+=======
+	__u16 manf_id, prod_code;
+	__u16 dev_index, instance;
+
+	/* Data private to the driver */
+	kernel_ulong_t driver_data;
+>>>>>>> rebase
 };
 
 #define APR_NAME_SIZE	32
@@ -504,6 +519,7 @@ struct spmi_device_id {
 	kernel_ulong_t driver_data;	/* Data private to the driver */
 };
 
+<<<<<<< HEAD
 /* soundwire */
 
 #define SOUNDWIRE_NAME_SIZE	32
@@ -514,6 +530,8 @@ struct swr_device_id {
 	kernel_ulong_t driver_data;	/* Data private to the driver */
 };
 
+=======
+>>>>>>> rebase
 /* dmi */
 enum dmi_field {
 	DMI_NONE,
@@ -645,6 +663,13 @@ struct mips_cdmm_device_id {
 /*
  * MODULE_DEVICE_TABLE expects this struct to be called x86cpu_device_id.
  * Although gcc seems to ignore this error, clang fails without this define.
+<<<<<<< HEAD
+=======
+ *
+ * Note: The ordering of the struct is different from upstream because the
+ * static initializers in kernels < 5.7 still use C89 style while upstream
+ * has been converted to proper C99 initializers.
+>>>>>>> rebase
  */
 #define x86cpu_device_id x86_cpu_id
 struct x86_cpu_id {
@@ -653,6 +678,7 @@ struct x86_cpu_id {
 	__u16 model;
 	__u16 feature;	/* bit index */
 	kernel_ulong_t driver_data;
+<<<<<<< HEAD
 };
 
 #define X86_FEATURE_MATCH(x) \
@@ -661,6 +687,16 @@ struct x86_cpu_id {
 #define X86_VENDOR_ANY 0xffff
 #define X86_FAMILY_ANY 0
 #define X86_MODEL_ANY  0
+=======
+	__u16 steppings;
+};
+
+/* Wild cards for x86_cpu_id::vendor, family, model and feature */
+#define X86_VENDOR_ANY 0xffff
+#define X86_FAMILY_ANY 0
+#define X86_MODEL_ANY  0
+#define X86_STEPPING_ANY 0
+>>>>>>> rebase
 #define X86_FEATURE_ANY 0	/* Same as FPU, you can't test for that */
 
 /*
@@ -786,6 +822,7 @@ struct typec_device_id {
 	kernel_ulong_t driver_data;
 };
 
+<<<<<<< HEAD
 #define MHI_NAME_SIZE 32
 
 /**
@@ -799,4 +836,6 @@ struct mhi_device_id {
 	kernel_ulong_t driver_data;
 };
 
+=======
+>>>>>>> rebase
 #endif /* LINUX_MOD_DEVICETABLE_H */

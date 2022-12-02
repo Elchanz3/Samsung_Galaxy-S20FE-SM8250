@@ -37,6 +37,7 @@ do {						\
 	(t)->kcov_mode &= ~KCOV_IN_CTXSW;	\
 } while (0)
 
+<<<<<<< HEAD
 /* See Documentation/dev-tools/kcov.rst for usage details. */
 void kcov_remote_start(u64 handle);
 void kcov_remote_stop(void);
@@ -52,12 +53,15 @@ static inline void kcov_remote_start_usb(u64 id)
 	kcov_remote_start(kcov_remote_handle(KCOV_SUBSYSTEM_USB, id));
 }
 
+=======
+>>>>>>> rebase
 #else
 
 static inline void kcov_task_init(struct task_struct *t) {}
 static inline void kcov_task_exit(struct task_struct *t) {}
 static inline void kcov_prepare_switch(struct task_struct *t) {}
 static inline void kcov_finish_switch(struct task_struct *t) {}
+<<<<<<< HEAD
 static inline void kcov_remote_start(u64 handle) {}
 static inline void kcov_remote_stop(void) {}
 static inline u64 kcov_common_handle(void)
@@ -66,6 +70,8 @@ static inline u64 kcov_common_handle(void)
 }
 static inline void kcov_remote_start_common(u64 id) {}
 static inline void kcov_remote_start_usb(u64 id) {}
+=======
+>>>>>>> rebase
 
 #endif /* CONFIG_KCOV */
 #endif /* _LINUX_KCOV_H */

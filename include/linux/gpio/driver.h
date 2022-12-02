@@ -47,6 +47,7 @@ struct gpio_irq_chip {
 	 */
 	const struct irq_domain_ops *domain_ops;
 
+<<<<<<< HEAD
 #ifdef CONFIG_IRQ_DOMAIN_HIERARCHY
 	/**
 	 * @parent_domain:
@@ -55,6 +56,8 @@ struct gpio_irq_chip {
 	struct irq_domain *parent_domain;
 #endif
 
+=======
+>>>>>>> rebase
 	/**
 	 * @handler:
 	 *

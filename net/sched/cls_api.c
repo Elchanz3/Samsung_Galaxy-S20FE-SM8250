@@ -539,6 +539,10 @@ static struct tcf_block *tcf_block_find(struct net *net, struct Qdisc **q,
 					struct netlink_ext_ack *extack)
 {
 	struct tcf_block *block;
+<<<<<<< HEAD
+=======
+	int err = 0;
+>>>>>>> rebase
 
 	if (ifindex == TCM_IFINDEX_MAGIC_BLOCK) {
 		block = tcf_block_lookup(net, block_index);
@@ -550,16 +554,28 @@ static struct tcf_block *tcf_block_find(struct net *net, struct Qdisc **q,
 		const struct Qdisc_class_ops *cops;
 		struct net_device *dev;
 
+<<<<<<< HEAD
 		/* Find link */
 		dev = __dev_get_by_index(net, ifindex);
 		if (!dev)
 			return ERR_PTR(-ENODEV);
+=======
+		rcu_read_lock();
+
+		/* Find link */
+		dev = dev_get_by_index_rcu(net, ifindex);
+		if (!dev) {
+			rcu_read_unlock();
+			return ERR_PTR(-ENODEV);
+		}
+>>>>>>> rebase
 
 		/* Find qdisc */
 		if (!*parent) {
 			*q = dev->qdisc;
 			*parent = (*q)->handle;
 		} else {
+<<<<<<< HEAD
 			*q = qdisc_lookup(dev, TC_H_MAJ(*parent));
 			if (!*q) {
 				NL_SET_ERR_MSG(extack, "Parent Qdisc doesn't exists");
@@ -567,38 +583,108 @@ static struct tcf_block *tcf_block_find(struct net *net, struct Qdisc **q,
 			}
 		}
 
+=======
+			*q = qdisc_lookup_rcu(dev, TC_H_MAJ(*parent));
+			if (!*q) {
+				NL_SET_ERR_MSG(extack, "Parent Qdisc doesn't exists");
+				err = -EINVAL;
+				goto errout_rcu;
+			}
+		}
+
+		*q = qdisc_refcount_inc_nz(*q);
+		if (!*q) {
+			NL_SET_ERR_MSG(extack, "Parent Qdisc doesn't exists");
+			err = -EINVAL;
+			goto errout_rcu;
+		}
+
+>>>>>>> rebase
 		/* Is it classful? */
 		cops = (*q)->ops->cl_ops;
 		if (!cops) {
 			NL_SET_ERR_MSG(extack, "Qdisc not classful");
+<<<<<<< HEAD
 			return ERR_PTR(-EINVAL);
+=======
+			err = -EINVAL;
+			goto errout_rcu;
+>>>>>>> rebase
 		}
 
 		if (!cops->tcf_block) {
 			NL_SET_ERR_MSG(extack, "Class doesn't support blocks");
+<<<<<<< HEAD
 			return ERR_PTR(-EOPNOTSUPP);
 		}
 
+=======
+			err = -EOPNOTSUPP;
+			goto errout_rcu;
+		}
+
+		/* At this point we know that qdisc is not noop_qdisc,
+		 * which means that qdisc holds a reference to net_device
+		 * and we hold a reference to qdisc, so it is safe to release
+		 * rcu read lock.
+		 */
+		rcu_read_unlock();
+
+>>>>>>> rebase
 		/* Do we search for filter, attached to class? */
 		if (TC_H_MIN(*parent)) {
 			*cl = cops->find(*q, *parent);
 			if (*cl == 0) {
 				NL_SET_ERR_MSG(extack, "Specified class doesn't exist");
+<<<<<<< HEAD
 				return ERR_PTR(-ENOENT);
+=======
+				err = -ENOENT;
+				goto errout_qdisc;
+>>>>>>> rebase
 			}
 		}
 
 		/* And the last stroke */
 		block = cops->tcf_block(*q, *cl, extack);
+<<<<<<< HEAD
 		if (!block)
 			return ERR_PTR(-EINVAL);
 		if (tcf_block_shared(block)) {
 			NL_SET_ERR_MSG(extack, "This filter block is shared. Please use the block index to manipulate the filters");
 			return ERR_PTR(-EOPNOTSUPP);
+=======
+		if (!block) {
+			err = -EINVAL;
+			goto errout_qdisc;
+		}
+		if (tcf_block_shared(block)) {
+			NL_SET_ERR_MSG(extack, "This filter block is shared. Please use the block index to manipulate the filters");
+			err = -EOPNOTSUPP;
+			goto errout_qdisc;
+>>>>>>> rebase
 		}
 	}
 
 	return block;
+<<<<<<< HEAD
+=======
+
+errout_rcu:
+	rcu_read_unlock();
+errout_qdisc:
+	if (*q) {
+		qdisc_put(*q);
+		*q = NULL;
+	}
+	return ERR_PTR(err);
+}
+
+static void tcf_block_release(struct Qdisc *q, struct tcf_block *block)
+{
+	if (q)
+		qdisc_put(q);
+>>>>>>> rebase
 }
 
 struct tcf_block_owner_item {
@@ -969,7 +1055,11 @@ int tcf_classify(struct sk_buff *skb, const struct tcf_proto *tp,
 reclassify:
 #endif
 	for (; tp; tp = rcu_dereference_bh(tp->next)) {
+<<<<<<< HEAD
 		__be16 protocol = tc_skb_protocol(skb);
+=======
+		__be16 protocol = skb_protocol(skb, false);
+>>>>>>> rebase
 		int err;
 
 		if (tp->protocol != protocol &&
@@ -1336,6 +1426,10 @@ replay:
 errout:
 	if (chain)
 		tcf_chain_put(chain);
+<<<<<<< HEAD
+=======
+	tcf_block_release(q, block);
+>>>>>>> rebase
 	if (err == -EAGAIN)
 		/* Replay the request. */
 		goto replay;
@@ -1457,6 +1551,10 @@ static int tc_del_tfilter(struct sk_buff *skb, struct nlmsghdr *n,
 errout:
 	if (chain)
 		tcf_chain_put(chain);
+<<<<<<< HEAD
+=======
+	tcf_block_release(q, block);
+>>>>>>> rebase
 	return err;
 }
 
@@ -1542,6 +1640,10 @@ static int tc_get_tfilter(struct sk_buff *skb, struct nlmsghdr *n,
 errout:
 	if (chain)
 		tcf_chain_put(chain);
+<<<<<<< HEAD
+=======
+	tcf_block_release(q, block);
+>>>>>>> rebase
 	return err;
 }
 
@@ -1858,7 +1960,12 @@ replay:
 	chain_index = tca[TCA_CHAIN] ? nla_get_u32(tca[TCA_CHAIN]) : 0;
 	if (chain_index > TC_ACT_EXT_VAL_MASK) {
 		NL_SET_ERR_MSG(extack, "Specified chain index exceeds upper limit");
+<<<<<<< HEAD
 		return -EINVAL;
+=======
+		err = -EINVAL;
+		goto errout_block;
+>>>>>>> rebase
 	}
 	chain = tcf_chain_lookup(block, chain_index);
 	if (n->nlmsg_type == RTM_NEWCHAIN) {
@@ -1870,23 +1977,43 @@ replay:
 				tcf_chain_hold(chain);
 			} else {
 				NL_SET_ERR_MSG(extack, "Filter chain already exists");
+<<<<<<< HEAD
 				return -EEXIST;
+=======
+				err = -EEXIST;
+				goto errout_block;
+>>>>>>> rebase
 			}
 		} else {
 			if (!(n->nlmsg_flags & NLM_F_CREATE)) {
 				NL_SET_ERR_MSG(extack, "Need both RTM_NEWCHAIN and NLM_F_CREATE to create a new chain");
+<<<<<<< HEAD
 				return -ENOENT;
+=======
+				err = -ENOENT;
+				goto errout_block;
+>>>>>>> rebase
 			}
 			chain = tcf_chain_create(block, chain_index);
 			if (!chain) {
 				NL_SET_ERR_MSG(extack, "Failed to create filter chain");
+<<<<<<< HEAD
 				return -ENOMEM;
+=======
+				err = -ENOMEM;
+				goto errout_block;
+>>>>>>> rebase
 			}
 		}
 	} else {
 		if (!chain || tcf_chain_held_by_acts_only(chain)) {
 			NL_SET_ERR_MSG(extack, "Cannot find specified filter chain");
+<<<<<<< HEAD
 			return -EINVAL;
+=======
+			err = -EINVAL;
+			goto errout_block;
+>>>>>>> rebase
 		}
 		tcf_chain_hold(chain);
 	}
@@ -1918,7 +2045,11 @@ replay:
 		break;
 	case RTM_GETCHAIN:
 		err = tc_chain_notify(chain, skb, n->nlmsg_seq,
+<<<<<<< HEAD
 				      n->nlmsg_seq, n->nlmsg_type, true);
+=======
+				      n->nlmsg_flags, n->nlmsg_type, true);
+>>>>>>> rebase
 		if (err < 0)
 			NL_SET_ERR_MSG(extack, "Failed to send chain notify message");
 		break;
@@ -1930,6 +2061,11 @@ replay:
 
 errout:
 	tcf_chain_put(chain);
+<<<<<<< HEAD
+=======
+errout_block:
+	tcf_block_release(q, block);
+>>>>>>> rebase
 	if (err == -EAGAIN)
 		/* Replay the request. */
 		goto replay;

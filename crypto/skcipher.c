@@ -967,6 +967,7 @@ struct crypto_skcipher *crypto_alloc_skcipher(const char *alg_name,
 }
 EXPORT_SYMBOL_GPL(crypto_alloc_skcipher);
 
+<<<<<<< HEAD
 struct crypto_sync_skcipher *crypto_alloc_sync_skcipher(
 				const char *alg_name, u32 type, u32 mask)
 {
@@ -991,6 +992,8 @@ struct crypto_sync_skcipher *crypto_alloc_sync_skcipher(
 }
 EXPORT_SYMBOL_GPL(crypto_alloc_sync_skcipher);
 
+=======
+>>>>>>> rebase
 int crypto_has_skcipher2(const char *alg_name, u32 type, u32 mask)
 {
 	return crypto_type_has_alg(alg_name, &crypto_skcipher_type2,

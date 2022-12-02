@@ -406,9 +406,17 @@ static void ipoib_ib_handle_tx_wc(struct net_device *dev, struct ib_wc *wc)
 	dev_kfree_skb_any(tx_req->skb);
 
 	++priv->tx_tail;
+<<<<<<< HEAD
 
 	if (unlikely(netif_queue_stopped(dev) &&
 		     ((priv->tx_head - priv->tx_tail) <= ipoib_sendq_size >> 1) &&
+=======
+	++priv->global_tx_tail;
+
+	if (unlikely(netif_queue_stopped(dev) &&
+		     ((priv->global_tx_head - priv->global_tx_tail) <=
+		      ipoib_sendq_size >> 1) &&
+>>>>>>> rebase
 		     test_bit(IPOIB_FLAG_ADMIN_UP, &priv->flags)))
 		netif_wake_queue(dev);
 
@@ -633,7 +641,12 @@ int ipoib_send(struct net_device *dev, struct sk_buff *skb,
 	else
 		priv->tx_wr.wr.send_flags &= ~IB_SEND_IP_CSUM;
 	/* increase the tx_head after send success, but use it for queue state */
+<<<<<<< HEAD
 	if (priv->tx_head - priv->tx_tail == ipoib_sendq_size - 1) {
+=======
+	if ((priv->global_tx_head - priv->global_tx_tail) ==
+	    ipoib_sendq_size - 1) {
+>>>>>>> rebase
 		ipoib_dbg(priv, "TX ring full, stopping kernel net queue\n");
 		netif_stop_queue(dev);
 	}
@@ -661,18 +674,31 @@ int ipoib_send(struct net_device *dev, struct sk_buff *skb,
 
 		rc = priv->tx_head;
 		++priv->tx_head;
+<<<<<<< HEAD
+=======
+		++priv->global_tx_head;
+>>>>>>> rebase
 	}
 	return rc;
 }
 
+<<<<<<< HEAD
 static void __ipoib_reap_ah(struct net_device *dev)
 {
 	struct ipoib_dev_priv *priv = ipoib_priv(dev);
+=======
+static void ipoib_reap_dead_ahs(struct ipoib_dev_priv *priv)
+{
+>>>>>>> rebase
 	struct ipoib_ah *ah, *tah;
 	LIST_HEAD(remove_list);
 	unsigned long flags;
 
+<<<<<<< HEAD
 	netif_tx_lock_bh(dev);
+=======
+	netif_tx_lock_bh(priv->dev);
+>>>>>>> rebase
 	spin_lock_irqsave(&priv->lock, flags);
 
 	list_for_each_entry_safe(ah, tah, &priv->dead_ahs, list)
@@ -683,22 +709,32 @@ static void __ipoib_reap_ah(struct net_device *dev)
 		}
 
 	spin_unlock_irqrestore(&priv->lock, flags);
+<<<<<<< HEAD
 	netif_tx_unlock_bh(dev);
+=======
+	netif_tx_unlock_bh(priv->dev);
+>>>>>>> rebase
 }
 
 void ipoib_reap_ah(struct work_struct *work)
 {
 	struct ipoib_dev_priv *priv =
 		container_of(work, struct ipoib_dev_priv, ah_reap_task.work);
+<<<<<<< HEAD
 	struct net_device *dev = priv->dev;
 
 	__ipoib_reap_ah(dev);
+=======
+
+	ipoib_reap_dead_ahs(priv);
+>>>>>>> rebase
 
 	if (!test_bit(IPOIB_STOP_REAPER, &priv->flags))
 		queue_delayed_work(priv->wq, &priv->ah_reap_task,
 				   round_jiffies_relative(HZ));
 }
 
+<<<<<<< HEAD
 static void ipoib_flush_ah(struct net_device *dev)
 {
 	struct ipoib_dev_priv *priv = ipoib_priv(dev);
@@ -714,6 +750,24 @@ static void ipoib_stop_ah(struct net_device *dev)
 
 	set_bit(IPOIB_STOP_REAPER, &priv->flags);
 	ipoib_flush_ah(dev);
+=======
+static void ipoib_start_ah_reaper(struct ipoib_dev_priv *priv)
+{
+	clear_bit(IPOIB_STOP_REAPER, &priv->flags);
+	queue_delayed_work(priv->wq, &priv->ah_reap_task,
+			   round_jiffies_relative(HZ));
+}
+
+static void ipoib_stop_ah_reaper(struct ipoib_dev_priv *priv)
+{
+	set_bit(IPOIB_STOP_REAPER, &priv->flags);
+	cancel_delayed_work(&priv->ah_reap_task);
+	/*
+	 * After ipoib_stop_ah_reaper() we always go through
+	 * ipoib_reap_dead_ahs() which ensures the work is really stopped and
+	 * does a final flush out of the dead_ah's list
+	 */
+>>>>>>> rebase
 }
 
 static int recvs_pending(struct net_device *dev)
@@ -807,6 +861,10 @@ int ipoib_ib_dev_stop_default(struct net_device *dev)
 				ipoib_dma_unmap_tx(priv, tx_req);
 				dev_kfree_skb_any(tx_req->skb);
 				++priv->tx_tail;
+<<<<<<< HEAD
+=======
+				++priv->global_tx_tail;
+>>>>>>> rebase
 			}
 
 			for (i = 0; i < ipoib_recvq_size; ++i) {
@@ -841,6 +899,7 @@ timeout:
 	return 0;
 }
 
+<<<<<<< HEAD
 int ipoib_ib_dev_stop(struct net_device *dev)
 {
 	struct ipoib_dev_priv *priv = ipoib_priv(dev);
@@ -853,6 +912,8 @@ int ipoib_ib_dev_stop(struct net_device *dev)
 	return 0;
 }
 
+=======
+>>>>>>> rebase
 int ipoib_ib_dev_open_default(struct net_device *dev)
 {
 	struct ipoib_dev_priv *priv = ipoib_priv(dev);
@@ -896,10 +957,14 @@ int ipoib_ib_dev_open(struct net_device *dev)
 		return -1;
 	}
 
+<<<<<<< HEAD
 	clear_bit(IPOIB_STOP_REAPER, &priv->flags);
 	queue_delayed_work(priv->wq, &priv->ah_reap_task,
 			   round_jiffies_relative(HZ));
 
+=======
+	ipoib_start_ah_reaper(priv);
+>>>>>>> rebase
 	if (priv->rn_ops->ndo_open(dev)) {
 		pr_warn("%s: Failed to open dev\n", dev->name);
 		goto dev_stop;
@@ -910,6 +975,7 @@ int ipoib_ib_dev_open(struct net_device *dev)
 	return 0;
 
 dev_stop:
+<<<<<<< HEAD
 	set_bit(IPOIB_STOP_REAPER, &priv->flags);
 	cancel_delayed_work(&priv->ah_reap_task);
 	set_bit(IPOIB_FLAG_INITIALIZED, &priv->flags);
@@ -917,6 +983,22 @@ dev_stop:
 	return -1;
 }
 
+=======
+	ipoib_stop_ah_reaper(priv);
+	return -1;
+}
+
+void ipoib_ib_dev_stop(struct net_device *dev)
+{
+	struct ipoib_dev_priv *priv = ipoib_priv(dev);
+
+	priv->rn_ops->ndo_stop(dev);
+
+	clear_bit(IPOIB_FLAG_INITIALIZED, &priv->flags);
+	ipoib_stop_ah_reaper(priv);
+}
+
+>>>>>>> rebase
 void ipoib_pkey_dev_check_presence(struct net_device *dev)
 {
 	struct ipoib_dev_priv *priv = ipoib_priv(dev);
@@ -1227,7 +1309,11 @@ static void __ipoib_ib_dev_flush(struct ipoib_dev_priv *priv,
 		ipoib_mcast_dev_flush(dev);
 		if (oper_up)
 			set_bit(IPOIB_FLAG_OPER_UP, &priv->flags);
+<<<<<<< HEAD
 		ipoib_flush_ah(dev);
+=======
+		ipoib_reap_dead_ahs(priv);
+>>>>>>> rebase
 	}
 
 	if (level >= IPOIB_FLUSH_NORMAL)
@@ -1302,7 +1388,11 @@ void ipoib_ib_dev_cleanup(struct net_device *dev)
 	 * the neighbor garbage collection is stopped and reaped.
 	 * That should all be done now, so make a final ah flush.
 	 */
+<<<<<<< HEAD
 	ipoib_stop_ah(dev);
+=======
+	ipoib_reap_dead_ahs(priv);
+>>>>>>> rebase
 
 	clear_bit(IPOIB_PKEY_ASSIGNED, &priv->flags);
 

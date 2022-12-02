@@ -423,7 +423,11 @@ int bcm47xxnflash_ops_bcm4706_init(struct bcm47xxnflash *b47n)
 			(w4 << 24 | w3 << 18 | w2 << 12 | w1 << 6 | w0));
 
 	/* Scan NAND */
+<<<<<<< HEAD
 	err = nand_scan(nand_to_mtd(&b47n->nand_chip), 1);
+=======
+	err = nand_scan(&b47n->nand_chip, 1);
+>>>>>>> rebase
 	if (err) {
 		pr_err("Could not scan NAND flash: %d\n", err);
 		goto exit;

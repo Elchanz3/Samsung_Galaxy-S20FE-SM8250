@@ -22,16 +22,24 @@ int rsa_get_n(void *context, size_t hdrlen, unsigned char tag,
 	      const void *value, size_t vlen)
 {
 	struct rsa_key *key = context;
+<<<<<<< HEAD
 #ifndef CONFIG_CRYPTO_FIPS /* FIPS_140_2 */
 	const u8 *ptr = value;
 	size_t n_sz = vlen;
 #endif
+=======
+	const u8 *ptr = value;
+	size_t n_sz = vlen;
+>>>>>>> rebase
 
 	/* invalid key provided */
 	if (!value || !vlen)
 		return -EINVAL;
 
+<<<<<<< HEAD
 #ifndef CONFIG_CRYPTO_FIPS /* FIPS_140_2 */
+=======
+>>>>>>> rebase
 	if (fips_enabled) {
 		while (n_sz && !*ptr) {
 			ptr++;
@@ -44,7 +52,10 @@ int rsa_get_n(void *context, size_t hdrlen, unsigned char tag,
 			return -EINVAL;
 		}
 	}
+<<<<<<< HEAD
 #endif
+=======
+>>>>>>> rebase
 
 	key->n = value;
 	key->n_sz = vlen;

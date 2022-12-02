@@ -356,7 +356,11 @@ void big_key_describe(const struct key *key, struct seq_file *m)
  * read the key data
  * - the key's semaphore is read-locked
  */
+<<<<<<< HEAD
 long big_key_read(const struct key *key, char __user *buffer, size_t buflen)
+=======
+long big_key_read(const struct key *key, char *buffer, size_t buflen)
+>>>>>>> rebase
 {
 	size_t datalen = (size_t)key->payload.data[big_key_len];
 	long ret;
@@ -395,9 +399,14 @@ long big_key_read(const struct key *key, char __user *buffer, size_t buflen)
 
 		ret = datalen;
 
+<<<<<<< HEAD
 		/* copy decrypted data to user */
 		if (copy_to_user(buffer, buf->virt, datalen) != 0)
 			ret = -EFAULT;
+=======
+		/* copy out decrypted data */
+		memcpy(buffer, buf->virt, datalen);
+>>>>>>> rebase
 
 err_fput:
 		fput(file);
@@ -405,9 +414,13 @@ error:
 		big_key_free_buffer(buf);
 	} else {
 		ret = datalen;
+<<<<<<< HEAD
 		if (copy_to_user(buffer, key->payload.data[big_key_data],
 				 datalen) != 0)
 			ret = -EFAULT;
+=======
+		memcpy(buffer, key->payload.data[big_key_data], datalen);
+>>>>>>> rebase
 	}
 
 	return ret;

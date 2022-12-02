@@ -4,7 +4,10 @@
  *
  * Copyright (C) 2011 Texas Instruments, Inc.
  * Copyright (C) 2011 Google, Inc.
+<<<<<<< HEAD
  * Copyright (c) 2018, The Linux Foundation. All rights reserved.
+=======
+>>>>>>> rebase
  *
  * Ohad Ben-Cohen <ohad@wizery.com>
  * Brian Swetland <swetland@google.com>
@@ -47,8 +50,11 @@ struct rpmsg_device_ops {
  * @trysend:		see @rpmsg_trysend(), required
  * @trysendto:		see @rpmsg_trysendto(), optional
  * @trysend_offchannel:	see @rpmsg_trysend_offchannel(), optional
+<<<<<<< HEAD
  * @get_sigs:		see @rpmsg_get_sigs(), optional
  * @set_sigs:		see @rpmsg_set_sigs(), optional
+=======
+>>>>>>> rebase
  *
  * Indirection table for the operations that a rpmsg backend should implement.
  * In addition to @destroy_ept, the backend must at least implement @send and
@@ -68,8 +74,11 @@ struct rpmsg_endpoint_ops {
 			     void *data, int len);
 	__poll_t (*poll)(struct rpmsg_endpoint *ept, struct file *filp,
 			     poll_table *wait);
+<<<<<<< HEAD
 	int (*get_sigs)(struct rpmsg_endpoint *ept, u32 *lsigs, u32 *rsigs);
 	int (*set_sigs)(struct rpmsg_endpoint *ept, u32 sigs);
+=======
+>>>>>>> rebase
 };
 
 int rpmsg_register_device(struct rpmsg_device *rpdev);

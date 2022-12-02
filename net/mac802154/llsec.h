@@ -29,7 +29,11 @@ struct mac802154_llsec_key {
 
 	/* one tfm for each authsize (4/8/16) */
 	struct crypto_aead *tfm[3];
+<<<<<<< HEAD
 	struct crypto_sync_skcipher *tfm0;
+=======
+	struct crypto_skcipher *tfm0;
+>>>>>>> rebase
 
 	struct kref ref;
 };

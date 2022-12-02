@@ -3,6 +3,7 @@ obj-$(CONFIG_B43LEGACY)		+= b43legacy/
 
 obj-$(CONFIG_BRCMFMAC)	+= brcm80211/
 obj-$(CONFIG_BRCMSMAC)	+= brcm80211/
+<<<<<<< HEAD
 
 ifneq ($(filter c2% c1%, $(TARGET_PRODUCT)), )
 ifeq ($(SEC_BUILD_OPTION_HW_REVISION),01)
@@ -24,3 +25,5 @@ obj-$(CONFIG_BCM4375)   += bcmdhd_101_16/
 obj-$(CONFIG_ARCH_KONA) += bcmdhd_101_16/dhd_custom_memprealloc.o
 obj-$(CONFIG_ARCH_KONA) += bcmdhd_101_16/dhd_custom_msm.o
 endif
+=======
+>>>>>>> rebase

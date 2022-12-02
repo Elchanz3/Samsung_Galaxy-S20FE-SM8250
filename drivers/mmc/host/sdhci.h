@@ -19,7 +19,11 @@
 #include <linux/io.h>
 #include <linux/leds.h>
 #include <linux/interrupt.h>
+<<<<<<< HEAD
 #include <linux/ratelimit.h>
+=======
+
+>>>>>>> rebase
 #include <linux/mmc/host.h>
 
 /*
@@ -158,8 +162,11 @@
 		SDHCI_INT_DATA_TIMEOUT | SDHCI_INT_DATA_CRC | \
 		SDHCI_INT_DATA_END_BIT | SDHCI_INT_ADMA_ERROR | \
 		SDHCI_INT_BLK_GAP)
+<<<<<<< HEAD
 
 #define SDHCI_INT_CMDQ_EN	(0x1 << 14)
+=======
+>>>>>>> rebase
 #define SDHCI_INT_ALL_MASK	((unsigned int)-1)
 
 #define SDHCI_CQE_INT_ERR_MASK ( \
@@ -170,13 +177,19 @@
 #define SDHCI_CQE_INT_MASK (SDHCI_CQE_INT_ERR_MASK | SDHCI_INT_CQE)
 
 #define SDHCI_AUTO_CMD_STATUS	0x3C
+<<<<<<< HEAD
 
 #define SDHCI_AUTO_CMD12_NOT_EXEC	0x0001
+=======
+>>>>>>> rebase
 #define  SDHCI_AUTO_CMD_TIMEOUT	0x00000002
 #define  SDHCI_AUTO_CMD_CRC	0x00000004
 #define  SDHCI_AUTO_CMD_END_BIT	0x00000008
 #define  SDHCI_AUTO_CMD_INDEX	0x00000010
+<<<<<<< HEAD
 #define SDHCI_AUTO_CMD12_NOT_ISSUED	0x0080
+=======
+>>>>>>> rebase
 
 #define SDHCI_HOST_CONTROL2		0x3E
 #define  SDHCI_CTRL_UHS_MASK		0x0007
@@ -194,7 +207,10 @@
 #define   SDHCI_CTRL_DRV_TYPE_D		0x0030
 #define  SDHCI_CTRL_EXEC_TUNING		0x0040
 #define  SDHCI_CTRL_TUNED_CLK		0x0080
+<<<<<<< HEAD
 #define  SDHCI_CTRL_ASYNC_INT_ENABLE	0x4000
+=======
+>>>>>>> rebase
 #define  SDHCI_CTRL_PRESET_VAL_ENABLE	0x8000
 
 #define SDHCI_CAPABILITIES	0x40
@@ -216,7 +232,10 @@
 #define  SDHCI_CAN_VDD_300	0x02000000
 #define  SDHCI_CAN_VDD_180	0x04000000
 #define  SDHCI_CAN_64BIT	0x10000000
+<<<<<<< HEAD
 #define  SDHCI_CAN_ASYNC_INT	0x20000000
+=======
+>>>>>>> rebase
 
 #define  SDHCI_SUPPORT_SDR50	0x00000001
 #define  SDHCI_SUPPORT_SDR104	0x00000002
@@ -259,6 +278,10 @@
 
 /* 60-FB reserved */
 
+<<<<<<< HEAD
+=======
+#define SDHCI_PRESET_FOR_HIGH_SPEED	0x64
+>>>>>>> rebase
 #define SDHCI_PRESET_FOR_SDR12 0x66
 #define SDHCI_PRESET_FOR_SDR25 0x68
 #define SDHCI_PRESET_FOR_SDR50 0x6A
@@ -358,12 +381,15 @@ enum sdhci_cookie {
 	COOKIE_MAPPED,		/* mapped by sdhci_prepare_data() */
 };
 
+<<<<<<< HEAD
 enum sdhci_power_policy {
 	SDHCI_PERFORMANCE_MODE,
 	SDHCI_POWER_SAVE_MODE,
 	SDHCI_POWER_POLICY_NUM /* Always keep this one last */
 };
 
+=======
+>>>>>>> rebase
 struct sdhci_host {
 	/* Data set by hardware interface driver */
 	const char *hw_name;	/* Hardware bus name */
@@ -471,6 +497,7 @@ struct sdhci_host {
  */
 #define SDHCI_QUIRK2_DISABLE_HW_TIMEOUT			(1<<17)
 
+<<<<<<< HEAD
 /*
  * Read Transfer Active/ Write Transfer Active may be not
  * de-asserted after end of transaction. Issue reset for DAT line.
@@ -553,6 +580,8 @@ struct sdhci_host {
  */
 #define SDHCI_QUIRK2_USE_DBG_FEATURE (1 << 30)
 
+=======
+>>>>>>> rebase
 	int irq;		/* Device IRQ */
 	void __iomem *ioaddr;	/* Mapped address */
 	char *bounce_buffer;	/* For packing SDMA reads/writes */
@@ -565,7 +594,10 @@ struct sdhci_host {
 	struct mmc_host *mmc;	/* MMC structure */
 	struct mmc_host_ops mmc_host_ops;	/* MMC host ops */
 	u64 dma_mask;		/* custom DMA mask */
+<<<<<<< HEAD
 	u64 coherent_dma_mask;
+=======
+>>>>>>> rebase
 
 #if IS_ENABLED(CONFIG_LEDS_CLASS)
 	struct led_classdev led;	/* LED control */
@@ -589,7 +621,10 @@ struct sdhci_host {
 #define SDHCI_SIGNALING_330	(1<<14)	/* Host is capable of 3.3V signaling */
 #define SDHCI_SIGNALING_180	(1<<15)	/* Host is capable of 1.8V signaling */
 #define SDHCI_SIGNALING_120	(1<<16)	/* Host is capable of 1.2V signaling */
+<<<<<<< HEAD
 #define SDHCI_HOST_IRQ_STATUS	(1<<17) /* host->irq status */
+=======
+>>>>>>> rebase
 
 	unsigned int version;	/* SDHCI spec. version */
 
@@ -605,10 +640,15 @@ struct sdhci_host {
 	bool preset_enabled;	/* Preset is enabled */
 	bool pending_reset;	/* Cmd/data reset is pending */
 	bool irq_wake_enabled;	/* IRQ wakeup is enabled */
+<<<<<<< HEAD
 	bool cdr_support;
 
 	struct mmc_request *mrqs_done[SDHCI_MAX_MRQS];	/* Requests done */
 	struct mmc_request *mrq;	/* Current request */
+=======
+
+	struct mmc_request *mrqs_done[SDHCI_MAX_MRQS];	/* Requests done */
+>>>>>>> rebase
 	struct mmc_command *cmd;	/* Current command */
 	struct mmc_command *data_cmd;	/* Current data command */
 	struct mmc_data *data;	/* Current data request */
@@ -671,6 +711,7 @@ struct sdhci_host {
 
 	u64			data_timeout;
 
+<<<<<<< HEAD
 	ktime_t data_start_time;
 
 	enum sdhci_power_policy power_policy;
@@ -683,6 +724,8 @@ struct sdhci_host {
 	ktime_t reset_wa_t; /* time when the reset workaround is applied */
 	int reset_wa_cnt; /* total number of times workaround is used */
 
+=======
+>>>>>>> rebase
 	unsigned long private[0] ____cacheline_aligned;
 };
 
@@ -719,6 +762,7 @@ struct sdhci_ops {
 	void	(*set_uhs_signaling)(struct sdhci_host *host, unsigned int uhs);
 	void	(*hw_reset)(struct sdhci_host *host);
 	void    (*adma_workaround)(struct sdhci_host *host, u32 intmask);
+<<<<<<< HEAD
 	unsigned int	(*get_max_segments)(void);
 #define REQ_BUS_OFF     (1 << 0)
 #define REQ_BUS_ON      (1 << 1)
@@ -748,6 +792,10 @@ struct sdhci_ops {
 	unsigned int	(*get_current_limit)(struct sdhci_host *host);
 	void	(*enter_dbg_mode)(struct sdhci_host *host);
 	void	(*exit_dbg_mode)(struct sdhci_host *host);
+=======
+	void    (*card_event)(struct sdhci_host *host);
+	void	(*voltage_switch)(struct sdhci_host *host);
+>>>>>>> rebase
 };
 
 #ifdef CONFIG_MMC_SDHCI_IO_ACCESSORS
@@ -898,5 +946,8 @@ void sdhci_end_tuning(struct sdhci_host *host);
 void sdhci_reset_tuning(struct sdhci_host *host);
 void sdhci_send_tuning(struct sdhci_host *host, u32 opcode);
 
+<<<<<<< HEAD
 void sdhci_cfg_irq(struct sdhci_host *host, bool enable, bool sync);
+=======
+>>>>>>> rebase
 #endif /* __SDHCI_HW_H */

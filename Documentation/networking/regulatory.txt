@@ -200,6 +200,7 @@ Then in some part of your code after your wiphy has been registered:
 Statically compiled regulatory database
 ---------------------------------------
 
+<<<<<<< HEAD
 In most situations the userland solution using CRDA as described
 above is the preferred solution.  However in some cases a set of
 rules built into the kernel itself may be desirable.  To account
@@ -220,3 +221,7 @@ provided with their distribution, and in most other situations users
 should be building and using CRDA on their own rather than using
 this option.  If you are not absolutely sure that you should be using
 CONFIG_CFG80211_INTERNAL_REGDB then _DO_NOT_USE_IT_.
+=======
+When a database should be fixed into the kernel, it can be provided as a
+firmware file at build time that is then linked into the kernel.
+>>>>>>> rebase

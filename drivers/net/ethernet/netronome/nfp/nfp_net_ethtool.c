@@ -299,6 +299,11 @@ nfp_net_get_link_ksettings(struct net_device *netdev,
 	port = nfp_port_from_netdev(netdev);
 	eth_port = nfp_port_get_eth_port(port);
 	if (eth_port) {
+<<<<<<< HEAD
+=======
+		ethtool_link_ksettings_add_link_mode(cmd, supported, Pause);
+		ethtool_link_ksettings_add_link_mode(cmd, advertising, Pause);
+>>>>>>> rebase
 		cmd->base.autoneg = eth_port->aneg != NFP_ANEG_DISABLED ?
 			AUTONEG_ENABLE : AUTONEG_DISABLE;
 		nfp_net_set_fec_link_mode(eth_port, cmd);
@@ -744,8 +749,13 @@ nfp_port_get_fecparam(struct net_device *netdev,
 	struct nfp_eth_table_port *eth_port;
 	struct nfp_port *port;
 
+<<<<<<< HEAD
 	param->active_fec = ETHTOOL_FEC_NONE_BIT;
 	param->fec = ETHTOOL_FEC_NONE_BIT;
+=======
+	param->active_fec = ETHTOOL_FEC_NONE;
+	param->fec = ETHTOOL_FEC_NONE;
+>>>>>>> rebase
 
 	port = nfp_port_from_netdev(netdev);
 	eth_port = nfp_port_get_eth_port(port);

@@ -89,6 +89,10 @@ asmlinkage __visible void cpu_bringup_and_idle(void)
 {
 	cpu_bringup();
 	cpu_startup_entry(CPUHP_AP_ONLINE_IDLE);
+<<<<<<< HEAD
+=======
+	prevent_tail_call_optimization();
+>>>>>>> rebase
 }
 
 void xen_smp_intr_free_pv(unsigned int cpu)
@@ -125,7 +129,11 @@ int xen_smp_intr_init_pv(unsigned int cpu)
 	per_cpu(xen_irq_work, cpu).irq = rc;
 	per_cpu(xen_irq_work, cpu).name = callfunc_name;
 
+<<<<<<< HEAD
 	if (is_xen_pmu(cpu)) {
+=======
+	if (is_xen_pmu) {
+>>>>>>> rebase
 		pmu_name = kasprintf(GFP_KERNEL, "pmu%d", cpu);
 		rc = bind_virq_to_irqhandler(VIRQ_XENPMU, cpu,
 					     xen_pmu_irq_handler,

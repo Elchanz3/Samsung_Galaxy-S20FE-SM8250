@@ -3,7 +3,10 @@ menuconfig ION
 	depends on HAVE_MEMBLOCK && HAS_DMA && MMU
 	select GENERIC_ALLOCATOR
 	select DMA_SHARED_BUFFER
+<<<<<<< HEAD
 	select MSM_SECURE_BUFFER
+=======
+>>>>>>> rebase
 	help
 	  Choose this option to enable the ION Memory Manager,
 	  used by Android to efficiently allocate buffers
@@ -43,6 +46,7 @@ config ION_CMA_HEAP
 	  Choose this option to enable CMA heaps with Ion. This heap is backed
 	  by the Contiguous Memory Allocator (CMA). If your system has these
 	  regions, you should say Y here.
+<<<<<<< HEAD
 
 config ION_FORCE_DMA_SYNC
 	bool "Force ION to always DMA sync buffer memory"
@@ -109,3 +113,5 @@ config ION_RBIN_HEAP_EXCEPTION
 	depends on ION_RBIN_ONLY_FOR_UNDER_8GB
 	help
 	  set different rbin size for under 8GB ram devices
+=======
+>>>>>>> rebase

@@ -340,6 +340,7 @@ config PWM_PXA
 	  To compile this driver as a module, choose M here: the module
 	  will be called pwm-pxa.
 
+<<<<<<< HEAD
 config PWM_QTI_LPG
 	tristate "Qualcomm Technologies, Inc. LPG driver"
 	depends on  MFD_SPMI_PMIC && OF
@@ -350,6 +351,8 @@ config PWM_QTI_LPG
 	  variable duty cycle or in LUT (Look up table) mode to output PWM
 	  signal with a modulated amplitude.
 
+=======
+>>>>>>> rebase
 config PWM_RCAR
 	tristate "Renesas R-Car PWM support"
 	depends on ARCH_RENESAS || COMPILE_TEST

@@ -30,7 +30,10 @@
 #include <linux/kernel.h>
 #include <linux/mm.h>
 #include <linux/stddef.h>
+<<<<<<< HEAD
 #include <linux/sysctl.h>
+=======
+>>>>>>> rebase
 #include <linux/unistd.h>
 #include <linux/user.h>
 #include <linux/delay.h>
@@ -50,7 +53,10 @@
 #include <trace/events/power.h>
 #include <linux/percpu.h>
 #include <linux/thread_info.h>
+<<<<<<< HEAD
 #include <linux/prctl.h>
+=======
+>>>>>>> rebase
 
 #include <asm/alternative.h>
 #include <asm/compat.h>
@@ -59,11 +65,15 @@
 #include <asm/fpsimd.h>
 #include <asm/mmu_context.h>
 #include <asm/processor.h>
+<<<<<<< HEAD
 #include <asm/scs.h>
+=======
+>>>>>>> rebase
 #include <asm/stacktrace.h>
 
 #ifdef CONFIG_STACKPROTECTOR
 #include <linux/stackprotector.h>
+<<<<<<< HEAD
 unsigned long __stack_chk_guard __read_mostly;
 EXPORT_SYMBOL(__stack_chk_guard);
 #endif
@@ -73,6 +83,12 @@ EXPORT_SYMBOL(__stack_chk_guard);
 #define RRK_MASK (1UL << 63)
 #endif
 
+=======
+unsigned long __stack_chk_guard __ro_after_init;
+EXPORT_SYMBOL(__stack_chk_guard);
+#endif
+
+>>>>>>> rebase
 /*
  * Function pointers to optional machine specific functions
  */
@@ -96,6 +112,7 @@ void arch_cpu_idle(void)
 	trace_cpu_idle_rcuidle(PWR_EVENT_EXIT, smp_processor_id());
 }
 
+<<<<<<< HEAD
 void arch_cpu_idle_enter(void)
 {
 	idle_notifier_call_chain(IDLE_START);
@@ -106,6 +123,8 @@ void arch_cpu_idle_exit(void)
 	idle_notifier_call_chain(IDLE_END);
 }
 
+=======
+>>>>>>> rebase
 #ifdef CONFIG_HOTPLUG_CPU
 void arch_cpu_idle_dead(void)
 {
@@ -221,6 +240,7 @@ static void print_pstate(struct pt_regs *regs)
 	}
 }
 
+<<<<<<< HEAD
 /*
  * dump a block of kernel memory from around the given address
  */
@@ -300,6 +320,8 @@ static void show_extra_register_data(struct pt_regs *regs, int nbytes)
 	set_fs(fs);
 }
 
+=======
+>>>>>>> rebase
 void __show_regs(struct pt_regs *regs)
 {
 	int i, top_reg;
@@ -341,10 +363,13 @@ void __show_regs(struct pt_regs *regs)
 
 		pr_cont("\n");
 	}
+<<<<<<< HEAD
 
 	if (!user_mode(regs) && (oops_in_progress == 1 || oops_in_progress == 2))
 		show_extra_register_data(regs, 128);
 
+=======
+>>>>>>> rebase
 }
 
 void show_regs(struct pt_regs * regs)
@@ -370,18 +395,24 @@ static void tls_thread_flush(void)
 	}
 }
 
+<<<<<<< HEAD
 static void flush_tagged_addr_state(void)
 {
 	if (IS_ENABLED(CONFIG_ARM64_TAGGED_ADDR_ABI))
 		clear_thread_flag(TIF_TAGGED_ADDR);
 }
 
+=======
+>>>>>>> rebase
 void flush_thread(void)
 {
 	fpsimd_flush_thread();
 	tls_thread_flush();
 	flush_ptrace_hw_breakpoint(current);
+<<<<<<< HEAD
 	flush_tagged_addr_state();
+=======
+>>>>>>> rebase
 }
 
 void release_thread(struct task_struct *dead_task)
@@ -419,6 +450,7 @@ int arch_dup_task_struct(struct task_struct *dst, struct task_struct *src)
 
 asmlinkage void ret_from_fork(void) asm("ret_from_fork");
 
+<<<<<<< HEAD
 #ifdef CONFIG_CFP_ROPP
 static inline void ropp_change_key(struct task_struct *p)
 {
@@ -441,6 +473,8 @@ static inline void ropp_change_key(struct task_struct *p)
 }
 #endif
 
+=======
+>>>>>>> rebase
 int copy_thread(unsigned long clone_flags, unsigned long stack_start,
 		unsigned long stk_sz, struct task_struct *p)
 {
@@ -493,9 +527,12 @@ int copy_thread(unsigned long clone_flags, unsigned long stack_start,
 		p->thread.cpu_context.x19 = stack_start;
 		p->thread.cpu_context.x20 = stk_sz;
 	}
+<<<<<<< HEAD
 #ifdef CONFIG_CFP_ROPP
 	ropp_change_key(p);
 #endif
+=======
+>>>>>>> rebase
 	p->thread.cpu_context.pc = (unsigned long)ret_from_fork;
 	p->thread.cpu_context.sp = (unsigned long)childregs;
 
@@ -594,7 +631,10 @@ __notrace_funcgraph struct task_struct *__switch_to(struct task_struct *prev,
 	entry_task_switch(next);
 	uao_thread_switch(next);
 	ssbs_thread_switch(next);
+<<<<<<< HEAD
 	scs_overflow_check(next);
+=======
+>>>>>>> rebase
 
 	/*
 	 * Complete any pending TLB or cache maintenance on this CPU in case
@@ -685,6 +725,7 @@ void __used stackleak_check_alloca(unsigned long size)
 }
 EXPORT_SYMBOL(stackleak_check_alloca);
 #endif
+<<<<<<< HEAD
 
 #ifdef CONFIG_ARM64_TAGGED_ADDR_ABI
 /*
@@ -752,3 +793,5 @@ static int __init tagged_addr_init(void)
 
 core_initcall(tagged_addr_init);
 #endif	/* CONFIG_ARM64_TAGGED_ADDR_ABI */
+=======
+>>>>>>> rebase

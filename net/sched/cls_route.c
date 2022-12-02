@@ -427,6 +427,14 @@ static int route4_set_parms(struct net *net, struct tcf_proto *tp,
 			return -EINVAL;
 	}
 
+<<<<<<< HEAD
+=======
+	if (!nhandle) {
+		NL_SET_ERR_MSG(extack, "Replacing with handle of 0 is invalid");
+		return -EINVAL;
+	}
+
+>>>>>>> rebase
 	h1 = to_hash(nhandle);
 	b = rtnl_dereference(head->table[h1]);
 	if (!b) {
@@ -480,6 +488,14 @@ static int route4_change(struct net *net, struct sk_buff *in_skb,
 	int err;
 	bool new = true;
 
+<<<<<<< HEAD
+=======
+	if (!handle) {
+		NL_SET_ERR_MSG(extack, "Creating with handle of 0 is invalid");
+		return -EINVAL;
+	}
+
+>>>>>>> rebase
 	if (opt == NULL)
 		return handle ? -EINVAL : 0;
 
@@ -528,7 +544,11 @@ static int route4_change(struct net *net, struct sk_buff *in_skb,
 	rcu_assign_pointer(f->next, f1);
 	rcu_assign_pointer(*fp, f);
 
+<<<<<<< HEAD
 	if (fold && fold->handle && f->handle != fold->handle) {
+=======
+	if (fold) {
+>>>>>>> rebase
 		th = to_hash(fold->handle);
 		h = from_hash(fold->handle >> 16);
 		b = rtnl_dereference(head->table[th]);
@@ -536,8 +556,13 @@ static int route4_change(struct net *net, struct sk_buff *in_skb,
 			fp = &b->ht[h];
 			for (pfp = rtnl_dereference(*fp); pfp;
 			     fp = &pfp->next, pfp = rtnl_dereference(*fp)) {
+<<<<<<< HEAD
 				if (pfp == f) {
 					*fp = f->next;
+=======
+				if (pfp == fold) {
+					rcu_assign_pointer(*fp, fold->next);
+>>>>>>> rebase
 					break;
 				}
 			}

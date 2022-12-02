@@ -53,11 +53,14 @@ struct msg_msg;
 struct xattr;
 struct xfrm_sec_ctx;
 struct mm_struct;
+<<<<<<< HEAD
 #ifdef CONFIG_KDP_CRED
 /* For understanding size of struct cred*/
 #include <linux/rkp.h>
 #include <linux/kdp.h>
 #endif
+=======
+>>>>>>> rebase
 
 /* Default (no) options for the capable function */
 #define CAP_OPT_NONE 0x0
@@ -78,10 +81,13 @@ enum lsm_event {
 	LSM_POLICY_CHANGE,
 };
 
+<<<<<<< HEAD
 #ifndef CONFIG_KDP_CRED
 #define security_integrity_current()  0
 #endif
 
+=======
+>>>>>>> rebase
 /* These functions are in security/commoncap.c */
 extern int cap_capable(const struct cred *cred, struct user_namespace *ns,
 		       int cap, unsigned int opts);
@@ -796,7 +802,11 @@ static inline int security_inode_killpriv(struct dentry *dentry)
 
 static inline int security_inode_getsecurity(struct inode *inode, const char *name, void **buffer, bool alloc)
 {
+<<<<<<< HEAD
 	return -EOPNOTSUPP;
+=======
+	return cap_inode_getsecurity(inode, name, buffer, alloc);
+>>>>>>> rebase
 }
 
 static inline int security_inode_setsecurity(struct inode *inode, const char *name, const void *value, size_t size, int flags)
@@ -923,11 +933,14 @@ static inline void security_transfer_creds(struct cred *new,
 {
 }
 
+<<<<<<< HEAD
 static inline void security_cred_getsecid(const struct cred *c, u32 *secid)
 {
 	*secid = 0;
 }
 
+=======
+>>>>>>> rebase
 static inline int security_kernel_act_as(struct cred *cred, u32 secid)
 {
 	return 0;
@@ -1857,6 +1870,7 @@ static inline void free_secdata(void *secdata)
 { }
 #endif /* CONFIG_SECURITY */
 
+<<<<<<< HEAD
 #ifdef CONFIG_PERF_EVENTS
 struct perf_event_attr;
 struct perf_event;
@@ -1896,3 +1910,7 @@ static inline int security_perf_event_write(struct perf_event *event)
 #endif /* CONFIG_PERF_EVENTS */
 
 #endif /* ! __LINUX_SECURITY_H */
+=======
+#endif /* ! __LINUX_SECURITY_H */
+
+>>>>>>> rebase

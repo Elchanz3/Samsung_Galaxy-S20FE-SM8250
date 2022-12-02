@@ -35,6 +35,7 @@ static int qfprom_reg_read(void *context,
 	return 0;
 }
 
+<<<<<<< HEAD
 static int qfprom_reg_write(void *context,
 			 unsigned int reg, void *_val, size_t bytes)
 {
@@ -48,12 +49,17 @@ static int qfprom_reg_write(void *context,
 	return 0;
 }
 
+=======
+>>>>>>> rebase
 static struct nvmem_config econfig = {
 	.name = "qfprom",
 	.stride = 1,
 	.word_size = 1,
 	.reg_read = qfprom_reg_read,
+<<<<<<< HEAD
 	.reg_write = qfprom_reg_write,
+=======
+>>>>>>> rebase
 };
 
 static int qfprom_probe(struct platform_device *pdev)

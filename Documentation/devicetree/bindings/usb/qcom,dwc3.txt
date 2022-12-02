@@ -97,7 +97,10 @@ Example device nodes:
 				interrupts = <0 205 0x4>;
 				phys = <&hs_phy>, <&ss_phy>;
 				phy-names = "usb2-phy", "usb3-phy";
+<<<<<<< HEAD
 				tx-fifo-resize;
+=======
+>>>>>>> rebase
 				dr_mode = "host";
 			};
 		};

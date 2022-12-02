@@ -656,8 +656,11 @@ static noinline int create_subvol(struct inode *dir,
 	btrfs_set_root_otransid(root_item, trans->transid);
 
 	btrfs_tree_unlock(leaf);
+<<<<<<< HEAD
 	free_extent_buffer(leaf);
 	leaf = NULL;
+=======
+>>>>>>> rebase
 
 	btrfs_set_root_dirid(root_item, new_dirid);
 
@@ -666,8 +669,27 @@ static noinline int create_subvol(struct inode *dir,
 	key.type = BTRFS_ROOT_ITEM_KEY;
 	ret = btrfs_insert_root(trans, fs_info->tree_root, &key,
 				root_item);
+<<<<<<< HEAD
 	if (ret)
 		goto fail;
+=======
+	if (ret) {
+		/*
+		 * Since we don't abort the transaction in this case, free the
+		 * tree block so that we don't leak space and leave the
+		 * filesystem in an inconsistent state (an extent item in the
+		 * extent tree without backreferences). Also no need to have
+		 * the tree block locked since it is not in any tree at this
+		 * point, so no other task can find it and use it.
+		 */
+		btrfs_free_tree_block(trans, root, leaf, 0, 1);
+		free_extent_buffer(leaf);
+		goto fail;
+	}
+
+	free_extent_buffer(leaf);
+	leaf = NULL;
+>>>>>>> rebase
 
 	key.offset = (u64)-1;
 	new_root = btrfs_read_fs_root_no_name(fs_info, &key);
@@ -1239,6 +1261,10 @@ static int cluster_pages_for_defrag(struct inode *inode,
 	u64 page_start;
 	u64 page_end;
 	u64 page_cnt;
+<<<<<<< HEAD
+=======
+	u64 start = (u64)start_index << PAGE_SHIFT;
+>>>>>>> rebase
 	int ret;
 	int i;
 	int i_done;
@@ -1255,8 +1281,12 @@ static int cluster_pages_for_defrag(struct inode *inode,
 	page_cnt = min_t(u64, (u64)num_pages, (u64)file_end - start_index + 1);
 
 	ret = btrfs_delalloc_reserve_space(inode, &data_reserved,
+<<<<<<< HEAD
 			start_index << PAGE_SHIFT,
 			page_cnt << PAGE_SHIFT);
+=======
+			start, page_cnt << PAGE_SHIFT);
+>>>>>>> rebase
 	if (ret)
 		return ret;
 	i_done = 0;
@@ -1346,8 +1376,12 @@ again:
 		btrfs_mod_outstanding_extents(BTRFS_I(inode), 1);
 		spin_unlock(&BTRFS_I(inode)->lock);
 		btrfs_delalloc_release_space(inode, data_reserved,
+<<<<<<< HEAD
 				start_index << PAGE_SHIFT,
 				(page_cnt - i_done) << PAGE_SHIFT, true);
+=======
+				start, (page_cnt - i_done) << PAGE_SHIFT, true);
+>>>>>>> rebase
 	}
 
 
@@ -1374,8 +1408,12 @@ out:
 		put_page(pages[i]);
 	}
 	btrfs_delalloc_release_space(inode, data_reserved,
+<<<<<<< HEAD
 			start_index << PAGE_SHIFT,
 			page_cnt << PAGE_SHIFT, true);
+=======
+			start, page_cnt << PAGE_SHIFT, true);
+>>>>>>> rebase
 	btrfs_delalloc_release_extents(BTRFS_I(inode), page_cnt << PAGE_SHIFT);
 	extent_changeset_free(data_reserved);
 	return ret;
@@ -1642,7 +1680,11 @@ static noinline int btrfs_ioctl_resize(struct file *file,
 		btrfs_info(fs_info, "resizing devid %llu", devid);
 	}
 
+<<<<<<< HEAD
 	device = btrfs_find_device(fs_info, devid, NULL, NULL);
+=======
+	device = btrfs_find_device(fs_info->fs_devices, devid, NULL, NULL, true);
+>>>>>>> rebase
 	if (!device) {
 		btrfs_info(fs_info, "resizer unable to find device %llu",
 			   devid);
@@ -1844,7 +1886,14 @@ static noinline int btrfs_ioctl_snap_create_v2(struct file *file,
 	if (vol_args->flags & BTRFS_SUBVOL_RDONLY)
 		readonly = true;
 	if (vol_args->flags & BTRFS_SUBVOL_QGROUP_INHERIT) {
+<<<<<<< HEAD
 		if (vol_args->size > PAGE_SIZE) {
+=======
+		u64 nums;
+
+		if (vol_args->size < sizeof(*inherit) ||
+		    vol_args->size > PAGE_SIZE) {
+>>>>>>> rebase
 			ret = -EINVAL;
 			goto free_args;
 		}
@@ -1853,6 +1902,23 @@ static noinline int btrfs_ioctl_snap_create_v2(struct file *file,
 			ret = PTR_ERR(inherit);
 			goto free_args;
 		}
+<<<<<<< HEAD
+=======
+
+		if (inherit->num_qgroups > PAGE_SIZE ||
+		    inherit->num_ref_copies > PAGE_SIZE ||
+		    inherit->num_excl_copies > PAGE_SIZE) {
+			ret = -EINVAL;
+			goto free_inherit;
+		}
+
+		nums = inherit->num_qgroups + 2 * inherit->num_ref_copies +
+		       2 * inherit->num_excl_copies;
+		if (vol_args->size != struct_size(inherit, qgroups, nums)) {
+			ret = -EINVAL;
+			goto free_inherit;
+		}
+>>>>>>> rebase
 	}
 
 	ret = btrfs_ioctl_snap_create_transid(file, vol_args->name,
@@ -2079,9 +2145,20 @@ static noinline int copy_to_sk(struct btrfs_path *path,
 		sh.len = item_len;
 		sh.transid = found_transid;
 
+<<<<<<< HEAD
 		/* copy search result header */
 		if (copy_to_user(ubuf + *sk_offset, &sh, sizeof(sh))) {
 			ret = -EFAULT;
+=======
+		/*
+		 * Copy search result header. If we fault then loop again so we
+		 * can fault in the pages and -EFAULT there if there's a
+		 * problem. Otherwise we'll fault and then copy the buffer in
+		 * properly this next time through
+		 */
+		if (probe_user_write(ubuf + *sk_offset, &sh, sizeof(sh))) {
+			ret = 0;
+>>>>>>> rebase
 			goto out;
 		}
 
@@ -2089,10 +2166,21 @@ static noinline int copy_to_sk(struct btrfs_path *path,
 
 		if (item_len) {
 			char __user *up = ubuf + *sk_offset;
+<<<<<<< HEAD
 			/* copy the item */
 			if (read_extent_buffer_to_user(leaf, up,
 						       item_off, item_len)) {
 				ret = -EFAULT;
+=======
+			/*
+			 * Copy the item, same behavior as above, but reset the
+			 * * sk_offset so we copy the full thing again.
+			 */
+			if (read_extent_buffer_to_user_nofault(leaf, up,
+						item_off, item_len)) {
+				ret = 0;
+				*sk_offset -= sizeof(sh);
+>>>>>>> rebase
 				goto out;
 			}
 
@@ -2180,6 +2268,14 @@ static noinline int search_ioctl(struct inode *inode,
 	key.offset = sk->min_offset;
 
 	while (1) {
+<<<<<<< HEAD
+=======
+		ret = fault_in_pages_writeable(ubuf + sk_offset,
+					       *buf_size - sk_offset);
+		if (ret)
+			break;
+
+>>>>>>> rebase
 		ret = btrfs_search_forward(root, &key, path, sk->min_transid);
 		if (ret != 0) {
 			if (ret > 0)
@@ -3178,7 +3274,12 @@ static long btrfs_ioctl_dev_info(struct btrfs_fs_info *fs_info,
 		s_uuid = di_args->uuid;
 
 	rcu_read_lock();
+<<<<<<< HEAD
 	dev = btrfs_find_device(fs_info, di_args->devid, s_uuid, NULL);
+=======
+	dev = btrfs_find_device(fs_info->fs_devices, di_args->devid, s_uuid,
+				NULL, true);
+>>>>>>> rebase
 
 	if (!dev) {
 		ret = -ENODEV;
@@ -4202,6 +4303,11 @@ process_slot:
 			ret = -EINTR;
 			goto out;
 		}
+<<<<<<< HEAD
+=======
+
+		cond_resched();
+>>>>>>> rebase
 	}
 	ret = 0;
 

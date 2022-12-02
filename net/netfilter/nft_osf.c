@@ -22,6 +22,14 @@ static void nft_osf_eval(const struct nft_expr *expr, struct nft_regs *regs,
 	struct tcphdr _tcph;
 	const char *os_name;
 
+<<<<<<< HEAD
+=======
+	if (pkt->tprot != IPPROTO_TCP) {
+		regs->verdict.code = NFT_BREAK;
+		return;
+	}
+
+>>>>>>> rebase
 	tcp = skb_header_pointer(skb, ip_hdrlen(skb),
 				 sizeof(struct tcphdr), &_tcph);
 	if (!tcp) {
@@ -76,9 +84,27 @@ static int nft_osf_validate(const struct nft_ctx *ctx,
 			    const struct nft_expr *expr,
 			    const struct nft_data **data)
 {
+<<<<<<< HEAD
 	return nft_chain_validate_hooks(ctx->chain, (1 << NF_INET_LOCAL_IN) |
 						    (1 << NF_INET_PRE_ROUTING) |
 						    (1 << NF_INET_FORWARD));
+=======
+	unsigned int hooks;
+
+	switch (ctx->family) {
+	case NFPROTO_IPV4:
+	case NFPROTO_IPV6:
+	case NFPROTO_INET:
+		hooks = (1 << NF_INET_LOCAL_IN) |
+			(1 << NF_INET_PRE_ROUTING) |
+			(1 << NF_INET_FORWARD);
+		break;
+	default:
+		return -EOPNOTSUPP;
+	}
+
+	return nft_chain_validate_hooks(ctx->chain, hooks);
+>>>>>>> rebase
 }
 
 static struct nft_expr_type nft_osf_type;

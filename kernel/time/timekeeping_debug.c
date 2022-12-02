@@ -76,7 +76,11 @@ void tk_debug_account_sleep_time(const struct timespec64 *t)
 	int bin = min(fls(t->tv_sec), NUM_BINS-1);
 
 	sleep_time_bin[bin]++;
+<<<<<<< HEAD
 	printk_deferred("PM: Timekeeping suspended for %lld.%03lu seconds\n",
+=======
+	pm_deferred_pr_dbg("Timekeeping suspended for %lld.%03lu seconds\n",
+>>>>>>> rebase
 			   (s64)t->tv_sec, t->tv_nsec / NSEC_PER_MSEC);
 }
 

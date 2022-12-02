@@ -1,5 +1,9 @@
 // SPDX-License-Identifier: GPL-2.0
+<<<<<<< HEAD
 /* Copyright (c) 2012,2017-2019, The Linux Foundation. All rights reserved.
+=======
+/* Copyright (c) 2012, The Linux Foundation. All rights reserved.
+>>>>>>> rebase
  *
  * Description: CoreSight Trace Memory Controller driver
  */
@@ -8,12 +12,18 @@
 #include <linux/init.h>
 #include <linux/types.h>
 #include <linux/device.h>
+<<<<<<< HEAD
 #include <linux/idr.h>
+=======
+>>>>>>> rebase
 #include <linux/io.h>
 #include <linux/err.h>
 #include <linux/fs.h>
 #include <linux/miscdevice.h>
+<<<<<<< HEAD
 #include <linux/mutex.h>
+=======
+>>>>>>> rebase
 #include <linux/property.h>
 #include <linux/uaccess.h>
 #include <linux/slab.h>
@@ -58,12 +68,16 @@ void tmc_flush_and_stop(struct tmc_drvdata *drvdata)
 
 void tmc_enable_hw(struct tmc_drvdata *drvdata)
 {
+<<<<<<< HEAD
 	drvdata->enable = true;
+=======
+>>>>>>> rebase
 	writel_relaxed(TMC_CTL_CAPT_EN, drvdata->base + TMC_CTL);
 }
 
 void tmc_disable_hw(struct tmc_drvdata *drvdata)
 {
+<<<<<<< HEAD
 	drvdata->enable = false;
 	writel_relaxed(0x0, drvdata->base + TMC_CTL);
 }
@@ -96,13 +110,21 @@ u32 tmc_get_memwidth_mask(struct tmc_drvdata *drvdata)
 	return mask;
 }
 
+=======
+	writel_relaxed(0x0, drvdata->base + TMC_CTL);
+}
+
+>>>>>>> rebase
 static int tmc_read_prepare(struct tmc_drvdata *drvdata)
 {
 	int ret = 0;
 
+<<<<<<< HEAD
 	if (!drvdata->enable)
 		return -EPERM;
 
+=======
+>>>>>>> rebase
 	switch (drvdata->config_type) {
 	case TMC_CONFIG_TYPE_ETB:
 	case TMC_CONFIG_TYPE_ETF:
@@ -116,7 +138,11 @@ static int tmc_read_prepare(struct tmc_drvdata *drvdata)
 	}
 
 	if (!ret)
+<<<<<<< HEAD
 		dev_dbg(drvdata->dev, "TMC read start\n");
+=======
+		dev_info(drvdata->dev, "TMC read start\n");
+>>>>>>> rebase
 
 	return ret;
 }
@@ -138,7 +164,11 @@ static int tmc_read_unprepare(struct tmc_drvdata *drvdata)
 	}
 
 	if (!ret)
+<<<<<<< HEAD
 		dev_dbg(drvdata->dev, "TMC read end\n");
+=======
+		dev_info(drvdata->dev, "TMC read end\n");
+>>>>>>> rebase
 
 	return ret;
 }
@@ -180,6 +210,7 @@ static ssize_t tmc_read(struct file *file, char __user *data, size_t len,
 	ssize_t actual;
 	struct tmc_drvdata *drvdata = container_of(file->private_data,
 						   struct tmc_drvdata, miscdev);
+<<<<<<< HEAD
 	mutex_lock(&drvdata->mem_lock);
 	actual = tmc_get_sysfs_trace(drvdata, *ppos, len, &bufp);
 	if (actual <= 0) {
@@ -190,13 +221,24 @@ static ssize_t tmc_read(struct file *file, char __user *data, size_t len,
 	if (copy_to_user(data, bufp, actual)) {
 		dev_dbg(drvdata->dev, "%s: copy_to_user failed\n", __func__);
 		mutex_unlock(&drvdata->mem_lock);
+=======
+	actual = tmc_get_sysfs_trace(drvdata, *ppos, len, &bufp);
+	if (actual <= 0)
+		return 0;
+
+	if (copy_to_user(data, bufp, actual)) {
+		dev_dbg(drvdata->dev, "%s: copy_to_user failed\n", __func__);
+>>>>>>> rebase
 		return -EFAULT;
 	}
 
 	*ppos += actual;
 	dev_dbg(drvdata->dev, "%zu bytes copied\n", actual);
 
+<<<<<<< HEAD
 	mutex_unlock(&drvdata->mem_lock);
+=======
+>>>>>>> rebase
 	return actual;
 }
 
@@ -269,7 +311,10 @@ coresight_tmc_reg(ffcr, TMC_FFCR);
 coresight_tmc_reg(mode, TMC_MODE);
 coresight_tmc_reg(pscr, TMC_PSCR);
 coresight_tmc_reg(axictl, TMC_AXICTL);
+<<<<<<< HEAD
 coresight_tmc_reg(authstatus, TMC_AUTHSTATUS);
+=======
+>>>>>>> rebase
 coresight_tmc_reg(devid, CORESIGHT_DEVID);
 coresight_tmc_reg64(rrp, TMC_RRP, TMC_RRPHI);
 coresight_tmc_reg64(rwp, TMC_RWP, TMC_RWPHI);
@@ -289,7 +334,10 @@ static struct attribute *coresight_tmc_mgmt_attrs[] = {
 	&dev_attr_devid.attr,
 	&dev_attr_dba.attr,
 	&dev_attr_axictl.attr,
+<<<<<<< HEAD
 	&dev_attr_authstatus.attr,
+=======
+>>>>>>> rebase
 	NULL,
 };
 
@@ -335,6 +383,7 @@ static ssize_t buffer_size_store(struct device *dev,
 	unsigned long val;
 	struct tmc_drvdata *drvdata = dev_get_drvdata(dev->parent);
 
+<<<<<<< HEAD
 	if (drvdata->enable) {
 		pr_err("ETR is in use, disable it to change the mem_size\n");
 		return -EINVAL;
@@ -342,19 +391,29 @@ static ssize_t buffer_size_store(struct device *dev,
 	/* Only permitted for TMC-ETRs */
 	if (drvdata->config_type != TMC_CONFIG_TYPE_ETR)
 		return -EPERM;
+=======
+	/* Only permitted for TMC-ETRs */
+	if (drvdata->config_type != TMC_CONFIG_TYPE_ETR)
+		return -EPERM;
+
+>>>>>>> rebase
 	ret = kstrtoul(buf, 0, &val);
 	if (ret)
 		return ret;
 	/* The buffer size should be page aligned */
 	if (val & (PAGE_SIZE - 1))
 		return -EINVAL;
+<<<<<<< HEAD
 
+=======
+>>>>>>> rebase
 	drvdata->size = val;
 	return size;
 }
 
 static DEVICE_ATTR_RW(buffer_size);
 
+<<<<<<< HEAD
 static ssize_t out_mode_show(struct device *dev,
 			     struct device_attribute *attr, char *buf)
 {
@@ -458,6 +517,16 @@ static const struct attribute_group coresight_tmc_etf_group = {
 
 static const struct attribute_group coresight_tmc_etr_group = {
 	.attrs = coresight_tmc_etr_attrs,
+=======
+static struct attribute *coresight_tmc_attrs[] = {
+	&dev_attr_trigger_cntr.attr,
+	&dev_attr_buffer_size.attr,
+	NULL,
+};
+
+static const struct attribute_group coresight_tmc_group = {
+	.attrs = coresight_tmc_attrs,
+>>>>>>> rebase
 };
 
 static const struct attribute_group coresight_tmc_mgmt_group = {
@@ -465,6 +534,7 @@ static const struct attribute_group coresight_tmc_mgmt_group = {
 	.name = "mgmt",
 };
 
+<<<<<<< HEAD
 const struct attribute_group *coresight_tmc_etf_groups[] = {
 	&coresight_tmc_etf_group,
 	&coresight_tmc_mgmt_group,
@@ -473,6 +543,10 @@ const struct attribute_group *coresight_tmc_etf_groups[] = {
 
 const struct attribute_group *coresight_tmc_etr_groups[] = {
 	&coresight_tmc_etr_group,
+=======
+const struct attribute_group *coresight_tmc_groups[] = {
+	&coresight_tmc_group,
+>>>>>>> rebase
 	&coresight_tmc_mgmt_group,
 	NULL,
 };
@@ -483,6 +557,7 @@ static inline bool tmc_etr_can_use_sg(struct tmc_drvdata *drvdata)
 				       "arm,scatter-gather");
 }
 
+<<<<<<< HEAD
 static inline bool tmc_etr_has_non_secure_access(struct tmc_drvdata *drvdata)
 {
 	u32 auth = readl_relaxed(drvdata->base + TMC_AUTHSTATUS);
@@ -490,10 +565,13 @@ static inline bool tmc_etr_has_non_secure_access(struct tmc_drvdata *drvdata)
 	return (auth & TMC_AUTH_NSID_MASK) == 0x3;
 }
 
+=======
+>>>>>>> rebase
 /* Detect and initialise the capabilities of a TMC ETR */
 static int tmc_etr_setup_caps(struct tmc_drvdata *drvdata,
 			     u32 devid, void *dev_caps)
 {
+<<<<<<< HEAD
 	int rc;
 
 	u32 dma_mask = 0;
@@ -501,6 +579,10 @@ static int tmc_etr_setup_caps(struct tmc_drvdata *drvdata,
 	if (!tmc_etr_has_non_secure_access(drvdata))
 		return -EACCES;
 
+=======
+	u32 dma_mask = 0;
+
+>>>>>>> rebase
 	/* Set the unadvertised capabilities */
 	tmc_etr_init_caps(drvdata, (u32)(unsigned long)dev_caps);
 
@@ -528,6 +610,7 @@ static int tmc_etr_setup_caps(struct tmc_drvdata *drvdata,
 		dma_mask = 40;
 	}
 
+<<<<<<< HEAD
 	rc = dma_set_mask_and_coherent(drvdata->dev, DMA_BIT_MASK(dma_mask));
 	if (rc)
 		dev_err(drvdata->dev, "Failed to setup DMA mask: %d\n", rc);
@@ -565,6 +648,9 @@ static int tmc_config_desc(struct tmc_drvdata *drvdata,
 	}
 
 	return ret;
+=======
+	return dma_set_mask_and_coherent(drvdata->dev, DMA_BIT_MASK(dma_mask));
+>>>>>>> rebase
 }
 
 static int tmc_probe(struct amba_device *adev, const struct amba_id *id)
@@ -578,6 +664,7 @@ static int tmc_probe(struct amba_device *adev, const struct amba_id *id)
 	struct resource *res = &adev->res;
 	struct coresight_desc desc = { 0 };
 	struct device_node *np = adev->dev.of_node;
+<<<<<<< HEAD
 	struct coresight_cti_data *ctidata;
 
 	pdata = of_get_coresight_platform_data(dev, np);
@@ -586,11 +673,26 @@ static int tmc_probe(struct amba_device *adev, const struct amba_id *id)
 		return ret;
 	}
 	adev->dev.platform_data = pdata;
+=======
+
+	if (np) {
+		pdata = of_get_coresight_platform_data(dev, np);
+		if (IS_ERR(pdata)) {
+			ret = PTR_ERR(pdata);
+			goto out;
+		}
+		adev->dev.platform_data = pdata;
+	}
+>>>>>>> rebase
 
 	ret = -ENOMEM;
 	drvdata = devm_kzalloc(dev, sizeof(*drvdata), GFP_KERNEL);
 	if (!drvdata)
+<<<<<<< HEAD
 		return ret;
+=======
+		goto out;
+>>>>>>> rebase
 
 	drvdata->dev = &adev->dev;
 	dev_set_drvdata(dev, drvdata);
@@ -599,17 +701,25 @@ static int tmc_probe(struct amba_device *adev, const struct amba_id *id)
 	base = devm_ioremap_resource(dev, res);
 	if (IS_ERR(base)) {
 		ret = PTR_ERR(base);
+<<<<<<< HEAD
 		return ret;
+=======
+		goto out;
+>>>>>>> rebase
 	}
 
 	drvdata->base = base;
 
 	spin_lock_init(&drvdata->spinlock);
+<<<<<<< HEAD
 	mutex_init(&drvdata->mem_lock);
+=======
+>>>>>>> rebase
 
 	devid = readl_relaxed(drvdata->base + CORESIGHT_DEVID);
 	drvdata->config_type = BMVAL(devid, 6, 7);
 	drvdata->memwidth = tmc_get_memwidth(devid);
+<<<<<<< HEAD
 	/* This device is not associated with a session */
 	drvdata->pid = -1;
 
@@ -617,12 +727,21 @@ static int tmc_probe(struct amba_device *adev, const struct amba_id *id)
 		drvdata->out_mode = TMC_ETR_OUT_MODE_MEM;
 		ret = of_property_read_u32(np, "arm,buffer-size",
 					   &drvdata->size);
+=======
+
+	if (drvdata->config_type == TMC_CONFIG_TYPE_ETR) {
+		if (np)
+			ret = of_property_read_u32(np,
+						   "arm,buffer-size",
+						   &drvdata->size);
+>>>>>>> rebase
 		if (ret)
 			drvdata->size = SZ_1M;
 	} else {
 		drvdata->size = readl_relaxed(drvdata->base + TMC_RSZ) * 4;
 	}
 
+<<<<<<< HEAD
 	ret = of_get_coresight_csr_name(adev->dev.of_node, &drvdata->csr_name);
 	if (ret)
 		dev_err(dev, "No csr data\n");
@@ -666,18 +785,54 @@ static int tmc_probe(struct amba_device *adev, const struct amba_id *id)
 		ret = tmc_etr_bam_init(adev, drvdata);
 		if (ret)
 			return ret;
+=======
+	pm_runtime_put(&adev->dev);
+
+	desc.pdata = pdata;
+	desc.dev = dev;
+	desc.groups = coresight_tmc_groups;
+
+	switch (drvdata->config_type) {
+	case TMC_CONFIG_TYPE_ETB:
+		desc.type = CORESIGHT_DEV_TYPE_SINK;
+		desc.subtype.sink_subtype = CORESIGHT_DEV_SUBTYPE_SINK_BUFFER;
+		desc.ops = &tmc_etb_cs_ops;
+		break;
+	case TMC_CONFIG_TYPE_ETR:
+		desc.type = CORESIGHT_DEV_TYPE_SINK;
+		desc.subtype.sink_subtype = CORESIGHT_DEV_SUBTYPE_SINK_BUFFER;
+		desc.ops = &tmc_etr_cs_ops;
+		ret = tmc_etr_setup_caps(drvdata, devid, id->data);
+		if (ret)
+			goto out;
+		break;
+	case TMC_CONFIG_TYPE_ETF:
+		desc.type = CORESIGHT_DEV_TYPE_LINKSINK;
+		desc.subtype.link_subtype = CORESIGHT_DEV_SUBTYPE_LINK_FIFO;
+		desc.ops = &tmc_etf_cs_ops;
+		break;
+	default:
+		pr_err("%s: Unsupported TMC config\n", pdata->name);
+		ret = -EINVAL;
+		goto out;
+>>>>>>> rebase
 	}
 
 	drvdata->csdev = coresight_register(&desc);
 	if (IS_ERR(drvdata->csdev)) {
 		ret = PTR_ERR(drvdata->csdev);
+<<<<<<< HEAD
 		return ret;
+=======
+		goto out;
+>>>>>>> rebase
 	}
 
 	drvdata->miscdev.name = pdata->name;
 	drvdata->miscdev.minor = MISC_DYNAMIC_MINOR;
 	drvdata->miscdev.fops = &tmc_fops;
 	ret = misc_register(&drvdata->miscdev);
+<<<<<<< HEAD
 	if (ret) {
 		coresight_unregister(drvdata->csdev);
 		return ret;
@@ -686,6 +841,11 @@ static int tmc_probe(struct amba_device *adev, const struct amba_id *id)
 	if (!ret)
 		pm_runtime_put(&adev->dev);
 
+=======
+	if (ret)
+		coresight_unregister(drvdata->csdev);
+out:
+>>>>>>> rebase
 	return ret;
 }
 

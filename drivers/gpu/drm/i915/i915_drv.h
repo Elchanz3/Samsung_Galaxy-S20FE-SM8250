@@ -33,6 +33,11 @@
 #include <uapi/drm/i915_drm.h>
 #include <uapi/drm/drm_fourcc.h>
 
+<<<<<<< HEAD
+=======
+#include <asm/hypervisor.h>
+
+>>>>>>> rebase
 #include <linux/io-mapping.h>
 #include <linux/i2c.h>
 #include <linux/i2c-algo-bit.h>
@@ -1593,6 +1598,11 @@ struct drm_i915_private {
 
 	struct intel_uncore uncore;
 
+<<<<<<< HEAD
+=======
+	struct mutex tlb_invalidate_lock;
+
+>>>>>>> rebase
 	struct i915_virtual_gpu vgpu;
 
 	struct intel_gvt *gvt;
@@ -2683,7 +2693,13 @@ static inline bool intel_vtd_active(void)
 	if (intel_iommu_gfx_mapped)
 		return true;
 #endif
+<<<<<<< HEAD
 	return false;
+=======
+
+	/* Running as a guest, we assume the host is enforcing VT'd */
+	return !hypervisor_is_type(X86_HYPER_NATIVE);
+>>>>>>> rebase
 }
 
 static inline bool intel_scanout_needs_vtd_wa(struct drm_i915_private *dev_priv)

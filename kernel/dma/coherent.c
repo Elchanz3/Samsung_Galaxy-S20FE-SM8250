@@ -29,14 +29,20 @@ static inline struct dma_coherent_mem *dev_get_coherent_memory(struct device *de
 	return NULL;
 }
 
+<<<<<<< HEAD
 dma_addr_t dma_get_device_base(struct device *dev,
 			       struct dma_coherent_mem *mem)
+=======
+static inline dma_addr_t dma_get_device_base(struct device *dev,
+					     struct dma_coherent_mem * mem)
+>>>>>>> rebase
 {
 	if (mem->use_dev_dma_pfn_offset)
 		return (mem->pfn_base - dev->dma_pfn_offset) << PAGE_SHIFT;
 	else
 		return mem->device_base;
 }
+<<<<<<< HEAD
 EXPORT_SYMBOL(dma_get_device_base);
 
 unsigned long dma_get_size(struct dma_coherent_mem *mem)
@@ -44,6 +50,8 @@ unsigned long dma_get_size(struct dma_coherent_mem *mem)
 	return mem->size << PAGE_SHIFT;
 }
 EXPORT_SYMBOL(dma_get_size);
+=======
+>>>>>>> rebase
 
 static int dma_init_coherent_memory(
 	phys_addr_t phys_addr, dma_addr_t device_addr, size_t size, int flags,
@@ -167,6 +175,7 @@ void *dma_mark_declared_memory_occupied(struct device *dev,
 }
 EXPORT_SYMBOL(dma_mark_declared_memory_occupied);
 
+<<<<<<< HEAD
 static void dma_coherent_show_areas_locked(struct dma_coherent_mem *mem,
 					ssize_t size, int order)
 {
@@ -191,6 +200,8 @@ static void dma_coherent_show_areas_locked(struct dma_coherent_mem *mem,
 	pr_cont("=> %u free of %d total pages\n", nr_total, mem->size);
 }
 
+=======
+>>>>>>> rebase
 static void *__dma_alloc_from_coherent(struct dma_coherent_mem *mem,
 		ssize_t size, dma_addr_t *dma_handle)
 {
@@ -205,12 +216,17 @@ static void *__dma_alloc_from_coherent(struct dma_coherent_mem *mem,
 		goto err;
 
 	pageno = bitmap_find_free_region(mem->bitmap, mem->size, order);
+<<<<<<< HEAD
 	if (unlikely(pageno < 0)) {
 		pr_err("%s: alloc failed, req-size: %zd bytes, req-order %d\n",
 		       __func__, size, order);
 		dma_coherent_show_areas_locked(mem, size, order);
 		goto err;
 	}
+=======
+	if (unlikely(pageno < 0))
+		goto err;
+>>>>>>> rebase
 
 	/*
 	 * Memory was found in the coherent area.

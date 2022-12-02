@@ -41,7 +41,10 @@ static void xfrm_state_gc_task(struct work_struct *work);
  */
 
 static unsigned int xfrm_state_hashmax __read_mostly = 1 * 1024 * 1024;
+<<<<<<< HEAD
 static __read_mostly seqcount_t xfrm_state_hash_generation = SEQCNT_ZERO(xfrm_state_hash_generation);
+=======
+>>>>>>> rebase
 static struct kmem_cache *xfrm_state_cache __ro_after_init;
 
 static DECLARE_WORK(xfrm_state_gc_work, xfrm_state_gc_task);
@@ -137,7 +140,11 @@ static void xfrm_hash_resize(struct work_struct *work)
 	}
 
 	spin_lock_bh(&net->xfrm.xfrm_state_lock);
+<<<<<<< HEAD
 	write_seqcount_begin(&xfrm_state_hash_generation);
+=======
+	write_seqcount_begin(&net->xfrm.xfrm_state_hash_generation);
+>>>>>>> rebase
 
 	nhashmask = (nsize / sizeof(struct hlist_head)) - 1U;
 	odst = xfrm_state_deref_prot(net->xfrm.state_bydst, net);
@@ -153,7 +160,11 @@ static void xfrm_hash_resize(struct work_struct *work)
 	rcu_assign_pointer(net->xfrm.state_byspi, nspi);
 	net->xfrm.state_hmask = nhashmask;
 
+<<<<<<< HEAD
 	write_seqcount_end(&xfrm_state_hash_generation);
+=======
+	write_seqcount_end(&net->xfrm.xfrm_state_hash_generation);
+>>>>>>> rebase
 	spin_unlock_bh(&net->xfrm.xfrm_state_lock);
 
 	osize = (ohashmask + 1) * sizeof(struct hlist_head);
@@ -923,7 +934,12 @@ static void xfrm_state_look_at(struct xfrm_policy *pol, struct xfrm_state *x,
 	 */
 	if (x->km.state == XFRM_STATE_VALID) {
 		if ((x->sel.family &&
+<<<<<<< HEAD
 		     !xfrm_selector_match(&x->sel, fl, x->sel.family)) ||
+=======
+		     (x->sel.family != family ||
+		      !xfrm_selector_match(&x->sel, fl, family))) ||
+>>>>>>> rebase
 		    !security_xfrm_state_pol_flow_match(x, pol, fl))
 			return;
 
@@ -936,7 +952,13 @@ static void xfrm_state_look_at(struct xfrm_policy *pol, struct xfrm_state *x,
 		*acq_in_progress = 1;
 	} else if (x->km.state == XFRM_STATE_ERROR ||
 		   x->km.state == XFRM_STATE_EXPIRED) {
+<<<<<<< HEAD
 		if (xfrm_selector_match(&x->sel, fl, x->sel.family) &&
+=======
+		if ((!x->sel.family ||
+		     (x->sel.family == family &&
+		      xfrm_selector_match(&x->sel, fl, family))) &&
+>>>>>>> rebase
 		    security_xfrm_state_pol_flow_match(x, pol, fl))
 			*error = -ESRCH;
 	}
@@ -962,7 +984,11 @@ xfrm_state_find(const xfrm_address_t *daddr, const xfrm_address_t *saddr,
 
 	to_put = NULL;
 
+<<<<<<< HEAD
 	sequence = read_seqcount_begin(&xfrm_state_hash_generation);
+=======
+	sequence = read_seqcount_begin(&net->xfrm.xfrm_state_hash_generation);
+>>>>>>> rebase
 
 	rcu_read_lock();
 	h = xfrm_dst_hash(net, daddr, saddr, tmpl->reqid, encap_family);
@@ -976,7 +1002,11 @@ xfrm_state_find(const xfrm_address_t *daddr, const xfrm_address_t *saddr,
 		    tmpl->mode == x->props.mode &&
 		    tmpl->id.proto == x->id.proto &&
 		    (tmpl->id.spi == x->id.spi || !tmpl->id.spi))
+<<<<<<< HEAD
 			xfrm_state_look_at(pol, x, fl, encap_family,
+=======
+			xfrm_state_look_at(pol, x, fl, family,
+>>>>>>> rebase
 					   &best, &acquire_in_progress, &error);
 	}
 	if (best || acquire_in_progress)
@@ -993,7 +1023,11 @@ xfrm_state_find(const xfrm_address_t *daddr, const xfrm_address_t *saddr,
 		    tmpl->mode == x->props.mode &&
 		    tmpl->id.proto == x->id.proto &&
 		    (tmpl->id.spi == x->id.spi || !tmpl->id.spi))
+<<<<<<< HEAD
 			xfrm_state_look_at(pol, x, fl, encap_family,
+=======
+			xfrm_state_look_at(pol, x, fl, family,
+>>>>>>> rebase
 					   &best, &acquire_in_progress, &error);
 	}
 
@@ -1073,7 +1107,11 @@ out:
 	if (to_put)
 		xfrm_state_put(to_put);
 
+<<<<<<< HEAD
 	if (read_seqcount_retry(&xfrm_state_hash_generation, sequence)) {
+=======
+	if (read_seqcount_retry(&net->xfrm.xfrm_state_hash_generation, sequence)) {
+>>>>>>> rebase
 		*err = -EAGAIN;
 		if (x) {
 			xfrm_state_put(x);
@@ -1341,6 +1379,33 @@ out:
 EXPORT_SYMBOL(xfrm_state_add);
 
 #ifdef CONFIG_XFRM_MIGRATE
+<<<<<<< HEAD
+=======
+static inline int clone_security(struct xfrm_state *x, struct xfrm_sec_ctx *security)
+{
+	struct xfrm_user_sec_ctx *uctx;
+	int size = sizeof(*uctx) + security->ctx_len;
+	int err;
+
+	uctx = kmalloc(size, GFP_KERNEL);
+	if (!uctx)
+		return -ENOMEM;
+
+	uctx->exttype = XFRMA_SEC_CTX;
+	uctx->len = size;
+	uctx->ctx_doi = security->ctx_doi;
+	uctx->ctx_alg = security->ctx_alg;
+	uctx->ctx_len = security->ctx_len;
+	memcpy(uctx + 1, security->ctx_str, security->ctx_len);
+	err = security_xfrm_state_alloc(x, uctx);
+	kfree(uctx);
+	if (err)
+		return err;
+
+	return 0;
+}
+
+>>>>>>> rebase
 static struct xfrm_state *xfrm_state_clone(struct xfrm_state *orig,
 					   struct xfrm_encap_tmpl *encap)
 {
@@ -1397,6 +1462,13 @@ static struct xfrm_state *xfrm_state_clone(struct xfrm_state *orig,
 			goto error;
 	}
 
+<<<<<<< HEAD
+=======
+	if (orig->security)
+		if (clone_security(x, orig->security))
+			goto error;
+
+>>>>>>> rebase
 	if (orig->coaddr) {
 		x->coaddr = kmemdup(orig->coaddr, sizeof(*x->coaddr),
 				    GFP_KERNEL);
@@ -1410,9 +1482,13 @@ static struct xfrm_state *xfrm_state_clone(struct xfrm_state *orig,
 	}
 
 	memcpy(&x->mark, &orig->mark, sizeof(x->mark));
+<<<<<<< HEAD
 
 	if (xfrm_init_state(x) < 0)
 		goto error;
+=======
+	memcpy(&x->props.smark, &orig->props.smark, sizeof(x->props.smark));
+>>>>>>> rebase
 
 	x->props.flags = orig->props.flags;
 	x->props.extra_flags = orig->props.extra_flags;
@@ -1421,7 +1497,11 @@ static struct xfrm_state *xfrm_state_clone(struct xfrm_state *orig,
 	x->tfcpad = orig->tfcpad;
 	x->replay_maxdiff = orig->replay_maxdiff;
 	x->replay_maxage = orig->replay_maxage;
+<<<<<<< HEAD
 	x->curlft.add_time = orig->curlft.add_time;
+=======
+	memcpy(&x->curlft, &orig->curlft, sizeof(x->curlft));
+>>>>>>> rebase
 	x->km.state = orig->km.state;
 	x->km.seq = orig->km.seq;
 	x->replay = orig->replay;
@@ -1435,7 +1515,12 @@ out:
 	return NULL;
 }
 
+<<<<<<< HEAD
 struct xfrm_state *xfrm_migrate_state_find(struct xfrm_migrate *m, struct net *net)
+=======
+struct xfrm_state *xfrm_migrate_state_find(struct xfrm_migrate *m, struct net *net,
+						u32 if_id)
+>>>>>>> rebase
 {
 	unsigned int h;
 	struct xfrm_state *x = NULL;
@@ -1451,6 +1536,11 @@ struct xfrm_state *xfrm_migrate_state_find(struct xfrm_migrate *m, struct net *n
 				continue;
 			if (m->reqid && x->props.reqid != m->reqid)
 				continue;
+<<<<<<< HEAD
+=======
+			if (if_id != 0 && x->if_id != if_id)
+				continue;
+>>>>>>> rebase
 			if (!xfrm_addr_equal(&x->id.daddr, &m->old_daddr,
 					     m->old_family) ||
 			    !xfrm_addr_equal(&x->props.saddr, &m->old_saddr,
@@ -1466,6 +1556,11 @@ struct xfrm_state *xfrm_migrate_state_find(struct xfrm_migrate *m, struct net *n
 			if (x->props.mode != m->mode ||
 			    x->id.proto != m->proto)
 				continue;
+<<<<<<< HEAD
+=======
+			if (if_id != 0 && x->if_id != if_id)
+				continue;
+>>>>>>> rebase
 			if (!xfrm_addr_equal(&x->id.daddr, &m->old_daddr,
 					     m->old_family) ||
 			    !xfrm_addr_equal(&x->props.saddr, &m->old_saddr,
@@ -1492,6 +1587,14 @@ struct xfrm_state *xfrm_state_migrate(struct xfrm_state *x,
 	if (!xc)
 		return NULL;
 
+<<<<<<< HEAD
+=======
+	xc->props.family = m->new_family;
+
+	if (xfrm_init_state(xc) < 0)
+		goto error;
+
+>>>>>>> rebase
 	memcpy(&xc->id.daddr, &m->new_daddr, sizeof(xc->id.daddr));
 	memcpy(&xc->props.saddr, &m->new_saddr, sizeof(xc->props.saddr));
 
@@ -1793,6 +1896,10 @@ int xfrm_alloc_spi(struct xfrm_state *x, u32 low, u32 high)
 	int err = -ENOENT;
 	__be32 minspi = htonl(low);
 	__be32 maxspi = htonl(high);
+<<<<<<< HEAD
+=======
+	__be32 newspi = 0;
+>>>>>>> rebase
 	u32 mark = x->mark.v & x->mark.m;
 
 	spin_lock_bh(&x->lock);
@@ -1811,21 +1918,35 @@ int xfrm_alloc_spi(struct xfrm_state *x, u32 low, u32 high)
 			xfrm_state_put(x0);
 			goto unlock;
 		}
+<<<<<<< HEAD
 		x->id.spi = minspi;
+=======
+		newspi = minspi;
+>>>>>>> rebase
 	} else {
 		u32 spi = 0;
 		for (h = 0; h < high-low+1; h++) {
 			spi = low + prandom_u32()%(high-low+1);
 			x0 = xfrm_state_lookup(net, mark, &x->id.daddr, htonl(spi), x->id.proto, x->props.family);
 			if (x0 == NULL) {
+<<<<<<< HEAD
 				x->id.spi = htonl(spi);
+=======
+				newspi = htonl(spi);
+>>>>>>> rebase
 				break;
 			}
 			xfrm_state_put(x0);
 		}
 	}
+<<<<<<< HEAD
 	if (x->id.spi) {
 		spin_lock_bh(&net->xfrm.xfrm_state_lock);
+=======
+	if (newspi) {
+		spin_lock_bh(&net->xfrm.xfrm_state_lock);
+		x->id.spi = newspi;
+>>>>>>> rebase
 		h = xfrm_spi_hash(net, &x->id.daddr, x->id.spi, x->id.proto, x->props.family);
 		hlist_add_head_rcu(&x->byspi, net->xfrm.state_byspi + h);
 		spin_unlock_bh(&net->xfrm.xfrm_state_lock);
@@ -2093,6 +2214,14 @@ int xfrm_user_policy(struct sock *sk, int optname, u8 __user *optval, int optlen
 	struct xfrm_mgr *km;
 	struct xfrm_policy *pol = NULL;
 
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_COMPAT
+	if (in_compat_syscall())
+		return -EOPNOTSUPP;
+#endif
+
+>>>>>>> rebase
 	if (!optval && !optlen) {
 		xfrm_sk_policy_insert(sk, XFRM_POLICY_IN, NULL);
 		xfrm_sk_policy_insert(sk, XFRM_POLICY_OUT, NULL);
@@ -2367,6 +2496,10 @@ int __net_init xfrm_state_init(struct net *net)
 	net->xfrm.state_num = 0;
 	INIT_WORK(&net->xfrm.state_hash_work, xfrm_hash_resize);
 	spin_lock_init(&net->xfrm.xfrm_state_lock);
+<<<<<<< HEAD
+=======
+	seqcount_init(&net->xfrm.xfrm_state_hash_generation);
+>>>>>>> rebase
 	return 0;
 
 out_byspi:
@@ -2396,8 +2529,12 @@ void xfrm_state_fini(struct net *net)
 	xfrm_hash_free(net->xfrm.state_bydst, sz);
 }
 
+<<<<<<< HEAD
 // [ SEC_SELINUX_PORTING_COMMON - remove AUDIT_MAC_IPSEC_EVENT audit log, it conflict with security notification
 #if 0 //#ifdef CONFIG_AUDITSYSCALL
+=======
+#ifdef CONFIG_AUDITSYSCALL
+>>>>>>> rebase
 static void xfrm_audit_helper_sainfo(struct xfrm_state *x,
 				     struct audit_buffer *audit_buf)
 {
@@ -2558,4 +2695,7 @@ void xfrm_audit_state_icvfail(struct xfrm_state *x,
 }
 EXPORT_SYMBOL_GPL(xfrm_audit_state_icvfail);
 #endif /* CONFIG_AUDITSYSCALL */
+<<<<<<< HEAD
 // ] SEC_SELINUX_PORTING_COMMON - remove AUDIT_MAC_IPSEC_EVENT audit log, it conflict with security notification
+=======
+>>>>>>> rebase

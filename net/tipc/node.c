@@ -1368,13 +1368,21 @@ int tipc_node_xmit(struct net *net, struct sk_buff_head *list,
 	int rc;
 
 	if (in_own_node(net, dnode)) {
+<<<<<<< HEAD
+=======
+		spin_lock_init(&list->lock);
+>>>>>>> rebase
 		tipc_sk_rcv(net, list);
 		return 0;
 	}
 
 	n = tipc_node_find(net, dnode);
 	if (unlikely(!n)) {
+<<<<<<< HEAD
 		skb_queue_purge(list);
+=======
+		__skb_queue_purge(list);
+>>>>>>> rebase
 		return -EHOSTUNREACH;
 	}
 
@@ -1383,7 +1391,11 @@ int tipc_node_xmit(struct net *net, struct sk_buff_head *list,
 	if (unlikely(bearer_id == INVALID_BEARER_ID)) {
 		tipc_node_read_unlock(n);
 		tipc_node_put(n);
+<<<<<<< HEAD
 		skb_queue_purge(list);
+=======
+		__skb_queue_purge(list);
+>>>>>>> rebase
 		return -EHOSTUNREACH;
 	}
 
@@ -1415,7 +1427,11 @@ int tipc_node_xmit_skb(struct net *net, struct sk_buff *skb, u32 dnode,
 {
 	struct sk_buff_head head;
 
+<<<<<<< HEAD
 	skb_queue_head_init(&head);
+=======
+	__skb_queue_head_init(&head);
+>>>>>>> rebase
 	__skb_queue_tail(&head, skb);
 	tipc_node_xmit(net, &head, dnode, selector);
 	return 0;

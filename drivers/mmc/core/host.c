@@ -34,10 +34,13 @@
 
 #define cls_dev_to_mmc_host(d)	container_of(d, struct mmc_host, class_dev)
 
+<<<<<<< HEAD
 #define MMC_DEVFRQ_DEFAULT_UP_THRESHOLD 35
 #define MMC_DEVFRQ_DEFAULT_DOWN_THRESHOLD 5
 #define MMC_DEVFRQ_DEFAULT_POLLING_MSEC 100
 
+=======
+>>>>>>> rebase
 static DEFINE_IDA(mmc_host_ida);
 
 static void mmc_host_classdev_release(struct device *dev)
@@ -47,6 +50,7 @@ static void mmc_host_classdev_release(struct device *dev)
 	kfree(host);
 }
 
+<<<<<<< HEAD
 static int mmc_host_prepare(struct device *dev)
 {
 	/*
@@ -69,6 +73,11 @@ static struct class mmc_host_class = {
 	.name		= "mmc_host",
 	.dev_release	= mmc_host_classdev_release,
 	.pm		= &mmc_pm_ops,
+=======
+static struct class mmc_host_class = {
+	.name		= "mmc_host",
+	.dev_release	= mmc_host_classdev_release,
+>>>>>>> rebase
 };
 
 int mmc_register_host_class(void)
@@ -153,9 +162,13 @@ int mmc_retune(struct mmc_host *host)
 	else
 		return 0;
 
+<<<<<<< HEAD
 	if (!host->need_retune || host->doing_retune || !host->card
 			|| mmc_card_hs400es(host->card)
 			|| (host->ios.clock <= MMC_HIGH_DDR_MAX_DTR))
+=======
+	if (!host->need_retune || host->doing_retune || !host->card)
+>>>>>>> rebase
 		return 0;
 
 	host->need_retune = 0;
@@ -414,17 +427,23 @@ struct mmc_host *mmc_alloc_host(int extra, struct device *dev)
 	}
 
 	spin_lock_init(&host->lock);
+<<<<<<< HEAD
 	atomic_set(&host->active_reqs, 0);
+=======
+>>>>>>> rebase
 	init_waitqueue_head(&host->wq);
 	INIT_DELAYED_WORK(&host->detect, mmc_rescan);
 	INIT_DELAYED_WORK(&host->sdio_irq_work, sdio_irq_work);
 	timer_setup(&host->retune_timer, mmc_retune_timer, 0);
 
+<<<<<<< HEAD
 	host->wlock_name = kasprintf(GFP_KERNEL,
 			"%s_detect", mmc_hostname(host));
 	wake_lock_init(&host->detect_wake_lock, WAKE_LOCK_SUSPEND,
 			host->wlock_name);
 
+=======
+>>>>>>> rebase
 	/*
 	 * By default, hosts do not support SGIO or large requests.
 	 * They have to set these according to their abilities.
@@ -441,6 +460,7 @@ struct mmc_host *mmc_alloc_host(int extra, struct device *dev)
 
 	return host;
 }
+<<<<<<< HEAD
 EXPORT_SYMBOL(mmc_alloc_host);
 
 static ssize_t enable_show(struct device *dev,
@@ -591,6 +611,21 @@ static struct attribute_group clk_scaling_attr_grp = {
 	.attrs = clk_scaling_attrs,
 };
 
+=======
+
+EXPORT_SYMBOL(mmc_alloc_host);
+
+static int mmc_validate_host_caps(struct mmc_host *host)
+{
+	if (host->caps & MMC_CAP_SDIO_IRQ && !host->ops->enable_sdio_irq) {
+		dev_warn(host->parent, "missing ->enable_sdio_irq() ops\n");
+		return -EINVAL;
+	}
+
+	return 0;
+}
+
+>>>>>>> rebase
 /**
  *	mmc_add_host - initialise host hardware
  *	@host: mmc host
@@ -603,8 +638,14 @@ int mmc_add_host(struct mmc_host *host)
 {
 	int err;
 
+<<<<<<< HEAD
 	WARN_ON((host->caps & MMC_CAP_SDIO_IRQ) &&
 		!host->ops->enable_sdio_irq);
+=======
+	err = mmc_validate_host_caps(host);
+	if (err)
+		return err;
+>>>>>>> rebase
 
 	err = device_add(&host->class_dev);
 	if (err)
@@ -612,15 +653,19 @@ int mmc_add_host(struct mmc_host *host)
 
 	led_trigger_register_simple(dev_name(&host->class_dev), &host->led);
 
+<<<<<<< HEAD
 	host->clk_scaling.upthreshold = MMC_DEVFRQ_DEFAULT_UP_THRESHOLD;
 	host->clk_scaling.downthreshold = MMC_DEVFRQ_DEFAULT_DOWN_THRESHOLD;
 	host->clk_scaling.polling_delay_ms = MMC_DEVFRQ_DEFAULT_POLLING_MSEC;
 	host->clk_scaling.skip_clk_scale_freq_update = false;
 
+=======
+>>>>>>> rebase
 #ifdef CONFIG_DEBUG_FS
 	mmc_add_host_debugfs(host);
 #endif
 
+<<<<<<< HEAD
 #ifdef CONFIG_MMC_IPC_LOGGING
 	host->ipc_log_ctxt = ipc_log_context_create(NUM_LOG_PAGES,
 					dev_name(&host->class_dev), 0);
@@ -636,6 +681,10 @@ int mmc_add_host(struct mmc_host *host)
 	mmc_start_host(host);
 	if (!(host->pm_flags & MMC_PM_IGNORE_PM_NOTIFY))
 		mmc_register_pm_notifier(host);
+=======
+	mmc_start_host(host);
+	mmc_register_pm_notifier(host);
+>>>>>>> rebase
 
 	return 0;
 }
@@ -652,20 +701,27 @@ EXPORT_SYMBOL(mmc_add_host);
  */
 void mmc_remove_host(struct mmc_host *host)
 {
+<<<<<<< HEAD
 	if (!(host->pm_flags & MMC_PM_IGNORE_PM_NOTIFY))
 		mmc_unregister_pm_notifier(host);
+=======
+	mmc_unregister_pm_notifier(host);
+>>>>>>> rebase
 	mmc_stop_host(host);
 
 #ifdef CONFIG_DEBUG_FS
 	mmc_remove_host_debugfs(host);
 #endif
 
+<<<<<<< HEAD
 #ifdef CONFIG_MMC_IPC_LOGGING
 	ipc_log_context_destroy(host->ipc_log_ctxt);
 	host->ipc_log_ctxt = NULL;
 #endif
 	sysfs_remove_group(&host->class_dev.kobj, &clk_scaling_attr_grp);
 
+=======
+>>>>>>> rebase
 	device_del(&host->class_dev);
 
 	led_trigger_unregister_simple(host->led);
@@ -682,7 +738,10 @@ EXPORT_SYMBOL(mmc_remove_host);
 void mmc_free_host(struct mmc_host *host)
 {
 	mmc_pwrseq_free(host);
+<<<<<<< HEAD
 	wake_lock_destroy(&host->detect_wake_lock);
+=======
+>>>>>>> rebase
 	put_device(&host->class_dev);
 }
 

@@ -39,7 +39,11 @@ struct sunxi_priv_data {
 static int sun7i_gmac_init(struct platform_device *pdev, void *priv)
 {
 	struct sunxi_priv_data *gmac = priv;
+<<<<<<< HEAD
 	int ret;
+=======
+	int ret = 0;
+>>>>>>> rebase
 
 	if (gmac->regulator) {
 		ret = regulator_enable(gmac->regulator);
@@ -60,11 +64,19 @@ static int sun7i_gmac_init(struct platform_device *pdev, void *priv)
 	} else {
 		clk_set_rate(gmac->tx_clk, SUN7I_GMAC_MII_RATE);
 		ret = clk_prepare(gmac->tx_clk);
+<<<<<<< HEAD
 		if (ret)
 			return ret;
 	}
 
 	return 0;
+=======
+		if (ret && gmac->regulator)
+			regulator_disable(gmac->regulator);
+	}
+
+	return ret;
+>>>>>>> rebase
 }
 
 static void sun7i_gmac_exit(struct platform_device *pdev, void *priv)
@@ -155,6 +167,11 @@ static int sun7i_gmac_probe(struct platform_device *pdev)
 	plat_dat->init = sun7i_gmac_init;
 	plat_dat->exit = sun7i_gmac_exit;
 	plat_dat->fix_mac_speed = sun7i_fix_speed;
+<<<<<<< HEAD
+=======
+	plat_dat->tx_fifo_size = 4096;
+	plat_dat->rx_fifo_size = 16384;
+>>>>>>> rebase
 
 	ret = sun7i_gmac_init(pdev, plat_dat->bsp_priv);
 	if (ret)

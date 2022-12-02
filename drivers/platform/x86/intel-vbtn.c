@@ -15,9 +15,19 @@
 #include <linux/platform_device.h>
 #include <linux/suspend.h>
 
+<<<<<<< HEAD
 /* When NOT in tablet mode, VGBS returns with the flag 0x40 */
 #define TABLET_MODE_FLAG 0x40
 #define DOCK_MODE_FLAG   0x80
+=======
+/* Returned when NOT in tablet mode on some HP Stream x360 11 models */
+#define VGBS_TABLET_MODE_FLAG_ALT	0x10
+/* When NOT in tablet mode, VGBS returns with the flag 0x40 */
+#define VGBS_TABLET_MODE_FLAG		0x40
+#define VGBS_DOCK_MODE_FLAG		0x80
+
+#define VGBS_TABLET_MODE_FLAGS (VGBS_TABLET_MODE_FLAG | VGBS_TABLET_MODE_FLAG_ALT)
+>>>>>>> rebase
 
 MODULE_LICENSE("GPL");
 MODULE_AUTHOR("AceLan Kao");
@@ -39,6 +49,7 @@ static const struct key_entry intel_vbtn_keymap[] = {
 	{ KE_IGNORE, 0xC7, { KEY_VOLUMEDOWN } },	/* volume-down key release */
 	{ KE_KEY,    0xC8, { KEY_ROTATE_LOCK_TOGGLE } },	/* rotate-lock key press */
 	{ KE_KEY,    0xC9, { KEY_ROTATE_LOCK_TOGGLE } },	/* rotate-lock key release */
+<<<<<<< HEAD
 	{ KE_SW,     0xCA, { .sw = { SW_DOCK, 1 } } },		/* Docked */
 	{ KE_SW,     0xCB, { .sw = { SW_DOCK, 0 } } },		/* Undocked */
 	{ KE_SW,     0xCC, { .sw = { SW_TABLET_MODE, 1 } } },	/* Tablet */
@@ -48,19 +59,69 @@ static const struct key_entry intel_vbtn_keymap[] = {
 
 struct intel_vbtn_priv {
 	struct input_dev *input_dev;
+=======
+};
+
+static const struct key_entry intel_vbtn_switchmap[] = {
+	/*
+	 * SW_DOCK should only be reported for docking stations, but DSDTs using the
+	 * intel-vbtn code, always seem to use this for 2-in-1s / convertibles and set
+	 * SW_DOCK=1 when in laptop-mode (in tandem with setting SW_TABLET_MODE=0).
+	 * This causes userspace to think the laptop is docked to a port-replicator
+	 * and to disable suspend-on-lid-close, which is undesirable.
+	 * Map the dock events to KEY_IGNORE to avoid this broken SW_DOCK reporting.
+	 */
+	{ KE_IGNORE, 0xCA, { .sw = { SW_DOCK, 1 } } },		/* Docked */
+	{ KE_IGNORE, 0xCB, { .sw = { SW_DOCK, 0 } } },		/* Undocked */
+	{ KE_SW,     0xCC, { .sw = { SW_TABLET_MODE, 1 } } },	/* Tablet */
+	{ KE_SW,     0xCD, { .sw = { SW_TABLET_MODE, 0 } } },	/* Laptop */
+};
+
+#define KEYMAP_LEN \
+	(ARRAY_SIZE(intel_vbtn_keymap) + ARRAY_SIZE(intel_vbtn_switchmap) + 1)
+
+struct intel_vbtn_priv {
+	struct key_entry keymap[KEYMAP_LEN];
+	struct input_dev *input_dev;
+	bool has_switches;
+>>>>>>> rebase
 	bool wakeup_mode;
 };
 
 static int intel_vbtn_input_setup(struct platform_device *device)
 {
 	struct intel_vbtn_priv *priv = dev_get_drvdata(&device->dev);
+<<<<<<< HEAD
 	int ret;
+=======
+	int ret, keymap_len = 0;
+
+	if (true) {
+		memcpy(&priv->keymap[keymap_len], intel_vbtn_keymap,
+		       ARRAY_SIZE(intel_vbtn_keymap) *
+		       sizeof(struct key_entry));
+		keymap_len += ARRAY_SIZE(intel_vbtn_keymap);
+	}
+
+	if (priv->has_switches) {
+		memcpy(&priv->keymap[keymap_len], intel_vbtn_switchmap,
+		       ARRAY_SIZE(intel_vbtn_switchmap) *
+		       sizeof(struct key_entry));
+		keymap_len += ARRAY_SIZE(intel_vbtn_switchmap);
+	}
+
+	priv->keymap[keymap_len].type = KE_END;
+>>>>>>> rebase
 
 	priv->input_dev = devm_input_allocate_device(&device->dev);
 	if (!priv->input_dev)
 		return -ENOMEM;
 
+<<<<<<< HEAD
 	ret = sparse_keymap_setup(priv->input_dev, intel_vbtn_keymap, NULL);
+=======
+	ret = sparse_keymap_setup(priv->input_dev, priv->keymap, NULL);
+>>>>>>> rebase
 	if (ret)
 		return ret;
 
@@ -115,6 +176,7 @@ out_unknown:
 
 static void detect_tablet_mode(struct platform_device *device)
 {
+<<<<<<< HEAD
 	const char *chassis_type = dmi_get_system_info(DMI_CHASSIS_TYPE);
 	struct intel_vbtn_priv *priv = dev_get_drvdata(&device->dev);
 	acpi_handle handle = ACPI_HANDLE(&device->dev);
@@ -140,6 +202,88 @@ static void detect_tablet_mode(struct platform_device *device)
 	input_report_switch(priv->input_dev, SW_DOCK, m);
 out:
 	kfree(vgbs_output.pointer);
+=======
+	struct intel_vbtn_priv *priv = dev_get_drvdata(&device->dev);
+	acpi_handle handle = ACPI_HANDLE(&device->dev);
+	unsigned long long vgbs;
+	acpi_status status;
+	int m;
+
+	status = acpi_evaluate_integer(handle, "VGBS", NULL, &vgbs);
+	if (ACPI_FAILURE(status))
+		return;
+
+	m = !(vgbs & VGBS_TABLET_MODE_FLAGS);
+	input_report_switch(priv->input_dev, SW_TABLET_MODE, m);
+	m = (vgbs & VGBS_DOCK_MODE_FLAG) ? 1 : 0;
+	input_report_switch(priv->input_dev, SW_DOCK, m);
+}
+
+/*
+ * There are several laptops (non 2-in-1) models out there which support VGBS,
+ * but simply always return 0, which we translate to SW_TABLET_MODE=1. This in
+ * turn causes userspace (libinput) to suppress events from the builtin
+ * keyboard and touchpad, making the laptop essentially unusable.
+ *
+ * Since the problem of wrongly reporting SW_TABLET_MODE=1 in combination
+ * with libinput, leads to a non-usable system. Where as OTOH many people will
+ * not even notice when SW_TABLET_MODE is not being reported, a DMI based allow
+ * list is used here. This list mainly matches on the chassis-type of 2-in-1s.
+ *
+ * There are also some 2-in-1s which use the intel-vbtn ACPI interface to report
+ * SW_TABLET_MODE with a chassis-type of 8 ("Portable") or 10 ("Notebook"),
+ * these are matched on a per model basis, since many normal laptops with a
+ * possible broken VGBS ACPI-method also use these chassis-types.
+ */
+static const struct dmi_system_id dmi_switches_allow_list[] = {
+	{
+		.matches = {
+			DMI_EXACT_MATCH(DMI_CHASSIS_TYPE, "31" /* Convertible */),
+		},
+	},
+	{
+		.matches = {
+			DMI_EXACT_MATCH(DMI_CHASSIS_TYPE, "32" /* Detachable */),
+		},
+	},
+	{
+		.matches = {
+			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
+			DMI_MATCH(DMI_PRODUCT_NAME, "Venue 11 Pro 7130"),
+		},
+	},
+	{
+		.matches = {
+			DMI_MATCH(DMI_SYS_VENDOR, "Hewlett-Packard"),
+			DMI_MATCH(DMI_PRODUCT_NAME, "HP Pavilion 13 x360 PC"),
+		},
+	},
+	{
+		.matches = {
+			DMI_MATCH(DMI_SYS_VENDOR, "Acer"),
+			DMI_MATCH(DMI_PRODUCT_NAME, "Switch SA5-271"),
+		},
+	},
+	{
+		.matches = {
+			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
+			DMI_MATCH(DMI_PRODUCT_NAME, "Inspiron 7352"),
+		},
+	},
+	{} /* Array terminator */
+};
+
+static bool intel_vbtn_has_switches(acpi_handle handle)
+{
+	unsigned long long vgbs;
+	acpi_status status;
+
+	if (!dmi_check_system(dmi_switches_allow_list))
+		return false;
+
+	status = acpi_evaluate_integer(handle, "VGBS", NULL, &vgbs);
+	return ACPI_SUCCESS(status);
+>>>>>>> rebase
 }
 
 static int intel_vbtn_probe(struct platform_device *device)
@@ -160,13 +304,23 @@ static int intel_vbtn_probe(struct platform_device *device)
 		return -ENOMEM;
 	dev_set_drvdata(&device->dev, priv);
 
+<<<<<<< HEAD
+=======
+	priv->has_switches = intel_vbtn_has_switches(handle);
+
+>>>>>>> rebase
 	err = intel_vbtn_input_setup(device);
 	if (err) {
 		pr_err("Failed to setup Intel Virtual Button\n");
 		return err;
 	}
 
+<<<<<<< HEAD
 	detect_tablet_mode(device);
+=======
+	if (priv->has_switches)
+		detect_tablet_mode(device);
+>>>>>>> rebase
 
 	status = acpi_install_notify_handler(handle,
 					     ACPI_DEVICE_NOTIFY,
@@ -237,7 +391,11 @@ check_acpi_dev(acpi_handle handle, u32 lvl, void *context, void **rv)
 		return AE_OK;
 
 	if (acpi_match_device_ids(dev, ids) == 0)
+<<<<<<< HEAD
 		if (acpi_create_platform_device(dev, NULL))
+=======
+		if (!IS_ERR_OR_NULL(acpi_create_platform_device(dev, NULL)))
+>>>>>>> rebase
 			dev_info(&dev->dev,
 				 "intel-vbtn: created platform device\n");
 

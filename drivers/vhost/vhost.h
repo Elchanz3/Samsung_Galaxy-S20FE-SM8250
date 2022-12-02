@@ -173,7 +173,10 @@ struct vhost_dev {
 	int iov_limit;
 	int weight;
 	int byte_weight;
+<<<<<<< HEAD
 	u64 kcov_handle;
+=======
+>>>>>>> rebase
 };
 
 bool vhost_exceeds_weight(struct vhost_virtqueue *vq, int pkts, int total_len);

@@ -192,8 +192,11 @@ enum {
 #define PCH_UART_HAL_LOOP		(PCH_UART_MCR_LOOP)
 #define PCH_UART_HAL_AFE		(PCH_UART_MCR_AFE)
 
+<<<<<<< HEAD
 #define PCI_VENDOR_ID_ROHM		0x10DB
 
+=======
+>>>>>>> rebase
 #define BOTH_EMPTY (UART_LSR_TEMT | UART_LSR_THRE)
 
 #define DEFAULT_UARTCLK   1843200 /*   1.8432 MHz */

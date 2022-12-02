@@ -21,6 +21,10 @@ extern void proc_flush_task(struct task_struct *);
 
 extern struct proc_dir_entry *proc_symlink(const char *,
 		struct proc_dir_entry *, const char *);
+<<<<<<< HEAD
+=======
+struct proc_dir_entry *_proc_mkdir(const char *, umode_t, struct proc_dir_entry *, void *, bool);
+>>>>>>> rebase
 extern struct proc_dir_entry *proc_mkdir(const char *, struct proc_dir_entry *);
 extern struct proc_dir_entry *proc_mkdir_data(const char *, umode_t,
 					      struct proc_dir_entry *, void *);
@@ -73,7 +77,10 @@ struct proc_dir_entry *proc_create_net_single_write(const char *name, umode_t mo
 						    int (*show)(struct seq_file *, void *),
 						    proc_write_t write,
 						    void *data);
+<<<<<<< HEAD
 extern struct pid *tgid_pidfd_to_pid(const struct file *file);
+=======
+>>>>>>> rebase
 
 #else /* CONFIG_PROC_FS */
 
@@ -90,6 +97,14 @@ static inline struct proc_dir_entry *proc_symlink(const char *name,
 static inline struct proc_dir_entry *proc_mkdir(const char *name,
 	struct proc_dir_entry *parent) {return NULL;}
 static inline struct proc_dir_entry *proc_create_mount_point(const char *name) { return NULL; }
+<<<<<<< HEAD
+=======
+static inline struct proc_dir_entry *_proc_mkdir(const char *name, umode_t mode,
+		struct proc_dir_entry *parent, void *data, bool force_lookup)
+{
+	return NULL;
+}
+>>>>>>> rebase
 static inline struct proc_dir_entry *proc_mkdir_data(const char *name,
 	umode_t mode, struct proc_dir_entry *parent, void *data) { return NULL; }
 static inline struct proc_dir_entry *proc_mkdir_mode(const char *name,
@@ -115,6 +130,7 @@ static inline int remove_proc_subtree(const char *name, struct proc_dir_entry *p
 #define proc_create_net(name, mode, parent, state_size, ops) ({NULL;})
 #define proc_create_net_single(name, mode, parent, show, data) ({NULL;})
 
+<<<<<<< HEAD
 static inline struct pid *tgid_pidfd_to_pid(const struct file *file)
 {
 	return ERR_PTR(-EBADF);
@@ -128,12 +144,20 @@ extern void proc_register_uid(kuid_t uid);
 static inline void proc_register_uid(kuid_t uid) {}
 #endif
 
+=======
+#endif /* CONFIG_PROC_FS */
+
+>>>>>>> rebase
 struct net;
 
 static inline struct proc_dir_entry *proc_net_mkdir(
 	struct net *net, const char *name, struct proc_dir_entry *parent)
 {
+<<<<<<< HEAD
 	return proc_mkdir_data(name, 0, parent, net);
+=======
+	return _proc_mkdir(name, 0, parent, net, true);
+>>>>>>> rebase
 }
 
 struct ns_common;

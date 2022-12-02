@@ -29,7 +29,11 @@
 #include <linux/string.h>
 #include <linux/mutex.h>
 #include <linux/slab.h>
+<<<<<<< HEAD
 #include <linux/kthread.h>
+=======
+
+>>>>>>> rebase
 #include <linux/dvb/dmx.h>
 
 #include <media/dvbdev.h>
@@ -83,12 +87,16 @@ enum dmxdev_state {
 
 struct dmxdev_feed {
 	u16 pid;
+<<<<<<< HEAD
 	struct dmx_indexing_params idx_params;
 	struct dmx_cipher_operations cipher_ops;
+=======
+>>>>>>> rebase
 	struct dmx_ts_feed *ts;
 	struct list_head next;
 };
 
+<<<<<<< HEAD
 struct dmxdev_sec_feed {
 	struct dmx_section_feed *feed;
 	struct dmx_cipher_operations cipher_ops;
@@ -164,6 +172,8 @@ struct ts_insertion_buffer {
 	int abort;
 };
 
+=======
+>>>>>>> rebase
 /**
  * struct dmxdev_filter - digital TV dmxdev filter
  *
@@ -207,7 +217,11 @@ struct dmxdev_filter {
 	union {
 		/* list of TS and PES feeds (struct dmxdev_feed) */
 		struct list_head ts;
+<<<<<<< HEAD
 		struct dmxdev_sec_feed sec;
+=======
+		struct dmx_section_feed *sec;
+>>>>>>> rebase
 	} feed;
 
 	union {
@@ -215,13 +229,17 @@ struct dmxdev_filter {
 		struct dmx_pes_filter_params pes;
 	} params;
 
+<<<<<<< HEAD
 	struct dmxdev_events_queue events;
 
+=======
+>>>>>>> rebase
 	enum dmxdev_type type;
 	enum dmxdev_state state;
 	struct dmxdev *dev;
 	struct dvb_ringbuffer buffer;
 	struct dvb_vb2_ctx vb2_ctx;
+<<<<<<< HEAD
 	struct ion_dma_buff_info buff_dma_info;
 	enum dmx_buffer_mode buffer_mode;
 
@@ -237,15 +255,23 @@ struct dmxdev_filter {
 	/* End-of-stream indication has been received */
 	int eos_state;
 
+=======
+
+	struct mutex mutex;
+
+>>>>>>> rebase
 	/* only for sections */
 	struct timer_list timer;
 	int todo;
 	u8 secheader[3];
+<<<<<<< HEAD
 
 	struct dmx_secure_mode sec_mode;
 
 	/* Decoder buffer(s) related */
 	struct dmx_decoder_buffers decoder_buffers;
+=======
+>>>>>>> rebase
 };
 
 /**
@@ -277,6 +303,7 @@ struct dmxdev {
 	int filternum;
 	int capabilities;
 
+<<<<<<< HEAD
 	enum dmx_playback_mode_t playback_mode;
 	enum dmx_source_t source;
 
@@ -285,10 +312,15 @@ struct dmxdev {
 	unsigned int dvr_in_exit:1;
 	unsigned int dvr_processing_input:1;
 
+=======
+	unsigned int may_do_mmap:1;
+	unsigned int exit:1;
+>>>>>>> rebase
 #define DMXDEV_CAP_DUPLEX 1
 	struct dmx_frontend *dvr_orig_fe;
 
 	struct dvb_ringbuffer dvr_buffer;
+<<<<<<< HEAD
 	struct ion_dma_buff_info dvr_buff_dma_info;
 	enum dmx_buffer_mode dvr_buffer_mode;
 	struct dmxdev_events_queue dvr_output_events;
@@ -301,12 +333,15 @@ struct dmxdev {
 	/* DVR commands (data feed / OOB command) queue */
 	struct dvb_ringbuffer dvr_cmd_buffer;
 
+=======
+>>>>>>> rebase
 #define DVR_BUFFER_SIZE (10*188*1024)
 
 	struct dvb_vb2_ctx dvr_vb2_ctx;
 
 	struct mutex mutex;
 	spinlock_t lock;
+<<<<<<< HEAD
 	spinlock_t dvr_in_lock;
 };
 
@@ -325,6 +360,10 @@ struct dvr_command {
 
 #define DVR_CMDS_BUFFER_SIZE (sizeof(struct dvr_command)*500)
 
+=======
+};
+
+>>>>>>> rebase
 /**
  * dvb_dmxdev_init - initializes a digital TV demux and registers both demux
  *	and DVR devices.

@@ -1,6 +1,10 @@
 /* SPDX-License-Identifier: GPL-2.0 */
 /*
+<<<<<<< HEAD
  * Copyright (c) 2017-2019, The Linux Foundation. All rights reserved.
+=======
+ * Copyright (c) 2017-2018, The Linux Foundation. All rights reserved.
+>>>>>>> rebase
  *
  */
 
@@ -16,11 +20,15 @@
 #define LLCC_AUDIO       6
 #define LLCC_MDMHPGRW    7
 #define LLCC_MDM         8
+<<<<<<< HEAD
 #define LLCC_MDMHW       9
+=======
+>>>>>>> rebase
 #define LLCC_CMPT        10
 #define LLCC_GPUHTW      11
 #define LLCC_GPU         12
 #define LLCC_MMUHWT      13
+<<<<<<< HEAD
 #define LLCC_SENSOR      14
 #define LLCC_CMPTDMA     15
 #define LLCC_DISP        16
@@ -39,6 +47,14 @@
 #define LLCC_APTCM       30
 #define LLCC_WRTCH       31
 #define LLCC_CVPFW       32
+=======
+#define LLCC_CMPTDMA     15
+#define LLCC_DISP        16
+#define LLCC_VIDFW       17
+#define LLCC_MDMHPFX     20
+#define LLCC_MDMPNG      21
+#define LLCC_AUDHW       22
+>>>>>>> rebase
 
 /**
  * llcc_slice_desc - Cache slice descriptor
@@ -62,7 +78,10 @@ struct llcc_slice_desc {
  * @cache_mode: mode of the llcc slice
  * @probe_target_ways: Probe only reserved and bonus ways on a cache miss
  * @dis_cap_alloc: Disable capacity based allocation
+<<<<<<< HEAD
  * @write_scid_en: Enables write cache support for a given scid.
+=======
+>>>>>>> rebase
  * @retain_on_pc: Retain through power collapse
  * @activate_on_init: activate the slice on init
  */
@@ -77,19 +96,27 @@ struct llcc_slice_config {
 	u32 cache_mode;
 	u32 probe_target_ways;
 	bool dis_cap_alloc;
+<<<<<<< HEAD
 	bool write_scid_en;
+=======
+>>>>>>> rebase
 	bool retain_on_pc;
 	bool activate_on_init;
 };
 
 /**
  * llcc_drv_data - Data associated with the llcc driver
+<<<<<<< HEAD
  * @regmap: regmap associated with the llcc banks
  * @bcast_regmap: regmap associated with broadcast llcc bank
+=======
+ * @regmap: regmap associated with the llcc device
+>>>>>>> rebase
  * @cfg: pointer to the data structure for slice configuration
  * @lock: mutex associated with each slice
  * @cfg_size: size of the config data table
  * @max_slices: max slices as read from device tree
+<<<<<<< HEAD
  * @num_banks: Number of llcc banks
  * @bitmap: Bit map to track the active slice ids
  * @offsets: Pointer to the bank offsets array
@@ -98,10 +125,20 @@ struct llcc_slice_config {
 struct llcc_drv_data {
 	struct regmap *regmap;
 	struct regmap *bcast_regmap;
+=======
+ * @bcast_off: Offset of the broadcast bank
+ * @num_banks: Number of llcc banks
+ * @bitmap: Bit map to track the active slice ids
+ * @offsets: Pointer to the bank offsets array
+ */
+struct llcc_drv_data {
+	struct regmap *regmap;
+>>>>>>> rebase
 	const struct llcc_slice_config *cfg;
 	struct mutex lock;
 	u32 cfg_size;
 	u32 max_slices;
+<<<<<<< HEAD
 	u32 num_banks;
 	unsigned long *bitmap;
 	u32 *offsets;
@@ -131,6 +168,12 @@ struct llcc_edac_reg_data {
 	u32 ways_mask;
 	u8  count_shift;
 	u8  ways_shift;
+=======
+	u32 bcast_off;
+	u32 num_banks;
+	unsigned long *bitmap;
+	u32 *offsets;
+>>>>>>> rebase
 };
 
 #if IS_ENABLED(CONFIG_QCOM_LLCC)

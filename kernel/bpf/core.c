@@ -33,6 +33,10 @@
 #include <linux/rcupdate.h>
 #include <linux/perf_event.h>
 
+<<<<<<< HEAD
+=======
+#include <asm/barrier.h>
+>>>>>>> rebase
 #include <asm/unaligned.h>
 
 /* Registers */
@@ -65,11 +69,21 @@ void *bpf_internal_load_pointer_neg_helper(const struct sk_buff *skb, int k, uns
 {
 	u8 *ptr = NULL;
 
+<<<<<<< HEAD
 	if (k >= SKF_NET_OFF)
 		ptr = skb_network_header(skb) + k - SKF_NET_OFF;
 	else if (k >= SKF_LL_OFF)
 		ptr = skb_mac_header(skb) + k - SKF_LL_OFF;
 
+=======
+	if (k >= SKF_NET_OFF) {
+		ptr = skb_network_header(skb) + k - SKF_NET_OFF;
+	} else if (k >= SKF_LL_OFF) {
+		if (unlikely(!skb_mac_header_was_set(skb)))
+			return NULL;
+		ptr = skb_mac_header(skb) + k - SKF_LL_OFF;
+	}
+>>>>>>> rebase
 	if (ptr >= skb->head && ptr + size <= skb_tail_pointer(skb))
 		return ptr;
 
@@ -371,6 +385,10 @@ int bpf_jit_enable   __read_mostly = IS_BUILTIN(CONFIG_BPF_JIT_ALWAYS_ON);
 int bpf_jit_harden   __read_mostly;
 int bpf_jit_kallsyms __read_mostly;
 long bpf_jit_limit   __read_mostly;
+<<<<<<< HEAD
+=======
+long bpf_jit_limit_max __read_mostly;
+>>>>>>> rebase
 
 static __always_inline void
 bpf_get_prog_addr_region(const struct bpf_prog *prog,
@@ -597,7 +615,12 @@ u64 __weak bpf_jit_alloc_exec_limit(void)
 static int __init bpf_jit_charge_init(void)
 {
 	/* Only used as heuristic here to derive limit. */
+<<<<<<< HEAD
 	bpf_jit_limit = min_t(u64, round_up(bpf_jit_alloc_exec_limit() >> 2,
+=======
+	bpf_jit_limit_max = bpf_jit_alloc_exec_limit();
+	bpf_jit_limit = min_t(u64, round_up(bpf_jit_limit_max >> 2,
+>>>>>>> rebase
 					    PAGE_SIZE), LONG_MAX);
 	return 0;
 }
@@ -621,6 +644,7 @@ static void bpf_jit_uncharge_modmem(u32 pages)
 	atomic_long_sub(pages, &bpf_jit_current);
 }
 
+<<<<<<< HEAD
 #if IS_ENABLED(CONFIG_BPF_JIT) && IS_ENABLED(CONFIG_CFI_CLANG)
 bool __weak arch_bpf_jit_check_func(const struct bpf_prog *prog)
 {
@@ -629,6 +653,8 @@ bool __weak arch_bpf_jit_check_func(const struct bpf_prog *prog)
 EXPORT_SYMBOL(arch_bpf_jit_check_func);
 #endif
 
+=======
+>>>>>>> rebase
 struct bpf_binary_header *
 bpf_jit_binary_alloc(unsigned int proglen, u8 **image_ptr,
 		     unsigned int alignment,
@@ -655,7 +681,10 @@ bpf_jit_binary_alloc(unsigned int proglen, u8 **image_ptr,
 	/* Fill space with illegal/arch-dep instructions. */
 	bpf_fill_ill_insns(hdr, size);
 
+<<<<<<< HEAD
 	bpf_jit_set_header_magic(hdr);
+=======
+>>>>>>> rebase
 	hdr->pages = pages;
 	hole = min_t(unsigned int, size - (proglen + sizeof(*hdr)),
 		     PAGE_SIZE - sizeof(*hdr));
@@ -714,9 +743,12 @@ static int bpf_jit_blind_insn(const struct bpf_insn *from,
 	 * below.
 	 *
 	 * Constant blinding is only used by JITs, not in the interpreter.
+<<<<<<< HEAD
 	 * The interpreter uses AX in some occasions as a local temporary
 	 * register e.g. in DIV or MOD instructions.
 	 *
+=======
+>>>>>>> rebase
 	 * In restricted circumstances, the verifier can also use the AX
 	 * register for rewrites as long as they do not interfere with
 	 * the above cases!
@@ -1062,10 +1094,18 @@ static u64 ___bpf_prog_run(u64 *regs, const struct bpf_insn *insn, u64 *stack)
 		/* Non-UAPI available opcodes. */
 		[BPF_JMP | BPF_CALL_ARGS] = &&JMP_CALL_ARGS,
 		[BPF_JMP | BPF_TAIL_CALL] = &&JMP_TAIL_CALL,
+<<<<<<< HEAD
+=======
+		[BPF_ST  | BPF_NOSPEC] = &&ST_NOSPEC,
+>>>>>>> rebase
 	};
 #undef BPF_INSN_3_LBL
 #undef BPF_INSN_2_LBL
 	u32 tail_call_cnt = 0;
+<<<<<<< HEAD
+=======
+	u64 tmp;
+>>>>>>> rebase
 
 #define CONT	 ({ insn++; goto select_insn; })
 #define CONT_JMP ({ insn++; goto select_insn; })
@@ -1126,6 +1166,7 @@ select_insn:
 		(*(s64 *) &DST) >>= IMM;
 		CONT;
 	ALU64_MOD_X:
+<<<<<<< HEAD
 		div64_u64_rem(DST, SRC, &AX);
 		DST = AX;
 		CONT;
@@ -1140,22 +1181,50 @@ select_insn:
 	ALU_MOD_K:
 		AX = (u32) DST;
 		DST = do_div(AX, (u32) IMM);
+=======
+		div64_u64_rem(DST, SRC, &tmp);
+		DST = tmp;
+		CONT;
+	ALU_MOD_X:
+		tmp = (u32) DST;
+		DST = do_div(tmp, (u32) SRC);
+		CONT;
+	ALU64_MOD_K:
+		div64_u64_rem(DST, IMM, &tmp);
+		DST = tmp;
+		CONT;
+	ALU_MOD_K:
+		tmp = (u32) DST;
+		DST = do_div(tmp, (u32) IMM);
+>>>>>>> rebase
 		CONT;
 	ALU64_DIV_X:
 		DST = div64_u64(DST, SRC);
 		CONT;
 	ALU_DIV_X:
+<<<<<<< HEAD
 		AX = (u32) DST;
 		do_div(AX, (u32) SRC);
 		DST = (u32) AX;
+=======
+		tmp = (u32) DST;
+		do_div(tmp, (u32) SRC);
+		DST = (u32) tmp;
+>>>>>>> rebase
 		CONT;
 	ALU64_DIV_K:
 		DST = div64_u64(DST, IMM);
 		CONT;
 	ALU_DIV_K:
+<<<<<<< HEAD
 		AX = (u32) DST;
 		do_div(AX, (u32) IMM);
 		DST = (u32) AX;
+=======
+		tmp = (u32) DST;
+		do_div(tmp, (u32) IMM);
+		DST = (u32) tmp;
+>>>>>>> rebase
 		CONT;
 	ALU_END_TO_BE:
 		switch (IMM) {
@@ -1367,7 +1436,25 @@ out:
 	JMP_EXIT:
 		return BPF_R0;
 
+<<<<<<< HEAD
 	/* STX and ST and LDX*/
+=======
+	/* ST, STX and LDX*/
+	ST_NOSPEC:
+		/* Speculation barrier for mitigating Speculative Store Bypass.
+		 * In case of arm64, we rely on the firmware mitigation as
+		 * controlled via the ssbd kernel parameter. Whenever the
+		 * mitigation is enabled, it works for all of the kernel code
+		 * with no need to provide any additional instructions here.
+		 * In case of x86, we use 'lfence' insn for mitigation. We
+		 * reuse preexisting logic from Spectre v1 mitigation that
+		 * happens to produce the required code on x86 for v4 as well.
+		 */
+#ifdef CONFIG_X86
+		barrier_nospec();
+#endif
+		CONT;
+>>>>>>> rebase
 #define LDST(SIZEOP, SIZE)						\
 	STX_MEM_##SIZEOP:						\
 		*(SIZE *)(unsigned long) (DST + insn->off) = SRC;	\

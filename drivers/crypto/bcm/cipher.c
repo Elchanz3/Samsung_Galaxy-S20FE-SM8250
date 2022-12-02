@@ -52,7 +52,11 @@
 
 /* ================= Device Structure ================== */
 
+<<<<<<< HEAD
 struct device_private iproc_priv;
+=======
+struct bcm_device_private iproc_priv;
+>>>>>>> rebase
 
 /* ==================== Parameters ===================== */
 
@@ -2980,7 +2984,10 @@ static int aead_gcm_ccm_setkey(struct crypto_aead *cipher,
 
 	ctx->enckeylen = keylen;
 	ctx->authkeylen = 0;
+<<<<<<< HEAD
 	memcpy(ctx->enckey, key, ctx->enckeylen);
+=======
+>>>>>>> rebase
 
 	switch (ctx->enckeylen) {
 	case AES_KEYSIZE_128:
@@ -2996,6 +3003,11 @@ static int aead_gcm_ccm_setkey(struct crypto_aead *cipher,
 		goto badkey;
 	}
 
+<<<<<<< HEAD
+=======
+	memcpy(ctx->enckey, key, ctx->enckeylen);
+
+>>>>>>> rebase
 	flow_log("  enckeylen:%u authkeylen:%u\n", ctx->enckeylen,
 		 ctx->authkeylen);
 	flow_dump("  enc: ", ctx->enckey, ctx->enckeylen);
@@ -3056,6 +3068,13 @@ static int aead_gcm_esp_setkey(struct crypto_aead *cipher,
 	struct iproc_ctx_s *ctx = crypto_aead_ctx(cipher);
 
 	flow_log("%s\n", __func__);
+<<<<<<< HEAD
+=======
+
+	if (keylen < GCM_ESP_SALT_SIZE)
+		return -EINVAL;
+
+>>>>>>> rebase
 	ctx->salt_len = GCM_ESP_SALT_SIZE;
 	ctx->salt_offset = GCM_ESP_SALT_OFFSET;
 	memcpy(ctx->salt, key + keylen - GCM_ESP_SALT_SIZE, GCM_ESP_SALT_SIZE);
@@ -3084,6 +3103,13 @@ static int rfc4543_gcm_esp_setkey(struct crypto_aead *cipher,
 	struct iproc_ctx_s *ctx = crypto_aead_ctx(cipher);
 
 	flow_log("%s\n", __func__);
+<<<<<<< HEAD
+=======
+
+	if (keylen < GCM_ESP_SALT_SIZE)
+		return -EINVAL;
+
+>>>>>>> rebase
 	ctx->salt_len = GCM_ESP_SALT_SIZE;
 	ctx->salt_offset = GCM_ESP_SALT_OFFSET;
 	memcpy(ctx->salt, key + keylen - GCM_ESP_SALT_SIZE, GCM_ESP_SALT_SIZE);
@@ -3113,6 +3139,13 @@ static int aead_ccm_esp_setkey(struct crypto_aead *cipher,
 	struct iproc_ctx_s *ctx = crypto_aead_ctx(cipher);
 
 	flow_log("%s\n", __func__);
+<<<<<<< HEAD
+=======
+
+	if (keylen < CCM_ESP_SALT_SIZE)
+		return -EINVAL;
+
+>>>>>>> rebase
 	ctx->salt_len = CCM_ESP_SALT_SIZE;
 	ctx->salt_offset = CCM_ESP_SALT_OFFSET;
 	memcpy(ctx->salt, key + keylen - CCM_ESP_SALT_SIZE, CCM_ESP_SALT_SIZE);

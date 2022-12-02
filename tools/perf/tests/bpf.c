@@ -1,5 +1,9 @@
 #include <errno.h>
 #include <stdio.h>
+<<<<<<< HEAD
+=======
+#include <stdlib.h>
+>>>>>>> rebase
 #include <sys/epoll.h>
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -277,6 +281,10 @@ static int __test__bpf(int idx)
 	}
 
 out:
+<<<<<<< HEAD
+=======
+	free(obj_buf);
+>>>>>>> rebase
 	bpf__clear();
 	return ret;
 }

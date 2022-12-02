@@ -546,6 +546,13 @@ static int calc_digits(int num)
 {
 	int count = 0;
 
+<<<<<<< HEAD
+=======
+	/* It takes a digit to represent zero */
+	if (!num)
+		return 1;
+
+>>>>>>> rebase
 	while (num != 0) {
 		num /= 10;
 		count++;

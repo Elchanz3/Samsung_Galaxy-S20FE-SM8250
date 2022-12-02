@@ -309,7 +309,11 @@ unsigned long erofs_shrink_scan(struct shrinker *shrink,
 		sbi->shrinker_run_no = run_no;
 
 #ifdef CONFIG_EROFS_FS_ZIP
+<<<<<<< HEAD
 		freed += erofs_shrink_workstation(sbi, nr, false);
+=======
+		freed += erofs_shrink_workstation(sbi, nr - freed, false);
+>>>>>>> rebase
 #endif
 
 		spin_lock(&erofs_sb_list_lock);

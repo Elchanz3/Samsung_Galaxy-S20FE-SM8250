@@ -807,7 +807,11 @@ static int nand_davinci_probe(struct platform_device *pdev)
 
 	/* Scan to find existence of the device(s) */
 	info->chip.dummy_controller.ops = &davinci_nand_controller_ops;
+<<<<<<< HEAD
 	ret = nand_scan(mtd, pdata->mask_chipsel ? 2 : 1);
+=======
+	ret = nand_scan(&info->chip, pdata->mask_chipsel ? 2 : 1);
+>>>>>>> rebase
 	if (ret < 0) {
 		dev_dbg(&pdev->dev, "no NAND chip(s) found\n");
 		return ret;
@@ -841,7 +845,11 @@ static int nand_davinci_remove(struct platform_device *pdev)
 		ecc4_busy = false;
 	spin_unlock_irq(&davinci_nand_lock);
 
+<<<<<<< HEAD
 	nand_release(nand_to_mtd(&info->chip));
+=======
+	nand_release(&info->chip);
+>>>>>>> rebase
 
 	return 0;
 }

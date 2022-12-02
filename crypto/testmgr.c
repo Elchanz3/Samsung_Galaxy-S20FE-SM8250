@@ -2410,6 +2410,7 @@ static int alg_test_null(const struct alg_test_desc *desc,
 /* Please keep this list sorted by algorithm name. */
 static const struct alg_test_desc alg_test_descs[] = {
 	{
+<<<<<<< HEAD
 		.alg = "adiantum(xchacha12,aes)",
 		.test = alg_test_skcipher,
 		.suite = {
@@ -2422,6 +2423,8 @@ static const struct alg_test_desc alg_test_descs[] = {
 			.cipher = __VECS(adiantum_xchacha20_aes_tv_template)
 		},
 	}, {
+=======
+>>>>>>> rebase
 		.alg = "aegis128",
 		.test = alg_test_aead,
 		.suite = {
@@ -3305,12 +3308,15 @@ static const struct alg_test_desc alg_test_descs[] = {
 			}
 		}
 	}, {
+<<<<<<< HEAD
 		.alg = "nhpoly1305",
 		.test = alg_test_hash,
 		.suite = {
 			.hash = __VECS(nhpoly1305_tv_template)
 		}
 	}, {
+=======
+>>>>>>> rebase
 		.alg = "ofb(aes)",
 		.test = alg_test_skcipher,
 		.fips_allowed = 1,
@@ -3564,6 +3570,7 @@ static const struct alg_test_desc alg_test_descs[] = {
 			.hash = __VECS(aes_xcbc128_tv_template)
 		}
 	}, {
+<<<<<<< HEAD
 		.alg = "xchacha12",
 		.test = alg_test_skcipher,
 		.suite = {
@@ -3576,6 +3583,8 @@ static const struct alg_test_desc alg_test_descs[] = {
 			.cipher = __VECS(xchacha20_tv_template)
 		},
 	}, {
+=======
+>>>>>>> rebase
 		.alg = "xts(aes)",
 		.test = alg_test_skcipher,
 		.fips_allowed = 1,

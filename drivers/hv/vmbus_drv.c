@@ -43,6 +43,10 @@
 #include <linux/kdebug.h>
 #include <linux/efi.h>
 #include <linux/random.h>
+<<<<<<< HEAD
+=======
+#include <linux/kernel.h>
+>>>>>>> rebase
 #include "hyperv_vmbus.h"
 
 struct vmbus_dynid {
@@ -58,14 +62,44 @@ static int hyperv_cpuhp_online;
 
 static void *hv_panic_page;
 
+<<<<<<< HEAD
+=======
+/*
+ * Boolean to control whether to report panic messages over Hyper-V.
+ *
+ * It can be set via /proc/sys/kernel/hyperv/record_panic_msg
+ */
+static int sysctl_record_panic_msg = 1;
+
+static int hyperv_report_reg(void)
+{
+	return !sysctl_record_panic_msg || !hv_panic_page;
+}
+
+>>>>>>> rebase
 static int hyperv_panic_event(struct notifier_block *nb, unsigned long val,
 			      void *args)
 {
 	struct pt_regs *regs;
 
+<<<<<<< HEAD
 	regs = current_pt_regs();
 
 	hyperv_report_panic(regs, val);
+=======
+	vmbus_initiate_unload(true);
+
+	/*
+	 * Hyper-V should be notified only once about a panic.  If we will be
+	 * doing hyperv_report_panic_msg() later with kmsg data, don't do
+	 * the notification here.
+	 */
+	if (ms_hyperv.misc_features & HV_FEATURE_GUEST_CRASH_MSR_AVAILABLE
+	    && hyperv_report_reg()) {
+		regs = current_pt_regs();
+		hyperv_report_panic(regs, val, false);
+	}
+>>>>>>> rebase
 	return NOTIFY_DONE;
 }
 
@@ -75,7 +109,17 @@ static int hyperv_die_event(struct notifier_block *nb, unsigned long val,
 	struct die_args *die = (struct die_args *)args;
 	struct pt_regs *regs = die->regs;
 
+<<<<<<< HEAD
 	hyperv_report_panic(regs, val);
+=======
+	/*
+	 * Hyper-V should be notified only once about a panic.  If we will be
+	 * doing hyperv_report_panic_msg() later with kmsg data, don't do
+	 * the notification here.
+	 */
+	if (hyperv_report_reg())
+		hyperv_report_panic(regs, val, true);
+>>>>>>> rebase
 	return NOTIFY_DONE;
 }
 
@@ -581,7 +625,40 @@ static struct attribute *vmbus_dev_attrs[] = {
 	&dev_attr_device.attr,
 	NULL,
 };
+<<<<<<< HEAD
 ATTRIBUTE_GROUPS(vmbus_dev);
+=======
+
+/*
+ * Device-level attribute_group callback function. Returns the permission for
+ * each attribute, and returns 0 if an attribute is not visible.
+ */
+static umode_t vmbus_dev_attr_is_visible(struct kobject *kobj,
+					 struct attribute *attr, int idx)
+{
+	struct device *dev = kobj_to_dev(kobj);
+	const struct hv_device *hv_dev = device_to_hv_device(dev);
+
+	/* Hide the monitor attributes if the monitor mechanism is not used. */
+	if (!hv_dev->channel->offermsg.monitor_allocated &&
+	    (attr == &dev_attr_monitor_id.attr ||
+	     attr == &dev_attr_server_monitor_pending.attr ||
+	     attr == &dev_attr_client_monitor_pending.attr ||
+	     attr == &dev_attr_server_monitor_latency.attr ||
+	     attr == &dev_attr_client_monitor_latency.attr ||
+	     attr == &dev_attr_server_monitor_conn_id.attr ||
+	     attr == &dev_attr_client_monitor_conn_id.attr))
+		return 0;
+
+	return attr->mode;
+}
+
+static const struct attribute_group vmbus_dev_group = {
+	.attrs = vmbus_dev_attrs,
+	.is_visible = vmbus_dev_attr_is_visible
+};
+__ATTRIBUTE_GROUPS(vmbus_dev);
+>>>>>>> rebase
 
 /*
  * vmbus_uevent - add uevent for our device
@@ -911,6 +988,13 @@ void vmbus_on_msg_dpc(unsigned long data)
 	}
 
 	entry = &channel_message_table[hdr->msgtype];
+<<<<<<< HEAD
+=======
+
+	if (!entry->message_handler)
+		goto msg_handled;
+
+>>>>>>> rebase
 	if (entry->handler_type	== VMHT_BLOCKING) {
 		ctx = kmalloc(sizeof(*ctx), GFP_ATOMIC);
 		if (ctx == NULL)
@@ -1085,6 +1169,7 @@ static void vmbus_isr(void)
 			tasklet_schedule(&hv_cpu->msg_dpc);
 	}
 
+<<<<<<< HEAD
 	add_interrupt_randomness(HYPERVISOR_CALLBACK_VECTOR, 0);
 }
 
@@ -1096,6 +1181,12 @@ static void vmbus_isr(void)
 static int sysctl_record_panic_msg = 1;
 
 /*
+=======
+	add_interrupt_randomness(HYPERVISOR_CALLBACK_VECTOR);
+}
+
+/*
+>>>>>>> rebase
  * Callback from kmsg_dump. Grab as much as possible from the end of the kmsg
  * buffer and call into Hyper-V to transfer the data.
  */
@@ -1219,19 +1310,42 @@ static int vmbus_bus_init(void)
 			hv_panic_page = (void *)get_zeroed_page(GFP_KERNEL);
 			if (hv_panic_page) {
 				ret = kmsg_dump_register(&hv_kmsg_dumper);
+<<<<<<< HEAD
 				if (ret)
 					pr_err("Hyper-V: kmsg dump register "
 						"error 0x%x\n", ret);
+=======
+				if (ret) {
+					pr_err("Hyper-V: kmsg dump register "
+						"error 0x%x\n", ret);
+					free_page(
+					    (unsigned long)hv_panic_page);
+					hv_panic_page = NULL;
+				}
+>>>>>>> rebase
 			} else
 				pr_err("Hyper-V: panic message page memory "
 					"allocation failed");
 		}
 
 		register_die_notifier(&hyperv_die_block);
+<<<<<<< HEAD
 		atomic_notifier_chain_register(&panic_notifier_list,
 					       &hyperv_panic_block);
 	}
 
+=======
+	}
+
+	/*
+	 * Always register the panic notifier because we need to unload
+	 * the VMbus channel connection to prevent any VMbus
+	 * activity after the VM panics.
+	 */
+	atomic_notifier_chain_register(&panic_notifier_list,
+			       &hyperv_panic_block);
+
+>>>>>>> rebase
 	vmbus_request_offers();
 
 	return 0;
@@ -1243,7 +1357,10 @@ err_alloc:
 	hv_remove_vmbus_irq();
 
 	bus_unregister(&hv_bus);
+<<<<<<< HEAD
 	free_page((unsigned long)hv_panic_page);
+=======
+>>>>>>> rebase
 	unregister_sysctl_table(hv_ctl_table_hdr);
 	hv_ctl_table_hdr = NULL;
 	return ret;
@@ -1450,10 +1567,41 @@ static struct attribute *vmbus_chan_attrs[] = {
 	NULL
 };
 
+<<<<<<< HEAD
 static struct kobj_type vmbus_chan_ktype = {
 	.sysfs_ops = &vmbus_chan_sysfs_ops,
 	.release = vmbus_chan_release,
 	.default_attrs = vmbus_chan_attrs,
+=======
+/*
+ * Channel-level attribute_group callback function. Returns the permission for
+ * each attribute, and returns 0 if an attribute is not visible.
+ */
+static umode_t vmbus_chan_attr_is_visible(struct kobject *kobj,
+					  struct attribute *attr, int idx)
+{
+	const struct vmbus_channel *channel =
+		container_of(kobj, struct vmbus_channel, kobj);
+
+	/* Hide the monitor attributes if the monitor mechanism is not used. */
+	if (!channel->offermsg.monitor_allocated &&
+	    (attr == &chan_attr_pending.attr ||
+	     attr == &chan_attr_latency.attr ||
+	     attr == &chan_attr_monitor_id.attr))
+		return 0;
+
+	return attr->mode;
+}
+
+static struct attribute_group vmbus_chan_group = {
+	.attrs = vmbus_chan_attrs,
+	.is_visible = vmbus_chan_attr_is_visible
+};
+
+static struct kobj_type vmbus_chan_ktype = {
+	.sysfs_ops = &vmbus_chan_sysfs_ops,
+	.release = vmbus_chan_release,
+>>>>>>> rebase
 };
 
 /*
@@ -1461,6 +1609,10 @@ static struct kobj_type vmbus_chan_ktype = {
  */
 int vmbus_add_channel_kobj(struct hv_device *dev, struct vmbus_channel *channel)
 {
+<<<<<<< HEAD
+=======
+	const struct device *device = &dev->device;
+>>>>>>> rebase
 	struct kobject *kobj = &channel->kobj;
 	u32 relid = channel->offermsg.child_relid;
 	int ret;
@@ -1468,8 +1620,27 @@ int vmbus_add_channel_kobj(struct hv_device *dev, struct vmbus_channel *channel)
 	kobj->kset = dev->channels_kset;
 	ret = kobject_init_and_add(kobj, &vmbus_chan_ktype, NULL,
 				   "%u", relid);
+<<<<<<< HEAD
 	if (ret)
 		return ret;
+=======
+	if (ret) {
+		kobject_put(kobj);
+		return ret;
+	}
+
+	ret = sysfs_create_group(kobj, &vmbus_chan_group);
+
+	if (ret) {
+		/*
+		 * The calling functions' error handling paths will cleanup the
+		 * empty channel directory.
+		 */
+		kobject_put(kobj);
+		dev_err(device, "Unable to set up channel sysfs files\n");
+		return ret;
+	}
+>>>>>>> rebase
 
 	kobject_uevent(kobj, KOBJ_ADD);
 
@@ -1477,6 +1648,17 @@ int vmbus_add_channel_kobj(struct hv_device *dev, struct vmbus_channel *channel)
 }
 
 /*
+<<<<<<< HEAD
+=======
+ * vmbus_remove_channel_attr_group - remove the channel's attribute group
+ */
+void vmbus_remove_channel_attr_group(struct vmbus_channel *channel)
+{
+	sysfs_remove_group(&channel->kobj, &vmbus_chan_group);
+}
+
+/*
+>>>>>>> rebase
  * vmbus_device_create - Creates and registers a new child device
  * on the vmbus.
  */
@@ -1736,7 +1918,11 @@ int vmbus_allocate_mmio(struct resource **new, struct hv_device *device_obj,
 			bool fb_overlap_ok)
 {
 	struct resource *iter, *shadow;
+<<<<<<< HEAD
 	resource_size_t range_min, range_max, start;
+=======
+	resource_size_t range_min, range_max, start, end;
+>>>>>>> rebase
 	const char *dev_n = dev_name(&device_obj->device);
 	int retval;
 
@@ -1771,6 +1957,17 @@ int vmbus_allocate_mmio(struct resource **new, struct hv_device *device_obj,
 		range_max = iter->end;
 		start = (range_min + align - 1) & ~(align - 1);
 		for (; start + size - 1 <= range_max; start += align) {
+<<<<<<< HEAD
+=======
+			end = start + size - 1;
+
+			/* Skip the whole fb_mmio region if not fb_overlap_ok */
+			if (!fb_overlap_ok && fb_mmio &&
+			    (((start >= fb_mmio->start) && (start <= fb_mmio->end)) ||
+			     ((end >= fb_mmio->start) && (end <= fb_mmio->end))))
+				continue;
+
+>>>>>>> rebase
 			shadow = __request_region(iter, start, size, NULL,
 						  IORESOURCE_BUSY);
 			if (!shadow)
@@ -1875,7 +2072,10 @@ static void hv_kexec_handler(void)
 {
 	hv_synic_clockevents_cleanup();
 	vmbus_initiate_unload(false);
+<<<<<<< HEAD
 	vmbus_connection.conn_state = DISCONNECTED;
+=======
+>>>>>>> rebase
 	/* Make sure conn_state is set as hv_synic_cleanup checks for it */
 	mb();
 	cpuhp_remove_state(hyperv_cpuhp_online);
@@ -1890,7 +2090,10 @@ static void hv_crash_handler(struct pt_regs *regs)
 	 * doing the cleanup for current CPU only. This should be sufficient
 	 * for kdump.
 	 */
+<<<<<<< HEAD
 	vmbus_connection.conn_state = DISCONNECTED;
+=======
+>>>>>>> rebase
 	hv_synic_cleanup(smp_processor_id());
 	hyperv_cleanup();
 };
@@ -1954,10 +2157,22 @@ static void __exit vmbus_exit(void)
 	if (ms_hyperv.misc_features & HV_FEATURE_GUEST_CRASH_MSR_AVAILABLE) {
 		kmsg_dump_unregister(&hv_kmsg_dumper);
 		unregister_die_notifier(&hyperv_die_block);
+<<<<<<< HEAD
 		atomic_notifier_chain_unregister(&panic_notifier_list,
 						 &hyperv_panic_block);
 	}
 
+=======
+	}
+
+	/*
+	 * The panic notifier is always registered, hence we should
+	 * also unconditionally unregister it here as well.
+	 */
+	atomic_notifier_chain_unregister(&panic_notifier_list,
+					 &hyperv_panic_block);
+
+>>>>>>> rebase
 	free_page((unsigned long)hv_panic_page);
 	unregister_sysctl_table(hv_ctl_table_hdr);
 	hv_ctl_table_hdr = NULL;

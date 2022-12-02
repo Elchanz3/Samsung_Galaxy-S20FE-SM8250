@@ -451,7 +451,11 @@ static unsigned long shmem_unused_huge_shrink(struct shmem_sb_info *sbinfo,
 	struct shmem_inode_info *info;
 	struct page *page;
 	unsigned long batch = sc ? sc->nr_to_scan : 128;
+<<<<<<< HEAD
 	int removed = 0, split = 0;
+=======
+	int split = 0;
+>>>>>>> rebase
 
 	if (list_empty(&sbinfo->shrinklist))
 		return SHRINK_STOP;
@@ -466,7 +470,10 @@ static unsigned long shmem_unused_huge_shrink(struct shmem_sb_info *sbinfo,
 		/* inode is about to be evicted */
 		if (!inode) {
 			list_del_init(&info->shrinklist);
+<<<<<<< HEAD
 			removed++;
+=======
+>>>>>>> rebase
 			goto next;
 		}
 
@@ -474,12 +481,19 @@ static unsigned long shmem_unused_huge_shrink(struct shmem_sb_info *sbinfo,
 		if (round_up(inode->i_size, PAGE_SIZE) ==
 				round_up(inode->i_size, HPAGE_PMD_SIZE)) {
 			list_move(&info->shrinklist, &to_remove);
+<<<<<<< HEAD
 			removed++;
+=======
+>>>>>>> rebase
 			goto next;
 		}
 
 		list_move(&info->shrinklist, &list);
 next:
+<<<<<<< HEAD
+=======
+		sbinfo->shrinklist_len--;
+>>>>>>> rebase
 		if (!--batch)
 			break;
 	}
@@ -499,7 +513,11 @@ next:
 		inode = &info->vfs_inode;
 
 		if (nr_to_split && split >= nr_to_split)
+<<<<<<< HEAD
 			goto leave;
+=======
+			goto move_back;
+>>>>>>> rebase
 
 		page = find_get_page(inode->i_mapping,
 				(inode->i_size & HPAGE_PMD_MASK) >> PAGE_SHIFT);
@@ -513,28 +531,44 @@ next:
 		}
 
 		/*
+<<<<<<< HEAD
 		 * Leave the inode on the list if we failed to lock
 		 * the page at this time.
+=======
+		 * Move the inode on the list back to shrinklist if we failed
+		 * to lock the page at this time.
+>>>>>>> rebase
 		 *
 		 * Waiting for the lock may lead to deadlock in the
 		 * reclaim path.
 		 */
 		if (!trylock_page(page)) {
 			put_page(page);
+<<<<<<< HEAD
 			goto leave;
+=======
+			goto move_back;
+>>>>>>> rebase
 		}
 
 		ret = split_huge_page(page);
 		unlock_page(page);
 		put_page(page);
 
+<<<<<<< HEAD
 		/* If split failed leave the inode on the list */
 		if (ret)
 			goto leave;
+=======
+		/* If split failed move the inode on the list back to shrinklist */
+		if (ret)
+			goto move_back;
+>>>>>>> rebase
 
 		split++;
 drop:
 		list_del_init(&info->shrinklist);
+<<<<<<< HEAD
 		removed++;
 leave:
 		iput(inode);
@@ -545,6 +579,24 @@ leave:
 	sbinfo->shrinklist_len -= removed;
 	spin_unlock(&sbinfo->shrinklist_lock);
 
+=======
+		goto put;
+move_back:
+		/*
+		 * Make sure the inode is either on the global list or deleted
+		 * from any local list before iput() since it could be deleted
+		 * in another thread once we put the inode (then the local list
+		 * is corrupted).
+		 */
+		spin_lock(&sbinfo->shrinklist_lock);
+		list_move(&info->shrinklist, &sbinfo->shrinklist);
+		sbinfo->shrinklist_len++;
+		spin_unlock(&sbinfo->shrinklist_lock);
+put:
+		iput(inode);
+	}
+
+>>>>>>> rebase
 	return split;
 }
 
@@ -2023,10 +2075,17 @@ static vm_fault_t shmem_fault(struct vm_fault *vmf)
 
 	sgp = SGP_CACHE;
 
+<<<<<<< HEAD
 	if ((vmf->vma_flags & VM_NOHUGEPAGE) ||
 	    test_bit(MMF_DISABLE_THP, &vma->vm_mm->flags))
 		sgp = SGP_NOHUGE;
 	else if (vmf->vma_flags & VM_HUGEPAGE)
+=======
+	if ((vma->vm_flags & VM_NOHUGEPAGE) ||
+	    test_bit(MMF_DISABLE_THP, &vma->vm_mm->flags))
+		sgp = SGP_NOHUGE;
+	else if (vma->vm_flags & VM_HUGEPAGE)
+>>>>>>> rebase
 		sgp = SGP_HUGE;
 
 	err = shmem_getpage_gfp(inode, vmf->pgoff, &vmf->page, sgp,
@@ -2149,7 +2208,15 @@ int shmem_lock(struct file *file, int lock, struct user_struct *user)
 	struct shmem_inode_info *info = SHMEM_I(inode);
 	int retval = -ENOMEM;
 
+<<<<<<< HEAD
 	spin_lock_irq(&info->lock);
+=======
+	/*
+	 * What serializes the accesses to info->flags?
+	 * ipc_lock_object() when called from shmctl_do_lock(),
+	 * no serialization needed when called from shm_destroy().
+	 */
+>>>>>>> rebase
 	if (lock && !(info->flags & VM_LOCKED)) {
 		if (!user_shm_lock(inode->i_size, user))
 			goto out_nomem;
@@ -2164,12 +2231,16 @@ int shmem_lock(struct file *file, int lock, struct user_struct *user)
 	retval = 0;
 
 out_nomem:
+<<<<<<< HEAD
 	spin_unlock_irq(&info->lock);
+=======
+>>>>>>> rebase
 	return retval;
 }
 
 static int shmem_mmap(struct file *file, struct vm_area_struct *vma)
 {
+<<<<<<< HEAD
 	struct shmem_inode_info *info = SHMEM_I(file_inode(file));
 
 	if (info->seals & F_SEAL_FUTURE_WRITE) {
@@ -2188,6 +2259,8 @@ static int shmem_mmap(struct file *file, struct vm_area_struct *vma)
 		vma->vm_flags &= ~(VM_MAYWRITE);
 	}
 
+=======
+>>>>>>> rebase
 	file_accessed(file);
 	vma->vm_ops = &shmem_vm_ops;
 	if (IS_ENABLED(CONFIG_TRANSPARENT_HUGE_PAGECACHE) &&
@@ -2286,8 +2359,23 @@ static int shmem_mfill_atomic_pte(struct mm_struct *dst_mm,
 	pgoff_t offset, max_off;
 
 	ret = -ENOMEM;
+<<<<<<< HEAD
 	if (!shmem_inode_acct_block(inode, 1))
 		goto out;
+=======
+	if (!shmem_inode_acct_block(inode, 1)) {
+		/*
+		 * We may have got a page, returned -ENOENT triggering a retry,
+		 * and now we find ourselves with -ENOMEM. Release the page, to
+		 * avoid a BUG_ON in our caller.
+		 */
+		if (unlikely(*pagep)) {
+			put_page(*pagep);
+			*pagep = NULL;
+		}
+		goto out;
+	}
+>>>>>>> rebase
 
 	if (!*pagep) {
 		page = shmem_alloc_page(gfp, info, pgoff);
@@ -2368,11 +2456,19 @@ static int shmem_mfill_atomic_pte(struct mm_struct *dst_mm,
 
 	lru_cache_add_anon(page);
 
+<<<<<<< HEAD
 	spin_lock(&info->lock);
 	info->alloced++;
 	inode->i_blocks += BLOCKS_PER_PAGE;
 	shmem_recalc_inode(inode);
 	spin_unlock(&info->lock);
+=======
+	spin_lock_irq(&info->lock);
+	info->alloced++;
+	inode->i_blocks += BLOCKS_PER_PAGE;
+	shmem_recalc_inode(inode);
+	spin_unlock_irq(&info->lock);
+>>>>>>> rebase
 
 	inc_mm_counter(dst_mm, mm_counter_file(page));
 	page_add_file_rmap(page, false);
@@ -2441,9 +2537,14 @@ shmem_write_begin(struct file *file, struct address_space *mapping,
 	pgoff_t index = pos >> PAGE_SHIFT;
 
 	/* i_mutex is held by caller */
+<<<<<<< HEAD
 	if (unlikely(info->seals & (F_SEAL_GROW |
 				   F_SEAL_WRITE | F_SEAL_FUTURE_WRITE))) {
 		if (info->seals & (F_SEAL_WRITE | F_SEAL_FUTURE_WRITE))
+=======
+	if (unlikely(info->seals & (F_SEAL_WRITE | F_SEAL_GROW))) {
+		if (info->seals & F_SEAL_WRITE)
+>>>>>>> rebase
 			return -EPERM;
 		if ((info->seals & F_SEAL_GROW) && pos + len > inode->i_size)
 			return -EPERM;
@@ -2706,7 +2807,11 @@ static long shmem_fallocate(struct file *file, int mode, loff_t offset,
 		DECLARE_WAIT_QUEUE_HEAD_ONSTACK(shmem_falloc_waitq);
 
 		/* protected by i_mutex */
+<<<<<<< HEAD
 		if (info->seals & (F_SEAL_WRITE | F_SEAL_FUTURE_WRITE)) {
+=======
+		if (info->seals & F_SEAL_WRITE) {
+>>>>>>> rebase
 			error = -EPERM;
 			goto out;
 		}

@@ -1,5 +1,9 @@
 /*
+<<<<<<< HEAD
  * Copyright (c) 2011-2015, 2017, 2020, The Linux Foundation. All rights reserved.
+=======
+ * Copyright (c) 2011-2015, 2017, The Linux Foundation. All rights reserved.
+>>>>>>> rebase
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -23,7 +27,10 @@
 #include <linux/regmap.h>
 #include <linux/thermal.h>
 
+<<<<<<< HEAD
 #define QPNP_TM_REG_DIG_MAJOR		0x01
+=======
+>>>>>>> rebase
 #define QPNP_TM_REG_TYPE		0x04
 #define QPNP_TM_REG_SUBTYPE		0x05
 #define QPNP_TM_REG_STATUS		0x08
@@ -43,6 +50,7 @@
 
 #define ALARM_CTRL_FORCE_ENABLE		BIT(7)
 
+<<<<<<< HEAD
 #define THRESH_COUNT			4
 #define STAGE_COUNT			3
 
@@ -65,6 +73,22 @@ static const long temp_map_gen2_v1[THRESH_COUNT][STAGE_COUNT] = {
 
 #define THRESH_MIN			0
 #define THRESH_MAX			3
+=======
+/*
+ * Trip point values based on threshold control
+ * 0 = {105 C, 125 C, 145 C}
+ * 1 = {110 C, 130 C, 150 C}
+ * 2 = {115 C, 135 C, 155 C}
+ * 3 = {120 C, 140 C, 160 C}
+*/
+#define TEMP_STAGE_STEP			20000	/* Stage step: 20.000 C */
+#define TEMP_STAGE_HYSTERESIS		2000
+
+#define TEMP_THRESH_MIN			105000	/* Threshold Min: 105 C */
+#define TEMP_THRESH_STEP		5000	/* Threshold step: 5 C */
+
+#define THRESH_MIN			0
+>>>>>>> rebase
 
 /* Temperature in Milli Celsius reported during stage 0 if no ADC is present */
 #define DEFAULT_TEMP			37000
@@ -78,9 +102,13 @@ struct qpnp_tm_chip {
 	unsigned int			stage;
 	unsigned int			prev_stage;
 	unsigned int			base;
+<<<<<<< HEAD
 	u32				init_thresh;
 	struct iio_channel		*adc;
 	const long			(*temp_map)[THRESH_COUNT][STAGE_COUNT];
+=======
+	struct iio_channel		*adc;
+>>>>>>> rebase
 };
 
 /* This array maps from GEN2 alarm state to GEN1 alarm stage */
@@ -105,6 +133,7 @@ static int qpnp_tm_write(struct qpnp_tm_chip *chip, u16 addr, u8 data)
 }
 
 /**
+<<<<<<< HEAD
  * qpnp_tm_decode_temp() - return temperature in mC corresponding to the
  *		specified over-temperature stage
  * @chip:		Pointer to the qpnp_tm chip
@@ -122,6 +151,8 @@ static long qpnp_tm_decode_temp(struct qpnp_tm_chip *chip, unsigned int stage)
 }
 
 /**
+=======
+>>>>>>> rebase
  * qpnp_tm_get_temp_stage() - return over-temperature stage
  * @chip:		Pointer to the qpnp_tm chip
  *
@@ -168,12 +199,23 @@ static int qpnp_tm_update_temp_no_adc(struct qpnp_tm_chip *chip)
 
 	if (stage_new > stage_old) {
 		/* increasing stage, use lower bound */
+<<<<<<< HEAD
 		chip->temp = qpnp_tm_decode_temp(chip, stage_new)
 				+ TEMP_STAGE_HYSTERESIS;
 	} else if (stage_new < stage_old) {
 		/* decreasing stage, use upper bound */
 		chip->temp = qpnp_tm_decode_temp(chip, stage_new + 1)
 				- TEMP_STAGE_HYSTERESIS;
+=======
+		chip->temp = (stage_new - 1) * TEMP_STAGE_STEP +
+			     chip->thresh * TEMP_THRESH_STEP +
+			     TEMP_STAGE_HYSTERESIS + TEMP_THRESH_MIN;
+	} else if (stage_new < stage_old) {
+		/* decreasing stage, use upper bound */
+		chip->temp = stage_new * TEMP_STAGE_STEP +
+			     chip->thresh * TEMP_THRESH_STEP -
+			     TEMP_STAGE_HYSTERESIS + TEMP_THRESH_MIN;
+>>>>>>> rebase
 	}
 
 	chip->stage = stage;
@@ -201,7 +243,11 @@ static int qpnp_tm_get_temp(void *data, int *temp)
 		chip->temp = mili_celsius;
 	}
 
+<<<<<<< HEAD
 	*temp = chip->temp;
+=======
+	*temp = chip->temp < 0 ? 0 : chip->temp;
+>>>>>>> rebase
 
 	return 0;
 }
@@ -246,13 +292,23 @@ static int qpnp_tm_init(struct qpnp_tm_chip *chip)
 		? chip->stage : alarm_state_map[chip->stage];
 
 	if (stage)
+<<<<<<< HEAD
 		chip->temp = qpnp_tm_decode_temp(chip, stage);
+=======
+		chip->temp = chip->thresh * TEMP_THRESH_STEP +
+			     (stage - 1) * TEMP_STAGE_STEP +
+			     TEMP_THRESH_MIN;
+>>>>>>> rebase
 
 	/*
 	 * Set threshold and disable software override of stage 2 and 3
 	 * shutdowns.
 	 */
+<<<<<<< HEAD
 	chip->thresh = chip->init_thresh;
+=======
+	chip->thresh = THRESH_MIN;
+>>>>>>> rebase
 	reg &= ~(SHUTDOWN_CTRL1_OVERRIDE_MASK | SHUTDOWN_CTRL1_THRESHOLD_MASK);
 	reg |= chip->thresh & SHUTDOWN_CTRL1_THRESHOLD_MASK;
 	ret = qpnp_tm_write(chip, QPNP_TM_REG_SHUTDOWN_CTRL1, reg);
@@ -270,7 +326,11 @@ static int qpnp_tm_probe(struct platform_device *pdev)
 {
 	struct qpnp_tm_chip *chip;
 	struct device_node *node;
+<<<<<<< HEAD
 	u8 type, subtype, dig_major;
+=======
+	u8 type, subtype;
+>>>>>>> rebase
 	u32 res;
 	int ret, irq;
 
@@ -290,6 +350,7 @@ static int qpnp_tm_probe(struct platform_device *pdev)
 	if (ret < 0)
 		return ret;
 
+<<<<<<< HEAD
 	chip->init_thresh = THRESH_MIN;
 	if (of_property_read_u32(node, "qcom,temperature-threshold-set",
 				 &chip->init_thresh) == 0) {
@@ -300,6 +361,8 @@ static int qpnp_tm_probe(struct platform_device *pdev)
 		}
 	}
 
+=======
+>>>>>>> rebase
 	irq = platform_get_irq(pdev, 0);
 	if (irq < 0)
 		return irq;
@@ -327,12 +390,15 @@ static int qpnp_tm_probe(struct platform_device *pdev)
 		return ret;
 	}
 
+<<<<<<< HEAD
 	ret = qpnp_tm_read(chip, QPNP_TM_REG_DIG_MAJOR, &dig_major);
 	if (ret < 0) {
 		dev_err(&pdev->dev, "could not read dig_major\n");
 		return ret;
 	}
 
+=======
+>>>>>>> rebase
 	if (type != QPNP_TM_TYPE || (subtype != QPNP_TM_SUBTYPE_GEN1
 				     && subtype != QPNP_TM_SUBTYPE_GEN2)) {
 		dev_err(&pdev->dev, "invalid type 0x%02x or subtype 0x%02x\n",
@@ -342,11 +408,14 @@ static int qpnp_tm_probe(struct platform_device *pdev)
 
 	chip->subtype = subtype;
 
+<<<<<<< HEAD
 	if (subtype == QPNP_TM_SUBTYPE_GEN2 && dig_major >= 1)
 		chip->temp_map = &temp_map_gen2_v1;
 	else
 		chip->temp_map = &temp_map_gen1;
 
+=======
+>>>>>>> rebase
 	ret = qpnp_tm_init(chip);
 	if (ret < 0) {
 		dev_err(&pdev->dev, "init failed\n");

@@ -40,7 +40,11 @@ enum tpm_pcrs { TPM_PCR0 = 0, TPM_PCR8 = 8 };
 #define IMA_DIGEST_SIZE		SHA1_DIGEST_SIZE
 #define IMA_EVENT_NAME_LEN_MAX	255
 
+<<<<<<< HEAD
 #define IMA_HASH_BITS 9
+=======
+#define IMA_HASH_BITS 10
+>>>>>>> rebase
 #define IMA_MEASURE_HTABLE_SIZE (1 << IMA_HASH_BITS)
 
 #define IMA_TEMPLATE_FIELD_ID_MAX_LEN	16
@@ -56,6 +60,10 @@ extern int ima_policy_flag;
 extern int ima_hash_algo;
 extern int ima_appraise;
 extern struct tpm_chip *ima_tpm_chip;
+<<<<<<< HEAD
+=======
+extern const char boot_aggregate_name[];
+>>>>>>> rebase
 
 /* IMA event related data */
 struct ima_event_data {
@@ -139,7 +147,11 @@ int ima_calc_buffer_hash(const void *buf, loff_t len,
 int ima_calc_field_array_hash(struct ima_field_data *field_data,
 			      struct ima_template_desc *desc, int num_fields,
 			      struct ima_digest_data *hash);
+<<<<<<< HEAD
 int __init ima_calc_boot_aggregate(struct ima_digest_data *hash);
+=======
+int ima_calc_boot_aggregate(struct ima_digest_data *hash);
+>>>>>>> rebase
 void ima_add_violation(struct file *file, const unsigned char *filename,
 		       struct integrity_iint_cache *iint,
 		       const char *op, const char *cause);
@@ -166,9 +178,16 @@ struct ima_h_table {
 };
 extern struct ima_h_table ima_htable;
 
+<<<<<<< HEAD
 static inline unsigned long ima_hash_key(u8 *digest)
 {
 	return hash_long(*digest, IMA_HASH_BITS);
+=======
+static inline unsigned int ima_hash_key(u8 *digest)
+{
+	/* there is no point in taking a hash of part of a digest */
+	return (digest[0] | digest[1] << 8) % IMA_MEASURE_HTABLE_SIZE;
+>>>>>>> rebase
 }
 
 #define __ima_hooks(hook)		\
@@ -296,6 +315,10 @@ static inline int ima_read_xattr(struct dentry *dentry,
 #ifdef CONFIG_IMA_LSM_RULES
 
 #define security_filter_rule_init security_audit_rule_init
+<<<<<<< HEAD
+=======
+#define security_filter_rule_free security_audit_rule_free
+>>>>>>> rebase
 #define security_filter_rule_match security_audit_rule_match
 
 #else
@@ -306,6 +329,13 @@ static inline int security_filter_rule_init(u32 field, u32 op, char *rulestr,
 	return -EINVAL;
 }
 
+<<<<<<< HEAD
+=======
+static inline void security_filter_rule_free(void *lsmrule)
+{
+}
+
+>>>>>>> rebase
 static inline int security_filter_rule_match(u32 secid, u32 field, u32 op,
 					     void *lsmrule,
 					     struct audit_context *actx)

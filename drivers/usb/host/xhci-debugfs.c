@@ -273,7 +273,11 @@ static int xhci_slot_context_show(struct seq_file *s, void *unused)
 
 static int xhci_endpoint_context_show(struct seq_file *s, void *unused)
 {
+<<<<<<< HEAD
 	int			dci;
+=======
+	int			ep_index;
+>>>>>>> rebase
 	dma_addr_t		dma;
 	struct xhci_hcd		*xhci;
 	struct xhci_ep_ctx	*ep_ctx;
@@ -282,9 +286,15 @@ static int xhci_endpoint_context_show(struct seq_file *s, void *unused)
 
 	xhci = hcd_to_xhci(bus_to_hcd(dev->udev->bus));
 
+<<<<<<< HEAD
 	for (dci = 1; dci < 32; dci++) {
 		ep_ctx = xhci_get_ep_ctx(xhci, dev->out_ctx, dci);
 		dma = dev->out_ctx->dma + dci * CTX_SIZE(xhci->hcc_params);
+=======
+	for (ep_index = 0; ep_index < 31; ep_index++) {
+		ep_ctx = xhci_get_ep_ctx(xhci, dev->out_ctx, ep_index);
+		dma = dev->out_ctx->dma + (ep_index + 1) * CTX_SIZE(xhci->hcc_params);
+>>>>>>> rebase
 		seq_printf(s, "%pad: %s\n", &dma,
 			   xhci_decode_ep_context(le32_to_cpu(ep_ctx->ep_info),
 						  le32_to_cpu(ep_ctx->ep_info2),

@@ -216,7 +216,10 @@ static char *kdb_read(char *buffer, size_t bufsize)
 	int count;
 	int i;
 	int diag, dtab_count;
+<<<<<<< HEAD
 	static int last_crlf;
+=======
+>>>>>>> rebase
 	int key, buf_size, ret;
 
 
@@ -239,9 +242,12 @@ poll_again:
 		return buffer;
 	if (key != 9)
 		tab = 0;
+<<<<<<< HEAD
 	if (key != 10 && key != 13)
 		last_crlf = 0;
 
+=======
+>>>>>>> rebase
 	switch (key) {
 	case 8: /* backspace */
 		if (cp > buffer) {
@@ -259,12 +265,16 @@ poll_again:
 			*cp = tmp;
 		}
 		break;
+<<<<<<< HEAD
 	case 10: /* new line */
 	case 13: /* carriage return */
 		/* handle \n after \r */
 		if (last_crlf && last_crlf != key)
 			break;
 		last_crlf = key;
+=======
+	case 13: /* enter */
+>>>>>>> rebase
 		*lastchar++ = '\n';
 		*lastchar++ = '\0';
 		if (!KDB_STATE(KGDB_TRANS)) {
@@ -688,12 +698,25 @@ int vkdb_printf(enum kdb_msgsrc src, const char *fmt, va_list ap)
 			size_avail = sizeof(kdb_buffer) - len;
 			goto kdb_print_out;
 		}
+<<<<<<< HEAD
 		if (kdb_grepping_flag >= KDB_GREPPING_FLAG_SEARCH)
 			/*
 			 * This was a interactive search (using '/' at more
 			 * prompt) and it has completed. Clear the flag.
 			 */
 			kdb_grepping_flag = 0;
+=======
+		if (kdb_grepping_flag >= KDB_GREPPING_FLAG_SEARCH) {
+			/*
+			 * This was a interactive search (using '/' at more
+			 * prompt) and it has completed. Replace the \0 with
+			 * its original value to ensure multi-line strings
+			 * are handled properly, and return to normal mode.
+			 */
+			*cphold = replaced_byte;
+			kdb_grepping_flag = 0;
+		}
+>>>>>>> rebase
 		/*
 		 * at this point the string is a full line and
 		 * should be printed, up to the null.

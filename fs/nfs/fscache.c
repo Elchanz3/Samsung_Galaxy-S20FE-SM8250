@@ -35,6 +35,10 @@ static DEFINE_SPINLOCK(nfs_fscache_keys_lock);
 struct nfs_server_key {
 	struct {
 		uint16_t	nfsversion;		/* NFS protocol version */
+<<<<<<< HEAD
+=======
+		uint32_t	minorversion;		/* NFSv4 minor version */
+>>>>>>> rebase
 		uint16_t	family;			/* address family */
 		__be16		port;			/* IP port */
 	} hdr;
@@ -59,6 +63,10 @@ void nfs_fscache_get_client_cookie(struct nfs_client *clp)
 
 	memset(&key, 0, sizeof(key));
 	key.hdr.nfsversion = clp->rpc_ops->version;
+<<<<<<< HEAD
+=======
+	key.hdr.minorversion = clp->cl_minorversion;
+>>>>>>> rebase
 	key.hdr.family = clp->cl_addr.ss_family;
 
 	switch (clp->cl_addr.ss_family) {
@@ -190,7 +198,12 @@ void nfs_fscache_get_super_cookie(struct super_block *sb, const char *uniq, int 
 	/* create a cache index for looking up filehandles */
 	nfss->fscache = fscache_acquire_cookie(nfss->nfs_client->fscache,
 					       &nfs_fscache_super_index_def,
+<<<<<<< HEAD
 					       key, sizeof(*key) + ulen,
+=======
+					       &key->key,
+					       sizeof(key->key) + ulen,
+>>>>>>> rebase
 					       NULL, 0,
 					       nfss, 0, true);
 	dfprintk(FSCACHE, "NFS: get superblock cookie (0x%p/0x%p)\n",
@@ -228,6 +241,22 @@ void nfs_fscache_release_super_cookie(struct super_block *sb)
 	}
 }
 
+<<<<<<< HEAD
+=======
+static void nfs_fscache_update_auxdata(struct nfs_fscache_inode_auxdata *auxdata,
+				  struct nfs_inode *nfsi)
+{
+	memset(auxdata, 0, sizeof(*auxdata));
+	auxdata->mtime_sec  = nfsi->vfs_inode.i_mtime.tv_sec;
+	auxdata->mtime_nsec = nfsi->vfs_inode.i_mtime.tv_nsec;
+	auxdata->ctime_sec  = nfsi->vfs_inode.i_ctime.tv_sec;
+	auxdata->ctime_nsec = nfsi->vfs_inode.i_ctime.tv_nsec;
+
+	if (NFS_SERVER(&nfsi->vfs_inode)->nfs_client->rpc_ops->version == 4)
+		auxdata->change_attr = inode_peek_iversion_raw(&nfsi->vfs_inode);
+}
+
+>>>>>>> rebase
 /*
  * Initialise the per-inode cache cookie pointer for an NFS inode.
  */
@@ -241,12 +270,16 @@ void nfs_fscache_init_inode(struct inode *inode)
 	if (!(nfss->fscache && S_ISREG(inode->i_mode)))
 		return;
 
+<<<<<<< HEAD
 	memset(&auxdata, 0, sizeof(auxdata));
 	auxdata.mtime = timespec64_to_timespec(nfsi->vfs_inode.i_mtime);
 	auxdata.ctime = timespec64_to_timespec(nfsi->vfs_inode.i_ctime);
 
 	if (NFS_SERVER(&nfsi->vfs_inode)->nfs_client->rpc_ops->version == 4)
 		auxdata.change_attr = inode_peek_iversion_raw(&nfsi->vfs_inode);
+=======
+	nfs_fscache_update_auxdata(&auxdata, nfsi);
+>>>>>>> rebase
 
 	nfsi->fscache = fscache_acquire_cookie(NFS_SB(inode->i_sb)->fscache,
 					       &nfs_fscache_inode_object_def,
@@ -266,9 +299,13 @@ void nfs_fscache_clear_inode(struct inode *inode)
 
 	dfprintk(FSCACHE, "NFS: clear cookie (0x%p/0x%p)\n", nfsi, cookie);
 
+<<<<<<< HEAD
 	memset(&auxdata, 0, sizeof(auxdata));
 	auxdata.mtime = timespec64_to_timespec(nfsi->vfs_inode.i_mtime);
 	auxdata.ctime = timespec64_to_timespec(nfsi->vfs_inode.i_ctime);
+=======
+	nfs_fscache_update_auxdata(&auxdata, nfsi);
+>>>>>>> rebase
 	fscache_relinquish_cookie(cookie, &auxdata, false);
 	nfsi->fscache = NULL;
 }
@@ -308,9 +345,13 @@ void nfs_fscache_open_file(struct inode *inode, struct file *filp)
 	if (!fscache_cookie_valid(cookie))
 		return;
 
+<<<<<<< HEAD
 	memset(&auxdata, 0, sizeof(auxdata));
 	auxdata.mtime = timespec64_to_timespec(nfsi->vfs_inode.i_mtime);
 	auxdata.ctime = timespec64_to_timespec(nfsi->vfs_inode.i_ctime);
+=======
+	nfs_fscache_update_auxdata(&auxdata, nfsi);
+>>>>>>> rebase
 
 	if (inode_is_open_for_write(inode)) {
 		dfprintk(FSCACHE, "NFS: nfsi 0x%p disabling cache\n", nfsi);

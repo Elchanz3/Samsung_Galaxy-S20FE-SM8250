@@ -724,10 +724,17 @@ struct drbd_connection {
 	struct list_head transfer_log;	/* all requests not yet fully processed */
 
 	struct crypto_shash *cram_hmac_tfm;
+<<<<<<< HEAD
 	struct crypto_shash *integrity_tfm;  /* checksums we compute, updates protected by connection->data->mutex */
 	struct crypto_shash *peer_integrity_tfm;  /* checksums we verify, only accessed from receiver thread  */
 	struct crypto_shash *csums_tfm;
 	struct crypto_shash *verify_tfm;
+=======
+	struct crypto_ahash *integrity_tfm;  /* checksums we compute, updates protected by connection->data->mutex */
+	struct crypto_ahash *peer_integrity_tfm;  /* checksums we verify, only accessed from receiver thread  */
+	struct crypto_ahash *csums_tfm;
+	struct crypto_ahash *verify_tfm;
+>>>>>>> rebase
 	void *int_dig_in;
 	void *int_dig_vv;
 
@@ -1531,9 +1538,14 @@ static inline void ov_out_of_sync_print(struct drbd_device *device)
 }
 
 
+<<<<<<< HEAD
 extern void drbd_csum_bio(struct crypto_shash *, struct bio *, void *);
 extern void drbd_csum_ee(struct crypto_shash *, struct drbd_peer_request *,
 			 void *);
+=======
+extern void drbd_csum_bio(struct crypto_ahash *, struct bio *, void *);
+extern void drbd_csum_ee(struct crypto_ahash *, struct drbd_peer_request *, void *);
+>>>>>>> rebase
 /* worker callbacks */
 extern int w_e_end_data_req(struct drbd_work *, int);
 extern int w_e_end_rsdata_req(struct drbd_work *, int);
@@ -1689,22 +1701,38 @@ struct sib_info {
 };
 void drbd_bcast_event(struct drbd_device *device, const struct sib_info *sib);
 
+<<<<<<< HEAD
 extern void notify_resource_state(struct sk_buff *,
+=======
+extern int notify_resource_state(struct sk_buff *,
+>>>>>>> rebase
 				  unsigned int,
 				  struct drbd_resource *,
 				  struct resource_info *,
 				  enum drbd_notification_type);
+<<<<<<< HEAD
 extern void notify_device_state(struct sk_buff *,
+=======
+extern int notify_device_state(struct sk_buff *,
+>>>>>>> rebase
 				unsigned int,
 				struct drbd_device *,
 				struct device_info *,
 				enum drbd_notification_type);
+<<<<<<< HEAD
 extern void notify_connection_state(struct sk_buff *,
+=======
+extern int notify_connection_state(struct sk_buff *,
+>>>>>>> rebase
 				    unsigned int,
 				    struct drbd_connection *,
 				    struct connection_info *,
 				    enum drbd_notification_type);
+<<<<<<< HEAD
 extern void notify_peer_device_state(struct sk_buff *,
+=======
+extern int notify_peer_device_state(struct sk_buff *,
+>>>>>>> rebase
 				     unsigned int,
 				     struct drbd_peer_device *,
 				     struct peer_device_info *,

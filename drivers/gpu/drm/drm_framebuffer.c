@@ -278,8 +278,12 @@ drm_internal_framebuffer_create(struct drm_device *dev,
 	struct drm_framebuffer *fb;
 	int ret;
 
+<<<<<<< HEAD
 	if (r->flags & ~(DRM_MODE_FB_INTERLACED | DRM_MODE_FB_MODIFIERS |
 			DRM_MODE_FB_SECURE)) {
+=======
+	if (r->flags & ~(DRM_MODE_FB_INTERLACED | DRM_MODE_FB_MODIFIERS)) {
+>>>>>>> rebase
 		DRM_DEBUG_KMS("bad framebuffer flags 0x%08x\n", r->flags);
 		return ERR_PTR(-EINVAL);
 	}

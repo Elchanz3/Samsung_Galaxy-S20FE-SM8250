@@ -117,6 +117,11 @@
 #define PCI_DEVICE_ID_AMD_17H_DF_F6	0x1466
 #define PCI_DEVICE_ID_AMD_17H_M10H_DF_F0 0x15e8
 #define PCI_DEVICE_ID_AMD_17H_M10H_DF_F6 0x15ee
+<<<<<<< HEAD
+=======
+#define PCI_DEVICE_ID_AMD_17H_M30H_DF_F0 0x1490
+#define PCI_DEVICE_ID_AMD_17H_M30H_DF_F6 0x1496
+>>>>>>> rebase
 
 /*
  * Function 1 - Address Map
@@ -284,6 +289,10 @@ enum amd_families {
 	F16_M30H_CPUS,
 	F17_CPUS,
 	F17_M10H_CPUS,
+<<<<<<< HEAD
+=======
+	F17_M30H_CPUS,
+>>>>>>> rebase
 	NUM_FAMILIES,
 };
 

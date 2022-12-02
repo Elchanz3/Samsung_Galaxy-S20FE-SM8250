@@ -34,6 +34,10 @@
 #include <net/flow.h>
 #include <net/flow_dissector.h>
 #include <net/netns/hash.h>
+<<<<<<< HEAD
+=======
+#include <net/lwtunnel.h>
+>>>>>>> rebase
 
 #define IPV4_MAX_PMTU		65535U		/* RFC 2675, Section 5.1 */
 #define IPV4_MIN_MTU		68			/* RFC 791 */
@@ -155,7 +159,10 @@ int ip_rcv(struct sk_buff *skb, struct net_device *dev, struct packet_type *pt,
 void ip_list_rcv(struct list_head *head, struct packet_type *pt,
 		 struct net_device *orig_dev);
 int ip_local_deliver(struct sk_buff *skb);
+<<<<<<< HEAD
 void ip_protocol_deliver_rcu(struct net *net, struct sk_buff *skb, int proto);
+=======
+>>>>>>> rebase
 int ip_mr_input(struct sk_buff *skb);
 int ip_output(struct net *net, struct sock *sk, struct sk_buff *skb);
 int ip_mc_output(struct net *net, struct sock *sk, struct sk_buff *skb);
@@ -331,8 +338,11 @@ static inline int inet_prot_sock(struct net *net)
 
 __be32 inet_current_timestamp(void);
 
+<<<<<<< HEAD
 extern int sysctl_reserved_port_bind;
 
+=======
+>>>>>>> rebase
 /* From inetpeer.c */
 extern int inet_peer_threshold;
 extern int inet_peer_minttl;
@@ -343,7 +353,11 @@ void ipfrag_init(void);
 void ip_static_sysctl_init(void);
 
 #define IP4_REPLY_MARK(net, mark) \
+<<<<<<< HEAD
 	((net)->ipv4.sysctl_fwmark_reflect ? (mark) : 0)
+=======
+	(READ_ONCE((net)->ipv4.sysctl_fwmark_reflect) ? (mark) : 0)
+>>>>>>> rebase
 
 static inline bool ip_is_fragment(const struct iphdr *iph)
 {
@@ -402,25 +416,50 @@ static inline unsigned int ip_dst_mtu_maybe_forward(const struct dst_entry *dst,
 						    bool forwarding)
 {
 	struct net *net = dev_net(dst->dev);
+<<<<<<< HEAD
 
 	if (net->ipv4.sysctl_ip_fwd_use_pmtu ||
+=======
+	unsigned int mtu;
+
+	if (READ_ONCE(net->ipv4.sysctl_ip_fwd_use_pmtu) ||
+>>>>>>> rebase
 	    ip_mtu_locked(dst) ||
 	    !forwarding)
 		return dst_mtu(dst);
 
+<<<<<<< HEAD
 	return min(READ_ONCE(dst->dev->mtu), IP_MAX_MTU);
+=======
+	/* 'forwarding = true' case should always honour route mtu */
+	mtu = dst_metric_raw(dst, RTAX_MTU);
+	if (!mtu)
+		mtu = min(READ_ONCE(dst->dev->mtu), IP_MAX_MTU);
+
+	return mtu - lwtunnel_headroom(dst->lwtstate, mtu);
+>>>>>>> rebase
 }
 
 static inline unsigned int ip_skb_dst_mtu(struct sock *sk,
 					  const struct sk_buff *skb)
 {
+<<<<<<< HEAD
+=======
+	unsigned int mtu;
+
+>>>>>>> rebase
 	if (!sk || !sk_fullsock(sk) || ip_sk_use_pmtu(sk)) {
 		bool forwarding = IPCB(skb)->flags & IPSKB_FORWARDED;
 
 		return ip_dst_mtu_maybe_forward(skb_dst(skb), forwarding);
 	}
 
+<<<<<<< HEAD
 	return min(READ_ONCE(skb_dst(skb)->dev->mtu), IP_MAX_MTU);
+=======
+	mtu = min(READ_ONCE(skb_dst(skb)->dev->mtu), IP_MAX_MTU);
+	return mtu - lwtunnel_headroom(skb_dst(skb)->lwtstate, mtu);
+>>>>>>> rebase
 }
 
 int ip_metrics_convert(struct net *net, struct nlattr *fc_mx, int fc_mx_len,
@@ -434,6 +473,7 @@ static inline void ip_select_ident_segs(struct net *net, struct sk_buff *skb,
 {
 	struct iphdr *iph = ip_hdr(skb);
 
+<<<<<<< HEAD
 	if ((iph->frag_off & htons(IP_DF)) && !skb->ignore_df) {
 		/* This is only to work around buggy Windows95/2000
 		 * VJ compression implementations.  If the ID field
@@ -447,6 +487,20 @@ static inline void ip_select_ident_segs(struct net *net, struct sk_buff *skb,
 			iph->id = 0;
 		}
 	} else {
+=======
+	/* We had many attacks based on IPID, use the private
+	 * generator as much as we can.
+	 */
+	if (sk && inet_sk(sk)->inet_daddr) {
+		iph->id = htons(inet_sk(sk)->inet_id);
+		inet_sk(sk)->inet_id += segs;
+		return;
+	}
+	if ((iph->frag_off & htons(IP_DF)) && !skb->ignore_df) {
+		iph->id = 0;
+	} else {
+		/* Unfortunately we need the big hammer to get a suitable IPID */
+>>>>>>> rebase
 		__ip_select_ident(net, iph, segs);
 	}
 }

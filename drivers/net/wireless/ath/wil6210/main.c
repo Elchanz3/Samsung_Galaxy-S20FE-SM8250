@@ -1,34 +1,65 @@
+<<<<<<< HEAD
 // SPDX-License-Identifier: ISC
 /*
  * Copyright (c) 2012-2017 Qualcomm Atheros, Inc.
  * Copyright (c) 2018-2020, The Linux Foundation. All rights reserved.
+=======
+/*
+ * Copyright (c) 2012-2017 Qualcomm Atheros, Inc.
+ * Copyright (c) 2018, The Linux Foundation. All rights reserved.
+ *
+ * Permission to use, copy, modify, and/or distribute this software for any
+ * purpose with or without fee is hereby granted, provided that the above
+ * copyright notice and this permission notice appear in all copies.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+ * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+ * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+ * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+ * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+ * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+ * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+>>>>>>> rebase
  */
 
 #include <linux/moduleparam.h>
 #include <linux/if_arp.h>
 #include <linux/etherdevice.h>
+<<<<<<< HEAD
 #include <linux/rtnetlink.h>
+=======
+>>>>>>> rebase
 
 #include "wil6210.h"
 #include "txrx.h"
 #include "txrx_edma.h"
 #include "wmi.h"
 #include "boot_loader.h"
+<<<<<<< HEAD
 #include "ipa.h"
+=======
+>>>>>>> rebase
 
 #define WAIT_FOR_HALP_VOTE_MS 100
 #define WAIT_FOR_SCAN_ABORT_MS 1000
 #define WIL_DEFAULT_NUM_RX_STATUS_RINGS 1
 #define WIL_BOARD_FILE_MAX_NAMELEN 128
+<<<<<<< HEAD
 #define WIL6210_ITR_VR_RX_MAX_BURST_DURATION (5) /* usec */
 #define WIL6210_VR_TX_RING_ORDER 10
 #define WIL6210_VR_AGG_WSIZE 16
+=======
+>>>>>>> rebase
 
 bool debug_fw; /* = false; */
 module_param(debug_fw, bool, 0444);
 MODULE_PARM_DESC(debug_fw, " do not perform card reset. For FW debug");
 
+<<<<<<< HEAD
 u8 oob_mode;
+=======
+static u8 oob_mode;
+>>>>>>> rebase
 module_param(oob_mode, byte, 0444);
 MODULE_PARM_DESC(oob_mode,
 		 " enable out of the box (OOB) mode in FW, for diagnostics and certification");
@@ -74,9 +105,15 @@ static const struct kernel_param_ops mtu_max_ops = {
 module_param_cb(mtu_max, &mtu_max_ops, &mtu_max, 0444);
 MODULE_PARM_DESC(mtu_max, " Max MTU value.");
 
+<<<<<<< HEAD
 uint rx_ring_order;
 uint tx_ring_order = WIL_TX_RING_SIZE_ORDER_DEFAULT;
 uint bcast_ring_order = WIL_BCAST_RING_SIZE_ORDER_DEFAULT;
+=======
+static uint rx_ring_order = WIL_RX_RING_SIZE_ORDER_DEFAULT;
+static uint tx_ring_order = WIL_TX_RING_SIZE_ORDER_DEFAULT;
+static uint bcast_ring_order = WIL_BCAST_RING_SIZE_ORDER_DEFAULT;
+>>>>>>> rebase
 
 static int ring_order_set(const char *val, const struct kernel_param *kp)
 {
@@ -107,11 +144,14 @@ MODULE_PARM_DESC(tx_ring_order, " Tx ring order; size = 1 << order");
 module_param_cb(bcast_ring_order, &ring_order_ops, &bcast_ring_order, 0444);
 MODULE_PARM_DESC(bcast_ring_order, " Bcast ring order; size = 1 << order");
 
+<<<<<<< HEAD
 static u8 support_sensing_over_spi;
 module_param(support_sensing_over_spi, byte, 0444);
 MODULE_PARM_DESC(support_sensing_over_spi,
 		 " notify FW to enable SPI for sensing");
 
+=======
+>>>>>>> rebase
 enum {
 	WIL_BOOT_ERR,
 	WIL_BOOT_VANILLA,
@@ -182,6 +222,7 @@ void wil_memcpy_toio_32(volatile void __iomem *dst, const void *src,
 	}
 }
 
+<<<<<<< HEAD
 /* Device memory access is prohibited while reset, suspend or
  * pci linkdown.
  * wil_mem_access_lock protects accessing device memory in these cases
@@ -206,6 +247,8 @@ void wil_mem_access_unlock(struct wil6210_priv *wil)
 	up_read(&wil->mem_lock);
 }
 
+=======
+>>>>>>> rebase
 static void wil_ring_fini_tx(struct wil6210_priv *wil, int id)
 {
 	struct wil_ring *ring = &wil->ring_tx[id];
@@ -237,6 +280,7 @@ static void wil_ring_fini_tx(struct wil6210_priv *wil, int id)
 	wil->txrx_ops.ring_fini_tx(wil, ring);
 }
 
+<<<<<<< HEAD
 static bool wil_vif_is_connected(struct wil6210_priv *wil, u8 mid)
 {
 	int i;
@@ -252,6 +296,10 @@ static bool wil_vif_is_connected(struct wil6210_priv *wil, u8 mid)
 
 static void wil_disconnect_cid_complete(struct wil6210_vif *vif, int cid,
 					u16 reason_code)
+=======
+static void wil_disconnect_cid(struct wil6210_vif *vif, int cid,
+			       u16 reason_code, bool from_event)
+>>>>>>> rebase
 __acquires(&sta->tid_rx_lock) __releases(&sta->tid_rx_lock)
 {
 	uint i;
@@ -262,14 +310,34 @@ __acquires(&sta->tid_rx_lock) __releases(&sta->tid_rx_lock)
 	int min_ring_id = wil_get_min_tx_ring_id(wil);
 
 	might_sleep();
+<<<<<<< HEAD
 	wil_dbg_misc(wil,
 		     "disconnect_cid_complete: CID %d, MID %d, status %d\n",
 		     cid, sta->mid, sta->status);
 	/* inform upper layers */
+=======
+	wil_dbg_misc(wil, "disconnect_cid: CID %d, MID %d, status %d\n",
+		     cid, sta->mid, sta->status);
+	/* inform upper/lower layers */
+>>>>>>> rebase
 	if (sta->status != wil_sta_unused) {
 		if (vif->mid != sta->mid) {
 			wil_err(wil, "STA MID mismatch with VIF MID(%d)\n",
 				vif->mid);
+<<<<<<< HEAD
+=======
+			/* let FW override sta->mid but be more strict with
+			 * user space requests
+			 */
+			if (!from_event)
+				return;
+		}
+		if (!from_event) {
+			bool del_sta = (wdev->iftype == NL80211_IFTYPE_AP) ?
+						disable_ap_sme : false;
+			wmi_disconnect_sta(vif, sta->addr, reason_code,
+					   true, del_sta);
+>>>>>>> rebase
 		}
 
 		switch (wdev->iftype) {
@@ -282,7 +350,10 @@ __acquires(&sta->tid_rx_lock) __releases(&sta->tid_rx_lock)
 			break;
 		}
 		sta->status = wil_sta_unused;
+<<<<<<< HEAD
 		sta->fst_link_loss = false;
+=======
+>>>>>>> rebase
 		sta->mid = U8_MAX;
 	}
 	/* reorder buffers */
@@ -300,35 +371,70 @@ __acquires(&sta->tid_rx_lock) __releases(&sta->tid_rx_lock)
 	/* crypto context */
 	memset(sta->tid_crypto_rx, 0, sizeof(sta->tid_crypto_rx));
 	memset(&sta->group_crypto_rx, 0, sizeof(sta->group_crypto_rx));
+<<<<<<< HEAD
 
 	if (wil->ipa_handle)
 		wil_ipa_disconn_client(wil->ipa_handle, cid);
 
+=======
+>>>>>>> rebase
 	/* release vrings */
 	for (i = min_ring_id; i < ARRAY_SIZE(wil->ring_tx); i++) {
 		if (wil->ring2cid_tid[i][0] == cid)
 			wil_ring_fini_tx(wil, i);
 	}
+<<<<<<< HEAD
 
+=======
+>>>>>>> rebase
 	/* statistics */
 	memset(&sta->stats, 0, sizeof(sta->stats));
 	sta->stats.tx_latency_min_us = U32_MAX;
 }
 
+<<<<<<< HEAD
 static void _wil6210_disconnect_complete(struct wil6210_vif *vif,
 					 const u8 *bssid, u16 reason_code)
+=======
+static bool wil_vif_is_connected(struct wil6210_priv *wil, u8 mid)
+{
+	int i;
+
+	for (i = 0; i < ARRAY_SIZE(wil->sta); i++) {
+		if (wil->sta[i].mid == mid &&
+		    wil->sta[i].status == wil_sta_connected)
+			return true;
+	}
+
+	return false;
+}
+
+static void _wil6210_disconnect(struct wil6210_vif *vif, const u8 *bssid,
+				u16 reason_code, bool from_event)
+>>>>>>> rebase
 {
 	struct wil6210_priv *wil = vif_to_wil(vif);
 	int cid = -ENOENT;
 	struct net_device *ndev;
 	struct wireless_dev *wdev;
 
+<<<<<<< HEAD
+=======
+	if (unlikely(!vif))
+		return;
+
+>>>>>>> rebase
 	ndev = vif_to_ndev(vif);
 	wdev = vif_to_wdev(vif);
 
 	might_sleep();
+<<<<<<< HEAD
 	wil_info(wil, "disconnect_complete: bssid=%pM, reason=%d\n",
 		 bssid, reason_code);
+=======
+	wil_info(wil, "bssid=%pM, reason=%d, ev%s\n", bssid,
+		 reason_code, from_event ? "+" : "-");
+>>>>>>> rebase
 
 	/* Cases are:
 	 * - disconnect single STA, still connected
@@ -343,6 +449,7 @@ static void _wil6210_disconnect_complete(struct wil6210_vif *vif,
 	if (bssid && !is_broadcast_ether_addr(bssid) &&
 	    !ether_addr_equal_unaligned(ndev->dev_addr, bssid)) {
 		cid = wil_find_cid(wil, vif->mid, bssid);
+<<<<<<< HEAD
 		wil_dbg_misc(wil,
 			     "Disconnect complete %pM, CID=%d, reason=%d\n",
 			     bssid, cid, reason_code);
@@ -352,6 +459,16 @@ static void _wil6210_disconnect_complete(struct wil6210_vif *vif,
 		wil_dbg_misc(wil, "Disconnect complete all\n");
 		for (cid = 0; cid < max_assoc_sta; cid++)
 			wil_disconnect_cid_complete(vif, cid, reason_code);
+=======
+		wil_dbg_misc(wil, "Disconnect %pM, CID=%d, reason=%d\n",
+			     bssid, cid, reason_code);
+		if (cid >= 0) /* disconnect 1 peer */
+			wil_disconnect_cid(vif, cid, reason_code, from_event);
+	} else { /* all */
+		wil_dbg_misc(wil, "Disconnect all\n");
+		for (cid = 0; cid < WIL6210_MAX_CID; cid++)
+			wil_disconnect_cid(vif, cid, reason_code, from_event);
+>>>>>>> rebase
 	}
 
 	/* link state */
@@ -378,9 +495,12 @@ static void _wil6210_disconnect_complete(struct wil6210_vif *vif,
 			vif->bss = NULL;
 		}
 		clear_bit(wil_vif_fwconnecting, vif->status);
+<<<<<<< HEAD
 		clear_bit(wil_vif_ft_roam, vif->status);
 		vif->ptk_rekey_state = WIL_REKEY_IDLE;
 
+=======
+>>>>>>> rebase
 		break;
 	case NL80211_IFTYPE_AP:
 	case NL80211_IFTYPE_P2P_GO:
@@ -398,6 +518,7 @@ static void _wil6210_disconnect_complete(struct wil6210_vif *vif,
 	}
 }
 
+<<<<<<< HEAD
 static int wil_disconnect_cid(struct wil6210_vif *vif, int cid,
 			      u16 reason_code)
 {
@@ -476,6 +597,8 @@ static void _wil6210_disconnect(struct wil6210_vif *vif, const u8 *bssid,
 	_wil6210_disconnect_complete(vif, bssid, reason_code);
 }
 
+=======
+>>>>>>> rebase
 void wil_disconnect_worker(struct work_struct *work)
 {
 	struct wil6210_vif *vif = container_of(work,
@@ -542,6 +665,7 @@ bool wil_is_recovery_blocked(struct wil6210_priv *wil)
 	return no_fw_recovery && (wil->recovery_state == fw_recovery_pending);
 }
 
+<<<<<<< HEAD
 void wil_fw_recovery(struct wil6210_priv *wil)
 {
 	struct net_device *ndev = wil->main_ndev;
@@ -552,6 +676,24 @@ void wil_fw_recovery(struct wil6210_priv *wil)
 	wdev = ndev->ieee80211_ptr;
 
 	/* increment @recovery_count if less than WIL6210_FW_RECOVERY_TO
+=======
+static void wil_fw_error_worker(struct work_struct *work)
+{
+	struct wil6210_priv *wil = container_of(work, struct wil6210_priv,
+						fw_error_worker);
+	struct net_device *ndev = wil->main_ndev;
+	struct wireless_dev *wdev;
+
+	wil_dbg_misc(wil, "fw error worker\n");
+
+	if (!ndev || !(ndev->flags & IFF_UP)) {
+		wil_info(wil, "No recovery - interface is down\n");
+		return;
+	}
+	wdev = ndev->ieee80211_ptr;
+
+	/* increment @recovery_count if less then WIL6210_FW_RECOVERY_TO
+>>>>>>> rebase
 	 * passed since last recovery attempt
 	 */
 	if (time_is_after_jiffies(wil->last_fw_recovery +
@@ -575,11 +717,18 @@ void wil_fw_recovery(struct wil6210_priv *wil)
 	if (wil_wait_for_recovery(wil) != 0)
 		return;
 
+<<<<<<< HEAD
 	rtnl_lock();
 	mutex_lock(&wil->mutex);
 	/* Needs adaptation for multiple VIFs
 	 * need to go over all VIFs and consider the appropriate
 	 * recovery because each one can have different iftype.
+=======
+	mutex_lock(&wil->mutex);
+	/* Needs adaptation for multiple VIFs
+	 * need to go over all VIFs and consider the appropriate
+	 * recovery.
+>>>>>>> rebase
 	 */
 	switch (wdev->iftype) {
 	case NL80211_IFTYPE_STATION:
@@ -591,6 +740,7 @@ void wil_fw_recovery(struct wil6210_priv *wil)
 		break;
 	case NL80211_IFTYPE_AP:
 	case NL80211_IFTYPE_P2P_GO:
+<<<<<<< HEAD
 		if (no_fw_recovery) /* upper layers do recovery */
 			break;
 		/* silent recovery, upper layers will see disconnect */
@@ -604,12 +754,17 @@ void wil_fw_recovery(struct wil6210_priv *wil)
 		wil_cfg80211_ap_recovery(wil);
 		mutex_lock(&wil->mutex);
 		wil_info(wil, "... completed\n");
+=======
+		wil_info(wil, "No recovery for AP-like interface\n");
+		/* recovery in these modes is done by upper layers */
+>>>>>>> rebase
 		break;
 	default:
 		wil_err(wil, "No recovery - unknown interface type %d\n",
 			wdev->iftype);
 		break;
 	}
+<<<<<<< HEAD
 
 	mutex_unlock(&wil->mutex);
 	rtnl_unlock();
@@ -635,6 +790,9 @@ static void wil_fw_error_worker(struct work_struct *work)
 	}
 
 	wil_fw_recovery(wil);
+=======
+	mutex_unlock(&wil->mutex);
+>>>>>>> rebase
 }
 
 static int wil_find_free_ring(struct wil6210_priv *wil)
@@ -652,7 +810,11 @@ static int wil_find_free_ring(struct wil6210_priv *wil)
 int wil_ring_init_tx(struct wil6210_vif *vif, int cid)
 {
 	struct wil6210_priv *wil = vif_to_wil(vif);
+<<<<<<< HEAD
 	int rc = -EINVAL, ringid, ring_size;
+=======
+	int rc = -EINVAL, ringid;
+>>>>>>> rebase
 
 	if (cid < 0) {
 		wil_err(wil, "No connection pending\n");
@@ -667,9 +829,13 @@ int wil_ring_init_tx(struct wil6210_vif *vif, int cid)
 	wil_dbg_wmi(wil, "Configure for connection CID %d MID %d ring %d\n",
 		    cid, vif->mid, ringid);
 
+<<<<<<< HEAD
 	ring_size = wil->ipa_handle ?
 		WIL_IPA_DESC_RING_SIZE : 1 << tx_ring_order;
 	rc = wil->txrx_ops.ring_init_tx(vif, ringid, ring_size,
+=======
+	rc = wil->txrx_ops.ring_init_tx(vif, ringid, 1 << tx_ring_order,
+>>>>>>> rebase
 					cid, 0);
 	if (rc)
 		wil_err(wil, "init TX for CID %d MID %d vring %d failed\n",
@@ -716,7 +882,11 @@ void wil_bcast_fini_all(struct wil6210_priv *wil)
 	int i;
 	struct wil6210_vif *vif;
 
+<<<<<<< HEAD
 	for (i = 0; i < GET_MAX_VIFS(wil); i++) {
+=======
+	for (i = 0; i < wil->max_vifs; i++) {
+>>>>>>> rebase
 		vif = wil->vifs[i];
 		if (vif)
 			wil_bcast_fini(vif);
@@ -751,16 +921,23 @@ int wil_priv_init(struct wil6210_priv *wil)
 
 	INIT_WORK(&wil->wmi_event_worker, wmi_event_worker);
 	INIT_WORK(&wil->fw_error_worker, wil_fw_error_worker);
+<<<<<<< HEAD
 	INIT_WORK(&wil->pci_linkdown_recovery_worker,
 		  wil_pci_linkdown_recovery_worker);
+=======
+>>>>>>> rebase
 
 	INIT_LIST_HEAD(&wil->pending_wmi_ev);
 	spin_lock_init(&wil->wmi_ev_lock);
 	spin_lock_init(&wil->net_queue_lock);
+<<<<<<< HEAD
 	spin_lock_init(&wil->eap_lock);
 
 	init_waitqueue_head(&wil->wq);
 	init_rwsem(&wil->mem_lock);
+=======
+	init_waitqueue_head(&wil->wq);
+>>>>>>> rebase
 
 	wil->wmi_wq = create_singlethread_workqueue(WIL_NAME "_wmi");
 	if (!wil->wmi_wq)
@@ -805,7 +982,10 @@ int wil_priv_init(struct wil6210_priv *wil)
 	wil->rx_buff_id_count = WIL_RX_BUFF_ARR_SIZE_DEFAULT;
 
 	wil->amsdu_en = 1;
+<<<<<<< HEAD
 	wil->fw_state = WIL_FW_STATE_DOWN;
+=======
+>>>>>>> rebase
 
 	return 0;
 
@@ -828,6 +1008,7 @@ void wil6210_bus_request(struct wil6210_priv *wil, u32 kbps)
  * @vif: virtual interface context
  * @bssid: peer to disconnect, NULL to disconnect all
  * @reason_code: Reason code for the Disassociation frame
+<<<<<<< HEAD
  *
  * Disconnect and release associated resources. Issue WMI
  * command(s) to trigger MAC disconnect. When command was issued
@@ -863,6 +1044,22 @@ void wil6210_disconnect_complete(struct wil6210_vif *vif, const u8 *bssid,
 
 	del_timer_sync(&vif->connect_timer);
 	_wil6210_disconnect_complete(vif, bssid, reason_code);
+=======
+ * @from_event: whether is invoked from FW event handler
+ *
+ * Disconnect and release associated resources. If invoked not from the
+ * FW event handler, issue WMI command(s) to trigger MAC disconnect.
+ */
+void wil6210_disconnect(struct wil6210_vif *vif, const u8 *bssid,
+			u16 reason_code, bool from_event)
+{
+	struct wil6210_priv *wil = vif_to_wil(vif);
+
+	wil_dbg_misc(wil, "disconnect\n");
+
+	del_timer_sync(&vif->connect_timer);
+	_wil6210_disconnect(vif, bssid, reason_code, from_event);
+>>>>>>> rebase
 }
 
 void wil_priv_deinit(struct wil6210_priv *wil)
@@ -871,12 +1068,18 @@ void wil_priv_deinit(struct wil6210_priv *wil)
 
 	wil_set_recovery_state(wil, fw_recovery_idle);
 	cancel_work_sync(&wil->fw_error_worker);
+<<<<<<< HEAD
 	cancel_work_sync(&wil->pci_linkdown_recovery_worker);
 	wmi_event_flush(wil);
 	destroy_workqueue(wil->wq_service);
 	destroy_workqueue(wil->wmi_wq);
 	kfree(wil->board_file);
 	kfree(wil->brd_info);
+=======
+	wmi_event_flush(wil);
+	destroy_workqueue(wil->wq_service);
+	destroy_workqueue(wil->wmi_wq);
+>>>>>>> rebase
 }
 
 static void wil_shutdown_bl(struct wil6210_priv *wil)
@@ -1318,10 +1521,13 @@ void wil_refresh_fw_capabilities(struct wil6210_priv *wil)
 		wil->max_agg_wsize = WIL_MAX_AGG_WSIZE;
 		wil->max_ampdu_size = WIL_MAX_AMPDU_SIZE;
 	}
+<<<<<<< HEAD
 
 	update_supported_bands(wil);
 
 	wil->ap_ps = test_bit(WIL_PLATFORM_CAPA_AP_PS, wil->platform_capa);
+=======
+>>>>>>> rebase
 }
 
 void wil_mbox_ring_le2cpus(struct wil6210_mbox_ring *r)
@@ -1337,8 +1543,11 @@ void wil_mbox_ring_le2cpus(struct wil6210_mbox_ring *r)
 void wil_get_board_file(struct wil6210_priv *wil, char *buf, size_t len)
 {
 	const char *board_file;
+<<<<<<< HEAD
 	const char *ext;
 	int prefix_len;
+=======
+>>>>>>> rebase
 	const char *wil_talyn_fw_name = ftm_mode ? WIL_FW_NAME_FTM_TALYN :
 			      WIL_FW_NAME_TALYN;
 
@@ -1354,6 +1563,7 @@ void wil_get_board_file(struct wil6210_priv *wil, char *buf, size_t len)
 			board_file = WIL_BOARD_FILE_NAME;
 	}
 
+<<<<<<< HEAD
 	if (wil->board_file_reg_suffix[0] == '\0') {
 		strlcpy(buf, board_file, len);
 		return;
@@ -1369,6 +1579,9 @@ void wil_get_board_file(struct wil6210_priv *wil, char *buf, size_t len)
 		 prefix_len, board_file, wil->board_file_reg_suffix);
 	if (ext)
 		strlcat(buf, ext, len);
+=======
+	strlcpy(buf, board_file, len);
+>>>>>>> rebase
 }
 
 static int wil_get_bl_info(struct wil6210_priv *wil)
@@ -1470,6 +1683,7 @@ static int wil_get_otp_info(struct wil6210_priv *wil)
 	u8 mac[8];
 	int mac_addr;
 
+<<<<<<< HEAD
 	/* OEM MAC has precedence */
 	mac_addr = RGF_OTP_OEM_MAC;
 	wil_memcpy_fromio_32(mac, wil->csr + HOSTADDR(mac_addr), sizeof(mac));
@@ -1495,6 +1709,18 @@ static int wil_get_otp_info(struct wil6210_priv *wil)
 		wil_err(wil, "Invalid MAC %pM, using random %pM\n", mac,
 			dummy_mac);
 		ether_addr_copy(mac, dummy_mac);
+=======
+	if (wil->hw_version >= HW_VER_TALYN_MB)
+		mac_addr = RGF_OTP_MAC_TALYN_MB;
+	else
+		mac_addr = RGF_OTP_MAC;
+
+	wil_memcpy_fromio_32(mac, wil->csr + HOSTADDR(mac_addr),
+			     sizeof(mac));
+	if (!is_valid_ether_addr(mac)) {
+		wil_err(wil, "Invalid MAC %pM\n", mac);
+		return -EINVAL;
+>>>>>>> rebase
 	}
 
 	ether_addr_copy(ndev->perm_addr, mac);
@@ -1516,7 +1742,10 @@ static int wil_wait_for_fw_ready(struct wil6210_priv *wil)
 	} else {
 		wil_info(wil, "FW ready after %d ms. HW version 0x%08x\n",
 			 jiffies_to_msecs(to-left), wil->hw_version);
+<<<<<<< HEAD
 		wil_nl_60g_fw_state_change(wil, WIL_FW_STATE_READY);
+=======
+>>>>>>> rebase
 	}
 	return 0;
 }
@@ -1556,7 +1785,11 @@ void wil_abort_scan_all_vifs(struct wil6210_priv *wil, bool sync)
 
 	lockdep_assert_held(&wil->vif_mutex);
 
+<<<<<<< HEAD
 	for (i = 0; i < GET_MAX_VIFS(wil); i++) {
+=======
+	for (i = 0; i < wil->max_vifs; i++) {
+>>>>>>> rebase
 		struct wil6210_vif *vif = wil->vifs[i];
 
 		if (vif)
@@ -1582,6 +1815,7 @@ int wil_ps_update(struct wil6210_priv *wil, enum wmi_ps_profile_type ps_profile)
 	return rc;
 }
 
+<<<<<<< HEAD
 int wil_vr_update_profile(struct wil6210_priv *wil, u8 profile)
 {
 	int rc;
@@ -1620,6 +1854,10 @@ int wil_vr_update_profile(struct wil6210_priv *wil, u8 profile)
 static void wil_pre_fw_config(struct wil6210_priv *wil)
 {
 	wil_clear_fw_log_addr(wil);
+=======
+static void wil_pre_fw_config(struct wil6210_priv *wil)
+{
+>>>>>>> rebase
 	/* Mark FW as loaded from host */
 	wil_s(wil, RGF_USER_USAGE_6, 1);
 
@@ -1660,7 +1898,11 @@ static int wil_restore_vifs(struct wil6210_priv *wil)
 	struct wireless_dev *wdev;
 	int i, rc;
 
+<<<<<<< HEAD
 	for (i = 0; i < GET_MAX_VIFS(wil); i++) {
+=======
+	for (i = 0; i < wil->max_vifs; i++) {
+>>>>>>> rebase
 		vif = wil->vifs[i];
 		if (!vif)
 			continue;
@@ -1682,6 +1924,7 @@ static int wil_restore_vifs(struct wil6210_priv *wil)
 }
 
 /*
+<<<<<<< HEAD
  * Clear FW and ucode log start addr to indicate FW log is not ready. The host
  * driver clears the addresses before FW starts and FW initializes the address
  * when it is ready to send logs.
@@ -1696,6 +1939,8 @@ void wil_clear_fw_log_addr(struct wil6210_priv *wil)
 }
 
 /*
+=======
+>>>>>>> rebase
  * We reset all the structures, and we reset the UMAC.
  * After calling this routine, you're expected to reload
  * the firmware.
@@ -1720,15 +1965,22 @@ int wil_reset(struct wil6210_priv *wil, bool load_fw)
 
 		ether_addr_copy(ndev->perm_addr, mac);
 		ether_addr_copy(ndev->dev_addr, ndev->perm_addr);
+<<<<<<< HEAD
 		wil->fw_state = WIL_FW_STATE_UNKNOWN;
+=======
+>>>>>>> rebase
 		return 0;
 	}
 
 	if (wil->hw_version == HW_VER_UNKNOWN)
 		return -ENODEV;
 
+<<<<<<< HEAD
 	if (test_bit(WIL_PLATFORM_CAPA_T_PWR_ON_0, wil->platform_capa) &&
 	    wil->hw_version < HW_VER_TALYN_MB) {
+=======
+	if (test_bit(WIL_PLATFORM_CAPA_T_PWR_ON_0, wil->platform_capa)) {
+>>>>>>> rebase
 		wil_dbg_misc(wil, "Notify FW to set T_POWER_ON=0\n");
 		wil_s(wil, RGF_USER_USAGE_8, BIT_USER_SUPPORT_T_POWER_ON_0);
 	}
@@ -1738,6 +1990,7 @@ int wil_reset(struct wil6210_priv *wil, bool load_fw)
 		wil_s(wil, RGF_USER_USAGE_8, BIT_USER_EXT_CLK);
 	}
 
+<<<<<<< HEAD
 	if (support_sensing_over_spi) {
 		wil_dbg_misc(wil, "notify FW to enable SPI for sensing\n");
 		wil_s(wil, RGF_USER_USAGE_6, BIT_SPI_SENSING_SUPPORT);
@@ -1747,6 +2000,8 @@ int wil_reset(struct wil6210_priv *wil, bool load_fw)
 		wil_c(wil, RGF_USER_USAGE_6, BIT_SPI_SENSING_SUPPORT);
 	}
 
+=======
+>>>>>>> rebase
 	if (wil->platform_ops.notify) {
 		rc = wil->platform_ops.notify(wil->platform_handle,
 					      WIL_PLATFORM_EVT_PRE_RESET);
@@ -1755,19 +2010,40 @@ int wil_reset(struct wil6210_priv *wil, bool load_fw)
 				rc);
 	}
 
+<<<<<<< HEAD
 	wil_nl_60g_fw_state_change(wil, WIL_FW_STATE_DOWN);
 	set_bit(wil_status_resetting, wil->status);
+=======
+	set_bit(wil_status_resetting, wil->status);
+	if (test_bit(wil_status_collecting_dumps, wil->status)) {
+		/* Device collects crash dump, cancel the reset.
+		 * following crash dump collection, reset would take place.
+		 */
+		wil_dbg_misc(wil, "reject reset while collecting crash dump\n");
+		rc = -EBUSY;
+		goto out;
+	}
+
+>>>>>>> rebase
 	mutex_lock(&wil->vif_mutex);
 	wil_abort_scan_all_vifs(wil, false);
 	mutex_unlock(&wil->vif_mutex);
 
+<<<<<<< HEAD
 	for (i = 0; i < GET_MAX_VIFS(wil); i++) {
+=======
+	for (i = 0; i < wil->max_vifs; i++) {
+>>>>>>> rebase
 		vif = wil->vifs[i];
 		if (vif) {
 			cancel_work_sync(&vif->disconnect_worker);
 			wil6210_disconnect(vif, NULL,
+<<<<<<< HEAD
 					   WLAN_REASON_DEAUTH_LEAVING);
 			vif->ptk_rekey_state = WIL_REKEY_IDLE;
+=======
+					   WLAN_REASON_DEAUTH_LEAVING, false);
+>>>>>>> rebase
 		}
 	}
 	wil_bcast_fini_all(wil);
@@ -1775,8 +2051,11 @@ int wil_reset(struct wil6210_priv *wil, bool load_fw)
 	/* Disable device led before reset*/
 	wmi_led_cfg(wil, false);
 
+<<<<<<< HEAD
 	down_write(&wil->mem_lock);
 
+=======
+>>>>>>> rebase
 	/* prevent NAPI from being scheduled and prevent wmi commands */
 	mutex_lock(&wil->wmi_mutex);
 	if (test_bit(wil_status_suspending, wil->status))
@@ -1790,8 +2069,11 @@ int wil_reset(struct wil6210_priv *wil, bool load_fw)
 
 	wmi_event_flush(wil);
 
+<<<<<<< HEAD
 	wil->force_wmi_send = false;
 
+=======
+>>>>>>> rebase
 	flush_workqueue(wil->wq_service);
 	flush_workqueue(wil->wmi_wq);
 
@@ -1825,17 +2107,28 @@ int wil_reset(struct wil6210_priv *wil, bool load_fw)
 	if (load_fw) {
 		char board_file[WIL_BOARD_FILE_MAX_NAMELEN];
 
+<<<<<<< HEAD
+=======
+		if  (wil->secured_boot) {
+			wil_err(wil, "secured boot is not supported\n");
+			return -ENOTSUPP;
+		}
+
+>>>>>>> rebase
 		board_file[0] = '\0';
 		wil_get_board_file(wil, board_file, sizeof(board_file));
 		wil_info(wil, "Use firmware <%s> + board <%s>\n",
 			 wil->wil_fw_name, board_file);
 
+<<<<<<< HEAD
 		if  (wil->secured_boot) {
 			wil_err(wil, "secured boot is not supported\n");
 			up_write(&wil->mem_lock);
 			return -ENOTSUPP;
 		}
 
+=======
+>>>>>>> rebase
 		if (!no_flash)
 			wil_bl_prepare_halt(wil);
 
@@ -1845,7 +2138,11 @@ int wil_reset(struct wil6210_priv *wil, bool load_fw)
 		rc = wil_request_firmware(wil, wil->wil_fw_name, true);
 		if (rc)
 			goto out;
+<<<<<<< HEAD
 		if (wil->num_of_brd_entries)
+=======
+		if (wil->brd_file_addr)
+>>>>>>> rebase
 			rc = wil_request_board(wil, board_file);
 		else
 			rc = wil_request_firmware(wil, board_file, true);
@@ -1863,8 +2160,11 @@ int wil_reset(struct wil6210_priv *wil, bool load_fw)
 
 	clear_bit(wil_status_resetting, wil->status);
 
+<<<<<<< HEAD
 	up_write(&wil->mem_lock);
 
+=======
+>>>>>>> rebase
 	if (load_fw) {
 		wil_unmask_irq(wil);
 
@@ -1880,10 +2180,13 @@ int wil_reset(struct wil6210_priv *wil, bool load_fw)
 			return rc;
 		}
 
+<<<<<<< HEAD
 		/* Update VR mode before configuring interrupt moderation */
 		if (wil->vr_profile != WMI_VR_PROFILE_DISABLED)
 			wil_vr_update_profile(wil, wil->vr_profile);
 
+=======
+>>>>>>> rebase
 		wil->txrx_ops.configure_interrupt_moderation(wil);
 
 		/* Enable OFU rdy valid bug fix, to prevent hang in oful34_rx
@@ -1904,6 +2207,7 @@ int wil_reset(struct wil6210_priv *wil, bool load_fw)
 		if (wil->ps_profile != WMI_PS_PROFILE_TYPE_DEFAULT)
 			wil_ps_update(wil, wil->ps_profile);
 
+<<<<<<< HEAD
 		if (wil->tt_data_set)
 			wmi_set_tt_cfg(wil, &wil->tt_data);
 
@@ -1922,6 +2226,8 @@ int wil_reset(struct wil6210_priv *wil, bool load_fw)
 					    WIL_DEFAULT_TX_RESERVED_ENTRIES :
 					    0);
 
+=======
+>>>>>>> rebase
 		if (wil->platform_ops.notify) {
 			rc = wil->platform_ops.notify(wil->platform_handle,
 						      WIL_PLATFORM_EVT_FW_RDY);
@@ -1936,7 +2242,10 @@ int wil_reset(struct wil6210_priv *wil, bool load_fw)
 	return rc;
 
 out:
+<<<<<<< HEAD
 	up_write(&wil->mem_lock);
+=======
+>>>>>>> rebase
 	clear_bit(wil_status_resetting, wil->status);
 	return rc;
 }
@@ -1967,11 +2276,14 @@ int __wil_up(struct wil6210_priv *wil)
 		return rc;
 
 	/* Rx RING. After MAC and beacon */
+<<<<<<< HEAD
 	if (rx_ring_order == 0)
 		rx_ring_order = wil->hw_version < HW_VER_TALYN_MB ?
 			WIL_RX_RING_SIZE_ORDER_DEFAULT :
 			WIL_RX_RING_SIZE_ORDER_TALYN_DEFAULT;
 
+=======
+>>>>>>> rebase
 	rc = wil->txrx_ops.rx_init(wil, rx_ring_order);
 	if (rc)
 		return rc;
@@ -2034,7 +2346,10 @@ int wil_up(struct wil6210_priv *wil)
 
 int __wil_down(struct wil6210_priv *wil)
 {
+<<<<<<< HEAD
 	int rc;
+=======
+>>>>>>> rebase
 	WARN_ON(!mutex_is_locked(&wil->mutex));
 
 	set_bit(wil_status_resetting, wil->status);
@@ -2050,14 +2365,21 @@ int __wil_down(struct wil6210_priv *wil)
 	wil_enable_irq(wil);
 
 	mutex_lock(&wil->vif_mutex);
+<<<<<<< HEAD
 	wil_ftm_stop_operations(wil);
+=======
+>>>>>>> rebase
 	wil_p2p_stop_radio_operations(wil);
 	wil_abort_scan_all_vifs(wil, false);
 	mutex_unlock(&wil->vif_mutex);
 
+<<<<<<< HEAD
 	rc = wil_reset(wil, false);
 
 	return rc;
+=======
+	return wil_reset(wil, false);
+>>>>>>> rebase
 }
 
 int wil_down(struct wil6210_priv *wil)
@@ -2079,7 +2401,11 @@ int wil_find_cid(struct wil6210_priv *wil, u8 mid, const u8 *mac)
 	int i;
 	int rc = -ENOENT;
 
+<<<<<<< HEAD
 	for (i = 0; i < max_assoc_sta; i++) {
+=======
+	for (i = 0; i < ARRAY_SIZE(wil->sta); i++) {
+>>>>>>> rebase
 		if (wil->sta[i].mid == mid &&
 		    wil->sta[i].status != wil_sta_unused &&
 		    ether_addr_equal(wil->sta[i].addr, mac)) {
@@ -2096,9 +2422,12 @@ void wil_halp_vote(struct wil6210_priv *wil)
 	unsigned long rc;
 	unsigned long to_jiffies = msecs_to_jiffies(WAIT_FOR_HALP_VOTE_MS);
 
+<<<<<<< HEAD
 	if (wil->hw_version >= HW_VER_TALYN_MB)
 		return;
 
+=======
+>>>>>>> rebase
 	mutex_lock(&wil->halp.lock);
 
 	wil_dbg_irq(wil, "halp_vote: start, HALP ref_cnt (%d)\n",
@@ -2107,12 +2436,20 @@ void wil_halp_vote(struct wil6210_priv *wil)
 	if (++wil->halp.ref_cnt == 1) {
 		reinit_completion(&wil->halp.comp);
 		/* mark to IRQ context to handle HALP ICR */
+<<<<<<< HEAD
 		atomic_set(&wil->halp.handle_icr, 1);
+=======
+		wil->halp.handle_icr = true;
+>>>>>>> rebase
 		wil6210_set_halp(wil);
 		rc = wait_for_completion_timeout(&wil->halp.comp, to_jiffies);
 		if (!rc) {
 			wil_err(wil, "HALP vote timed out\n");
 			/* Mask HALP as done in case the interrupt is raised */
+<<<<<<< HEAD
+=======
+			wil->halp.handle_icr = false;
+>>>>>>> rebase
 			wil6210_mask_halp(wil);
 		} else {
 			wil_dbg_irq(wil,
@@ -2129,9 +2466,12 @@ void wil_halp_vote(struct wil6210_priv *wil)
 
 void wil_halp_unvote(struct wil6210_priv *wil)
 {
+<<<<<<< HEAD
 	if (wil->hw_version >= HW_VER_TALYN_MB)
 		return;
 
+=======
+>>>>>>> rebase
 	WARN_ON(wil->halp.ref_cnt == 0);
 
 	mutex_lock(&wil->halp.lock);

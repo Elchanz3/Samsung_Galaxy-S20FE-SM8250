@@ -1070,12 +1070,19 @@ static int mlx5_ib_query_device(struct ib_device *ibdev,
 		if (MLX5_CAP_ETH(mdev, tunnel_stateless_gre))
 			resp.tunnel_offloads_caps |=
 				MLX5_IB_TUNNELED_OFFLOADS_GRE;
+<<<<<<< HEAD
 		if (MLX5_CAP_GEN(mdev, flex_parser_protocols) &
 		    MLX5_FLEX_PROTO_CW_MPLS_GRE)
 			resp.tunnel_offloads_caps |=
 				MLX5_IB_TUNNELED_OFFLOADS_MPLS_GRE;
 		if (MLX5_CAP_GEN(mdev, flex_parser_protocols) &
 		    MLX5_FLEX_PROTO_CW_MPLS_UDP)
+=======
+		if (MLX5_CAP_ETH(mdev, tunnel_stateless_mpls_over_gre))
+			resp.tunnel_offloads_caps |=
+				MLX5_IB_TUNNELED_OFFLOADS_MPLS_GRE;
+		if (MLX5_CAP_ETH(mdev, tunnel_stateless_mpls_over_udp))
+>>>>>>> rebase
 			resp.tunnel_offloads_caps |=
 				MLX5_IB_TUNNELED_OFFLOADS_MPLS_UDP;
 	}
@@ -5376,8 +5383,11 @@ static void mlx5_ib_unbind_slave_port(struct mlx5_ib_dev *ibdev,
 
 	port->mp.mpi = NULL;
 
+<<<<<<< HEAD
 	list_add_tail(&mpi->list, &mlx5_ib_unaffiliated_port_list);
 
+=======
+>>>>>>> rebase
 	spin_unlock(&port->mp.mpi_lock);
 
 	err = mlx5_nic_vport_unaffiliate_multiport(mpi->mdev);
@@ -5526,6 +5536,11 @@ static void mlx5_ib_cleanup_multiport_master(struct mlx5_ib_dev *dev)
 				dev->port[i].mp.mpi = NULL;
 			} else {
 				mlx5_ib_dbg(dev, "unbinding port_num: %d\n", i + 1);
+<<<<<<< HEAD
+=======
+				list_add_tail(&dev->port[i].mp.mpi->list,
+					      &mlx5_ib_unaffiliated_port_list);
+>>>>>>> rebase
 				mlx5_ib_unbind_slave_port(dev, dev->port[i].mp.mpi);
 			}
 		}
@@ -6096,7 +6111,11 @@ int mlx5_ib_stage_bfrag_init(struct mlx5_ib_dev *dev)
 
 	err = mlx5_alloc_bfreg(dev->mdev, &dev->fp_bfreg, false, true);
 	if (err)
+<<<<<<< HEAD
 		mlx5_free_bfreg(dev->mdev, &dev->fp_bfreg);
+=======
+		mlx5_free_bfreg(dev->mdev, &dev->bfreg);
+>>>>>>> rebase
 
 	return err;
 }
@@ -6341,6 +6360,10 @@ static void *mlx5_ib_add_slave_port(struct mlx5_core_dev *mdev)
 
 		if (bound) {
 			rdma_roce_rescan_device(&dev->ib_dev);
+<<<<<<< HEAD
+=======
+			mpi->ibdev->ib_active = true;
+>>>>>>> rebase
 			break;
 		}
 	}

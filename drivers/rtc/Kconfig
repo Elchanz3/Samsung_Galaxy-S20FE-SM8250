@@ -639,6 +639,10 @@ config RTC_DRV_S5M
 	tristate "Samsung S2M/S5M series"
 	depends on MFD_SEC_CORE || COMPILE_TEST
 	select REGMAP_IRQ
+<<<<<<< HEAD
+=======
+	select REGMAP_I2C
+>>>>>>> rebase
 	help
 	  If you say yes here you will get support for the
 	  RTC of Samsung S2MPS14 and S5M PMIC series.
@@ -1818,6 +1822,7 @@ config RTC_DRV_GOLDFISH
 	  Goldfish is a code name for the virtual platform developed by Google
 	  for Android emulation.
 
+<<<<<<< HEAD
 config RTC_AUTO_PWRON
 	bool "RTC Auto Power on PMICs"
 	default n
@@ -1832,4 +1837,6 @@ config RTC_AUTO_PWRON_PARAM
 	help
 	  Use parameter partition to save alarm time
 
+=======
+>>>>>>> rebase
 endif # RTC_CLASS

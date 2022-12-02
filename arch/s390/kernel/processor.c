@@ -157,8 +157,14 @@ static void show_cpu_mhz(struct seq_file *m, unsigned long n)
 static int show_cpuinfo(struct seq_file *m, void *v)
 {
 	unsigned long n = (unsigned long) v - 1;
+<<<<<<< HEAD
 
 	if (!n)
+=======
+	unsigned long first = cpumask_first(cpu_online_mask);
+
+	if (n == first)
+>>>>>>> rebase
 		show_cpu_summary(m, v);
 	if (!machine_has_cpu_mhz)
 		return 0;
@@ -171,6 +177,11 @@ static inline void *c_update(loff_t *pos)
 {
 	if (*pos)
 		*pos = cpumask_next(*pos - 1, cpu_online_mask);
+<<<<<<< HEAD
+=======
+	else
+		*pos = cpumask_first(cpu_online_mask);
+>>>>>>> rebase
 	return *pos < nr_cpu_ids ? (void *)*pos + 1 : NULL;
 }
 

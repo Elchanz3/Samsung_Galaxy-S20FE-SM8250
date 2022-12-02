@@ -32,7 +32,11 @@
 
 			phy-reset-gpios = <&gpio TEGRA194_MAIN_GPIO(G, 5) GPIO_ACTIVE_LOW>;
 			phy-handle = <&phy>;
+<<<<<<< HEAD
 			phy-mode = "rgmii";
+=======
+			phy-mode = "rgmii-id";
+>>>>>>> rebase
 
 			mdio {
 				#address-cells = <1>;

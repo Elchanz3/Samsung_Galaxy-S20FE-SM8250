@@ -297,6 +297,7 @@ static inline void __check_heap_object(const void *ptr, unsigned long n,
 #define SLAB_OBJ_MIN_SIZE      (KMALLOC_MIN_SIZE < 16 ? \
                                (KMALLOC_MIN_SIZE) : 16)
 
+<<<<<<< HEAD
 /*
  * Whenever changing this, take care of that kmalloc_type() and
  * create_kmalloc_caches() still work as intended.
@@ -333,6 +334,13 @@ static __always_inline enum kmalloc_cache_type kmalloc_type(gfp_t flags)
 	return flags & __GFP_RECLAIMABLE ? KMALLOC_RECLAIM : KMALLOC_NORMAL;
 #endif
 }
+=======
+#ifndef CONFIG_SLOB
+extern struct kmem_cache *kmalloc_caches[KMALLOC_SHIFT_HIGH + 1];
+#ifdef CONFIG_ZONE_DMA
+extern struct kmem_cache *kmalloc_dma_caches[KMALLOC_SHIFT_HIGH + 1];
+#endif
+>>>>>>> rebase
 
 /*
  * Figure out which kmalloc slab an allocation of a certain size
@@ -446,7 +454,11 @@ static __always_inline void *kmem_cache_alloc_trace(struct kmem_cache *s,
 {
 	void *ret = kmem_cache_alloc(s, flags);
 
+<<<<<<< HEAD
 	ret = kasan_kmalloc(s, ret, size, flags);
+=======
+	kasan_kmalloc(s, ret, size, flags);
+>>>>>>> rebase
 	return ret;
 }
 
@@ -457,7 +469,11 @@ kmem_cache_alloc_node_trace(struct kmem_cache *s,
 {
 	void *ret = kmem_cache_alloc_node(s, gfpflags, node);
 
+<<<<<<< HEAD
 	ret = kasan_kmalloc(s, ret, size, gfpflags);
+=======
+	kasan_kmalloc(s, ret, size, gfpflags);
+>>>>>>> rebase
 	return ret;
 }
 #endif /* CONFIG_TRACING */
@@ -534,6 +550,7 @@ static __always_inline void *kmalloc_large(size_t size, gfp_t flags)
 static __always_inline void *kmalloc(size_t size, gfp_t flags)
 {
 	if (__builtin_constant_p(size)) {
+<<<<<<< HEAD
 #ifndef CONFIG_SLOB
 		unsigned int index;
 #endif
@@ -548,6 +565,20 @@ static __always_inline void *kmalloc(size_t size, gfp_t flags)
 		return kmem_cache_alloc_trace(
 				kmalloc_caches[kmalloc_type(flags)][index],
 				flags, size);
+=======
+		if (size > KMALLOC_MAX_CACHE_SIZE)
+			return kmalloc_large(size, flags);
+#ifndef CONFIG_SLOB
+		if (!(flags & GFP_DMA)) {
+			unsigned int index = kmalloc_index(size);
+
+			if (!index)
+				return ZERO_SIZE_PTR;
+
+			return kmem_cache_alloc_trace(kmalloc_caches[index],
+					flags, size);
+		}
+>>>>>>> rebase
 #endif
 	}
 	return __kmalloc(size, flags);
@@ -577,14 +608,22 @@ static __always_inline void *kmalloc_node(size_t size, gfp_t flags, int node)
 {
 #ifndef CONFIG_SLOB
 	if (__builtin_constant_p(size) &&
+<<<<<<< HEAD
 		size <= KMALLOC_MAX_CACHE_SIZE) {
+=======
+		size <= KMALLOC_MAX_CACHE_SIZE && !(flags & GFP_DMA)) {
+>>>>>>> rebase
 		unsigned int i = kmalloc_index(size);
 
 		if (!i)
 			return ZERO_SIZE_PTR;
 
+<<<<<<< HEAD
 		return kmem_cache_alloc_node_trace(
 				kmalloc_caches[kmalloc_type(flags)][i],
+=======
+		return kmem_cache_alloc_node_trace(kmalloc_caches[i],
+>>>>>>> rebase
 						flags, node, size);
 	}
 #endif

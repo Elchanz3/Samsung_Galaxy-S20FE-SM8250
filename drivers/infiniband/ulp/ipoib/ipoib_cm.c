@@ -756,7 +756,12 @@ void ipoib_cm_send(struct net_device *dev, struct sk_buff *skb, struct ipoib_cm_
 		return;
 	}
 
+<<<<<<< HEAD
 	if ((priv->tx_head - priv->tx_tail) == ipoib_sendq_size - 1) {
+=======
+	if ((priv->global_tx_head - priv->global_tx_tail) ==
+	    ipoib_sendq_size - 1) {
+>>>>>>> rebase
 		ipoib_dbg(priv, "TX ring 0x%x full, stopping kernel net queue\n",
 			  tx->qp->qp_num);
 		netif_stop_queue(dev);
@@ -786,7 +791,11 @@ void ipoib_cm_send(struct net_device *dev, struct sk_buff *skb, struct ipoib_cm_
 	} else {
 		netif_trans_update(dev);
 		++tx->tx_head;
+<<<<<<< HEAD
 		++priv->tx_head;
+=======
+		++priv->global_tx_head;
+>>>>>>> rebase
 	}
 }
 
@@ -820,10 +829,18 @@ void ipoib_cm_handle_tx_wc(struct net_device *dev, struct ib_wc *wc)
 	netif_tx_lock(dev);
 
 	++tx->tx_tail;
+<<<<<<< HEAD
 	++priv->tx_tail;
 
 	if (unlikely(netif_queue_stopped(dev) &&
 		     (priv->tx_head - priv->tx_tail) <= ipoib_sendq_size >> 1 &&
+=======
+	++priv->global_tx_tail;
+
+	if (unlikely(netif_queue_stopped(dev) &&
+		     ((priv->global_tx_head - priv->global_tx_tail) <=
+		      ipoib_sendq_size >> 1) &&
+>>>>>>> rebase
 		     test_bit(IPOIB_FLAG_ADMIN_UP, &priv->flags)))
 		netif_wake_queue(dev);
 
@@ -1233,8 +1250,14 @@ timeout:
 		dev_kfree_skb_any(tx_req->skb);
 		netif_tx_lock_bh(p->dev);
 		++p->tx_tail;
+<<<<<<< HEAD
 		++priv->tx_tail;
 		if (unlikely(priv->tx_head - priv->tx_tail == ipoib_sendq_size >> 1) &&
+=======
+		++priv->global_tx_tail;
+		if (unlikely((priv->global_tx_head - priv->global_tx_tail) <=
+			     ipoib_sendq_size >> 1) &&
+>>>>>>> rebase
 		    netif_queue_stopped(p->dev) &&
 		    test_bit(IPOIB_FLAG_ADMIN_UP, &priv->flags))
 			netif_wake_queue(p->dev);

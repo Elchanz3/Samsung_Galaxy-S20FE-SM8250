@@ -67,11 +67,16 @@ static ssize_t node_read_meminfo(struct device *dev,
 	int nid = dev->id;
 	struct pglist_data *pgdat = NODE_DATA(nid);
 	struct sysinfo i;
+<<<<<<< HEAD
 	unsigned long sreclaimable, sunreclaimable;
 
 	si_meminfo_node(&i, nid);
 	sreclaimable = node_page_state(pgdat, NR_SLAB_RECLAIMABLE);
 	sunreclaimable = node_page_state(pgdat, NR_SLAB_UNRECLAIMABLE);
+=======
+
+	si_meminfo_node(&i, nid);
+>>>>>>> rebase
 	n = sprintf(buf,
 		       "Node %d MemTotal:       %8lu kB\n"
 		       "Node %d MemFree:        %8lu kB\n"
@@ -117,14 +122,20 @@ static ssize_t node_read_meminfo(struct device *dev,
 		       "Node %d AnonPages:      %8lu kB\n"
 		       "Node %d Shmem:          %8lu kB\n"
 		       "Node %d KernelStack:    %8lu kB\n"
+<<<<<<< HEAD
 #ifdef CONFIG_SHADOW_CALL_STACK
 		       "Node %d ShadowCallStack:%8lu kB\n"
 #endif
+=======
+>>>>>>> rebase
 		       "Node %d PageTables:     %8lu kB\n"
 		       "Node %d NFS_Unstable:   %8lu kB\n"
 		       "Node %d Bounce:         %8lu kB\n"
 		       "Node %d WritebackTmp:   %8lu kB\n"
+<<<<<<< HEAD
 		       "Node %d KReclaimable:   %8lu kB\n"
+=======
+>>>>>>> rebase
 		       "Node %d Slab:           %8lu kB\n"
 		       "Node %d SReclaimable:   %8lu kB\n"
 		       "Node %d SUnreclaim:     %8lu kB\n"
@@ -141,13 +152,17 @@ static ssize_t node_read_meminfo(struct device *dev,
 		       nid, K(node_page_state(pgdat, NR_ANON_MAPPED)),
 		       nid, K(i.sharedram),
 		       nid, sum_zone_node_page_state(nid, NR_KERNEL_STACK_KB),
+<<<<<<< HEAD
 #ifdef CONFIG_SHADOW_CALL_STACK
 		       nid, sum_zone_node_page_state(nid, NR_KERNEL_SCS_BYTES) / 1024,
 #endif
+=======
+>>>>>>> rebase
 		       nid, K(sum_zone_node_page_state(nid, NR_PAGETABLE)),
 		       nid, K(node_page_state(pgdat, NR_UNSTABLE_NFS)),
 		       nid, K(sum_zone_node_page_state(nid, NR_BOUNCE)),
 		       nid, K(node_page_state(pgdat, NR_WRITEBACK_TEMP)),
+<<<<<<< HEAD
 		       nid, K(sreclaimable +
 			      node_page_state(pgdat, NR_KERNEL_MISC_RECLAIMABLE)),
 		       nid, K(sreclaimable + sunreclaimable),
@@ -155,14 +170,28 @@ static ssize_t node_read_meminfo(struct device *dev,
 		       nid, K(sunreclaimable)
 #ifdef CONFIG_TRANSPARENT_HUGEPAGE
 		       ,
+=======
+		       nid, K(node_page_state(pgdat, NR_SLAB_RECLAIMABLE) +
+			      node_page_state(pgdat, NR_SLAB_UNRECLAIMABLE)),
+		       nid, K(node_page_state(pgdat, NR_SLAB_RECLAIMABLE)),
+#ifdef CONFIG_TRANSPARENT_HUGEPAGE
+		       nid, K(node_page_state(pgdat, NR_SLAB_UNRECLAIMABLE)),
+>>>>>>> rebase
 		       nid, K(node_page_state(pgdat, NR_ANON_THPS) *
 				       HPAGE_PMD_NR),
 		       nid, K(node_page_state(pgdat, NR_SHMEM_THPS) *
 				       HPAGE_PMD_NR),
 		       nid, K(node_page_state(pgdat, NR_SHMEM_PMDMAPPED) *
+<<<<<<< HEAD
 				       HPAGE_PMD_NR)
 #endif
 		       );
+=======
+				       HPAGE_PMD_NR));
+#else
+		       nid, K(node_page_state(pgdat, NR_SLAB_UNRECLAIMABLE)));
+#endif
+>>>>>>> rebase
 	n += hugetlb_report_node_meminfo(nid, buf + n);
 	return n;
 }
@@ -350,6 +379,10 @@ static int register_node(struct node *node, int num)
  */
 void unregister_node(struct node *node)
 {
+<<<<<<< HEAD
+=======
+	compaction_unregister_node(node);
+>>>>>>> rebase
 	hugetlb_unregister_node(node);		/* no-op, if memoryless node */
 
 	device_unregister(&node->dev);
@@ -414,10 +447,39 @@ static int __ref get_nid_for_pfn(unsigned long pfn)
 	return pfn_to_nid(pfn);
 }
 
+<<<<<<< HEAD
 /* register memory section under specified node if it spans that node */
 int register_mem_sect_under_node(struct memory_block *mem_blk, void *arg)
 {
 	int ret, nid = *(int *)arg;
+=======
+static int do_register_memory_block_under_node(int nid,
+					       struct memory_block *mem_blk)
+{
+	int ret;
+
+	/*
+	 * If this memory block spans multiple nodes, we only indicate
+	 * the last processed node.
+	 */
+	mem_blk->nid = nid;
+
+	ret = sysfs_create_link_nowarn(&node_devices[nid]->dev.kobj,
+				       &mem_blk->dev.kobj,
+				       kobject_name(&mem_blk->dev.kobj));
+	if (ret)
+		return ret;
+
+	return sysfs_create_link_nowarn(&mem_blk->dev.kobj,
+				&node_devices[nid]->dev.kobj,
+				kobject_name(&node_devices[nid]->dev.kobj));
+}
+
+/* register memory section under specified node if it spans that node */
+int register_mem_block_under_node_early(struct memory_block *mem_blk, void *arg)
+{
+	int nid = *(int *)arg;
+>>>>>>> rebase
 	unsigned long pfn, sect_start_pfn, sect_end_pfn;
 
 	sect_start_pfn = section_nr_to_pfn(mem_blk->start_section_nr);
@@ -437,6 +499,7 @@ int register_mem_sect_under_node(struct memory_block *mem_blk, void *arg)
 		}
 
 		/*
+<<<<<<< HEAD
 		 * We need to check if page belongs to nid only for the boot
 		 * case, during hotplug we know that all pages in the memory
 		 * block belong to the same node.
@@ -464,12 +527,39 @@ int register_mem_sect_under_node(struct memory_block *mem_blk, void *arg)
 		return sysfs_create_link_nowarn(&mem_blk->dev.kobj,
 				&node_devices[nid]->dev.kobj,
 				kobject_name(&node_devices[nid]->dev.kobj));
+=======
+		 * We need to check if page belongs to nid only at the boot
+		 * case because node's ranges can be interleaved.
+		 */
+		page_nid = get_nid_for_pfn(pfn);
+		if (page_nid < 0)
+			continue;
+		if (page_nid != nid)
+			continue;
+
+		return do_register_memory_block_under_node(nid, mem_blk);
+>>>>>>> rebase
 	}
 	/* mem section does not span the specified node */
 	return 0;
 }
 
 /*
+<<<<<<< HEAD
+=======
+ * During hotplug we know that all pages in the memory block belong to the same
+ * node.
+ */
+static int register_mem_block_under_node_hotplug(struct memory_block *mem_blk,
+						 void *arg)
+{
+	int nid = *(int *)arg;
+
+	return do_register_memory_block_under_node(nid, mem_blk);
+}
+
+/*
+>>>>>>> rebase
  * Unregister a memory block device under the node it spans. Memory blocks
  * with multiple nodes cannot be offlined and therefore also never be removed.
  */
@@ -484,10 +574,24 @@ void unregister_memory_block_under_nodes(struct memory_block *mem_blk)
 			  kobject_name(&node_devices[mem_blk->nid]->dev.kobj));
 }
 
+<<<<<<< HEAD
 int link_mem_sections(int nid, unsigned long start_pfn, unsigned long end_pfn)
 {
 	return walk_memory_range(start_pfn, end_pfn, (void *)&nid,
 					register_mem_sect_under_node);
+=======
+int link_mem_sections(int nid, unsigned long start_pfn, unsigned long end_pfn,
+		      enum meminit_context context)
+{
+	walk_memory_blocks_func_t func;
+
+	if (context == MEMINIT_HOTPLUG)
+		func = register_mem_block_under_node_hotplug;
+	else
+		func = register_mem_block_under_node_early;
+
+	return walk_memory_range(start_pfn, end_pfn, (void *)&nid, func);
+>>>>>>> rebase
 }
 
 #ifdef CONFIG_HUGETLBFS

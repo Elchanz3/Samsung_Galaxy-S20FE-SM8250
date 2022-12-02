@@ -211,11 +211,25 @@ static int event_trigger_regex_open(struct inode *inode, struct file *file)
 
 static int trigger_process_regex(struct trace_event_file *file, char *buff)
 {
+<<<<<<< HEAD
 	char *command, *next = buff;
 	struct event_command *p;
 	int ret = -EINVAL;
 
 	command = strsep(&next, ": \t");
+=======
+	char *command, *next;
+	struct event_command *p;
+	int ret = -EINVAL;
+
+	next = buff = skip_spaces(buff);
+	command = strsep(&next, ": \t");
+	if (next) {
+		next = skip_spaces(next);
+		if (!*next)
+			next = NULL;
+	}
+>>>>>>> rebase
 	command = (command[0] != '!') ? command : command + 1;
 
 	mutex_lock(&trigger_cmd_mutex);
@@ -624,8 +638,19 @@ event_trigger_callback(struct event_command *cmd_ops,
 	int ret;
 
 	/* separate the trigger from the filter (t:n [if filter]) */
+<<<<<<< HEAD
 	if (param && isdigit(param[0]))
 		trigger = strsep(&param, " \t");
+=======
+	if (param && isdigit(param[0])) {
+		trigger = strsep(&param, " \t");
+		if (param) {
+			param = skip_spaces(param);
+			if (!*param)
+				param = NULL;
+		}
+	}
+>>>>>>> rebase
 
 	trigger_ops = cmd_ops->get_trigger_ops(cmd, trigger);
 
@@ -921,6 +946,19 @@ static void
 traceon_trigger(struct event_trigger_data *data, void *rec,
 		struct ring_buffer_event *event)
 {
+<<<<<<< HEAD
+=======
+	struct trace_event_file *file = data->private_data;
+
+	if (file) {
+		if (tracer_tracing_is_on(file->tr))
+			return;
+
+		tracer_tracing_on(file->tr);
+		return;
+	}
+
+>>>>>>> rebase
 	if (tracing_is_on())
 		return;
 
@@ -931,8 +969,20 @@ static void
 traceon_count_trigger(struct event_trigger_data *data, void *rec,
 		      struct ring_buffer_event *event)
 {
+<<<<<<< HEAD
 	if (tracing_is_on())
 		return;
+=======
+	struct trace_event_file *file = data->private_data;
+
+	if (file) {
+		if (tracer_tracing_is_on(file->tr))
+			return;
+	} else {
+		if (tracing_is_on())
+			return;
+	}
+>>>>>>> rebase
 
 	if (!data->count)
 		return;
@@ -940,13 +990,33 @@ traceon_count_trigger(struct event_trigger_data *data, void *rec,
 	if (data->count != -1)
 		(data->count)--;
 
+<<<<<<< HEAD
 	tracing_on();
+=======
+	if (file)
+		tracer_tracing_on(file->tr);
+	else
+		tracing_on();
+>>>>>>> rebase
 }
 
 static void
 traceoff_trigger(struct event_trigger_data *data, void *rec,
 		 struct ring_buffer_event *event)
 {
+<<<<<<< HEAD
+=======
+	struct trace_event_file *file = data->private_data;
+
+	if (file) {
+		if (!tracer_tracing_is_on(file->tr))
+			return;
+
+		tracer_tracing_off(file->tr);
+		return;
+	}
+
+>>>>>>> rebase
 	if (!tracing_is_on())
 		return;
 
@@ -957,8 +1027,20 @@ static void
 traceoff_count_trigger(struct event_trigger_data *data, void *rec,
 		       struct ring_buffer_event *event)
 {
+<<<<<<< HEAD
 	if (!tracing_is_on())
 		return;
+=======
+	struct trace_event_file *file = data->private_data;
+
+	if (file) {
+		if (!tracer_tracing_is_on(file->tr))
+			return;
+	} else {
+		if (!tracing_is_on())
+			return;
+	}
+>>>>>>> rebase
 
 	if (!data->count)
 		return;
@@ -966,7 +1048,14 @@ traceoff_count_trigger(struct event_trigger_data *data, void *rec,
 	if (data->count != -1)
 		(data->count)--;
 
+<<<<<<< HEAD
 	tracing_off();
+=======
+	if (file)
+		tracer_tracing_off(file->tr);
+	else
+		tracing_off();
+>>>>>>> rebase
 }
 
 static int
@@ -1081,6 +1170,7 @@ register_snapshot_trigger(char *glob, struct event_trigger_ops *ops,
 			  struct event_trigger_data *data,
 			  struct trace_event_file *file)
 {
+<<<<<<< HEAD
 	int ret = register_trigger(glob, ops, data, file);
 
 	if (ret > 0 && tracing_alloc_snapshot_instance(file->tr) != 0) {
@@ -1089,6 +1179,12 @@ register_snapshot_trigger(char *glob, struct event_trigger_ops *ops,
 	}
 
 	return ret;
+=======
+	if (tracing_alloc_snapshot_instance(file->tr) != 0)
+		return 0;
+
+	return register_trigger(glob, ops, data, file);
+>>>>>>> rebase
 }
 
 static int
@@ -1164,7 +1260,18 @@ static void
 stacktrace_trigger(struct event_trigger_data *data, void *rec,
 		   struct ring_buffer_event *event)
 {
+<<<<<<< HEAD
 	trace_dump_stack(STACK_SKIP);
+=======
+	struct trace_event_file *file = data->private_data;
+	unsigned long flags;
+
+	if (file) {
+		local_save_flags(flags);
+		__trace_stack(file->tr, flags, STACK_SKIP, preempt_count());
+	} else
+		trace_dump_stack(STACK_SKIP);
+>>>>>>> rebase
 }
 
 static void
@@ -1365,6 +1472,14 @@ int event_enable_trigger_func(struct event_command *cmd_ops,
 	trigger = strsep(&param, " \t");
 	if (!trigger)
 		return -EINVAL;
+<<<<<<< HEAD
+=======
+	if (param) {
+		param = skip_spaces(param);
+		if (!*param)
+			param = NULL;
+	}
+>>>>>>> rebase
 
 	system = strsep(&trigger, ":");
 	if (!trigger)

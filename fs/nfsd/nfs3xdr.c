@@ -844,9 +844,20 @@ compose_entry_fh(struct nfsd3_readdirres *cd, struct svc_fh *fhp,
 	if (isdotent(name, namlen)) {
 		if (namlen == 2) {
 			dchild = dget_parent(dparent);
+<<<<<<< HEAD
 			/* filesystem root - cannot return filehandle for ".." */
 			if (dchild == dparent)
 				goto out;
+=======
+			/*
+			 * Don't return filehandle for ".." if we're at
+			 * the filesystem or export root:
+			 */
+			if (dchild == dparent)
+				goto out;
+			if (dparent == exp->ex_path.dentry)
+				goto out;
+>>>>>>> rebase
 		} else
 			dchild = dget(dparent);
 	} else

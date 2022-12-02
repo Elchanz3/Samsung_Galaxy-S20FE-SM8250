@@ -37,6 +37,7 @@ config CPU_FREQ_STAT
 
 	  If in doubt, say N.
 
+<<<<<<< HEAD
 config CPU_FREQ_TIMES
        bool "CPU frequency time-in-state statistics"
        help
@@ -50,6 +51,8 @@ config CPU_FREQ_LIMIT
 	help
 	  This driver supports API to limit CPU frequency.
 
+=======
+>>>>>>> rebase
 choice
 	prompt "Default CPUFreq governor"
 	default CPU_FREQ_DEFAULT_GOV_USERSPACE if ARM_SA1100_CPUFREQ || ARM_SA1110_CPUFREQ
@@ -116,6 +119,7 @@ config CPU_FREQ_DEFAULT_GOV_SCHEDUTIL
 	  Use the 'schedutil' CPUFreq governor by default. If unsure,
 	  have a look at the help section of that governor. The fallback
 	  governor will be 'performance'.
+<<<<<<< HEAD
 	  
 config CPU_FREQ_DEFAULT_GOV_SCHEDHORIZON
 	bool "schedhorizon"
@@ -126,6 +130,8 @@ config CPU_FREQ_DEFAULT_GOV_SCHEDHORIZON
 	  Use the 'schedhorizon' CPUFreq governor by default. If unsure,
 	  have a look at the help section of that governor. The fallback
 	  governor will be 'performance'.
+=======
+>>>>>>> rebase
 
 endchoice
 
@@ -208,6 +214,7 @@ config CPU_FREQ_GOV_CONSERVATIVE
 
 	  If in doubt, say N.
 
+<<<<<<< HEAD
 config CPU_BOOST
 	tristate "Event base short term CPU freq boost"
 	depends on CPU_FREQ
@@ -219,6 +226,8 @@ config CPU_BOOST
 
 	  If in doubt, say N.
 
+=======
+>>>>>>> rebase
 config CPU_FREQ_GOV_SCHEDUTIL
 	bool "'schedutil' cpufreq policy governor"
 	depends on CPU_FREQ && SMP
@@ -235,6 +244,7 @@ config CPU_FREQ_GOV_SCHEDUTIL
 	  both cases.
 
 	  If in doubt, say N.
+<<<<<<< HEAD
 	  
 config CPU_FREQ_GOV_SCHEDHORIZON
 	bool "'schedhorizon' cpufreq policy governor"
@@ -308,6 +318,8 @@ config SCHEDHORIZON_DEFAULT_UP_DELAY_PR
 	  the default value acts as a multiplicand which is to be multiplied
 	  by the number of nanosecond in one milisecond (NSEC_PER_MSEC).
 endif
+=======
+>>>>>>> rebase
 
 comment "CPU frequency scaling drivers"
 
@@ -334,6 +346,7 @@ config CPUFREQ_DT_PLATDEV
 
 	  If in doubt, say N.
 
+<<<<<<< HEAD
 config CPUFREQ_DUMMY
 	tristate "Dummy CPU frequency driver"
 	help
@@ -343,6 +356,8 @@ config CPUFREQ_DUMMY
 
 	  If in doubt, say N
 
+=======
+>>>>>>> rebase
 if X86
 source "drivers/cpufreq/Kconfig.x86"
 endif

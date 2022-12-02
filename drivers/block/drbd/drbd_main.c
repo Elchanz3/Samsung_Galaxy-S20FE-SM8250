@@ -195,7 +195,11 @@ void tl_release(struct drbd_connection *connection, unsigned int barrier_nr,
 		unsigned int set_size)
 {
 	struct drbd_request *r;
+<<<<<<< HEAD
 	struct drbd_request *req = NULL;
+=======
+	struct drbd_request *req = NULL, *tmp = NULL;
+>>>>>>> rebase
 	int expect_epoch = 0;
 	int expect_size = 0;
 
@@ -249,8 +253,16 @@ void tl_release(struct drbd_connection *connection, unsigned int barrier_nr,
 	 * to catch requests being barrier-acked "unexpectedly".
 	 * It usually should find the same req again, or some READ preceding it. */
 	list_for_each_entry(req, &connection->transfer_log, tl_requests)
+<<<<<<< HEAD
 		if (req->epoch == expect_epoch)
 			break;
+=======
+		if (req->epoch == expect_epoch) {
+			tmp = req;
+			break;
+		}
+	req = list_prepare_entry(tmp, &connection->transfer_log, tl_requests);
+>>>>>>> rebase
 	list_for_each_entry_safe_from(req, r, &connection->transfer_log, tl_requests) {
 		if (req->epoch != expect_epoch)
 			break;
@@ -1378,7 +1390,11 @@ void drbd_send_ack_dp(struct drbd_peer_device *peer_device, enum drbd_packet cmd
 		      struct p_data *dp, int data_size)
 {
 	if (peer_device->connection->peer_integrity_tfm)
+<<<<<<< HEAD
 		data_size -= crypto_shash_digestsize(peer_device->connection->peer_integrity_tfm);
+=======
+		data_size -= crypto_ahash_digestsize(peer_device->connection->peer_integrity_tfm);
+>>>>>>> rebase
 	_drbd_send_ack(peer_device, cmd, dp->sector, cpu_to_be32(data_size),
 		       dp->block_id);
 }
@@ -1691,7 +1707,11 @@ int drbd_send_dblock(struct drbd_peer_device *peer_device, struct drbd_request *
 	sock = &peer_device->connection->data;
 	p = drbd_prepare_command(peer_device, sock);
 	digest_size = peer_device->connection->integrity_tfm ?
+<<<<<<< HEAD
 		      crypto_shash_digestsize(peer_device->connection->integrity_tfm) : 0;
+=======
+		      crypto_ahash_digestsize(peer_device->connection->integrity_tfm) : 0;
+>>>>>>> rebase
 
 	if (!p)
 		return -EIO;
@@ -1797,7 +1817,11 @@ int drbd_send_block(struct drbd_peer_device *peer_device, enum drbd_packet cmd,
 	p = drbd_prepare_command(peer_device, sock);
 
 	digest_size = peer_device->connection->integrity_tfm ?
+<<<<<<< HEAD
 		      crypto_shash_digestsize(peer_device->connection->integrity_tfm) : 0;
+=======
+		      crypto_ahash_digestsize(peer_device->connection->integrity_tfm) : 0;
+>>>>>>> rebase
 
 	if (!p)
 		return -EIO;
@@ -2558,11 +2582,19 @@ void conn_free_crypto(struct drbd_connection *connection)
 {
 	drbd_free_sock(connection);
 
+<<<<<<< HEAD
 	crypto_free_shash(connection->csums_tfm);
 	crypto_free_shash(connection->verify_tfm);
 	crypto_free_shash(connection->cram_hmac_tfm);
 	crypto_free_shash(connection->integrity_tfm);
 	crypto_free_shash(connection->peer_integrity_tfm);
+=======
+	crypto_free_ahash(connection->csums_tfm);
+	crypto_free_ahash(connection->verify_tfm);
+	crypto_free_shash(connection->cram_hmac_tfm);
+	crypto_free_ahash(connection->integrity_tfm);
+	crypto_free_ahash(connection->peer_integrity_tfm);
+>>>>>>> rebase
 	kfree(connection->int_dig_in);
 	kfree(connection->int_dig_vv);
 

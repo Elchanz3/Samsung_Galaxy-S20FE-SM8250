@@ -77,6 +77,7 @@ config QCOM_L2_PMU
 	  Adds the L2 cache PMU into the perf events subsystem for
 	  monitoring L2 cache events.
 
+<<<<<<< HEAD
 config QCOM_L2_COUNTERS
 	bool "Qualcomm Technologies L2-cache counters (PMU)"
 	depends on ARCH_QCOM && ARM64
@@ -86,6 +87,8 @@ config QCOM_L2_COUNTERS
 	  Adds the L2 cache counters support into the perf events subsystem for
 	  monitoring L2 cache events.
 
+=======
+>>>>>>> rebase
 config QCOM_L3_PMU
 	bool "Qualcomm Technologies L3-cache PMU"
 	depends on ARCH_QCOM && ARM64 && ACPI
@@ -96,6 +99,7 @@ config QCOM_L3_PMU
 	   Adds the L3 cache PMU into the perf events subsystem for
 	   monitoring L3 cache events.
 
+<<<<<<< HEAD
 config QCOM_LLCC_PMU
 	bool "Qualcomm Technologies LLCC PMU"
 	depends on ARCH_QCOM && ARM64
@@ -105,6 +109,8 @@ config QCOM_LLCC_PMU
 	   Adds the LLCC PMU into the perf events subsystem for monitoring
 	   LLCC miss events.
 
+=======
+>>>>>>> rebase
 config XGENE_PMU
         depends on ARCH_XGENE
         bool "APM X-Gene SoC PMU"
