@@ -307,7 +307,6 @@ config HW_RANDOM_HISI
 
 	  If unsure, say Y.
 
-<<<<<<< HEAD
 config HW_RANDOM_MSM_LEGACY
 	tristate "QTI MSM Random Number Generator support (LEGACY)"
 	depends on HW_RANDOM && ARCH_QCOM
@@ -322,8 +321,6 @@ config HW_RANDOM_MSM_LEGACY
 
 	  If unsure, say Y.
 
-=======
->>>>>>> rebase
 config HW_RANDOM_ST
 	tristate "ST Microelectronics HW Random Number Generator support"
 	depends on HW_RANDOM && ARCH_STI

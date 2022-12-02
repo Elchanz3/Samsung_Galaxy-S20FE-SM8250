@@ -119,10 +119,7 @@ struct elevator_mq_ops {
 	struct request *(*next_request)(struct request_queue *, struct request *);
 	void (*init_icq)(struct io_cq *);
 	void (*exit_icq)(struct io_cq *);
-<<<<<<< HEAD
 	void (*elevator_registered_fn)(struct request_queue *q);
-=======
->>>>>>> rebase
 };
 
 #define ELV_NAME_MAX	(16)

@@ -25,11 +25,8 @@
 #include <linux/user_namespace.h>
 #include <linux/memfd.h>
 #include <linux/compat.h>
-<<<<<<< HEAD
 #include <linux/task_integrity.h>
 #include <linux/proca.h>
-=======
->>>>>>> rebase
 
 #include <linux/poll.h>
 #include <asm/siginfo.h>
@@ -421,7 +418,6 @@ static long do_fcntl(int fd, unsigned int cmd, unsigned long arg,
 	case F_GETPIPE_SZ:
 		err = pipe_fcntl(filp, cmd, arg);
 		break;
-<<<<<<< HEAD
 #ifdef CONFIG_FIVE
 	case F_FIVE_SIGN:
 		err = five_fcntl_sign(filp,
@@ -450,8 +446,6 @@ static long do_fcntl(int fd, unsigned int cmd, unsigned long arg,
 		break;
 #endif
 #endif
-=======
->>>>>>> rebase
 	case F_ADD_SEALS:
 	case F_GET_SEALS:
 		err = memfd_fcntl(filp, cmd, arg);
@@ -815,16 +809,9 @@ void send_sigio(struct fown_struct *fown, int fd, int band)
 {
 	struct task_struct *p;
 	enum pid_type type;
-<<<<<<< HEAD
 	struct pid *pid;
 	
 	read_lock(&fown->lock);
-=======
-	unsigned long flags;
-	struct pid *pid;
-	
-	read_lock_irqsave(&fown->lock, flags);
->>>>>>> rebase
 
 	type = fown->pid_type;
 	pid = fown->pid;
@@ -845,11 +832,7 @@ void send_sigio(struct fown_struct *fown, int fd, int band)
 		read_unlock(&tasklist_lock);
 	}
  out_unlock_fown:
-<<<<<<< HEAD
 	read_unlock(&fown->lock);
-=======
-	read_unlock_irqrestore(&fown->lock, flags);
->>>>>>> rebase
 }
 
 static void send_sigurg_to_task(struct task_struct *p,
@@ -864,16 +847,9 @@ int send_sigurg(struct fown_struct *fown)
 	struct task_struct *p;
 	enum pid_type type;
 	struct pid *pid;
-<<<<<<< HEAD
 	int ret = 0;
 	
 	read_lock(&fown->lock);
-=======
-	unsigned long flags;
-	int ret = 0;
-	
-	read_lock_irqsave(&fown->lock, flags);
->>>>>>> rebase
 
 	type = fown->pid_type;
 	pid = fown->pid;
@@ -896,11 +872,7 @@ int send_sigurg(struct fown_struct *fown)
 		read_unlock(&tasklist_lock);
 	}
  out_unlock_fown:
-<<<<<<< HEAD
 	read_unlock(&fown->lock);
-=======
-	read_unlock_irqrestore(&fown->lock, flags);
->>>>>>> rebase
 	return ret;
 }
 
@@ -1049,21 +1021,13 @@ static void kill_fasync_rcu(struct fasync_struct *fa, int sig, int band)
 {
 	while (fa) {
 		struct fown_struct *fown;
-<<<<<<< HEAD
-=======
-		unsigned long flags;
->>>>>>> rebase
 
 		if (fa->magic != FASYNC_MAGIC) {
 			printk(KERN_ERR "kill_fasync: bad magic number in "
 			       "fasync_struct!\n");
 			return;
 		}
-<<<<<<< HEAD
 		read_lock(&fa->fa_lock);
-=======
-		read_lock_irqsave(&fa->fa_lock, flags);
->>>>>>> rebase
 		if (fa->fa_file) {
 			fown = &fa->fa_file->f_owner;
 			/* Don't send SIGURG to processes which have not set a
@@ -1072,11 +1036,7 @@ static void kill_fasync_rcu(struct fasync_struct *fa, int sig, int band)
 			if (!(sig == SIGURG && fown->signum == 0))
 				send_sigio(fown, fa->fa_fd, band);
 		}
-<<<<<<< HEAD
 		read_unlock(&fa->fa_lock);
-=======
-		read_unlock_irqrestore(&fa->fa_lock, flags);
->>>>>>> rebase
 		fa = rcu_dereference(fa->fa_next);
 	}
 }

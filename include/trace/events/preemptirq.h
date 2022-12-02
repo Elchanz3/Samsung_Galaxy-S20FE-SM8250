@@ -62,7 +62,6 @@ DEFINE_EVENT(preemptirq_template, preempt_enable,
 #define trace_preempt_disable_rcuidle(...)
 #endif
 
-<<<<<<< HEAD
 TRACE_EVENT(irqs_disable,
 
 	TP_PROTO(u64 delta, unsigned long caddr0, unsigned long caddr1,
@@ -130,8 +129,6 @@ TRACE_EVENT(sched_preempt_disable,
 				__entry->caddr4)
 );
 
-=======
->>>>>>> rebase
 #endif /* _TRACE_PREEMPTIRQ_H */
 
 #include <trace/define_trace.h>

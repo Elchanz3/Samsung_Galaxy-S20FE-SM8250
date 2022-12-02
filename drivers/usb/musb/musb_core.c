@@ -1868,21 +1868,10 @@ static void musb_pm_runtime_check_session(struct musb *musb)
 		MUSB_DEVCTL_HR;
 	switch (devctl & ~s) {
 	case MUSB_QUIRK_B_DISCONNECT_99:
-<<<<<<< HEAD
 		musb_dbg(musb, "Poll devctl in case of suspend after disconnect\n");
 		schedule_delayed_work(&musb->irq_work,
 				      msecs_to_jiffies(1000));
 		break;
-=======
-		if (musb->quirk_retries && !musb->flush_irq_work) {
-			musb_dbg(musb, "Poll devctl in case of suspend after disconnect\n");
-			schedule_delayed_work(&musb->irq_work,
-					      msecs_to_jiffies(1000));
-			musb->quirk_retries--;
-			break;
-		}
-		/* fall through */
->>>>>>> rebase
 	case MUSB_QUIRK_B_INVALID_VBUS_91:
 		if (musb->quirk_retries && !musb->flush_irq_work) {
 			musb_dbg(musb,
@@ -2119,16 +2108,11 @@ int musb_queue_resume_work(struct musb *musb,
 {
 	struct musb_pending_work *w;
 	unsigned long flags;
-<<<<<<< HEAD
-=======
-	bool is_suspended;
->>>>>>> rebase
 	int error;
 
 	if (WARN_ON(!callback))
 		return -EINVAL;
 
-<<<<<<< HEAD
 	if (pm_runtime_active(musb->controller))
 		return callback(musb, data);
 
@@ -2150,31 +2134,6 @@ int musb_queue_resume_work(struct musb *musb,
 	}
 	spin_unlock_irqrestore(&musb->list_lock, flags);
 
-=======
-	spin_lock_irqsave(&musb->list_lock, flags);
-	is_suspended = musb->is_runtime_suspended;
-
-	if (is_suspended) {
-		w = devm_kzalloc(musb->controller, sizeof(*w), GFP_ATOMIC);
-		if (!w) {
-			error = -ENOMEM;
-			goto out_unlock;
-		}
-
-		w->callback = callback;
-		w->data = data;
-
-		list_add_tail(&w->node, &musb->pending_list);
-		error = 0;
-	}
-
-out_unlock:
-	spin_unlock_irqrestore(&musb->list_lock, flags);
-
-	if (!is_suspended)
-		error = callback(musb, data);
-
->>>>>>> rebase
 	return error;
 }
 EXPORT_SYMBOL_GPL(musb_queue_resume_work);
@@ -2778,16 +2737,6 @@ static int musb_resume(struct device *dev)
 	musb_enable_interrupts(musb);
 	musb_platform_enable(musb);
 
-<<<<<<< HEAD
-=======
-	/* session might be disabled in suspend */
-	if (musb->port_mode == MUSB_HOST &&
-	    !(musb->ops->quirks & MUSB_PRESERVE_SESSION)) {
-		devctl |= MUSB_DEVCTL_SESSION;
-		musb_writeb(musb->mregs, MUSB_DEVCTL, devctl);
-	}
-
->>>>>>> rebase
 	spin_lock_irqsave(&musb->lock, flags);
 	error = musb_run_resume_work(musb);
 	if (error)

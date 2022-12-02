@@ -5,12 +5,9 @@
 
 CFLAGS_ptrace.o		+= -DUTS_MACHINE='"$(UTS_MACHINE)"'
 
-<<<<<<< HEAD
 # Avoid clang warnings around longjmp/setjmp declarations
 CFLAGS_crash.o += -ffreestanding
 
-=======
->>>>>>> rebase
 subdir-ccflags-$(CONFIG_PPC_WERROR) := -Werror
 
 ifdef CONFIG_PPC64
@@ -21,10 +18,6 @@ CFLAGS_prom_init.o      += -fPIC
 CFLAGS_btext.o		+= -fPIC
 endif
 
-<<<<<<< HEAD
-=======
-CFLAGS_setup_32.o += $(DISABLE_LATENT_ENTROPY_PLUGIN)
->>>>>>> rebase
 CFLAGS_cputable.o += $(DISABLE_LATENT_ENTROPY_PLUGIN)
 CFLAGS_prom_init.o += $(DISABLE_LATENT_ENTROPY_PLUGIN)
 CFLAGS_btext.o += $(DISABLE_LATENT_ENTROPY_PLUGIN)

@@ -407,11 +407,7 @@ static int bcm2835aux_spi_probe(struct platform_device *pdev)
 	unsigned long clk_hz;
 	int err;
 
-<<<<<<< HEAD
 	master = spi_alloc_master(&pdev->dev, sizeof(*bs));
-=======
-	master = devm_spi_alloc_master(&pdev->dev, sizeof(*bs));
->>>>>>> rebase
 	if (!master) {
 		dev_err(&pdev->dev, "spi_alloc_master() failed\n");
 		return -ENOMEM;
@@ -443,47 +439,30 @@ static int bcm2835aux_spi_probe(struct platform_device *pdev)
 	/* the main area */
 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
 	bs->regs = devm_ioremap_resource(&pdev->dev, res);
-<<<<<<< HEAD
 	if (IS_ERR(bs->regs)) {
 		err = PTR_ERR(bs->regs);
 		goto out_master_put;
 	}
-=======
-	if (IS_ERR(bs->regs))
-		return PTR_ERR(bs->regs);
->>>>>>> rebase
 
 	bs->clk = devm_clk_get(&pdev->dev, NULL);
 	if ((!bs->clk) || (IS_ERR(bs->clk))) {
 		err = PTR_ERR(bs->clk);
 		dev_err(&pdev->dev, "could not get clk: %d\n", err);
-<<<<<<< HEAD
 		goto out_master_put;
-=======
-		return err;
->>>>>>> rebase
 	}
 
 	bs->irq = platform_get_irq(pdev, 0);
 	if (bs->irq <= 0) {
 		dev_err(&pdev->dev, "could not get IRQ: %d\n", bs->irq);
-<<<<<<< HEAD
 		err = bs->irq ? bs->irq : -ENODEV;
 		goto out_master_put;
-=======
-		return bs->irq ? bs->irq : -ENODEV;
->>>>>>> rebase
 	}
 
 	/* this also enables the HW block */
 	err = clk_prepare_enable(bs->clk);
 	if (err) {
 		dev_err(&pdev->dev, "could not prepare clock: %d\n", err);
-<<<<<<< HEAD
 		goto out_master_put;
-=======
-		return err;
->>>>>>> rebase
 	}
 
 	/* just checking if the clock returns a sane value */
@@ -506,11 +485,7 @@ static int bcm2835aux_spi_probe(struct platform_device *pdev)
 		goto out_clk_disable;
 	}
 
-<<<<<<< HEAD
 	err = devm_spi_register_master(&pdev->dev, master);
-=======
-	err = spi_register_master(master);
->>>>>>> rebase
 	if (err) {
 		dev_err(&pdev->dev, "could not register SPI master: %d\n", err);
 		goto out_clk_disable;
@@ -520,11 +495,8 @@ static int bcm2835aux_spi_probe(struct platform_device *pdev)
 
 out_clk_disable:
 	clk_disable_unprepare(bs->clk);
-<<<<<<< HEAD
 out_master_put:
 	spi_master_put(master);
-=======
->>>>>>> rebase
 	return err;
 }
 
@@ -533,11 +505,6 @@ static int bcm2835aux_spi_remove(struct platform_device *pdev)
 	struct spi_master *master = platform_get_drvdata(pdev);
 	struct bcm2835aux_spi *bs = spi_master_get_devdata(master);
 
-<<<<<<< HEAD
-=======
-	spi_unregister_master(master);
-
->>>>>>> rebase
 	bcm2835aux_spi_reset_hw(bs);
 
 	/* disable the HW block by releasing the clock */

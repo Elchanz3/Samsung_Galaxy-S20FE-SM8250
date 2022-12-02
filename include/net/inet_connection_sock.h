@@ -29,12 +29,9 @@
 
 struct inet_bind_bucket;
 struct tcp_congestion_ops;
-<<<<<<< HEAD
 #ifdef CONFIG_MPTCP
 	struct tcp_options_received;
 #endif
-=======
->>>>>>> rebase
 
 /*
  * Pointers to address related TCP functions
@@ -145,13 +142,8 @@ struct inet_connection_sock {
 	} icsk_mtup;
 	u32			  icsk_user_timeout;
 
-<<<<<<< HEAD
 	u64			  icsk_ca_priv[88 / sizeof(u64)];
 #define ICSK_CA_PRIV_SIZE      (11 * sizeof(u64))
-=======
-	u64			  icsk_ca_priv[104 / sizeof(u64)];
-#define ICSK_CA_PRIV_SIZE      (13 * sizeof(u64))
->>>>>>> rebase
 };
 
 #define ICSK_TIME_RETRANS	1	/* Retransmit timer */
@@ -299,11 +291,7 @@ static inline int inet_csk_reqsk_queue_is_full(const struct sock *sk)
 	return inet_csk_reqsk_queue_len(sk) >= sk->sk_max_ack_backlog;
 }
 
-<<<<<<< HEAD
 void inet_csk_reqsk_queue_drop(struct sock *sk, struct request_sock *req);
-=======
-bool inet_csk_reqsk_queue_drop(struct sock *sk, struct request_sock *req);
->>>>>>> rebase
 void inet_csk_reqsk_queue_drop_and_put(struct sock *sk, struct request_sock *req);
 
 void inet_csk_destroy_sock(struct sock *sk);
@@ -328,12 +316,5 @@ int inet_csk_compat_getsockopt(struct sock *sk, int level, int optname,
 int inet_csk_compat_setsockopt(struct sock *sk, int level, int optname,
 			       char __user *optval, unsigned int optlen);
 
-<<<<<<< HEAD
-=======
-/* update the fast reuse flag when adding a socket */
-void inet_csk_update_fastreuse(struct inet_bind_bucket *tb,
-			       struct sock *sk);
-
->>>>>>> rebase
 struct dst_entry *inet_csk_update_pmtu(struct sock *sk, u32 mtu);
 #endif /* _INET_CONNECTION_SOCK_H */

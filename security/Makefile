@@ -10,11 +10,8 @@ subdir-$(CONFIG_SECURITY_TOMOYO)        += tomoyo
 subdir-$(CONFIG_SECURITY_APPARMOR)	+= apparmor
 subdir-$(CONFIG_SECURITY_YAMA)		+= yama
 subdir-$(CONFIG_SECURITY_LOADPIN)	+= loadpin
-<<<<<<< HEAD
 subdir-$(CONFIG_SECURITY_DEFEX)		+= samsung/defex_lsm
 subdir-$(CONFIG_SECURITY_DSMS)		+= samsung/dsms
-=======
->>>>>>> rebase
 
 # always enable default capabilities
 obj-y					+= commoncap.o
@@ -31,16 +28,12 @@ obj-$(CONFIG_SECURITY_APPARMOR)		+= apparmor/
 obj-$(CONFIG_SECURITY_YAMA)		+= yama/
 obj-$(CONFIG_SECURITY_LOADPIN)		+= loadpin/
 obj-$(CONFIG_CGROUP_DEVICE)		+= device_cgroup.o
-<<<<<<< HEAD
 obj-$(CONFIG_SECURITY_DEFEX)		+= samsung/defex_lsm/built-in.a
 obj-$(CONFIG_SECURITY_DSMS)		+= samsung/dsms/
-=======
->>>>>>> rebase
 
 # Object integrity file lists
 subdir-$(CONFIG_INTEGRITY)		+= integrity
 obj-$(CONFIG_INTEGRITY)			+= integrity/
-<<<<<<< HEAD
 
 # MST driver
 obj-$(CONFIG_MST_LDO)	  += mstdrv/
@@ -63,5 +56,3 @@ obj-$(CONFIG_HDM)			+= hdm/
 # Knox SDP
 obj-$(CONFIG_SDP) += sdp/
 obj-$(CONFIG_SDP) += sdp/built-in.a
-=======
->>>>>>> rebase

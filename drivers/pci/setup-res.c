@@ -209,20 +209,6 @@ static int pci_revert_fw_address(struct resource *res, struct pci_dev *dev,
 
 	root = pci_find_parent_resource(dev, res);
 	if (!root) {
-<<<<<<< HEAD
-=======
-		/*
-		 * If dev is behind a bridge, accesses will only reach it
-		 * if res is inside the relevant bridge window.
-		 */
-		if (pci_upstream_bridge(dev))
-			return -ENXIO;
-
-		/*
-		 * On the root bus, assume the host bridge will forward
-		 * everything.
-		 */
->>>>>>> rebase
 		if (res->flags & IORESOURCE_IO)
 			root = &ioport_resource;
 		else
@@ -453,18 +439,10 @@ int pci_resize_resource(struct pci_dev *dev, int resno, int size)
 	res->end = res->start + pci_rebar_size_to_bytes(size) - 1;
 
 	/* Check if the new config works by trying to assign everything. */
-<<<<<<< HEAD
 	ret = pci_reassign_bridge_resources(dev->bus->self, res->flags);
 	if (ret)
 		goto error_resize;
 
-=======
-	if (dev->bus->self) {
-		ret = pci_reassign_bridge_resources(dev->bus->self, res->flags);
-		if (ret)
-			goto error_resize;
-	}
->>>>>>> rebase
 	return 0;
 
 error_resize:

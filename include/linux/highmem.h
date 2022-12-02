@@ -40,15 +40,12 @@ extern unsigned long totalhigh_pages;
 
 void kmap_flush_unused(void);
 
-<<<<<<< HEAD
 #ifdef CONFIG_ARCH_WANT_KMAP_ATOMIC_FLUSH
 void kmap_atomic_flush_unused(void);
 #else
 static inline void kmap_atomic_flush_unused(void) { }
 #endif
 
-=======
->>>>>>> rebase
 struct page *kmap_to_page(void *addr);
 
 #else /* CONFIG_HIGHMEM */
@@ -90,10 +87,7 @@ static inline void __kunmap_atomic(void *addr)
 #define kmap_atomic_pfn(pfn)	kmap_atomic(pfn_to_page(pfn))
 
 #define kmap_flush_unused()	do {} while(0)
-<<<<<<< HEAD
 #define kmap_atomic_flush_unused()	do {} while (0)
-=======
->>>>>>> rebase
 #endif
 
 #endif /* CONFIG_HIGHMEM */
@@ -194,7 +188,6 @@ static inline struct page *
 alloc_zeroed_user_highpage_movable(struct vm_area_struct *vma,
 					unsigned long vaddr)
 {
-<<<<<<< HEAD
 #if defined(CONFIG_KZEROD)
 	struct page *page;
 
@@ -212,9 +205,6 @@ alloc_zeroed_user_highpage_movable(struct vm_area_struct *vma,
 	return __alloc_zeroed_user_highpage(__GFP_MOVABLE|__GFP_CMA, vma,
 						vaddr);
 #endif
-=======
-	return __alloc_zeroed_user_highpage(__GFP_MOVABLE, vma, vaddr);
->>>>>>> rebase
 }
 
 static inline void clear_highpage(struct page *page)

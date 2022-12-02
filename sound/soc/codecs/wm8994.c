@@ -3376,11 +3376,6 @@ int wm8994_mic_detect(struct snd_soc_component *component, struct snd_soc_jack *
 		return -EINVAL;
 	}
 
-<<<<<<< HEAD
-=======
-	pm_runtime_get_sync(component->dev);
-
->>>>>>> rebase
 	switch (micbias) {
 	case 1:
 		micdet = &wm8994->micdet[0];
@@ -3428,11 +3423,6 @@ int wm8994_mic_detect(struct snd_soc_component *component, struct snd_soc_jack *
 
 	snd_soc_dapm_sync(dapm);
 
-<<<<<<< HEAD
-=======
-	pm_runtime_put(component->dev);
-
->>>>>>> rebase
 	return 0;
 }
 EXPORT_SYMBOL_GPL(wm8994_mic_detect);
@@ -3800,11 +3790,6 @@ int wm8958_mic_detect(struct snd_soc_component *component, struct snd_soc_jack *
 		return -EINVAL;
 	}
 
-<<<<<<< HEAD
-=======
-	pm_runtime_get_sync(component->dev);
-
->>>>>>> rebase
 	if (jack) {
 		snd_soc_dapm_force_enable_pin(dapm, "CLK_SYS");
 		snd_soc_dapm_sync(dapm);
@@ -3873,11 +3858,6 @@ int wm8958_mic_detect(struct snd_soc_component *component, struct snd_soc_jack *
 		snd_soc_dapm_sync(dapm);
 	}
 
-<<<<<<< HEAD
-=======
-	pm_runtime_put(component->dev);
-
->>>>>>> rebase
 	return 0;
 }
 EXPORT_SYMBOL_GPL(wm8958_mic_detect);
@@ -4071,19 +4051,11 @@ static int wm8994_component_probe(struct snd_soc_component *component)
 			wm8994->hubs.dcs_readback_mode = 2;
 			break;
 		}
-<<<<<<< HEAD
-=======
-		wm8994->hubs.micd_scthr = true;
->>>>>>> rebase
 		break;
 
 	case WM8958:
 		wm8994->hubs.dcs_readback_mode = 1;
 		wm8994->hubs.hp_startup_mode = 1;
-<<<<<<< HEAD
-=======
-		wm8994->hubs.micd_scthr = true;
->>>>>>> rebase
 
 		switch (control->revision) {
 		case 0:

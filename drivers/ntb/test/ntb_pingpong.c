@@ -121,7 +121,6 @@ static int pp_find_next_peer(struct pp_ctx *pp)
 	link = ntb_link_is_up(pp->ntb, NULL, NULL);
 
 	/* Find next available peer */
-<<<<<<< HEAD
 	if (link & pp->nmask) {
 		pidx = __ffs64(link & pp->nmask);
 		out_db = BIT_ULL(pidx + 1);
@@ -131,16 +130,6 @@ static int pp_find_next_peer(struct pp_ctx *pp)
 	} else {
 		return -ENODEV;
 	}
-=======
-	if (link & pp->nmask)
-		pidx = __ffs64(link & pp->nmask);
-	else if (link & pp->pmask)
-		pidx = __ffs64(link & pp->pmask);
-	else
-		return -ENODEV;
-
-	out_db = BIT_ULL(ntb_peer_port_number(pp->ntb, pidx));
->>>>>>> rebase
 
 	spin_lock(&pp->lock);
 	pp->out_pidx = pidx;
@@ -314,11 +303,7 @@ static void pp_init_flds(struct pp_ctx *pp)
 			break;
 	}
 
-<<<<<<< HEAD
 	pp->in_db = BIT_ULL(pidx);
-=======
-	pp->in_db = BIT_ULL(lport);
->>>>>>> rebase
 	pp->pmask = GENMASK_ULL(pidx, 0) >> 1;
 	pp->nmask = GENMASK_ULL(pcnt - 1, pidx);
 
@@ -450,7 +435,4 @@ static void __exit pp_exit(void)
 	debugfs_remove_recursive(pp_dbgfs_topdir);
 }
 module_exit(pp_exit);
-<<<<<<< HEAD
 
-=======
->>>>>>> rebase

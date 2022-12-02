@@ -35,15 +35,11 @@ struct mount {
 	struct hlist_node mnt_hash;
 	struct mount *mnt_parent;
 	struct dentry *mnt_mountpoint;
-<<<<<<< HEAD
 #ifdef CONFIG_KDP_NS
 	struct vfsmount *mnt;
 #else
 	struct vfsmount mnt;
 #endif
-=======
-	struct vfsmount mnt;
->>>>>>> rebase
 	union {
 		struct rcu_head mnt_rcu;
 		struct llist_node mnt_llist;
@@ -84,15 +80,11 @@ struct mount {
 
 static inline struct mount *real_mount(struct vfsmount *mnt)
 {
-<<<<<<< HEAD
 #ifdef CONFIG_KDP_NS
 	return mnt->bp_mount;
 #else
 	return container_of(mnt, struct mount, mnt);
 #endif
-=======
-	return container_of(mnt, struct mount, mnt);
->>>>>>> rebase
 }
 
 static inline int mnt_has_parent(struct mount *mnt)
@@ -114,15 +106,11 @@ extern bool legitimize_mnt(struct vfsmount *, unsigned);
 static inline bool __path_is_mountpoint(const struct path *path)
 {
 	struct mount *m = __lookup_mnt(path->mnt, path->dentry);
-<<<<<<< HEAD
 #ifdef CONFIG_KDP_NS
 	return m && likely(!(m->mnt->mnt_flags & MNT_SYNC_UMOUNT));
 #else
 	return m && likely(!(m->mnt.mnt_flags & MNT_SYNC_UMOUNT));
 #endif
-=======
-	return m && likely(!(m->mnt.mnt_flags & MNT_SYNC_UMOUNT));
->>>>>>> rebase
 }
 
 extern void __detach_mounts(struct dentry *dentry);

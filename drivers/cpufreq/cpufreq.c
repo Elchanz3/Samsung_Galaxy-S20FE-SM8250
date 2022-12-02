@@ -19,10 +19,7 @@
 
 #include <linux/cpu.h>
 #include <linux/cpufreq.h>
-<<<<<<< HEAD
 #include <linux/cpufreq_times.h>
-=======
->>>>>>> rebase
 #include <linux/delay.h>
 #include <linux/device.h>
 #include <linux/init.h>
@@ -33,21 +30,15 @@
 #include <linux/suspend.h>
 #include <linux/syscore_ops.h>
 #include <linux/tick.h>
-<<<<<<< HEAD
 #include <linux/sched/topology.h>
 #include <linux/sched/sysctl.h>
 #include <linux/ologk.h>
-=======
->>>>>>> rebase
 #include <trace/events/power.h>
 
 static LIST_HEAD(cpufreq_policy_list);
 
-<<<<<<< HEAD
 struct cpufreq_user_policy core_min_max_policy[NR_CPUS];
 
-=======
->>>>>>> rebase
 static inline bool policy_is_inactive(struct cpufreq_policy *policy)
 {
 	return cpumask_empty(policy->cpus);
@@ -173,15 +164,12 @@ __weak void arch_set_freq_scale(struct cpumask *cpus, unsigned long cur_freq,
 }
 EXPORT_SYMBOL_GPL(arch_set_freq_scale);
 
-<<<<<<< HEAD
 __weak void arch_set_max_freq_scale(struct cpumask *cpus,
 				    unsigned long policy_max_freq)
 {
 }
 EXPORT_SYMBOL_GPL(arch_set_max_freq_scale);
 
-=======
->>>>>>> rebase
 /*
  * This is a generic cpufreq init() routine which can be used by cpufreq
  * drivers of SMP systems. It will do following:
@@ -373,10 +361,7 @@ static void cpufreq_notify_transition(struct cpufreq_policy *policy,
 		}
 
 		cpufreq_stats_record_transition(policy, freqs->new);
-<<<<<<< HEAD
 		cpufreq_times_record_transition(policy, freqs->new);
-=======
->>>>>>> rebase
 		policy->cur = freqs->new;
 	}
 }
@@ -676,15 +661,10 @@ static ssize_t show_##file_name				\
 }
 
 show_one(cpuinfo_min_freq, cpuinfo.min_freq);
-<<<<<<< HEAD
-=======
-show_one(cpuinfo_max_freq, cpuinfo.max_freq);
->>>>>>> rebase
 show_one(cpuinfo_transition_latency, cpuinfo.transition_latency);
 show_one(scaling_min_freq, min);
 show_one(scaling_max_freq, max);
 
-<<<<<<< HEAD
 unsigned int cpuinfo_max_freq_cached;
 
 static bool should_use_cached_freq(int cpu)
@@ -710,8 +690,6 @@ static ssize_t show_cpuinfo_max_freq(struct cpufreq_policy *policy, char *buf)
 	return scnprintf(buf, PAGE_SIZE, "%u\n", freq);
 }
 
-=======
->>>>>>> rebase
 __weak unsigned int arch_freq_get_on_cpu(int cpu)
 {
 	return 0;
@@ -1131,12 +1109,8 @@ static int cpufreq_add_policy_cpu(struct cpufreq_policy *policy, unsigned int cp
 	if (has_target()) {
 		ret = cpufreq_start_governor(policy);
 		if (ret)
-<<<<<<< HEAD
 			pr_err("%s: Failed to start governor for CPU%u, policy CPU%u\n",
 			       __func__, cpu, policy->cpu);
-=======
-			pr_err("%s: Failed to start governor\n", __func__);
->>>>>>> rebase
 	}
 	up_write(&policy->rwsem);
 	return ret;
@@ -1366,10 +1340,7 @@ static int cpufreq_online(unsigned int cpu)
 			goto out_destroy_policy;
 
 		cpufreq_stats_create_table(policy);
-<<<<<<< HEAD
 		cpufreq_times_create_policy(policy);
-=======
->>>>>>> rebase
 
 		write_lock_irqsave(&cpufreq_driver_lock, flags);
 		list_add(&policy->policy_list, &cpufreq_policy_list);
@@ -1932,7 +1903,6 @@ EXPORT_SYMBOL(cpufreq_unregister_notifier);
 unsigned int cpufreq_driver_fast_switch(struct cpufreq_policy *policy,
 					unsigned int target_freq)
 {
-<<<<<<< HEAD
 	int ret;
 
 	target_freq = clamp_val(target_freq, policy->min, policy->max);
@@ -1944,11 +1914,6 @@ unsigned int cpufreq_driver_fast_switch(struct cpufreq_policy *policy,
 	}
 
 	return ret;
-=======
-	target_freq = clamp_val(target_freq, policy->min, policy->max);
-
-	return cpufreq_driver->fast_switch(policy, target_freq);
->>>>>>> rebase
 }
 EXPORT_SYMBOL_GPL(cpufreq_driver_fast_switch);
 
@@ -2051,18 +2016,6 @@ int __cpufreq_driver_target(struct cpufreq_policy *policy,
 	pr_debug("target for CPU %u: %u kHz, relation %u, requested %u kHz\n",
 		 policy->cpu, target_freq, relation, old_target_freq);
 
-<<<<<<< HEAD
-=======
-	/*
-	 * This might look like a redundant call as we are checking it again
-	 * after finding index. But it is left intentionally for cases where
-	 * exactly same freq is called again and so we can save on few function
-	 * calls.
-	 */
-	if (target_freq == policy->cur)
-		return 0;
-
->>>>>>> rebase
 	/* Save last value to restore later on errors */
 	policy->restore_freq = policy->cur;
 
@@ -2315,13 +2268,10 @@ static int cpufreq_set_policy(struct cpufreq_policy *policy,
 	blocking_notifier_call_chain(&cpufreq_policy_notifier_list,
 			CPUFREQ_ADJUST, new_policy);
 
-<<<<<<< HEAD
 	/* adjust if necessary - hardware incompatibility */
 	blocking_notifier_call_chain(&cpufreq_policy_notifier_list,
 			CPUFREQ_INCOMPATIBLE, new_policy);
 
-=======
->>>>>>> rebase
 	/*
 	 * verify the cpu speed can be set within this limit, which might be
 	 * different to the first one
@@ -2337,7 +2287,6 @@ static int cpufreq_set_policy(struct cpufreq_policy *policy,
 	policy->min = new_policy->min;
 	policy->max = new_policy->max;
 	trace_cpu_frequency_limits(policy);
-<<<<<<< HEAD
 	if(policy->cpu < NR_CPUS) {
 		if(/*core_min_max_policy[policy->cpu].min != policy->min ||*/ core_min_max_policy[policy->cpu].max != policy->max) {
 			if(policy->max < OLOG_CPU_FREQ_FILTER || core_min_max_policy[policy->cpu].max < OLOG_CPU_FREQ_FILTER) {
@@ -2349,8 +2298,6 @@ static int cpufreq_set_policy(struct cpufreq_policy *policy,
 	}
 
 	arch_set_max_freq_scale(policy->cpus, policy->max);
-=======
->>>>>>> rebase
 
 	policy->cached_target_freq = UINT_MAX;
 
@@ -2646,11 +2593,7 @@ int cpufreq_register_driver(struct cpufreq_driver *driver_data)
 	hp_online = ret;
 	ret = 0;
 
-<<<<<<< HEAD
 	pr_info("driver %s up and running\n", driver_data->name);
-=======
-	pr_debug("driver %s up and running\n", driver_data->name);
->>>>>>> rebase
 	goto out;
 
 err_if_unreg:
@@ -2682,11 +2625,7 @@ int cpufreq_unregister_driver(struct cpufreq_driver *driver)
 	if (!cpufreq_driver || (driver != cpufreq_driver))
 		return -EINVAL;
 
-<<<<<<< HEAD
 	pr_info("unregistering driver %s\n", driver->name);
-=======
-	pr_debug("unregistering driver %s\n", driver->name);
->>>>>>> rebase
 
 	/* Protect against concurrent cpu hotplug */
 	cpus_read_lock();

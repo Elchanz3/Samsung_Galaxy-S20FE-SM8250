@@ -1339,11 +1339,8 @@ int jbd2_journal_dirty_metadata(handle_t *handle, struct buffer_head *bh)
 	struct journal_head *jh;
 	int ret = 0;
 
-<<<<<<< HEAD
 	if (is_handle_aborted(handle))
 		return -EROFS;
-=======
->>>>>>> rebase
 	if (!buffer_jbd(bh))
 		return -EUCLEAN;
 
@@ -1390,21 +1387,6 @@ int jbd2_journal_dirty_metadata(handle_t *handle, struct buffer_head *bh)
 	journal = transaction->t_journal;
 	jbd_lock_bh_state(bh);
 
-<<<<<<< HEAD
-=======
-	if (is_handle_aborted(handle)) {
-		/*
-		 * Check journal aborting with @jh->b_state_lock locked,
-		 * since 'jh->b_transaction' could be replaced with
-		 * 'jh->b_next_transaction' during old transaction
-		 * committing if journal aborted, which may fail
-		 * assertion on 'jh->b_frozen_data == NULL'.
-		 */
-		ret = -EROFS;
-		goto out_unlock_bh;
-	}
-
->>>>>>> rebase
 	if (jh->b_modified == 0) {
 		/*
 		 * This buffer's got modified and becoming part
@@ -1921,11 +1903,7 @@ static void __jbd2_journal_temp_unlink_buffer(struct journal_head *jh)
 	if (transaction && is_journal_aborted(transaction->t_journal))
 		clear_buffer_jbddirty(bh);
 	else if (test_clear_buffer_jbddirty(bh))
-<<<<<<< HEAD
 		mark_buffer_dirty_sync(bh);	/* Expose it to the VM */
-=======
-		mark_buffer_dirty(bh);	/* Expose it to the VM */
->>>>>>> rebase
 }
 
 /*
@@ -1937,12 +1915,6 @@ static void __jbd2_journal_temp_unlink_buffer(struct journal_head *jh)
  */
 static void __jbd2_journal_unfile_buffer(struct journal_head *jh)
 {
-<<<<<<< HEAD
-=======
-	J_ASSERT_JH(jh, jh->b_transaction != NULL);
-	J_ASSERT_JH(jh, jh->b_next_transaction == NULL);
-
->>>>>>> rebase
 	__jbd2_journal_temp_unlink_buffer(jh);
 	jh->b_transaction = NULL;
 	jbd2_journal_put_journal_head(jh);
@@ -2034,10 +2006,6 @@ int jbd2_journal_try_to_free_buffers(journal_t *journal,
 {
 	struct buffer_head *head;
 	struct buffer_head *bh;
-<<<<<<< HEAD
-=======
-	bool has_write_io_error = false;
->>>>>>> rebase
 	int ret = 0;
 
 	J_ASSERT(PageLocked(page));
@@ -2062,32 +2030,11 @@ int jbd2_journal_try_to_free_buffers(journal_t *journal,
 		jbd_unlock_bh_state(bh);
 		if (buffer_jbd(bh))
 			goto busy;
-<<<<<<< HEAD
-=======
-
-		/*
-		 * If we free a metadata buffer which has been failed to
-		 * write out, the jbd2 checkpoint procedure will not detect
-		 * this failure and may lead to filesystem inconsistency
-		 * after cleanup journal tail.
-		 */
-		if (buffer_write_io_error(bh)) {
-			pr_err("JBD2: Error while async write back metadata bh %llu.",
-			       (unsigned long long)bh->b_blocknr);
-			has_write_io_error = true;
-		}
->>>>>>> rebase
 	} while ((bh = bh->b_this_page) != head);
 
 	ret = try_to_free_buffers(page);
 
 busy:
-<<<<<<< HEAD
-=======
-	if (has_write_io_error)
-		jbd2_journal_abort(journal, -EIO);
-
->>>>>>> rebase
 	return ret;
 }
 
@@ -2515,16 +2462,6 @@ void __jbd2_journal_refile_buffer(struct journal_head *jh)
 
 	was_dirty = test_clear_buffer_jbddirty(bh);
 	__jbd2_journal_temp_unlink_buffer(jh);
-<<<<<<< HEAD
-=======
-
-	/*
-	 * b_transaction must be set, otherwise the new b_transaction won't
-	 * be holding jh reference
-	 */
-	J_ASSERT_JH(jh, jh->b_transaction != NULL);
-
->>>>>>> rebase
 	/*
 	 * We set b_transaction here because b_next_transaction will inherit
 	 * our jh reference and thus __jbd2_journal_file_buffer() must not

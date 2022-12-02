@@ -35,10 +35,7 @@ static bool silent = false, multi = false;
 static bool done = false, fshared = false;
 static unsigned int nthreads = 0;
 static int futex_flag = 0;
-<<<<<<< HEAD
 struct timeval start, end, runtime;
-=======
->>>>>>> rebase
 static pthread_mutex_t thread_lock;
 static unsigned int threads_starting;
 static struct stats throughput_stats;
@@ -65,11 +62,7 @@ static void print_summary(void)
 
 	printf("%sAveraged %ld operations/sec (+- %.2f%%), total secs = %d\n",
 	       !silent ? "\n" : "", avg, rel_stddev_stats(stddev, avg),
-<<<<<<< HEAD
 	       (int) runtime.tv_sec);
-=======
-	       (int)bench__runtime.tv_sec);
->>>>>>> rebase
 }
 
 static void toggle_done(int sig __maybe_unused,
@@ -78,13 +71,8 @@ static void toggle_done(int sig __maybe_unused,
 {
 	/* inform all threads that we're done for the day */
 	done = true;
-<<<<<<< HEAD
 	gettimeofday(&end, NULL);
 	timersub(&end, &start, &runtime);
-=======
-	gettimeofday(&bench__end, NULL);
-	timersub(&bench__end, &bench__start, &bench__runtime);
->>>>>>> rebase
 }
 
 static void *workerfn(void *arg)
@@ -195,11 +183,7 @@ int bench_futex_lock_pi(int argc, const char **argv)
 
 	threads_starting = nthreads;
 	pthread_attr_init(&thread_attr);
-<<<<<<< HEAD
 	gettimeofday(&start, NULL);
-=======
-	gettimeofday(&bench__start, NULL);
->>>>>>> rebase
 
 	create_threads(worker, thread_attr, cpu);
 	pthread_attr_destroy(&thread_attr);
@@ -225,11 +209,7 @@ int bench_futex_lock_pi(int argc, const char **argv)
 	pthread_mutex_destroy(&thread_lock);
 
 	for (i = 0; i < nthreads; i++) {
-<<<<<<< HEAD
 		unsigned long t = worker[i].ops/runtime.tv_sec;
-=======
-		unsigned long t = worker[i].ops / bench__runtime.tv_sec;
->>>>>>> rebase
 
 		update_stats(&throughput_stats, t);
 		if (!silent)

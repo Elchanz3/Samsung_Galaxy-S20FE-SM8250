@@ -82,11 +82,8 @@ struct partition {
 	__le32 nr_sects;		/* nr of sectors in partition */
 } __attribute__((packed));
 
-<<<<<<< HEAD
 #define FSYNC_TIME_GROUP_MAX 4
 #define IO_SIZE_GROUP_MAX 8
-=======
->>>>>>> rebase
 struct disk_stats {
 	u64 nsecs[NR_STAT_GROUPS];
 	unsigned long sectors[NR_STAT_GROUPS];
@@ -94,11 +91,8 @@ struct disk_stats {
 	unsigned long merges[NR_STAT_GROUPS];
 	unsigned long io_ticks;
 	unsigned long time_in_queue;
-<<<<<<< HEAD
 	unsigned long flush_ios;
 	unsigned long size_cnt[3][IO_SIZE_GROUP_MAX]; /* READs, WRITEs and DISCARDs */
-=======
->>>>>>> rebase
 };
 
 #define PARTITION_META_INFO_VOLNAMELTH	64
@@ -153,12 +147,9 @@ struct hd_struct {
 #define GENHD_FL_BLOCK_EVENTS_ON_EXCL_WRITE	256
 #define GENHD_FL_NO_PART_SCAN			512
 #define GENHD_FL_HIDDEN				1024
-<<<<<<< HEAD
 #ifdef CONFIG_USB_STORAGE_DETECT
 #define GENHD_IF_USB	1
 #endif
-=======
->>>>>>> rebase
 
 enum {
 	DISK_EVENT_MEDIA_CHANGE			= 1 << 0, /* media changed */
@@ -187,7 +178,6 @@ struct blk_integrity {
 
 #endif	/* CONFIG_BLK_DEV_INTEGRITY */
 
-<<<<<<< HEAD
 struct accumulated_io_stats {
 	struct timespec uptime;
 	unsigned long sectors[3];	/* READ, WRITE, DISCARD */
@@ -197,8 +187,6 @@ struct accumulated_io_stats {
 	unsigned long iot;		/* sec */
 };
 
-=======
->>>>>>> rebase
 struct gendisk {
 	/* major, first_minor and minors are input parameters only,
 	 * don't use directly.  Use disk_devt() and disk_max_parts().
@@ -233,22 +221,16 @@ struct gendisk {
 	struct timer_rand_state *random;
 	atomic_t sync_io;		/* RAID */
 	struct disk_events *ev;
-<<<<<<< HEAD
 	struct accumulated_io_stats accios;
 	unsigned long hiotime[3]; /* LOW, MID AND HIGH */
-=======
->>>>>>> rebase
 #ifdef  CONFIG_BLK_DEV_INTEGRITY
 	struct kobject integrity_kobj;
 #endif	/* CONFIG_BLK_DEV_INTEGRITY */
 	int node_id;
-<<<<<<< HEAD
 #ifdef CONFIG_USB_STORAGE_DETECT
 	int media_present;
 	int interfaces;
 #endif
-=======
->>>>>>> rebase
 	struct badblocks *bb;
 	struct lockdep_map lockdep_map;
 };
@@ -442,18 +424,10 @@ static inline void free_part_info(struct hd_struct *part)
 extern void part_round_stats(struct request_queue *q, int cpu, struct hd_struct *part);
 
 /* block/genhd.c */
-<<<<<<< HEAD
 extern void device_add_disk(struct device *parent, struct gendisk *disk);
 static inline void add_disk(struct gendisk *disk)
 {
 	device_add_disk(NULL, disk);
-=======
-extern void device_add_disk(struct device *parent, struct gendisk *disk,
-			    const struct attribute_group **groups);
-static inline void add_disk(struct gendisk *disk)
-{
-	device_add_disk(NULL, disk, NULL);
->>>>>>> rebase
 }
 extern void device_add_disk_no_queue_reg(struct device *parent, struct gendisk *disk);
 static inline void add_disk_no_queue_reg(struct gendisk *disk)
@@ -777,17 +751,9 @@ static inline sector_t part_nr_sects_read(struct hd_struct *part)
 static inline void part_nr_sects_write(struct hd_struct *part, sector_t size)
 {
 #if BITS_PER_LONG==32 && defined(CONFIG_LBDAF) && defined(CONFIG_SMP)
-<<<<<<< HEAD
 	write_seqcount_begin(&part->nr_sects_seq);
 	part->nr_sects = size;
 	write_seqcount_end(&part->nr_sects_seq);
-=======
-	preempt_disable();
-	write_seqcount_begin(&part->nr_sects_seq);
-	part->nr_sects = size;
-	write_seqcount_end(&part->nr_sects_seq);
-	preempt_enable();
->>>>>>> rebase
 #elif BITS_PER_LONG==32 && defined(CONFIG_LBDAF) && defined(CONFIG_PREEMPT)
 	preempt_disable();
 	part->nr_sects = size;

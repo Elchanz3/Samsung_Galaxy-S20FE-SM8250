@@ -20,19 +20,7 @@
 
 DEFINE_MUTEX(kernfs_mutex);
 static DEFINE_SPINLOCK(kernfs_rename_lock);	/* kn->parent and ->name */
-<<<<<<< HEAD
 static char kernfs_pr_cont_buf[PATH_MAX];	/* protected by rename_lock */
-=======
-/*
- * Don't use rename_lock to piggy back on pr_cont_buf. We don't want to
- * call pr_cont() while holding rename_lock. Because sometimes pr_cont()
- * will perform wakeups when releasing console_sem. Holding rename_lock
- * will introduce deadlock if the scheduler reads the kernfs_name in the
- * wakeup path.
- */
-static DEFINE_SPINLOCK(kernfs_pr_cont_lock);
-static char kernfs_pr_cont_buf[PATH_MAX];	/* protected by pr_cont_lock */
->>>>>>> rebase
 static DEFINE_SPINLOCK(kernfs_idr_lock);	/* root->ino_idr */
 
 #define rb_to_kn(X) rb_entry((X), struct kernfs_node, rb)
@@ -241,21 +229,12 @@ void pr_cont_kernfs_name(struct kernfs_node *kn)
 {
 	unsigned long flags;
 
-<<<<<<< HEAD
 	spin_lock_irqsave(&kernfs_rename_lock, flags);
 
 	kernfs_name_locked(kn, kernfs_pr_cont_buf, sizeof(kernfs_pr_cont_buf));
 	pr_cont("%s", kernfs_pr_cont_buf);
 
 	spin_unlock_irqrestore(&kernfs_rename_lock, flags);
-=======
-	spin_lock_irqsave(&kernfs_pr_cont_lock, flags);
-
-	kernfs_name(kn, kernfs_pr_cont_buf, sizeof(kernfs_pr_cont_buf));
-	pr_cont("%s", kernfs_pr_cont_buf);
-
-	spin_unlock_irqrestore(&kernfs_pr_cont_lock, flags);
->>>>>>> rebase
 }
 
 /**
@@ -269,17 +248,10 @@ void pr_cont_kernfs_path(struct kernfs_node *kn)
 	unsigned long flags;
 	int sz;
 
-<<<<<<< HEAD
 	spin_lock_irqsave(&kernfs_rename_lock, flags);
 
 	sz = kernfs_path_from_node_locked(kn, NULL, kernfs_pr_cont_buf,
 					  sizeof(kernfs_pr_cont_buf));
-=======
-	spin_lock_irqsave(&kernfs_pr_cont_lock, flags);
-
-	sz = kernfs_path_from_node(kn, NULL, kernfs_pr_cont_buf,
-				   sizeof(kernfs_pr_cont_buf));
->>>>>>> rebase
 	if (sz < 0) {
 		pr_cont("(error)");
 		goto out;
@@ -293,11 +265,7 @@ void pr_cont_kernfs_path(struct kernfs_node *kn)
 	pr_cont("%s", kernfs_pr_cont_buf);
 
 out:
-<<<<<<< HEAD
 	spin_unlock_irqrestore(&kernfs_rename_lock, flags);
-=======
-	spin_unlock_irqrestore(&kernfs_pr_cont_lock, flags);
->>>>>>> rebase
 }
 
 /**
@@ -899,21 +867,13 @@ static struct kernfs_node *kernfs_walk_ns(struct kernfs_node *parent,
 
 	lockdep_assert_held(&kernfs_mutex);
 
-<<<<<<< HEAD
 	/* grab kernfs_rename_lock to piggy back on kernfs_pr_cont_buf */
 	spin_lock_irq(&kernfs_rename_lock);
-=======
-	spin_lock_irq(&kernfs_pr_cont_lock);
->>>>>>> rebase
 
 	len = strlcpy(kernfs_pr_cont_buf, path, sizeof(kernfs_pr_cont_buf));
 
 	if (len >= sizeof(kernfs_pr_cont_buf)) {
-<<<<<<< HEAD
 		spin_unlock_irq(&kernfs_rename_lock);
-=======
-		spin_unlock_irq(&kernfs_pr_cont_lock);
->>>>>>> rebase
 		return NULL;
 	}
 
@@ -925,11 +885,7 @@ static struct kernfs_node *kernfs_walk_ns(struct kernfs_node *parent,
 		parent = kernfs_find_ns(parent, name, ns);
 	}
 
-<<<<<<< HEAD
 	spin_unlock_irq(&kernfs_rename_lock);
-=======
-	spin_unlock_irq(&kernfs_pr_cont_lock);
->>>>>>> rebase
 
 	return parent;
 }
@@ -1550,16 +1506,8 @@ int kernfs_remove_by_name_ns(struct kernfs_node *parent, const char *name,
 	mutex_lock(&kernfs_mutex);
 
 	kn = kernfs_find_ns(parent, name, ns);
-<<<<<<< HEAD
 	if (kn)
 		__kernfs_remove(kn);
-=======
-	if (kn) {
-		kernfs_get(kn);
-		__kernfs_remove(kn);
-		kernfs_put(kn);
-	}
->>>>>>> rebase
 
 	mutex_unlock(&kernfs_mutex);
 

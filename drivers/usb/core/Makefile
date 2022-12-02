@@ -11,10 +11,7 @@ usbcore-y += phy.o port.o
 usbcore-$(CONFIG_OF)		+= of.o
 usbcore-$(CONFIG_USB_PCI)		+= hcd-pci.o
 usbcore-$(CONFIG_ACPI)		+= usb-acpi.o
-<<<<<<< HEAD
 usbcore-$(CONFIG_USB_HOST_CERTIFICATION)		+= usb_host_certify.o
-=======
->>>>>>> rebase
 
 obj-$(CONFIG_USB)		+= usbcore.o
 

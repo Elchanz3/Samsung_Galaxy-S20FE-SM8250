@@ -34,31 +34,19 @@ static void memfd_tag_pins(struct address_space *mapping)
 	void __rcu **slot;
 	pgoff_t start;
 	struct page *page;
-<<<<<<< HEAD
 	unsigned int tagged = 0;
-=======
-	int latency = 0;
-	int cache_count;
->>>>>>> rebase
 
 	lru_add_drain();
 	start = 0;
 
 	xa_lock_irq(&mapping->i_pages);
 	radix_tree_for_each_slot(slot, &mapping->i_pages, &iter, start) {
-<<<<<<< HEAD
 		page = radix_tree_deref_slot_protected(slot, &mapping->i_pages.xa_lock);
 		if (!page || radix_tree_exception(page)) {
-=======
-		cache_count = 1;
-		page = radix_tree_deref_slot_protected(slot, &mapping->i_pages.xa_lock);
-		if (!page || radix_tree_exception(page) || PageTail(page)) {
->>>>>>> rebase
 			if (radix_tree_deref_retry(page)) {
 				slot = radix_tree_iter_retry(&iter);
 				continue;
 			}
-<<<<<<< HEAD
 		} else if (page_count(page) - page_mapcount(page) > 1) {
 			radix_tree_tag_set(&mapping->i_pages, iter.index,
 					   MEMFD_TAG_PINNED);
@@ -66,22 +54,6 @@ static void memfd_tag_pins(struct address_space *mapping)
 
 		if (++tagged % 1024)
 			continue;
-=======
-		} else {
-			if (PageTransHuge(page) && !PageHuge(page))
-				cache_count = HPAGE_PMD_NR;
-			if (cache_count !=
-			    page_count(page) - total_mapcount(page)) {
-				radix_tree_tag_set(&mapping->i_pages,
-						iter.index, MEMFD_TAG_PINNED);
-			}
-		}
-
-		latency += cache_count;
-		if (latency < 1024)
-			continue;
-		latency = 0;
->>>>>>> rebase
 
 		slot = radix_tree_iter_resume(slot, &iter);
 		xa_unlock_irq(&mapping->i_pages);
@@ -107,10 +79,6 @@ static int memfd_wait_for_pins(struct address_space *mapping)
 	pgoff_t start;
 	struct page *page;
 	int error, scan;
-<<<<<<< HEAD
-=======
-	int cache_count;
->>>>>>> rebase
 
 	memfd_tag_pins(mapping);
 
@@ -139,17 +107,8 @@ static int memfd_wait_for_pins(struct address_space *mapping)
 				page = NULL;
 			}
 
-<<<<<<< HEAD
 			if (page &&
 			    page_count(page) - page_mapcount(page) != 1) {
-=======
-			cache_count = 1;
-			if (page && PageTransHuge(page) && !PageHuge(page))
-				cache_count = HPAGE_PMD_NR;
-
-			if (page && cache_count !=
-			    page_count(page) - total_mapcount(page)) {
->>>>>>> rebase
 				if (scan < LAST_SCAN)
 					goto continue_resched;
 
@@ -193,12 +152,8 @@ static unsigned int *memfd_file_seals_ptr(struct file *file)
 #define F_ALL_SEALS (F_SEAL_SEAL | \
 		     F_SEAL_SHRINK | \
 		     F_SEAL_GROW | \
-<<<<<<< HEAD
 		     F_SEAL_WRITE | \
 		     F_SEAL_FUTURE_WRITE)
-=======
-		     F_SEAL_WRITE)
->>>>>>> rebase
 
 static int memfd_add_seals(struct file *file, unsigned int seals)
 {

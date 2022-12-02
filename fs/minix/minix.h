@@ -32,10 +32,7 @@ struct minix_sb_info {
 	unsigned long s_zmap_blocks;
 	unsigned long s_firstdatazone;
 	unsigned long s_log_zone_size;
-<<<<<<< HEAD
 	unsigned long s_max_size;
-=======
->>>>>>> rebase
 	int s_dirsize;
 	int s_namelen;
 	struct buffer_head ** s_imap;

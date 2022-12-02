@@ -214,10 +214,6 @@ __xfs_dir3_free_read(
 	if (fa) {
 		xfs_verifier_error(*bpp, -EFSCORRUPTED, fa);
 		xfs_trans_brelse(tp, *bpp);
-<<<<<<< HEAD
-=======
-		*bpp = NULL;
->>>>>>> rebase
 		return -EFSCORRUPTED;
 	}
 

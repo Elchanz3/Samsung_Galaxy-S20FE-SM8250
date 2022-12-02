@@ -55,11 +55,6 @@ static int mcopy_atomic_pte(struct mm_struct *dst_mm,
 			/* don't free the page */
 			goto out;
 		}
-<<<<<<< HEAD
-=======
-
-		flush_dcache_page(page);
->>>>>>> rebase
 	} else {
 		page = *pagep;
 		*pagep = NULL;
@@ -276,11 +271,7 @@ retry:
 		 */
 		idx = linear_page_index(dst_vma, dst_addr);
 		mapping = dst_vma->vm_file->f_mapping;
-<<<<<<< HEAD
 		hash = hugetlb_fault_mutex_hash(h, mapping, idx, dst_addr);
-=======
-		hash = hugetlb_fault_mutex_hash(h, mapping, idx);
->>>>>>> rebase
 		mutex_lock(&hugetlb_fault_mutex_table[hash]);
 
 		err = -ENOMEM;
@@ -583,10 +574,6 @@ retry:
 				err = -EFAULT;
 				goto out;
 			}
-<<<<<<< HEAD
-=======
-			flush_dcache_page(page);
->>>>>>> rebase
 			goto retry;
 		} else
 			BUG_ON(page);

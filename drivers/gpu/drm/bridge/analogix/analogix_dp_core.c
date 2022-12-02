@@ -1514,24 +1514,8 @@ static ssize_t analogix_dpaux_transfer(struct drm_dp_aux *aux,
 				       struct drm_dp_aux_msg *msg)
 {
 	struct analogix_dp_device *dp = to_dp(aux);
-<<<<<<< HEAD
 
 	return analogix_dp_transfer(dp, msg);
-=======
-	int ret;
-
-	pm_runtime_get_sync(dp->dev);
-
-	ret = analogix_dp_detect_hpd(dp);
-	if (ret)
-		goto out;
-
-	ret = analogix_dp_transfer(dp, msg);
-out:
-	pm_runtime_put(dp->dev);
-
-	return ret;
->>>>>>> rebase
 }
 
 struct analogix_dp_device *
@@ -1695,15 +1679,12 @@ EXPORT_SYMBOL_GPL(analogix_dp_unbind);
 int analogix_dp_suspend(struct analogix_dp_device *dp)
 {
 	clk_disable_unprepare(dp->clock);
-<<<<<<< HEAD
 
 	if (dp->plat_data->panel) {
 		if (drm_panel_unprepare(dp->plat_data->panel))
 			DRM_ERROR("failed to turnoff the panel\n");
 	}
 
-=======
->>>>>>> rebase
 	return 0;
 }
 EXPORT_SYMBOL_GPL(analogix_dp_suspend);
@@ -1718,7 +1699,6 @@ int analogix_dp_resume(struct analogix_dp_device *dp)
 		return ret;
 	}
 
-<<<<<<< HEAD
 	if (dp->plat_data->panel) {
 		if (drm_panel_prepare(dp->plat_data->panel)) {
 			DRM_ERROR("failed to setup the panel\n");
@@ -1726,8 +1706,6 @@ int analogix_dp_resume(struct analogix_dp_device *dp)
 		}
 	}
 
-=======
->>>>>>> rebase
 	return 0;
 }
 EXPORT_SYMBOL_GPL(analogix_dp_resume);

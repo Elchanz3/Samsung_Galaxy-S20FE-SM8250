@@ -193,11 +193,7 @@ static struct notifier_block ipvtap_notifier_block __read_mostly = {
 	.notifier_call	= ipvtap_device_event,
 };
 
-<<<<<<< HEAD
 static int ipvtap_init(void)
-=======
-static int __init ipvtap_init(void)
->>>>>>> rebase
 {
 	int err;
 
@@ -231,11 +227,7 @@ out1:
 }
 module_init(ipvtap_init);
 
-<<<<<<< HEAD
 static void ipvtap_exit(void)
-=======
-static void __exit ipvtap_exit(void)
->>>>>>> rebase
 {
 	rtnl_link_unregister(&ipvtap_link_ops);
 	unregister_netdevice_notifier(&ipvtap_notifier_block);

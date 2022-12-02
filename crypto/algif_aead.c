@@ -42,11 +42,7 @@
 
 struct aead_tfm {
 	struct crypto_aead *aead;
-<<<<<<< HEAD
 	struct crypto_sync_skcipher *null_tfm;
-=======
-	struct crypto_skcipher *null_tfm;
->>>>>>> rebase
 };
 
 static inline bool aead_sufficient_data(struct sock *sk)
@@ -79,7 +75,6 @@ static int aead_sendmsg(struct socket *sock, struct msghdr *msg, size_t size)
 	return af_alg_sendmsg(sock, msg, size, ivsize);
 }
 
-<<<<<<< HEAD
 static int crypto_aead_copy_sgl(struct crypto_sync_skcipher *null_tfm,
 				struct scatterlist *src,
 				struct scatterlist *dst, unsigned int len)
@@ -88,16 +83,6 @@ static int crypto_aead_copy_sgl(struct crypto_sync_skcipher *null_tfm,
 
 	skcipher_request_set_sync_tfm(skreq, null_tfm);
 	skcipher_request_set_callback(skreq, CRYPTO_TFM_REQ_MAY_BACKLOG,
-=======
-static int crypto_aead_copy_sgl(struct crypto_skcipher *null_tfm,
-				struct scatterlist *src,
-				struct scatterlist *dst, unsigned int len)
-{
-	SKCIPHER_REQUEST_ON_STACK(skreq, null_tfm);
-
-	skcipher_request_set_tfm(skreq, null_tfm);
-	skcipher_request_set_callback(skreq, CRYPTO_TFM_REQ_MAY_SLEEP,
->>>>>>> rebase
 				      NULL, NULL);
 	skcipher_request_set_crypt(skreq, src, dst, len, NULL);
 
@@ -114,11 +99,7 @@ static int _aead_recvmsg(struct socket *sock, struct msghdr *msg,
 	struct af_alg_ctx *ctx = ask->private;
 	struct aead_tfm *aeadc = pask->private;
 	struct crypto_aead *tfm = aeadc->aead;
-<<<<<<< HEAD
 	struct crypto_sync_skcipher *null_tfm = aeadc->null_tfm;
-=======
-	struct crypto_skcipher *null_tfm = aeadc->null_tfm;
->>>>>>> rebase
 	unsigned int i, as = crypto_aead_authsize(tfm);
 	struct af_alg_async_req *areq;
 	struct af_alg_tsgl *tsgl, *tmp;
@@ -314,31 +295,19 @@ static int _aead_recvmsg(struct socket *sock, struct msghdr *msg,
 		areq->outlen = outlen;
 
 		aead_request_set_callback(&areq->cra_u.aead_req,
-<<<<<<< HEAD
 					  CRYPTO_TFM_REQ_MAY_BACKLOG,
-=======
-					  CRYPTO_TFM_REQ_MAY_SLEEP,
->>>>>>> rebase
 					  af_alg_async_cb, areq);
 		err = ctx->enc ? crypto_aead_encrypt(&areq->cra_u.aead_req) :
 				 crypto_aead_decrypt(&areq->cra_u.aead_req);
 
 		/* AIO operation in progress */
-<<<<<<< HEAD
 		if (err == -EINPROGRESS || err == -EBUSY)
-=======
-		if (err == -EINPROGRESS)
->>>>>>> rebase
 			return -EIOCBQUEUED;
 
 		sock_put(sk);
 	} else {
 		/* Synchronous operation */
 		aead_request_set_callback(&areq->cra_u.aead_req,
-<<<<<<< HEAD
-=======
-					  CRYPTO_TFM_REQ_MAY_SLEEP |
->>>>>>> rebase
 					  CRYPTO_TFM_REQ_MAY_BACKLOG,
 					  crypto_req_done, &ctx->wait);
 		err = crypto_wait_req(ctx->enc ?
@@ -419,11 +388,7 @@ static int aead_check_key(struct socket *sock)
 	struct alg_sock *ask = alg_sk(sk);
 
 	lock_sock(sk);
-<<<<<<< HEAD
 	if (ask->refcnt)
-=======
-	if (!atomic_read(&ask->nokey_refcnt))
->>>>>>> rebase
 		goto unlock_child;
 
 	psk = ask->parent;
@@ -435,16 +400,11 @@ static int aead_check_key(struct socket *sock)
 	if (crypto_aead_get_flags(tfm->aead) & CRYPTO_TFM_NEED_KEY)
 		goto unlock;
 
-<<<<<<< HEAD
 	if (!pask->refcnt++)
 		sock_hold(psk);
 
 	ask->refcnt = 1;
 	sock_put(psk);
-=======
-	atomic_dec(&pask->nokey_refcnt);
-	atomic_set(&ask->nokey_refcnt, 0);
->>>>>>> rebase
 
 	err = 0;
 
@@ -518,11 +478,7 @@ static void *aead_bind(const char *name, u32 type, u32 mask)
 {
 	struct aead_tfm *tfm;
 	struct crypto_aead *aead;
-<<<<<<< HEAD
 	struct crypto_sync_skcipher *null_tfm;
-=======
-	struct crypto_skcipher *null_tfm;
->>>>>>> rebase
 
 	tfm = kzalloc(sizeof(*tfm), GFP_KERNEL);
 	if (!tfm)

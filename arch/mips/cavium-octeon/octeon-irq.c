@@ -127,19 +127,6 @@ static void octeon_irq_free_cd(struct irq_domain *d, unsigned int irq)
 static int octeon_irq_force_ciu_mapping(struct irq_domain *domain,
 					int irq, int line, int bit)
 {
-<<<<<<< HEAD
-=======
-	struct device_node *of_node;
-	int ret;
-
-	of_node = irq_domain_get_of_node(domain);
-	if (!of_node)
-		return -EINVAL;
-	ret = irq_alloc_desc_at(irq, of_node_to_nid(of_node));
-	if (ret < 0)
-		return ret;
-
->>>>>>> rebase
 	return irq_domain_associate(domain, irq, line << 6 | bit);
 }
 
@@ -2212,12 +2199,6 @@ static int octeon_irq_cib_map(struct irq_domain *d,
 	}
 
 	cd = kzalloc(sizeof(*cd), GFP_KERNEL);
-<<<<<<< HEAD
-=======
-	if (!cd)
-		return -ENOMEM;
-
->>>>>>> rebase
 	cd->host_data = host_data;
 	cd->bit = hw;
 

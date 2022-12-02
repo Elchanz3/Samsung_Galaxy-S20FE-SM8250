@@ -14,10 +14,7 @@
 #include <linux/perf_event.h>
 #include <linux/percpu-defs.h>
 #include <linux/slab.h>
-<<<<<<< HEAD
 #include <linux/stringhash.h>
-=======
->>>>>>> rebase
 #include <linux/types.h>
 #include <linux/workqueue.h>
 
@@ -27,29 +24,11 @@
 static struct pmu etm_pmu;
 static bool etm_perf_up;
 
-<<<<<<< HEAD
-=======
-/**
- * struct etm_event_data - Coresight specifics associated to an event
- * @work:		Handle to free allocated memory outside IRQ context.
- * @mask:		Hold the CPU(s) this event was set for.
- * @snk_config:		The sink configuration.
- * @path:		An array of path, each slot for one CPU.
- */
-struct etm_event_data {
-	struct work_struct work;
-	cpumask_t mask;
-	void *snk_config;
-	struct list_head * __percpu *path;
-};
-
->>>>>>> rebase
 static DEFINE_PER_CPU(struct perf_output_handle, ctx_handle);
 static DEFINE_PER_CPU(struct coresight_device *, csdev_src);
 
 /* ETMv3.5/PTM's ETMCR is 'config' */
 PMU_FORMAT_ATTR(cycacc,		"config:" __stringify(ETM_OPT_CYCACC));
-<<<<<<< HEAD
 PMU_FORMAT_ATTR(contextid,	"config:" __stringify(ETM_OPT_CTXTID));
 PMU_FORMAT_ATTR(timestamp,	"config:" __stringify(ETM_OPT_TS));
 PMU_FORMAT_ATTR(retstack,	"config:" __stringify(ETM_OPT_RETSTK));
@@ -62,15 +41,6 @@ static struct attribute *etm_config_formats_attr[] = {
 	&format_attr_timestamp.attr,
 	&format_attr_retstack.attr,
 	&format_attr_sinkid.attr,
-=======
-PMU_FORMAT_ATTR(timestamp,	"config:" __stringify(ETM_OPT_TS));
-PMU_FORMAT_ATTR(retstack,	"config:" __stringify(ETM_OPT_RETSTK));
-
-static struct attribute *etm_config_formats_attr[] = {
-	&format_attr_cycacc.attr,
-	&format_attr_timestamp.attr,
-	&format_attr_retstack.attr,
->>>>>>> rebase
 	NULL,
 };
 
@@ -79,7 +49,6 @@ static const struct attribute_group etm_pmu_format_group = {
 	.attrs  = etm_config_formats_attr,
 };
 
-<<<<<<< HEAD
 static struct attribute *etm_config_sinks_attr[] = {
 	NULL,
 };
@@ -92,10 +61,6 @@ static const struct attribute_group etm_pmu_sinks_group = {
 static const struct attribute_group *etm_pmu_attr_groups[] = {
 	&etm_pmu_format_group,
 	&etm_pmu_sinks_group,
-=======
-static const struct attribute_group *etm_pmu_attr_groups[] = {
-	&etm_pmu_format_group,
->>>>>>> rebase
 	NULL,
 };
 
@@ -155,7 +120,6 @@ out:
 	return ret;
 }
 
-<<<<<<< HEAD
 static void free_sink_buffer(struct etm_event_data *event_data)
 {
 	int cpu;
@@ -173,14 +137,11 @@ static void free_sink_buffer(struct etm_event_data *event_data)
 	sink_ops(sink)->free_buffer(event_data->snk_config);
 }
 
-=======
->>>>>>> rebase
 static void free_event_data(struct work_struct *work)
 {
 	int cpu;
 	cpumask_t *mask;
 	struct etm_event_data *event_data;
-<<<<<<< HEAD
 	struct coresight_device *source;
 
 	event_data = container_of(work, struct etm_event_data, work);
@@ -188,35 +149,14 @@ static void free_event_data(struct work_struct *work)
 
 	/* Free the sink buffers, if there are any */
 	free_sink_buffer(event_data);
-=======
-	struct coresight_device *sink;
-
-	event_data = container_of(work, struct etm_event_data, work);
-	mask = &event_data->mask;
-	/*
-	 * First deal with the sink configuration.  See comment in
-	 * etm_setup_aux() about why we take the first available path.
-	 */
-	if (event_data->snk_config) {
-		cpu = cpumask_first(mask);
-		sink = coresight_get_sink(etm_event_cpu_path(event_data, cpu));
-		if (sink_ops(sink)->free_buffer)
-			sink_ops(sink)->free_buffer(event_data->snk_config);
-	}
->>>>>>> rebase
 
 	for_each_cpu(cpu, mask) {
 		struct list_head **ppath;
 
 		ppath = etm_event_cpu_path_ptr(event_data, cpu);
-<<<<<<< HEAD
 		source = coresight_get_source(*ppath);
 		if (!(IS_ERR_OR_NULL(*ppath)))
 			coresight_release_path(source, *ppath);
-=======
-		if (!(IS_ERR_OR_NULL(*ppath)))
-			coresight_release_path(*ppath);
->>>>>>> rebase
 		*ppath = NULL;
 	}
 
@@ -234,22 +174,12 @@ static void *alloc_event_data(int cpu)
 	if (!event_data)
 		return NULL;
 
-<<<<<<< HEAD
-=======
-	/* Make sure nothing disappears under us */
-	get_online_cpus();
->>>>>>> rebase
 
 	mask = &event_data->mask;
 	if (cpu != -1)
 		cpumask_set_cpu(cpu, mask);
 	else
-<<<<<<< HEAD
 		cpumask_copy(mask, cpu_present_mask);
-=======
-		cpumask_copy(mask, cpu_online_mask);
-	put_online_cpus();
->>>>>>> rebase
 
 	/*
 	 * Each CPU has a single path between source and destination.  As such
@@ -279,10 +209,7 @@ static void etm_free_aux(void *data)
 static void *etm_setup_aux(struct perf_event *event, void **pages,
 			   int nr_pages, bool overwrite)
 {
-<<<<<<< HEAD
 	u32 id;
-=======
->>>>>>> rebase
 	int cpu = event->cpu;
 	cpumask_t *mask;
 	struct coresight_device *sink;
@@ -293,7 +220,6 @@ static void *etm_setup_aux(struct perf_event *event, void **pages,
 		return NULL;
 	INIT_WORK(&event_data->work, free_event_data);
 
-<<<<<<< HEAD
 	mask = &event_data->mask;
 
 	/* First get the selected sink from user space. */
@@ -315,32 +241,11 @@ static void *etm_setup_aux(struct perf_event *event, void **pages,
 	 * mask and continue with the rest. If ever we try to trace on those
 	 * CPUs, we can handle it and fail the session.
 	 */
-=======
-	/*
-	 * In theory nothing prevent tracers in a trace session from being
-	 * associated with different sinks, nor having a sink per tracer.  But
-	 * until we have HW with this kind of topology we need to assume tracers
-	 * in a trace session are using the same sink.  Therefore go through
-	 * the coresight bus and pick the first enabled sink.
-	 *
-	 * When operated from sysFS users are responsible to enable the sink
-	 * while from perf, the perf tools will do it based on the choice made
-	 * on the cmd line.  As such the "enable_sink" flag in sysFS is reset.
-	 */
-	sink = coresight_get_enabled_sink(true);
-	if (!sink)
-		goto err;
-
-	mask = &event_data->mask;
-
-	/* Setup the path for each CPU in a trace session */
->>>>>>> rebase
 	for_each_cpu(cpu, mask) {
 		struct list_head *path;
 		struct coresight_device *csdev;
 
 		csdev = per_cpu(csdev_src, cpu);
-<<<<<<< HEAD
 		/*
 		 * If there is no ETM associated with this CPU clear it from
 		 * the mask and continue with the rest. If ever we try to trace
@@ -350,10 +255,6 @@ static void *etm_setup_aux(struct perf_event *event, void **pages,
 			cpumask_clear_cpu(cpu, mask);
 			continue;
 		}
-=======
-		if (!csdev)
-			goto err;
->>>>>>> rebase
 
 		/*
 		 * Building a path doesn't enable it, it simply builds a
@@ -361,20 +262,14 @@ static void *etm_setup_aux(struct perf_event *event, void **pages,
 		 * referenced later when the path is actually needed.
 		 */
 		path = coresight_build_path(csdev, sink);
-<<<<<<< HEAD
 		if (IS_ERR(path)) {
 			cpumask_clear_cpu(cpu, mask);
 			continue;
 		}
-=======
-		if (IS_ERR(path))
-			goto err;
->>>>>>> rebase
 
 		*etm_event_cpu_path_ptr(event_data, cpu) = path;
 	}
 
-<<<<<<< HEAD
 	/* If we don't have any CPUs ready for tracing, abort */
 	cpu = cpumask_first(mask);
 	if (cpu >= nr_cpu_ids)
@@ -386,15 +281,6 @@ static void *etm_setup_aux(struct perf_event *event, void **pages,
 	/* Allocate the sink buffer for this session */
 	event_data->snk_config =
 			sink_ops(sink)->alloc_buffer(sink, event, pages,
-=======
-	if (!sink_ops(sink)->alloc_buffer)
-		goto err;
-
-	cpu = cpumask_first(mask);
-	/* Get the AUX specific data from the sink buffer */
-	event_data->snk_config =
-			sink_ops(sink)->alloc_buffer(sink, cpu, pages,
->>>>>>> rebase
 						     nr_pages, overwrite);
 	if (!event_data->snk_config)
 		goto err;
@@ -430,24 +316,11 @@ static void etm_event_start(struct perf_event *event, int flags)
 	path = etm_event_cpu_path(event_data, cpu);
 	/* We need a sink, no need to continue without one */
 	sink = coresight_get_sink(path);
-<<<<<<< HEAD
 	if (WARN_ON_ONCE(!sink))
 		goto fail_end_stop;
 
 	/* Nothing will happen without a path */
 	if (coresight_enable_path(path, CS_MODE_PERF, handle))
-=======
-	if (WARN_ON_ONCE(!sink || !sink_ops(sink)->set_buffer))
-		goto fail_end_stop;
-
-	/* Configure the sink */
-	if (sink_ops(sink)->set_buffer(sink, handle,
-				       event_data->snk_config))
-		goto fail_end_stop;
-
-	/* Nothing will happen without a path */
-	if (coresight_enable_path(path, CS_MODE_PERF))
->>>>>>> rebase
 		goto fail_end_stop;
 
 	/* Tell the perf core the event is alive */
@@ -507,20 +380,8 @@ static void etm_event_stop(struct perf_event *event, int mode)
 		if (!sink_ops(sink)->update_buffer)
 			return;
 
-<<<<<<< HEAD
 		size = sink_ops(sink)->update_buffer(sink, handle,
 					      event_data->snk_config);
-=======
-		sink_ops(sink)->update_buffer(sink, handle,
-					      event_data->snk_config);
-
-		if (!sink_ops(sink)->reset_buffer)
-			return;
-
-		size = sink_ops(sink)->reset_buffer(sink, handle,
-						    event_data->snk_config);
-
->>>>>>> rebase
 		perf_aux_output_end(handle, size);
 	}
 
@@ -649,7 +510,6 @@ int etm_perf_symlink(struct coresight_device *csdev, bool link)
 	return 0;
 }
 
-<<<<<<< HEAD
 static ssize_t etm_perf_sink_name_show(struct device *dev,
 				       struct device_attribute *dattr,
 				       char *buf)
@@ -722,18 +582,12 @@ void etm_perf_del_symlink_sink(struct coresight_device *csdev)
 	csdev->ea = NULL;
 }
 
-=======
->>>>>>> rebase
 static int __init etm_perf_init(void)
 {
 	int ret;
 
-<<<<<<< HEAD
 	etm_pmu.capabilities		= (PERF_PMU_CAP_EXCLUSIVE |
 					   PERF_PMU_CAP_ITRACE);
-=======
-	etm_pmu.capabilities		= PERF_PMU_CAP_EXCLUSIVE;
->>>>>>> rebase
 
 	etm_pmu.attr_groups		= etm_pmu_attr_groups;
 	etm_pmu.task_ctx_nr		= perf_sw_context;

@@ -552,11 +552,7 @@ struct mac80211_hwsim_data {
 	bool ps_poll_pending;
 	struct dentry *debugfs;
 
-<<<<<<< HEAD
 	uintptr_t pending_cookie;
-=======
-	atomic_t pending_cookie;
->>>>>>> rebase
 	struct sk_buff_head pending;	/* packets pending */
 	/*
 	 * Only radios in the same group can communicate together (the
@@ -1140,12 +1136,8 @@ static void mac80211_hwsim_tx_frame_nl(struct ieee80211_hw *hw,
 		goto nla_put_failure;
 
 	/* We create a cookie to identify this skb */
-<<<<<<< HEAD
 	data->pending_cookie++;
 	cookie = data->pending_cookie;
-=======
-	cookie = atomic_inc_return(&data->pending_cookie);
->>>>>>> rebase
 	info->rate_driver_data[0] = (void *)cookie;
 	if (nla_put_u64_64bit(skb, HWSIM_ATTR_COOKIE, cookie, HWSIM_ATTR_PAD))
 		goto nla_put_failure;
@@ -2090,27 +2082,9 @@ static void hw_scan_work(struct work_struct *work)
 			if (req->ie_len)
 				skb_put_data(probe, req->ie, req->ie_len);
 
-<<<<<<< HEAD
 			local_bh_disable();
 			mac80211_hwsim_tx_frame(hwsim->hw, probe,
 						hwsim->tmp_chan);
-=======
-			rcu_read_lock();
-			if (!ieee80211_tx_prepare_skb(hwsim->hw,
-						      hwsim->hw_scan_vif,
-						      probe,
-						      hwsim->tmp_chan->band,
-						      NULL)) {
-				rcu_read_unlock();
-				kfree_skb(probe);
-				continue;
-			}
-
-			local_bh_disable();
-			mac80211_hwsim_tx_frame(hwsim->hw, probe,
-						hwsim->tmp_chan);
-			rcu_read_unlock();
->>>>>>> rebase
 			local_bh_enable();
 		}
 	}
@@ -3134,10 +3108,6 @@ static int hwsim_tx_info_frame_received_nl(struct sk_buff *skb_2,
 	const u8 *src;
 	unsigned int hwsim_flags;
 	int i;
-<<<<<<< HEAD
-=======
-	unsigned long flags;
->>>>>>> rebase
 	bool found = false;
 
 	if (!info->attrs[HWSIM_ATTR_ADDR_TRANSMITTER] ||
@@ -3162,7 +3132,6 @@ static int hwsim_tx_info_frame_received_nl(struct sk_buff *skb_2,
 		goto out;
 
 	/* look for the skb matching the cookie passed back from user */
-<<<<<<< HEAD
 	skb_queue_walk_safe(&data2->pending, skb, tmp) {
 		u64 skb_cookie;
 
@@ -3171,25 +3140,10 @@ static int hwsim_tx_info_frame_received_nl(struct sk_buff *skb_2,
 
 		if (skb_cookie == ret_skb_cookie) {
 			skb_unlink(skb, &data2->pending);
-=======
-	spin_lock_irqsave(&data2->pending.lock, flags);
-	skb_queue_walk_safe(&data2->pending, skb, tmp) {
-		uintptr_t skb_cookie;
-
-		txi = IEEE80211_SKB_CB(skb);
-		skb_cookie = (uintptr_t)txi->rate_driver_data[0];
-
-		if (skb_cookie == ret_skb_cookie) {
-			__skb_unlink(skb, &data2->pending);
->>>>>>> rebase
 			found = true;
 			break;
 		}
 	}
-<<<<<<< HEAD
-=======
-	spin_unlock_irqrestore(&data2->pending.lock, flags);
->>>>>>> rebase
 
 	/* not found */
 	if (!found)
@@ -3222,13 +3176,6 @@ static int hwsim_tx_info_frame_received_nl(struct sk_buff *skb_2,
 		}
 		txi->flags |= IEEE80211_TX_STAT_ACK;
 	}
-<<<<<<< HEAD
-=======
-
-	if (hwsim_flags & HWSIM_TX_CTL_NO_ACK)
-		txi->flags |= IEEE80211_TX_STAT_NOACK_TRANSMITTED;
-
->>>>>>> rebase
 	ieee80211_tx_status_irqsafe(data2->hw, skb);
 	return 0;
 out:
@@ -3305,11 +3252,6 @@ static int hwsim_cloned_frame_received_nl(struct sk_buff *skb_2,
 
 	rx_status.band = data2->channel->band;
 	rx_status.rate_idx = nla_get_u32(info->attrs[HWSIM_ATTR_RX_RATE]);
-<<<<<<< HEAD
-=======
-	if (rx_status.rate_idx >= data2->hw->wiphy->bands[rx_status.band]->n_bitrates)
-		goto out;
->>>>>>> rebase
 	rx_status.signal = nla_get_u32(info->attrs[HWSIM_ATTR_SIGNAL]);
 
 	memcpy(IEEE80211_SKB_RXCB(skb), &rx_status, sizeof(rx_status));
@@ -3385,15 +3327,9 @@ static int hwsim_new_radio_nl(struct sk_buff *msg, struct genl_info *info)
 		param.no_vif = true;
 
 	if (info->attrs[HWSIM_ATTR_RADIO_NAME]) {
-<<<<<<< HEAD
 		hwname = kasprintf(GFP_KERNEL, "%.*s",
 				   nla_len(info->attrs[HWSIM_ATTR_RADIO_NAME]),
 				   (char *)nla_data(info->attrs[HWSIM_ATTR_RADIO_NAME]));
-=======
-		hwname = kstrndup((char *)nla_data(info->attrs[HWSIM_ATTR_RADIO_NAME]),
-				  nla_len(info->attrs[HWSIM_ATTR_RADIO_NAME]),
-				  GFP_KERNEL);
->>>>>>> rebase
 		if (!hwname)
 			return -ENOMEM;
 		param.hwname = hwname;
@@ -3449,15 +3385,9 @@ static int hwsim_del_radio_nl(struct sk_buff *msg, struct genl_info *info)
 	if (info->attrs[HWSIM_ATTR_RADIO_ID]) {
 		idx = nla_get_u32(info->attrs[HWSIM_ATTR_RADIO_ID]);
 	} else if (info->attrs[HWSIM_ATTR_RADIO_NAME]) {
-<<<<<<< HEAD
 		hwname = kasprintf(GFP_KERNEL, "%.*s",
 				   nla_len(info->attrs[HWSIM_ATTR_RADIO_NAME]),
 				   (char *)nla_data(info->attrs[HWSIM_ATTR_RADIO_NAME]));
-=======
-		hwname = kstrndup((char *)nla_data(info->attrs[HWSIM_ATTR_RADIO_NAME]),
-				  nla_len(info->attrs[HWSIM_ATTR_RADIO_NAME]),
-				  GFP_KERNEL);
->>>>>>> rebase
 		if (!hwname)
 			return -ENOMEM;
 	} else

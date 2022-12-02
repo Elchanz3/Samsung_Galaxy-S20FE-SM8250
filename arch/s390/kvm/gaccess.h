@@ -18,26 +18,6 @@
 
 /**
  * kvm_s390_real_to_abs - convert guest real address to guest absolute address
-<<<<<<< HEAD
-=======
- * @prefix - guest prefix
- * @gra - guest real address
- *
- * Returns the guest absolute address that corresponds to the passed guest real
- * address @gra of by applying the given prefix.
- */
-static inline unsigned long _kvm_s390_real_to_abs(u32 prefix, unsigned long gra)
-{
-	if (gra < 2 * PAGE_SIZE)
-		gra += prefix;
-	else if (gra >= prefix && gra < prefix + 2 * PAGE_SIZE)
-		gra -= prefix;
-	return gra;
-}
-
-/**
- * kvm_s390_real_to_abs - convert guest real address to guest absolute address
->>>>>>> rebase
  * @vcpu - guest virtual cpu
  * @gra - guest real address
  *
@@ -47,7 +27,6 @@ static inline unsigned long _kvm_s390_real_to_abs(u32 prefix, unsigned long gra)
 static inline unsigned long kvm_s390_real_to_abs(struct kvm_vcpu *vcpu,
 						 unsigned long gra)
 {
-<<<<<<< HEAD
 	unsigned long prefix  = kvm_s390_get_prefix(vcpu);
 
 	if (gra < 2 * PAGE_SIZE)
@@ -55,32 +34,6 @@ static inline unsigned long kvm_s390_real_to_abs(struct kvm_vcpu *vcpu,
 	else if (gra >= prefix && gra < prefix + 2 * PAGE_SIZE)
 		gra -= prefix;
 	return gra;
-=======
-	return _kvm_s390_real_to_abs(kvm_s390_get_prefix(vcpu), gra);
-}
-
-/**
- * _kvm_s390_logical_to_effective - convert guest logical to effective address
- * @psw: psw of the guest
- * @ga: guest logical address
- *
- * Convert a guest logical address to an effective address by applying the
- * rules of the addressing mode defined by bits 31 and 32 of the given PSW
- * (extendended/basic addressing mode).
- *
- * Depending on the addressing mode, the upper 40 bits (24 bit addressing
- * mode), 33 bits (31 bit addressing mode) or no bits (64 bit addressing
- * mode) of @ga will be zeroed and the remaining bits will be returned.
- */
-static inline unsigned long _kvm_s390_logical_to_effective(psw_t *psw,
-							   unsigned long ga)
-{
-	if (psw_bits(*psw).eaba == PSW_BITS_AMODE_64BIT)
-		return ga;
-	if (psw_bits(*psw).eaba == PSW_BITS_AMODE_31BIT)
-		return ga & ((1UL << 31) - 1);
-	return ga & ((1UL << 24) - 1);
->>>>>>> rebase
 }
 
 /**
@@ -99,7 +52,6 @@ static inline unsigned long _kvm_s390_logical_to_effective(psw_t *psw,
 static inline unsigned long kvm_s390_logical_to_effective(struct kvm_vcpu *vcpu,
 							  unsigned long ga)
 {
-<<<<<<< HEAD
 	psw_t *psw = &vcpu->arch.sie_block->gpsw;
 
 	if (psw_bits(*psw).eaba == PSW_BITS_AMODE_64BIT)
@@ -107,9 +59,6 @@ static inline unsigned long kvm_s390_logical_to_effective(struct kvm_vcpu *vcpu,
 	if (psw_bits(*psw).eaba == PSW_BITS_AMODE_31BIT)
 		return ga & ((1UL << 31) - 1);
 	return ga & ((1UL << 24) - 1);
-=======
-	return _kvm_s390_logical_to_effective(&vcpu->arch.sie_block->gpsw, ga);
->>>>>>> rebase
 }
 
 /*

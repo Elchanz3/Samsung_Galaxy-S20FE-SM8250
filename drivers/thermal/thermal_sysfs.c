@@ -63,7 +63,6 @@ mode_show(struct device *dev, struct device_attribute *attr, char *buf)
 		       : "disabled");
 }
 
-<<<<<<< HEAD
 static int thermal_zone_device_clear(struct thermal_zone_device *tz)
 {
 	struct thermal_instance *pos;
@@ -86,8 +85,6 @@ static int thermal_zone_device_clear(struct thermal_zone_device *tz)
 	return ret;
 }
 
-=======
->>>>>>> rebase
 static ssize_t
 mode_store(struct device *dev, struct device_attribute *attr,
 	   const char *buf, size_t count)
@@ -101,11 +98,7 @@ mode_store(struct device *dev, struct device_attribute *attr,
 	if (!strncmp(buf, "enabled", sizeof("enabled") - 1))
 		result = tz->ops->set_mode(tz, THERMAL_DEVICE_ENABLED);
 	else if (!strncmp(buf, "disabled", sizeof("disabled") - 1))
-<<<<<<< HEAD
 		result = thermal_zone_device_clear(tz);
-=======
-		result = tz->ops->set_mode(tz, THERMAL_DEVICE_DISABLED);
->>>>>>> rebase
 	else
 		result = -EINVAL;
 
@@ -377,7 +370,6 @@ sustainable_power_store(struct device *dev, struct device_attribute *devattr,
 	return count;
 }
 
-<<<<<<< HEAD
 static ssize_t
 polling_delay_show(struct device *dev, struct device_attribute *attr,
 		   char *buf)
@@ -436,8 +428,6 @@ passive_delay_store(struct device *dev, struct device_attribute *attr,
 	return count;
 }
 
-=======
->>>>>>> rebase
 #define create_s32_tzp_attr(name)					\
 	static ssize_t							\
 	name##_show(struct device *dev, struct device_attribute *devattr, \
@@ -489,11 +479,8 @@ static DEVICE_ATTR_RO(temp);
 static DEVICE_ATTR_RW(policy);
 static DEVICE_ATTR_RO(available_policies);
 static DEVICE_ATTR_RW(sustainable_power);
-<<<<<<< HEAD
 static DEVICE_ATTR_RW(passive_delay);
 static DEVICE_ATTR_RW(polling_delay);
-=======
->>>>>>> rebase
 
 /* These thermal zone device attributes are created based on conditions */
 static DEVICE_ATTR_RW(mode);
@@ -509,11 +496,8 @@ static struct attribute *thermal_zone_dev_attrs[] = {
 	&dev_attr_policy.attr,
 	&dev_attr_available_policies.attr,
 	&dev_attr_sustainable_power.attr,
-<<<<<<< HEAD
 	&dev_attr_passive_delay.attr,
 	&dev_attr_polling_delay.attr,
-=======
->>>>>>> rebase
 	&dev_attr_k_po.attr,
 	&dev_attr_k_pu.attr,
 	&dev_attr_k_i.attr,
@@ -798,7 +782,6 @@ static ssize_t cur_state_show(struct device *dev, struct device_attribute *attr,
 	return sprintf(buf, "%ld\n", state);
 }
 
-<<<<<<< HEAD
 static ssize_t min_state_show(struct device *dev, struct device_attribute *attr,
 				char *buf)
 {
@@ -817,18 +800,12 @@ static ssize_t min_state_show(struct device *dev, struct device_attribute *attr,
 	return snprintf(buf, PAGE_SIZE, "%lu\n", state);
 }
 
-=======
->>>>>>> rebase
 static ssize_t
 cur_state_store(struct device *dev, struct device_attribute *attr,
 		const char *buf, size_t count)
 {
 	struct thermal_cooling_device *cdev = to_cooling_device(dev);
 	unsigned long state;
-<<<<<<< HEAD
-=======
-	int result;
->>>>>>> rebase
 
 	if (sscanf(buf, "%ld\n", &state) != 1)
 		return -EINVAL;
@@ -837,7 +814,6 @@ cur_state_store(struct device *dev, struct device_attribute *attr,
 		return -EINVAL;
 
 	mutex_lock(&cdev->lock);
-<<<<<<< HEAD
 	cdev->sysfs_cur_state_req = state;
 
 	cdev->updated = false;
@@ -870,34 +846,19 @@ min_state_store(struct device *dev, struct device_attribute *attr,
 	thermal_cdev_update(cdev);
 
 	return count;
-=======
-
-	result = cdev->ops->set_cur_state(cdev, state);
-	if (!result)
-		thermal_cooling_device_stats_update(cdev, state);
-
-	mutex_unlock(&cdev->lock);
-	return result ? result : count;
->>>>>>> rebase
 }
 
 static struct device_attribute
 dev_attr_cdev_type = __ATTR(type, 0444, cdev_type_show, NULL);
 static DEVICE_ATTR_RO(max_state);
 static DEVICE_ATTR_RW(cur_state);
-<<<<<<< HEAD
 static DEVICE_ATTR_RW(min_state);
-=======
->>>>>>> rebase
 
 static struct attribute *cooling_device_attrs[] = {
 	&dev_attr_cdev_type.attr,
 	&dev_attr_max_state.attr,
 	&dev_attr_cur_state.attr,
-<<<<<<< HEAD
 	&dev_attr_min_state.attr,
-=======
->>>>>>> rebase
 	NULL,
 };
 
@@ -961,12 +922,9 @@ static ssize_t total_trans_show(struct device *dev,
 	struct cooling_dev_stats *stats = cdev->stats;
 	int ret;
 
-<<<<<<< HEAD
 	if (!stats)
 		return -ENODEV;
 
-=======
->>>>>>> rebase
 	spin_lock(&stats->lock);
 	ret = sprintf(buf, "%u\n", stats->total_trans);
 	spin_unlock(&stats->lock);
@@ -983,12 +941,9 @@ time_in_state_ms_show(struct device *dev, struct device_attribute *attr,
 	ssize_t len = 0;
 	int i;
 
-<<<<<<< HEAD
 	if (!stats)
 		return -ENODEV;
 
-=======
->>>>>>> rebase
 	spin_lock(&stats->lock);
 	update_time_in_state(stats);
 
@@ -1007,17 +962,12 @@ reset_store(struct device *dev, struct device_attribute *attr, const char *buf,
 {
 	struct thermal_cooling_device *cdev = to_cooling_device(dev);
 	struct cooling_dev_stats *stats = cdev->stats;
-<<<<<<< HEAD
 	int i, states;
 
 	if (!stats)
 		return -ENODEV;
 
 	states = stats->max_states;
-=======
-	int i, states = stats->max_states;
-
->>>>>>> rebase
 	spin_lock(&stats->lock);
 
 	stats->total_trans = 0;
@@ -1041,12 +991,9 @@ static ssize_t trans_table_show(struct device *dev,
 	ssize_t len = 0;
 	int i, j;
 
-<<<<<<< HEAD
 	if (!stats)
 		return -ENODEV;
 
-=======
->>>>>>> rebase
 	len += snprintf(buf + len, PAGE_SIZE - len, " From  :    To\n");
 	len += snprintf(buf + len, PAGE_SIZE - len, "       : ");
 	for (i = 0; i < stats->max_states; i++) {
@@ -1103,20 +1050,12 @@ static const struct attribute_group cooling_device_stats_attr_group = {
 
 static void cooling_device_stats_setup(struct thermal_cooling_device *cdev)
 {
-<<<<<<< HEAD
-=======
-	const struct attribute_group *stats_attr_group = NULL;
->>>>>>> rebase
 	struct cooling_dev_stats *stats;
 	unsigned long states;
 	int var;
 
 	if (cdev->ops->get_max_state(cdev, &states))
-<<<<<<< HEAD
 		return;
-=======
-		goto out;
->>>>>>> rebase
 
 	states++; /* Total number of states is highest state + 1 */
 
@@ -1126,11 +1065,7 @@ static void cooling_device_stats_setup(struct thermal_cooling_device *cdev)
 
 	stats = kzalloc(var, GFP_KERNEL);
 	if (!stats)
-<<<<<<< HEAD
 		return;
-=======
-		goto out;
->>>>>>> rebase
 
 	stats->time_in_state = (ktime_t *)(stats + 1);
 	stats->trans_table = (unsigned int *)(stats->time_in_state + states);
@@ -1140,18 +1075,9 @@ static void cooling_device_stats_setup(struct thermal_cooling_device *cdev)
 
 	spin_lock_init(&stats->lock);
 
-<<<<<<< HEAD
 	/* Fill the empty slot left in cooling_device_attr_groups */
 	var = ARRAY_SIZE(cooling_device_attr_groups) - 2;
 	cooling_device_attr_groups[var] = &cooling_device_stats_attr_group;
-=======
-	stats_attr_group = &cooling_device_stats_attr_group;
-
-out:
-	/* Fill the empty slot left in cooling_device_attr_groups */
-	var = ARRAY_SIZE(cooling_device_attr_groups) - 2;
-	cooling_device_attr_groups[var] = stats_attr_group;
->>>>>>> rebase
 }
 
 static void cooling_device_stats_destroy(struct thermal_cooling_device *cdev)
@@ -1181,7 +1107,6 @@ void thermal_cooling_device_destroy_sysfs(struct thermal_cooling_device *cdev)
 }
 
 /* these helper will be used only at the time of bindig */
-<<<<<<< HEAD
 
 ssize_t
 lower_limit_show(struct device *dev, struct device_attribute *attr, char *buf)
@@ -1205,8 +1130,6 @@ upper_limit_show(struct device *dev, struct device_attribute *attr, char *buf)
 	return snprintf(buf, PAGE_SIZE, "%lu\n", instance->upper);
 }
 
-=======
->>>>>>> rebase
 ssize_t
 trip_point_show(struct device *dev, struct device_attribute *attr, char *buf)
 {
@@ -1246,7 +1169,6 @@ ssize_t weight_store(struct device *dev, struct device_attribute *attr,
 
 	return count;
 }
-<<<<<<< HEAD
 
 ssize_t
 upper_limit_store(struct device *dev, struct device_attribute *attr,
@@ -1293,5 +1215,3 @@ lower_limit_store(struct device *dev, struct device_attribute *attr,
 
 	return count;
 }
-=======
->>>>>>> rebase

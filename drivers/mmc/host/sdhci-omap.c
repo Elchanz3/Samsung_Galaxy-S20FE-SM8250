@@ -690,12 +690,7 @@ static void sdhci_omap_set_power(struct sdhci_host *host, unsigned char mode,
 {
 	struct mmc_host *mmc = host->mmc;
 
-<<<<<<< HEAD
 	mmc_regulator_set_ocr(mmc, mmc->supply.vmmc, vdd);
-=======
-	if (!IS_ERR(mmc->supply.vmmc))
-		mmc_regulator_set_ocr(mmc, mmc->supply.vmmc, vdd);
->>>>>>> rebase
 }
 
 static int sdhci_omap_enable_dma(struct sdhci_host *host)
@@ -1152,12 +1147,6 @@ static int sdhci_omap_probe(struct platform_device *pdev)
 	host->mmc_host_ops.execute_tuning = sdhci_omap_execute_tuning;
 	host->mmc_host_ops.enable_sdio_irq = sdhci_omap_enable_sdio_irq;
 
-<<<<<<< HEAD
-=======
-	/* R1B responses is required to properly manage HW busy detection. */
-	mmc->caps |= MMC_CAP_NEED_RSP_BUSY;
-
->>>>>>> rebase
 	ret = sdhci_setup_host(host);
 	if (ret)
 		goto err_put_sync;

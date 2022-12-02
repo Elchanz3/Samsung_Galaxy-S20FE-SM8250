@@ -407,11 +407,7 @@ create_l1(struct dchannel *dch, dchannel_l1callback *dcb) {
 EXPORT_SYMBOL(create_l1);
 
 int
-<<<<<<< HEAD
 l1_init(u_int *deb)
-=======
-Isdnl1_Init(u_int *deb)
->>>>>>> rebase
 {
 	debug = deb;
 	l1fsm_s.state_count = L1S_STATE_COUNT;
@@ -422,11 +418,7 @@ Isdnl1_Init(u_int *deb)
 }
 
 void
-<<<<<<< HEAD
 l1_cleanup(void)
-=======
-Isdnl1_cleanup(void)
->>>>>>> rebase
 {
 	mISDN_FsmFree(&l1fsm_s);
 }

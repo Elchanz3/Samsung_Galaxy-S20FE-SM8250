@@ -270,10 +270,7 @@ static int esp_output_udp_encap(struct xfrm_state *x, struct sk_buff *skb, struc
 int esp_output_head(struct xfrm_state *x, struct sk_buff *skb, struct esp_info *esp)
 {
 	u8 *tail;
-<<<<<<< HEAD
 	u8 *vaddr;
-=======
->>>>>>> rebase
 	int nfrags;
 	int esph_offset;
 	struct page *page;
@@ -288,13 +285,6 @@ int esp_output_head(struct xfrm_state *x, struct sk_buff *skb, struct esp_info *
 			return err;
 	}
 
-<<<<<<< HEAD
-=======
-	if (ALIGN(tailen, L1_CACHE_BYTES) > PAGE_SIZE ||
-	    ALIGN(skb->data_len, L1_CACHE_BYTES) > PAGE_SIZE)
-		goto cow;
-
->>>>>>> rebase
 	if (!skb_cloned(skb)) {
 		if (tailen <= skb_tailroom(skb)) {
 			nfrags = 1;
@@ -322,7 +312,6 @@ int esp_output_head(struct xfrm_state *x, struct sk_buff *skb, struct esp_info *
 			page = pfrag->page;
 			get_page(page);
 
-<<<<<<< HEAD
 			vaddr = kmap_atomic(page);
 
 			tail = vaddr + pfrag->offset;
@@ -331,12 +320,6 @@ int esp_output_head(struct xfrm_state *x, struct sk_buff *skb, struct esp_info *
 
 			kunmap_atomic(vaddr);
 
-=======
-			tail = page_address(page) + pfrag->offset;
-
-			esp_output_fill_trailer(tail, esp->tfclen, esp->plen, esp->proto);
-
->>>>>>> rebase
 			nfrags = skb_shinfo(skb)->nr_frags;
 
 			__skb_fill_page_desc(skb, nfrags, page, pfrag->offset,

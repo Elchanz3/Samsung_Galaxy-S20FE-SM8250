@@ -212,7 +212,6 @@ static const struct can_bittiming_const c_can_bittiming_const = {
 	.brp_inc = 1,
 };
 
-<<<<<<< HEAD
 static inline void c_can_pm_runtime_enable(const struct c_can_priv *priv)
 {
 	if (priv->device)
@@ -225,8 +224,6 @@ static inline void c_can_pm_runtime_disable(const struct c_can_priv *priv)
 		pm_runtime_disable(priv->device);
 }
 
-=======
->>>>>>> rebase
 static inline void c_can_pm_runtime_get_sync(const struct c_can_priv *priv)
 {
 	if (priv->device)
@@ -1321,10 +1318,7 @@ static const struct net_device_ops c_can_netdev_ops = {
 
 int register_c_can_dev(struct net_device *dev)
 {
-<<<<<<< HEAD
 	struct c_can_priv *priv = netdev_priv(dev);
-=======
->>>>>>> rebase
 	int err;
 
 	/* Deactivate pins to prevent DRA7 DCAN IP from being
@@ -1334,40 +1328,28 @@ int register_c_can_dev(struct net_device *dev)
 	 */
 	pinctrl_pm_select_sleep_state(dev->dev.parent);
 
-<<<<<<< HEAD
 	c_can_pm_runtime_enable(priv);
 
-=======
->>>>>>> rebase
 	dev->flags |= IFF_ECHO;	/* we support local echo */
 	dev->netdev_ops = &c_can_netdev_ops;
 
 	err = register_candev(dev);
-<<<<<<< HEAD
 	if (err)
 		c_can_pm_runtime_disable(priv);
 	else
 		devm_can_led_init(dev);
 
-=======
-	if (!err)
-		devm_can_led_init(dev);
->>>>>>> rebase
 	return err;
 }
 EXPORT_SYMBOL_GPL(register_c_can_dev);
 
 void unregister_c_can_dev(struct net_device *dev)
 {
-<<<<<<< HEAD
 	struct c_can_priv *priv = netdev_priv(dev);
 
 	unregister_candev(dev);
 
 	c_can_pm_runtime_disable(priv);
-=======
-	unregister_candev(dev);
->>>>>>> rebase
 }
 EXPORT_SYMBOL_GPL(unregister_c_can_dev);
 

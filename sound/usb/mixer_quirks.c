@@ -130,11 +130,7 @@ static int snd_create_std_mono_ctl(struct usb_mixer_interface *mixer,
  * Create a set of standard UAC controls from a table
  */
 static int snd_create_std_mono_table(struct usb_mixer_interface *mixer,
-<<<<<<< HEAD
 				struct std_mono_table *t)
-=======
-				     const struct std_mono_table *t)
->>>>>>> rebase
 {
 	int err;
 
@@ -172,12 +168,7 @@ static int add_single_ctl_with_resume(struct usb_mixer_interface *mixer,
 		return -ENOMEM;
 	}
 	kctl->private_free = snd_usb_mixer_elem_free;
-<<<<<<< HEAD
 	return snd_usb_mixer_add_control(list, kctl);
-=======
-	/* don't use snd_usb_mixer_add_control() here, this is a special list element */
-	return snd_usb_mixer_add_list(list, kctl, false);
->>>>>>> rebase
 }
 
 /*
@@ -203,10 +194,6 @@ static const struct rc_config {
 	{ USB_ID(0x041e, 0x3042), 0, 1, 1, 1,  1,  0x000d }, /* Usb X-Fi S51 */
 	{ USB_ID(0x041e, 0x30df), 0, 1, 1, 1,  1,  0x000d }, /* Usb X-Fi S51 Pro */
 	{ USB_ID(0x041e, 0x3237), 0, 1, 1, 1,  1,  0x000d }, /* Usb X-Fi S51 Pro */
-<<<<<<< HEAD
-=======
-	{ USB_ID(0x041e, 0x3263), 0, 1, 1, 1,  1,  0x000d }, /* Usb X-Fi S51 Pro */
->>>>>>> rebase
 	{ USB_ID(0x041e, 0x3048), 2, 2, 6, 6,  2,  0x6e91 }, /* Toshiba SB0500 */
 };
 
@@ -1410,11 +1397,7 @@ static int snd_c400_create_mixer(struct usb_mixer_interface *mixer)
  * are valid they presents mono controls as L and R channels of
  * stereo. So we provide a good mixer here.
  */
-<<<<<<< HEAD
 static struct std_mono_table ebox44_table[] = {
-=======
-static const struct std_mono_table ebox44_table[] = {
->>>>>>> rebase
 	{
 		.unitid = 4,
 		.control = 1,
@@ -1536,23 +1519,11 @@ static int snd_microii_spdif_default_get(struct snd_kcontrol *kcontrol,
 
 	/* use known values for that card: interface#1 altsetting#1 */
 	iface = usb_ifnum_to_if(chip->dev, 1);
-<<<<<<< HEAD
 	if (!iface || iface->num_altsetting < 2)
 		return -EINVAL;
 	alts = &iface->altsetting[1];
 	if (get_iface_desc(alts)->bNumEndpoints < 1)
 		return -EINVAL;
-=======
-	if (!iface || iface->num_altsetting < 2) {
-		err = -EINVAL;
-		goto end;
-	}
-	alts = &iface->altsetting[1];
-	if (get_iface_desc(alts)->bNumEndpoints < 1) {
-		err = -EINVAL;
-		goto end;
-	}
->>>>>>> rebase
 	ep = get_endpoint(alts, 0)->bEndpointAddress;
 
 	err = snd_usb_ctl_msg(chip->dev,
@@ -1731,11 +1702,7 @@ static struct snd_kcontrol_new snd_microii_mixer_spdif[] = {
 static int snd_microii_controls_create(struct usb_mixer_interface *mixer)
 {
 	int err, i;
-<<<<<<< HEAD
 	static usb_mixer_elem_resume_func_t resume_funcs[] = {
-=======
-	static const usb_mixer_elem_resume_func_t resume_funcs[] = {
->>>>>>> rebase
 		snd_microii_spdif_default_update,
 		NULL,
 		snd_microii_spdif_switch_update
@@ -2024,16 +1991,9 @@ void snd_usb_mixer_fu_apply_quirk(struct usb_mixer_interface *mixer,
 		if (unitid == 7 && cval->control == UAC_FU_VOLUME)
 			snd_dragonfly_quirk_db_scale(mixer, cval, kctl);
 		break;
-<<<<<<< HEAD
 	/* lowest playback value is muted on C-Media devices */
 	case USB_ID(0x0d8c, 0x000c):
 	case USB_ID(0x0d8c, 0x0014):
-=======
-	/* lowest playback value is muted on some devices */
-	case USB_ID(0x0d8c, 0x000c): /* C-Media */
-	case USB_ID(0x0d8c, 0x0014): /* C-Media */
-	case USB_ID(0x19f7, 0x0003): /* RODE NT-USB */
->>>>>>> rebase
 		if (strstr(kctl->id.name, "Playback"))
 			cval->min_mute = 1;
 		break;

@@ -213,11 +213,7 @@ int rndis_command(struct usbnet *dev, struct rndis_msg_hdr *buf, int buflen)
 			dev_dbg(&info->control->dev,
 				"rndis response error, code %d\n", retval);
 		}
-<<<<<<< HEAD
 		msleep(20);
-=======
-		msleep(40);
->>>>>>> rebase
 	}
 	dev_dbg(&info->control->dev, "rndis response timeout\n");
 	return -ETIMEDOUT;
@@ -403,11 +399,7 @@ generic_rndis_bind(struct usbnet *dev, struct usb_interface *intf, int flags)
 	reply_len = sizeof *phym;
 	retval = rndis_query(dev, intf, u.buf,
 			     RNDIS_OID_GEN_PHYSICAL_MEDIUM,
-<<<<<<< HEAD
 			     0, (void **) &phym, &reply_len);
-=======
-			     reply_len, (void **)&phym, &reply_len);
->>>>>>> rebase
 	if (retval != 0 || !phym) {
 		/* OID is optional so don't fail here. */
 		phym_unspec = cpu_to_le32(RNDIS_PHYSICAL_MEDIUM_UNSPECIFIED);
@@ -629,14 +621,6 @@ static const struct usb_device_id	products [] = {
 				      USB_CLASS_COMM, 2 /* ACM */, 0x0ff),
 	.driver_info = (unsigned long) &rndis_poll_status_info,
 }, {
-<<<<<<< HEAD
-=======
-	/* Hytera Communications DMR radios' "Radio to PC Network" */
-	USB_VENDOR_AND_INTERFACE_INFO(0x238b,
-				      USB_CLASS_COMM, 2 /* ACM */, 0x0ff),
-	.driver_info = (unsigned long)&rndis_info,
-}, {
->>>>>>> rebase
 	/* RNDIS is MSFT's un-official variant of CDC ACM */
 	USB_INTERFACE_INFO(USB_CLASS_COMM, 2 /* ACM */, 0x0ff),
 	.driver_info = (unsigned long) &rndis_info,

@@ -50,15 +50,8 @@ static int aq_ndev_open(struct net_device *ndev)
 	if (err < 0)
 		goto err_exit;
 	err = aq_nic_start(aq_nic);
-<<<<<<< HEAD
 	if (err < 0)
 		goto err_exit;
-=======
-	if (err < 0) {
-		aq_nic_stop(aq_nic);
-		goto err_exit;
-	}
->>>>>>> rebase
 
 err_exit:
 	if (err < 0)

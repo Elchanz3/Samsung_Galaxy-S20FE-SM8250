@@ -13,11 +13,8 @@
 #ifndef __PINCTRL_MSM_H__
 #define __PINCTRL_MSM_H__
 
-<<<<<<< HEAD
 #include <linux/pinctrl/qcom-pinctrl.h>
 
-=======
->>>>>>> rebase
 struct pinctrl_pin_desc;
 
 /**
@@ -48,10 +45,7 @@ struct msm_function {
  * @intr_status_reg:      Offset of the register holding the status bits for this group.
  * @intr_target_reg:      Offset of the register specifying routing of the interrupts
  *                        from this group.
-<<<<<<< HEAD
  * @dir_conn_reg:         Offset of the register hmss setup in tile.
-=======
->>>>>>> rebase
  * @mux_bit:              Offset in @ctl_reg for the pinmux function selection.
  * @pull_bit:             Offset in @ctl_reg for the bias configuration.
  * @drv_bit:              Offset in @ctl_reg for the drive strength configuration.
@@ -70,12 +64,9 @@ struct msm_function {
  * @intr_detection_width: Number of bits used for specifying interrupt type,
  *                        Should be 2 for SoCs that can detect both edges in hardware,
  *                        otherwise 1.
-<<<<<<< HEAD
  * @dir_conn_en_bit:      Offset in @intr_cfg_reg for direct connect enable bit
  * @wake_reg:             Offset of the WAKEUP_INT_EN register from base tile
  * @wake_bit:             Bit number for the corresponding gpio
-=======
->>>>>>> rebase
  */
 struct msm_pingroup {
 	const char *name;
@@ -90,21 +81,15 @@ struct msm_pingroup {
 	u32 intr_cfg_reg;
 	u32 intr_status_reg;
 	u32 intr_target_reg;
-<<<<<<< HEAD
 	u32 dir_conn_reg;
-=======
->>>>>>> rebase
 
 	unsigned mux_bit:5;
 
 	unsigned pull_bit:5;
 	unsigned drv_bit:5;
 
-<<<<<<< HEAD
 	unsigned egpio_enable:5;
 	unsigned egpio_present:5;
-=======
->>>>>>> rebase
 	unsigned oe_bit:5;
 	unsigned in_bit:5;
 	unsigned out_bit:5;
@@ -119,7 +104,6 @@ struct msm_pingroup {
 	unsigned intr_polarity_bit:5;
 	unsigned intr_detection_bit:5;
 	unsigned intr_detection_width:5;
-<<<<<<< HEAD
 	unsigned dir_conn_en_bit:8;
 
 	u32 wake_reg;
@@ -144,8 +128,6 @@ struct msm_dir_conn {
 struct pinctrl_qup {
 	u32 mode;
 	u32 offset;
-=======
->>>>>>> rebase
 };
 
 /**
@@ -158,12 +140,9 @@ struct pinctrl_qup {
  * @ngroups:	    The numbmer of entries in @groups.
  * @ngpio:	    The number of pingroups the driver should expose as GPIOs.
  * @pull_no_keeper: The SoC does not support keeper bias.
-<<<<<<< HEAD
  * @wakeirq_map:    The map of wakeup capable GPIOs and the pin at PDC/MPM
  * @nwakeirq_map:   The number of entries in @hierarchy_map
  * @dir_conn:       An array describing all the pins directly connected to GIC.
-=======
->>>>>>> rebase
  */
 struct msm_pinctrl_soc_data {
 	const struct pinctrl_pin_desc *pins;
@@ -174,26 +153,20 @@ struct msm_pinctrl_soc_data {
 	unsigned ngroups;
 	unsigned ngpios;
 	bool pull_no_keeper;
-<<<<<<< HEAD
 	struct pinctrl_qup *qup_regs;
 	unsigned int nqup_regs;
 	const int *reserved_gpios;
 	struct msm_dir_conn *dir_conn;
-=======
->>>>>>> rebase
 };
 
 int msm_pinctrl_probe(struct platform_device *pdev,
 		      const struct msm_pinctrl_soc_data *soc_data);
 int msm_pinctrl_remove(struct platform_device *pdev);
 
-<<<<<<< HEAD
 #ifdef CONFIG_QCOM_SHOW_RESUME_IRQ
 extern int msm_show_resume_irq_mask;
 #else
 #define msm_show_resume_irq_mask 0
 #endif
 
-=======
->>>>>>> rebase
 #endif

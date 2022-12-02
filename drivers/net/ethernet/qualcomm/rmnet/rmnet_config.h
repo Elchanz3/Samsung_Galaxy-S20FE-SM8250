@@ -1,18 +1,5 @@
-<<<<<<< HEAD
 /* SPDX-License-Identifier: GPL-2.0 */
 /* Copyright (c) 2013-2014, 2016-2019 The Linux Foundation. All rights reserved.
-=======
-/* Copyright (c) 2013-2014, 2016-2018 The Linux Foundation. All rights reserved.
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License version 2 and
- * only version 2 as published by the Free Software Foundation.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
->>>>>>> rebase
  *
  * RMNET Data configuration engine
  *
@@ -25,10 +12,7 @@
 #define _RMNET_CONFIG_H_
 
 #define RMNET_MAX_LOGICAL_EP 255
-<<<<<<< HEAD
 #define RMNET_MAX_VEID 4
-=======
->>>>>>> rebase
 
 struct rmnet_endpoint {
 	u8 mux_id;
@@ -36,7 +20,6 @@ struct rmnet_endpoint {
 	struct hlist_node hlnode;
 };
 
-<<<<<<< HEAD
 struct rmnet_agg_stats {
 	u64 ul_agg_reuse;
 	u64 ul_agg_alloc;
@@ -70,8 +53,6 @@ struct rmnet_agg_page {
 	struct page *page;
 };
 
-=======
->>>>>>> rebase
 /* One instance of this structure is instantiated for each real_dev associated
  * with rmnet.
  */
@@ -82,7 +63,6 @@ struct rmnet_port {
 	u8 rmnet_mode;
 	struct hlist_head muxed_ep[RMNET_MAX_LOGICAL_EP];
 	struct net_device *bridge_ep;
-<<<<<<< HEAD
 	void *rmnet_perf;
 
 	struct rmnet_egress_agg_params egress_agg_params;
@@ -111,9 +91,6 @@ struct rmnet_port {
 	/* Descriptor pool */
 	spinlock_t desc_pool_lock;
 	struct rmnet_frag_descriptor_pool *frag_desc_pool;
-=======
-	struct net_device *rmnet_dev;
->>>>>>> rebase
 };
 
 extern struct rtnl_link_ops rmnet_link_ops;
@@ -131,7 +108,6 @@ struct rmnet_pcpu_stats {
 	struct u64_stats_sync syncp;
 };
 
-<<<<<<< HEAD
 struct rmnet_coal_close_stats {
 	u64 non_coal;
 	u64 ip_miss;
@@ -161,8 +137,6 @@ struct rmnet_coal_stats {
 	u64 coal_udp_bytes;
 };
 
-=======
->>>>>>> rebase
 struct rmnet_priv_stats {
 	u64 csum_ok;
 	u64 csum_valid_unset;
@@ -173,12 +147,9 @@ struct rmnet_priv_stats {
 	u64 csum_fragmented_pkt;
 	u64 csum_skipped;
 	u64 csum_sw;
-<<<<<<< HEAD
 	u64 csum_hw;
 	struct rmnet_coal_stats coal;
 	u64 ul_prio;
-=======
->>>>>>> rebase
 };
 
 struct rmnet_priv {
@@ -187,7 +158,6 @@ struct rmnet_priv {
 	struct rmnet_pcpu_stats __percpu *pcpu_stats;
 	struct gro_cells gro_cells;
 	struct rmnet_priv_stats stats;
-<<<<<<< HEAD
 	void __rcu *qos_info;
 };
 
@@ -213,11 +183,6 @@ enum rmnet_trace_evt {
 
 int rmnet_is_real_dev_registered(const struct net_device *real_dev);
 struct rmnet_port *rmnet_get_port(struct net_device *real_dev);
-=======
-};
-
-struct rmnet_port *rmnet_get_port_rcu(struct net_device *real_dev);
->>>>>>> rebase
 struct rmnet_endpoint *rmnet_get_endpoint(struct rmnet_port *port, u8 mux_id);
 int rmnet_add_bridge(struct net_device *rmnet_dev,
 		     struct net_device *slave_dev,

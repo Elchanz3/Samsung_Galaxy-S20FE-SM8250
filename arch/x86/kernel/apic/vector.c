@@ -274,7 +274,6 @@ static int assign_irq_vector_any_locked(struct irq_data *irqd)
 	const struct cpumask *affmsk = irq_data_get_affinity_mask(irqd);
 	int node = irq_data_get_node(irqd);
 
-<<<<<<< HEAD
 	if (node == NUMA_NO_NODE)
 		goto all;
 	/* Try the intersection of @affmsk and node mask */
@@ -285,29 +284,10 @@ static int assign_irq_vector_any_locked(struct irq_data *irqd)
 	if (!assign_vector_locked(irqd, cpumask_of_node(node)))
 		return 0;
 all:
-=======
-	if (node != NUMA_NO_NODE) {
-		/* Try the intersection of @affmsk and node mask */
-		cpumask_and(vector_searchmask, cpumask_of_node(node), affmsk);
-		if (!assign_vector_locked(irqd, vector_searchmask))
-			return 0;
-	}
-
->>>>>>> rebase
 	/* Try the full affinity mask */
 	cpumask_and(vector_searchmask, affmsk, cpu_online_mask);
 	if (!assign_vector_locked(irqd, vector_searchmask))
 		return 0;
-<<<<<<< HEAD
-=======
-
-	if (node != NUMA_NO_NODE) {
-		/* Try the node mask */
-		if (!assign_vector_locked(irqd, cpumask_of_node(node)))
-			return 0;
-	}
-
->>>>>>> rebase
 	/* Try the full online mask */
 	return assign_vector_locked(irqd, cpu_online_mask);
 }
@@ -468,19 +448,12 @@ static int x86_vector_activate(struct irq_domain *dom, struct irq_data *irqd,
 	trace_vector_activate(irqd->irq, apicd->is_managed,
 			      apicd->can_reserve, reserve);
 
-<<<<<<< HEAD
 	/* Nothing to do for fixed assigned vectors */
 	if (!apicd->can_reserve && !apicd->is_managed)
 		return 0;
 
 	raw_spin_lock_irqsave(&vector_lock, flags);
 	if (reserve || irqd_is_managed_and_shutdown(irqd))
-=======
-	raw_spin_lock_irqsave(&vector_lock, flags);
-	if (!apicd->can_reserve && !apicd->is_managed)
-		assign_irq_vector_any_locked(irqd);
-	else if (reserve || irqd_is_managed_and_shutdown(irqd))
->>>>>>> rebase
 		vector_assign_managed_shutdown(irqd);
 	else if (apicd->is_managed)
 		ret = activate_managed(irqd);
@@ -585,13 +558,6 @@ static int x86_vector_alloc_irqs(struct irq_domain *domain, unsigned int virq,
 		irqd->chip_data = apicd;
 		irqd->hwirq = virq + i;
 		irqd_set_single_target(irqd);
-<<<<<<< HEAD
-=======
-
-		/* Don't invoke affinity setter on deactivated interrupts */
-		irqd_set_affinity_on_activate(irqd);
-
->>>>>>> rebase
 		/*
 		 * Legacy vectors are already assigned when the IOAPIC
 		 * takes them over. They stay on the same vector. This is
@@ -710,29 +676,6 @@ void lapic_assign_legacy_vector(unsigned int irq, bool replace)
 	irq_matrix_assign_system(vector_matrix, ISA_IRQ_VECTOR(irq), replace);
 }
 
-<<<<<<< HEAD
-=======
-void __init lapic_update_legacy_vectors(void)
-{
-	unsigned int i;
-
-	if (IS_ENABLED(CONFIG_X86_IO_APIC) && nr_ioapics > 0)
-		return;
-
-	/*
-	 * If the IO/APIC is disabled via config, kernel command line or
-	 * lack of enumeration then all legacy interrupts are routed
-	 * through the PIC. Make sure that they are marked as legacy
-	 * vectors. PIC_CASCADE_IRQ has already been marked in
-	 * lapic_assign_system_vectors().
-	 */
-	for (i = 0; i < nr_legacy_irqs(); i++) {
-		if (i != PIC_CASCADE_IR)
-			lapic_assign_legacy_vector(i, true);
-	}
-}
-
->>>>>>> rebase
 void __init lapic_assign_system_vectors(void)
 {
 	unsigned int i, vector = 0;
@@ -762,10 +705,7 @@ int __init arch_early_irq_init(void)
 	x86_vector_domain = irq_domain_create_tree(fn, &x86_vector_domain_ops,
 						   NULL);
 	BUG_ON(x86_vector_domain == NULL);
-<<<<<<< HEAD
 	irq_domain_free_fwnode(fn);
-=======
->>>>>>> rebase
 	irq_set_default_host(x86_vector_domain);
 
 	arch_init_msi_domain(x86_vector_domain);
@@ -831,7 +771,6 @@ void lapic_offline(void)
 static int apic_set_affinity(struct irq_data *irqd,
 			     const struct cpumask *dest, bool force)
 {
-<<<<<<< HEAD
 	struct apic_chip_data *apicd = apic_chip_data(irqd);
 	int err;
 
@@ -846,12 +785,6 @@ static int apic_set_affinity(struct irq_data *irqd,
 	if (!irqd_is_activated(irqd) &&
 	    (apicd->is_managed || apicd->can_reserve))
 		return IRQ_SET_MASK_OK;
-=======
-	int err;
-
-	if (WARN_ON_ONCE(!irqd_is_activated(irqd)))
-		return -EIO;
->>>>>>> rebase
 
 	raw_spin_lock(&vector_lock);
 	cpumask_and(vector_searchmask, dest, cpu_online_mask);

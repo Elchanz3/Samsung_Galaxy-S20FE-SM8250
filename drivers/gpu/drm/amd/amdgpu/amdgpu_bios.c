@@ -191,7 +191,6 @@ static bool amdgpu_read_bios_from_rom(struct amdgpu_device *adev)
 
 static bool amdgpu_read_platform_bios(struct amdgpu_device *adev)
 {
-<<<<<<< HEAD
 	uint8_t __iomem *bios;
 	size_t size;
 
@@ -216,37 +215,6 @@ static bool amdgpu_read_platform_bios(struct amdgpu_device *adev)
 	adev->bios_size = size;
 
 	return true;
-=======
-	phys_addr_t rom = adev->pdev->rom;
-	size_t romlen = adev->pdev->romlen;
-	void __iomem *bios;
-
-	adev->bios = NULL;
-
-	if (!rom || romlen == 0)
-		return false;
-
-	adev->bios = kzalloc(romlen, GFP_KERNEL);
-	if (!adev->bios)
-		return false;
-
-	bios = ioremap(rom, romlen);
-	if (!bios)
-		goto free_bios;
-
-	memcpy_fromio(adev->bios, bios, romlen);
-	iounmap(bios);
-
-	if (!check_atom_bios(adev->bios, romlen))
-		goto free_bios;
-
-	adev->bios_size = romlen;
-
-	return true;
-free_bios:
-	kfree(adev->bios);
-	return false;
->>>>>>> rebase
 }
 
 #ifdef CONFIG_ACPI

@@ -220,10 +220,6 @@ void hlwd_pic_probe(void)
 			irq_set_chained_handler(cascade_virq,
 						hlwd_pic_irq_cascade);
 			hlwd_irq_host = host;
-<<<<<<< HEAD
-=======
-			of_node_put(np);
->>>>>>> rebase
 			break;
 		}
 	}

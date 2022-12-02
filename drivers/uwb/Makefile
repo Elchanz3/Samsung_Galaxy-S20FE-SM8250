@@ -30,9 +30,6 @@ umc-objs :=		\
 	umc-bus.o	\
 	umc-dev.o	\
 	umc-drv.o
-<<<<<<< HEAD
 
 obj-$(CONFIG_UWB_SR100)		+= sr100.o
 obj-y				+= uwb_logger/
-=======
->>>>>>> rebase

@@ -179,10 +179,6 @@ int icp_hv_init(void)
 
 	icp_ops = &icp_hv_ops;
 
-<<<<<<< HEAD
-=======
-	of_node_put(np);
->>>>>>> rebase
 	return 0;
 }
 

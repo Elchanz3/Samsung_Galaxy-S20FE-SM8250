@@ -45,12 +45,6 @@ static void nft_exthdr_ipv6_eval(const struct nft_expr *expr,
 	unsigned int offset = 0;
 	int err;
 
-<<<<<<< HEAD
-=======
-	if (pkt->skb->protocol != htons(ETH_P_IPV6))
-		goto err;
-
->>>>>>> rebase
 	err = ipv6_find_hdr(pkt->skb, &offset, priv->type, NULL, NULL);
 	if (priv->flags & NFT_EXTHDR_F_PRESENT) {
 		*dest = (err >= 0);
@@ -140,10 +134,7 @@ static void nft_exthdr_tcp_set_eval(const struct nft_expr *expr,
 	unsigned int i, optl, tcphdr_len, offset;
 	struct tcphdr *tcph;
 	u8 *opt;
-<<<<<<< HEAD
 	u32 src;
-=======
->>>>>>> rebase
 
 	tcph = nft_tcp_header_pointer(pkt, sizeof(buff), buff, &tcphdr_len);
 	if (!tcph)
@@ -152,10 +143,7 @@ static void nft_exthdr_tcp_set_eval(const struct nft_expr *expr,
 	opt = (u8 *)tcph;
 	for (i = sizeof(*tcph); i < tcphdr_len - 1; i += optl) {
 		union {
-<<<<<<< HEAD
 			u8 octet;
-=======
->>>>>>> rebase
 			__be16 v16;
 			__be32 v32;
 		} old, new;
@@ -176,21 +164,13 @@ static void nft_exthdr_tcp_set_eval(const struct nft_expr *expr,
 		if (!tcph)
 			return;
 
-<<<<<<< HEAD
 		src = regs->data[priv->sreg];
-=======
->>>>>>> rebase
 		offset = i + priv->offset;
 
 		switch (priv->len) {
 		case 2:
 			old.v16 = get_unaligned((u16 *)(opt + offset));
-<<<<<<< HEAD
 			new.v16 = src;
-=======
-			new.v16 = (__force __be16)nft_reg_load16(
-				&regs->data[priv->sreg]);
->>>>>>> rebase
 
 			switch (priv->type) {
 			case TCPOPT_MSS:
@@ -208,11 +188,7 @@ static void nft_exthdr_tcp_set_eval(const struct nft_expr *expr,
 						 old.v16, new.v16, false);
 			break;
 		case 4:
-<<<<<<< HEAD
 			new.v32 = src;
-=======
-			new.v32 = regs->data[priv->sreg];
->>>>>>> rebase
 			old.v32 = get_unaligned((u32 *)(opt + offset));
 
 			if (old.v32 == new.v32)

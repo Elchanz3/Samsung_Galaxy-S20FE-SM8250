@@ -1848,15 +1848,8 @@ static bool check_non_pcm_per_cvt(struct hda_codec *codec, hda_nid_t cvt_nid)
 	/* Add sanity check to pass klockwork check.
 	 * This should never happen.
 	 */
-<<<<<<< HEAD
 	if (WARN_ON(spdif == NULL))
 		return true;
-=======
-	if (WARN_ON(spdif == NULL)) {
-		mutex_unlock(&codec->spdif_mutex);
-		return true;
-	}
->>>>>>> rebase
 	non_pcm = !!(spdif->status & IEC958_AES0_NONAUDIO);
 	mutex_unlock(&codec->spdif_mutex);
 	return non_pcm;
@@ -1960,7 +1953,6 @@ static int hdmi_pcm_close(struct hda_pcm_stream *hinfo,
 	int pinctl;
 	int err = 0;
 
-<<<<<<< HEAD
 	if (hinfo->nid) {
 		pcm_idx = hinfo_to_pcm_index(codec, hinfo);
 		if (snd_BUG_ON(pcm_idx < 0))
@@ -1970,29 +1962,11 @@ static int hdmi_pcm_close(struct hda_pcm_stream *hinfo,
 			return -EINVAL;
 		per_cvt = get_cvt(spec, cvt_idx);
 
-=======
-	mutex_lock(&spec->pcm_lock);
-	if (hinfo->nid) {
-		pcm_idx = hinfo_to_pcm_index(codec, hinfo);
-		if (snd_BUG_ON(pcm_idx < 0)) {
-			err = -EINVAL;
-			goto unlock;
-		}
-		cvt_idx = cvt_nid_to_cvt_index(codec, hinfo->nid);
-		if (snd_BUG_ON(cvt_idx < 0)) {
-			err = -EINVAL;
-			goto unlock;
-		}
-		per_cvt = get_cvt(spec, cvt_idx);
->>>>>>> rebase
 		snd_BUG_ON(!per_cvt->assigned);
 		per_cvt->assigned = 0;
 		hinfo->nid = 0;
 
-<<<<<<< HEAD
 		mutex_lock(&spec->pcm_lock);
-=======
->>>>>>> rebase
 		snd_hda_spdif_ctls_unassign(codec, pcm_idx);
 		clear_bit(pcm_idx, &spec->pcm_in_use);
 		pin_idx = hinfo_to_pin_index(codec, hinfo);
@@ -2020,18 +1994,10 @@ static int hdmi_pcm_close(struct hda_pcm_stream *hinfo,
 		per_pin->setup = false;
 		per_pin->channels = 0;
 		mutex_unlock(&per_pin->lock);
-<<<<<<< HEAD
 	unlock:
 		mutex_unlock(&spec->pcm_lock);
 	}
 
-=======
-	}
-
-unlock:
-	mutex_unlock(&spec->pcm_lock);
-
->>>>>>> rebase
 	return err;
 }
 
@@ -2243,13 +2209,7 @@ static int generic_hdmi_build_controls(struct hda_codec *codec)
 
 	for (pin_idx = 0; pin_idx < spec->num_pins; pin_idx++) {
 		struct hdmi_spec_per_pin *per_pin = get_pin(spec, pin_idx);
-<<<<<<< HEAD
 
-=======
-		struct hdmi_eld *pin_eld = &per_pin->sink_eld;
-
-		pin_eld->eld_valid = false;
->>>>>>> rebase
 		hdmi_present_sense(per_pin, 0);
 	}
 
@@ -2358,21 +2318,6 @@ static void generic_hdmi_free(struct hda_codec *codec)
 }
 
 #ifdef CONFIG_PM
-<<<<<<< HEAD
-=======
-static int generic_hdmi_suspend(struct hda_codec *codec)
-{
-	struct hdmi_spec *spec = codec->spec;
-	int pin_idx;
-
-	for (pin_idx = 0; pin_idx < spec->num_pins; pin_idx++) {
-		struct hdmi_spec_per_pin *per_pin = get_pin(spec, pin_idx);
-		cancel_delayed_work_sync(&per_pin->work);
-	}
-	return 0;
-}
-
->>>>>>> rebase
 static int generic_hdmi_resume(struct hda_codec *codec)
 {
 	struct hdmi_spec *spec = codec->spec;
@@ -2396,10 +2341,6 @@ static const struct hda_codec_ops generic_hdmi_patch_ops = {
 	.build_controls		= generic_hdmi_build_controls,
 	.unsol_event		= hdmi_unsol_event,
 #ifdef CONFIG_PM
-<<<<<<< HEAD
-=======
-	.suspend		= generic_hdmi_suspend,
->>>>>>> rebase
 	.resume			= generic_hdmi_resume,
 #endif
 };
@@ -2629,10 +2570,6 @@ static void i915_pin_cvt_fixup(struct hda_codec *codec,
 			       hda_nid_t cvt_nid)
 {
 	if (per_pin) {
-<<<<<<< HEAD
-=======
-		haswell_verify_D0(codec, per_pin->cvt_nid, per_pin->pin_nid);
->>>>>>> rebase
 		snd_hda_set_dev_select(codec, per_pin->pin_nid,
 			       per_pin->dev_id);
 		intel_verify_pin_cvt_connect(codec, per_pin);
@@ -3489,26 +3426,13 @@ static int tegra_hdmi_build_pcms(struct hda_codec *codec)
 
 static int patch_tegra_hdmi(struct hda_codec *codec)
 {
-<<<<<<< HEAD
-=======
-	struct hdmi_spec *spec;
->>>>>>> rebase
 	int err;
 
 	err = patch_generic_hdmi(codec);
 	if (err)
 		return err;
 
-<<<<<<< HEAD
 	codec->patch_ops.build_pcms = tegra_hdmi_build_pcms;
-=======
-	codec->depop_delay = 10;
-	codec->patch_ops.build_pcms = tegra_hdmi_build_pcms;
-	spec = codec->spec;
-	spec->chmap.ops.chmap_cea_alloc_validate_get_type =
-		nvhdmi_chmap_cea_alloc_validate_get_type;
-	spec->chmap.ops.chmap_validate = nvhdmi_chmap_validate;
->>>>>>> rebase
 
 	return 0;
 }
@@ -3970,14 +3894,6 @@ HDA_CODEC_ENTRY(0x10de0095, "GPU 95 HDMI/DP",	patch_nvhdmi),
 HDA_CODEC_ENTRY(0x10de0097, "GPU 97 HDMI/DP",	patch_nvhdmi),
 HDA_CODEC_ENTRY(0x10de0098, "GPU 98 HDMI/DP",	patch_nvhdmi),
 HDA_CODEC_ENTRY(0x10de0099, "GPU 99 HDMI/DP",	patch_nvhdmi),
-<<<<<<< HEAD
-=======
-HDA_CODEC_ENTRY(0x10de009a, "GPU 9a HDMI/DP",	patch_nvhdmi),
-HDA_CODEC_ENTRY(0x10de009d, "GPU 9d HDMI/DP",	patch_nvhdmi),
-HDA_CODEC_ENTRY(0x10de009e, "GPU 9e HDMI/DP",	patch_nvhdmi),
-HDA_CODEC_ENTRY(0x10de009f, "GPU 9f HDMI/DP",	patch_nvhdmi),
-HDA_CODEC_ENTRY(0x10de00a0, "GPU a0 HDMI/DP",	patch_nvhdmi),
->>>>>>> rebase
 HDA_CODEC_ENTRY(0x10de8001, "MCP73 HDMI",	patch_nvhdmi_2ch),
 HDA_CODEC_ENTRY(0x10de8067, "MCP67/68 HDMI",	patch_nvhdmi_2ch),
 HDA_CODEC_ENTRY(0x11069f80, "VX900 HDMI/DP",	patch_via_hdmi),

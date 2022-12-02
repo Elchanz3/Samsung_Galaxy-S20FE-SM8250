@@ -94,25 +94,14 @@ static void mac_exception(void *handle, enum fman_mac_exceptions ex)
 		__func__, ex);
 }
 
-<<<<<<< HEAD
 static void set_fman_mac_params(struct mac_device *mac_dev,
 				struct fman_mac_params *params)
-=======
-static int set_fman_mac_params(struct mac_device *mac_dev,
-			       struct fman_mac_params *params)
->>>>>>> rebase
 {
 	struct mac_priv_s *priv = mac_dev->priv;
 
 	params->base_addr = (typeof(params->base_addr))
 		devm_ioremap(priv->dev, mac_dev->res->start,
 			     resource_size(mac_dev->res));
-<<<<<<< HEAD
-=======
-	if (!params->base_addr)
-		return -ENOMEM;
-
->>>>>>> rebase
 	memcpy(&params->addr, mac_dev->addr, sizeof(mac_dev->addr));
 	params->max_speed	= priv->max_speed;
 	params->phy_if		= mac_dev->phy_if;
@@ -123,11 +112,6 @@ static int set_fman_mac_params(struct mac_device *mac_dev,
 	params->event_cb	= mac_exception;
 	params->dev_id		= mac_dev;
 	params->internal_phy_node = priv->internal_phy_node;
-<<<<<<< HEAD
-=======
-
-	return 0;
->>>>>>> rebase
 }
 
 static int tgec_initialization(struct mac_device *mac_dev)
@@ -139,13 +123,7 @@ static int tgec_initialization(struct mac_device *mac_dev)
 
 	priv = mac_dev->priv;
 
-<<<<<<< HEAD
 	set_fman_mac_params(mac_dev, &params);
-=======
-	err = set_fman_mac_params(mac_dev, &params);
-	if (err)
-		goto _return;
->>>>>>> rebase
 
 	mac_dev->fman_mac = tgec_config(&params);
 	if (!mac_dev->fman_mac) {
@@ -191,13 +169,7 @@ static int dtsec_initialization(struct mac_device *mac_dev)
 
 	priv = mac_dev->priv;
 
-<<<<<<< HEAD
 	set_fman_mac_params(mac_dev, &params);
-=======
-	err = set_fman_mac_params(mac_dev, &params);
-	if (err)
-		goto _return;
->>>>>>> rebase
 
 	mac_dev->fman_mac = dtsec_config(&params);
 	if (!mac_dev->fman_mac) {
@@ -246,13 +218,7 @@ static int memac_initialization(struct mac_device *mac_dev)
 
 	priv = mac_dev->priv;
 
-<<<<<<< HEAD
 	set_fman_mac_params(mac_dev, &params);
-=======
-	err = set_fman_mac_params(mac_dev, &params);
-	if (err)
-		goto _return;
->>>>>>> rebase
 
 	if (priv->max_speed == SPEED_10000)
 		params.phy_if = PHY_INTERFACE_MODE_XGMII;

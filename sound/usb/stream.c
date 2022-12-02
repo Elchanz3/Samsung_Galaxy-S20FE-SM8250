@@ -72,7 +72,6 @@ static void snd_usb_audio_stream_free(struct snd_usb_stream *stream)
 static void snd_usb_audio_pcm_free(struct snd_pcm *pcm)
 {
 	struct snd_usb_stream *stream = pcm->private_data;
-<<<<<<< HEAD
 	struct snd_usb_audio *chip;
 
 	if (stream) {
@@ -81,11 +80,6 @@ static void snd_usb_audio_pcm_free(struct snd_pcm *pcm)
 		stream->pcm = NULL;
 		snd_usb_audio_stream_free(stream);
 		mutex_unlock(&chip->dev_lock);
-=======
-	if (stream) {
-		stream->pcm = NULL;
-		snd_usb_audio_stream_free(stream);
->>>>>>> rebase
 	}
 }
 
@@ -110,10 +104,6 @@ static void snd_usb_init_substream(struct snd_usb_stream *as,
 	subs->tx_length_quirk = as->chip->tx_length_quirk;
 	subs->speed = snd_usb_get_speed(subs->dev);
 	subs->pkt_offset_adj = 0;
-<<<<<<< HEAD
-=======
-	subs->stream_offset_adj = 0;
->>>>>>> rebase
 
 	snd_usb_set_pcm_ops(as->pcm, stream);
 
@@ -212,26 +202,16 @@ static int usb_chmap_ctl_get(struct snd_kcontrol *kcontrol,
 	struct snd_pcm_chmap *info = snd_kcontrol_chip(kcontrol);
 	struct snd_usb_substream *subs = info->private_data;
 	struct snd_pcm_chmap_elem *chmap = NULL;
-<<<<<<< HEAD
 	int i;
 
 	memset(ucontrol->value.integer.value, 0,
 	       sizeof(ucontrol->value.integer.value));
-=======
-	int i = 0;
-
->>>>>>> rebase
 	if (subs->cur_audiofmt)
 		chmap = subs->cur_audiofmt->chmap;
 	if (chmap) {
 		for (i = 0; i < chmap->channels; i++)
 			ucontrol->value.integer.value[i] = chmap->map[i];
 	}
-<<<<<<< HEAD
-=======
-	for (; i < subs->channels_max; i++)
-		ucontrol->value.integer.value[i] = 0;
->>>>>>> rebase
 	return 0;
 }
 
@@ -269,11 +249,7 @@ static int add_chmap(struct snd_pcm *pcm, int stream,
 static struct snd_pcm_chmap_elem *convert_chmap(int channels, unsigned int bits,
 						int protocol)
 {
-<<<<<<< HEAD
 	static unsigned int uac1_maps[] = {
-=======
-	static const unsigned int uac1_maps[] = {
->>>>>>> rebase
 		SNDRV_CHMAP_FL,		/* left front */
 		SNDRV_CHMAP_FR,		/* right front */
 		SNDRV_CHMAP_FC,		/* center front */
@@ -288,11 +264,7 @@ static struct snd_pcm_chmap_elem *convert_chmap(int channels, unsigned int bits,
 		SNDRV_CHMAP_TC,		/* top */
 		0 /* terminator */
 	};
-<<<<<<< HEAD
 	static unsigned int uac2_maps[] = {
-=======
-	static const unsigned int uac2_maps[] = {
->>>>>>> rebase
 		SNDRV_CHMAP_FL,		/* front left */
 		SNDRV_CHMAP_FR,		/* front right */
 		SNDRV_CHMAP_FC,		/* front center */
@@ -1143,11 +1115,7 @@ int snd_usb_parse_audio_interface(struct snd_usb_audio *chip, int iface_no)
 	 * Dallas DS4201 workaround: It presents 5 altsettings, but the last
 	 * one misses syncpipe, and does not produce any sound.
 	 */
-<<<<<<< HEAD
 	if (chip->usb_id == USB_ID(0x04fa, 0x4201))
-=======
-	if (chip->usb_id == USB_ID(0x04fa, 0x4201) && num >= 4)
->>>>>>> rebase
 		num = 4;
 
 	for (i = 0; i < num; i++) {

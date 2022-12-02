@@ -156,7 +156,6 @@ config PINCTRL_SDM845
          Qualcomm Technologies Inc TLMM block found on the Qualcomm
          Technologies Inc SDM845 platform.
 
-<<<<<<< HEAD
 config PINCTRL_KONA
 	tristate "Qualcomm Technologies Inc KONA pin controller driver"
 	depends on GPIOLIB && OF
@@ -221,6 +220,4 @@ config SENSORS_FP_SPI_GPIO_END
 	int "Fingerprint spi gpio number end"
 	default 0
 
-=======
->>>>>>> rebase
 endif

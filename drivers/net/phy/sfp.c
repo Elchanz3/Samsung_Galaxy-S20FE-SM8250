@@ -113,11 +113,7 @@ static const char * const sm_state_strings[] = {
 	[SFP_S_LINK_UP] = "link_up",
 	[SFP_S_TX_FAULT] = "tx_fault",
 	[SFP_S_REINIT] = "reinit",
-<<<<<<< HEAD
 	[SFP_S_TX_DISABLE] = "rx_disable",
-=======
-	[SFP_S_TX_DISABLE] = "tx_disable",
->>>>>>> rebase
 };
 
 static const char *sm_state_to_str(unsigned short sm_state)
@@ -1815,11 +1811,7 @@ static int sfp_probe(struct platform_device *pdev)
 
 	platform_set_drvdata(pdev, sfp);
 
-<<<<<<< HEAD
 	err = devm_add_action(sfp->dev, sfp_cleanup, sfp);
-=======
-	err = devm_add_action_or_reset(sfp->dev, sfp_cleanup, sfp);
->>>>>>> rebase
 	if (err < 0)
 		return err;
 
@@ -1894,12 +1886,7 @@ static int sfp_probe(struct platform_device *pdev)
 			continue;
 
 		irq = gpiod_to_irq(sfp->gpio[i]);
-<<<<<<< HEAD
 		if (!irq) {
-=======
-		if (irq < 0) {
-			irq = 0;
->>>>>>> rebase
 			poll = true;
 			continue;
 		}

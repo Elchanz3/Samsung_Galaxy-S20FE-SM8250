@@ -114,31 +114,18 @@ EXPORT_SYMBOL_GPL(xenbus_strstate);
  */
 int xenbus_watch_path(struct xenbus_device *dev, const char *path,
 		      struct xenbus_watch *watch,
-<<<<<<< HEAD
-=======
-		      bool (*will_handle)(struct xenbus_watch *,
-					  const char *, const char *),
->>>>>>> rebase
 		      void (*callback)(struct xenbus_watch *,
 				       const char *, const char *))
 {
 	int err;
 
 	watch->node = path;
-<<<<<<< HEAD
-=======
-	watch->will_handle = will_handle;
->>>>>>> rebase
 	watch->callback = callback;
 
 	err = register_xenbus_watch(watch);
 
 	if (err) {
 		watch->node = NULL;
-<<<<<<< HEAD
-=======
-		watch->will_handle = NULL;
->>>>>>> rebase
 		watch->callback = NULL;
 		xenbus_dev_fatal(dev, err, "adding watch on %s", path);
 	}
@@ -165,11 +152,6 @@ EXPORT_SYMBOL_GPL(xenbus_watch_path);
  */
 int xenbus_watch_pathfmt(struct xenbus_device *dev,
 			 struct xenbus_watch *watch,
-<<<<<<< HEAD
-=======
-			 bool (*will_handle)(struct xenbus_watch *,
-					const char *, const char *),
->>>>>>> rebase
 			 void (*callback)(struct xenbus_watch *,
 					  const char *, const char *),
 			 const char *pathfmt, ...)
@@ -186,11 +168,7 @@ int xenbus_watch_pathfmt(struct xenbus_device *dev,
 		xenbus_dev_fatal(dev, -ENOMEM, "allocating path for watch");
 		return -ENOMEM;
 	}
-<<<<<<< HEAD
 	err = xenbus_watch_path(dev, path, watch, callback);
-=======
-	err = xenbus_watch_path(dev, path, watch, will_handle, callback);
->>>>>>> rebase
 
 	if (err)
 		kfree(path);
@@ -384,7 +362,6 @@ int xenbus_grant_ring(struct xenbus_device *dev, void *vaddr,
 		      unsigned int nr_pages, grant_ref_t *grefs)
 {
 	int err;
-<<<<<<< HEAD
 	int i, j;
 
 	for (i = 0; i < nr_pages; i++) {
@@ -396,41 +373,16 @@ int xenbus_grant_ring(struct xenbus_device *dev, void *vaddr,
 			goto fail;
 		}
 		grefs[i] = err;
-=======
-	unsigned int i;
-	grant_ref_t gref_head;
-
-	err = gnttab_alloc_grant_references(nr_pages, &gref_head);
-	if (err) {
-		xenbus_dev_fatal(dev, err, "granting access to ring page");
-		return err;
-	}
-
-	for (i = 0; i < nr_pages; i++) {
-		unsigned long gfn;
-
-		if (is_vmalloc_addr(vaddr))
-			gfn = pfn_to_gfn(vmalloc_to_pfn(vaddr));
-		else
-			gfn = virt_to_gfn(vaddr);
-
-		grefs[i] = gnttab_claim_grant_reference(&gref_head);
-		gnttab_grant_foreign_access_ref(grefs[i], dev->otherend_id,
-						gfn, 0);
->>>>>>> rebase
 
 		vaddr = vaddr + XEN_PAGE_SIZE;
 	}
 
 	return 0;
-<<<<<<< HEAD
 
 fail:
 	for (j = 0; j < i; j++)
 		gnttab_end_foreign_access_ref(grefs[j], 0);
 	return err;
-=======
->>>>>>> rebase
 }
 EXPORT_SYMBOL_GPL(xenbus_grant_ring);
 
@@ -498,18 +450,7 @@ EXPORT_SYMBOL_GPL(xenbus_free_evtchn);
 int xenbus_map_ring_valloc(struct xenbus_device *dev, grant_ref_t *gnt_refs,
 			   unsigned int nr_grefs, void **vaddr)
 {
-<<<<<<< HEAD
 	return ring_ops->map(dev, gnt_refs, nr_grefs, vaddr);
-=======
-	int err;
-
-	err = ring_ops->map(dev, gnt_refs, nr_grefs, vaddr);
-	/* Some hypervisors are buggy and can return 1. */
-	if (err > 0)
-		err = GNTST_general_error;
-
-	return err;
->>>>>>> rebase
 }
 EXPORT_SYMBOL_GPL(xenbus_map_ring_valloc);
 

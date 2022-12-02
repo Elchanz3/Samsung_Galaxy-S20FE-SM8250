@@ -291,10 +291,6 @@ enum pmbus_fan_mode { percent = 0, rpm };
 /*
  * STATUS_VOUT, STATUS_INPUT
  */
-<<<<<<< HEAD
-=======
-#define PB_VOLTAGE_VIN_OFF		BIT(3)
->>>>>>> rebase
 #define PB_VOLTAGE_UV_FAULT		BIT(4)
 #define PB_VOLTAGE_UV_WARNING		BIT(5)
 #define PB_VOLTAGE_OV_WARNING		BIT(6)

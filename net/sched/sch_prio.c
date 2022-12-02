@@ -175,11 +175,7 @@ prio_destroy(struct Qdisc *sch)
 	tcf_block_put(q->block);
 	prio_offload(sch, NULL);
 	for (prio = 0; prio < q->bands; prio++)
-<<<<<<< HEAD
 		qdisc_destroy(q->queues[prio]);
-=======
-		qdisc_put(q->queues[prio]);
->>>>>>> rebase
 }
 
 static int prio_tune(struct Qdisc *sch, struct nlattr *opt,
@@ -209,11 +205,7 @@ static int prio_tune(struct Qdisc *sch, struct nlattr *opt,
 					      extack);
 		if (!queues[i]) {
 			while (i > oldbands)
-<<<<<<< HEAD
 				qdisc_destroy(queues[--i]);
-=======
-				qdisc_put(queues[--i]);
->>>>>>> rebase
 			return -ENOMEM;
 		}
 	}
@@ -228,11 +220,7 @@ static int prio_tune(struct Qdisc *sch, struct nlattr *opt,
 
 		qdisc_tree_reduce_backlog(child, child->q.qlen,
 					  child->qstats.backlog);
-<<<<<<< HEAD
 		qdisc_destroy(child);
-=======
-		qdisc_put(child);
->>>>>>> rebase
 	}
 
 	for (i = oldbands; i < q->bands; i++) {

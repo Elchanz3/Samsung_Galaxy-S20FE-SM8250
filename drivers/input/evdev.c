@@ -28,16 +28,6 @@
 #include <linux/cdev.h>
 #include "input-compat.h"
 
-<<<<<<< HEAD
-=======
-enum evdev_clock_type {
-	EV_CLK_REAL = 0,
-	EV_CLK_MONO,
-	EV_CLK_BOOT,
-	EV_CLK_MAX
-};
-
->>>>>>> rebase
 struct evdev {
 	int open;
 	struct input_handle handle;
@@ -59,7 +49,6 @@ struct evdev_client {
 	struct fasync_struct *fasync;
 	struct evdev *evdev;
 	struct list_head node;
-<<<<<<< HEAD
 	enum input_clock_type clk_type;
 	bool revoked;
 	unsigned long *evmasks[EV_CNT];
@@ -78,15 +67,6 @@ struct evdev_client {
 #include <linux/input/input_booster.h>
 #endif
 
-=======
-	unsigned int clk_type;
-	bool revoked;
-	unsigned long *evmasks[EV_CNT];
-	unsigned int bufsize;
-	struct input_event buffer[];
-};
-
->>>>>>> rebase
 static size_t evdev_get_mask_cnt(unsigned int type)
 {
 	static const size_t counts[EV_CNT] = {
@@ -176,24 +156,10 @@ static void __evdev_flush_queue(struct evdev_client *client, unsigned int type)
 
 static void __evdev_queue_syn_dropped(struct evdev_client *client)
 {
-<<<<<<< HEAD
 	ktime_t *ev_time = input_get_timestamp(client->evdev->handle.dev);
 	struct timespec64 ts = ktime_to_timespec64(ev_time[client->clk_type]);
 	struct input_event ev;
 
-=======
-	struct input_event ev;
-	ktime_t time;
-	struct timespec64 ts;
-
-	time = client->clk_type == EV_CLK_REAL ?
-			ktime_get_real() :
-			client->clk_type == EV_CLK_MONO ?
-				ktime_get() :
-				ktime_get_boottime();
-
-	ts = ktime_to_timespec64(time);
->>>>>>> rebase
 	ev.input_event_sec = ts.tv_sec;
 	ev.input_event_usec = ts.tv_nsec / NSEC_PER_USEC;
 	ev.type = EV_SYN;
@@ -222,16 +188,11 @@ static void evdev_queue_syn_dropped(struct evdev_client *client)
 static int evdev_set_clk_type(struct evdev_client *client, unsigned int clkid)
 {
 	unsigned long flags;
-<<<<<<< HEAD
 	enum input_clock_type clk_type;
-=======
-	unsigned int clk_type;
->>>>>>> rebase
 
 	switch (clkid) {
 
 	case CLOCK_REALTIME:
-<<<<<<< HEAD
 		clk_type = INPUT_CLK_REAL;
 		break;
 	case CLOCK_MONOTONIC:
@@ -239,15 +200,6 @@ static int evdev_set_clk_type(struct evdev_client *client, unsigned int clkid)
 		break;
 	case CLOCK_BOOTTIME:
 		clk_type = INPUT_CLK_BOOT;
-=======
-		clk_type = EV_CLK_REAL;
-		break;
-	case CLOCK_MONOTONIC:
-		clk_type = EV_CLK_MONO;
-		break;
-	case CLOCK_BOOTTIME:
-		clk_type = EV_CLK_BOOT;
->>>>>>> rebase
 		break;
 	default:
 		return -EINVAL;
@@ -273,7 +225,6 @@ static int evdev_set_clk_type(struct evdev_client *client, unsigned int clkid)
 	return 0;
 }
 
-<<<<<<< HEAD
 #ifdef CONFIG_SEC_INPUT_BOOSTER
 #include "evdev_booster.c"
 #endif //--CONFIG_SEC_INPUT_BOOSTER
@@ -289,11 +240,6 @@ static void __pass_event(struct evdev_client *client,
 	client->ev_cnt++;
 #endif
 
-=======
-static void __pass_event(struct evdev_client *client,
-			 const struct input_event *event)
-{
->>>>>>> rebase
 	client->buffer[client->head++] = *event;
 	client->head &= client->bufsize - 1;
 
@@ -317,7 +263,6 @@ static void __pass_event(struct evdev_client *client,
 
 	if (event->type == EV_SYN && event->code == SYN_REPORT) {
 		client->packet_head = client->head;
-<<<<<<< HEAD
 #ifdef CONFIG_SEC_INPUT_BOOSTER
 		pr_booster("IB Triggered :: HEAD(%d) TAIL(%d)", client->head, client->tail);
 		spin_lock_irqsave(&ib_type_lock, flags);
@@ -325,8 +270,6 @@ static void __pass_event(struct evdev_client *client,
 		client->ev_cnt = 0;
 		spin_unlock_irqrestore(&ib_type_lock, flags);
 #endif
-=======
->>>>>>> rebase
 		kill_fasync(&client->fasync, SIGIO, POLL_IN);
 	}
 }
@@ -383,16 +326,7 @@ static void evdev_events(struct input_handle *handle,
 {
 	struct evdev *evdev = handle->private;
 	struct evdev_client *client;
-<<<<<<< HEAD
 	ktime_t *ev_time = input_get_timestamp(handle->dev);
-=======
-	ktime_t ev_time[EV_CLK_MAX];
-
-	ev_time[EV_CLK_MONO] = ktime_get();
-	ev_time[EV_CLK_REAL] = ktime_mono_to_real(ev_time[EV_CLK_MONO]);
-	ev_time[EV_CLK_BOOT] = ktime_mono_to_any(ev_time[EV_CLK_MONO],
-						 TK_OFFS_BOOT);
->>>>>>> rebase
 
 	rcu_read_lock();
 
@@ -425,7 +359,6 @@ static int evdev_fasync(int fd, struct file *file, int on)
 	return fasync_helper(fd, file, on, &client->fasync);
 }
 
-<<<<<<< HEAD
 static int evdev_flush(struct file *file, fl_owner_t id)
 {
 	struct evdev_client *client = file->private_data;
@@ -440,8 +373,6 @@ static int evdev_flush(struct file *file, fl_owner_t id)
 	return 0;
 }
 
-=======
->>>>>>> rebase
 static void evdev_free(struct device *dev)
 {
 	struct evdev *evdev = container_of(dev, struct evdev, dev);
@@ -555,13 +486,6 @@ static int evdev_release(struct inode *inode, struct file *file)
 	unsigned int i;
 
 	mutex_lock(&evdev->mutex);
-<<<<<<< HEAD
-=======
-
-	if (evdev->exist && !client->revoked)
-		input_flush_device(&evdev->handle, file);
-
->>>>>>> rebase
 	evdev_ungrab(evdev, client);
 	mutex_unlock(&evdev->mutex);
 
@@ -1423,10 +1347,7 @@ static const struct file_operations evdev_fops = {
 	.compat_ioctl	= evdev_ioctl_compat,
 #endif
 	.fasync		= evdev_fasync,
-<<<<<<< HEAD
 	.flush		= evdev_flush,
-=======
->>>>>>> rebase
 	.llseek		= no_llseek,
 };
 
@@ -1557,12 +1478,9 @@ static struct input_handler evdev_handler = {
 
 static int __init evdev_init(void)
 {
-<<<<<<< HEAD
 #ifdef CONFIG_SEC_INPUT_BOOSTER
 	input_booster_init();
 #endif
-=======
->>>>>>> rebase
 	return input_register_handler(&evdev_handler);
 }
 

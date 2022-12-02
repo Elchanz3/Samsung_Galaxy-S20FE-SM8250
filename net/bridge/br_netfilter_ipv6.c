@@ -201,10 +201,6 @@ static int br_nf_pre_routing_finish_ipv6(struct net *net, struct sock *sk, struc
 			kfree_skb(skb);
 			return 0;
 		}
-<<<<<<< HEAD
-=======
-		skb_dst_drop(skb);
->>>>>>> rebase
 		skb_dst_set_noref(skb, &rt->dst);
 	}
 

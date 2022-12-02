@@ -33,15 +33,12 @@
 #include <linux/fs_stack.h>
 #include "ecryptfs_kernel.h"
 
-<<<<<<< HEAD
 #ifdef CONFIG_WTL_ENCRYPTION_FILTER
 #include <linux/ctype.h>
 #define ECRYPTFS_IOCTL_GET_ATTRIBUTES	_IOR('l', 0x10, __u32)
 #define ECRYPTFS_WAS_ENCRYPTED 0x0080
 #define ECRYPTFS_WAS_ENCRYPTED_OTHER_DEVICE 0x0100
 #endif
-=======
->>>>>>> rebase
 /**
  * ecryptfs_read_update_atime
  *
@@ -157,7 +154,6 @@ static int read_or_initialize_metadata(struct dentry *dentry)
 	crypt_stat = &ecryptfs_inode_to_private(inode)->crypt_stat;
 	mount_crypt_stat = &ecryptfs_superblock_to_private(
 						inode->i_sb)->mount_crypt_stat;
-<<<<<<< HEAD
 
 #ifdef CONFIG_WTL_ENCRYPTION_FILTER
 	if (crypt_stat->flags & ECRYPTFS_STRUCT_INITIALIZED
@@ -198,8 +194,6 @@ static int read_or_initialize_metadata(struct dentry *dentry)
 	}
 	mutex_unlock(&crypt_stat->cs_mutex);
 #endif
-=======
->>>>>>> rebase
 	mutex_lock(&crypt_stat->cs_mutex);
 
 	if (crypt_stat->flags & ECRYPTFS_POLICY_APPLIED &&
@@ -414,7 +408,6 @@ ecryptfs_unlocked_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
 {
 	struct file *lower_file = ecryptfs_file_to_lower(file);
 	long rc = -ENOTTY;
-<<<<<<< HEAD
 #ifdef CONFIG_WTL_ENCRYPTION_FILTER
 	if (cmd == ECRYPTFS_IOCTL_GET_ATTRIBUTES) {
 		u32 __user *user_attr = (u32 __user *)arg;
@@ -453,9 +446,6 @@ ecryptfs_unlocked_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
 		return 0;
 	}
 #endif
-=======
-
->>>>>>> rebase
 	if (!lower_file->f_op->unlocked_ioctl)
 		return rc;
 
@@ -480,7 +470,6 @@ ecryptfs_compat_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
 {
 	struct file *lower_file = ecryptfs_file_to_lower(file);
 	long rc = -ENOIOCTLCMD;
-<<<<<<< HEAD
 #ifdef CONFIG_WTL_ENCRYPTION_FILTER
 	if (cmd == ECRYPTFS_IOCTL_GET_ATTRIBUTES) {
 		u32 __user *user_attr = (u32 __user *)arg;
@@ -519,9 +508,6 @@ ecryptfs_compat_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
 		return 0;
 	}
 #endif
-=======
-
->>>>>>> rebase
 	if (!lower_file->f_op->compat_ioctl)
 		return rc;
 
@@ -539,7 +525,6 @@ ecryptfs_compat_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
 	}
 }
 #endif
-<<<<<<< HEAD
 #ifdef CONFIG_WTL_ENCRYPTION_FILTER
 int is_file_name_match(struct ecryptfs_mount_crypt_stat *mcs,
 					struct dentry *fp_dentry)
@@ -620,9 +605,6 @@ int is_file_ext_match(struct ecryptfs_mount_crypt_stat *mcs, char *str)
 	return 0;
 }
 #endif
-=======
-
->>>>>>> rebase
 const struct file_operations ecryptfs_dir_fops = {
 	.iterate_shared = ecryptfs_readdir,
 	.read = generic_read_dir,

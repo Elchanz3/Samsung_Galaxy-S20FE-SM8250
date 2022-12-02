@@ -35,21 +35,12 @@ static inline bool is_omap_iommu_detached(struct omap_iommu *obj)
 		ssize_t bytes;						\
 		const char *str = "%20s: %08x\n";			\
 		const int maxcol = 32;					\
-<<<<<<< HEAD
 		bytes = snprintf(p, maxcol, str, __stringify(name),	\
 				 iommu_read_reg(obj, MMU_##name));	\
 		p += bytes;						\
 		len -= bytes;						\
 		if (len < maxcol)					\
 			goto out;					\
-=======
-		if (len < maxcol)					\
-			goto out;					\
-		bytes = scnprintf(p, maxcol, str, __stringify(name),	\
-				 iommu_read_reg(obj, MMU_##name));	\
-		p += bytes;						\
-		len -= bytes;						\
->>>>>>> rebase
 	} while (0)
 
 static ssize_t
@@ -110,16 +101,8 @@ static ssize_t debug_read_regs(struct file *file, char __user *userbuf,
 	mutex_lock(&iommu_debug_lock);
 
 	bytes = omap_iommu_dump_ctx(obj, p, count);
-<<<<<<< HEAD
 	bytes = simple_read_from_buffer(userbuf, count, ppos, buf, bytes);
 
-=======
-	if (bytes < 0)
-		goto err;
-	bytes = simple_read_from_buffer(userbuf, count, ppos, buf, bytes);
-
-err:
->>>>>>> rebase
 	mutex_unlock(&iommu_debug_lock);
 	kfree(buf);
 

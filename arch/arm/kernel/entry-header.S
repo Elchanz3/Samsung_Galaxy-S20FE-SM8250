@@ -6,10 +6,6 @@
 #include <asm/asm-offsets.h>
 #include <asm/errno.h>
 #include <asm/thread_info.h>
-<<<<<<< HEAD
-=======
-#include <asm/uaccess-asm.h>
->>>>>>> rebase
 #include <asm/v7m.h>
 
 @ Bad Abort numbers
@@ -221,13 +217,9 @@
 	blne	trace_hardirqs_off
 #endif
 	.endif
-<<<<<<< HEAD
 	ldr	r1, [sp, #SVC_ADDR_LIMIT]
 	uaccess_restore
 	str	r1, [tsk, #TI_ADDR_LIMIT]
-=======
-	uaccess_exit tsk, r0, r1
->>>>>>> rebase
 
 #ifndef CONFIG_THUMB2_KERNEL
 	@ ARM mode SVC restore
@@ -271,13 +263,9 @@
 	@ on the stack remains correct).
 	@
 	.macro  svc_exit_via_fiq
-<<<<<<< HEAD
 	ldr	r1, [sp, #SVC_ADDR_LIMIT]
 	uaccess_restore
 	str	r1, [tsk, #TI_ADDR_LIMIT]
-=======
-	uaccess_exit tsk, r0, r1
->>>>>>> rebase
 #ifndef CONFIG_THUMB2_KERNEL
 	@ ARM mode restore
 	mov	r0, sp

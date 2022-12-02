@@ -18,10 +18,7 @@
 #include <linux/leds.h>
 #include <linux/spinlock.h>
 #include <linux/notifier.h>
-<<<<<<< HEAD
 #include <linux/types.h>
-=======
->>>>>>> rebase
 
 /*
  * All voltages, currents, charges, energies, time and temperatures in uV,
@@ -49,11 +46,8 @@ enum {
 	POWER_SUPPLY_CHARGE_TYPE_NONE,
 	POWER_SUPPLY_CHARGE_TYPE_TRICKLE,
 	POWER_SUPPLY_CHARGE_TYPE_FAST,
-<<<<<<< HEAD
 	POWER_SUPPLY_CHARGE_TYPE_TAPER,
 	POWER_SUPPLY_CHARGE_TYPE_SLOW,
-=======
->>>>>>> rebase
 };
 
 enum {
@@ -66,15 +60,12 @@ enum {
 	POWER_SUPPLY_HEALTH_COLD,
 	POWER_SUPPLY_HEALTH_WATCHDOG_TIMER_EXPIRE,
 	POWER_SUPPLY_HEALTH_SAFETY_TIMER_EXPIRE,
-<<<<<<< HEAD
 	POWER_SUPPLY_HEALTH_WARM,
 	POWER_SUPPLY_HEALTH_COOL,
 	POWER_SUPPLY_HEALTH_HOT,
 	POWER_SUPPLY_HEALTH_UNDERVOLTAGE,
 	POWER_SUPPLY_HEALTH_OVERHEATLIMIT,
 	POWER_SUPPLY_HEALTH_MAX,
-=======
->>>>>>> rebase
 };
 
 enum {
@@ -102,7 +93,6 @@ enum {
 	POWER_SUPPLY_SCOPE_DEVICE,
 };
 
-<<<<<<< HEAD
 enum {
 	POWER_SUPPLY_DP_DM_UNKNOWN = 0,
 	POWER_SUPPLY_DP_DM_PREPARE = 1,
@@ -174,8 +164,6 @@ enum {
 	POWER_SUPPLY_QC_INOV_THERMAL_DISABLE = BIT(2),
 };
 
-=======
->>>>>>> rebase
 enum power_supply_property {
 	/* Properties of type `int' */
 	POWER_SUPPLY_PROP_STATUS = 0,
@@ -198,16 +186,11 @@ enum power_supply_property {
 	POWER_SUPPLY_PROP_CURRENT_NOW,
 	POWER_SUPPLY_PROP_CURRENT_AVG,
 	POWER_SUPPLY_PROP_CURRENT_BOOT,
-<<<<<<< HEAD
 	POWER_SUPPLY_PROP_CURRENT_FULL,
 	POWER_SUPPLY_PROP_POWER_DESIGN,
 	POWER_SUPPLY_PROP_POWER_NOW,
 	POWER_SUPPLY_PROP_POWER_AVG,
 	POWER_SUPPLY_PROP_FILTER_CFG,
-=======
-	POWER_SUPPLY_PROP_POWER_NOW,
-	POWER_SUPPLY_PROP_POWER_AVG,
->>>>>>> rebase
 	POWER_SUPPLY_PROP_CHARGE_FULL_DESIGN,
 	POWER_SUPPLY_PROP_CHARGE_EMPTY_DESIGN,
 	POWER_SUPPLY_PROP_CHARGE_FULL,
@@ -215,12 +198,9 @@ enum power_supply_property {
 	POWER_SUPPLY_PROP_CHARGE_NOW,
 	POWER_SUPPLY_PROP_CHARGE_AVG,
 	POWER_SUPPLY_PROP_CHARGE_COUNTER,
-<<<<<<< HEAD
 	POWER_SUPPLY_PROP_CHARGE_OTG_CONTROL,
 	POWER_SUPPLY_PROP_CHARGE_POWERED_OTG_CONTROL,
 	POWER_SUPPLY_PROP_CHARGE_UNO_CONTROL,
-=======
->>>>>>> rebase
 	POWER_SUPPLY_PROP_CONSTANT_CHARGE_CURRENT,
 	POWER_SUPPLY_PROP_CONSTANT_CHARGE_CURRENT_MAX,
 	POWER_SUPPLY_PROP_CONSTANT_CHARGE_VOLTAGE,
@@ -256,7 +236,6 @@ enum power_supply_property {
 	POWER_SUPPLY_PROP_PRECHARGE_CURRENT,
 	POWER_SUPPLY_PROP_CHARGE_TERM_CURRENT,
 	POWER_SUPPLY_PROP_CALIBRATE,
-<<<<<<< HEAD
 	/* Local extensions */
 	POWER_SUPPLY_PROP_USB_HC,
 	POWER_SUPPLY_PROP_USB_OTG,
@@ -409,12 +388,6 @@ enum power_supply_property {
 	POWER_SUPPLY_PROP_SERIAL_NUMBER,
 	POWER_SUPPLY_PROP_MAX,
 	POWER_SUPPLY_EXT_PROP_MAX = POWER_SUPPLY_PROP_MAX + 256,
-=======
-	/* Properties of type `const char *' */
-	POWER_SUPPLY_PROP_MODEL_NAME,
-	POWER_SUPPLY_PROP_MANUFACTURER,
-	POWER_SUPPLY_PROP_SERIAL_NUMBER,
->>>>>>> rebase
 };
 
 enum power_supply_type {
@@ -430,7 +403,6 @@ enum power_supply_type {
 	POWER_SUPPLY_TYPE_USB_PD,		/* Power Delivery Port */
 	POWER_SUPPLY_TYPE_USB_PD_DRP,		/* PD Dual Role Port */
 	POWER_SUPPLY_TYPE_APPLE_BRICK_ID,	/* Apple Charging Method */
-<<<<<<< HEAD
 	POWER_SUPPLY_TYPE_USB_HVDCP,		/* High Voltage DCP */
 	POWER_SUPPLY_TYPE_USB_HVDCP_3,		/* Efficient High Voltage DCP */
 	POWER_SUPPLY_TYPE_USB_HVDCP_3P5,	/* Efficient High Voltage DCP */
@@ -447,8 +419,6 @@ enum power_supply_type {
 	POWER_SUPPLY_TYPE_OTG,
 	POWER_SUPPLY_TYPE_POGO,			/* POGO */
 	POWER_SUPPLY_TYPE_MAX,
-=======
->>>>>>> rebase
 };
 
 enum power_supply_usb_type {
@@ -464,7 +434,6 @@ enum power_supply_usb_type {
 	POWER_SUPPLY_USB_TYPE_APPLE_BRICK_ID,	/* Apple Charging Method */
 };
 
-<<<<<<< HEAD
 /* Indicates USB Type-C CC connection status */
 enum power_supply_typec_mode {
 	POWER_SUPPLY_TYPEC_NONE,
@@ -496,8 +465,6 @@ enum power_supply_typec_power_role {
 	POWER_SUPPLY_TYPEC_PR_SOURCE,
 };
 
-=======
->>>>>>> rebase
 enum power_supply_notifier_events {
 	PSY_EVENT_PROP_CHANGED,
 };
@@ -505,10 +472,7 @@ enum power_supply_notifier_events {
 union power_supply_propval {
 	int intval;
 	const char *strval;
-<<<<<<< HEAD
 	int64_t int64val;
-=======
->>>>>>> rebase
 };
 
 struct device_node;

@@ -50,15 +50,6 @@ struct adc12138 {
 	struct completion complete;
 	/* The number of cclk periods for the S/H's acquisition time */
 	unsigned int acquisition_time;
-<<<<<<< HEAD
-=======
-	/*
-	 * Maximum size needed: 16x 2 bytes ADC data + 8 bytes timestamp.
-	 * Less may be need if not all channels are enabled, as long as
-	 * the 8 byte alignment of the timestamp is maintained.
-	 */
-	__be16 data[20] __aligned(8);
->>>>>>> rebase
 
 	u8 tx_buf[2] ____cacheline_aligned;
 	u8 rx_buf[2];
@@ -341,10 +332,7 @@ static irqreturn_t adc12138_trigger_handler(int irq, void *p)
 	struct iio_poll_func *pf = p;
 	struct iio_dev *indio_dev = pf->indio_dev;
 	struct adc12138 *adc = iio_priv(indio_dev);
-<<<<<<< HEAD
 	__be16 data[20] = { }; /* 16x 2 bytes ADC data + 8 bytes timestamp */
-=======
->>>>>>> rebase
 	__be16 trash;
 	int ret;
 	int scan_index;
@@ -360,11 +348,7 @@ static irqreturn_t adc12138_trigger_handler(int irq, void *p)
 		reinit_completion(&adc->complete);
 
 		ret = adc12138_start_and_read_conv(adc, scan_chan,
-<<<<<<< HEAD
 						   i ? &data[i - 1] : &trash);
-=======
-					i ? &adc->data[i - 1] : &trash);
->>>>>>> rebase
 		if (ret) {
 			dev_warn(&adc->spi->dev,
 				 "failed to start conversion\n");
@@ -381,11 +365,7 @@ static irqreturn_t adc12138_trigger_handler(int irq, void *p)
 	}
 
 	if (i) {
-<<<<<<< HEAD
 		ret = adc12138_read_conv_data(adc, &data[i - 1]);
-=======
-		ret = adc12138_read_conv_data(adc, &adc->data[i - 1]);
->>>>>>> rebase
 		if (ret) {
 			dev_warn(&adc->spi->dev,
 				 "failed to get conversion data\n");
@@ -393,11 +373,7 @@ static irqreturn_t adc12138_trigger_handler(int irq, void *p)
 		}
 	}
 
-<<<<<<< HEAD
 	iio_push_to_buffers_with_timestamp(indio_dev, data,
-=======
-	iio_push_to_buffers_with_timestamp(indio_dev, adc->data,
->>>>>>> rebase
 					   iio_get_time_ns(indio_dev));
 out:
 	mutex_unlock(&adc->lock);

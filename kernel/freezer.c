@@ -47,12 +47,9 @@ bool freezing_slow_path(struct task_struct *p)
 	if (test_tsk_thread_flag(p, TIF_MEMDIE))
 		return false;
 
-<<<<<<< HEAD
 	if (cgroup_freezer_killable(p) && fatal_signal_pending(p))
 		return false;
 
-=======
->>>>>>> rebase
 	if (pm_nosig_freezing || cgroup_freezing(p))
 		return true;
 
@@ -74,16 +71,12 @@ bool __refrigerator(bool check_kthr_stop)
 	pr_debug("%s entered refrigerator\n", current->comm);
 
 	for (;;) {
-<<<<<<< HEAD
 		bool killable = cgroup_freezer_killable(current);
 
 		if (killable)
 			set_current_state(TASK_INTERRUPTIBLE);
 		else
 			set_current_state(TASK_UNINTERRUPTIBLE);
-=======
-		set_current_state(TASK_UNINTERRUPTIBLE);
->>>>>>> rebase
 
 		spin_lock_irq(&freezer_lock);
 		current->flags |= PF_FROZEN;
@@ -95,7 +88,6 @@ bool __refrigerator(bool check_kthr_stop)
 		if (!(current->flags & PF_FROZEN))
 			break;
 		was_frozen = true;
-<<<<<<< HEAD
 		/*
 		 * Now we're sure that there is no pending fatal signal.
 		 * Clear TIF_SIGPENDING to not get out of schedule()
@@ -104,8 +96,6 @@ bool __refrigerator(bool check_kthr_stop)
 		 */
 		if (killable)
 			clear_thread_flag(TIF_SIGPENDING);
-=======
->>>>>>> rebase
 		schedule();
 	}
 

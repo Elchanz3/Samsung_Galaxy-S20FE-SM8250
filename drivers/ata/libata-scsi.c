@@ -2391,10 +2391,6 @@ static unsigned int ata_scsiop_inq_89(struct ata_scsi_args *args, u8 *rbuf)
 
 static unsigned int ata_scsiop_inq_b0(struct ata_scsi_args *args, u8 *rbuf)
 {
-<<<<<<< HEAD
-=======
-	struct ata_device *dev = args->dev;
->>>>>>> rebase
 	u16 min_io_sectors;
 
 	rbuf[1] = 0xb0;
@@ -2420,16 +2416,7 @@ static unsigned int ata_scsiop_inq_b0(struct ata_scsi_args *args, u8 *rbuf)
 	 * with the unmap bit set.
 	 */
 	if (ata_id_has_trim(args->id)) {
-<<<<<<< HEAD
 		put_unaligned_be64(65535 * ATA_MAX_TRIM_RNUM, &rbuf[36]);
-=======
-		u64 max_blocks = 65535 * ATA_MAX_TRIM_RNUM;
-
-		if (dev->horkage & ATA_HORKAGE_MAX_TRIM_128M)
-			max_blocks = 128 << (20 - SECTOR_SHIFT);
-
-		put_unaligned_be64(max_blocks, &rbuf[36]);
->>>>>>> rebase
 		put_unaligned_be32(1, &rbuf[28]);
 	}
 
@@ -3188,24 +3175,8 @@ static unsigned int ata_scsi_pass_thru(struct ata_queued_cmd *qc)
 		goto invalid_fld;
 	}
 
-<<<<<<< HEAD
 	if (ata_is_ncq(tf->protocol) && (cdb[2 + cdb_offset] & 0x3) == 0)
 		tf->protocol = ATA_PROT_NCQ_NODATA;
-=======
-	if ((cdb[2 + cdb_offset] & 0x3) == 0) {
-		/*
-		 * When T_LENGTH is zero (No data is transferred), dir should
-		 * be DMA_NONE.
-		 */
-		if (scmd->sc_data_direction != DMA_NONE) {
-			fp = 2 + cdb_offset;
-			goto invalid_fld;
-		}
-
-		if (ata_is_ncq(tf->protocol))
-			tf->protocol = ATA_PROT_NCQ_NODATA;
-	}
->>>>>>> rebase
 
 	/* enable LBA */
 	tf->flags |= ATA_TFLAG_LBA;
@@ -4024,20 +3995,12 @@ static unsigned int ata_scsi_mode_select_xlat(struct ata_queued_cmd *qc)
 {
 	struct scsi_cmnd *scmd = qc->scsicmd;
 	const u8 *cdb = scmd->cmnd;
-<<<<<<< HEAD
 	const u8 *p;
-=======
->>>>>>> rebase
 	u8 pg, spg;
 	unsigned six_byte, pg_len, hdr_len, bd_len;
 	int len;
 	u16 fp = (u16)-1;
 	u8 bp = 0xff;
-<<<<<<< HEAD
-=======
-	u8 buffer[64];
-	const u8 *p = buffer;
->>>>>>> rebase
 
 	VPRINTK("ENTER\n");
 
@@ -4071,22 +4034,12 @@ static unsigned int ata_scsi_mode_select_xlat(struct ata_queued_cmd *qc)
 	if (!scsi_sg_count(scmd) || scsi_sglist(scmd)->length < len)
 		goto invalid_param_len;
 
-<<<<<<< HEAD
 	p = page_address(sg_page(scsi_sglist(scmd)));
 
-=======
->>>>>>> rebase
 	/* Move past header and block descriptors.  */
 	if (len < hdr_len)
 		goto invalid_param_len;
 
-<<<<<<< HEAD
-=======
-	if (!sg_copy_to_buffer(scsi_sglist(scmd), scsi_sg_count(scmd),
-			       buffer, sizeof(buffer)))
-		goto invalid_param_len;
-
->>>>>>> rebase
 	if (six_byte)
 		bd_len = p[3];
 	else
@@ -4617,36 +4570,22 @@ int ata_scsi_add_hosts(struct ata_host *host, struct scsi_host_template *sht)
 		 */
 		shost->max_host_blocked = 1;
 
-<<<<<<< HEAD
 		rc = scsi_add_host_with_dma(ap->scsi_host,
 						&ap->tdev, ap->host->dev);
 		if (rc)
 			goto err_add;
-=======
-		rc = scsi_add_host_with_dma(shost, &ap->tdev, ap->host->dev);
-		if (rc)
-			goto err_alloc;
->>>>>>> rebase
 	}
 
 	return 0;
 
-<<<<<<< HEAD
  err_add:
 	scsi_host_put(host->ports[i]->scsi_host);
-=======
->>>>>>> rebase
  err_alloc:
 	while (--i >= 0) {
 		struct Scsi_Host *shost = host->ports[i]->scsi_host;
 
-<<<<<<< HEAD
 		scsi_remove_host(shost);
 		scsi_host_put(shost);
-=======
-		/* scsi_host_put() is in ata_devres_release() */
-		scsi_remove_host(shost);
->>>>>>> rebase
 	}
 	return rc;
 }

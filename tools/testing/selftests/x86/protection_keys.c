@@ -24,10 +24,6 @@
 #define _GNU_SOURCE
 #include <errno.h>
 #include <linux/futex.h>
-<<<<<<< HEAD
-=======
-#include <time.h>
->>>>>>> rebase
 #include <sys/time.h>
 #include <sys/syscall.h>
 #include <string.h>
@@ -619,10 +615,7 @@ int alloc_random_pkey(void)
 
 	/* allocate every possible key and make a note of which ones we got */
 	max_nr_pkey_allocs = NR_PKEYS;
-<<<<<<< HEAD
 	max_nr_pkey_allocs = 1;
-=======
->>>>>>> rebase
 	for (i = 0; i < max_nr_pkey_allocs; i++) {
 		int new_pkey = alloc_pkey();
 		if (new_pkey < 0)
@@ -1485,11 +1478,6 @@ int main(void)
 {
 	int nr_iterations = 22;
 
-<<<<<<< HEAD
-=======
-	srand((unsigned int)time(NULL));
-
->>>>>>> rebase
 	setup_handlers();
 
 	printf("has pku: %d\n", cpu_has_pku());

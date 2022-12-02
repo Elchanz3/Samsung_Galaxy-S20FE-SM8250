@@ -76,11 +76,8 @@ int pmc56_overflow(void)
 	ebb_global_disable();
 	ebb_freeze_pmcs();
 
-<<<<<<< HEAD
 	count_pmc(2, sample_period);
 
-=======
->>>>>>> rebase
 	dump_ebb_state();
 
 	printf("PMC5/6 overflow %d\n", pmc56_overflowed);

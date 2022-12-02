@@ -19,10 +19,7 @@
 #include <linux/workqueue.h>
 #include <linux/export.h>
 #include <linux/debugfs.h>
-<<<<<<< HEAD
 #include <linux/dma-mapping.h>
-=======
->>>>>>> rebase
 #include <sound/core.h>
 #include <sound/pcm.h>
 #include <sound/pcm_params.h>
@@ -33,7 +30,6 @@
 #define DPCM_MAX_BE_USERS	8
 
 /*
-<<<<<<< HEAD
  * ASoC no host IO hardware.
  * TODO: fine tune these values for all host less transfers.
  */
@@ -58,8 +54,6 @@ static const struct snd_pcm_hardware no_host_hardware = {
 };
 
 /*
-=======
->>>>>>> rebase
  * snd_soc_dai_stream_valid() - check if a DAI supports the given stream
  *
  * Returns true if the DAI supports the indicated stream type.
@@ -185,11 +179,8 @@ int snd_soc_set_runtime_hwparams(struct snd_pcm_substream *substream,
 	const struct snd_pcm_hardware *hw)
 {
 	struct snd_pcm_runtime *runtime = substream->runtime;
-<<<<<<< HEAD
 	if (!runtime)
 		return 0;
-=======
->>>>>>> rebase
 	runtime->hw.info = hw->info;
 	runtime->hw.formats = hw->formats;
 	runtime->hw.period_bytes_min = hw->period_bytes_min;
@@ -529,12 +520,9 @@ static int soc_pcm_open(struct snd_pcm_substream *substream)
 
 	mutex_lock_nested(&rtd->pcm_mutex, rtd->pcm_subclass);
 
-<<<<<<< HEAD
 	if (rtd->dai_link->no_host_mode == SND_SOC_DAI_LINK_NO_HOST)
 		snd_soc_set_runtime_hwparams(substream, &no_host_hardware);
 
-=======
->>>>>>> rebase
 	/* startup the audio subsystem */
 	if (cpu_dai->driver->ops->startup) {
 		ret = cpu_dai->driver->ops->startup(substream, cpu_dai);
@@ -751,7 +739,6 @@ static int soc_pcm_close(struct snd_pcm_substream *substream)
 
 	snd_soc_dai_digital_mute(cpu_dai, 1, substream->stream);
 
-<<<<<<< HEAD
 	if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK) {
 		if (snd_soc_runtime_ignore_pmdown_time(rtd)) {
 			/* powered down playback stream now */
@@ -766,8 +753,6 @@ static int soc_pcm_close(struct snd_pcm_substream *substream)
 					   msecs_to_jiffies(rtd->pmdown_time));
 		}
 	}
-=======
->>>>>>> rebase
 	if (cpu_dai->driver->ops->shutdown)
 		cpu_dai->driver->ops->shutdown(substream, cpu_dai);
 
@@ -782,24 +767,7 @@ static int soc_pcm_close(struct snd_pcm_substream *substream)
 
 	soc_pcm_components_close(substream, NULL);
 
-<<<<<<< HEAD
 	if (substream->stream != SNDRV_PCM_STREAM_PLAYBACK) {
-=======
-	if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK) {
-		if (snd_soc_runtime_ignore_pmdown_time(rtd)) {
-			/* powered down playback stream now */
-			snd_soc_dapm_stream_event(rtd,
-						  SNDRV_PCM_STREAM_PLAYBACK,
-						  SND_SOC_DAPM_STREAM_STOP);
-		} else {
-			/* start delayed pop wq here for playback streams */
-			rtd->pop_wait = 1;
-			queue_delayed_work(system_power_efficient_wq,
-					   &rtd->delayed_work,
-					   msecs_to_jiffies(rtd->pmdown_time));
-		}
-	} else {
->>>>>>> rebase
 		/* capture streams can be powered down now */
 		snd_soc_dapm_stream_event(rtd, SNDRV_PCM_STREAM_CAPTURE,
 					  SND_SOC_DAPM_STREAM_STOP);
@@ -840,14 +808,11 @@ static int soc_pcm_prepare(struct snd_pcm_substream *substream)
 
 	mutex_lock_nested(&rtd->pcm_mutex, rtd->pcm_subclass);
 
-<<<<<<< HEAD
 	if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK)
 		snd_soc_dapm_stream_event(rtd,
 		SNDRV_PCM_STREAM_PLAYBACK,
 		SND_SOC_DAPM_STREAM_START);
 
-=======
->>>>>>> rebase
 	if (rtd->dai_link->ops->prepare) {
 		ret = rtd->dai_link->ops->prepare(substream);
 		if (ret < 0) {
@@ -902,7 +867,6 @@ static int soc_pcm_prepare(struct snd_pcm_substream *substream)
 		cancel_delayed_work(&rtd->delayed_work);
 	}
 
-<<<<<<< HEAD
 	if (substream->stream == SNDRV_PCM_STREAM_CAPTURE) {
 		for (i = 0; i < rtd->num_codecs; i++) {
 			codec_dai = rtd->codec_dais[i];
@@ -912,10 +876,6 @@ static int soc_pcm_prepare(struct snd_pcm_substream *substream)
 				SND_SOC_DAPM_STREAM_START);
 		}
 	}
-=======
-	snd_soc_dapm_stream_event(rtd, substream->stream,
-			SND_SOC_DAPM_STREAM_START);
->>>>>>> rebase
 
 	for (i = 0; i < rtd->num_codecs; i++)
 		snd_soc_dai_digital_mute(rtd->codec_dais[i], 0,
@@ -923,7 +883,6 @@ static int soc_pcm_prepare(struct snd_pcm_substream *substream)
 	snd_soc_dai_digital_mute(cpu_dai, 0, substream->stream);
 
 out:
-<<<<<<< HEAD
 	if (ret < 0 && substream->stream == SNDRV_PCM_STREAM_PLAYBACK) {
 		pr_err("%s: Issue stop stream for codec_dai due to op failure %d = ret\n",
 		__func__, ret);
@@ -931,8 +890,6 @@ out:
 		SNDRV_PCM_STREAM_PLAYBACK,
 		SND_SOC_DAPM_STREAM_STOP);
 	}
-=======
->>>>>>> rebase
 	mutex_unlock(&rtd->pcm_mutex);
 	return ret;
 }
@@ -1016,7 +973,6 @@ static int soc_pcm_hw_params(struct snd_pcm_substream *substream,
 	int i, ret = 0;
 
 	mutex_lock_nested(&rtd->pcm_mutex, rtd->pcm_subclass);
-<<<<<<< HEAD
 
 	/* perform any hw_params fixups */
 	if ((rtd->dai_link->no_host_mode == SND_SOC_DAI_LINK_NO_HOST) &&
@@ -1028,8 +984,6 @@ static int soc_pcm_hw_params(struct snd_pcm_substream *substream,
 				rtd->dai_link->name);
 	}
 
-=======
->>>>>>> rebase
 	if (rtd->dai_link->ops->hw_params) {
 		ret = rtd->dai_link->ops->hw_params(substream, params);
 		if (ret < 0) {
@@ -1114,7 +1068,6 @@ static int soc_pcm_hw_params(struct snd_pcm_substream *substream,
 	ret = soc_pcm_params_symmetry(substream, params);
         if (ret)
 		goto component_err;
-<<<<<<< HEAD
 
 	/* malloc a page for hostless IO.
 	 * FIXME: rework with alsa-lib changes so that this malloc is
@@ -1133,8 +1086,6 @@ static int soc_pcm_hw_params(struct snd_pcm_substream *substream,
 		if (ret < 0)
 			goto component_err;
 	}
-=======
->>>>>>> rebase
 out:
 	mutex_unlock(&rtd->pcm_mutex);
 	return ret;
@@ -1217,11 +1168,8 @@ static int soc_pcm_hw_free(struct snd_pcm_substream *substream)
 	if (cpu_dai->driver->ops->hw_free)
 		cpu_dai->driver->ops->hw_free(substream, cpu_dai);
 
-<<<<<<< HEAD
 	if (rtd->dai_link->no_host_mode == SND_SOC_DAI_LINK_NO_HOST)
 		snd_pcm_lib_free_pages(substream);
-=======
->>>>>>> rebase
 	mutex_unlock(&rtd->pcm_mutex);
 	return 0;
 }
@@ -1327,12 +1275,9 @@ static snd_pcm_uframes_t soc_pcm_pointer(struct snd_pcm_substream *substream)
 
 		/* FIXME: use 1st pointer */
 		offset = component->driver->ops->pointer(substream);
-<<<<<<< HEAD
 		if (component->driver->delay_blk)
 			return offset;
 
-=======
->>>>>>> rebase
 		break;
 	}
 	/* base delay if assigned in pointer callback */
@@ -1355,7 +1300,6 @@ static snd_pcm_uframes_t soc_pcm_pointer(struct snd_pcm_substream *substream)
 	return offset;
 }
 
-<<<<<<< HEAD
 static int soc_pcm_delay_blk(struct snd_pcm_substream *substream)
 {
 	struct snd_soc_pcm_runtime *rtd = substream->private_data;
@@ -1376,17 +1320,11 @@ static int soc_pcm_delay_blk(struct snd_pcm_substream *substream)
 	return 0;
 }
 
-=======
->>>>>>> rebase
 /* connect a FE and BE */
 static int dpcm_be_connect(struct snd_soc_pcm_runtime *fe,
 		struct snd_soc_pcm_runtime *be, int stream)
 {
 	struct snd_soc_dpcm *dpcm;
-<<<<<<< HEAD
-=======
-	unsigned long flags;
->>>>>>> rebase
 
 	/* only add new dpcms */
 	list_for_each_entry(dpcm, &fe->dpcm[stream].be_clients, list_be) {
@@ -1402,15 +1340,8 @@ static int dpcm_be_connect(struct snd_soc_pcm_runtime *fe,
 	dpcm->fe = fe;
 	be->dpcm[stream].runtime = fe->dpcm[stream].runtime;
 	dpcm->state = SND_SOC_DPCM_LINK_STATE_NEW;
-<<<<<<< HEAD
 	list_add(&dpcm->list_be, &fe->dpcm[stream].be_clients);
 	list_add(&dpcm->list_fe, &be->dpcm[stream].fe_clients);
-=======
-	spin_lock_irqsave(&fe->card->dpcm_lock, flags);
-	list_add(&dpcm->list_be, &fe->dpcm[stream].be_clients);
-	list_add(&dpcm->list_fe, &be->dpcm[stream].fe_clients);
-	spin_unlock_irqrestore(&fe->card->dpcm_lock, flags);
->>>>>>> rebase
 
 	dev_dbg(fe->dev, "connected new DPCM %s path %s %s %s\n",
 			stream ? "capture" : "playback",  fe->dai_link->name,
@@ -1456,10 +1387,6 @@ static void dpcm_be_reparent(struct snd_soc_pcm_runtime *fe,
 void dpcm_be_disconnect(struct snd_soc_pcm_runtime *fe, int stream)
 {
 	struct snd_soc_dpcm *dpcm, *d;
-<<<<<<< HEAD
-=======
-	unsigned long flags;
->>>>>>> rebase
 
 	list_for_each_entry_safe(dpcm, d, &fe->dpcm[stream].be_clients, list_be) {
 		dev_dbg(fe->dev, "ASoC: BE %s disconnect check for %s\n",
@@ -1479,15 +1406,8 @@ void dpcm_be_disconnect(struct snd_soc_pcm_runtime *fe, int stream)
 #ifdef CONFIG_DEBUG_FS
 		debugfs_remove(dpcm->debugfs_state);
 #endif
-<<<<<<< HEAD
 		list_del(&dpcm->list_be);
 		list_del(&dpcm->list_fe);
-=======
-		spin_lock_irqsave(&fe->card->dpcm_lock, flags);
-		list_del(&dpcm->list_be);
-		list_del(&dpcm->list_fe);
-		spin_unlock_irqrestore(&fe->card->dpcm_lock, flags);
->>>>>>> rebase
 		kfree(dpcm);
 	}
 }
@@ -1511,16 +1431,12 @@ static struct snd_soc_pcm_runtime *dpcm_get_be(struct snd_soc_card *card,
 				be->cpu_dai->playback_widget ?
 				be->cpu_dai->playback_widget->name : "(not set)");
 
-<<<<<<< HEAD
 			if ((be->cpu_dai->playback_widget &&
 				be->cpu_dai->playback_widget == widget &&
 				(be->dai_link->stream_name &&
 				!strcmp(be->dai_link->stream_name,
 				   be->cpu_dai->playback_widget->sname))) ||
 				be->codec_dai->playback_widget == widget)
-=======
-			if (be->cpu_dai->playback_widget == widget)
->>>>>>> rebase
 				return be;
 
 			for (i = 0; i < be->num_codecs; i++) {
@@ -1540,16 +1456,12 @@ static struct snd_soc_pcm_runtime *dpcm_get_be(struct snd_soc_card *card,
 				be->cpu_dai->capture_widget ?
 				be->cpu_dai->capture_widget->name : "(not set)");
 
-<<<<<<< HEAD
 			if ((be->cpu_dai->capture_widget &&
 				be->cpu_dai->capture_widget == widget &&
 				(be->dai_link->stream_name &&
 				!strcmp(be->dai_link->stream_name,
 				   be->cpu_dai->capture_widget->sname))) ||
 				be->codec_dai->capture_widget == widget)
-=======
-			if (be->cpu_dai->capture_widget == widget)
->>>>>>> rebase
 				return be;
 
 			for (i = 0; i < be->num_codecs; i++) {
@@ -1759,20 +1671,10 @@ int dpcm_process_paths(struct snd_soc_pcm_runtime *fe,
 void dpcm_clear_pending_state(struct snd_soc_pcm_runtime *fe, int stream)
 {
 	struct snd_soc_dpcm *dpcm;
-<<<<<<< HEAD
 
 	list_for_each_entry(dpcm, &fe->dpcm[stream].be_clients, list_be)
 		dpcm->be->dpcm[stream].runtime_update =
 						SND_SOC_DPCM_UPDATE_NO;
-=======
-	unsigned long flags;
-
-	spin_lock_irqsave(&fe->card->dpcm_lock, flags);
-	list_for_each_entry(dpcm, &fe->dpcm[stream].be_clients, list_be)
-		dpcm->be->dpcm[stream].runtime_update =
-						SND_SOC_DPCM_UPDATE_NO;
-	spin_unlock_irqrestore(&fe->card->dpcm_lock, flags);
->>>>>>> rebase
 }
 
 static void dpcm_be_dai_startup_unwind(struct snd_soc_pcm_runtime *fe,
@@ -2243,23 +2145,14 @@ static int dpcm_fe_dai_shutdown(struct snd_pcm_substream *substream)
 
 	dpcm_set_fe_update_state(fe, stream, SND_SOC_DPCM_UPDATE_FE);
 
-<<<<<<< HEAD
-=======
-	/* shutdown the BEs */
-	dpcm_be_dai_shutdown(fe, substream->stream);
-
->>>>>>> rebase
 	dev_dbg(fe->dev, "ASoC: close FE %s\n", fe->dai_link->name);
 
 	/* now shutdown the frontend */
 	soc_pcm_close(substream);
 
-<<<<<<< HEAD
 	/* shutdown the BEs */
 	dpcm_be_dai_shutdown(fe, substream->stream);
 
-=======
->>>>>>> rebase
 	/* run the stream event for each BE */
 	dpcm_dapm_stream_event(fe, stream, SND_SOC_DAPM_STREAM_STOP);
 
@@ -2338,7 +2231,6 @@ static int dpcm_fe_dai_hw_free(struct snd_pcm_substream *substream)
 	return 0;
 }
 
-<<<<<<< HEAD
 int dpcm_fe_dai_hw_params_be(struct snd_soc_pcm_runtime *fe,
 	struct snd_soc_pcm_runtime *be,
 	struct snd_pcm_hw_params *params, int stream)
@@ -2414,8 +2306,6 @@ unwind:
 	return ret;
 }
 
-=======
->>>>>>> rebase
 int dpcm_be_dai_hw_params(struct snd_soc_pcm_runtime *fe, int stream)
 {
 	struct snd_soc_dpcm *dpcm;
@@ -2565,12 +2455,7 @@ int dpcm_be_dai_trigger(struct snd_soc_pcm_runtime *fe, int stream,
 		switch (cmd) {
 		case SNDRV_PCM_TRIGGER_START:
 			if ((be->dpcm[stream].state != SND_SOC_DPCM_STATE_PREPARE) &&
-<<<<<<< HEAD
 			    (be->dpcm[stream].state != SND_SOC_DPCM_STATE_STOP))
-=======
-			    (be->dpcm[stream].state != SND_SOC_DPCM_STATE_STOP) &&
-			    (be->dpcm[stream].state != SND_SOC_DPCM_STATE_PAUSED))
->>>>>>> rebase
 				continue;
 
 			ret = dpcm_do_trigger(dpcm, be_substream, cmd);
@@ -2600,12 +2485,7 @@ int dpcm_be_dai_trigger(struct snd_soc_pcm_runtime *fe, int stream,
 			be->dpcm[stream].state = SND_SOC_DPCM_STATE_START;
 			break;
 		case SNDRV_PCM_TRIGGER_STOP:
-<<<<<<< HEAD
 			if (be->dpcm[stream].state != SND_SOC_DPCM_STATE_START)
-=======
-			if ((be->dpcm[stream].state != SND_SOC_DPCM_STATE_START) &&
-			    (be->dpcm[stream].state != SND_SOC_DPCM_STATE_PAUSED))
->>>>>>> rebase
 				continue;
 
 			if (!snd_soc_dpcm_can_be_free_stop(fe, be, stream))
@@ -2697,10 +2577,6 @@ static int dpcm_fe_dai_do_trigger(struct snd_pcm_substream *substream, int cmd)
 		case SNDRV_PCM_TRIGGER_START:
 		case SNDRV_PCM_TRIGGER_RESUME:
 		case SNDRV_PCM_TRIGGER_PAUSE_RELEASE:
-<<<<<<< HEAD
-=======
-		case SNDRV_PCM_TRIGGER_DRAIN:
->>>>>>> rebase
 			ret = dpcm_dai_trigger_fe_be(substream, cmd, true);
 			break;
 		case SNDRV_PCM_TRIGGER_STOP:
@@ -2718,10 +2594,6 @@ static int dpcm_fe_dai_do_trigger(struct snd_pcm_substream *substream, int cmd)
 		case SNDRV_PCM_TRIGGER_START:
 		case SNDRV_PCM_TRIGGER_RESUME:
 		case SNDRV_PCM_TRIGGER_PAUSE_RELEASE:
-<<<<<<< HEAD
-=======
-		case SNDRV_PCM_TRIGGER_DRAIN:
->>>>>>> rebase
 			ret = dpcm_dai_trigger_fe_be(substream, cmd, false);
 			break;
 		case SNDRV_PCM_TRIGGER_STOP:
@@ -2775,7 +2647,6 @@ out:
 	return ret;
 }
 
-<<<<<<< HEAD
 int dpcm_fe_dai_prepare_be(struct snd_soc_pcm_runtime *fe,
 		struct snd_soc_pcm_runtime *be, int stream)
 {
@@ -2805,8 +2676,6 @@ int dpcm_fe_dai_prepare_be(struct snd_soc_pcm_runtime *fe,
 	return ret;
 }
 
-=======
->>>>>>> rebase
 static int dpcm_fe_dai_trigger(struct snd_pcm_substream *substream, int cmd)
 {
 	struct snd_soc_pcm_runtime *fe = substream->private_data;
@@ -2841,12 +2710,7 @@ int dpcm_be_dai_prepare(struct snd_soc_pcm_runtime *fe, int stream)
 
 		if ((be->dpcm[stream].state != SND_SOC_DPCM_STATE_HW_PARAMS) &&
 		    (be->dpcm[stream].state != SND_SOC_DPCM_STATE_STOP) &&
-<<<<<<< HEAD
 		    (be->dpcm[stream].state != SND_SOC_DPCM_STATE_SUSPEND))
-=======
-		    (be->dpcm[stream].state != SND_SOC_DPCM_STATE_SUSPEND) &&
-		    (be->dpcm[stream].state != SND_SOC_DPCM_STATE_PAUSED))
->>>>>>> rebase
 			continue;
 
 		dev_dbg(be->dev, "ASoC: prepare BE %s\n",
@@ -2864,7 +2728,6 @@ int dpcm_be_dai_prepare(struct snd_soc_pcm_runtime *fe, int stream)
 	return ret;
 }
 
-<<<<<<< HEAD
 static void dpcm_be_async_prepare(void *data, async_cookie_t cookie)
 {
 	struct snd_soc_dpcm *dpcm = data;
@@ -2953,15 +2816,6 @@ static int dpcm_fe_dai_prepare(struct snd_pcm_substream *substream)
 
 	fe->err_ops = 0;
 
-=======
-static int dpcm_fe_dai_prepare(struct snd_pcm_substream *substream)
-{
-	struct snd_soc_pcm_runtime *fe = substream->private_data;
-	int stream = substream->stream, ret = 0;
-
-	mutex_lock_nested(&fe->card->mutex, SND_SOC_CARD_CLASS_RUNTIME);
-
->>>>>>> rebase
 	dev_dbg(fe->dev, "ASoC: prepare FE %s\n", fe->dai_link->name);
 
 	dpcm_set_fe_update_state(fe, stream, SND_SOC_DPCM_UPDATE_FE);
@@ -2974,7 +2828,6 @@ static int dpcm_fe_dai_prepare(struct snd_pcm_substream *substream)
 		goto out;
 	}
 
-<<<<<<< HEAD
 	if (!(fe->dai_link->async_ops & ASYNC_DPCM_SND_SOC_PREPARE)) {
 		ret = dpcm_be_dai_prepare(fe, substream->stream);
 		if (ret < 0)
@@ -3016,18 +2869,6 @@ static int dpcm_fe_dai_prepare(struct snd_pcm_substream *substream)
 			ret = fe->err_ops;
 			goto out;
 		}
-=======
-	ret = dpcm_be_dai_prepare(fe, substream->stream);
-	if (ret < 0)
-		goto out;
-
-	/* call prepare on the frontend */
-	ret = soc_pcm_prepare(substream);
-	if (ret < 0) {
-		dev_err(fe->dev,"ASoC: prepare FE %s failed\n",
-			fe->dai_link->name);
-		goto out;
->>>>>>> rebase
 	}
 
 	/* run the stream event for each BE */
@@ -3041,7 +2882,6 @@ out:
 	return ret;
 }
 
-<<<<<<< HEAD
 static int soc_pcm_compat_ioctl(struct snd_pcm_substream *substream,
 		     unsigned int cmd, void *arg)
 {
@@ -3064,8 +2904,6 @@ static int soc_pcm_compat_ioctl(struct snd_pcm_substream *substream,
 	return snd_pcm_lib_ioctl(substream, cmd, arg);
 }
 
-=======
->>>>>>> rebase
 static int soc_pcm_ioctl(struct snd_pcm_substream *substream,
 		     unsigned int cmd, void *arg)
 {
@@ -3135,10 +2973,6 @@ static int dpcm_run_update_startup(struct snd_soc_pcm_runtime *fe, int stream)
 	struct snd_soc_dpcm *dpcm;
 	enum snd_soc_dpcm_trigger trigger = fe->dai_link->trigger[stream];
 	int ret;
-<<<<<<< HEAD
-=======
-	unsigned long flags;
->>>>>>> rebase
 
 	dev_dbg(fe->dev, "ASoC: runtime %s open on FE %s\n",
 			stream ? "capture" : "playback", fe->dai_link->name);
@@ -3208,19 +3042,11 @@ close:
 	dpcm_be_dai_shutdown(fe, stream);
 disconnect:
 	/* disconnect any non started BEs */
-<<<<<<< HEAD
-=======
-	spin_lock_irqsave(&fe->card->dpcm_lock, flags);
->>>>>>> rebase
 	list_for_each_entry(dpcm, &fe->dpcm[stream].be_clients, list_be) {
 		struct snd_soc_pcm_runtime *be = dpcm->be;
 		if (be->dpcm[stream].state != SND_SOC_DPCM_STATE_START)
 				dpcm->state = SND_SOC_DPCM_LINK_STATE_FREE;
 	}
-<<<<<<< HEAD
-=======
-	spin_unlock_irqrestore(&fe->card->dpcm_lock, flags);
->>>>>>> rebase
 
 	return ret;
 }
@@ -3603,10 +3429,7 @@ int soc_new_pcm(struct snd_soc_pcm_runtime *rtd, int num)
 	struct snd_soc_component *component;
 	struct snd_soc_rtdcom_list *rtdcom;
 	struct snd_pcm *pcm;
-<<<<<<< HEAD
 	struct snd_pcm_str *stream;
-=======
->>>>>>> rebase
 	char new_name[64];
 	int ret = 0, playback = 0, capture = 0;
 	int i;
@@ -3676,7 +3499,6 @@ int soc_new_pcm(struct snd_soc_pcm_runtime *rtd, int num)
 			pcm->streams[SNDRV_PCM_STREAM_PLAYBACK].substream->private_data = rtd;
 		if (capture)
 			pcm->streams[SNDRV_PCM_STREAM_CAPTURE].substream->private_data = rtd;
-<<<<<<< HEAD
 		for_each_rtdcom(rtd, rtdcom) {
 			component = rtdcom->component;
 
@@ -3710,11 +3532,6 @@ int soc_new_pcm(struct snd_soc_pcm_runtime *rtd, int num)
 		}
 	}
 
-=======
-		goto out;
-	}
-
->>>>>>> rebase
 	/* ASoC PCM operations */
 	if (rtd->dai_link->dynamic) {
 		rtd->ops.open		= dpcm_fe_dai_open;
@@ -3724,13 +3541,9 @@ int soc_new_pcm(struct snd_soc_pcm_runtime *rtd, int num)
 		rtd->ops.hw_free	= dpcm_fe_dai_hw_free;
 		rtd->ops.close		= dpcm_fe_dai_close;
 		rtd->ops.pointer	= soc_pcm_pointer;
-<<<<<<< HEAD
 		rtd->ops.delay_blk	= soc_pcm_delay_blk;
 		rtd->ops.ioctl		= soc_pcm_ioctl;
 		rtd->ops.compat_ioctl   = soc_pcm_compat_ioctl;
-=======
-		rtd->ops.ioctl		= soc_pcm_ioctl;
->>>>>>> rebase
 	} else {
 		rtd->ops.open		= soc_pcm_open;
 		rtd->ops.hw_params	= soc_pcm_hw_params;
@@ -3739,13 +3552,9 @@ int soc_new_pcm(struct snd_soc_pcm_runtime *rtd, int num)
 		rtd->ops.hw_free	= soc_pcm_hw_free;
 		rtd->ops.close		= soc_pcm_close;
 		rtd->ops.pointer	= soc_pcm_pointer;
-<<<<<<< HEAD
 		rtd->ops.delay_blk	= soc_pcm_delay_blk;
 		rtd->ops.ioctl		= soc_pcm_ioctl;
 		rtd->ops.compat_ioctl   = soc_pcm_compat_ioctl;
-=======
-		rtd->ops.ioctl		= soc_pcm_ioctl;
->>>>>>> rebase
 	}
 
 	for_each_rtdcom(rtd, rtdcom) {
@@ -3791,11 +3600,7 @@ int soc_new_pcm(struct snd_soc_pcm_runtime *rtd, int num)
 
 	pcm->private_free = soc_pcm_private_free;
 out:
-<<<<<<< HEAD
 	dev_dbg(rtd->card->dev, "%s <-> %s mapping ok\n",
-=======
-	dev_info(rtd->card->dev, "%s <-> %s mapping ok\n",
->>>>>>> rebase
 		 (rtd->num_codecs > 1) ? "multicodec" : rtd->codec_dai->name,
 		 cpu_dai->name);
 	return ret;
@@ -3855,14 +3660,7 @@ int snd_soc_dpcm_can_be_free_stop(struct snd_soc_pcm_runtime *fe,
 {
 	struct snd_soc_dpcm *dpcm;
 	int state;
-<<<<<<< HEAD
 
-=======
-	int ret = 1;
-	unsigned long flags;
-
-	spin_lock_irqsave(&fe->card->dpcm_lock, flags);
->>>>>>> rebase
 	list_for_each_entry(dpcm, &be->dpcm[stream].fe_clients, list_fe) {
 
 		if (dpcm->fe == fe)
@@ -3871,24 +3669,12 @@ int snd_soc_dpcm_can_be_free_stop(struct snd_soc_pcm_runtime *fe,
 		state = dpcm->fe->dpcm[stream].state;
 		if (state == SND_SOC_DPCM_STATE_START ||
 			state == SND_SOC_DPCM_STATE_PAUSED ||
-<<<<<<< HEAD
 			state == SND_SOC_DPCM_STATE_SUSPEND)
 			return 0;
 	}
 
 	/* it's safe to free/stop this BE DAI */
 	return 1;
-=======
-			state == SND_SOC_DPCM_STATE_SUSPEND) {
-			ret = 0;
-			break;
-		}
-	}
-	spin_unlock_irqrestore(&fe->card->dpcm_lock, flags);
-
-	/* it's safe to free/stop this BE DAI */
-	return ret;
->>>>>>> rebase
 }
 EXPORT_SYMBOL_GPL(snd_soc_dpcm_can_be_free_stop);
 
@@ -3901,14 +3687,7 @@ int snd_soc_dpcm_can_be_params(struct snd_soc_pcm_runtime *fe,
 {
 	struct snd_soc_dpcm *dpcm;
 	int state;
-<<<<<<< HEAD
 
-=======
-	int ret = 1;
-	unsigned long flags;
-
-	spin_lock_irqsave(&fe->card->dpcm_lock, flags);
->>>>>>> rebase
 	list_for_each_entry(dpcm, &be->dpcm[stream].fe_clients, list_fe) {
 
 		if (dpcm->fe == fe)
@@ -3918,24 +3697,12 @@ int snd_soc_dpcm_can_be_params(struct snd_soc_pcm_runtime *fe,
 		if (state == SND_SOC_DPCM_STATE_START ||
 			state == SND_SOC_DPCM_STATE_PAUSED ||
 			state == SND_SOC_DPCM_STATE_SUSPEND ||
-<<<<<<< HEAD
 			state == SND_SOC_DPCM_STATE_PREPARE)
 			return 0;
 	}
 
 	/* it's safe to change hw_params */
 	return 1;
-=======
-			state == SND_SOC_DPCM_STATE_PREPARE) {
-			ret = 0;
-			break;
-		}
-	}
-	spin_unlock_irqrestore(&fe->card->dpcm_lock, flags);
-
-	/* it's safe to change hw_params */
-	return ret;
->>>>>>> rebase
 }
 EXPORT_SYMBOL_GPL(snd_soc_dpcm_can_be_params);
 
@@ -3974,10 +3741,6 @@ static ssize_t dpcm_show_state(struct snd_soc_pcm_runtime *fe,
 	struct snd_pcm_hw_params *params = &fe->dpcm[stream].hw_params;
 	struct snd_soc_dpcm *dpcm;
 	ssize_t offset = 0;
-<<<<<<< HEAD
-=======
-	unsigned long flags;
->>>>>>> rebase
 
 	/* FE state */
 	offset += scnprintf(buf + offset, size - offset,
@@ -4005,10 +3768,6 @@ static ssize_t dpcm_show_state(struct snd_soc_pcm_runtime *fe,
 		goto out;
 	}
 
-<<<<<<< HEAD
-=======
-	spin_lock_irqsave(&fe->card->dpcm_lock, flags);
->>>>>>> rebase
 	list_for_each_entry(dpcm, &fe->dpcm[stream].be_clients, list_be) {
 		struct snd_soc_pcm_runtime *be = dpcm->be;
 		params = &dpcm->hw_params;
@@ -4029,11 +3788,7 @@ static ssize_t dpcm_show_state(struct snd_soc_pcm_runtime *fe,
 				params_channels(params),
 				params_rate(params));
 	}
-<<<<<<< HEAD
 
-=======
-	spin_unlock_irqrestore(&fe->card->dpcm_lock, flags);
->>>>>>> rebase
 out:
 	return offset;
 }

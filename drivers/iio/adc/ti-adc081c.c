@@ -36,15 +36,6 @@ struct adc081c {
 
 	/* 8, 10 or 12 */
 	int bits;
-<<<<<<< HEAD
-=======
-
-	/* Ensure natural alignment of buffer elements */
-	struct {
-		u16 channel;
-		s64 ts __aligned(8);
-	} scan;
->>>>>>> rebase
 };
 
 #define REG_CONV_RES 0x00
@@ -140,22 +131,14 @@ static irqreturn_t adc081c_trigger_handler(int irq, void *p)
 	struct iio_poll_func *pf = p;
 	struct iio_dev *indio_dev = pf->indio_dev;
 	struct adc081c *data = iio_priv(indio_dev);
-<<<<<<< HEAD
 	u16 buf[8]; /* 2 bytes data + 6 bytes padding + 8 bytes timestamp */
-=======
->>>>>>> rebase
 	int ret;
 
 	ret = i2c_smbus_read_word_swapped(data->i2c, REG_CONV_RES);
 	if (ret < 0)
 		goto out;
-<<<<<<< HEAD
 	buf[0] = ret;
 	iio_push_to_buffers_with_timestamp(indio_dev, buf,
-=======
-	data->scan.channel = ret;
-	iio_push_to_buffers_with_timestamp(indio_dev, &data->scan,
->>>>>>> rebase
 					   iio_get_time_ns(indio_dev));
 out:
 	iio_trigger_notify_done(indio_dev->trig);

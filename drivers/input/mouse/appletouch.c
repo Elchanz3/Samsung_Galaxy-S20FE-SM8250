@@ -930,11 +930,6 @@ static int atp_probe(struct usb_interface *iface,
 	set_bit(BTN_TOOL_TRIPLETAP, input_dev->keybit);
 	set_bit(BTN_LEFT, input_dev->keybit);
 
-<<<<<<< HEAD
-=======
-	INIT_WORK(&dev->work, atp_reinit);
-
->>>>>>> rebase
 	error = input_register_device(dev->input);
 	if (error)
 		goto err_free_buffer;
@@ -942,11 +937,8 @@ static int atp_probe(struct usb_interface *iface,
 	/* save our data pointer in this interface device */
 	usb_set_intfdata(iface, dev);
 
-<<<<<<< HEAD
 	INIT_WORK(&dev->work, atp_reinit);
 
-=======
->>>>>>> rebase
 	return 0;
 
  err_free_buffer:

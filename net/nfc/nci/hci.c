@@ -165,11 +165,7 @@ static int nci_hci_send_data(struct nci_dev *ndev, u8 pipe,
 
 	i = 0;
 	skb = nci_skb_alloc(ndev, conn_info->max_pkt_payload_len +
-<<<<<<< HEAD
 			    NCI_DATA_HDR_SIZE, GFP_KERNEL);
-=======
-			    NCI_DATA_HDR_SIZE, GFP_ATOMIC);
->>>>>>> rebase
 	if (!skb)
 		return -ENOMEM;
 
@@ -202,11 +198,7 @@ static int nci_hci_send_data(struct nci_dev *ndev, u8 pipe,
 		if (i < data_len) {
 			skb = nci_skb_alloc(ndev,
 					    conn_info->max_pkt_payload_len +
-<<<<<<< HEAD
 					    NCI_DATA_HDR_SIZE, GFP_KERNEL);
-=======
-					    NCI_DATA_HDR_SIZE, GFP_ATOMIC);
->>>>>>> rebase
 			if (!skb)
 				return -ENOMEM;
 
@@ -815,11 +807,3 @@ struct nci_hci_dev *nci_hci_allocate(struct nci_dev *ndev)
 
 	return hdev;
 }
-<<<<<<< HEAD
-=======
-
-void nci_hci_deallocate(struct nci_dev *ndev)
-{
-	kfree(ndev->hci_dev);
-}
->>>>>>> rebase

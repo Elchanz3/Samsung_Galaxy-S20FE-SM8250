@@ -910,14 +910,7 @@ NOKPROBE_SYMBOL(emulate_dcbz);
 
 #define __put_user_asmx(x, addr, err, op, cr)		\
 	__asm__ __volatile__(				\
-<<<<<<< HEAD
 		"1:	" op " %2,0,%3\n"		\
-=======
-		".machine push\n"			\
-		".machine power8\n"			\
-		"1:	" op " %2,0,%3\n"		\
-		".machine pop\n"			\
->>>>>>> rebase
 		"	mfcr	%1\n"			\
 		"2:\n"					\
 		".section .fixup,\"ax\"\n"		\
@@ -930,14 +923,7 @@ NOKPROBE_SYMBOL(emulate_dcbz);
 
 #define __get_user_asmx(x, addr, err, op)		\
 	__asm__ __volatile__(				\
-<<<<<<< HEAD
 		"1:	"op" %1,0,%2\n"			\
-=======
-		".machine push\n"			\
-		".machine power8\n"			\
-		"1:	"op" %1,0,%2\n"			\
-		".machine pop\n"			\
->>>>>>> rebase
 		"2:\n"					\
 		".section .fixup,\"ax\"\n"		\
 		"3:	li	%0,%3\n"		\
@@ -2695,20 +2681,12 @@ void emulate_update_regs(struct pt_regs *regs, struct instruction_op *op)
 		case BARRIER_EIEIO:
 			eieio();
 			break;
-<<<<<<< HEAD
-=======
-#ifdef CONFIG_PPC64
->>>>>>> rebase
 		case BARRIER_LWSYNC:
 			asm volatile("lwsync" : : : "memory");
 			break;
 		case BARRIER_PTESYNC:
 			asm volatile("ptesync" : : : "memory");
 			break;
-<<<<<<< HEAD
-=======
-#endif
->>>>>>> rebase
 		}
 		break;
 
@@ -2826,11 +2804,7 @@ int emulate_loadstore(struct pt_regs *regs, struct instruction_op *op)
 			__put_user_asmx(op->val, ea, err, "stbcx.", cr);
 			break;
 		case 2:
-<<<<<<< HEAD
 			__put_user_asmx(op->val, ea, err, "stbcx.", cr);
-=======
-			__put_user_asmx(op->val, ea, err, "sthcx.", cr);
->>>>>>> rebase
 			break;
 #endif
 		case 4:

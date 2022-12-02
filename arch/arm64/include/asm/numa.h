@@ -25,12 +25,6 @@ const struct cpumask *cpumask_of_node(int node);
 /* Returns a pointer to the cpumask of CPUs on Node 'node'. */
 static inline const struct cpumask *cpumask_of_node(int node)
 {
-<<<<<<< HEAD
-=======
-	if (node == NUMA_NO_NODE)
-		return cpu_all_mask;
-
->>>>>>> rebase
 	return node_to_cpumask_map[node];
 }
 #endif

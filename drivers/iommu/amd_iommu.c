@@ -1348,42 +1348,24 @@ static void increase_address_space(struct protection_domain *domain,
 	unsigned long flags;
 	u64 *pte;
 
-<<<<<<< HEAD
-=======
-	pte = (void *)get_zeroed_page(gfp);
-	if (!pte)
-		return;
-
->>>>>>> rebase
 	spin_lock_irqsave(&domain->lock, flags);
 
 	if (WARN_ON_ONCE(domain->mode == PAGE_MODE_6_LEVEL))
 		/* address space already 64 bit large */
 		goto out;
 
-<<<<<<< HEAD
 	pte = (void *)get_zeroed_page(gfp);
 	if (!pte)
 		goto out;
 
-=======
->>>>>>> rebase
 	*pte             = PM_LEVEL_PDE(domain->mode,
 					iommu_virt_to_phys(domain->pt_root));
 	domain->pt_root  = pte;
 	domain->mode    += 1;
 	domain->updated  = true;
-<<<<<<< HEAD
 
 out:
 	spin_unlock_irqrestore(&domain->lock, flags);
-=======
-	pte              = NULL;
-
-out:
-	spin_unlock_irqrestore(&domain->lock, flags);
-	free_page((unsigned long)pte);
->>>>>>> rebase
 
 	return;
 }
@@ -4526,16 +4508,9 @@ int amd_iommu_create_irq_domain(struct amd_iommu *iommu)
 	if (!fn)
 		return -ENOMEM;
 	iommu->ir_domain = irq_domain_create_tree(fn, &amd_ir_domain_ops, iommu);
-<<<<<<< HEAD
 	irq_domain_free_fwnode(fn);
 	if (!iommu->ir_domain)
 		return -ENOMEM;
-=======
-	if (!iommu->ir_domain) {
-		irq_domain_free_fwnode(fn);
-		return -ENOMEM;
-	}
->>>>>>> rebase
 
 	iommu->ir_domain->parent = arch_get_ir_parent_domain();
 	iommu->msi_domain = arch_create_remap_msi_irq_domain(iommu->ir_domain,

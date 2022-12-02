@@ -101,12 +101,8 @@
 
 	vcc5v0_host: vcc5v0-host-regulator {
 		compatible = "regulator-fixed";
-<<<<<<< HEAD
 		gpio = <&gpio4 RK_PA3 GPIO_ACTIVE_HIGH>;
 		enable-active-low;
-=======
-		gpio = <&gpio4 RK_PA3 GPIO_ACTIVE_LOW>;
->>>>>>> rebase
 		pinctrl-names = "default";
 		pinctrl-0 = <&vcc5v0_host_en>;
 		regulator-name = "vcc5v0_host";
@@ -160,11 +156,7 @@
 	phy-mode = "rgmii";
 	pinctrl-names = "default";
 	pinctrl-0 = <&rgmii_pins>;
-<<<<<<< HEAD
 	snps,reset-gpio = <&gpio3 RK_PC0 GPIO_ACTIVE_HIGH>;
-=======
-	snps,reset-gpio = <&gpio3 RK_PC0 GPIO_ACTIVE_LOW>;
->>>>>>> rebase
 	snps,reset-active-low;
 	snps,reset-delays-us = <0 10000 50000>;
 	tx_delay = <0x10>;
@@ -476,15 +468,6 @@
 };
 
 &sdhci {
-<<<<<<< HEAD
-=======
-	/*
-	 * Signal integrity isn't great at 200MHz but 100MHz has proven stable
-	 * enough.
-	 */
-	max-frequency = <100000000>;
-
->>>>>>> rebase
 	bus-width = <8>;
 	mmc-hs400-1_8v;
 	mmc-hs400-enhanced-strobe;

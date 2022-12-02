@@ -2064,15 +2064,9 @@ static void happy_meal_rx(struct happy_meal *hp, struct net_device *dev)
 
 			skb_reserve(copy_skb, 2);
 			skb_put(copy_skb, len);
-<<<<<<< HEAD
 			dma_sync_single_for_cpu(hp->dma_dev, dma_addr, len, DMA_FROM_DEVICE);
 			skb_copy_from_linear_data(skb, copy_skb->data, len);
 			dma_sync_single_for_device(hp->dma_dev, dma_addr, len, DMA_FROM_DEVICE);
-=======
-			dma_sync_single_for_cpu(hp->dma_dev, dma_addr, len + 2, DMA_FROM_DEVICE);
-			skb_copy_from_linear_data(skb, copy_skb->data, len);
-			dma_sync_single_for_device(hp->dma_dev, dma_addr, len + 2, DMA_FROM_DEVICE);
->>>>>>> rebase
 			/* Reuse original ring buffer. */
 			hme_write_rxd(hp, this,
 				      (RXFLAG_OWN|((RX_BUF_ALLOC_SIZE-RX_OFFSET)<<16)),
@@ -3170,11 +3164,7 @@ static int happy_meal_pci_probe(struct pci_dev *pdev,
 	if (err) {
 		printk(KERN_ERR "happymeal(PCI): Cannot register net device, "
 		       "aborting.\n");
-<<<<<<< HEAD
 		goto err_out_iounmap;
-=======
-		goto err_out_free_coherent;
->>>>>>> rebase
 	}
 
 	pci_set_drvdata(pdev, hp);
@@ -3207,13 +3197,6 @@ static int happy_meal_pci_probe(struct pci_dev *pdev,
 
 	return 0;
 
-<<<<<<< HEAD
-=======
-err_out_free_coherent:
-	dma_free_coherent(hp->dma_dev, PAGE_SIZE,
-			  hp->happy_block, hp->hblock_dvma);
-
->>>>>>> rebase
 err_out_iounmap:
 	iounmap(hp->gregs);
 

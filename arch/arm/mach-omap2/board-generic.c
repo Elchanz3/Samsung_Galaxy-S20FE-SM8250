@@ -330,11 +330,7 @@ DT_MACHINE_START(DRA74X_DT, "Generic DRA74X (Flattened Device Tree)")
 	.init_late	= dra7xx_init_late,
 	.init_irq	= omap_gic_of_init,
 	.init_machine	= omap_generic_init,
-<<<<<<< HEAD
 	.init_time	= omap5_realtime_timer_init,
-=======
-	.init_time	= omap3_gptimer_timer_init,
->>>>>>> rebase
 	.dt_compat	= dra74x_boards_compat,
 	.restart	= omap44xx_restart,
 MACHINE_END
@@ -357,11 +353,7 @@ DT_MACHINE_START(DRA72X_DT, "Generic DRA72X (Flattened Device Tree)")
 	.init_late	= dra7xx_init_late,
 	.init_irq	= omap_gic_of_init,
 	.init_machine	= omap_generic_init,
-<<<<<<< HEAD
 	.init_time	= omap5_realtime_timer_init,
-=======
-	.init_time	= omap3_gptimer_timer_init,
->>>>>>> rebase
 	.dt_compat	= dra72x_boards_compat,
 	.restart	= omap44xx_restart,
 MACHINE_END

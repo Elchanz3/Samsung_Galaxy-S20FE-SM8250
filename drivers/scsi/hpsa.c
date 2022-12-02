@@ -507,15 +507,6 @@ static ssize_t host_store_rescan(struct device *dev,
 	return count;
 }
 
-<<<<<<< HEAD
-=======
-static void hpsa_turn_off_ioaccel_for_device(struct hpsa_scsi_dev_t *device)
-{
-	device->offload_enabled = 0;
-	device->offload_to_be_enabled = 0;
-}
-
->>>>>>> rebase
 static ssize_t host_show_firmware_revision(struct device *dev,
 	     struct device_attribute *attr, char *buf)
 {
@@ -1752,12 +1743,8 @@ static void hpsa_figure_phys_disk_ptrs(struct ctlr_info *h,
 				__func__,
 				h->scsi_host->host_no, logical_drive->bus,
 				logical_drive->target, logical_drive->lun);
-<<<<<<< HEAD
 			logical_drive->offload_enabled = 0;
 			logical_drive->offload_to_be_enabled = 0;
-=======
-			hpsa_turn_off_ioaccel_for_device(logical_drive);
->>>>>>> rebase
 			logical_drive->queue_depth = 8;
 		}
 	}
@@ -2509,12 +2496,8 @@ static void process_ioaccel2_completion(struct ctlr_info *h,
 			IOACCEL2_SERV_RESPONSE_FAILURE) {
 		if (c2->error_data.status ==
 			IOACCEL2_STATUS_SR_IOACCEL_DISABLED) {
-<<<<<<< HEAD
 			dev->offload_enabled = 0;
 			dev->offload_to_be_enabled = 0;
-=======
-			hpsa_turn_off_ioaccel_for_device(dev);
->>>>>>> rebase
 		}
 
 		return hpsa_retry_cmd(h, c);
@@ -3693,24 +3676,10 @@ static void hpsa_get_ioaccel_status(struct ctlr_info *h,
 	this_device->offload_config =
 		!!(ioaccel_status & OFFLOAD_CONFIGURED_BIT);
 	if (this_device->offload_config) {
-<<<<<<< HEAD
 		this_device->offload_to_be_enabled =
 			!!(ioaccel_status & OFFLOAD_ENABLED_BIT);
 		if (hpsa_get_raid_map(h, scsi3addr, this_device))
 			this_device->offload_to_be_enabled = 0;
-=======
-		bool offload_enabled =
-			!!(ioaccel_status & OFFLOAD_ENABLED_BIT);
-		/*
-		 * Check to see if offload can be enabled.
-		 */
-		if (offload_enabled) {
-			rc = hpsa_get_raid_map(h, scsi3addr, this_device);
-			if (rc) /* could not load raid_map */
-				goto out;
-			this_device->offload_to_be_enabled = 1;
-		}
->>>>>>> rebase
 	}
 
 out:
@@ -4029,12 +3998,8 @@ static int hpsa_update_device_info(struct ctlr_info *h,
 	} else {
 		this_device->raid_level = RAID_UNKNOWN;
 		this_device->offload_config = 0;
-<<<<<<< HEAD
 		this_device->offload_enabled = 0;
 		this_device->offload_to_be_enabled = 0;
-=======
-		hpsa_turn_off_ioaccel_for_device(this_device);
->>>>>>> rebase
 		this_device->hba_ioaccel_enabled = 0;
 		this_device->volume_offline = 0;
 		this_device->queue_depth = h->nr_cmds;
@@ -5248,17 +5213,8 @@ static int hpsa_scsi_ioaccel_raid_map(struct ctlr_info *h,
 		/* Handles load balance across RAID 1 members.
 		 * (2-drive R1 and R10 with even # of drives.)
 		 * Appropriate for SSDs, not optimal for HDDs
-<<<<<<< HEAD
 		 */
 		BUG_ON(le16_to_cpu(map->layout_map_count) != 2);
-=======
-		 * Ensure we have the correct raid_map.
-		 */
-		if (le16_to_cpu(map->layout_map_count) != 2) {
-			hpsa_turn_off_ioaccel_for_device(dev);
-			return IO_ACCEL_INELIGIBLE;
-		}
->>>>>>> rebase
 		if (dev->offload_to_mirror)
 			map_index += le16_to_cpu(map->data_disks_per_row);
 		dev->offload_to_mirror = !dev->offload_to_mirror;
@@ -5266,17 +5222,8 @@ static int hpsa_scsi_ioaccel_raid_map(struct ctlr_info *h,
 	case HPSA_RAID_ADM:
 		/* Handles N-way mirrors  (R1-ADM)
 		 * and R10 with # of drives divisible by 3.)
-<<<<<<< HEAD
 		 */
 		BUG_ON(le16_to_cpu(map->layout_map_count) != 3);
-=======
-		 * Ensure we have the correct raid_map.
-		 */
-		if (le16_to_cpu(map->layout_map_count) != 3) {
-			hpsa_turn_off_ioaccel_for_device(dev);
-			return IO_ACCEL_INELIGIBLE;
-		}
->>>>>>> rebase
 
 		offload_to_mirror = dev->offload_to_mirror;
 		raid_map_helper(map, offload_to_mirror,
@@ -5301,14 +5248,7 @@ static int hpsa_scsi_ioaccel_raid_map(struct ctlr_info *h,
 		r5or6_blocks_per_row =
 			le16_to_cpu(map->strip_size) *
 			le16_to_cpu(map->data_disks_per_row);
-<<<<<<< HEAD
 		BUG_ON(r5or6_blocks_per_row == 0);
-=======
-		if (r5or6_blocks_per_row == 0) {
-			hpsa_turn_off_ioaccel_for_device(dev);
-			return IO_ACCEL_INELIGIBLE;
-		}
->>>>>>> rebase
 		stripesize = r5or6_blocks_per_row *
 			le16_to_cpu(map->layout_map_count);
 #if BITS_PER_LONG == 32
@@ -8278,11 +8218,7 @@ static int detect_controller_lockup(struct ctlr_info *h)
  *
  * Called from monitor controller worker (hpsa_event_monitor_worker)
  *
-<<<<<<< HEAD
  * A Volume (or Volumes that comprise an Array set may be undergoing a
-=======
- * A Volume (or Volumes that comprise an Array set) may be undergoing a
->>>>>>> rebase
  * transformation, so we will be turning off ioaccel for all volumes that
  * make up the Array.
  */
@@ -8305,12 +8241,6 @@ static void hpsa_set_ioaccel_status(struct ctlr_info *h)
 	 * Run through current device list used during I/O requests.
 	 */
 	for (i = 0; i < h->ndevices; i++) {
-<<<<<<< HEAD
-=======
-		int offload_to_be_enabled = 0;
-		int offload_config = 0;
-
->>>>>>> rebase
 		device = h->dev[i];
 
 		if (!device)
@@ -8328,7 +8258,6 @@ static void hpsa_set_ioaccel_status(struct ctlr_info *h)
 			continue;
 
 		ioaccel_status = buf[IOACCEL_STATUS_BYTE];
-<<<<<<< HEAD
 		device->offload_config =
 				!!(ioaccel_status & OFFLOAD_CONFIGURED_BIT);
 		if (device->offload_config)
@@ -8336,36 +8265,10 @@ static void hpsa_set_ioaccel_status(struct ctlr_info *h)
 				!!(ioaccel_status & OFFLOAD_ENABLED_BIT);
 
 		/*
-=======
-
-		/*
-		 * Check if offload is still configured on
-		 */
-		offload_config =
-				!!(ioaccel_status & OFFLOAD_CONFIGURED_BIT);
-		/*
-		 * If offload is configured on, check to see if ioaccel
-		 * needs to be enabled.
-		 */
-		if (offload_config)
-			offload_to_be_enabled =
-				!!(ioaccel_status & OFFLOAD_ENABLED_BIT);
-
-		/*
-		 * If ioaccel is to be re-enabled, re-enable later during the
-		 * scan operation so the driver can get a fresh raidmap
-		 * before turning ioaccel back on.
-		 */
-		if (offload_to_be_enabled)
-			continue;
-
-		/*
->>>>>>> rebase
 		 * Immediately turn off ioaccel for any volume the
 		 * controller tells us to. Some of the reasons could be:
 		 *    transformation - change to the LVs of an Array.
 		 *    degraded volume - component failure
-<<<<<<< HEAD
 		 *
 		 * If ioaccel is to be re-enabled, re-enable later during the
 		 * scan operation so the driver can get a fresh raidmap
@@ -8374,10 +8277,6 @@ static void hpsa_set_ioaccel_status(struct ctlr_info *h)
 		 */
 		if (!device->offload_to_be_enabled)
 			device->offload_enabled = 0;
-=======
-		 */
-		hpsa_turn_off_ioaccel_for_device(device);
->>>>>>> rebase
 	}
 
 	kfree(buf);
@@ -8848,11 +8747,7 @@ reinit_after_soft_reset:
 	/* hook into SCSI subsystem */
 	rc = hpsa_scsi_add_host(h);
 	if (rc)
-<<<<<<< HEAD
 		goto clean7; /* perf, sg, cmd, irq, shost, pci, lu, aer/h */
-=======
-		goto clean8; /* lastlogicals, perf, sg, cmd, irq, shost, pci, lu, aer/h */
->>>>>>> rebase
 
 	/* Monitor the controller for firmware lockups */
 	h->heartbeat_sample_interval = HEARTBEAT_SAMPLE_INTERVAL;
@@ -8867,11 +8762,6 @@ reinit_after_soft_reset:
 				HPSA_EVENT_MONITOR_INTERVAL);
 	return 0;
 
-<<<<<<< HEAD
-=======
-clean8: /* lastlogicals, perf, sg, cmd, irq, shost, pci, lu, aer/h */
-	kfree(h->lastlogicals);
->>>>>>> rebase
 clean7: /* perf, sg, cmd, irq, shost, pci, lu, aer/h */
 	hpsa_free_performant_mode(h);
 	h->access.set_intr_mask(h, HPSA_INTR_OFF);

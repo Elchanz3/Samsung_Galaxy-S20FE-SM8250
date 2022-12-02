@@ -34,15 +34,8 @@ static int dsi_get_phy(struct msm_dsi *msm_dsi)
 	}
 
 	phy_pdev = of_find_device_by_node(phy_node);
-<<<<<<< HEAD
 	if (phy_pdev)
 		msm_dsi->phy = platform_get_drvdata(phy_pdev);
-=======
-	if (phy_pdev) {
-		msm_dsi->phy = platform_get_drvdata(phy_pdev);
-		msm_dsi->phy_dev = &phy_pdev->dev;
-	}
->>>>>>> rebase
 
 	of_node_put(phy_node);
 
@@ -51,11 +44,8 @@ static int dsi_get_phy(struct msm_dsi *msm_dsi)
 		return -EPROBE_DEFER;
 	}
 
-<<<<<<< HEAD
 	msm_dsi->phy_dev = get_device(&phy_pdev->dev);
 
-=======
->>>>>>> rebase
 	return 0;
 }
 
@@ -210,15 +200,6 @@ int msm_dsi_modeset_init(struct msm_dsi *msm_dsi, struct drm_device *dev,
 		return -EINVAL;
 
 	priv = dev->dev_private;
-<<<<<<< HEAD
-=======
-
-	if (priv->num_bridges == ARRAY_SIZE(priv->bridges)) {
-		DRM_DEV_ERROR(dev->dev, "too many bridges\n");
-		return -ENOSPC;
-	}
-
->>>>>>> rebase
 	msm_dsi->dev = dev;
 
 	ret = msm_dsi_host_modeset_init(msm_dsi->host, dev);
@@ -227,15 +208,8 @@ int msm_dsi_modeset_init(struct msm_dsi *msm_dsi, struct drm_device *dev,
 		goto fail;
 	}
 
-<<<<<<< HEAD
 	if (!msm_dsi_manager_validate_current_config(msm_dsi->id))
 		goto fail;
-=======
-	if (!msm_dsi_manager_validate_current_config(msm_dsi->id)) {
-		ret = -EINVAL;
-		goto fail;
-	}
->>>>>>> rebase
 
 	msm_dsi->encoder = encoder;
 

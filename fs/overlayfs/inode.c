@@ -64,11 +64,7 @@ int ovl_setattr(struct dentry *dentry, struct iattr *attr)
 		inode_lock(upperdentry->d_inode);
 		old_cred = ovl_override_creds(dentry->d_sb);
 		err = notify_change(upperdentry, attr, NULL);
-<<<<<<< HEAD
 		ovl_revert_creds(old_cred);
-=======
-		revert_creds(old_cred);
->>>>>>> rebase
 		if (!err)
 			ovl_copyattr(upperdentry->d_inode, dentry->d_inode);
 		inode_unlock(upperdentry->d_inode);
@@ -270,11 +266,7 @@ int ovl_getattr(const struct path *path, struct kstat *stat,
 		stat->nlink = dentry->d_inode->i_nlink;
 
 out:
-<<<<<<< HEAD
 	ovl_revert_creds(old_cred);
-=======
-	revert_creds(old_cred);
->>>>>>> rebase
 
 	return err;
 }
@@ -308,11 +300,7 @@ int ovl_permission(struct inode *inode, int mask)
 		mask |= MAY_READ;
 	}
 	err = inode_permission(realinode, mask);
-<<<<<<< HEAD
 	ovl_revert_creds(old_cred);
-=======
-	revert_creds(old_cred);
->>>>>>> rebase
 
 	return err;
 }
@@ -329,11 +317,7 @@ static const char *ovl_get_link(struct dentry *dentry,
 
 	old_cred = ovl_override_creds(dentry->d_sb);
 	p = vfs_get_link(ovl_dentry_real(dentry), done);
-<<<<<<< HEAD
 	ovl_revert_creds(old_cred);
-=======
-	revert_creds(old_cred);
->>>>>>> rebase
 	return p;
 }
 
@@ -356,13 +340,7 @@ int ovl_xattr_set(struct dentry *dentry, struct inode *inode, const char *name,
 		goto out;
 
 	if (!value && !upperdentry) {
-<<<<<<< HEAD
 		err = vfs_getxattr(realdentry, name, NULL, 0);
-=======
-		old_cred = ovl_override_creds(dentry->d_sb);
-		err = vfs_getxattr(realdentry, name, NULL, 0);
-		revert_creds(old_cred);
->>>>>>> rebase
 		if (err < 0)
 			goto out_drop_write;
 	}
@@ -382,11 +360,7 @@ int ovl_xattr_set(struct dentry *dentry, struct inode *inode, const char *name,
 		WARN_ON(flags != XATTR_REPLACE);
 		err = vfs_removexattr(realdentry, name);
 	}
-<<<<<<< HEAD
 	ovl_revert_creds(old_cred);
-=======
-	revert_creds(old_cred);
->>>>>>> rebase
 
 	/* copy c/mtime */
 	ovl_copyattr(d_inode(realdentry), inode);
@@ -397,7 +371,6 @@ out:
 	return err;
 }
 
-<<<<<<< HEAD
 int __ovl_xattr_get(struct dentry *dentry, struct inode *inode,
 		    const char *name, void *value, size_t size)
 {
@@ -413,8 +386,6 @@ int __ovl_xattr_get(struct dentry *dentry, struct inode *inode,
 	return res;
 }
 
-=======
->>>>>>> rebase
 int ovl_xattr_get(struct dentry *dentry, struct inode *inode, const char *name,
 		  void *value, size_t size)
 {
@@ -425,11 +396,7 @@ int ovl_xattr_get(struct dentry *dentry, struct inode *inode, const char *name,
 
 	old_cred = ovl_override_creds(dentry->d_sb);
 	res = vfs_getxattr(realdentry, name, value, size);
-<<<<<<< HEAD
 	ovl_revert_creds(old_cred);
-=======
-	revert_creds(old_cred);
->>>>>>> rebase
 	return res;
 }
 
@@ -454,11 +421,7 @@ ssize_t ovl_listxattr(struct dentry *dentry, char *list, size_t size)
 
 	old_cred = ovl_override_creds(dentry->d_sb);
 	res = vfs_listxattr(realdentry, list, size);
-<<<<<<< HEAD
 	ovl_revert_creds(old_cred);
-=======
-	revert_creds(old_cred);
->>>>>>> rebase
 	if (res <= 0 || size == 0)
 		return res;
 
@@ -493,11 +456,7 @@ struct posix_acl *ovl_get_acl(struct inode *inode, int type)
 
 	old_cred = ovl_override_creds(inode->i_sb);
 	acl = get_acl(realinode, type);
-<<<<<<< HEAD
 	ovl_revert_creds(old_cred);
-=======
-	revert_creds(old_cred);
->>>>>>> rebase
 
 	return acl;
 }
@@ -535,11 +494,7 @@ static int ovl_fiemap(struct inode *inode, struct fiemap_extent_info *fieinfo,
 		filemap_write_and_wait(realinode->i_mapping);
 
 	err = realinode->i_op->fiemap(realinode, fieinfo, start, len);
-<<<<<<< HEAD
 	ovl_revert_creds(old_cred);
-=======
-	revert_creds(old_cred);
->>>>>>> rebase
 
 	return err;
 }
@@ -944,11 +899,7 @@ struct inode *ovl_get_inode(struct super_block *sb,
 	struct dentry *lowerdentry = lowerpath ? lowerpath->dentry : NULL;
 	bool bylower = ovl_hash_bylower(sb, upperdentry, lowerdentry,
 					oip->index);
-<<<<<<< HEAD
 	int fsid = bylower ? oip->lowerpath->layer->fsid : 0;
-=======
-	int fsid = bylower ? lowerpath->layer->fsid : 0;
->>>>>>> rebase
 	bool is_dir, metacopy = false;
 	unsigned long ino = 0;
 	int err = oip->newinode ? -EEXIST : -ENOMEM;
@@ -998,11 +949,6 @@ struct inode *ovl_get_inode(struct super_block *sb,
 			err = -ENOMEM;
 			goto out_err;
 		}
-<<<<<<< HEAD
-=======
-		ino = realinode->i_ino;
-		fsid = lowerpath->layer->fsid;
->>>>>>> rebase
 	}
 	ovl_fill_inode(inode, realinode->i_mode, realinode->i_rdev, ino, fsid);
 	ovl_inode_init(inode, upperdentry, lowerdentry, oip->lowerdata);

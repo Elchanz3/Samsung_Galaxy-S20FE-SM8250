@@ -827,10 +827,6 @@ static int tegra_spi_setup(struct spi_device *spi)
 
 	ret = pm_runtime_get_sync(tspi->dev);
 	if (ret < 0) {
-<<<<<<< HEAD
-=======
-		pm_runtime_put_noidle(tspi->dev);
->>>>>>> rebase
 		dev_err(tspi->dev, "pm runtime failed, e = %d\n", ret);
 		return ret;
 	}
@@ -1139,13 +1135,6 @@ static int tegra_spi_probe(struct platform_device *pdev)
 	tspi->phys = r->start;
 
 	spi_irq = platform_get_irq(pdev, 0);
-<<<<<<< HEAD
-=======
-	if (spi_irq < 0) {
-		ret = spi_irq;
-		goto exit_free_master;
-	}
->>>>>>> rebase
 	tspi->irq = spi_irq;
 
 	tspi->clk = devm_clk_get(&pdev->dev, "spi");
@@ -1263,10 +1252,6 @@ static int tegra_spi_resume(struct device *dev)
 
 	ret = pm_runtime_get_sync(dev);
 	if (ret < 0) {
-<<<<<<< HEAD
-=======
-		pm_runtime_put_noidle(dev);
->>>>>>> rebase
 		dev_err(dev, "pm runtime failed, e = %d\n", ret);
 		return ret;
 	}

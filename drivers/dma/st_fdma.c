@@ -886,8 +886,4 @@ MODULE_LICENSE("GPL v2");
 MODULE_DESCRIPTION("STMicroelectronics FDMA engine driver");
 MODULE_AUTHOR("Ludovic.barre <Ludovic.barre@st.com>");
 MODULE_AUTHOR("Peter Griffin <peter.griffin@linaro.org>");
-<<<<<<< HEAD
 MODULE_ALIAS("platform: " DRIVER_NAME);
-=======
-MODULE_ALIAS("platform:" DRIVER_NAME);
->>>>>>> rebase

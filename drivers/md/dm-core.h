@@ -110,13 +110,6 @@ struct mapped_device {
 	/* zero-length flush that will be cloned and submitted to targets */
 	struct bio flush_bio;
 
-<<<<<<< HEAD
-=======
-	int swap_bios;
-	struct semaphore swap_bios_semaphore;
-	struct mutex swap_bios_lock;
-
->>>>>>> rebase
 	struct dm_stats stats;
 
 	struct kthread_worker kworker;

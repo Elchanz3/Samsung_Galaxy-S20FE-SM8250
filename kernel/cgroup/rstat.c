@@ -32,18 +32,12 @@ void cgroup_rstat_updated(struct cgroup *cgrp, int cpu)
 		return;
 
 	/*
-<<<<<<< HEAD
 	 * Paired with the one in cgroup_rstat_cpu_pop_upated().  Either we
 	 * see NULL updated_next or they see our updated stat.
 	 */
 	smp_mb();
 
 	/*
-=======
-	 * Speculative already-on-list test. This may race leading to
-	 * temporary inaccuracies, which is fine.
-	 *
->>>>>>> rebase
 	 * Because @parent's updated_children is terminated with @parent
 	 * instead of NULL, we can tell whether @cgrp is on the list by
 	 * testing the next pointer for NULL.
@@ -139,7 +133,6 @@ static struct cgroup *cgroup_rstat_cpu_pop_updated(struct cgroup *pos,
 		*nextp = rstatc->updated_next;
 		rstatc->updated_next = NULL;
 
-<<<<<<< HEAD
 		/*
 		 * Paired with the one in cgroup_rstat_cpu_updated().
 		 * Either they see NULL updated_next or we see their
@@ -147,8 +140,6 @@ static struct cgroup *cgroup_rstat_cpu_pop_updated(struct cgroup *pos,
 		 */
 		smp_mb();
 
-=======
->>>>>>> rebase
 		return pos;
 	}
 

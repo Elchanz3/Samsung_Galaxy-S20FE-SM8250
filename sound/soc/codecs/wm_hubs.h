@@ -31,10 +31,6 @@ struct wm_hubs_data {
 	int hp_startup_mode;
 	int series_startup;
 	int no_series_update;
-<<<<<<< HEAD
-=======
-	bool micd_scthr;
->>>>>>> rebase
 
 	bool no_cache_dac_hp_direct;
 	struct list_head dcs_cache;

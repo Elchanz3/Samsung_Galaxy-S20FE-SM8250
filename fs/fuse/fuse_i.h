@@ -27,7 +27,6 @@
 #include <linux/pid_namespace.h>
 #include <linux/refcount.h>
 #include <linux/user_namespace.h>
-<<<<<<< HEAD
 #include <linux/freezer.h>
 
 #ifdef CONFIG_FUSE_SUPPORT_STLOG
@@ -41,11 +40,6 @@
 
 /** Maximum of max_pages received in init_out */
 #define FUSE_MAX_MAX_PAGES 256
-=======
-
-/** Max number of pages that can be used in a single read request */
-#define FUSE_MAX_PAGES_PER_REQ 32
->>>>>>> rebase
 
 /** Bias for fi->writectr, meaning new writepages must not be sent */
 #define FUSE_NOWRITE INT_MIN
@@ -134,13 +128,8 @@ enum {
 	FUSE_I_INIT_RDPLUS,
 	/** An operation changing file size is in progress  */
 	FUSE_I_SIZE_UNSTABLE,
-<<<<<<< HEAD
 	/** Can be filled in by open, to use direct I/O on this file. */
 	FUSE_I_ATTR_FORCE_SYNC,
-=======
-	/* Bad inode */
-	FUSE_I_BAD,
->>>>>>> rebase
 };
 
 struct fuse_conn;
@@ -334,11 +323,6 @@ struct fuse_req {
 	/** refcount */
 	refcount_t count;
 
-<<<<<<< HEAD
-=======
-	bool user_pages;
-
->>>>>>> rebase
 	/** Unique ID for the interrupt request */
 	u64 intr_unique;
 
@@ -399,12 +383,9 @@ struct fuse_req {
 	/** Inode used in the request or NULL */
 	struct inode *inode;
 
-<<<<<<< HEAD
 	/** Path used for completing d_canonical_path */
 	struct path *canonical_path;
 
-=======
->>>>>>> rebase
 	/** AIO control block */
 	struct fuse_io_priv *io;
 
@@ -513,12 +494,9 @@ struct fuse_conn {
 	/** Maximum write size */
 	unsigned max_write;
 
-<<<<<<< HEAD
 	/** Maxmum number of pages that can be used in a single request */
 	unsigned int max_pages;
 
-=======
->>>>>>> rebase
 	/** Input queue */
 	struct fuse_iqueue iq;
 
@@ -740,20 +718,6 @@ static inline u64 get_node_id(struct inode *inode)
 	return get_fuse_inode(inode)->nodeid;
 }
 
-<<<<<<< HEAD
-=======
-static inline void fuse_make_bad(struct inode *inode)
-{
-	remove_inode_hash(inode);
-	set_bit(FUSE_I_BAD, &get_fuse_inode(inode)->state);
-}
-
-static inline bool fuse_is_bad(struct inode *inode)
-{
-	return unlikely(test_bit(FUSE_I_BAD, &get_fuse_inode(inode)->state));
-}
-
->>>>>>> rebase
 /** Device operations */
 extern const struct file_operations fuse_dev_operations;
 
@@ -1051,7 +1015,6 @@ struct posix_acl;
 struct posix_acl *fuse_get_acl(struct inode *inode, int type);
 int fuse_set_acl(struct inode *inode, struct posix_acl *acl, int type);
 
-<<<<<<< HEAD
 #ifdef CONFIG_FREEZER
 static inline void fuse_freezer_do_not_count(void)
 {
@@ -1096,6 +1059,4 @@ static inline void fuse_freezer_count(void) {}
 	__ret;									\
 })
 
-=======
->>>>>>> rebase
 #endif /* _FS_FUSE_I_H */

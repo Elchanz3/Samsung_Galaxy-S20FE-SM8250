@@ -429,12 +429,7 @@ recheck_state:
 		goto recheck_state;
 	}
 
-<<<<<<< HEAD
 	if (test_and_clear_bit(RXRPC_CALL_EV_RESEND, &call->events)) {
-=======
-	if (test_and_clear_bit(RXRPC_CALL_EV_RESEND, &call->events) &&
-	    call->state != RXRPC_CALL_CLIENT_RECV_REPLY) {
->>>>>>> rebase
 		rxrpc_resend(call, now);
 		goto recheck_state;
 	}

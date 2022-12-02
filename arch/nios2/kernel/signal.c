@@ -240,11 +240,7 @@ static int do_signal(struct pt_regs *regs)
 	/*
 	 * If we were from a system call, check for system call restarting...
 	 */
-<<<<<<< HEAD
 	if (regs->orig_r2 >= 0) {
-=======
-	if (regs->orig_r2 >= 0 && regs->r1) {
->>>>>>> rebase
 		continue_addr = regs->ea;
 		restart_addr = continue_addr - 4;
 		retval = regs->r2;
@@ -265,10 +261,6 @@ static int do_signal(struct pt_regs *regs)
 			regs->ea = restart_addr;
 			break;
 		}
-<<<<<<< HEAD
-=======
-		regs->orig_r2 = -1;
->>>>>>> rebase
 	}
 
 	if (get_signal(&ksig)) {

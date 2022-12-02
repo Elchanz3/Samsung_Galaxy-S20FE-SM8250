@@ -412,11 +412,7 @@ static ssize_t dsicm_num_errors_show(struct device *dev,
 	if (r)
 		return r;
 
-<<<<<<< HEAD
 	return snprintf(buf, PAGE_SIZE, "%d\n", errors);
-=======
-	return sysfs_emit(buf, "%d\n", errors);
->>>>>>> rebase
 }
 
 static ssize_t dsicm_hw_revision_show(struct device *dev,
@@ -446,11 +442,7 @@ static ssize_t dsicm_hw_revision_show(struct device *dev,
 	if (r)
 		return r;
 
-<<<<<<< HEAD
 	return snprintf(buf, PAGE_SIZE, "%02x.%02x.%02x\n", id1, id2, id3);
-=======
-	return sysfs_emit(buf, "%02x.%02x.%02x\n", id1, id2, id3);
->>>>>>> rebase
 }
 
 static ssize_t dsicm_store_ulps(struct device *dev,
@@ -498,11 +490,7 @@ static ssize_t dsicm_show_ulps(struct device *dev,
 	t = ddata->ulps_enabled;
 	mutex_unlock(&ddata->lock);
 
-<<<<<<< HEAD
 	return snprintf(buf, PAGE_SIZE, "%u\n", t);
-=======
-	return sysfs_emit(buf, "%u\n", t);
->>>>>>> rebase
 }
 
 static ssize_t dsicm_store_ulps_timeout(struct device *dev,
@@ -547,11 +535,7 @@ static ssize_t dsicm_show_ulps_timeout(struct device *dev,
 	t = ddata->ulps_timeout;
 	mutex_unlock(&ddata->lock);
 
-<<<<<<< HEAD
 	return snprintf(buf, PAGE_SIZE, "%u\n", t);
-=======
-	return sysfs_emit(buf, "%u\n", t);
->>>>>>> rebase
 }
 
 static DEVICE_ATTR(num_dsi_errors, S_IRUGO, dsicm_num_errors_show, NULL);

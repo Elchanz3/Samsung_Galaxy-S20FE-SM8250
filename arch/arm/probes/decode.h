@@ -22,10 +22,6 @@
 #include <linux/types.h>
 #include <linux/stddef.h>
 #include <asm/probes.h>
-<<<<<<< HEAD
-=======
-#include <asm/ptrace.h>
->>>>>>> rebase
 #include <asm/kprobes.h>
 
 void __init arm_probes_decode_init(void);
@@ -47,7 +43,6 @@ void __init find_str_pc_offset(void);
 #endif
 
 
-<<<<<<< HEAD
 /*
  * Update ITSTATE after normal execution of an IT block instruction.
  *
@@ -73,8 +68,6 @@ static inline unsigned long it_advance(unsigned long cpsr)
 	return cpsr;
 }
 
-=======
->>>>>>> rebase
 static inline void __kprobes bx_write_pc(long pcv, struct pt_regs *regs)
 {
 	long cpsr = regs->ARM_cpsr;

@@ -168,11 +168,7 @@ struct cb_devicenotifyitem {
 };
 
 struct cb_devicenotifyargs {
-<<<<<<< HEAD
 	int				 ndevs;
-=======
-	uint32_t			 ndevs;
->>>>>>> rebase
 	struct cb_devicenotifyitem	 *devs;
 };
 

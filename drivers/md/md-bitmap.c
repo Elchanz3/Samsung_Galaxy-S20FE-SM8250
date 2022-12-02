@@ -641,7 +641,6 @@ re_read:
 	daemon_sleep = le32_to_cpu(sb->daemon_sleep) * HZ;
 	write_behind = le32_to_cpu(sb->write_behind);
 	sectors_reserved = le32_to_cpu(sb->sectors_reserved);
-<<<<<<< HEAD
 	/* Setup nodes/clustername only if bitmap version is
 	 * cluster-compatible
 	 */
@@ -650,8 +649,6 @@ re_read:
 		strlcpy(bitmap->mddev->bitmap_info.cluster_name,
 				sb->cluster_name, 64);
 	}
-=======
->>>>>>> rebase
 
 	/* verify that the bitmap-specific fields are valid */
 	if (sb->magic != cpu_to_le32(BITMAP_MAGIC))
@@ -673,19 +670,6 @@ re_read:
 		goto out;
 	}
 
-<<<<<<< HEAD
-=======
-	/*
-	 * Setup nodes/clustername only if bitmap version is
-	 * cluster-compatible
-	 */
-	if (sb->version == cpu_to_le32(BITMAP_MAJOR_CLUSTERED)) {
-		nodes = le32_to_cpu(sb->nodes);
-		strlcpy(bitmap->mddev->bitmap_info.cluster_name,
-				sb->cluster_name, 64);
-	}
-
->>>>>>> rebase
 	/* keep the array size field of the bitmap superblock up to date */
 	sb->sync_size = cpu_to_le64(bitmap->mddev->resync_max_sectors);
 
@@ -718,15 +702,9 @@ re_read:
 
 out:
 	kunmap_atomic(sb);
-<<<<<<< HEAD
 	/* Assigning chunksize is required for "re_read" */
 	bitmap->mddev->bitmap_info.chunksize = chunksize;
 	if (err == 0 && nodes && (bitmap->cluster_slot < 0)) {
-=======
-	if (err == 0 && nodes && (bitmap->cluster_slot < 0)) {
-		/* Assigning chunksize is required for "re_read" */
-		bitmap->mddev->bitmap_info.chunksize = chunksize;
->>>>>>> rebase
 		err = md_setup_cluster(bitmap->mddev, nodes);
 		if (err) {
 			pr_warn("%s: Could not setup cluster service (%d)\n",
@@ -737,7 +715,6 @@ out:
 		goto re_read;
 	}
 
-<<<<<<< HEAD
 
 out_no_sb:
 	if (test_bit(BITMAP_STALE, &bitmap->flags))
@@ -750,20 +727,6 @@ out_no_sb:
 	    bitmap->mddev->bitmap_info.space > sectors_reserved)
 		bitmap->mddev->bitmap_info.space = sectors_reserved;
 	if (err) {
-=======
-out_no_sb:
-	if (err == 0) {
-		if (test_bit(BITMAP_STALE, &bitmap->flags))
-			bitmap->events_cleared = bitmap->mddev->events;
-		bitmap->mddev->bitmap_info.chunksize = chunksize;
-		bitmap->mddev->bitmap_info.daemon_sleep = daemon_sleep;
-		bitmap->mddev->bitmap_info.max_write_behind = write_behind;
-		bitmap->mddev->bitmap_info.nodes = nodes;
-		if (bitmap->mddev->bitmap_info.space == 0 ||
-			bitmap->mddev->bitmap_info.space > sectors_reserved)
-			bitmap->mddev->bitmap_info.space = sectors_reserved;
-	} else {
->>>>>>> rebase
 		md_bitmap_print_sb(bitmap);
 		if (bitmap->cluster_slot < 0)
 			md_cluster_stop(bitmap->mddev);
@@ -1408,11 +1371,7 @@ __acquires(bitmap->lock)
 	if (bitmap->bp[page].hijacked ||
 	    bitmap->bp[page].map == NULL)
 		csize = ((sector_t)1) << (bitmap->chunkshift +
-<<<<<<< HEAD
 					  PAGE_COUNTER_SHIFT - 1);
-=======
-					  PAGE_COUNTER_SHIFT);
->>>>>>> rebase
 	else
 		csize = ((sector_t)1) << bitmap->chunkshift;
 	*blocks = csize - (offset & (csize - 1));
@@ -1766,11 +1725,6 @@ void md_bitmap_flush(struct mddev *mddev)
 	md_bitmap_daemon_work(mddev);
 	bitmap->daemon_lastrun -= sleep;
 	md_bitmap_daemon_work(mddev);
-<<<<<<< HEAD
-=======
-	if (mddev->bitmap_info.external)
-		md_super_wait(mddev);
->>>>>>> rebase
 	md_bitmap_update_sb(bitmap);
 }
 

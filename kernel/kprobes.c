@@ -599,19 +599,11 @@ static void kprobe_optimizer(struct work_struct *work)
 	mutex_unlock(&module_mutex);
 	mutex_unlock(&text_mutex);
 	cpus_read_unlock();
-<<<<<<< HEAD
 	mutex_unlock(&kprobe_mutex);
-=======
->>>>>>> rebase
 
 	/* Step 5: Kick optimizer again if needed */
 	if (!list_empty(&optimizing_list) || !list_empty(&unoptimizing_list))
 		kick_kprobe_optimizer();
-<<<<<<< HEAD
-=======
-
-	mutex_unlock(&kprobe_mutex);
->>>>>>> rebase
 }
 
 /* Wait for completing optimization and unoptimization */
@@ -1072,26 +1064,9 @@ static int disarm_kprobe_ftrace(struct kprobe *p)
 	return ret;
 }
 #else	/* !CONFIG_KPROBES_ON_FTRACE */
-<<<<<<< HEAD
 #define prepare_kprobe(p)	arch_prepare_kprobe(p)
 #define arm_kprobe_ftrace(p)	(-ENODEV)
 #define disarm_kprobe_ftrace(p)	(-ENODEV)
-=======
-static inline int prepare_kprobe(struct kprobe *p)
-{
-	return arch_prepare_kprobe(p);
-}
-
-static inline int arm_kprobe_ftrace(struct kprobe *p)
-{
-	return -ENODEV;
-}
-
-static inline int disarm_kprobe_ftrace(struct kprobe *p)
-{
-	return -ENODEV;
-}
->>>>>>> rebase
 #endif
 
 /* Arm a kprobe with text_mutex */
@@ -1251,29 +1226,6 @@ __releases(hlist_lock)
 }
 NOKPROBE_SYMBOL(kretprobe_table_unlock);
 
-<<<<<<< HEAD
-=======
-struct kprobe kprobe_busy = {
-	.addr = (void *) get_kprobe,
-};
-
-void kprobe_busy_begin(void)
-{
-	struct kprobe_ctlblk *kcb;
-
-	preempt_disable();
-	__this_cpu_write(current_kprobe, &kprobe_busy);
-	kcb = get_kprobe_ctlblk();
-	kcb->kprobe_status = KPROBE_HIT_ACTIVE;
-}
-
-void kprobe_busy_end(void)
-{
-	__this_cpu_write(current_kprobe, NULL);
-	preempt_enable();
-}
-
->>>>>>> rebase
 /*
  * This function is called from finish_task_switch when task tk becomes dead,
  * so that we can recycle any function-return probe instances associated
@@ -1291,11 +1243,6 @@ void kprobe_flush_task(struct task_struct *tk)
 		/* Early boot.  kretprobe_table_locks not yet initialized. */
 		return;
 
-<<<<<<< HEAD
-=======
-	kprobe_busy_begin();
-
->>>>>>> rebase
 	INIT_HLIST_HEAD(&empty_rp);
 	hash = hash_ptr(tk, KPROBE_HASH_BITS);
 	head = &kretprobe_inst_table[hash];
@@ -1309,11 +1256,6 @@ void kprobe_flush_task(struct task_struct *tk)
 		hlist_del(&ri->hlist);
 		kfree(ri);
 	}
-<<<<<<< HEAD
-=======
-
-	kprobe_busy_end();
->>>>>>> rebase
 }
 NOKPROBE_SYMBOL(kprobe_flush_task);
 
@@ -1588,13 +1530,7 @@ static int check_kprobe_address_safe(struct kprobe *p,
 	preempt_disable();
 
 	/* Ensure it is not in reserved area nor out of text */
-<<<<<<< HEAD
 	if (!kernel_text_address((unsigned long) p->addr) ||
-=======
-	if (!(core_kernel_text((unsigned long) p->addr) ||
-	    is_module_text_address((unsigned long) p->addr)) ||
-	    in_gate_area_no_mm((unsigned long) p->addr) ||
->>>>>>> rebase
 	    within_kprobe_blacklist((unsigned long) p->addr) ||
 	    jump_label_text_reserved(p->addr, p->addr) ||
 	    find_bug((unsigned long)p->addr)) {
@@ -1736,20 +1672,11 @@ static struct kprobe *__disable_kprobe(struct kprobe *p)
 		/* Try to disarm and disable this/parent probe */
 		if (p == orig_p || aggr_kprobe_disabled(orig_p)) {
 			/*
-<<<<<<< HEAD
 			 * If kprobes_all_disarmed is set, orig_p
 			 * should have already been disarmed, so
 			 * skip unneed disarming process.
 			 */
 			if (!kprobes_all_disarmed) {
-=======
-			 * Don't be lazy here.  Even if 'kprobes_all_disarmed'
-			 * is false, 'orig_p' might not have been armed yet.
-			 * Note arm_all_kprobes() __tries__ to arm all kprobes
-			 * on the best effort basis.
-			 */
-			if (!kprobes_all_disarmed && !kprobe_disabled(orig_p)) {
->>>>>>> rebase
 				ret = disarm_kprobe(orig_p, true);
 				if (ret) {
 					p->flags &= ~KPROBE_FLAG_DISABLED;
@@ -1958,29 +1885,11 @@ bool __weak arch_kprobe_on_func_entry(unsigned long offset)
 	return !offset;
 }
 
-<<<<<<< HEAD
 bool kprobe_on_func_entry(kprobe_opcode_t *addr, const char *sym, unsigned long offset)
-=======
-/**
- * kprobe_on_func_entry() -- check whether given address is function entry
- * @addr: Target address
- * @sym:  Target symbol name
- * @offset: The offset from the symbol or the address
- *
- * This checks whether the given @addr+@offset or @sym+@offset is on the
- * function entry address or not.
- * This returns 0 if it is the function entry, or -EINVAL if it is not.
- * And also it returns -ENOENT if it fails the symbol or address lookup.
- * Caller must pass @addr or @sym (either one must be NULL), or this
- * returns -EINVAL.
- */
-int kprobe_on_func_entry(kprobe_opcode_t *addr, const char *sym, unsigned long offset)
->>>>>>> rebase
 {
 	kprobe_opcode_t *kp_addr = _kprobe_addr(addr, sym, offset);
 
 	if (IS_ERR(kp_addr))
-<<<<<<< HEAD
 		return false;
 
 	if (!kallsyms_lookup_size_offset((unsigned long)kp_addr, NULL, &offset) ||
@@ -1988,40 +1897,16 @@ int kprobe_on_func_entry(kprobe_opcode_t *addr, const char *sym, unsigned long o
 		return false;
 
 	return true;
-=======
-		return PTR_ERR(kp_addr);
-
-	if (!kallsyms_lookup_size_offset((unsigned long)kp_addr, NULL, &offset))
-		return -ENOENT;
-
-	if (!arch_kprobe_on_func_entry(offset))
-		return -EINVAL;
-
-	return 0;
->>>>>>> rebase
 }
 
 int register_kretprobe(struct kretprobe *rp)
 {
-<<<<<<< HEAD
 	int ret = 0;
-=======
-	int ret;
->>>>>>> rebase
 	struct kretprobe_instance *inst;
 	int i;
 	void *addr;
 
-<<<<<<< HEAD
 	if (!kprobe_on_func_entry(rp->kp.addr, rp->kp.symbol_name, rp->kp.offset))
-=======
-	ret = kprobe_on_func_entry(rp->kp.addr, rp->kp.symbol_name, rp->kp.offset);
-	if (ret)
-		return ret;
-
-	/* If only rp->kp.addr is specified, check reregistering kprobes */
-	if (rp->kp.addr && check_kprobe_rereg(&rp->kp))
->>>>>>> rebase
 		return -EINVAL;
 
 	if (kretprobe_blacklist_size) {
@@ -2035,12 +1920,6 @@ int register_kretprobe(struct kretprobe *rp)
 		}
 	}
 
-<<<<<<< HEAD
-=======
-	if (rp->data_size > KRETPROBE_MAX_DATA_SIZE)
-		return -E2BIG;
-
->>>>>>> rebase
 	rp->kp.pre_handler = pre_handler_kretprobe;
 	rp->kp.post_handler = NULL;
 	rp->kp.fault_handler = NULL;
@@ -2157,12 +2036,6 @@ static void kill_kprobe(struct kprobe *p)
 {
 	struct kprobe *kp;
 
-<<<<<<< HEAD
-=======
-	if (WARN_ON_ONCE(kprobe_gone(p)))
-		return;
-
->>>>>>> rebase
 	p->flags |= KPROBE_FLAG_GONE;
 	if (kprobe_aggrprobe(p)) {
 		/*
@@ -2179,17 +2052,6 @@ static void kill_kprobe(struct kprobe *p)
 	 * the original probed function (which will be freed soon) any more.
 	 */
 	arch_remove_kprobe(p);
-<<<<<<< HEAD
-=======
-
-	/*
-	 * The module is going away. We should disarm the kprobe which
-	 * is using ftrace, because ftrace framework is still available at
-	 * MODULE_STATE_GOING notification.
-	 */
-	if (kprobe_ftrace(p) && !kprobe_disabled(p) && !kprobes_all_disarmed)
-		disarm_kprobe_ftrace(p);
->>>>>>> rebase
 }
 
 /* Disable one kprobe */
@@ -2237,16 +2099,8 @@ int enable_kprobe(struct kprobe *kp)
 	if (!kprobes_all_disarmed && kprobe_disabled(p)) {
 		p->flags &= ~KPROBE_FLAG_DISABLED;
 		ret = arm_kprobe(p);
-<<<<<<< HEAD
 		if (ret)
 			p->flags |= KPROBE_FLAG_DISABLED;
-=======
-		if (ret) {
-			p->flags |= KPROBE_FLAG_DISABLED;
-			if (p != kp)
-				kp->flags |= KPROBE_FLAG_DISABLED;
-		}
->>>>>>> rebase
 	}
 out:
 	mutex_unlock(&kprobe_mutex);
@@ -2357,14 +2211,7 @@ static int kprobes_module_callback(struct notifier_block *nb,
 	mutex_lock(&kprobe_mutex);
 	for (i = 0; i < KPROBE_TABLE_SIZE; i++) {
 		head = &kprobe_table[i];
-<<<<<<< HEAD
 		hlist_for_each_entry_rcu(p, head, hlist)
-=======
-		hlist_for_each_entry_rcu(p, head, hlist) {
-			if (kprobe_gone(p))
-				continue;
-
->>>>>>> rebase
 			if (within_module_init((unsigned long)p->addr, mod) ||
 			    (checkcore &&
 			     within_module_core((unsigned long)p->addr, mod))) {
@@ -2381,10 +2228,6 @@ static int kprobes_module_callback(struct notifier_block *nb,
 				 */
 				kill_kprobe(p);
 			}
-<<<<<<< HEAD
-=======
-		}
->>>>>>> rebase
 	}
 	mutex_unlock(&kprobe_mutex);
 	return NOTIFY_DONE;
@@ -2466,11 +2309,7 @@ static void report_probe(struct seq_file *pi, struct kprobe *p,
 	else
 		kprobe_type = "k";
 
-<<<<<<< HEAD
 	if (!kallsyms_show_value())
-=======
-	if (!kallsyms_show_value(pi->file->f_cred))
->>>>>>> rebase
 		addr = NULL;
 
 	if (sym)
@@ -2571,11 +2410,7 @@ static int kprobe_blacklist_seq_show(struct seq_file *m, void *v)
 	 * If /proc/kallsyms is not showing kernel address, we won't
 	 * show them here either.
 	 */
-<<<<<<< HEAD
 	if (!kallsyms_show_value())
-=======
-	if (!kallsyms_show_value(m->file->f_cred))
->>>>>>> rebase
 		seq_printf(m, "0x%px-0x%px\t%ps\n", NULL, NULL,
 			   (void *)ent->start_addr);
 	else

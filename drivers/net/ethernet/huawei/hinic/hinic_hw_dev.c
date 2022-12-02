@@ -370,7 +370,6 @@ static int wait_for_db_state(struct hinic_hwdev *hwdev)
 	return -EFAULT;
 }
 
-<<<<<<< HEAD
 static int wait_for_io_stopped(struct hinic_hwdev *hwdev)
 {
 	struct hinic_cmd_io_status cmd_io_status;
@@ -415,8 +414,6 @@ static int wait_for_io_stopped(struct hinic_hwdev *hwdev)
 	return -ETIMEDOUT;
 }
 
-=======
->>>>>>> rebase
 /**
  * clear_io_resource - set the IO resources as not active in the NIC
  * @hwdev: the NIC HW device
@@ -436,16 +433,11 @@ static int clear_io_resources(struct hinic_hwdev *hwdev)
 		return -EINVAL;
 	}
 
-<<<<<<< HEAD
 	err = wait_for_io_stopped(hwdev);
 	if (err) {
 		dev_err(&pdev->dev, "IO has not stopped yet\n");
 		return err;
 	}
-=======
-	/* sleep 100ms to wait for firmware stopping I/O */
-	msleep(100);
->>>>>>> rebase
 
 	cmd_clear_io_res.func_idx = HINIC_HWIF_FUNC_IDX(hwif);
 

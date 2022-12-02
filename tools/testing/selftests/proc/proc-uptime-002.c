@@ -15,10 +15,7 @@
  */
 // Test that values in /proc/uptime increment monotonically
 // while shifting across CPUs.
-<<<<<<< HEAD
 #define _GNU_SOURCE
-=======
->>>>>>> rebase
 #undef NDEBUG
 #include <assert.h>
 #include <unistd.h>

@@ -61,7 +61,6 @@
 			reg = <0>;
 			clock-latency = <61036>; /* two CLK32 periods */
 			#cooling-cells = <2>;
-<<<<<<< HEAD
 			operating-points = <
 				/* kHz	uV */
 				696000	1275000
@@ -76,20 +75,6 @@
 				396000	1175000
 				198000	1175000
 			>;
-=======
-			operating-points =
-				/* kHz	uV */
-				<696000	1275000>,
-				<528000	1175000>,
-				<396000	1025000>,
-				<198000	950000>;
-			fsl,soc-operating-points =
-				/* KHz	uV */
-				<696000	1275000>,
-				<528000	1175000>,
-				<396000	1175000>,
-				<198000	1175000>;
->>>>>>> rebase
 			clocks = <&clks IMX6UL_CLK_ARM>,
 				 <&clks IMX6UL_CLK_PLL2_BUS>,
 				 <&clks IMX6UL_CLK_PLL2_PFD2>,
@@ -184,12 +169,6 @@
 		ocram: sram@900000 {
 			compatible = "mmio-sram";
 			reg = <0x00900000 0x20000>;
-<<<<<<< HEAD
-=======
-			ranges = <0 0x00900000 0x20000>;
-			#address-cells = <1>;
-			#size-cells = <1>;
->>>>>>> rebase
 		};
 
 		dma_apbh: dma-apbh@1804000 {
@@ -960,11 +939,7 @@
 			};
 
 			lcdif: lcdif@21c8000 {
-<<<<<<< HEAD
 				compatible = "fsl,imx6ul-lcdif", "fsl,imx28-lcdif";
-=======
-				compatible = "fsl,imx6ul-lcdif", "fsl,imx6sx-lcdif";
->>>>>>> rebase
 				reg = <0x021c8000 0x4000>;
 				interrupts = <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>;
 				clocks = <&clks IMX6UL_CLK_LCDIF_PIX>,
@@ -977,11 +952,7 @@
 			qspi: qspi@21e0000 {
 				#address-cells = <1>;
 				#size-cells = <0>;
-<<<<<<< HEAD
 				compatible = "fsl,imx6ul-qspi", "fsl,imx6sx-qspi";
-=======
-				compatible = "fsl,imx6ul-qspi";
->>>>>>> rebase
 				reg = <0x021e0000 0x4000>, <0x60000000 0x10000000>;
 				reg-names = "QuadSPI", "QuadSPI-memory";
 				interrupts = <GIC_SPI 107 IRQ_TYPE_LEVEL_HIGH>;

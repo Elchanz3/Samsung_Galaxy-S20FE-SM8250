@@ -275,10 +275,7 @@ freedev(struct aoedev *d)
 	del_timer_sync(&d->timer);
 	if (d->gd) {
 		aoedisk_rm_debugfs(d);
-<<<<<<< HEAD
 		aoedisk_rm_sysfs(d);
-=======
->>>>>>> rebase
 		del_gendisk(d->gd);
 		put_disk(d->gd);
 		blk_cleanup_queue(d->blkq);

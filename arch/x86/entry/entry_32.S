@@ -643,10 +643,7 @@ ENTRY(__switch_to_asm)
 	movl	%ebx, PER_CPU_VAR(stack_canary)+stack_canary_offset
 #endif
 
-<<<<<<< HEAD
 #ifdef CONFIG_RETPOLINE
-=======
->>>>>>> rebase
 	/*
 	 * When switching from a shallower to a deeper call stack
 	 * the RSB may either underflow or use entries populated
@@ -655,10 +652,7 @@ ENTRY(__switch_to_asm)
 	 * speculative execution to prevent attack.
 	 */
 	FILL_RETURN_BUFFER %ebx, RSB_CLEAR_LOOPS, X86_FEATURE_RSB_CTXSW
-<<<<<<< HEAD
 #endif
-=======
->>>>>>> rebase
 
 	/* restore callee-saved registers */
 	popfl
@@ -1495,10 +1489,6 @@ ENTRY(int3)
 END(int3)
 
 ENTRY(general_protection)
-<<<<<<< HEAD
-=======
-	ASM_CLAC
->>>>>>> rebase
 	pushl	$do_general_protection
 	jmp	common_exception
 END(general_protection)

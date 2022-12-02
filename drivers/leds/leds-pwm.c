@@ -22,7 +22,6 @@
 #include <linux/leds_pwm.h>
 #include <linux/slab.h>
 
-<<<<<<< HEAD
 #define PWM_PERIOD_DEFAULT_NS 1000000
 
 struct pwm_setting {
@@ -46,14 +45,6 @@ struct led_pwm_data {
 	unsigned int		period;
 	int			duty;
 	bool			blinking;
-=======
-struct led_pwm_data {
-	struct led_classdev	cdev;
-	struct pwm_device	*pwm;
-	unsigned int		active_low;
-	unsigned int		period;
-	int			duty;
->>>>>>> rebase
 };
 
 struct led_pwm_priv {
@@ -61,7 +52,6 @@ struct led_pwm_priv {
 	struct led_pwm_data leds[0];
 };
 
-<<<<<<< HEAD
 static int __led_blink_config_pwm(struct led_pwm_data *led_data)
 {
 	struct pwm_state pstate;
@@ -176,39 +166,19 @@ static void __led_pwm_set(struct led_pwm_data *led_data)
 		pwm_disable(led_data->pwm);
 	else
 		pwm_enable(led_data->pwm);
-=======
-static void __led_pwm_set(struct led_pwm_data *led_dat)
-{
-	int new_duty = led_dat->duty;
-
-	pwm_config(led_dat->pwm, new_duty, led_dat->period);
-
-	if (new_duty == 0)
-		pwm_disable(led_dat->pwm);
-	else
-		pwm_enable(led_dat->pwm);
->>>>>>> rebase
 }
 
 static int led_pwm_set(struct led_classdev *led_cdev,
 		       enum led_brightness brightness)
 {
-<<<<<<< HEAD
 	struct led_pwm_data *led_data =
 		container_of(led_cdev, struct led_pwm_data, cdev);
 	unsigned int max = led_data->cdev.max_brightness;
 	unsigned long long duty =  led_data->period;
-=======
-	struct led_pwm_data *led_dat =
-		container_of(led_cdev, struct led_pwm_data, cdev);
-	unsigned int max = led_dat->cdev.max_brightness;
-	unsigned long long duty =  led_dat->period;
->>>>>>> rebase
 
 	duty *= brightness;
 	do_div(duty, max);
 
-<<<<<<< HEAD
 	if (led_data->active_low)
 		duty = led_data->period - duty;
 
@@ -216,14 +186,6 @@ static int led_pwm_set(struct led_classdev *led_cdev,
 	led_data->blinking = false;
 
 	__led_pwm_set(led_data);
-=======
-	if (led_dat->active_low)
-		duty = led_dat->period - duty;
-
-	led_dat->duty = duty;
-
-	__led_pwm_set(led_dat);
->>>>>>> rebase
 
 	return 0;
 }
@@ -252,12 +214,8 @@ static int led_pwm_add(struct device *dev, struct led_pwm_priv *priv,
 	led_data->cdev.default_trigger = led->default_trigger;
 	led_data->cdev.brightness = LED_OFF;
 	led_data->cdev.max_brightness = led->max_brightness;
-<<<<<<< HEAD
 	/* Set a flag to keep the trigger always */
 	led_data->cdev.flags |= LED_KEEP_TRIGGER;
-=======
-	led_data->cdev.flags = LED_CORE_SUSPENDRESUME;
->>>>>>> rebase
 
 	if (child)
 		led_data->pwm = devm_of_pwm_get(dev, child, NULL);
@@ -272,10 +230,7 @@ static int led_pwm_add(struct device *dev, struct led_pwm_priv *priv,
 	}
 
 	led_data->cdev.brightness_set_blocking = led_pwm_set;
-<<<<<<< HEAD
 	led_data->cdev.blink_set = led_pwm_blink_set;
-=======
->>>>>>> rebase
 
 	/*
 	 * FIXME: pwm_apply_args() should be removed when switching to the

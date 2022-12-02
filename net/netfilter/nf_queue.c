@@ -46,18 +46,6 @@ void nf_unregister_queue_handler(struct net *net)
 }
 EXPORT_SYMBOL(nf_unregister_queue_handler);
 
-<<<<<<< HEAD
-=======
-static void nf_queue_sock_put(struct sock *sk)
-{
-#ifdef CONFIG_INET
-	sock_gen_put(sk);
-#else
-	sock_put(sk);
-#endif
-}
-
->>>>>>> rebase
 void nf_queue_entry_release_refs(struct nf_queue_entry *entry)
 {
 	struct nf_hook_state *state = &entry->state;
@@ -68,11 +56,7 @@ void nf_queue_entry_release_refs(struct nf_queue_entry *entry)
 	if (state->out)
 		dev_put(state->out);
 	if (state->sk)
-<<<<<<< HEAD
 		sock_put(state->sk);
-=======
-		nf_queue_sock_put(state->sk);
->>>>>>> rebase
 #if IS_ENABLED(CONFIG_BRIDGE_NETFILTER)
 	if (entry->skb->nf_bridge) {
 		struct net_device *physdev;
@@ -89,20 +73,10 @@ void nf_queue_entry_release_refs(struct nf_queue_entry *entry)
 EXPORT_SYMBOL_GPL(nf_queue_entry_release_refs);
 
 /* Bump dev refs so they don't vanish while packet is out */
-<<<<<<< HEAD
 void nf_queue_entry_get_refs(struct nf_queue_entry *entry)
 {
 	struct nf_hook_state *state = &entry->state;
 
-=======
-bool nf_queue_entry_get_refs(struct nf_queue_entry *entry)
-{
-	struct nf_hook_state *state = &entry->state;
-
-	if (state->sk && !refcount_inc_not_zero(&state->sk->sk_refcnt))
-		return false;
-
->>>>>>> rebase
 	if (state->in)
 		dev_hold(state->in);
 	if (state->out)
@@ -121,10 +95,6 @@ bool nf_queue_entry_get_refs(struct nf_queue_entry *entry)
 			dev_hold(physdev);
 	}
 #endif
-<<<<<<< HEAD
-=======
-	return true;
->>>>>>> rebase
 }
 EXPORT_SYMBOL_GPL(nf_queue_entry_get_refs);
 
@@ -216,14 +186,7 @@ static int __nf_queue(struct sk_buff *skb, const struct nf_hook_state *state,
 		.size	= sizeof(*entry) + route_key_size,
 	};
 
-<<<<<<< HEAD
 	nf_queue_entry_get_refs(entry);
-=======
-	if (!nf_queue_entry_get_refs(entry)) {
-		kfree(entry);
-		return -ENOTCONN;
-	}
->>>>>>> rebase
 
 	switch (entry->state.pf) {
 	case AF_INET:

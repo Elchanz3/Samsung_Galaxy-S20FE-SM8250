@@ -681,11 +681,8 @@ static int a5xx_hw_init(struct msm_gpu *gpu)
 	if (adreno_gpu->info->quirks & ADRENO_QUIRK_TWO_PASS_USE_WFI)
 		gpu_rmw(gpu, REG_A5XX_PC_DBG_ECO_CNTL, 0, (1 << 8));
 
-<<<<<<< HEAD
 	gpu_write(gpu, REG_A5XX_PC_DBG_ECO_CNTL, 0xc0200100);
 
-=======
->>>>>>> rebase
 	/* Enable USE_RETENTION_FLOPS */
 	gpu_write(gpu, REG_A5XX_CP_CHICKEN_DBG, 0x02000000);
 
@@ -1199,13 +1196,8 @@ static int a5xx_pm_suspend(struct msm_gpu *gpu)
 
 static int a5xx_get_timestamp(struct msm_gpu *gpu, uint64_t *value)
 {
-<<<<<<< HEAD
 	*value = gpu_read64(gpu, REG_A5XX_RBBM_PERFCTR_CP_0_LO,
 		REG_A5XX_RBBM_PERFCTR_CP_0_HI);
-=======
-	*value = gpu_read64(gpu, REG_A5XX_RBBM_ALWAYSON_COUNTER_LO,
-		REG_A5XX_RBBM_ALWAYSON_COUNTER_HI);
->>>>>>> rebase
 
 	return 0;
 }
@@ -1482,7 +1474,6 @@ static const struct adreno_gpu_funcs funcs = {
 static void check_speed_bin(struct device *dev)
 {
 	struct nvmem_cell *cell;
-<<<<<<< HEAD
 	u32 bin, val;
 
 	cell = nvmem_cell_get(dev, "speed_bin");
@@ -1495,33 +1486,6 @@ static void check_speed_bin(struct device *dev)
 	nvmem_cell_put(cell);
 
 	val = (1 << bin);
-=======
-	u32 val;
-
-	/*
-	 * If the OPP table specifies a opp-supported-hw property then we have
-	 * to set something with dev_pm_opp_set_supported_hw() or the table
-	 * doesn't get populated so pick an arbitrary value that should
-	 * ensure the default frequencies are selected but not conflict with any
-	 * actual bins
-	 */
-	val = 0x80;
-
-	cell = nvmem_cell_get(dev, "speed_bin");
-
-	if (!IS_ERR(cell)) {
-		void *buf = nvmem_cell_read(cell, NULL);
-
-		if (!IS_ERR(buf)) {
-			u8 bin = *((u8 *) buf);
-
-			val = (1 << bin);
-			kfree(buf);
-		}
-
-		nvmem_cell_put(cell);
-	}
->>>>>>> rebase
 
 	dev_pm_opp_set_supported_hw(dev, &val, 1);
 }
@@ -1554,12 +1518,7 @@ struct msm_gpu *a5xx_gpu_init(struct drm_device *dev)
 
 	check_speed_bin(&pdev->dev);
 
-<<<<<<< HEAD
 	ret = adreno_gpu_init(dev, pdev, adreno_gpu, &funcs, 4);
-=======
-	/* Restricting nr_rings to 1 to temporarily disable preemption */
-	ret = adreno_gpu_init(dev, pdev, adreno_gpu, &funcs, 1);
->>>>>>> rebase
 	if (ret) {
 		a5xx_destroy(&(a5xx_gpu->base.base));
 		return ERR_PTR(ret);

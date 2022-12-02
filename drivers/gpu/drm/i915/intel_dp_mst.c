@@ -77,11 +77,7 @@ static bool intel_dp_mst_compute_config(struct intel_encoder *encoder,
 	pipe_config->pbn = mst_pbn;
 
 	/* Zombie connectors can't have VCPI slots */
-<<<<<<< HEAD
 	if (READ_ONCE(connector->registered)) {
-=======
-	if (!drm_connector_is_unregistered(connector)) {
->>>>>>> rebase
 		slots = drm_dp_atomic_find_vcpi_slots(state,
 						      &intel_dp->mst_mgr,
 						      port,
@@ -321,11 +317,7 @@ static int intel_dp_mst_get_ddc_modes(struct drm_connector *connector)
 	struct edid *edid;
 	int ret;
 
-<<<<<<< HEAD
 	if (!READ_ONCE(connector->registered))
-=======
-	if (drm_connector_is_unregistered(connector))
->>>>>>> rebase
 		return intel_connector_update_modes(connector, NULL);
 
 	edid = drm_dp_mst_get_edid(connector, &intel_dp->mst_mgr, intel_connector->port);
@@ -341,11 +333,7 @@ intel_dp_mst_detect(struct drm_connector *connector, bool force)
 	struct intel_connector *intel_connector = to_intel_connector(connector);
 	struct intel_dp *intel_dp = intel_connector->mst_port;
 
-<<<<<<< HEAD
 	if (!READ_ONCE(connector->registered))
-=======
-	if (drm_connector_is_unregistered(connector))
->>>>>>> rebase
 		return connector_status_disconnected;
 	return drm_dp_mst_detect_port(connector, &intel_dp->mst_mgr,
 				      intel_connector->port);
@@ -388,11 +376,7 @@ intel_dp_mst_mode_valid(struct drm_connector *connector,
 	int bpp = 24; /* MST uses fixed bpp */
 	int max_rate, mode_rate, max_lanes, max_link_clock;
 
-<<<<<<< HEAD
 	if (!READ_ONCE(connector->registered))
-=======
-	if (drm_connector_is_unregistered(connector))
->>>>>>> rebase
 		return MODE_ERROR;
 
 	if (mode->flags & DRM_MODE_FLAG_DBLSCAN)
@@ -604,48 +588,21 @@ intel_dp_create_fake_mst_encoders(struct intel_digital_port *intel_dig_port)
 int
 intel_dp_mst_encoder_init(struct intel_digital_port *intel_dig_port, int conn_base_id)
 {
-<<<<<<< HEAD
 	struct intel_dp *intel_dp = &intel_dig_port->dp;
 	struct drm_device *dev = intel_dig_port->base.base.dev;
 	int ret;
 
 	intel_dp->can_mst = true;
-=======
-	struct drm_i915_private *i915 = to_i915(intel_dig_port->base.base.dev);
-	struct intel_dp *intel_dp = &intel_dig_port->dp;
-	enum port port = intel_dig_port->base.port;
-	int ret;
-
-	if (!HAS_DP_MST(i915) || intel_dp_is_edp(intel_dp))
-		return 0;
-
-	if (INTEL_GEN(i915) < 12 && port == PORT_A)
-		return 0;
-
-	if (INTEL_GEN(i915) < 11 && port == PORT_E)
-		return 0;
-
->>>>>>> rebase
 	intel_dp->mst_mgr.cbs = &mst_cbs;
 
 	/* create encoders */
 	intel_dp_create_fake_mst_encoders(intel_dig_port);
-<<<<<<< HEAD
 	ret = drm_dp_mst_topology_mgr_init(&intel_dp->mst_mgr, dev,
 					   &intel_dp->aux, 16, 3, conn_base_id);
 	if (ret) {
 		intel_dp->can_mst = false;
 		return ret;
 	}
-=======
-	ret = drm_dp_mst_topology_mgr_init(&intel_dp->mst_mgr, &i915->drm,
-					   &intel_dp->aux, 16, 3, conn_base_id);
-	if (ret)
-		return ret;
-
-	intel_dp->can_mst = true;
-
->>>>>>> rebase
 	return 0;
 }
 

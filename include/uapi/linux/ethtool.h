@@ -14,11 +14,7 @@
 #ifndef _UAPI_LINUX_ETHTOOL_H
 #define _UAPI_LINUX_ETHTOOL_H
 
-<<<<<<< HEAD
 #include <linux/kernel.h>
-=======
-#include <linux/const.h>
->>>>>>> rebase
 #include <linux/types.h>
 #include <linux/if_ether.h>
 
@@ -231,11 +227,7 @@ enum tunable_id {
 	ETHTOOL_PFC_PREVENTION_TOUT, /* timeout in msecs */
 	/*
 	 * Add your fresh new tunable attribute above and remember to update
-<<<<<<< HEAD
 	 * tunable_strings[] in net/core/ethtool.c
-=======
-	 * tunable_strings[] in net/ethtool/common.c
->>>>>>> rebase
 	 */
 	__ETHTOOL_TUNABLE_COUNT,
 };
@@ -269,11 +261,7 @@ enum phy_tunable_id {
 	ETHTOOL_PHY_DOWNSHIFT,
 	/*
 	 * Add your fresh new phy tunable attribute above and remember to update
-<<<<<<< HEAD
 	 * phy_tunable_strings[] in net/core/ethtool.c
-=======
-	 * phy_tunable_strings[] in net/ethtool/common.c
->>>>>>> rebase
 	 */
 	__ETHTOOL_PHY_TUNABLE_COUNT,
 };

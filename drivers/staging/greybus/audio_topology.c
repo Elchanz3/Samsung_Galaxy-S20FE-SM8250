@@ -145,12 +145,6 @@ static const char **gb_generate_enum_strings(struct gbaudio_module_info *gb,
 
 	items = le32_to_cpu(gbenum->items);
 	strings = devm_kcalloc(gb->dev, items, sizeof(char *), GFP_KERNEL);
-<<<<<<< HEAD
-=======
-	if (!strings)
-		return NULL;
-
->>>>>>> rebase
 	data = gbenum->names;
 
 	for (i = 0; i < items; i++) {
@@ -466,18 +460,6 @@ static int gbcodec_mixer_dapm_ctl_put(struct snd_kcontrol *kcontrol,
 	val = ucontrol->value.integer.value[0] & mask;
 	connect = !!val;
 
-<<<<<<< HEAD
-=======
-	ret = gb_pm_runtime_get_sync(bundle);
-	if (ret)
-		return ret;
-
-	ret = gb_audio_gb_get_control(module->mgmt_connection, data->ctl_id,
-				      GB_AUDIO_INVALID_INDEX, &gbvalue);
-	if (ret)
-		goto exit;
-
->>>>>>> rebase
 	/* update ucontrol */
 	if (gbvalue.value.integer_value[0] != val) {
 		for (wi = 0; wi < wlist->num_widgets; wi++) {
@@ -491,7 +473,6 @@ static int gbcodec_mixer_dapm_ctl_put(struct snd_kcontrol *kcontrol,
 		gbvalue.value.integer_value[0] =
 			cpu_to_le32(ucontrol->value.integer.value[0]);
 
-<<<<<<< HEAD
 		ret = gb_pm_runtime_get_sync(bundle);
 		if (ret)
 			return ret;
@@ -511,19 +492,6 @@ static int gbcodec_mixer_dapm_ctl_put(struct snd_kcontrol *kcontrol,
 	}
 
 	return 0;
-=======
-		ret = gb_audio_gb_set_control(module->mgmt_connection,
-					      data->ctl_id,
-					      GB_AUDIO_INVALID_INDEX, &gbvalue);
-	}
-
-exit:
-	gb_pm_runtime_put_autosuspend(bundle);
-	if (ret)
-		dev_err_ratelimited(codec_dev, "%d:Error in %s for %s\n", ret,
-				    __func__, kcontrol->id.name);
-	return ret;
->>>>>>> rebase
 }
 
 #define SOC_DAPM_MIXER_GB(xname, kcount, data) \
@@ -693,11 +661,6 @@ static int gbaudio_tplg_create_enum_kctl(struct gbaudio_module_info *gb,
 	/* since count=1, and reg is dummy */
 	gbe->max = le32_to_cpu(gb_enum->items);
 	gbe->texts = gb_generate_enum_strings(gb, gb_enum);
-<<<<<<< HEAD
-=======
-	if (!gbe->texts)
-		return -ENOMEM;
->>>>>>> rebase
 
 	/* debug enum info */
 	dev_dbg(gb->dev, "Max:%d, name_length:%d\n", gbe->max,
@@ -907,11 +870,6 @@ static int gbaudio_tplg_create_enum_ctl(struct gbaudio_module_info *gb,
 	/* since count=1, and reg is dummy */
 	gbe->max = le32_to_cpu(gb_enum->items);
 	gbe->texts = gb_generate_enum_strings(gb, gb_enum);
-<<<<<<< HEAD
-=======
-	if (!gbe->texts)
-		return -ENOMEM;
->>>>>>> rebase
 
 	/* debug enum info */
 	dev_dbg(gb->dev, "Max:%d, name_length:%d\n", gbe->max,
@@ -1085,13 +1043,6 @@ static int gbaudio_tplg_create_widget(struct gbaudio_module_info *module,
 			csize += le16_to_cpu(gbenum->names_length);
 			control->texts = (const char * const *)
 				gb_generate_enum_strings(module, gbenum);
-<<<<<<< HEAD
-=======
-			if (!control->texts) {
-				ret = -ENOMEM;
-				goto error;
-			}
->>>>>>> rebase
 			control->items = le32_to_cpu(gbenum->items);
 		} else {
 			csize = sizeof(struct gb_audio_control);
@@ -1240,13 +1191,6 @@ static int gbaudio_tplg_process_kcontrols(struct gbaudio_module_info *module,
 			csize += le16_to_cpu(gbenum->names_length);
 			control->texts = (const char * const *)
 				gb_generate_enum_strings(module, gbenum);
-<<<<<<< HEAD
-=======
-			if (!control->texts) {
-				ret = -ENOMEM;
-				goto error;
-			}
->>>>>>> rebase
 			control->items = le32_to_cpu(gbenum->items);
 		} else {
 			csize = sizeof(struct gb_audio_control);

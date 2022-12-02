@@ -1479,11 +1479,7 @@ int kvmppc_handle_vmx_load(struct kvm_run *run, struct kvm_vcpu *vcpu,
 {
 	enum emulation_result emulated = EMULATE_DONE;
 
-<<<<<<< HEAD
 	if (vcpu->arch.mmio_vsx_copy_nums > 2)
-=======
-	if (vcpu->arch.mmio_vmx_copy_nums > 2)
->>>>>>> rebase
 		return EMULATE_FAIL;
 
 	while (vcpu->arch.mmio_vmx_copy_nums) {
@@ -1501,11 +1497,7 @@ int kvmppc_handle_vmx_load(struct kvm_run *run, struct kvm_vcpu *vcpu,
 	return emulated;
 }
 
-<<<<<<< HEAD
 int kvmppc_get_vmx_dword(struct kvm_vcpu *vcpu, int index, u64 *val)
-=======
-static int kvmppc_get_vmx_dword(struct kvm_vcpu *vcpu, int index, u64 *val)
->>>>>>> rebase
 {
 	union kvmppc_one_reg reg;
 	int vmx_offset = 0;
@@ -1523,11 +1515,7 @@ static int kvmppc_get_vmx_dword(struct kvm_vcpu *vcpu, int index, u64 *val)
 	return result;
 }
 
-<<<<<<< HEAD
 int kvmppc_get_vmx_word(struct kvm_vcpu *vcpu, int index, u64 *val)
-=======
-static int kvmppc_get_vmx_word(struct kvm_vcpu *vcpu, int index, u64 *val)
->>>>>>> rebase
 {
 	union kvmppc_one_reg reg;
 	int vmx_offset = 0;
@@ -1545,11 +1533,7 @@ static int kvmppc_get_vmx_word(struct kvm_vcpu *vcpu, int index, u64 *val)
 	return result;
 }
 
-<<<<<<< HEAD
 int kvmppc_get_vmx_hword(struct kvm_vcpu *vcpu, int index, u64 *val)
-=======
-static int kvmppc_get_vmx_hword(struct kvm_vcpu *vcpu, int index, u64 *val)
->>>>>>> rebase
 {
 	union kvmppc_one_reg reg;
 	int vmx_offset = 0;
@@ -1567,11 +1551,7 @@ static int kvmppc_get_vmx_hword(struct kvm_vcpu *vcpu, int index, u64 *val)
 	return result;
 }
 
-<<<<<<< HEAD
 int kvmppc_get_vmx_byte(struct kvm_vcpu *vcpu, int index, u64 *val)
-=======
-static int kvmppc_get_vmx_byte(struct kvm_vcpu *vcpu, int index, u64 *val)
->>>>>>> rebase
 {
 	union kvmppc_one_reg reg;
 	int vmx_offset = 0;
@@ -1596,11 +1576,7 @@ int kvmppc_handle_vmx_store(struct kvm_run *run, struct kvm_vcpu *vcpu,
 	unsigned int index = rs & KVM_MMIO_REG_MASK;
 	enum emulation_result emulated = EMULATE_DONE;
 
-<<<<<<< HEAD
 	if (vcpu->arch.mmio_vsx_copy_nums > 2)
-=======
-	if (vcpu->arch.mmio_vmx_copy_nums > 2)
->>>>>>> rebase
 		return EMULATE_FAIL;
 
 	vcpu->arch.io_gpr = rs;
@@ -2019,15 +1995,9 @@ long kvm_arch_vcpu_ioctl(struct file *filp,
 	{
 		struct kvm_enable_cap cap;
 		r = -EFAULT;
-<<<<<<< HEAD
 		vcpu_load(vcpu);
 		if (copy_from_user(&cap, argp, sizeof(cap)))
 			goto out;
-=======
-		if (copy_from_user(&cap, argp, sizeof(cap)))
-			goto out;
-		vcpu_load(vcpu);
->>>>>>> rebase
 		r = kvm_vcpu_ioctl_enable_cap(vcpu, &cap);
 		vcpu_put(vcpu);
 		break;
@@ -2051,15 +2021,9 @@ long kvm_arch_vcpu_ioctl(struct file *filp,
 	case KVM_DIRTY_TLB: {
 		struct kvm_dirty_tlb dirty;
 		r = -EFAULT;
-<<<<<<< HEAD
 		vcpu_load(vcpu);
 		if (copy_from_user(&dirty, argp, sizeof(dirty)))
 			goto out;
-=======
-		if (copy_from_user(&dirty, argp, sizeof(dirty)))
-			goto out;
-		vcpu_load(vcpu);
->>>>>>> rebase
 		r = kvm_vcpu_ioctl_dirty_tlb(vcpu, &dirty);
 		vcpu_put(vcpu);
 		break;

@@ -40,12 +40,9 @@
 #include <linux/mm.h>
 #include <linux/kexec.h>
 #include <linux/crash_dump.h>
-<<<<<<< HEAD
 #include <linux/memory.h>
 #include <linux/libfdt.h>
 #include <linux/memblock.h>
-=======
->>>>>>> rebase
 
 #include <asm/boot.h>
 #include <asm/fixmap.h>
@@ -322,7 +319,6 @@ static void __init arm64_memory_present(void)
 #endif
 
 static phys_addr_t memory_limit = PHYS_ADDR_MAX;
-<<<<<<< HEAD
 phys_addr_t bootloader_memory_limit;
 
 #ifdef CONFIG_OVERRIDE_MEMORY_LIMIT
@@ -421,8 +417,6 @@ static void __init update_memory_limit(void)
 
 }
 #endif
-=======
->>>>>>> rebase
 
 /*
  * Limit the memory size that was specified via FDT.
@@ -475,10 +469,7 @@ void __init arm64_memblock_init(void)
 {
 	const s64 linear_region_size = -(s64)PAGE_OFFSET;
 
-<<<<<<< HEAD
 	set_memsize_kernel_type(MEMSIZE_KERNEL_STOP);
-=======
->>>>>>> rebase
 	/* Handle linux,usable-memory-range property */
 	fdt_enforce_memory_region();
 
@@ -513,7 +504,6 @@ void __init arm64_memblock_init(void)
 	}
 
 	/*
-<<<<<<< HEAD
 	 * Save bootloader imposed memory limit before we overwirte
 	 * memblock.
 	 */
@@ -525,8 +515,6 @@ void __init arm64_memblock_init(void)
 	update_memory_limit();
 
 	/*
-=======
->>>>>>> rebase
 	 * Apply the memory limit if it was set. Since the kernel may be loaded
 	 * high up in memory, add back the kernel region that must be accessible
 	 * via the linear mapping.
@@ -568,11 +556,7 @@ void __init arm64_memblock_init(void)
 	if (IS_ENABLED(CONFIG_RANDOMIZE_BASE)) {
 		extern u16 memstart_offset_seed;
 		u64 range = linear_region_size -
-<<<<<<< HEAD
 			   (bootloader_memory_limit - memblock_start_of_DRAM());
-=======
-			    (memblock_end_of_DRAM() - memblock_start_of_DRAM());
->>>>>>> rebase
 
 		/*
 		 * If the size of the linear region exceeds, by a sufficient
@@ -590,7 +574,6 @@ void __init arm64_memblock_init(void)
 	 * Register the kernel text, kernel data, initrd, and initial
 	 * pagetables with memblock.
 	 */
-<<<<<<< HEAD
 	set_memsize_kernel_type(MEMSIZE_KERNEL_KERNEL);
 	memblock_reserve(__pa_symbol(_text), _end - _text);
 	set_memsize_kernel_type(MEMSIZE_KERNEL_STOP);
@@ -602,12 +585,6 @@ void __init arm64_memblock_init(void)
 		record_memsize_reserved("initrd", initrd_start,
 					initrd_end - initrd_start, false,
 					false);
-=======
-	memblock_reserve(__pa_symbol(_text), _end - _text);
-#ifdef CONFIG_BLK_DEV_INITRD
-	if (initrd_start) {
-		memblock_reserve(initrd_start, initrd_end - initrd_start);
->>>>>>> rebase
 
 		/* the generic initrd code expects virtual addresses */
 		initrd_start = __phys_to_virt(initrd_start);
@@ -630,10 +607,7 @@ void __init arm64_memblock_init(void)
 	high_memory = __va(memblock_end_of_DRAM() - 1) + 1;
 
 	dma_contiguous_reserve(arm64_dma_phys_limit);
-<<<<<<< HEAD
 	set_memsize_kernel_type(MEMSIZE_KERNEL_OTHERS);
-=======
->>>>>>> rebase
 
 	memblock_allow_resize();
 }
@@ -642,10 +616,7 @@ void __init bootmem_init(void)
 {
 	unsigned long min, max;
 
-<<<<<<< HEAD
 	set_memsize_kernel_type(MEMSIZE_KERNEL_PAGING);
-=======
->>>>>>> rebase
 	min = PFN_UP(memblock_start_of_DRAM());
 	max = PFN_DOWN(memblock_end_of_DRAM());
 
@@ -664,10 +635,7 @@ void __init bootmem_init(void)
 	zone_sizes_init(min, max);
 
 	memblock_dump_all();
-<<<<<<< HEAD
 	set_memsize_kernel_type(MEMSIZE_KERNEL_OTHERS);
-=======
->>>>>>> rebase
 }
 
 #ifndef CONFIG_SPARSEMEM_VMEMMAP
@@ -847,7 +815,6 @@ static int __init register_mem_limit_dumper(void)
 	return 0;
 }
 __initcall(register_mem_limit_dumper);
-<<<<<<< HEAD
 
 #ifdef CONFIG_MEMORY_HOTPLUG
 int arch_add_memory(int nid, u64 start, u64 size, struct vmem_altmap *altmap,
@@ -973,5 +940,3 @@ static int __init arm64_memory_hotplug_init(void)
 }
 core_initcall(arm64_memory_hotplug_init);
 #endif /* CONFIG_MEMORY_HOTPLUG */
-=======
->>>>>>> rebase

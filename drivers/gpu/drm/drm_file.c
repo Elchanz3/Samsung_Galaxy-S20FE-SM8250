@@ -46,11 +46,8 @@
 /* from BKL pushdown */
 DEFINE_MUTEX(drm_global_mutex);
 
-<<<<<<< HEAD
 #define MAX_DRM_OPEN_COUNT		20
 
-=======
->>>>>>> rebase
 /**
  * DOC: file operations
  *
@@ -267,7 +264,6 @@ void drm_file_free(struct drm_file *file)
 	kfree(file);
 }
 
-<<<<<<< HEAD
 static void drm_close_helper(struct file *filp)
 {
 	struct drm_file *file_priv = filp->private_data;
@@ -280,8 +276,6 @@ static void drm_close_helper(struct file *filp)
 	drm_file_free(file_priv);
 }
 
-=======
->>>>>>> rebase
 static int drm_setup(struct drm_device * dev)
 {
 	int ret;
@@ -330,14 +324,11 @@ int drm_open(struct inode *inode, struct file *filp)
 	if (!dev->open_count++)
 		need_setup = 1;
 
-<<<<<<< HEAD
 	if (dev->open_count >= MAX_DRM_OPEN_COUNT) {
 		retcode = -EPERM;
 		goto err_undo;
 	}
 
-=======
->>>>>>> rebase
 	/* share address_space across all char-devs of a single device */
 	filp->f_mapping = dev->anon_inode->i_mapping;
 
@@ -346,15 +337,10 @@ int drm_open(struct inode *inode, struct file *filp)
 		goto err_undo;
 	if (need_setup) {
 		retcode = drm_setup(dev);
-<<<<<<< HEAD
 		if (retcode) {
 			drm_close_helper(filp);
 			goto err_undo;
 		}
-=======
-		if (retcode)
-			goto err_undo;
->>>>>>> rebase
 	}
 	return 0;
 
@@ -508,15 +494,7 @@ int drm_release(struct inode *inode, struct file *filp)
 
 	DRM_DEBUG("open_count = %d\n", dev->open_count);
 
-<<<<<<< HEAD
 	drm_close_helper(filp);
-=======
-	mutex_lock(&dev->filelist_mutex);
-	list_del(&file_priv->lhead);
-	mutex_unlock(&dev->filelist_mutex);
-
-	drm_file_free(file_priv);
->>>>>>> rebase
 
 	if (!--dev->open_count)
 		drm_lastclose(dev);

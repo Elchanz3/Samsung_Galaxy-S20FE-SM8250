@@ -42,10 +42,6 @@ static int axxia_boot_secondary(unsigned int cpu, struct task_struct *idle)
 		return -ENOENT;
 
 	syscon = of_iomap(syscon_np, 0);
-<<<<<<< HEAD
-=======
-	of_node_put(syscon_np);
->>>>>>> rebase
 	if (!syscon)
 		return -ENOMEM;
 

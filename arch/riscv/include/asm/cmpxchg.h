@@ -187,11 +187,7 @@
 			"	bnez %1, 0b\n"				\
 			"1:\n"						\
 			: "=&r" (__ret), "=&r" (__rc), "+A" (*__ptr)	\
-<<<<<<< HEAD
 			: "rJ" (__old), "rJ" (__new)			\
-=======
-			: "rJ" ((long)__old), "rJ" (__new)		\
->>>>>>> rebase
 			: "memory");					\
 		break;							\
 	case 8:								\
@@ -236,11 +232,7 @@
 			RISCV_ACQUIRE_BARRIER				\
 			"1:\n"						\
 			: "=&r" (__ret), "=&r" (__rc), "+A" (*__ptr)	\
-<<<<<<< HEAD
 			: "rJ" (__old), "rJ" (__new)			\
-=======
-			: "rJ" ((long)__old), "rJ" (__new)		\
->>>>>>> rebase
 			: "memory");					\
 		break;							\
 	case 8:								\
@@ -286,11 +278,7 @@
 			"	bnez %1, 0b\n"				\
 			"1:\n"						\
 			: "=&r" (__ret), "=&r" (__rc), "+A" (*__ptr)	\
-<<<<<<< HEAD
 			: "rJ" (__old), "rJ" (__new)			\
-=======
-			: "rJ" ((long)__old), "rJ" (__new)		\
->>>>>>> rebase
 			: "memory");					\
 		break;							\
 	case 8:								\
@@ -336,11 +324,7 @@
 			"	fence rw, rw\n"				\
 			"1:\n"						\
 			: "=&r" (__ret), "=&r" (__rc), "+A" (*__ptr)	\
-<<<<<<< HEAD
 			: "rJ" (__old), "rJ" (__new)			\
-=======
-			: "rJ" ((long)__old), "rJ" (__new)		\
->>>>>>> rebase
 			: "memory");					\
 		break;							\
 	case 8:								\

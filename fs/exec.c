@@ -62,10 +62,7 @@
 #include <linux/oom.h>
 #include <linux/compat.h>
 #include <linux/vmalloc.h>
-<<<<<<< HEAD
 #include <linux/task_integrity.h>
-=======
->>>>>>> rebase
 
 #include <linux/uaccess.h>
 #include <asm/mmu_context.h>
@@ -73,7 +70,6 @@
 
 #include <trace/events/task.h>
 #include "internal.h"
-<<<<<<< HEAD
 #ifdef CONFIG_KDP_NS
 #include "mount.h"
 #endif
@@ -105,11 +101,6 @@ static int __init boot_recovery(char *str)
 early_param("androidboot.boot_recovery", boot_recovery);
 #endif
 
-=======
-
-#include <trace/events/sched.h>
-
->>>>>>> rebase
 int suid_dumpable = 0;
 
 static LIST_HEAD(formats);
@@ -1022,11 +1013,7 @@ int kernel_read_file_from_fd(int fd, void **buf, loff_t *size, loff_t max_size,
 	struct fd f = fdget(fd);
 	int ret = -EBADF;
 
-<<<<<<< HEAD
 	if (!f.file)
-=======
-	if (!f.file || !(f.file->f_mode & FMODE_READ))
->>>>>>> rebase
 		goto out;
 
 	ret = kernel_read_file(f.file, buf, size, max_size, id);
@@ -1053,11 +1040,7 @@ static int exec_mmap(struct mm_struct *mm)
 	/* Notify parent that we're no longer interested in the old VM */
 	tsk = current;
 	old_mm = current->mm;
-<<<<<<< HEAD
 	mm_release(tsk, old_mm);
-=======
-	exec_mm_release(tsk, old_mm);
->>>>>>> rebase
 
 	if (old_mm) {
 		sync_mm_rss(old_mm);
@@ -1074,7 +1057,6 @@ static int exec_mmap(struct mm_struct *mm)
 		}
 	}
 	task_lock(tsk);
-<<<<<<< HEAD
 	active_mm = tsk->active_mm;
 	tsk->mm = mm;
 	tsk->active_mm = mm;
@@ -1085,27 +1067,6 @@ static int exec_mmap(struct mm_struct *mm)
 	if(rkp_cred_enable)
 		uh_call(UH_APP_RKP, RKP_KDP_X43, (u64)current_cred(), (u64)mm->pgd, 0, 0);
 #endif 
-=======
-
-	local_irq_disable();
-	active_mm = tsk->active_mm;
-	tsk->active_mm = mm;
-	tsk->mm = mm;
-	/*
-	 * This prevents preemption while active_mm is being loaded and
-	 * it and mm are being updated, which could cause problems for
-	 * lazy tlb mm refcounting when these are updated by context
-	 * switches. Not all architectures can handle irqs off over
-	 * activate_mm yet.
-	 */
-	if (!IS_ENABLED(CONFIG_ARCH_WANT_IRQS_OFF_ACTIVATE_MM))
-		local_irq_enable();
-	activate_mm(active_mm, mm);
-	if (IS_ENABLED(CONFIG_ARCH_WANT_IRQS_OFF_ACTIVATE_MM))
-		local_irq_enable();
-	tsk->mm->vmacache_seqnum = 0;
-	vmacache_flush(tsk);
->>>>>>> rebase
 	task_unlock(tsk);
 	if (old_mm) {
 		up_read(&old_mm->mmap_sem);
@@ -1315,7 +1276,6 @@ void __set_task_comm(struct task_struct *tsk, const char *buf, bool exec)
 	task_unlock(tsk);
 	perf_event_comm(tsk, exec);
 }
-<<<<<<< HEAD
 #if 0
 #ifdef CONFIG_KDP_NS
 /* pointer to superblock */
@@ -1428,8 +1388,6 @@ static int is_kdp_priv_task(void)
 }
 #endif
 #endif
-=======
->>>>>>> rebase
 
 /*
  * Calling this is the point of no return. None of the failures will be
@@ -1456,16 +1414,10 @@ int flush_old_exec(struct linux_binprm * bprm)
 	 */
 	set_mm_exe_file(bprm->mm, bprm->file);
 
-<<<<<<< HEAD
-=======
-	would_dump(bprm, bprm->file);
-
->>>>>>> rebase
 	/*
 	 * Release all of the old mmap stuff
 	 */
 	acct_arg_size(bprm, 0);
-<<<<<<< HEAD
 #ifdef CONFIG_KDP_NS
 	/*
 	if(rkp_cred_enable &&
@@ -1475,8 +1427,6 @@ int flush_old_exec(struct linux_binprm * bprm)
 	}
 	*/
 #endif 
-=======
->>>>>>> rebase
 	retval = exec_mmap(bprm->mm);
 	if (retval)
 		goto out;
@@ -1512,11 +1462,7 @@ EXPORT_SYMBOL(flush_old_exec);
 void would_dump(struct linux_binprm *bprm, struct file *file)
 {
 	struct inode *inode = file_inode(file);
-<<<<<<< HEAD
 	if (inode_permission2(file->f_path.mnt, inode, MAY_READ) < 0) {
-=======
-	if (inode_permission(inode, MAY_READ) < 0) {
->>>>>>> rebase
 		struct user_namespace *old, *user_ns;
 		bprm->interp_flags |= BINPRM_FLAGS_ENFORCE_NONDUMP;
 
@@ -1586,11 +1532,7 @@ void setup_new_exec(struct linux_binprm * bprm)
 
 	/* An exec changes our domain. We are no longer part of the thread
 	   group */
-<<<<<<< HEAD
 	current->self_exec_id++;
-=======
-	WRITE_ONCE(current->self_exec_id, current->self_exec_id + 1);
->>>>>>> rebase
 	flush_signal_handlers(current, 0);
 }
 EXPORT_SYMBOL(setup_new_exec);
@@ -1883,12 +1825,8 @@ int search_binary_handler(struct linux_binprm *bprm)
 		if (printable(bprm->buf[0]) && printable(bprm->buf[1]) &&
 		    printable(bprm->buf[2]) && printable(bprm->buf[3]))
 			return retval;
-<<<<<<< HEAD
 		if (request_module("binfmt-%04x",
 					*(ushort *)(bprm->buf + 2)) < 0)
-=======
-		if (request_module("binfmt-%04x", *(ushort *)(bprm->buf + 2)) < 0)
->>>>>>> rebase
 			return retval;
 		need_retry = false;
 		goto retry;
@@ -1898,7 +1836,6 @@ int search_binary_handler(struct linux_binprm *bprm)
 }
 EXPORT_SYMBOL(search_binary_handler);
 
-<<<<<<< HEAD
 #ifdef CONFIG_KDP_CRED
 #define CHECK_ROOT_UID(x) (x->cred->uid.val == 0 || x->cred->gid.val == 0 || \
 			x->cred->euid.val == 0 || x->cred->egid.val == 0 || \
@@ -1934,8 +1871,6 @@ static int rkp_restrict_fork(struct filename *path)
 }
 #endif
 
-=======
->>>>>>> rebase
 static int exec_binprm(struct linux_binprm *bprm)
 {
 	pid_t old_pid, old_vpid;
@@ -1953,11 +1888,8 @@ static int exec_binprm(struct linux_binprm *bprm)
 		trace_sched_process_exec(current, old_pid, bprm);
 		ptrace_event(PTRACE_EVENT_EXEC, old_vpid);
 		proc_exec_connector(current);
-<<<<<<< HEAD
 	} else {
 		task_integrity_delayed_reset(current, CAUSE_EXEC, bprm->file);
-=======
->>>>>>> rebase
 	}
 
 	return ret;
@@ -2017,7 +1949,6 @@ static int __do_execve_file(int fd, struct filename *filename,
 	if (IS_ERR(file))
 		goto out_unmark;
 
-<<<<<<< HEAD
 #ifdef CONFIG_SECURITY_DEFEX
 	retval = task_defex_enforce(current, file, -__NR_execve);
 	if (retval < 0) {
@@ -2027,8 +1958,6 @@ static int __do_execve_file(int fd, struct filename *filename,
 	 }
 #endif
 
-=======
->>>>>>> rebase
 	sched_exec();
 
 	bprm->file = file;
@@ -2062,12 +1991,6 @@ static int __do_execve_file(int fd, struct filename *filename,
 		goto out_unmark;
 
 	bprm->argc = count(argv, MAX_ARG_STRINGS);
-<<<<<<< HEAD
-=======
-	if (bprm->argc == 0)
-		pr_warn_once("process '%s' launched '%s' with NULL argv: empty string added\n",
-			     current->comm, bprm->filename);
->>>>>>> rebase
 	if ((retval = bprm->argc) < 0)
 		goto out;
 
@@ -2092,23 +2015,7 @@ static int __do_execve_file(int fd, struct filename *filename,
 	if (retval < 0)
 		goto out;
 
-<<<<<<< HEAD
 	would_dump(bprm, bprm->file);
-=======
-	/*
-	 * When argv is empty, add an empty string ("") as argv[0] to
-	 * ensure confused userspace programs that start processing
-	 * from argv[1] won't end up walking envp. See also
-	 * bprm_stack_limits().
-	 */
-	if (bprm->argc == 0) {
-		const char *argv[] = { "", NULL };
-		retval = copy_strings_kernel(1, argv, bprm);
-		if (retval < 0)
-			goto out;
-		bprm->argc = 1;
-	}
->>>>>>> rebase
 
 	retval = exec_binprm(bprm);
 	if (retval < 0)
@@ -2255,7 +2162,6 @@ SYSCALL_DEFINE3(execve,
 		const char __user *const __user *, argv,
 		const char __user *const __user *, envp)
 {
-<<<<<<< HEAD
 #ifdef CONFIG_KDP_CRED
 	struct filename *path = getname(filename);
 	int error = PTR_ERR(path);
@@ -2279,8 +2185,6 @@ SYSCALL_DEFINE3(execve,
 	}
 	putname(path);
 #endif
-=======
->>>>>>> rebase
 	return do_execve(getname(filename), argv, envp);
 }
 

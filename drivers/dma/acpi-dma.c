@@ -72,21 +72,10 @@ static int acpi_dma_parse_resource_group(const struct acpi_csrt_group *grp,
 
 	si = (const struct acpi_csrt_shared_info *)&grp[1];
 
-<<<<<<< HEAD
 	/* Match device by MMIO and IRQ */
 	if (si->mmio_base_low != lower_32_bits(mem) ||
 	    si->mmio_base_high != upper_32_bits(mem) ||
 	    si->gsi_interrupt != irq)
-=======
-	/* Match device by MMIO */
-	if (si->mmio_base_low != lower_32_bits(mem) ||
-	    si->mmio_base_high != upper_32_bits(mem))
-		return 0;
-
-	/* Match device by Linux vIRQ */
-	ret = acpi_register_gsi(NULL, si->gsi_interrupt, si->interrupt_mode, si->interrupt_polarity);
-	if (ret != irq)
->>>>>>> rebase
 		return 0;
 
 	dev_dbg(&adev->dev, "matches with %.4s%04X (rev %u)\n",
@@ -142,20 +131,11 @@ static void acpi_dma_parse_csrt(struct acpi_device *adev, struct acpi_dma *adma)
 		if (ret < 0) {
 			dev_warn(&adev->dev,
 				 "error in parsing resource group\n");
-<<<<<<< HEAD
 			return;
-=======
-			break;
->>>>>>> rebase
 		}
 
 		grp = (struct acpi_csrt_group *)((void *)grp + grp->length);
 	}
-<<<<<<< HEAD
-=======
-
-	acpi_put_table((struct acpi_table_header *)csrt);
->>>>>>> rebase
 }
 
 /**

@@ -407,24 +407,12 @@ static int tipc_conn_rcv_from_sock(struct tipc_conn *con)
 		return -EWOULDBLOCK;
 	if (ret == sizeof(s)) {
 		read_lock_bh(&sk->sk_callback_lock);
-<<<<<<< HEAD
 		ret = tipc_conn_rcv_sub(srv, con, &s);
 		read_unlock_bh(&sk->sk_callback_lock);
 	}
 	if (ret < 0)
 		tipc_conn_close(con);
 
-=======
-		/* RACE: the connection can be closed in the meantime */
-		if (likely(connected(con)))
-			ret = tipc_conn_rcv_sub(srv, con, &s);
-		read_unlock_bh(&sk->sk_callback_lock);
-		if (!ret)
-			return 0;
-	}
-
-	tipc_conn_close(con);
->>>>>>> rebase
 	return ret;
 }
 
@@ -466,27 +454,12 @@ static void tipc_conn_data_ready(struct sock *sk)
 static void tipc_topsrv_accept(struct work_struct *work)
 {
 	struct tipc_topsrv *srv = container_of(work, struct tipc_topsrv, awork);
-<<<<<<< HEAD
 	struct socket *lsock = srv->listener;
 	struct socket *newsock;
-=======
-	struct socket *newsock, *lsock;
->>>>>>> rebase
 	struct tipc_conn *con;
 	struct sock *newsk;
 	int ret;
 
-<<<<<<< HEAD
-=======
-	spin_lock_bh(&srv->idr_lock);
-	if (!srv->listener) {
-		spin_unlock_bh(&srv->idr_lock);
-		return;
-	}
-	lsock = srv->listener;
-	spin_unlock_bh(&srv->idr_lock);
-
->>>>>>> rebase
 	while (1) {
 		ret = kernel_accept(lsock, &newsock, O_NONBLOCK);
 		if (ret < 0)
@@ -520,11 +493,7 @@ static void tipc_topsrv_listener_data_ready(struct sock *sk)
 
 	read_lock_bh(&sk->sk_callback_lock);
 	srv = sk->sk_user_data;
-<<<<<<< HEAD
 	if (srv->listener)
-=======
-	if (srv)
->>>>>>> rebase
 		queue_work(srv->rcv_wq, &srv->awork);
 	read_unlock_bh(&sk->sk_callback_lock);
 }
@@ -603,11 +572,7 @@ bool tipc_topsrv_kern_subscr(struct net *net, u32 port, u32 type, u32 lower,
 	sub.seq.upper = upper;
 	sub.timeout = TIPC_WAIT_FOREVER;
 	sub.filter = filter;
-<<<<<<< HEAD
 	*(u32 *)&sub.usr_handle = port;
-=======
-	*(u64 *)&sub.usr_handle = (u64)port;
->>>>>>> rebase
 
 	con = tipc_conn_alloc(tipc_topsrv(net));
 	if (IS_ERR(con))
@@ -703,27 +668,12 @@ static int tipc_topsrv_start(struct net *net)
 
 	ret = tipc_topsrv_work_start(srv);
 	if (ret < 0)
-<<<<<<< HEAD
 		return ret;
 
 	ret = tipc_topsrv_create_listener(srv);
 	if (ret < 0)
 		tipc_topsrv_work_stop(srv);
 
-=======
-		goto err_start;
-
-	ret = tipc_topsrv_create_listener(srv);
-	if (ret < 0)
-		goto err_create;
-
-	return 0;
-
-err_create:
-	tipc_topsrv_work_stop(srv);
-err_start:
-	kfree(srv);
->>>>>>> rebase
 	return ret;
 }
 
@@ -747,14 +697,8 @@ static void tipc_topsrv_stop(struct net *net)
 	__module_get(lsock->sk->sk_prot_creator->owner);
 	srv->listener = NULL;
 	spin_unlock_bh(&srv->idr_lock);
-<<<<<<< HEAD
 	sock_release(lsock);
 	tipc_topsrv_work_stop(srv);
-=======
-
-	tipc_topsrv_work_stop(srv);
-	sock_release(lsock);
->>>>>>> rebase
 	idr_destroy(&srv->conn_idr);
 	kfree(srv);
 }

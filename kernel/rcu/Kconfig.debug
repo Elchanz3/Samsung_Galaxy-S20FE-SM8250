@@ -56,7 +56,6 @@ config RCU_CPU_STALL_TIMEOUT
 	  RCU grace period persists, additional CPU stall warnings are
 	  printed at more widely spaced intervals.
 
-<<<<<<< HEAD
 config RCU_PANIC_ON_STALL
 	int "Panic on RCU Stalls"
 	range 0 1
@@ -68,8 +67,6 @@ config RCU_PANIC_ON_STALL
 	  This helps to collect cpu context as part of ramdumps for post
 	  mortem analysis.
 
-=======
->>>>>>> rebase
 config RCU_TRACE
 	bool "Enable tracing for RCU"
 	depends on DEBUG_KERNEL

@@ -81,7 +81,6 @@ void of_fdt_limit_memory(int limit)
 }
 
 /**
-<<<<<<< HEAD
  * of_fdt_get_ddrhbb - Return the highest bank bit of ddr on the current device
  *
  * On match, returns a non-zero positive value which matches the highest bank
@@ -172,8 +171,6 @@ int of_fdt_get_ddrtype(void)
 EXPORT_SYMBOL_GPL(of_fdt_get_ddrtype);
 
 /**
-=======
->>>>>>> rebase
  * of_fdt_is_compatible - Return true if given node from the given blob has
  * compat in its compatible list
  * @blob: A device tree blob
@@ -485,11 +482,7 @@ static int unflatten_dt_nodes(const void *blob,
 	for (offset = 0;
 	     offset >= 0 && depth >= initial_depth;
 	     offset = fdt_next_node(blob, offset, &depth)) {
-<<<<<<< HEAD
 		if (WARN_ON_ONCE(depth >= FDT_MAX_DEPTH))
-=======
-		if (WARN_ON_ONCE(depth >= FDT_MAX_DEPTH - 1))
->>>>>>> rebase
 			continue;
 
 		if (!IS_ENABLED(CONFIG_OF_KOBJ) &&
@@ -674,19 +667,11 @@ static int __init __reserved_mem_reserve_reg(unsigned long node,
 
 		if (size &&
 		    early_init_dt_reserve_memory_arch(base, size, nomap) == 0)
-<<<<<<< HEAD
 			pr_debug("Reserved memory: reserved region for node '%s': base %pa, size %ld MiB\n",
 				uname, &base, (unsigned long)size / SZ_1M);
 		else
 			pr_info("Reserved memory: failed to reserve memory for node '%s': base %pa, size %ld MiB\n",
 				uname, &base, (unsigned long)size / SZ_1M);
-=======
-			pr_debug("Reserved memory: reserved region for node '%s': base %pa, size %lu MiB\n",
-				uname, &base, (unsigned long)(size / SZ_1M));
-		else
-			pr_info("Reserved memory: failed to reserve memory for node '%s': base %pa, size %lu MiB\n",
-				uname, &base, (unsigned long)(size / SZ_1M));
->>>>>>> rebase
 
 		len -= t_len;
 		if (first) {
@@ -778,10 +763,7 @@ void __init early_init_fdt_scan_reserved_mem(void)
 		if (!size)
 			break;
 		early_init_dt_reserve_memory_arch(base, size, 0);
-<<<<<<< HEAD
 		record_memsize_reserved(NULL, base, size, 0, 0);
-=======
->>>>>>> rebase
 	}
 
 	of_scan_flat_dt(__fdt_scan_reserved_mem, NULL);
@@ -1182,7 +1164,6 @@ int __init early_init_dt_scan_memory(unsigned long node, const char *uname,
 	return 0;
 }
 
-<<<<<<< HEAD
 /*
  * Convert configs to something easy to use in C code
  */
@@ -1212,28 +1193,16 @@ int __init early_init_dt_scan_chosen(unsigned long node, const char *uname,
 	int l = 0;
 	const char *p = NULL;
 	char *cmdline = data;
-=======
-int __init early_init_dt_scan_chosen(unsigned long node, const char *uname,
-				     int depth, void *data)
-{
-	int l;
-	const char *p;
->>>>>>> rebase
 	const void *rng_seed;
 
 	pr_debug("search \"chosen\", depth: %d, uname: %s\n", depth, uname);
 
-<<<<<<< HEAD
 	if (depth != 1 || !cmdline ||
-=======
-	if (depth != 1 || !data ||
->>>>>>> rebase
 	    (strcmp(uname, "chosen") != 0 && strcmp(uname, "chosen@0") != 0))
 		return 0;
 
 	early_init_dt_check_for_initrd(node);
 
-<<<<<<< HEAD
 	/* Put CONFIG_CMDLINE in if forced or if data had nothing in it to start */
 	if (overwrite_incoming_cmdline || !cmdline[0])
 		strlcpy(cmdline, config_cmdline, COMMAND_LINE_SIZE);
@@ -1256,30 +1225,6 @@ int __init early_init_dt_scan_chosen(unsigned long node, const char *uname,
 			strlcpy(cmdline, p, min((int)l, COMMAND_LINE_SIZE));
 		}
 	}
-=======
-	/* Retrieve command line */
-	p = of_get_flat_dt_prop(node, "bootargs", &l);
-	if (p != NULL && l > 0)
-		strlcpy(data, p, min((int)l, COMMAND_LINE_SIZE));
-
-	/*
-	 * CONFIG_CMDLINE is meant to be a default in case nothing else
-	 * managed to set the command line, unless CONFIG_CMDLINE_FORCE
-	 * is set in which case we override whatever was found earlier.
-	 */
-#ifdef CONFIG_CMDLINE
-#if defined(CONFIG_CMDLINE_EXTEND)
-	strlcat(data, " ", COMMAND_LINE_SIZE);
-	strlcat(data, CONFIG_CMDLINE, COMMAND_LINE_SIZE);
-#elif defined(CONFIG_CMDLINE_FORCE)
-	strlcpy(data, CONFIG_CMDLINE, COMMAND_LINE_SIZE);
-#else
-	/* No arguments from boot loader, use kernel's  cmdl*/
-	if (!((char *)data)[0])
-		strlcpy(data, CONFIG_CMDLINE, COMMAND_LINE_SIZE);
-#endif
-#endif /* CONFIG_CMDLINE */
->>>>>>> rebase
 
 	pr_debug("Command line is: %s\n", (char*)data);
 
@@ -1289,13 +1234,6 @@ int __init early_init_dt_scan_chosen(unsigned long node, const char *uname,
 
 		/* try to clear seed so it won't be found. */
 		fdt_nop_property(initial_boot_params, node, "rng-seed");
-<<<<<<< HEAD
-=======
-
-		/* update CRC check value */
-		of_fdt_crc32 = crc32_be(~0, initial_boot_params,
-				fdt_totalsize(initial_boot_params));
->>>>>>> rebase
 	}
 
 	/* break now */
@@ -1400,11 +1338,6 @@ bool __init early_init_dt_verify(void *params)
 
 	/* Setup flat device-tree pointer */
 	initial_boot_params = params;
-<<<<<<< HEAD
-=======
-	of_fdt_crc32 = crc32_be(~0, initial_boot_params,
-				fdt_totalsize(initial_boot_params));
->>>>>>> rebase
 	return true;
 }
 
@@ -1419,10 +1352,7 @@ void __init early_init_dt_scan_nodes(void)
 
 	/* Setup memory, calling early_init_dt_add_memory_arch */
 	of_scan_flat_dt(early_init_dt_scan_memory, NULL);
-<<<<<<< HEAD
 	record_memsize_memory_hole();
-=======
->>>>>>> rebase
 }
 
 bool __init early_init_dt_scan(void *params)
@@ -1434,11 +1364,8 @@ bool __init early_init_dt_scan(void *params)
 		return false;
 
 	early_init_dt_scan_nodes();
-<<<<<<< HEAD
 	of_fdt_crc32 = crc32_be(~0, initial_boot_params,
 				fdt_totalsize(initial_boot_params));
-=======
->>>>>>> rebase
 	return true;
 }
 

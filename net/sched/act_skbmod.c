@@ -10,10 +10,6 @@
 */
 
 #include <linux/module.h>
-<<<<<<< HEAD
-=======
-#include <linux/if_arp.h>
->>>>>>> rebase
 #include <linux/init.h>
 #include <linux/kernel.h>
 #include <linux/skbuff.h>
@@ -40,16 +36,6 @@ static int tcf_skbmod_act(struct sk_buff *skb, const struct tc_action *a,
 	tcf_lastuse_update(&d->tcf_tm);
 	bstats_cpu_update(this_cpu_ptr(d->common.cpu_bstats), skb);
 
-<<<<<<< HEAD
-=======
-	action = READ_ONCE(d->tcf_action);
-	if (unlikely(action == TC_ACT_SHOT))
-		goto drop;
-
-	if (!skb->dev || skb->dev->type != ARPHRD_ETHER)
-		return action;
-
->>>>>>> rebase
 	/* XXX: if you are going to edit more fields beyond ethernet header
 	 * (example when you add IP header replacement or vlan swap)
 	 * then MAX_EDIT_LEN needs to change appropriately
@@ -58,13 +44,10 @@ static int tcf_skbmod_act(struct sk_buff *skb, const struct tc_action *a,
 	if (unlikely(err)) /* best policy is to drop on the floor */
 		goto drop;
 
-<<<<<<< HEAD
 	action = READ_ONCE(d->tcf_action);
 	if (unlikely(action == TC_ACT_SHOT))
 		goto drop;
 
-=======
->>>>>>> rebase
 	p = rcu_dereference_bh(d->skbmod_p);
 	flags = p->flags;
 	if (flags & SKBMOD_F_DMAC)

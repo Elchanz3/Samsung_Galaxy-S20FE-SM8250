@@ -42,7 +42,6 @@
 
 #define UFSHCD_DEFAULT_LANES_PER_DIRECTION		2
 
-<<<<<<< HEAD
 static int ufshcd_parse_reset_info(struct ufs_hba *hba)
 {
 	int ret = 0;
@@ -59,8 +58,6 @@ static int ufshcd_parse_reset_info(struct ufs_hba *hba)
 	return ret;
 }
 
-=======
->>>>>>> rebase
 static int ufshcd_parse_clock_info(struct ufs_hba *hba)
 {
 	int ret = 0;
@@ -73,10 +70,7 @@ static int ufshcd_parse_clock_info(struct ufs_hba *hba)
 	struct ufs_clk_info *clki;
 	int len = 0;
 	size_t sz = 0;
-<<<<<<< HEAD
 	char *str = NULL;
-=======
->>>>>>> rebase
 
 	if (!np)
 		goto out;
@@ -138,7 +132,6 @@ static int ufshcd_parse_clock_info(struct ufs_hba *hba)
 
 		clki->min_freq = clkfreq[i];
 		clki->max_freq = clkfreq[i+1];
-<<<<<<< HEAD
 		str = devm_kzalloc(dev, strlen(name) + 1, GFP_KERNEL);
 		if (!str) {
 			ret = -ENOMEM;
@@ -148,9 +141,6 @@ static int ufshcd_parse_clock_info(struct ufs_hba *hba)
 		memcpy(str, name, strlen(name) + 1);
 		clki->name = str;
 
-=======
-		clki->name = kstrdup(name, GFP_KERNEL);
->>>>>>> rebase
 		dev_dbg(dev, "%s: min %u max %u name %s\n", "freq-table-hz",
 				clki->min_freq, clki->max_freq, clki->name);
 		list_add_tail(&clki->list, &hba->clk_list_head);
@@ -159,7 +149,6 @@ out:
 	return ret;
 }
 
-<<<<<<< HEAD
 #define MAX_PROP_SIZE 32
 static int ufshcd_populate_vreg(struct device *dev, const char *name,
 		struct ufs_vreg **out_vreg)
@@ -170,27 +159,6 @@ static int ufshcd_populate_vreg(struct device *dev, const char *name,
 	struct device_node *np = dev->of_node;
 	const __be32 *prop;
 	char *str = NULL;
-=======
-static bool phandle_exists(const struct device_node *np,
-			   const char *phandle_name, int index)
-{
-	struct device_node *parse_np = of_parse_phandle(np, phandle_name, index);
-
-	if (parse_np)
-		of_node_put(parse_np);
-
-	return parse_np != NULL;
-}
-
-#define MAX_PROP_SIZE 32
-static int ufshcd_populate_vreg(struct device *dev, const char *name,
-				struct ufs_vreg **out_vreg)
-{
-	int ret = 0;
-	char prop_name[MAX_PROP_SIZE];
-	struct ufs_vreg *vreg = NULL;
-	struct device_node *np = dev->of_node;
->>>>>>> rebase
 
 	if (!np) {
 		dev_err(dev, "%s: non DT initialization\n", __func__);
@@ -198,11 +166,7 @@ static int ufshcd_populate_vreg(struct device *dev, const char *name,
 	}
 
 	snprintf(prop_name, MAX_PROP_SIZE, "%s-supply", name);
-<<<<<<< HEAD
 	if (!of_parse_phandle(np, prop_name, 0)) {
-=======
-	if (!phandle_exists(np, prop_name, 0)) {
->>>>>>> rebase
 		dev_info(dev, "%s: Unable to find %s regulator, assuming enabled\n",
 				__func__, prop_name);
 		goto out;
@@ -212,15 +176,11 @@ static int ufshcd_populate_vreg(struct device *dev, const char *name,
 	if (!vreg)
 		return -ENOMEM;
 
-<<<<<<< HEAD
 	str = devm_kzalloc(dev, strlen(name) + 1, GFP_KERNEL);
 	if (!str)
 		return -ENOMEM;
 	memcpy(str, name, strlen(name) + 1);
 	vreg->name = str;
-=======
-	vreg->name = kstrdup(name, GFP_KERNEL);
->>>>>>> rebase
 
 	/* if fixed regulator no need further initialization */
 	snprintf(prop_name, MAX_PROP_SIZE, "%s-fixed-regulator", name);
@@ -235,20 +195,15 @@ static int ufshcd_populate_vreg(struct device *dev, const char *name,
 		goto out;
 	}
 
-<<<<<<< HEAD
 	snprintf(prop_name, MAX_PROP_SIZE, "%s-min-microamp", name);
 	if (of_property_read_u32(np, prop_name, &vreg->min_uA))
 		vreg->min_uA = UFS_VREG_LPM_LOAD_UA;
 
-=======
-	vreg->min_uA = 0;
->>>>>>> rebase
 	if (!strcmp(name, "vcc")) {
 		if (of_property_read_bool(np, "vcc-supply-1p8")) {
 			vreg->min_uV = UFS_VREG_VCC_1P8_MIN_UV;
 			vreg->max_uV = UFS_VREG_VCC_1P8_MAX_UV;
 		} else {
-<<<<<<< HEAD
 			prop = of_get_property(np, "vcc-voltage-level", &len);
 			if (!prop || (len != (2 * sizeof(__be32)))) {
 				dev_warn(dev, "%s vcc-voltage-level property.\n",
@@ -261,15 +216,10 @@ static int ufshcd_populate_vreg(struct device *dev, const char *name,
 			}
 			if (of_property_read_bool(np, "vcc-low-voltage-sup"))
 				vreg->low_voltage_sup = true;
-=======
-			vreg->min_uV = UFS_VREG_VCC_MIN_UV;
-			vreg->max_uV = UFS_VREG_VCC_MAX_UV;
->>>>>>> rebase
 		}
 	} else if (!strcmp(name, "vccq")) {
 		vreg->min_uV = UFS_VREG_VCCQ_MIN_UV;
 		vreg->max_uV = UFS_VREG_VCCQ_MAX_UV;
-<<<<<<< HEAD
 		/**
 		 * Only if the SoC supports turning off VCCQ or VCCQ2 power
 		 * supply source during power collapse, set a flag to turn off
@@ -296,11 +246,6 @@ static int ufshcd_populate_vreg(struct device *dev, const char *name,
 		}
 		if (of_property_read_bool(np, "vccq2-pwr-collapse-sup"))
 			vreg->sys_suspend_pwr_off = true;
-=======
-	} else if (!strcmp(name, "vccq2")) {
-		vreg->min_uV = UFS_VREG_VCCQ2_MIN_UV;
-		vreg->max_uV = UFS_VREG_VCCQ2_MAX_UV;
->>>>>>> rebase
 	}
 
 	goto out;
@@ -343,7 +288,6 @@ out:
 	return err;
 }
 
-<<<<<<< HEAD
 static void ufshcd_parse_pm_levels(struct ufs_hba *hba)
 {
 	struct device *dev = hba->dev;
@@ -443,9 +387,6 @@ static void ufshcd_parse_dev_ref_clk_freq(struct ufs_hba *hba)
 }
 
 #ifdef CONFIG_SMP
-=======
-#ifdef CONFIG_PM
->>>>>>> rebase
 /**
  * ufshcd_pltfrm_suspend - suspend power management function
  * @dev: pointer to device handle
@@ -516,20 +457,12 @@ static void ufshcd_init_lanes_per_dir(struct ufs_hba *hba)
 /**
  * ufshcd_pltfrm_init - probe routine of the driver
  * @pdev: pointer to Platform device handle
-<<<<<<< HEAD
  * @var: pointer to variant specific data
-=======
- * @vops: pointer to variant ops
->>>>>>> rebase
  *
  * Returns 0 on success, non-zero value on failure
  */
 int ufshcd_pltfrm_init(struct platform_device *pdev,
-<<<<<<< HEAD
 		       struct ufs_hba_variant *var)
-=======
-		       struct ufs_hba_variant_ops *vops)
->>>>>>> rebase
 {
 	struct ufs_hba *hba;
 	void __iomem *mmio_base;
@@ -557,11 +490,7 @@ int ufshcd_pltfrm_init(struct platform_device *pdev,
 		goto out;
 	}
 
-<<<<<<< HEAD
 	hba->var = var;
-=======
-	hba->vops = vops;
->>>>>>> rebase
 
 	err = ufshcd_parse_clock_info(hba);
 	if (err) {
@@ -576,7 +505,6 @@ int ufshcd_pltfrm_init(struct platform_device *pdev,
 		goto dealloc_host;
 	}
 
-<<<<<<< HEAD
 	err = ufshcd_parse_reset_info(hba);
 	if (err) {
 		dev_err(&pdev->dev, "%s: reset parse failed %d\n",
@@ -600,8 +528,6 @@ int ufshcd_pltfrm_init(struct platform_device *pdev,
 	if (!dev->dma_mask)
 		dev->dma_mask = &dev->coherent_dma_mask;
 
-=======
->>>>>>> rebase
 	ufshcd_init_lanes_per_dir(hba);
 
 	err = ufshcd_init(hba, mmio_base, irq);
@@ -610,11 +536,8 @@ int ufshcd_pltfrm_init(struct platform_device *pdev,
 		goto dealloc_host;
 	}
 
-<<<<<<< HEAD
 	platform_set_drvdata(pdev, hba);
 
-=======
->>>>>>> rebase
 	pm_runtime_set_active(&pdev->dev);
 	pm_runtime_enable(&pdev->dev);
 

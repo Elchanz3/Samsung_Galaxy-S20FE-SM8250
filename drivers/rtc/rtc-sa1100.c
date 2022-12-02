@@ -186,10 +186,7 @@ static const struct rtc_class_ops sa1100_rtc_ops = {
 
 int sa1100_rtc_init(struct platform_device *pdev, struct sa1100_rtc *info)
 {
-<<<<<<< HEAD
 	struct rtc_device *rtc;
-=======
->>>>>>> rebase
 	int ret;
 
 	spin_lock_init(&info->lock);
@@ -218,7 +215,6 @@ int sa1100_rtc_init(struct platform_device *pdev, struct sa1100_rtc *info)
 		writel_relaxed(0, info->rcnr);
 	}
 
-<<<<<<< HEAD
 	rtc = devm_rtc_device_register(&pdev->dev, pdev->name, &sa1100_rtc_ops,
 					THIS_MODULE);
 	if (IS_ERR(rtc)) {
@@ -228,16 +224,6 @@ int sa1100_rtc_init(struct platform_device *pdev, struct sa1100_rtc *info)
 	info->rtc = rtc;
 
 	rtc->max_user_freq = RTC_FREQ;
-=======
-	info->rtc->ops = &sa1100_rtc_ops;
-	info->rtc->max_user_freq = RTC_FREQ;
-
-	ret = rtc_register_device(info->rtc);
-	if (ret) {
-		clk_disable_unprepare(info->clk);
-		return ret;
-	}
->>>>>>> rebase
 
 	/* Fix for a nasty initialization problem the in SA11xx RTSR register.
 	 * See also the comments in sa1100_rtc_interrupt().
@@ -286,13 +272,6 @@ static int sa1100_rtc_probe(struct platform_device *pdev)
 	info->irq_1hz = irq_1hz;
 	info->irq_alarm = irq_alarm;
 
-<<<<<<< HEAD
-=======
-	info->rtc = devm_rtc_allocate_device(&pdev->dev);
-	if (IS_ERR(info->rtc))
-		return PTR_ERR(info->rtc);
-
->>>>>>> rebase
 	ret = devm_request_irq(&pdev->dev, irq_1hz, sa1100_rtc_interrupt, 0,
 			       "rtc 1Hz", &pdev->dev);
 	if (ret) {

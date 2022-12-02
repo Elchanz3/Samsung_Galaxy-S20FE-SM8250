@@ -118,10 +118,7 @@ static void handle_system_shutdown(char event_modifier)
 	case EPOW_SHUTDOWN_ON_UPS:
 		pr_emerg("Loss of system power detected. System is running on"
 			 " UPS/battery. Check RTAS error log for details\n");
-<<<<<<< HEAD
 		orderly_poweroff(true);
-=======
->>>>>>> rebase
 		break;
 
 	case EPOW_SHUTDOWN_LOSS_OF_CRITICAL_FUNCTIONS:
@@ -331,18 +328,10 @@ static irqreturn_t ras_error_interrupt(int irq, void *dev_id)
 /*
  * Some versions of FWNMI place the buffer inside the 4kB page starting at
  * 0x7000. Other versions place it inside the rtas buffer. We check both.
-<<<<<<< HEAD
  */
 #define VALID_FWNMI_BUFFER(A) \
 	((((A) >= 0x7000) && ((A) < 0x7ff0)) || \
 	(((A) >= rtas.base) && ((A) < (rtas.base + rtas.size - 16))))
-=======
- * Minimum size of the buffer is 16 bytes.
- */
-#define VALID_FWNMI_BUFFER(A) \
-	((((A) >= 0x7000) && ((A) <= 0x8000 - 16)) || \
-	(((A) >= rtas.base) && ((A) <= (rtas.base + rtas.size - 16))))
->>>>>>> rebase
 
 static inline struct rtas_error_log *fwnmi_get_errlog(void)
 {

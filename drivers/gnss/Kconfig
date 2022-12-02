@@ -40,7 +40,6 @@ config GNSS_UBX_SERIAL
 
 	  If unsure, say N.
 
-<<<<<<< HEAD
 config GNSS_CMDLINE_SERIAL
 	tristate "Command line test driver for GNSS"
 	depends on SERIAL_DEV_BUS
@@ -56,6 +55,4 @@ config GNSS_CMDLINE_SERIAL
 
 	  If unsure, say N.
 
-=======
->>>>>>> rebase
 endif # GNSS

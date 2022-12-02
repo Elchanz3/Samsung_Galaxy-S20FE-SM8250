@@ -11,11 +11,8 @@ source "drivers/connector/Kconfig"
 
 source "drivers/gnss/Kconfig"
 
-<<<<<<< HEAD
 source "drivers/gps/Kconfig"
 
-=======
->>>>>>> rebase
 source "drivers/mtd/Kconfig"
 
 source "drivers/of/Kconfig"
@@ -62,11 +59,8 @@ source "drivers/char/Kconfig"
 
 source "drivers/i2c/Kconfig"
 
-<<<<<<< HEAD
 source "drivers/i3c/Kconfig"
 
-=======
->>>>>>> rebase
 source "drivers/spi/Kconfig"
 
 source "drivers/spmi/Kconfig"
@@ -147,11 +141,8 @@ source "drivers/hv/Kconfig"
 
 source "drivers/xen/Kconfig"
 
-<<<<<<< HEAD
 source "drivers/vservices/Kconfig"
 
-=======
->>>>>>> rebase
 source "drivers/staging/Kconfig"
 
 source "drivers/platform/Kconfig"
@@ -234,7 +225,6 @@ source "drivers/siox/Kconfig"
 
 source "drivers/slimbus/Kconfig"
 
-<<<<<<< HEAD
 source "drivers/esoc/Kconfig"
 
 source "drivers/battery_v2/Kconfig"
@@ -280,6 +270,4 @@ source "drivers/security/samsung/tzic/Kconfig"
 source "drivers/kunit/Kconfig"
 
 source "drivers/spu_verify/Kconfig"
-=======
->>>>>>> rebase
 endmenu

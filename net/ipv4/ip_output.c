@@ -73,10 +73,6 @@
 #include <net/icmp.h>
 #include <net/checksum.h>
 #include <net/inetpeer.h>
-<<<<<<< HEAD
-=======
-#include <net/inet_ecn.h>
->>>>>>> rebase
 #include <net/lwtunnel.h>
 #include <linux/bpf-cgroup.h>
 #include <linux/igmp.h>
@@ -163,27 +159,12 @@ int ip_build_and_send_pkt(struct sk_buff *skb, const struct sock *sk,
 	iph->daddr    = (opt && opt->opt.srr ? opt->opt.faddr : daddr);
 	iph->saddr    = saddr;
 	iph->protocol = sk->sk_protocol;
-<<<<<<< HEAD
 	if (ip_dont_fragment(sk, &rt->dst)) {
-=======
-	/* Do not bother generating IPID for small packets (eg SYNACK) */
-	if (skb->len <= IPV4_MIN_MTU || ip_dont_fragment(sk, &rt->dst)) {
->>>>>>> rebase
 		iph->frag_off = htons(IP_DF);
 		iph->id = 0;
 	} else {
 		iph->frag_off = 0;
-<<<<<<< HEAD
 		__ip_select_ident(net, iph, 1);
-=======
-		/* TCP packets here are SYNACK with fat IPv4/TCP options.
-		 * Avoid using the hashed IP ident generator.
-		 */
-		if (sk->sk_protocol == IPPROTO_TCP)
-			iph->id = (__force __be16)prandom_u32();
-		else
-			__ip_select_ident(net, iph, 1);
->>>>>>> rebase
 	}
 
 	if (opt && opt->opt.optlen) {
@@ -330,11 +311,7 @@ static int ip_finish_output(struct net *net, struct sock *sk, struct sk_buff *sk
 	if (skb_is_gso(skb))
 		return ip_finish_output_gso(net, sk, skb, mtu);
 
-<<<<<<< HEAD
 	if (skb->len > mtu || (IPCB(skb)->flags & IPSKB_FRAG_PMTU))
-=======
-	if (skb->len > mtu || IPCB(skb)->frag_max_size)
->>>>>>> rebase
 		return ip_fragment(net, sk, skb, mtu, ip_finish_output2);
 
 	return ip_finish_output2(net, sk, skb);
@@ -441,14 +418,8 @@ static void ip_copy_addrs(struct iphdr *iph, const struct flowi4 *fl4)
 {
 	BUILD_BUG_ON(offsetof(typeof(*fl4), daddr) !=
 		     offsetof(typeof(*fl4), saddr) + sizeof(fl4->saddr));
-<<<<<<< HEAD
 	memcpy(&iph->saddr, &fl4->saddr,
 	       sizeof(fl4->saddr) + sizeof(fl4->daddr));
-=======
-
-	iph->saddr = fl4->saddr;
-	iph->daddr = fl4->daddr;
->>>>>>> rebase
 }
 
 /* Note: skb->sk can be different from sk, in case of tunnels */
@@ -968,11 +939,7 @@ static int __ip_append_data(struct sock *sk,
 			unsigned int datalen;
 			unsigned int fraglen;
 			unsigned int fraggap;
-<<<<<<< HEAD
 			unsigned int alloclen;
-=======
-			unsigned int alloclen, alloc_extra;
->>>>>>> rebase
 			unsigned int pagedlen;
 			struct sk_buff *skb_prev;
 alloc_new_skb:
@@ -992,7 +959,6 @@ alloc_new_skb:
 			fraglen = datalen + fragheaderlen;
 			pagedlen = 0;
 
-<<<<<<< HEAD
 			if ((flags & MSG_MORE) &&
 			    !(rt->dst.dev->features&NETIF_F_SG))
 				alloclen = mtu;
@@ -1004,10 +970,6 @@ alloc_new_skb:
 			}
 
 			alloclen += exthdrlen;
-=======
-			alloc_extra = hh_len + 15;
-			alloc_extra += exthdrlen;
->>>>>>> rebase
 
 			/* The last fragment gets additional space at tail.
 			 * Note, with MSG_MORE we overallocate on fragments,
@@ -1015,42 +977,17 @@ alloc_new_skb:
 			 * the last.
 			 */
 			if (datalen == length + fraggap)
-<<<<<<< HEAD
 				alloclen += rt->dst.trailer_len;
 
 			if (transhdrlen) {
 				skb = sock_alloc_send_skb(sk,
 						alloclen + hh_len + 15,
-=======
-				alloc_extra += rt->dst.trailer_len;
-
-			if ((flags & MSG_MORE) &&
-			    !(rt->dst.dev->features&NETIF_F_SG))
-				alloclen = mtu;
-			else if (!paged &&
-				 (fraglen + alloc_extra < SKB_MAX_ALLOC ||
-				  !(rt->dst.dev->features & NETIF_F_SG)))
-				alloclen = fraglen;
-			else {
-				alloclen = min_t(int, fraglen, MAX_HEADER);
-				pagedlen = fraglen - alloclen;
-			}
-
-			alloclen += alloc_extra;
-
-			if (transhdrlen) {
-				skb = sock_alloc_send_skb(sk, alloclen,
->>>>>>> rebase
 						(flags & MSG_DONTWAIT), &err);
 			} else {
 				skb = NULL;
 				if (refcount_read(&sk->sk_wmem_alloc) + wmem_alloc_delta <=
 				    2 * sk->sk_sndbuf)
-<<<<<<< HEAD
 					skb = alloc_skb(alloclen + hh_len + 15,
-=======
-					skb = alloc_skb(alloclen,
->>>>>>> rebase
 							sk->sk_allocation);
 				if (unlikely(!skb))
 					err = -ENOBUFS;
@@ -1645,11 +1582,7 @@ void ip_send_unicast_reply(struct sock *sk, struct sk_buff *skb,
 	if (IS_ERR(rt))
 		return;
 
-<<<<<<< HEAD
 	inet_sk(sk)->tos = arg->tos;
-=======
-	inet_sk(sk)->tos = arg->tos & ~INET_ECN_MASK;
->>>>>>> rebase
 
 	sk->sk_priority = skb->priority;
 	sk->sk_protocol = ip_hdr(skb)->protocol;

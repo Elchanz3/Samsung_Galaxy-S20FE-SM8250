@@ -578,7 +578,6 @@ static int rfcomm_sock_sendmsg(struct socket *sock, struct msghdr *msg,
 	lock_sock(sk);
 
 	sent = bt_sock_wait_ready(sk, msg->msg_flags);
-<<<<<<< HEAD
 	if (sent)
 		goto done;
 
@@ -620,23 +619,6 @@ static int rfcomm_sock_sendmsg(struct socket *sock, struct msghdr *msg,
 done:
 	release_sock(sk);
 
-=======
-
-	release_sock(sk);
-
-	if (sent)
-		return sent;
-
-	skb = bt_skb_sendmmsg(sk, msg, len, d->mtu, RFCOMM_SKB_HEAD_RESERVE,
-			      RFCOMM_SKB_TAIL_RESERVE);
-	if (IS_ERR(skb))
-		return PTR_ERR(skb);
-
-	sent = rfcomm_dlc_send(d, skb);
-	if (sent < 0)
-		kfree_skb(skb);
-
->>>>>>> rebase
 	return sent;
 }
 

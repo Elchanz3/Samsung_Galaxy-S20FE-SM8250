@@ -23,10 +23,6 @@
 #include <linux/init.h>
 #include <linux/module.h>
 #include <linux/pci.h>
-<<<<<<< HEAD
-=======
-#include <linux/pci_ids.h>
->>>>>>> rebase
 #include <asm/amd_nb.h>
 #include <asm/processor.h>
 
@@ -45,7 +41,6 @@ static DEFINE_MUTEX(nb_smu_ind_mutex);
 #define PCI_DEVICE_ID_AMD_15H_M70H_NB_F3	0x15b3
 #endif
 
-<<<<<<< HEAD
 #ifndef PCI_DEVICE_ID_AMD_17H_DF_F3
 #define PCI_DEVICE_ID_AMD_17H_DF_F3	0x1463
 #endif
@@ -54,8 +49,6 @@ static DEFINE_MUTEX(nb_smu_ind_mutex);
 #define PCI_DEVICE_ID_AMD_17H_M10H_DF_F3	0x15eb
 #endif
 
-=======
->>>>>>> rebase
 /* CPUID function 0x80000001, ebx */
 #define CPUID_PKGTYPE_MASK	0xf0000000
 #define CPUID_PKGTYPE_F		0x00000000

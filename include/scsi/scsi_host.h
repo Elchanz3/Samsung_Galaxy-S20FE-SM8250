@@ -325,10 +325,7 @@ struct scsi_host_template {
 #define SCSI_ADAPTER_RESET	1
 #define SCSI_FIRMWARE_RESET	2
 
-<<<<<<< HEAD
         void (* tw_ctrl)(struct scsi_device *, int);
-=======
->>>>>>> rebase
 
 	/*
 	 * Name of proc directory
@@ -488,12 +485,9 @@ struct scsi_host_template {
 	 */
 	unsigned int cmd_size;
 	struct scsi_host_cmd_pool *cmd_pool;
-<<<<<<< HEAD
 
 	/* Delay for runtime autosuspend */
 	int rpm_autosuspend_delay;
-=======
->>>>>>> rebase
 };
 
 /*
@@ -665,15 +659,12 @@ struct Scsi_Host {
 	unsigned short_inquiry:1;
 
 	/*
-<<<<<<< HEAD
 	 * Set "DBD" field in mode_sense caching mode page in case it is
 	 * mandatory by LLD standard.
 	 */
 	unsigned set_dbd_for_caching:1;
 
 	/*
-=======
->>>>>>> rebase
 	 * Optional work queue to be utilized by the transport
 	 */
 	char work_q_name[20];
@@ -721,7 +712,6 @@ struct Scsi_Host {
 	 */
 	struct device *dma_dev;
 
-<<<<<<< HEAD
 	unsigned int  by_ufs;
 #ifdef CONFIG_USB_STORAGE_DETECT
 	unsigned int  by_usb;
@@ -740,8 +730,6 @@ struct Scsi_Host {
 	bool ufs_sys_log_en;
 #endif
 
-=======
->>>>>>> rebase
 	/*
 	 * We should ensure that this is aligned, both for better performance
 	 * and also because some compilers (m68k) don't automatically force
@@ -827,12 +815,9 @@ static inline int scsi_host_scan_allowed(struct Scsi_Host *shost)
 
 extern void scsi_unblock_requests(struct Scsi_Host *);
 extern void scsi_block_requests(struct Scsi_Host *);
-<<<<<<< HEAD
 #ifdef CONFIG_BLK_TURBO_WRITE
 extern void scsi_reset_tw_state(struct Scsi_Host *);
 #endif
-=======
->>>>>>> rebase
 
 struct class_container;
 

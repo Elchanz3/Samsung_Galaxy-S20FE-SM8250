@@ -303,11 +303,7 @@ void usb_put_intf(struct usb_interface *intf);
  * should cope with both LPJ calibration errors and devices not following every
  * detail of the USB Specification.
  */
-<<<<<<< HEAD
 #define USB_RESUME_TIMEOUT	20 /* ms */
-=======
-#define USB_RESUME_TIMEOUT	40 /* ms */
->>>>>>> rebase
 
 /**
  * struct usb_interface_cache - long-term representation of a device interface
@@ -406,11 +402,8 @@ struct usb_host_bos {
 	struct usb_ssp_cap_descriptor	*ssp_cap;
 	struct usb_ss_container_id_descriptor	*ss_id;
 	struct usb_ptm_cap_descriptor	*ptm_cap;
-<<<<<<< HEAD
 	struct usb_config_summary_descriptor	*config_summary;
 	unsigned int	num_config_summary_desc;
-=======
->>>>>>> rebase
 };
 
 int __usb_get_extra_descriptor(char *buffer, unsigned size,
@@ -475,7 +468,6 @@ struct usb_bus {
 	struct mon_bus *mon_bus;	/* non-null when associated */
 	int monitored;			/* non-zero when monitored */
 #endif
-<<<<<<< HEAD
 	unsigned skip_resume:1;		/* All USB devices are brought into full
 					 * power state after system resume. It
 					 * is desirable for some buses to keep
@@ -485,8 +477,6 @@ struct usb_bus {
 					 * wakeup is detected or an interface
 					 * driver starts I/O.
 					 */
-=======
->>>>>>> rebase
 };
 
 struct usb_dev_state;
@@ -601,10 +591,6 @@ struct usb3_lpm_parameters {
  * @level: number of USB hub ancestors
  * @can_submit: URBs may be submitted
  * @persist_enabled:  USB_PERSIST enabled for this device
-<<<<<<< HEAD
-=======
- * @reset_in_progress: the device is being reset
->>>>>>> rebase
  * @have_langid: whether string_langid is valid
  * @authorized: policy has said we can use it;
  *	(user space) policy determines if we authorize this device to be
@@ -689,10 +675,6 @@ struct usb_device {
 
 	unsigned can_submit:1;
 	unsigned persist_enabled:1;
-<<<<<<< HEAD
-=======
-	unsigned reset_in_progress:1;
->>>>>>> rebase
 	unsigned have_langid:1;
 	unsigned authorized:1;
 	unsigned authenticated:1;
@@ -853,7 +835,6 @@ static inline bool usb_device_no_sg_constraint(struct usb_device *udev)
 
 /* for drivers using iso endpoints */
 extern int usb_get_current_frame_number(struct usb_device *usb_dev);
-<<<<<<< HEAD
 extern int usb_sec_event_ring_setup(struct usb_device *dev,
 	unsigned int intr_num);
 extern int usb_sec_event_ring_cleanup(struct usb_device *dev,
@@ -867,8 +848,6 @@ extern int usb_get_controller_id(struct usb_device *dev);
 
 extern int usb_stop_endpoint(struct usb_device *dev,
 	struct usb_host_endpoint *ep);
-=======
->>>>>>> rebase
 
 /* Sets up a group of bulk endpoints to support multiple stream IDs. */
 extern int usb_alloc_streams(struct usb_interface *interface,
@@ -1853,11 +1832,8 @@ extern int usb_string(struct usb_device *dev, int index,
 extern int usb_clear_halt(struct usb_device *dev, int pipe);
 extern int usb_reset_configuration(struct usb_device *dev);
 extern int usb_set_interface(struct usb_device *dev, int ifnum, int alternate);
-<<<<<<< HEAD
 extern int usb_set_interface_timeout(struct usb_device *dev, int ifnum,
 		int alternate, unsigned long timeout);
-=======
->>>>>>> rebase
 extern void usb_reset_endpoint(struct usb_device *dev, unsigned int epaddr);
 
 /* this request isn't really synchronous, but it belongs with the others */
@@ -2040,16 +2016,11 @@ static inline int usb_translate_errors(int error_code)
 #define USB_DEVICE_REMOVE	0x0002
 #define USB_BUS_ADD		0x0003
 #define USB_BUS_REMOVE		0x0004
-<<<<<<< HEAD
 #define USB_BUS_DIED		0x0005
 extern void usb_register_notify(struct notifier_block *nb);
 extern void usb_unregister_notify(struct notifier_block *nb);
 extern void usb_register_atomic_notify(struct notifier_block *nb);
 extern void usb_unregister_atomic_notify(struct notifier_block *nb);
-=======
-extern void usb_register_notify(struct notifier_block *nb);
-extern void usb_unregister_notify(struct notifier_block *nb);
->>>>>>> rebase
 
 /* debugfs stuff */
 extern struct dentry *usb_debug_root;
@@ -2060,7 +2031,6 @@ enum usb_led_event {
 	USB_LED_EVENT_GADGET = 1,
 };
 
-<<<<<<< HEAD
 #if IS_ENABLED(CONFIG_USB_HOST_CERTIFICATION)
 /* USB certification */
 enum usb_host_certi_type {
@@ -2074,8 +2044,6 @@ enum usb_host_certi_type {
 extern void send_usb_host_certi_uevent(struct device *dev, int usb_certi);
 #endif
 
-=======
->>>>>>> rebase
 #ifdef CONFIG_USB_LED_TRIG
 extern void usb_led_activity(enum usb_led_event ev);
 #else

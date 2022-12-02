@@ -156,12 +156,7 @@ static int mt8173_max98090_dev_probe(struct platform_device *pdev)
 	if (!codec_node) {
 		dev_err(&pdev->dev,
 			"Property 'audio-codec' missing or invalid\n");
-<<<<<<< HEAD
 		return -EINVAL;
-=======
-		ret = -EINVAL;
-		goto put_platform_node;
->>>>>>> rebase
 	}
 	for (i = 0; i < card->num_links; i++) {
 		if (mt8173_max98090_dais[i].codec_name)
@@ -174,14 +169,6 @@ static int mt8173_max98090_dev_probe(struct platform_device *pdev)
 	if (ret)
 		dev_err(&pdev->dev, "%s snd_soc_register_card fail %d\n",
 			__func__, ret);
-<<<<<<< HEAD
-=======
-
-	of_node_put(codec_node);
-
-put_platform_node:
-	of_node_put(platform_node);
->>>>>>> rebase
 	return ret;
 }
 

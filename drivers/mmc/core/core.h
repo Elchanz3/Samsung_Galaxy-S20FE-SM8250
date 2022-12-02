@@ -17,10 +17,7 @@
 struct mmc_host;
 struct mmc_card;
 struct mmc_request;
-<<<<<<< HEAD
 struct mmc_queue;
-=======
->>>>>>> rebase
 
 #define MMC_CMD_RETRIES        3
 
@@ -30,23 +27,16 @@ struct mmc_bus_ops {
 	int (*pre_suspend)(struct mmc_host *);
 	int (*suspend)(struct mmc_host *);
 	int (*resume)(struct mmc_host *);
-<<<<<<< HEAD
 	int (*deferred_resume)(struct mmc_host *host);
-=======
->>>>>>> rebase
 	int (*runtime_suspend)(struct mmc_host *);
 	int (*runtime_resume)(struct mmc_host *);
 	int (*alive)(struct mmc_host *);
 	int (*shutdown)(struct mmc_host *);
 	int (*hw_reset)(struct mmc_host *);
 	int (*sw_reset)(struct mmc_host *);
-<<<<<<< HEAD
 	int (*change_bus_speed)(struct mmc_host *host, unsigned long *freq);
 	int (*change_bus_speed_deferred)(struct mmc_host *host,
 							unsigned long *freq);
-=======
-	bool (*cache_enabled)(struct mmc_host *);
->>>>>>> rebase
 };
 
 void mmc_attach_bus(struct mmc_host *host, const struct mmc_bus_ops *ops);
@@ -74,11 +64,8 @@ void mmc_power_up(struct mmc_host *host, u32 ocr);
 void mmc_power_off(struct mmc_host *host);
 void mmc_power_cycle(struct mmc_host *host, u32 ocr);
 void mmc_set_initial_state(struct mmc_host *host);
-<<<<<<< HEAD
 int mmc_clk_update_freq(struct mmc_host *host,
 		unsigned long freq, enum mmc_load state);
-=======
->>>>>>> rebase
 
 static inline void mmc_delay(unsigned int ms)
 {
@@ -109,7 +96,6 @@ void mmc_remove_host_debugfs(struct mmc_host *host);
 void mmc_add_card_debugfs(struct mmc_card *card);
 void mmc_remove_card_debugfs(struct mmc_card *card);
 
-<<<<<<< HEAD
 extern bool mmc_can_scale_clk(struct mmc_host *host);
 extern int mmc_init_clk_scaling(struct mmc_host *host);
 extern int mmc_suspend_clk_scaling(struct mmc_host *host);
@@ -123,20 +109,15 @@ extern void mmc_cqe_clk_scaling_stop_busy(struct mmc_host *host,
 
 extern unsigned long mmc_get_max_frequency(struct mmc_host *host);
 
-=======
->>>>>>> rebase
 int mmc_execute_tuning(struct mmc_card *card);
 int mmc_hs200_to_hs400(struct mmc_card *card);
 int mmc_hs400_to_hs200(struct mmc_card *card);
 
-<<<<<<< HEAD
 #ifndef CONFIG_MMC_CLKGATE
 void mmc_gate_clock(struct mmc_host *host);
 void mmc_ungate_clock(struct mmc_host *host);
 #endif
 
-=======
->>>>>>> rebase
 #ifdef CONFIG_PM_SLEEP
 void mmc_register_pm_notifier(struct mmc_host *host);
 void mmc_unregister_pm_notifier(struct mmc_host *host);
@@ -167,11 +148,8 @@ int mmc_set_blockcount(struct mmc_card *card, unsigned int blockcount,
 
 int __mmc_claim_host(struct mmc_host *host, struct mmc_ctx *ctx,
 		     atomic_t *abort);
-<<<<<<< HEAD
 int __mmc_try_claim_host(struct mmc_host *host, struct mmc_ctx *ctx,
 		         unsigned int delay);
-=======
->>>>>>> rebase
 void mmc_release_host(struct mmc_host *host);
 void mmc_get_card(struct mmc_card *card, struct mmc_ctx *ctx);
 void mmc_put_card(struct mmc_card *card, struct mmc_ctx *ctx);
@@ -187,7 +165,6 @@ static inline void mmc_claim_host(struct mmc_host *host)
 	__mmc_claim_host(host, NULL, NULL);
 }
 
-<<<<<<< HEAD
 /**
  *	mmc_try_claim_host - try exclusively to claim a host
  *         and keep trying for given time, with a gap of 10ms
@@ -203,8 +180,6 @@ static inline int mmc_try_claim_host(struct mmc_host *host, unsigned int delay_m
 	return ret;
 }
 
-=======
->>>>>>> rebase
 int mmc_cqe_start_req(struct mmc_host *host, struct mmc_request *mrq);
 void mmc_cqe_post_req(struct mmc_host *host, struct mmc_request *mrq);
 int mmc_cqe_recovery(struct mmc_host *host);
@@ -240,15 +215,4 @@ static inline void mmc_post_req(struct mmc_host *host, struct mmc_request *mrq,
 		host->ops->post_req(host, mrq, err);
 }
 
-<<<<<<< HEAD
-=======
-static inline bool mmc_cache_enabled(struct mmc_host *host)
-{
-	if (host->bus_ops->cache_enabled)
-		return host->bus_ops->cache_enabled(host);
-
-	return false;
-}
-
->>>>>>> rebase
 #endif

@@ -2038,11 +2038,8 @@ err_engine1:
 
 	pm_runtime_disable(dev);
 	pm_runtime_put_noidle(dev);
-<<<<<<< HEAD
 	pm_runtime_disable(dev);
 	pm_runtime_put_noidle(dev);
-=======
->>>>>>> rebase
 
 	clk_disable_unprepare(cryp->clk);
 

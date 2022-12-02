@@ -529,11 +529,7 @@ static int lp8788_set_irqs(struct platform_device *pdev,
 
 		ret = request_threaded_irq(virq, NULL,
 					lp8788_charger_irq_thread,
-<<<<<<< HEAD
 					0, name, pchg);
-=======
-					IRQF_ONESHOT, name, pchg);
->>>>>>> rebase
 		if (ret)
 			break;
 	}
@@ -604,7 +600,6 @@ static void lp8788_setup_adc_channel(struct device *dev,
 		return;
 
 	/* ADC channel for battery voltage */
-<<<<<<< HEAD
 	chan = iio_channel_get(dev, pdata->adc_vbatt);
 	pchg->chan[LP8788_VBATT] = IS_ERR(chan) ? NULL : chan;
 
@@ -626,16 +621,6 @@ static void lp8788_release_adc_channel(struct lp8788_charger *pchg)
 	}
 }
 
-=======
-	chan = devm_iio_channel_get(dev, pdata->adc_vbatt);
-	pchg->chan[LP8788_VBATT] = IS_ERR(chan) ? NULL : chan;
-
-	/* ADC channel for battery temperature */
-	chan = devm_iio_channel_get(dev, pdata->adc_batt_temp);
-	pchg->chan[LP8788_BATT_TEMP] = IS_ERR(chan) ? NULL : chan;
-}
-
->>>>>>> rebase
 static ssize_t lp8788_show_charger_status(struct device *dev,
 				struct device_attribute *attr, char *buf)
 {
@@ -762,10 +747,7 @@ static int lp8788_charger_remove(struct platform_device *pdev)
 	lp8788_irq_unregister(pdev, pchg);
 	sysfs_remove_group(&pdev->dev.kobj, &lp8788_attr_group);
 	lp8788_psy_unregister(pchg);
-<<<<<<< HEAD
 	lp8788_release_adc_channel(pchg);
-=======
->>>>>>> rebase
 
 	return 0;
 }

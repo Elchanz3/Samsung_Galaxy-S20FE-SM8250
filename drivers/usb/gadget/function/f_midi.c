@@ -1048,21 +1048,12 @@ static int f_midi_bind(struct usb_configuration *c, struct usb_function *f)
 		f->ss_descriptors = usb_copy_descriptors(midi_function);
 		if (!f->ss_descriptors)
 			goto fail_f_midi;
-<<<<<<< HEAD
 	}
 
 	if (gadget_is_superspeed_plus(c->cdev->gadget)) {
 		f->ssp_descriptors = usb_copy_descriptors(midi_function);
 		if (!f->ssp_descriptors)
 			goto fail_f_midi;
-=======
-
-		if (gadget_is_superspeed_plus(c->cdev->gadget)) {
-			f->ssp_descriptors = usb_copy_descriptors(midi_function);
-			if (!f->ssp_descriptors)
-				goto fail_f_midi;
-		}
->>>>>>> rebase
 	}
 
 	kfree(midi_function);
@@ -1231,7 +1222,6 @@ static void f_midi_free_inst(struct usb_function_instance *f)
 	}
 }
 
-<<<<<<< HEAD
 #ifdef CONFIG_USB_CONFIGFS_UEVENT
 extern struct device *create_function_device(char *name);
 static ssize_t alsa_show(struct device *dev,
@@ -1291,8 +1281,6 @@ static int create_alsa_device(struct usb_function_instance *fi)
 }
 #endif
 
-=======
->>>>>>> rebase
 static struct usb_function_instance *f_midi_alloc_inst(void)
 {
 	struct f_midi_opts *opts;
@@ -1311,14 +1299,11 @@ static struct usb_function_instance *f_midi_alloc_inst(void)
 	opts->out_ports = 1;
 	opts->refcnt = 1;
 
-<<<<<<< HEAD
 	if (create_alsa_device(&opts->func_inst)) {
 		kfree(opts);
 		return ERR_PTR(-ENODEV);
 	}
 
-=======
->>>>>>> rebase
 	config_group_init_type_name(&opts->func_inst.group, "",
 				    &midi_func_type);
 
@@ -1339,10 +1324,7 @@ static void f_midi_free(struct usb_function *f)
 		kfifo_free(&midi->in_req_fifo);
 		kfree(midi);
 		free = true;
-<<<<<<< HEAD
 		opts->func_inst.f = NULL;
-=======
->>>>>>> rebase
 	}
 	mutex_unlock(&opts->lock);
 
@@ -1404,11 +1386,7 @@ static struct usb_function *f_midi_alloc(struct usb_function_instance *fi)
 	midi->id = kstrdup(opts->id, GFP_KERNEL);
 	if (opts->id && !midi->id) {
 		status = -ENOMEM;
-<<<<<<< HEAD
 		goto setup_fail;
-=======
-		goto midi_free;
->>>>>>> rebase
 	}
 	midi->in_ports = opts->in_ports;
 	midi->out_ports = opts->out_ports;
@@ -1420,11 +1398,7 @@ static struct usb_function *f_midi_alloc(struct usb_function_instance *fi)
 
 	status = kfifo_alloc(&midi->in_req_fifo, midi->qlen, GFP_KERNEL);
 	if (status)
-<<<<<<< HEAD
 		goto setup_fail;
-=======
-		goto midi_free;
->>>>>>> rebase
 
 	spin_lock_init(&midi->transmit_lock);
 
@@ -1438,24 +1412,12 @@ static struct usb_function *f_midi_alloc(struct usb_function_instance *fi)
 	midi->func.disable	= f_midi_disable;
 	midi->func.free_func	= f_midi_free;
 
-<<<<<<< HEAD
 	fi->f = &midi->func;
 	return &midi->func;
 
 setup_fail:
 	mutex_unlock(&opts->lock);
 	kfree(midi);
-=======
-	return &midi->func;
-
-midi_free:
-	if (midi)
-		kfree(midi->id);
-	kfree(midi);
-setup_fail:
-	mutex_unlock(&opts->lock);
-
->>>>>>> rebase
 	return ERR_PTR(status);
 }
 

@@ -16,16 +16,12 @@
 #include <linux/exportfs.h>
 #include <linux/writeback.h>
 #include <linux/buffer_head.h> /* sync_mapping_buffers */
-<<<<<<< HEAD
 #include <linux/unicode.h>
 #include <linux/fscrypt.h>
 
 #ifdef CONFIG_FSCRYPT_SDP
 #include "crypto/fscrypt_private.h"
 #endif
-=======
-
->>>>>>> rebase
 #include <linux/uaccess.h>
 
 #include "internal.h"
@@ -811,11 +807,7 @@ int simple_attr_open(struct inode *inode, struct file *file,
 {
 	struct simple_attr *attr;
 
-<<<<<<< HEAD
 	attr = kmalloc(sizeof(*attr), GFP_KERNEL);
-=======
-	attr = kzalloc(sizeof(*attr), GFP_KERNEL);
->>>>>>> rebase
 	if (!attr)
 		return -ENOMEM;
 
@@ -855,17 +847,9 @@ ssize_t simple_attr_read(struct file *file, char __user *buf,
 	if (ret)
 		return ret;
 
-<<<<<<< HEAD
 	if (*ppos) {		/* continued read */
 		size = strlen(attr->get_buf);
 	} else {		/* first read */
-=======
-	if (*ppos && attr->get_buf[0]) {
-		/* continued read */
-		size = strlen(attr->get_buf);
-	} else {
-		/* first read */
->>>>>>> rebase
 		u64 val;
 		ret = attr->get(attr->data, &val);
 		if (ret)
@@ -887,11 +871,7 @@ ssize_t simple_attr_write(struct file *file, const char __user *buf,
 			  size_t len, loff_t *ppos)
 {
 	struct simple_attr *attr;
-<<<<<<< HEAD
 	u64 val;
-=======
-	unsigned long long val;
->>>>>>> rebase
 	size_t size;
 	ssize_t ret;
 
@@ -909,13 +889,7 @@ ssize_t simple_attr_write(struct file *file, const char __user *buf,
 		goto out;
 
 	attr->set_buf[size] = '\0';
-<<<<<<< HEAD
 	val = simple_strtoll(attr->set_buf, NULL, 0);
-=======
-	ret = kstrtoull(attr->set_buf, 0, &val);
-	if (ret)
-		goto out;
->>>>>>> rebase
 	ret = attr->set(attr->data, val);
 	if (ret == 0)
 		ret = len; /* on success, claim we got the whole input */
@@ -1289,7 +1263,6 @@ bool is_empty_dir_inode(struct inode *inode)
 	return (inode->i_fop == &empty_dir_operations) &&
 		(inode->i_op == &empty_dir_inode_operations);
 }
-<<<<<<< HEAD
 
 #ifdef CONFIG_FSCRYPT_SDP
 static int fscrypt_sdp_d_delete(const struct dentry *dentry)
@@ -1425,5 +1398,3 @@ void generic_set_encrypted_ci_d_ops(struct inode *dir, struct dentry *dentry)
 #endif
 }
 EXPORT_SYMBOL(generic_set_encrypted_ci_d_ops);
-=======
->>>>>>> rebase

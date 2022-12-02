@@ -158,11 +158,7 @@ static int fuel_gauge_reg_readb(struct axp288_fg_info *info, int reg)
 	}
 
 	if (ret < 0) {
-<<<<<<< HEAD
 		dev_err(&info->pdev->dev, "axp288 reg read err:%d\n", ret);
-=======
-		dev_err(&info->pdev->dev, "Error reading reg 0x%02x err: %d\n", reg, ret);
->>>>>>> rebase
 		return ret;
 	}
 
@@ -176,11 +172,7 @@ static int fuel_gauge_reg_writeb(struct axp288_fg_info *info, int reg, u8 val)
 	ret = regmap_write(info->regmap, reg, (unsigned int)val);
 
 	if (ret < 0)
-<<<<<<< HEAD
 		dev_err(&info->pdev->dev, "axp288 reg write err:%d\n", ret);
-=======
-		dev_err(&info->pdev->dev, "Error writing reg 0x%02x err: %d\n", reg, ret);
->>>>>>> rebase
 
 	return ret;
 }
@@ -726,22 +718,14 @@ static const struct dmi_system_id axp288_fuel_gauge_blacklist[] = {
 	{
 		/* Intel Cherry Trail Compute Stick, Windows version */
 		.matches = {
-<<<<<<< HEAD
 			DMI_MATCH(DMI_SYS_VENDOR, "Intel Corporation"),
-=======
-			DMI_MATCH(DMI_SYS_VENDOR, "Intel"),
->>>>>>> rebase
 			DMI_MATCH(DMI_PRODUCT_NAME, "STK1AW32SC"),
 		},
 	},
 	{
 		/* Intel Cherry Trail Compute Stick, version without an OS */
 		.matches = {
-<<<<<<< HEAD
 			DMI_MATCH(DMI_SYS_VENDOR, "Intel Corporation"),
-=======
-			DMI_MATCH(DMI_SYS_VENDOR, "Intel"),
->>>>>>> rebase
 			DMI_MATCH(DMI_PRODUCT_NAME, "STK1A32SC"),
 		},
 	},

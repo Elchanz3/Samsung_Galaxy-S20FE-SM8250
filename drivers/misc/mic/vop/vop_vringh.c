@@ -308,11 +308,7 @@ static int vop_virtio_add_device(struct vop_vdev *vdev,
 
 		num = le16_to_cpu(vqconfig[i].num);
 		mutex_init(&vvr->vr_mutex);
-<<<<<<< HEAD
 		vr_size = PAGE_ALIGN(vring_size(num, MIC_VIRTIO_RING_ALIGN) +
-=======
-		vr_size = PAGE_ALIGN(round_up(vring_size(num, MIC_VIRTIO_RING_ALIGN), 4) +
->>>>>>> rebase
 			sizeof(struct _mic_vring_info));
 		vr->va = (void *)
 			__get_free_pages(GFP_KERNEL | __GFP_ZERO,
@@ -324,11 +320,7 @@ static int vop_virtio_add_device(struct vop_vdev *vdev,
 			goto err;
 		}
 		vr->len = vr_size;
-<<<<<<< HEAD
 		vr->info = vr->va + vring_size(num, MIC_VIRTIO_RING_ALIGN);
-=======
-		vr->info = vr->va + round_up(vring_size(num, MIC_VIRTIO_RING_ALIGN), 4);
->>>>>>> rebase
 		vr->info->magic = cpu_to_le32(MIC_MAGIC + vdev->virtio_id + i);
 		vr_addr = dma_map_single(&vpdev->dev, vr->va, vr_size,
 					 DMA_BIDIRECTIONAL);
@@ -619,10 +611,6 @@ static int vop_virtio_copy_from_user(struct vop_vdev *vdev, void __user *ubuf,
 	size_t partlen;
 	bool dma = VOP_USE_DMA;
 	int err = 0;
-<<<<<<< HEAD
-=======
-	size_t offset = 0;
->>>>>>> rebase
 
 	if (daddr & (dma_alignment - 1)) {
 		vdev->tx_dst_unaligned += len;
@@ -671,7 +659,6 @@ memcpy:
 	 * We are copying to IO below and should ideally use something
 	 * like copy_from_user_toio(..) if it existed.
 	 */
-<<<<<<< HEAD
 	if (copy_from_user((void __force *)dbuf, ubuf, len)) {
 		err = -EFAULT;
 		dev_err(vop_dev(vdev), "%s %d err %d\n",
@@ -679,22 +666,6 @@ memcpy:
 		goto err;
 	}
 	vdev->out_bytes += len;
-=======
-	while (len) {
-		partlen = min_t(size_t, len, VOP_INT_DMA_BUF_SIZE);
-
-		if (copy_from_user(vvr->buf, ubuf + offset, partlen)) {
-			err = -EFAULT;
-			dev_err(vop_dev(vdev), "%s %d err %d\n",
-				__func__, __LINE__, err);
-			goto err;
-		}
-		memcpy_toio(dbuf + offset, vvr->buf, partlen);
-		offset += partlen;
-		vdev->out_bytes += partlen;
-		len -= partlen;
-	}
->>>>>>> rebase
 	err = 0;
 err:
 	vpdev->hw_ops->iounmap(vpdev, dbuf);

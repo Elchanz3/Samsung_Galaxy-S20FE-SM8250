@@ -1,18 +1,5 @@
-<<<<<<< HEAD
 // SPDX-License-Identifier: GPL-2.0-only
 /* Copyright (c) 2013-2020, The Linux Foundation. All rights reserved.
-=======
-/* Copyright (c) 2013-2018, The Linux Foundation. All rights reserved.
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License version 2 and
- * only version 2 as published by the Free Software Foundation.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
->>>>>>> rebase
  *
  * RMNET Data MAP protocol
  *
@@ -25,7 +12,6 @@
 #include "rmnet_config.h"
 #include "rmnet_map.h"
 #include "rmnet_private.h"
-<<<<<<< HEAD
 #include "rmnet_handlers.h"
 
 #define RMNET_MAP_PKT_COPY_THRESHOLD 64
@@ -45,12 +31,6 @@ struct rmnet_map_coal_metadata {
 	u8 pkt_count;
 };
 
-=======
-
-#define RMNET_MAP_DEAGGR_SPACING  64
-#define RMNET_MAP_DEAGGR_HEADROOM (RMNET_MAP_DEAGGR_SPACING / 2)
-
->>>>>>> rebase
 static __sum16 *rmnet_map_get_csum_field(unsigned char protocol,
 					 const void *txporthdr)
 {
@@ -84,22 +64,14 @@ rmnet_map_ipv4_dl_csum_trailer(struct sk_buff *skb,
 	void *txporthdr;
 	__be16 addend;
 
-<<<<<<< HEAD
 	ip4h = (struct iphdr *)rmnet_map_data_ptr(skb);
-=======
-	ip4h = (struct iphdr *)(skb->data);
->>>>>>> rebase
 	if ((ntohs(ip4h->frag_off) & IP_MF) ||
 	    ((ntohs(ip4h->frag_off) & IP_OFFSET) > 0)) {
 		priv->stats.csum_fragmented_pkt++;
 		return -EOPNOTSUPP;
 	}
 
-<<<<<<< HEAD
 	txporthdr = rmnet_map_data_ptr(skb) + ip4h->ihl * 4;
-=======
-	txporthdr = skb->data + ip4h->ihl * 4;
->>>>>>> rebase
 
 	csum_field = rmnet_map_get_csum_field(ip4h->protocol, txporthdr);
 
@@ -163,21 +135,12 @@ rmnet_map_ipv6_dl_csum_trailer(struct sk_buff *skb,
 	u16 csum_value, csum_value_final;
 	__be16 ip6_hdr_csum, addend;
 	struct ipv6hdr *ip6h;
-<<<<<<< HEAD
 	void *txporthdr, *data = rmnet_map_data_ptr(skb);
 	u32 length;
 
 	ip6h = data;
 
 	txporthdr = data + sizeof(struct ipv6hdr);
-=======
-	void *txporthdr;
-	u32 length;
-
-	ip6h = (struct ipv6hdr *)(skb->data);
-
-	txporthdr = skb->data + sizeof(struct ipv6hdr);
->>>>>>> rebase
 	csum_field = rmnet_map_get_csum_field(ip6h->nexthdr, txporthdr);
 
 	if (!csum_field) {
@@ -188,11 +151,7 @@ rmnet_map_ipv6_dl_csum_trailer(struct sk_buff *skb,
 	csum_value = ~ntohs(csum_trailer->csum_value);
 	ip6_hdr_csum = (__force __be16)
 			~ntohs((__force __be16)ip_compute_csum(ip6h,
-<<<<<<< HEAD
 			       (int)(txporthdr - data)));
-=======
-			       (int)(txporthdr - (void *)(skb->data))));
->>>>>>> rebase
 	ip6_payload_csum = csum16_sub((__force __sum16)csum_value,
 				      ip6_hdr_csum);
 
@@ -325,12 +284,8 @@ rmnet_map_ipv6_ul_csum_header(void *ip6hdr,
  * initialized to 0.
  */
 struct rmnet_map_header *rmnet_map_add_map_header(struct sk_buff *skb,
-<<<<<<< HEAD
 						  int hdrlen, int pad,
 						  struct rmnet_port *port)
-=======
-						  int hdrlen, int pad)
->>>>>>> rebase
 {
 	struct rmnet_map_header *map_header;
 	u32 padding, map_datalen;
@@ -341,13 +296,10 @@ struct rmnet_map_header *rmnet_map_add_map_header(struct sk_buff *skb,
 			skb_push(skb, sizeof(struct rmnet_map_header));
 	memset(map_header, 0, sizeof(struct rmnet_map_header));
 
-<<<<<<< HEAD
 	/* Set next_hdr bit for csum offload packets */
 	if (port->data_format & RMNET_FLAGS_EGRESS_MAP_CKSUMV5)
 		map_header->next_hdr = 1;
 
-=======
->>>>>>> rebase
 	if (pad == RMNET_MAP_NO_PAD_BYTES) {
 		map_header->pkt_len = htons(map_datalen);
 		return map_header;
@@ -382,25 +334,17 @@ struct sk_buff *rmnet_map_deaggregate(struct sk_buff *skb,
 {
 	struct rmnet_map_header *maph;
 	struct sk_buff *skbn;
-<<<<<<< HEAD
 	unsigned char *data = rmnet_map_data_ptr(skb), *next_hdr = NULL;
-=======
->>>>>>> rebase
 	u32 packet_len;
 
 	if (skb->len == 0)
 		return NULL;
 
-<<<<<<< HEAD
 	maph = (struct rmnet_map_header *)data;
-=======
-	maph = (struct rmnet_map_header *)skb->data;
->>>>>>> rebase
 	packet_len = ntohs(maph->pkt_len) + sizeof(struct rmnet_map_header);
 
 	if (port->data_format & RMNET_FLAGS_INGRESS_MAP_CKSUMV4)
 		packet_len += sizeof(struct rmnet_map_dl_csum_trailer);
-<<<<<<< HEAD
 	else if (port->data_format & RMNET_FLAGS_INGRESS_MAP_CKSUMV5) {
 		if (!maph->cd_bit) {
 			packet_len += sizeof(struct rmnet_map_v5_csum_header);
@@ -409,8 +353,6 @@ struct sk_buff *rmnet_map_deaggregate(struct sk_buff *skb,
 			next_hdr = data + sizeof(*maph);
 		}
 	}
-=======
->>>>>>> rebase
 
 	if (((int)skb->len - (int)packet_len) < 0)
 		return NULL;
@@ -419,7 +361,6 @@ struct sk_buff *rmnet_map_deaggregate(struct sk_buff *skb,
 	if (ntohs(maph->pkt_len) == 0)
 		return NULL;
 
-<<<<<<< HEAD
 	if (next_hdr &&
 	    ((struct rmnet_map_v5_coal_header *)next_hdr)->header_type ==
 	     RMNET_MAP_HEADER_TYPE_COALESCING)
@@ -449,16 +390,6 @@ struct sk_buff *rmnet_map_deaggregate(struct sk_buff *skb,
 	}
 
 	pskb_pull(skb, packet_len);
-=======
-	skbn = alloc_skb(packet_len + RMNET_MAP_DEAGGR_SPACING, GFP_ATOMIC);
-	if (!skbn)
-		return NULL;
-
-	skb_reserve(skbn, RMNET_MAP_DEAGGR_HEADROOM);
-	skb_put(skbn, packet_len);
-	memcpy(skbn->data, skb->data, packet_len);
-	skb_pull(skb, packet_len);
->>>>>>> rebase
 
 	return skbn;
 }
@@ -479,12 +410,8 @@ int rmnet_map_checksum_downlink_packet(struct sk_buff *skb, u16 len)
 		return -EOPNOTSUPP;
 	}
 
-<<<<<<< HEAD
 	csum_trailer = (struct rmnet_map_dl_csum_trailer *)
 		       (rmnet_map_data_ptr(skb) + len);
-=======
-	csum_trailer = (struct rmnet_map_dl_csum_trailer *)(skb->data + len);
->>>>>>> rebase
 
 	if (!csum_trailer->valid) {
 		priv->stats.csum_valid_unset++;
@@ -507,19 +434,10 @@ int rmnet_map_checksum_downlink_packet(struct sk_buff *skb, u16 len)
 
 	return 0;
 }
-<<<<<<< HEAD
 EXPORT_SYMBOL(rmnet_map_checksum_downlink_packet);
 
 void rmnet_map_v4_checksum_uplink_packet(struct sk_buff *skb,
 					 struct net_device *orig_dev)
-=======
-
-/* Generates UL checksum meta info header for IPv4 and IPv6 over TCP and UDP
- * packets that are supported for UL checksum offload.
- */
-void rmnet_map_checksum_uplink_packet(struct sk_buff *skb,
-				      struct net_device *orig_dev)
->>>>>>> rebase
 {
 	struct rmnet_priv *priv = netdev_priv(orig_dev);
 	struct rmnet_map_ul_csum_header *ul_header;
@@ -538,18 +456,12 @@ void rmnet_map_checksum_uplink_packet(struct sk_buff *skb,
 
 		if (skb->protocol == htons(ETH_P_IP)) {
 			rmnet_map_ipv4_ul_csum_header(iphdr, ul_header, skb);
-<<<<<<< HEAD
 			priv->stats.csum_hw++;
-=======
->>>>>>> rebase
 			return;
 		} else if (skb->protocol == htons(ETH_P_IPV6)) {
 #if IS_ENABLED(CONFIG_IPV6)
 			rmnet_map_ipv6_ul_csum_header(iphdr, ul_header, skb);
-<<<<<<< HEAD
 			priv->stats.csum_hw++;
-=======
->>>>>>> rebase
 			return;
 #else
 			priv->stats.csum_err_invalid_ip_version++;
@@ -568,7 +480,6 @@ sw_csum:
 
 	priv->stats.csum_sw++;
 }
-<<<<<<< HEAD
 
 static void rmnet_map_v5_check_priority(struct sk_buff *skb,
 					struct net_device *orig_dev,
@@ -1690,5 +1601,3 @@ void rmnet_map_tx_qmap_cmd(struct sk_buff *qmap_skb)
 	dev_queue_xmit(qmap_skb);
 }
 EXPORT_SYMBOL(rmnet_map_tx_qmap_cmd);
-=======
->>>>>>> rebase

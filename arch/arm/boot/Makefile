@@ -16,10 +16,7 @@ OBJCOPYFLAGS	:=-O binary -R .comment -S
 ifneq ($(MACHINE),)
 include $(MACHINE)/Makefile.boot
 endif
-<<<<<<< HEAD
 include $(srctree)/arch/arm/boot/dts/Makefile
-=======
->>>>>>> rebase
 
 # Note: the following conditions must always be true:
 #   ZRELADDR == virt_to_phys(PAGE_OFFSET + TEXT_OFFSET)
@@ -33,7 +30,6 @@ export ZRELADDR INITRD_PHYS PARAMS_PHYS
 
 targets := Image zImage xipImage bootpImage uImage
 
-<<<<<<< HEAD
 DTB_NAMES := $(subst $\",,$(CONFIG_BUILD_ARM_APPENDED_DTB_IMAGE_NAMES))
 ifneq ($(DTB_NAMES),)
 DTB_LIST := $(addsuffix .dtb,$(DTB_NAMES))
@@ -52,8 +48,6 @@ else
 DTB_OBJS := $(shell find $(obj)/dts/ -name \*.dtb)
 endif
 
-=======
->>>>>>> rebase
 ifeq ($(CONFIG_XIP_KERNEL),y)
 
 cmd_deflate_xip_data = $(CONFIG_SHELL) -c \
@@ -91,13 +85,10 @@ $(obj)/compressed/vmlinux: $(obj)/Image FORCE
 $(obj)/zImage:	$(obj)/compressed/vmlinux FORCE
 	$(call if_changed,objcopy)
 
-<<<<<<< HEAD
 $(obj)/zImage-dtb:	$(obj)/zImage $(DTB_OBJS) FORCE
 	$(call if_changed,cat)
 	@echo '  Kernel: $@ is ready'
 
-=======
->>>>>>> rebase
 endif
 
 ifneq ($(LOADADDR),)

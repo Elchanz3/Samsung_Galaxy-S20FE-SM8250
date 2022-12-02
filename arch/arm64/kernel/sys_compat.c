@@ -19,10 +19,6 @@
  */
 
 #include <linux/compat.h>
-<<<<<<< HEAD
-=======
-#include <linux/cpufeature.h>
->>>>>>> rebase
 #include <linux/personality.h>
 #include <linux/sched.h>
 #include <linux/sched/signal.h>
@@ -32,10 +28,6 @@
 
 #include <asm/cacheflush.h>
 #include <asm/system_misc.h>
-<<<<<<< HEAD
-=======
-#include <asm/tlbflush.h>
->>>>>>> rebase
 #include <asm/unistd.h>
 
 static long
@@ -49,18 +41,6 @@ __do_compat_cache_op(unsigned long start, unsigned long end)
 		if (fatal_signal_pending(current))
 			return 0;
 
-<<<<<<< HEAD
-=======
-		if (cpus_have_const_cap(ARM64_WORKAROUND_1542419)) {
-			/*
-			 * The workaround requires an inner-shareable tlbi.
-			 * We pick the reserved-ASID to minimise the impact.
-			 */
-			__tlbi(aside1is, __TLBI_VADDR(0, 0));
-			dsb(ish);
-		}
-
->>>>>>> rebase
 		ret = __flush_cache_user_range(start, start + chunk);
 		if (ret)
 			return ret;

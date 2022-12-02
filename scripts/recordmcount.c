@@ -401,11 +401,7 @@ static uint32_t (*w2)(uint16_t);
 static int
 is_mcounted_section_name(char const *const txtname)
 {
-<<<<<<< HEAD
 	return strcmp(".text",           txtname) == 0 ||
-=======
-	return strncmp(".text",          txtname, 5) == 0 ||
->>>>>>> rebase
 		strcmp(".init.text",     txtname) == 0 ||
 		strcmp(".ref.text",      txtname) == 0 ||
 		strcmp(".sched.text",    txtname) == 0 ||
@@ -414,12 +410,8 @@ is_mcounted_section_name(char const *const txtname)
 		strcmp(".softirqentry.text", txtname) == 0 ||
 		strcmp(".kprobes.text", txtname) == 0 ||
 		strcmp(".cpuidle.text", txtname) == 0 ||
-<<<<<<< HEAD
 		(strncmp(".text.",       txtname, 6) == 0 &&
 		 strcmp(".text..ftrace", txtname) != 0);
-=======
-		strcmp(".text.unlikely", txtname) == 0;
->>>>>>> rebase
 }
 
 /* 32 bit and 64 bit are very similar */

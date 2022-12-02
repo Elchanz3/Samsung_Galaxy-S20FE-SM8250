@@ -20,10 +20,7 @@ struct security_class_mapping {
 
 extern struct security_class_mapping secclass_map[];
 
-<<<<<<< HEAD
 extern int ss_initialized; // SEC_SELINUX_PORTING_COMMON
 
-=======
->>>>>>> rebase
 #endif /* _SELINUX_AVC_SS_H_ */
 

@@ -249,24 +249,10 @@ void ovs_dp_process_packet(struct sk_buff *skb, struct sw_flow_key *key)
 		upcall.portid = ovs_vport_find_upcall_portid(p, skb);
 		upcall.mru = OVS_CB(skb)->mru;
 		error = ovs_dp_upcall(dp, skb, key, &upcall, 0);
-<<<<<<< HEAD
 		if (unlikely(error))
 			kfree_skb(skb);
 		else
 			consume_skb(skb);
-=======
-		switch (error) {
-		case 0:
-		case -EAGAIN:
-		case -ERESTARTSYS:
-		case -EINTR:
-			consume_skb(skb);
-			break;
-		default:
-			kfree_skb(skb);
-			break;
-		}
->>>>>>> rebase
 		stats_counter = &stats->n_missed;
 		goto out;
 	}
@@ -533,14 +519,8 @@ static int queue_userspace_packet(struct datapath *dp, struct sk_buff *skb,
 out:
 	if (err)
 		skb_tx_error(skb);
-<<<<<<< HEAD
 	kfree_skb(user_skb);
 	kfree_skb(nskb);
-=======
-	consume_skb(user_skb);
-	consume_skb(nskb);
-
->>>>>>> rebase
 	return err;
 }
 
@@ -1563,12 +1543,7 @@ static void ovs_dp_reset_user_features(struct sk_buff *skb, struct genl_info *in
 	if (IS_ERR(dp))
 		return;
 
-<<<<<<< HEAD
 	WARN(dp->user_features, "Dropping previously announced user features\n");
-=======
-	pr_warn("%s: Dropping previously announced user features\n",
-		ovs_dp_name(dp));
->>>>>>> rebase
 	dp->user_features = 0;
 }
 

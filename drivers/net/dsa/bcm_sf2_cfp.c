@@ -742,25 +742,17 @@ static int bcm_sf2_cfp_rule_set(struct dsa_switch *ds, int port,
 	     fs->m_ext.data[1]))
 		return -EINVAL;
 
-<<<<<<< HEAD
 	if (fs->location != RX_CLS_LOC_ANY && fs->location >= CFP_NUM_RULES)
-=======
-	if (fs->location != RX_CLS_LOC_ANY &&
-	    fs->location > bcm_sf2_cfp_rule_size(priv))
->>>>>>> rebase
 		return -EINVAL;
 
 	if (fs->location != RX_CLS_LOC_ANY &&
 	    test_bit(fs->location, priv->cfp.used))
 		return -EBUSY;
 
-<<<<<<< HEAD
 	if (fs->location != RX_CLS_LOC_ANY &&
 	    fs->location > bcm_sf2_cfp_rule_size(priv))
 		return -EINVAL;
 
-=======
->>>>>>> rebase
 	/* This rule is a Wake-on-LAN filter and we must specifically
 	 * target the CPU port in order for it to be working.
 	 */
@@ -847,11 +839,7 @@ static int bcm_sf2_cfp_rule_del(struct bcm_sf2_priv *priv, int port,
 	u32 next_loc = 0;
 	int ret;
 
-<<<<<<< HEAD
 	if (loc >= CFP_NUM_RULES)
-=======
-	if (loc > bcm_sf2_cfp_rule_size(priv))
->>>>>>> rebase
 		return -EINVAL;
 
 	/* Refuse deleting unused rules, and those that are not unique since

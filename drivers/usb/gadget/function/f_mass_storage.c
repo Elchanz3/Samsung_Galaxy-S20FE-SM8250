@@ -225,24 +225,17 @@
 
 #include "configfs.h"
 
-<<<<<<< HEAD
 #ifdef CONFIG_USB_ANDROID_SAMSUNG_COMPOSITE
 #define _SUPPORT_MAC_   /* support to recognize CDFS on OSX (MAC PC) */
 #define VENDER_CMD_VERSION_INFO	0xfa  /* Image version info */
 #endif
-=======
->>>>>>> rebase
 
 /*------------------------------------------------------------------------*/
 
 #define FSG_DRIVER_DESC		"Mass Storage Function"
 #define FSG_DRIVER_VERSION	"2009/09/11"
 
-<<<<<<< HEAD
 static const char fsg_string_interface[] = "Android Mass Storage";
-=======
-static const char fsg_string_interface[] = "Mass Storage";
->>>>>>> rebase
 
 #include "storage_common.h"
 #include "f_mass_storage.h"
@@ -325,15 +318,12 @@ struct fsg_common {
 	void			*private_data;
 
 	char inquiry_string[INQUIRY_STRING_LEN];
-<<<<<<< HEAD
 #ifdef CONFIG_USB_ANDROID_SAMSUNG_COMPOSITE
 	char vendor_string[8 + 1];
 	char product_string[16 + 1];
 	/* Additional image version info for SUA */
 	char version_string[100 + 1];
 #endif
-=======
->>>>>>> rebase
 };
 
 struct fsg_dev {
@@ -353,7 +343,6 @@ struct fsg_dev {
 	struct usb_ep		*bulk_out;
 };
 
-<<<<<<< HEAD
 #ifdef CONFIG_USB_ANDROID_SAMSUNG_COMPOSITE
 static int send_message(struct fsg_common *common, char *msg)
 {
@@ -429,8 +418,6 @@ static int get_version_info(struct fsg_common *common, struct fsg_buffhd *bh)
 }
 #endif /* CONFIG_USB_ANDROID_SAMSUNG_COMPOSITE */
 
-=======
->>>>>>> rebase
 static inline int __fsg_is_set(struct fsg_common *common,
 			       const char *func, unsigned line)
 {
@@ -710,7 +697,6 @@ static int sleep_thread(struct fsg_common *common, bool can_freeze,
 					BUF_STATE_EMPTY);
 	return rc ? -EINTR : 0;
 }
-<<<<<<< HEAD
 #ifdef _SUPPORT_MAC_
 static void _lba_to_msf(u8 *buf, int lba)
 {
@@ -948,9 +934,6 @@ static int do_read_cd(struct fsg_common *common)
 	return -EIO;		/* No default reply */
 }
 #endif /* _SUPPORT_MAC_ */
-=======
-
->>>>>>> rebase
 
 /*-------------------------------------------------------------------------*/
 
@@ -1400,13 +1383,10 @@ static int do_inquiry(struct fsg_common *common, struct fsg_buffhd *bh)
 	struct fsg_lun *curlun = common->curlun;
 	u8	*buf = (u8 *) bh->buf;
 
-<<<<<<< HEAD
 #if defined(CONFIG_USB_ANDROID_SAMSUNG_COMPOSITE)
 	static char new_product_name[16 + 1];
 #endif
 
-=======
->>>>>>> rebase
 	if (!curlun) {		/* Unsupported LUNs are okay */
 		common->bad_lun_okay = 1;
 		memset(buf, 0, 36);
@@ -1423,7 +1403,6 @@ static int do_inquiry(struct fsg_common *common, struct fsg_buffhd *bh)
 	buf[5] = 0;		/* No special options */
 	buf[6] = 0;
 	buf[7] = 0;
-<<<<<<< HEAD
 
 #if defined(CONFIG_USB_ANDROID_SAMSUNG_COMPOSITE)
 	strncpy(new_product_name, common->product_string, 16);
@@ -1442,8 +1421,6 @@ static int do_inquiry(struct fsg_common *common, struct fsg_buffhd *bh)
 		new_product_name, 1);
 #endif
 
-=======
->>>>>>> rebase
 	if (curlun->inquiry_string[0])
 		memcpy(buf + 8, curlun->inquiry_string,
 		       sizeof(curlun->inquiry_string));
@@ -1553,12 +1530,9 @@ static int do_read_toc(struct fsg_common *common, struct fsg_buffhd *bh)
 	int		msf = common->cmnd[1] & 0x02;
 	int		start_track = common->cmnd[6];
 	u8		*buf = (u8 *)bh->buf;
-<<<<<<< HEAD
 #ifdef _SUPPORT_MAC_
 	int format = (common->cmnd[9] & 0xC0) >> 6;
 #endif
-=======
->>>>>>> rebase
 
 	if ((common->cmnd[1] & ~0x02) != 0 ||	/* Mask away MSF */
 			start_track > 1) {
@@ -1566,14 +1540,11 @@ static int do_read_toc(struct fsg_common *common, struct fsg_buffhd *bh)
 		return -EINVAL;
 	}
 
-<<<<<<< HEAD
 #ifdef _SUPPORT_MAC_
 	if (format == 2)
 		return _read_toc_raw(common, bh);
 #endif
 
-=======
->>>>>>> rebase
 	memset(buf, 0, 20);
 	buf[1] = (20-2);		/* TOC data length */
 	buf[2] = 1;			/* First track number */
@@ -1655,7 +1626,6 @@ static int do_mode_sense(struct fsg_common *common, struct fsg_buffhd *bh)
 		}
 		buf += 12;
 	}
-<<<<<<< HEAD
 #ifdef CONFIG_USB_ANDROID_SAMSUNG_COMPOSITE
 	else if (page_code == 0x2A) {
 		valid_page = 1;
@@ -1669,8 +1639,6 @@ static int do_mode_sense(struct fsg_common *common, struct fsg_buffhd *bh)
 		buf += 28;
 	}
 #endif
-=======
->>>>>>> rebase
 
 	/*
 	 * Check that a valid page was requested and the mode data length
@@ -1714,13 +1682,10 @@ static int do_start_stop(struct fsg_common *common)
 	 * available for use as soon as it is loaded.
 	 */
 	if (start) {
-<<<<<<< HEAD
 #ifdef CONFIG_USB_ANDROID_SAMSUNG_COMPOSITE
 		if (loej)
 			send_message(common, "Load AT");
 #endif
-=======
->>>>>>> rebase
 		if (!fsg_lun_is_open(curlun)) {
 			curlun->sense_data = SS_MEDIUM_NOT_PRESENT;
 			return -EINVAL;
@@ -1744,13 +1709,10 @@ static int do_start_stop(struct fsg_common *common)
 	up_write(&common->filesem);
 	down_read(&common->filesem);
 
-<<<<<<< HEAD
 #ifdef CONFIG_USB_ANDROID_SAMSUNG_COMPOSITE
 	send_message(common, "Load User");
 #endif
 
-=======
->>>>>>> rebase
 	return 0;
 }
 
@@ -2342,15 +2304,11 @@ static int do_scsi_command(struct fsg_common *common)
 		common->data_size_from_cmnd =
 			get_unaligned_be16(&common->cmnd[7]);
 		reply = check_command(common, 10, DATA_DIR_TO_HOST,
-<<<<<<< HEAD
 #ifdef _SUPPORT_MAC_
 				      (0xf<<6) | (1<<1), 1,
 #else
 				      (7<<6) | (1<<1), 1,
 #endif
-=======
-				      (7<<6) | (1<<1), 1,
->>>>>>> rebase
 				      "READ TOC");
 		if (reply == 0)
 			reply = do_read_toc(common, bh);
@@ -2446,7 +2404,6 @@ static int do_scsi_command(struct fsg_common *common)
 			reply = do_write(common);
 		break;
 
-<<<<<<< HEAD
 #ifdef CONFIG_USB_ANDROID_SAMSUNG_COMPOSITE
 	case RELEASE:	/* SUA Timer Stop : 0x17 */
 		reply = do_timer_stop(common);
@@ -2475,8 +2432,6 @@ static int do_scsi_command(struct fsg_common *common)
 
 #endif /* _SUPPORT_MAC_ */
 #endif
-=======
->>>>>>> rebase
 	/*
 	 * Some mandatory commands that we recognize but don't implement.
 	 * They don't mean much in this setting.  It's left as an exercise
@@ -2484,15 +2439,10 @@ static int do_scsi_command(struct fsg_common *common)
 	 * of Posix locks.
 	 */
 	case FORMAT_UNIT:
-<<<<<<< HEAD
 #ifndef CONFIG_USB_ANDROID_SAMSUNG_COMPOSITE
 	case RELEASE:
 	case RESERVE:
 #endif
-=======
-	case RELEASE:
-	case RESERVE:
->>>>>>> rebase
 	case SEND_DIAGNOSTIC:
 		/* Fall through */
 
@@ -2685,11 +2635,8 @@ reset:
 			fsg->bulk_out_enabled = 0;
 		}
 
-<<<<<<< HEAD
 		/* allow usb LPM after eps are disabled */
 		usb_gadget_autopm_put_async(common->gadget);
-=======
->>>>>>> rebase
 		common->fsg = NULL;
 		wake_up(&common->fsg_wait);
 	}
@@ -2754,12 +2701,9 @@ static int fsg_set_alt(struct usb_function *f, unsigned intf, unsigned alt)
 {
 	struct fsg_dev *fsg = fsg_from_func(f);
 
-<<<<<<< HEAD
 	/* prevents usb LPM until thread runs to completion */
 	usb_gadget_autopm_get_async(fsg->common->gadget);
 
-=======
->>>>>>> rebase
 	__raise_exception(fsg->common, FSG_STATE_CONFIG_CHANGE, fsg);
 	return USB_GADGET_DELAYED_STATUS;
 }
@@ -3228,15 +3172,11 @@ int fsg_common_create_lun(struct fsg_common *common, struct fsg_lun_config *cfg,
 	lun->name_pfx = name_pfx;
 
 	lun->cdrom = !!cfg->cdrom;
-<<<<<<< HEAD
 #ifdef CONFIG_USB_ANDROID_SAMSUNG_COMPOSITE
 	lun->ro = false;
 #else
 	lun->ro = cfg->cdrom || cfg->ro;
 #endif
-=======
-	lun->ro = cfg->cdrom || cfg->ro;
->>>>>>> rebase
 	lun->initially_ro = lun->ro;
 	lun->removable = !!cfg->removable;
 
@@ -3335,7 +3275,6 @@ void fsg_common_set_inquiry_string(struct fsg_common *common, const char *vn,
 		     ? "File-CD Gadget"
 		     : "File-Stor Gadget"),
 		 i);
-<<<<<<< HEAD
 
 #ifdef	CONFIG_USB_ANDROID_SAMSUNG_COMPOSITE
 	/* Default INQUIRY strings */
@@ -3345,8 +3284,6 @@ void fsg_common_set_inquiry_string(struct fsg_common *common, const char *vn,
 			sizeof(common->product_string) - 1);
 	common->product_string[16] = '\0';
 #endif
-=======
->>>>>>> rebase
 }
 EXPORT_SYMBOL_GPL(fsg_common_set_inquiry_string);
 
@@ -3820,7 +3757,6 @@ static const struct config_item_type fsg_func_type = {
 	.ct_owner	= THIS_MODULE,
 };
 
-<<<<<<< HEAD
 #ifdef CONFIG_USB_CONFIGFS_UEVENT
 extern struct device *create_function_device(char *name);
 static ssize_t mass_storage_inquiry_show(struct device *dev,
@@ -3989,8 +3925,6 @@ static int create_mass_storage_device(struct usb_function_instance *fi)
 	return 0;
 }
 #endif
-=======
->>>>>>> rebase
 static void fsg_free_inst(struct usb_function_instance *fi)
 {
 	struct fsg_opts *opts;
@@ -4026,14 +3960,11 @@ static struct usb_function_instance *fsg_alloc_inst(void)
 
 	memset(&config, 0, sizeof(config));
 	config.removable = true;
-<<<<<<< HEAD
 #ifdef CONFIG_USB_ANDROID_SAMSUNG_COMPOSITE
 	config.cdrom = 1;
 	config.ro = 0;
 #endif
 
-=======
->>>>>>> rebase
 	rc = fsg_common_create_lun(opts->common, &config, 0, "lun.0",
 			(const char **)&opts->func_inst.group.cg_item.ci_name);
 	if (rc)
@@ -4045,7 +3976,6 @@ static struct usb_function_instance *fsg_alloc_inst(void)
 	config_group_init_type_name(&opts->func_inst.group, "", &fsg_func_type);
 
 	config_group_init_type_name(&opts->lun0.group, "lun.0", &fsg_lun_type);
-<<<<<<< HEAD
 
 #ifdef CONFIG_USB_ANDROID_SAMSUNG_COMPOSITE
 	if (create_mass_storage_device(&opts->func_inst)) {
@@ -4053,8 +3983,6 @@ static struct usb_function_instance *fsg_alloc_inst(void)
 		goto release_buffers;
 	}
 #endif
-=======
->>>>>>> rebase
 	configfs_add_default_group(&opts->lun0.group, &opts->func_inst.group);
 
 	return &opts->func_inst;

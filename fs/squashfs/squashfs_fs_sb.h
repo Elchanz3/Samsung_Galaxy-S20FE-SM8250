@@ -77,9 +77,5 @@ struct squashfs_sb_info {
 	unsigned int				inodes;
 	unsigned int				fragments;
 	int					xattr_ids;
-<<<<<<< HEAD
-=======
-	unsigned int				ids;
->>>>>>> rebase
 };
 #endif

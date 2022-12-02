@@ -1,12 +1,6 @@
-<<<<<<< HEAD
 // SPDX-License-Identifier: GPL-2.0-only
 /*
  * Copyright (c) 2016-2020, The Linux Foundation. All rights reserved.
-=======
-// SPDX-License-Identifier: GPL-2.0
-/*
- * Copyright (c) 2016-2018, The Linux Foundation. All rights reserved.
->>>>>>> rebase
  */
 
 #define pr_fmt(fmt) "%s " fmt, KBUILD_MODNAME
@@ -15,10 +9,7 @@
 #include <linux/delay.h>
 #include <linux/interrupt.h>
 #include <linux/io.h>
-<<<<<<< HEAD
 #include <linux/ipc_logging.h>
-=======
->>>>>>> rebase
 #include <linux/kernel.h>
 #include <linux/list.h>
 #include <linux/of.h>
@@ -37,11 +28,8 @@
 #define CREATE_TRACE_POINTS
 #include "trace-rpmh.h"
 
-<<<<<<< HEAD
 #define RSC_DRV_IPC_LOG_SIZE		2
 
-=======
->>>>>>> rebase
 #define RSC_DRV_TCS_OFFSET		672
 #define RSC_DRV_CMD_OFFSET		20
 
@@ -76,7 +64,6 @@
 #define CMD_STATUS_ISSUED		BIT(8)
 #define CMD_STATUS_COMPL		BIT(16)
 
-<<<<<<< HEAD
 /* PDC wakeup */
 #define RSC_PDC_DATA_SIZE		2
 #define RSC_PDC_DRV_DATA		0x38
@@ -93,8 +80,6 @@ bool rpmh_standalone;
 static struct rsc_drv *__rsc_drv[2];
 static int __rsc_count;
 
-=======
->>>>>>> rebase
 static u32 read_tcs_reg(struct rsc_drv *drv, int reg, int tcs_id, int cmd_id)
 {
 	return readl_relaxed(drv->tcs_base + reg + RSC_DRV_TCS_OFFSET * tcs_id +
@@ -127,12 +112,7 @@ static void write_tcs_reg_sync(struct rsc_drv *drv, int reg, int tcs_id,
 
 static bool tcs_is_free(struct rsc_drv *drv, int tcs_id)
 {
-<<<<<<< HEAD
 	return !test_bit(tcs_id, drv->tcs_in_use);
-=======
-	return !test_bit(tcs_id, drv->tcs_in_use) &&
-	       read_tcs_reg(drv, RSC_DRV_STATUS, tcs_id, 0);
->>>>>>> rebase
 }
 
 static struct tcs_group *get_tcs_of_type(struct rsc_drv *drv, int type)
@@ -142,16 +122,11 @@ static struct tcs_group *get_tcs_of_type(struct rsc_drv *drv, int type)
 
 static int tcs_invalidate(struct rsc_drv *drv, int type)
 {
-<<<<<<< HEAD
 	int m, ret = 0;
-=======
-	int m;
->>>>>>> rebase
 	struct tcs_group *tcs;
 
 	tcs = get_tcs_of_type(drv, type);
 
-<<<<<<< HEAD
 	spin_lock(&drv->lock);
 	if (bitmap_empty(tcs->slots, MAX_TCS_SLOTS))
 		goto done;
@@ -160,33 +135,15 @@ static int tcs_invalidate(struct rsc_drv *drv, int type)
 		if (!tcs_is_free(drv, m)) {
 			ret = -EAGAIN;
 			goto done;
-=======
-	spin_lock(&tcs->lock);
-	if (bitmap_empty(tcs->slots, MAX_TCS_SLOTS)) {
-		spin_unlock(&tcs->lock);
-		return 0;
-	}
-
-	for (m = tcs->offset; m < tcs->offset + tcs->num_tcs; m++) {
-		if (!tcs_is_free(drv, m)) {
-			spin_unlock(&tcs->lock);
-			return -EAGAIN;
->>>>>>> rebase
 		}
 		write_tcs_reg_sync(drv, RSC_DRV_CMD_ENABLE, m, 0);
 		write_tcs_reg_sync(drv, RSC_DRV_CMD_WAIT_FOR_CMPL, m, 0);
 	}
 	bitmap_zero(tcs->slots, MAX_TCS_SLOTS);
-<<<<<<< HEAD
 
 done:
 	spin_unlock(&drv->lock);
 	return ret;
-=======
-	spin_unlock(&tcs->lock);
-
-	return 0;
->>>>>>> rebase
 }
 
 /**
@@ -208,11 +165,7 @@ int rpmh_rsc_invalidate(struct rsc_drv *drv)
 static struct tcs_group *get_tcs_for_msg(struct rsc_drv *drv,
 					 const struct tcs_request *msg)
 {
-<<<<<<< HEAD
 	int type, ret;
-=======
-	int type;
->>>>>>> rebase
 	struct tcs_group *tcs;
 
 	switch (msg->state) {
@@ -233,7 +186,6 @@ static struct tcs_group *get_tcs_for_msg(struct rsc_drv *drv,
 	 * If we are making an active request on a RSC that does not have a
 	 * dedicated TCS for active state use, then re-purpose a wake TCS to
 	 * send active votes.
-<<<<<<< HEAD
 	 * NOTE: The driver must be aware that this RSC does not have a
 	 * dedicated AMC, and therefore would invalidate the sleep and wake
 	 * TCSes before making an active state request.
@@ -247,12 +199,6 @@ static struct tcs_group *get_tcs_for_msg(struct rsc_drv *drv,
 				return ERR_PTR(ret);
 		}
 	}
-=======
-	 */
-	tcs = get_tcs_of_type(drv, type);
-	if (msg->state == RPMH_ACTIVE_ONLY_STATE && !tcs->num_tcs)
-		tcs = get_tcs_of_type(drv, WAKE_TCS);
->>>>>>> rebase
 
 	return tcs;
 }
@@ -272,11 +218,7 @@ static const struct tcs_request *get_req_from_tcs(struct rsc_drv *drv,
 	return NULL;
 }
 
-<<<<<<< HEAD
 static void __tcs_trigger(struct rsc_drv *drv, int tcs_id, bool trigger)
-=======
-static void __tcs_set_trigger(struct rsc_drv *drv, int tcs_id, bool trigger)
->>>>>>> rebase
 {
 	u32 enable;
 
@@ -296,20 +238,12 @@ static void __tcs_set_trigger(struct rsc_drv *drv, int tcs_id, bool trigger)
 		enable = TCS_AMC_MODE_ENABLE;
 		write_tcs_reg_sync(drv, RSC_DRV_CONTROL, tcs_id, enable);
 		enable |= TCS_AMC_MODE_TRIGGER;
-<<<<<<< HEAD
 		write_tcs_reg(drv, RSC_DRV_CONTROL, tcs_id, enable);
 		ipc_log_string(drv->ipc_log_ctx, "TCS trigger: m=%d", tcs_id);
 	}
 }
 
 static inline void enable_tcs_irq(struct rsc_drv *drv, int tcs_id, bool enable)
-=======
-		write_tcs_reg_sync(drv, RSC_DRV_CONTROL, tcs_id, enable);
-	}
-}
-
-static void enable_tcs_irq(struct rsc_drv *drv, int tcs_id, bool enable)
->>>>>>> rebase
 {
 	u32 data;
 
@@ -357,7 +291,6 @@ static irqreturn_t tcs_tx_done(int irq, void *p)
 		}
 
 		trace_rpmh_tx_done(drv, i, req, err);
-<<<<<<< HEAD
 		ipc_log_string(drv->ipc_log_ctx,
 			       "IRQ response: m=%d err=%d", i, err);
 
@@ -375,35 +308,12 @@ static irqreturn_t tcs_tx_done(int irq, void *p)
 			 */
 			enable_tcs_irq(drv, i, false);
 		}
-=======
-
-		/*
-		 * If wake tcs was re-purposed for sending active
-		 * votes, clear AMC trigger & enable modes and
-		 * disable interrupt for this TCS
-		 */
-		if (!drv->tcs[ACTIVE_TCS].num_tcs)
-			__tcs_set_trigger(drv, i, false);
->>>>>>> rebase
 skip:
 		/* Reclaim the TCS */
 		write_tcs_reg(drv, RSC_DRV_CMD_ENABLE, i, 0);
 		write_tcs_reg(drv, RSC_DRV_CMD_WAIT_FOR_CMPL, i, 0);
 		write_tcs_reg(drv, RSC_DRV_IRQ_CLEAR, 0, BIT(i));
-<<<<<<< HEAD
 		clear_bit(i, drv->tcs_in_use);
-=======
-		spin_lock(&drv->lock);
-		clear_bit(i, drv->tcs_in_use);
-		/*
-		 * Disable interrupt for WAKE TCS to avoid being
-		 * spammed with interrupts coming when the solver
-		 * sends its wake votes.
-		 */
-		if (!drv->tcs[ACTIVE_TCS].num_tcs)
-			enable_tcs_irq(drv, i, false);
-		spin_unlock(&drv->lock);
->>>>>>> rebase
 		if (req)
 			rpmh_tx_done(req, err);
 	}
@@ -437,13 +347,10 @@ static void __tcs_buffer_write(struct rsc_drv *drv, int tcs_id, int cmd_id,
 		write_tcs_cmd(drv, RSC_DRV_CMD_ADDR, tcs_id, j, cmd->addr);
 		write_tcs_cmd(drv, RSC_DRV_CMD_DATA, tcs_id, j, cmd->data);
 		trace_rpmh_send_msg(drv, tcs_id, j, msgid, cmd);
-<<<<<<< HEAD
 		ipc_log_string(drv->ipc_log_ctx,
 			       "TCS write: m=%d n=%d msgid=%#x addr=%#x data=%#x wait=%d",
 			       tcs_id, j, msgid, cmd->addr,
 			       cmd->data, cmd->wait);
-=======
->>>>>>> rebase
 	}
 
 	write_tcs_reg(drv, RSC_DRV_CMD_WAIT_FOR_CMPL, tcs_id, cmd_complete);
@@ -493,52 +400,34 @@ static int tcs_write(struct rsc_drv *drv, const struct tcs_request *msg)
 {
 	struct tcs_group *tcs;
 	int tcs_id;
-<<<<<<< HEAD
-=======
-	unsigned long flags;
->>>>>>> rebase
 	int ret;
 
 	tcs = get_tcs_for_msg(drv, msg);
 	if (IS_ERR(tcs))
 		return PTR_ERR(tcs);
 
-<<<<<<< HEAD
 	spin_lock(&drv->lock);
 	if (msg->state == RPMH_ACTIVE_ONLY_STATE && drv->in_solver_mode) {
 		ret = -EINVAL;
 		goto done_write;
 	}
-=======
-	spin_lock_irqsave(&tcs->lock, flags);
-	spin_lock(&drv->lock);
->>>>>>> rebase
 	/*
 	 * The h/w does not like if we send a request to the same address,
 	 * when one is already in-flight or being processed.
 	 */
 	ret = check_for_req_inflight(drv, tcs, msg);
 	if (ret) {
-<<<<<<< HEAD
-=======
-		spin_unlock(&drv->lock);
->>>>>>> rebase
 		goto done_write;
 	}
 
 	tcs_id = find_free_tcs(tcs);
 	if (tcs_id < 0) {
 		ret = tcs_id;
-<<<<<<< HEAD
-=======
-		spin_unlock(&drv->lock);
->>>>>>> rebase
 		goto done_write;
 	}
 
 	tcs->req[tcs_id - tcs->offset] = msg;
 	set_bit(tcs_id, drv->tcs_in_use);
-<<<<<<< HEAD
 	if (msg->state == RPMH_ACTIVE_ONLY_STATE && tcs->type != ACTIVE_TCS)
 		enable_tcs_irq(drv, tcs_id, true);
 
@@ -547,25 +436,6 @@ static int tcs_write(struct rsc_drv *drv, const struct tcs_request *msg)
 
 done_write:
 	spin_unlock(&drv->lock);
-=======
-	if (msg->state == RPMH_ACTIVE_ONLY_STATE && tcs->type != ACTIVE_TCS) {
-		/*
-		 * Clear previously programmed WAKE commands in selected
-		 * repurposed TCS to avoid triggering them. tcs->slots will be
-		 * cleaned from rpmh_flush() by invoking rpmh_rsc_invalidate()
-		 */
-		write_tcs_reg_sync(drv, RSC_DRV_CMD_ENABLE, tcs_id, 0);
-		write_tcs_reg_sync(drv, RSC_DRV_CMD_WAIT_FOR_CMPL, tcs_id, 0);
-		enable_tcs_irq(drv, tcs_id, true);
-	}
-	spin_unlock(&drv->lock);
-
-	__tcs_buffer_write(drv, tcs_id, 0, msg);
-	__tcs_set_trigger(drv, tcs_id, true);
-
-done_write:
-	spin_unlock_irqrestore(&tcs->lock, flags);
->>>>>>> rebase
 	return ret;
 }
 
@@ -592,13 +462,8 @@ int rpmh_rsc_send_data(struct rsc_drv *drv, const struct tcs_request *msg)
 	do {
 		ret = tcs_write(drv, msg);
 		if (ret == -EBUSY) {
-<<<<<<< HEAD
 			pr_info_ratelimited("DRV:%s TCS Busy, retrying RPMH message send: addr=%#x\n",
 					    drv->name, msg->cmds[0].addr);
-=======
-			pr_info_ratelimited("TCS Busy, retrying RPMH message send: addr=%#x\n",
-					    msg->cmds[0].addr);
->>>>>>> rebase
 			udelay(10);
 		}
 	} while (ret == -EBUSY);
@@ -646,11 +511,7 @@ static int find_slots(struct tcs_group *tcs, const struct tcs_request *msg,
 	do {
 		slot = bitmap_find_next_zero_area(tcs->slots, MAX_TCS_SLOTS,
 						  i, msg->num_cmds, 0);
-<<<<<<< HEAD
 		if (slot >= tcs->num_tcs * tcs->ncpt)
-=======
-		if (slot == tcs->num_tcs * tcs->ncpt)
->>>>>>> rebase
 			return -ENOMEM;
 		i += tcs->ncpt;
 	} while (slot + msg->num_cmds - 1 >= i);
@@ -672,36 +533,23 @@ static int tcs_ctrl_write(struct rsc_drv *drv, const struct tcs_request *msg)
 {
 	struct tcs_group *tcs;
 	int tcs_id = 0, cmd_id = 0;
-<<<<<<< HEAD
-=======
-	unsigned long flags;
->>>>>>> rebase
 	int ret;
 
 	tcs = get_tcs_for_msg(drv, msg);
 	if (IS_ERR(tcs))
 		return PTR_ERR(tcs);
 
-<<<<<<< HEAD
 	spin_lock(&drv->lock);
-=======
-	spin_lock_irqsave(&tcs->lock, flags);
->>>>>>> rebase
 	/* find the TCS id and the command in the TCS to write to */
 	ret = find_slots(tcs, msg, &tcs_id, &cmd_id);
 	if (!ret)
 		__tcs_buffer_write(drv, tcs_id, cmd_id, msg);
-<<<<<<< HEAD
 	spin_unlock(&drv->lock);
-=======
-	spin_unlock_irqrestore(&tcs->lock, flags);
->>>>>>> rebase
 
 	return ret;
 }
 
 /**
-<<<<<<< HEAD
  *  rpmh_rsc_mode_solver_set: Enable/disable solver mode
  *
  *  @drv: The controller
@@ -754,8 +602,6 @@ bool rpmh_rsc_ctrlr_is_idle(struct rsc_drv *drv)
 }
 
 /**
-=======
->>>>>>> rebase
  * rpmh_rsc_write_ctrl_data: Write request to the controller
  *
  * @drv: the controller
@@ -778,7 +624,6 @@ int rpmh_rsc_write_ctrl_data(struct rsc_drv *drv, const struct tcs_request *msg)
 	return tcs_ctrl_write(drv, msg);
 }
 
-<<<<<<< HEAD
 int rpmh_rsc_write_pdc_data(struct rsc_drv *drv, const struct tcs_request *msg)
 {
 	int i;
@@ -904,8 +749,6 @@ void rpmh_rsc_debug(struct rsc_drv *drv, struct completion *compl)
 	BUG_ON(busy);
 }
 
-=======
->>>>>>> rebase
 static int rpmh_probe_tcs_config(struct platform_device *pdev,
 				 struct rsc_drv *drv)
 {
@@ -918,36 +761,20 @@ static int rpmh_probe_tcs_config(struct platform_device *pdev,
 	int i, ret, n, st = 0;
 	struct tcs_group *tcs;
 	struct resource *res;
-<<<<<<< HEAD
-=======
-	void __iomem *base;
->>>>>>> rebase
 	char drv_id[10] = {0};
 
 	snprintf(drv_id, ARRAY_SIZE(drv_id), "drv-%d", drv->id);
 	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, drv_id);
-<<<<<<< HEAD
 	drv->base = devm_ioremap_resource(&pdev->dev, res);
 	if (IS_ERR(drv->base))
 		return PTR_ERR(drv->base);
-=======
-	base = devm_ioremap_resource(&pdev->dev, res);
-	if (IS_ERR(base))
-		return PTR_ERR(base);
->>>>>>> rebase
 
 	ret = of_property_read_u32(dn, "qcom,tcs-offset", &offset);
 	if (ret)
 		return ret;
-<<<<<<< HEAD
 	drv->tcs_base = drv->base + offset;
 
 	config = readl_relaxed(drv->base + DRV_PRNT_CHLD_CONFIG);
-=======
-	drv->tcs_base = base + offset;
-
-	config = readl_relaxed(base + DRV_PRNT_CHLD_CONFIG);
->>>>>>> rebase
 
 	max_tcs = config;
 	max_tcs &= DRV_NUM_TCS_MASK << (DRV_NUM_TCS_SHIFT * drv->id);
@@ -984,10 +811,6 @@ static int rpmh_probe_tcs_config(struct platform_device *pdev,
 		tcs->type = tcs_cfg[i].type;
 		tcs->num_tcs = tcs_cfg[i].n;
 		tcs->ncpt = ncpt;
-<<<<<<< HEAD
-=======
-		spin_lock_init(&tcs->lock);
->>>>>>> rebase
 
 		if (!tcs->num_tcs || tcs->type == CONTROL_TCS)
 			continue;
@@ -1037,11 +860,8 @@ static int rpmh_rsc_probe(struct platform_device *pdev)
 		return ret;
 	}
 
-<<<<<<< HEAD
 	rpmh_standalone = (cmd_db_is_standalone() == 1);
 
-=======
->>>>>>> rebase
 	drv = devm_kzalloc(&pdev->dev, sizeof(*drv), GFP_KERNEL);
 	if (!drv)
 		return -ENOMEM;
@@ -1059,21 +879,15 @@ static int rpmh_rsc_probe(struct platform_device *pdev)
 		return ret;
 
 	spin_lock_init(&drv->lock);
-<<<<<<< HEAD
 	drv->in_solver_mode = false;
-=======
->>>>>>> rebase
 	bitmap_zero(drv->tcs_in_use, MAX_TCS_NR);
 
 	irq = platform_get_irq(pdev, drv->id);
 	if (irq < 0)
 		return irq;
 
-<<<<<<< HEAD
 	drv->irq = irq;
 
-=======
->>>>>>> rebase
 	ret = devm_request_irq(&pdev->dev, irq, tcs_tx_done,
 			       IRQF_TRIGGER_HIGH | IRQF_NO_SUSPEND,
 			       drv->name, drv);
@@ -1087,15 +901,11 @@ static int rpmh_rsc_probe(struct platform_device *pdev)
 	INIT_LIST_HEAD(&drv->client.cache);
 	INIT_LIST_HEAD(&drv->client.batch_cache);
 
-<<<<<<< HEAD
 	drv->ipc_log_ctx = ipc_log_context_create(RSC_DRV_IPC_LOG_SIZE,
 						  drv->name, 0);
 
 	dev_set_drvdata(&pdev->dev, drv);
 	__rsc_drv[__rsc_count++] = drv;
-=======
-	dev_set_drvdata(&pdev->dev, drv);
->>>>>>> rebase
 
 	return devm_of_platform_populate(&pdev->dev);
 }
@@ -1119,9 +929,6 @@ static int __init rpmh_driver_init(void)
 	return platform_driver_register(&rpmh_driver);
 }
 arch_initcall(rpmh_driver_init);
-<<<<<<< HEAD
 
 MODULE_LICENSE("GPL v2");
 MODULE_DESCRIPTION("Qualcomm RPM-Hardened (RPMH) Communication driver");
-=======
->>>>>>> rebase

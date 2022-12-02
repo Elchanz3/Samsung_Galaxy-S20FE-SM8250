@@ -20,10 +20,7 @@ struct device;
 struct fwnode_handle {
 	struct fwnode_handle *secondary;
 	const struct fwnode_operations *ops;
-<<<<<<< HEAD
 	struct device *dev;
-=======
->>>>>>> rebase
 };
 
 /**
@@ -72,7 +69,6 @@ struct fwnode_reference_args {
  *			       endpoint node.
  * @graph_get_port_parent: Return the parent node of a port node.
  * @graph_parse_endpoint: Parse endpoint for port and endpoint id.
-<<<<<<< HEAD
  * @add_links:	Called after the device corresponding to the fwnode is added
  *		using device_add(). The function is expected to create device
  *		links to all the suppliers of the device that are available at
@@ -111,8 +107,6 @@ struct fwnode_reference_args {
  *		Return -EAGAIN if some of the suppliers of this device have not
  *		been registered yet, but none of those suppliers are necessary
  *		for probing the device.
-=======
->>>>>>> rebase
  */
 struct fwnode_operations {
 	struct fwnode_handle *(*get)(struct fwnode_handle *fwnode);
@@ -150,11 +144,8 @@ struct fwnode_operations {
 	(*graph_get_port_parent)(struct fwnode_handle *fwnode);
 	int (*graph_parse_endpoint)(const struct fwnode_handle *fwnode,
 				    struct fwnode_endpoint *endpoint);
-<<<<<<< HEAD
 	int (*add_links)(const struct fwnode_handle *fwnode,
 			 struct device *dev);
-=======
->>>>>>> rebase
 };
 
 #define fwnode_has_op(fwnode, op)				\
@@ -175,9 +166,6 @@ struct fwnode_operations {
 		if (fwnode_has_op(fwnode, op))				\
 			(fwnode)->ops->op(fwnode, ## __VA_ARGS__);	\
 	} while (false)
-<<<<<<< HEAD
 #define get_dev_from_fwnode(fwnode)	get_device((fwnode)->dev)
-=======
->>>>>>> rebase
 
 #endif

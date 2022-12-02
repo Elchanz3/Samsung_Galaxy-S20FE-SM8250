@@ -290,15 +290,8 @@ void kvm_set_posted_intr_wakeup_handler(void (*handler)(void))
 {
 	if (handler)
 		kvm_posted_intr_wakeup_handler = handler;
-<<<<<<< HEAD
 	else
 		kvm_posted_intr_wakeup_handler = dummy_handler;
-=======
-	else {
-		kvm_posted_intr_wakeup_handler = dummy_handler;
-		synchronize_rcu();
-	}
->>>>>>> rebase
 }
 EXPORT_SYMBOL_GPL(kvm_set_posted_intr_wakeup_handler);
 

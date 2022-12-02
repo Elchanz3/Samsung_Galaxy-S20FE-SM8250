@@ -87,14 +87,11 @@ int ieee80211_channel_to_frequency(int chan, enum nl80211_band band)
 		else
 			return 5000 + chan * 5;
 		break;
-<<<<<<< HEAD
 	case NL80211_BAND_6GHZ:
 		/* see 802.11ax D4.1 27.3.22.2 */
 		if (chan <= 253)
 			return 5940 + chan * 5;
 		break;
-=======
->>>>>>> rebase
 	case NL80211_BAND_60GHZ:
 		if (chan < 5)
 			return 56160 + chan * 2160;
@@ -115,16 +112,11 @@ int ieee80211_frequency_to_channel(int freq)
 		return (freq - 2407) / 5;
 	else if (freq >= 4910 && freq <= 4980)
 		return (freq - 4000) / 5;
-<<<<<<< HEAD
 	else if (freq < 5940)
 		return (freq - 5000) / 5;
 	else if (freq <= 45000) /* DMG band lower limit */
 		/* see 802.11ax D4.1 27.3.22.2 */
 		return (freq - 5940) / 5;
-=======
-	else if (freq <= 45000) /* DMG band lower limit */
-		return (freq - 5000) / 5;
->>>>>>> rebase
 	else if (freq >= 58320 && freq <= 64800)
 		return (freq - 56160) / 2160;
 	else
@@ -160,10 +152,7 @@ static void set_mandatory_flags_band(struct ieee80211_supported_band *sband)
 
 	switch (sband->band) {
 	case NL80211_BAND_5GHZ:
-<<<<<<< HEAD
 	case NL80211_BAND_6GHZ:
-=======
->>>>>>> rebase
 		want = 3;
 		for (i = 0; i < sband->n_bitrates; i++) {
 			if (sband->bitrates[i].bitrate == 60 ||
@@ -234,60 +223,16 @@ bool cfg80211_supported_cipher_suite(struct wiphy *wiphy, u32 cipher)
 	return false;
 }
 
-<<<<<<< HEAD
-=======
-static bool
-cfg80211_igtk_cipher_supported(struct cfg80211_registered_device *rdev)
-{
-	struct wiphy *wiphy = &rdev->wiphy;
-	int i;
-
-	for (i = 0; i < wiphy->n_cipher_suites; i++) {
-		switch (wiphy->cipher_suites[i]) {
-		case WLAN_CIPHER_SUITE_AES_CMAC:
-		case WLAN_CIPHER_SUITE_BIP_CMAC_256:
-		case WLAN_CIPHER_SUITE_BIP_GMAC_128:
-		case WLAN_CIPHER_SUITE_BIP_GMAC_256:
-			return true;
-		}
-	}
-
-	return false;
-}
-
-bool cfg80211_valid_key_idx(struct cfg80211_registered_device *rdev,
-			    int key_idx, bool pairwise)
-{
-	int max_key_idx;
-
-	if (pairwise)
-		max_key_idx = 3;
-	else if (cfg80211_igtk_cipher_supported(rdev))
-		max_key_idx = 5;
-	else
-		max_key_idx = 3;
-
-	if (key_idx < 0 || key_idx > max_key_idx)
-		return false;
-
-	return true;
-}
-
->>>>>>> rebase
 int cfg80211_validate_key_settings(struct cfg80211_registered_device *rdev,
 				   struct key_params *params, int key_idx,
 				   bool pairwise, const u8 *mac_addr)
 {
-<<<<<<< HEAD
 	int max_key_idx = 5;
 
 	if (wiphy_ext_feature_isset(&rdev->wiphy,
 				    NL80211_EXT_FEATURE_BEACON_PROTECTION))
 		max_key_idx = 7;
 	if (key_idx > max_key_idx)
-=======
-	if (!cfg80211_valid_key_idx(rdev, key_idx, pairwise))
->>>>>>> rebase
 		return -EINVAL;
 
 	if (!pairwise && mac_addr && !(rdev->wiphy.flags & WIPHY_FLAG_IBSS_RSN))
@@ -318,11 +263,6 @@ int cfg80211_validate_key_settings(struct cfg80211_registered_device *rdev,
 		/* Disallow BIP (group-only) cipher as pairwise cipher */
 		if (pairwise)
 			return -EINVAL;
-<<<<<<< HEAD
-=======
-		if (key_idx < 4)
-			return -EINVAL;
->>>>>>> rebase
 		break;
 	case WLAN_CIPHER_SUITE_WEP40:
 	case WLAN_CIPHER_SUITE_WEP104:
@@ -494,11 +434,7 @@ EXPORT_SYMBOL(ieee80211_get_mesh_hdrlen);
 
 int ieee80211_data_to_8023_exthdr(struct sk_buff *skb, struct ethhdr *ehdr,
 				  const u8 *addr, enum nl80211_iftype iftype,
-<<<<<<< HEAD
 				  u8 data_offset)
-=======
-				  u8 data_offset, bool is_amsdu)
->>>>>>> rebase
 {
 	struct ieee80211_hdr *hdr = (struct ieee80211_hdr *) skb->data;
 	struct {
@@ -586,11 +522,7 @@ int ieee80211_data_to_8023_exthdr(struct sk_buff *skb, struct ethhdr *ehdr,
 	skb_copy_bits(skb, hdrlen, &payload, sizeof(payload));
 	tmp.h_proto = payload.proto;
 
-<<<<<<< HEAD
 	if (likely((ether_addr_equal(payload.hdr, rfc1042_header) &&
-=======
-	if (likely((!is_amsdu && ether_addr_equal(payload.hdr, rfc1042_header) &&
->>>>>>> rebase
 		    tmp.h_proto != htons(ETH_P_AARP) &&
 		    tmp.h_proto != htons(ETH_P_IPX)) ||
 		   ether_addr_equal(payload.hdr, bridge_tunnel_header)))
@@ -732,12 +664,6 @@ void ieee80211_amsdu_to_8023s(struct sk_buff *skb, struct sk_buff_head *list,
 		remaining = skb->len - offset;
 		if (subframe_len > remaining)
 			goto purge;
-<<<<<<< HEAD
-=======
-		/* mitigate A-MSDU aggregation injection attacks */
-		if (ether_addr_equal(eth.h_dest, rfc1042_header))
-			goto purge;
->>>>>>> rebase
 
 		offset += sizeof(struct ethhdr);
 		last = remaining <= subframe_len + padding;
@@ -859,11 +785,7 @@ unsigned int cfg80211_classify8021d(struct sk_buff *skb,
 }
 EXPORT_SYMBOL(cfg80211_classify8021d);
 
-<<<<<<< HEAD
 const struct element *ieee80211_bss_get_elem(struct cfg80211_bss *bss, u8 id)
-=======
-const u8 *ieee80211_bss_get_ie(struct cfg80211_bss *bss, u8 ie)
->>>>>>> rebase
 {
 	const struct cfg80211_bss_ies *ies;
 
@@ -871,15 +793,9 @@ const u8 *ieee80211_bss_get_ie(struct cfg80211_bss *bss, u8 ie)
 	if (!ies)
 		return NULL;
 
-<<<<<<< HEAD
 	return cfg80211_find_elem(id, ies->data, ies->len);
 }
 EXPORT_SYMBOL(ieee80211_bss_get_elem);
-=======
-	return cfg80211_find_ie(ie, ies->data, ies->len);
-}
-EXPORT_SYMBOL(ieee80211_bss_get_ie);
->>>>>>> rebase
 
 void cfg80211_upload_connect_keys(struct wireless_dev *wdev)
 {
@@ -1006,10 +922,6 @@ int cfg80211_change_iface(struct cfg80211_registered_device *rdev,
 
 		switch (otype) {
 		case NL80211_IFTYPE_AP:
-<<<<<<< HEAD
-=======
-		case NL80211_IFTYPE_P2P_GO:
->>>>>>> rebase
 			cfg80211_stop_ap(rdev, dev, true);
 			break;
 		case NL80211_IFTYPE_ADHOC:
@@ -1025,12 +937,6 @@ int cfg80211_change_iface(struct cfg80211_registered_device *rdev,
 		case NL80211_IFTYPE_MESH_POINT:
 			/* mesh should be handled? */
 			break;
-<<<<<<< HEAD
-=======
-		case NL80211_IFTYPE_OCB:
-			cfg80211_leave_ocb(rdev, dev);
-			break;
->>>>>>> rebase
 		default:
 			break;
 		}
@@ -1116,11 +1022,7 @@ static u32 cfg80211_calculate_bitrate_ht(struct rate_info *rate)
 	return (bitrate + 50000) / 100000;
 }
 
-<<<<<<< HEAD
 static u32 cfg80211_calculate_bitrate_dmg(struct rate_info *rate)
-=======
-static u32 cfg80211_calculate_bitrate_60g(struct rate_info *rate)
->>>>>>> rebase
 {
 	static const u32 __mcs2bitrate[] = {
 		/* control PHY */
@@ -1167,7 +1069,6 @@ static u32 cfg80211_calculate_bitrate_60g(struct rate_info *rate)
 	return __mcs2bitrate[rate->mcs];
 }
 
-<<<<<<< HEAD
 static u32 cfg80211_calculate_bitrate_edmg(struct rate_info *rate)
 {
 	static const u32 __mcs2bitrate[] = {
@@ -1202,8 +1103,6 @@ static u32 cfg80211_calculate_bitrate_edmg(struct rate_info *rate)
 	return __mcs2bitrate[rate->mcs] * rate->n_bonded_ch;
 }
 
-=======
->>>>>>> rebase
 static u32 cfg80211_calculate_bitrate_vht(struct rate_info *rate)
 {
 	static const u32 base[4][10] = {
@@ -1374,15 +1273,10 @@ u32 cfg80211_calculate_bitrate(struct rate_info *rate)
 {
 	if (rate->flags & RATE_INFO_FLAGS_MCS)
 		return cfg80211_calculate_bitrate_ht(rate);
-<<<<<<< HEAD
 	if (rate->flags & RATE_INFO_FLAGS_DMG)
 		return cfg80211_calculate_bitrate_dmg(rate);
 	if (rate->flags & RATE_INFO_FLAGS_EDMG)
 		return cfg80211_calculate_bitrate_edmg(rate);
-=======
-	if (rate->flags & RATE_INFO_FLAGS_60G)
-		return cfg80211_calculate_bitrate_60g(rate);
->>>>>>> rebase
 	if (rate->flags & RATE_INFO_FLAGS_VHT_MCS)
 		return cfg80211_calculate_bitrate_vht(rate);
 	if (rate->flags & RATE_INFO_FLAGS_HE_MCS)
@@ -1594,12 +1488,9 @@ bool ieee80211_operating_class_to_band(u8 operating_class,
 	case 128 ... 130:
 		*band = NL80211_BAND_5GHZ;
 		return true;
-<<<<<<< HEAD
 	case 131 ... 135:
 		*band = NL80211_BAND_6GHZ;
 		return true;
-=======
->>>>>>> rebase
 	case 81:
 	case 82:
 	case 83:

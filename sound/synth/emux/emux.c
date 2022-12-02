@@ -101,11 +101,7 @@ int snd_emux_register(struct snd_emux *emu, struct snd_card *card, int index, ch
 	emu->name = kstrdup(name, GFP_KERNEL);
 	emu->voices = kcalloc(emu->max_voices, sizeof(struct snd_emux_voice),
 			      GFP_KERNEL);
-<<<<<<< HEAD
 	if (emu->voices == NULL)
-=======
-	if (emu->name == NULL || emu->voices == NULL)
->>>>>>> rebase
 		return -ENOMEM;
 
 	/* create soundfont list */
@@ -142,7 +138,6 @@ EXPORT_SYMBOL(snd_emux_register);
  */
 int snd_emux_free(struct snd_emux *emu)
 {
-<<<<<<< HEAD
 	unsigned long flags;
 
 	if (! emu)
@@ -152,12 +147,6 @@ int snd_emux_free(struct snd_emux *emu)
 	if (emu->timer_active)
 		del_timer(&emu->tlist);
 	spin_unlock_irqrestore(&emu->voice_lock, flags);
-=======
-	if (! emu)
-		return -EINVAL;
-
-	del_timer_sync(&emu->tlist);
->>>>>>> rebase
 
 	snd_emux_proc_free(emu);
 	snd_emux_delete_virmidi(emu);

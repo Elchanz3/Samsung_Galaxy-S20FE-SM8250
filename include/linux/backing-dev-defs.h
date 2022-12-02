@@ -178,14 +178,11 @@ struct backing_dev_info {
 	unsigned int min_ratio;
 	unsigned int max_ratio, max_prop_frac;
 
-<<<<<<< HEAD
 	/* approximate write throttle statistics - updated at each throttling */
 	unsigned long last_thresh;  /* global/bdi thresh at the last throttle */
 	unsigned long last_nr_dirty; /* global/bdi dirty at the last throttle */
 	unsigned long paused_total; /* approximated sum of pauses. in jiffies */
 
-=======
->>>>>>> rebase
 	/*
 	 * Sum of avg_write_bw of wbs with dirty inodes.  > 0 if there are
 	 * any dirty wbs, which is depended upon by bdi_has_dirty().
@@ -205,10 +202,6 @@ struct backing_dev_info {
 	wait_queue_head_t wb_waitq;
 
 	struct device *dev;
-<<<<<<< HEAD
-=======
-	char dev_name[64];
->>>>>>> rebase
 	struct device *owner;
 
 	struct timer_list laptop_mode_wb_timer;
@@ -219,7 +212,6 @@ struct backing_dev_info {
 #endif
 };
 
-<<<<<<< HEAD
 #define BDI_BDP_DEBUG_ENTRY 20
 struct bdi_sec_bdp_entry {
 	unsigned long start_time;
@@ -251,8 +243,6 @@ static inline struct sec_backing_dev_info *SEC_BDI(struct backing_dev_info *bdi)
 	return container_of(bdi, struct sec_backing_dev_info, bdi);
 }
 
-=======
->>>>>>> rebase
 enum {
 	BLK_RW_ASYNC	= 0,
 	BLK_RW_SYNC	= 1,

@@ -54,10 +54,7 @@
 #include <linux/proc_fs.h>
 #include <linux/seq_file.h>
 #include <trace/events/skb.h>
-<<<<<<< HEAD
 #include <trace/events/udp.h>
-=======
->>>>>>> rebase
 #include "udp_impl.h"
 
 static bool udp6_lib_exact_dif_match(struct net *net, struct sk_buff *skb)
@@ -171,11 +168,7 @@ static struct sock *udp6_lib_lookup2(struct net *net,
 		int dif, int sdif, bool exact_dif,
 		struct udp_hslot *hslot2, struct sk_buff *skb)
 {
-<<<<<<< HEAD
 	struct sock *sk, *result;
-=======
-	struct sock *sk, *result, *reuseport_result;
->>>>>>> rebase
 	int score, badness;
 	u32 hash = 0;
 
@@ -185,32 +178,17 @@ static struct sock *udp6_lib_lookup2(struct net *net,
 		score = compute_score(sk, net, saddr, sport,
 				      daddr, hnum, dif, sdif, exact_dif);
 		if (score > badness) {
-<<<<<<< HEAD
-=======
-			reuseport_result = NULL;
-
->>>>>>> rebase
 			if (sk->sk_reuseport &&
 			    sk->sk_state != TCP_ESTABLISHED) {
 				hash = udp6_ehashfn(net, daddr, hnum,
 						    saddr, sport);
 
-<<<<<<< HEAD
 				result = reuseport_select_sock(sk, hash, skb,
 							sizeof(struct udphdr));
 				if (result && !reuseport_has_conns(sk, false))
 					return result;
 			}
 			result = sk;
-=======
-				reuseport_result = reuseport_select_sock(sk, hash, skb,
-									 sizeof(struct udphdr));
-				if (reuseport_result && !reuseport_has_conns(sk, false))
-					return reuseport_result;
-			}
-
-			result = reuseport_result ? : sk;
->>>>>>> rebase
 			badness = score;
 		}
 	}
@@ -449,12 +427,9 @@ try_again:
 						(struct sockaddr *)sin6);
 	}
 
-<<<<<<< HEAD
 	if (udp_sk(sk)->gro_enabled)
 		udp_cmsg_recv(msg, sk, skb);
 
-=======
->>>>>>> rebase
 	if (np->rxopt.all)
 		ip6_datagram_recv_common_ctl(sk, msg, skb);
 
@@ -564,17 +539,11 @@ static int __udpv6_queue_rcv_skb(struct sock *sk, struct sk_buff *skb)
 		int is_udplite = IS_UDPLITE(sk);
 
 		/* Note that an ENOMEM error is charged twice */
-<<<<<<< HEAD
 		if (rc == -ENOMEM) {
 			UDP6_INC_STATS(sock_net(sk),
 					 UDP_MIB_RCVBUFERRORS, is_udplite);
 			trace_udpv6_fail_rcv_buf_errors(skb);
 		}
-=======
-		if (rc == -ENOMEM)
-			UDP6_INC_STATS(sock_net(sk),
-					 UDP_MIB_RCVBUFERRORS, is_udplite);
->>>>>>> rebase
 		UDP6_INC_STATS(sock_net(sk), UDP_MIB_INERRORS, is_udplite);
 		kfree_skb(skb);
 		return -1;
@@ -593,19 +562,11 @@ static __inline__ void udpv6_err(struct sk_buff *skb,
 static DEFINE_STATIC_KEY_FALSE(udpv6_encap_needed_key);
 void udpv6_encap_enable(void)
 {
-<<<<<<< HEAD
 	static_branch_inc(&udpv6_encap_needed_key);
 }
 EXPORT_SYMBOL(udpv6_encap_enable);
 
 static int udpv6_queue_rcv_one_skb(struct sock *sk, struct sk_buff *skb)
-=======
-	static_branch_enable(&udpv6_encap_needed_key);
-}
-EXPORT_SYMBOL(udpv6_encap_enable);
-
-static int udpv6_queue_rcv_skb(struct sock *sk, struct sk_buff *skb)
->>>>>>> rebase
 {
 	struct udp_sock *up = udp_sk(sk);
 	int is_udplite = IS_UDPLITE(sk);
@@ -651,11 +612,7 @@ static int udpv6_queue_rcv_skb(struct sock *sk, struct sk_buff *skb)
 	/*
 	 * UDP-Lite specific tests, ignored on UDP sockets (see net/ipv4/udp.c).
 	 */
-<<<<<<< HEAD
 	if ((is_udplite & UDPLITE_RECV_CC)  &&  UDP_SKB_CB(skb)->partial_cov) {
-=======
-	if ((up->pcflag & UDPLITE_RECV_CC)  &&  UDP_SKB_CB(skb)->partial_cov) {
->>>>>>> rebase
 
 		if (up->pcrlen == 0) {          /* full coverage was set  */
 			net_dbg_ratelimited("UDPLITE6: partial coverage %d while full coverage %d requested\n",
@@ -692,7 +649,6 @@ drop:
 	return -1;
 }
 
-<<<<<<< HEAD
 static int udpv6_queue_rcv_skb(struct sock *sk, struct sk_buff *skb)
 {
 	struct sk_buff *next, *segs;
@@ -715,8 +671,6 @@ static int udpv6_queue_rcv_skb(struct sock *sk, struct sk_buff *skb)
 	return 0;
 }
 
-=======
->>>>>>> rebase
 static bool __udp_v6_is_mcast_sock(struct net *net, struct sock *sk,
 				   __be16 loc_port, const struct in6_addr *loc_addr,
 				   __be16 rmt_port, const struct in6_addr *rmt_addr,
@@ -899,11 +853,7 @@ int __udp6_lib_rcv(struct sk_buff *skb, struct udp_table *udptable,
 		struct dst_entry *dst = skb_dst(skb);
 		int ret;
 
-<<<<<<< HEAD
 		if (unlikely(sk->sk_rx_dst != dst))
-=======
-		if (unlikely(rcu_dereference(sk->sk_rx_dst) != dst))
->>>>>>> rebase
 			udp6_sk_rx_dst_set(sk, dst);
 
 		if (!uh->check && !udp_sk(sk)->no_check6_rx) {
@@ -987,11 +937,7 @@ static struct sock *__udp6_lib_demux_lookup(struct net *net,
 	return NULL;
 }
 
-<<<<<<< HEAD
 static void udp_v6_early_demux(struct sk_buff *skb)
-=======
-void udp_v6_early_demux(struct sk_buff *skb)
->>>>>>> rebase
 {
 	struct net *net = dev_net(skb->dev);
 	const struct udphdr *uh;
@@ -1019,11 +965,7 @@ void udp_v6_early_demux(struct sk_buff *skb)
 
 	skb->sk = sk;
 	skb->destructor = sock_efree;
-<<<<<<< HEAD
 	dst = READ_ONCE(sk->sk_rx_dst);
-=======
-	dst = rcu_dereference(sk->sk_rx_dst);
->>>>>>> rebase
 
 	if (dst)
 		dst = dst_check(dst, inet6_sk(sk)->rx_dst_cookie);
@@ -1152,11 +1094,7 @@ static int udp_v6_send_skb(struct sk_buff *skb, struct flowi6 *fl6,
 			kfree_skb(skb);
 			return -EINVAL;
 		}
-<<<<<<< HEAD
 		if (skb->len > cork->gso_size * UDP_MAX_SEGMENTS) {
-=======
-		if (datalen > cork->gso_size * UDP_MAX_SEGMENTS) {
->>>>>>> rebase
 			kfree_skb(skb);
 			return -EINVAL;
 		}
@@ -1256,21 +1194,13 @@ int udpv6_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
 	int addr_len = msg->msg_namelen;
 	bool connected = false;
 	int ulen = len;
-<<<<<<< HEAD
 	int corkreq = up->corkflag || msg->msg_flags&MSG_MORE;
-=======
-	int corkreq = READ_ONCE(up->corkflag) || msg->msg_flags&MSG_MORE;
->>>>>>> rebase
 	int err;
 	int is_udplite = IS_UDPLITE(sk);
 	int (*getfrag)(void *, char *, int, int, int, struct sk_buff *);
 
 	ipcm6_init(&ipc6);
-<<<<<<< HEAD
 	ipc6.gso_size = up->gso_size;
-=======
-	ipc6.gso_size = READ_ONCE(up->gso_size);
->>>>>>> rebase
 	ipc6.sockc.tsflags = sk->sk_tsflags;
 
 	/* destination address check */
@@ -1571,7 +1501,6 @@ void udpv6_destroy_sock(struct sock *sk)
 {
 	struct udp_sock *up = udp_sk(sk);
 	lock_sock(sk);
-<<<<<<< HEAD
 	udp_v6_flush_pending_frames(sk);
 	release_sock(sk);
 
@@ -1584,19 +1513,6 @@ void udpv6_destroy_sock(struct sock *sk)
 		}
 		if (up->encap_enabled)
 			static_branch_dec(&udpv6_encap_needed_key);
-=======
-
-	/* protects from races with udp_abort() */
-	sock_set_flag(sk, SOCK_DEAD);
-	udp_v6_flush_pending_frames(sk);
-	release_sock(sk);
-
-	if (static_branch_unlikely(&udpv6_encap_needed_key) && up->encap_type) {
-		void (*encap_destroy)(struct sock *sk);
-		encap_destroy = READ_ONCE(up->encap_destroy);
-		if (encap_destroy)
-			encap_destroy(sk);
->>>>>>> rebase
 	}
 
 	inet6_destroy_sock(sk);
@@ -1643,16 +1559,12 @@ int compat_udpv6_getsockopt(struct sock *sk, int level, int optname,
 }
 #endif
 
-<<<<<<< HEAD
 /* thinking of making this const? Don't.
  * early_demux can change based on sysctl.
  */
 static struct inet6_protocol udpv6_protocol = {
 	.early_demux	=	udp_v6_early_demux,
 	.early_demux_handler =  udp_v6_early_demux,
-=======
-static const struct inet6_protocol udpv6_protocol = {
->>>>>>> rebase
 	.handler	=	udpv6_rcv,
 	.err_handler	=	udpv6_err,
 	.flags		=	INET6_PROTO_NOPOLICY|INET6_PROTO_FINAL,

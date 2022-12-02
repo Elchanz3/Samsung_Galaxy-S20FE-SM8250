@@ -23,13 +23,7 @@
 #ifndef __KFD_IOMMU_H__
 #define __KFD_IOMMU_H__
 
-<<<<<<< HEAD
 #if defined(CONFIG_AMD_IOMMU_V2_MODULE) || defined(CONFIG_AMD_IOMMU_V2)
-=======
-#include <linux/kconfig.h>
-
-#if IS_REACHABLE(CONFIG_AMD_IOMMU_V2)
->>>>>>> rebase
 
 #define KFD_SUPPORT_IOMMU_V2
 
@@ -52,12 +46,6 @@ static inline int kfd_iommu_check_device(struct kfd_dev *kfd)
 }
 static inline int kfd_iommu_device_init(struct kfd_dev *kfd)
 {
-<<<<<<< HEAD
-=======
-#if IS_MODULE(CONFIG_AMD_IOMMU_V2)
-	WARN_ONCE(1, "iommu_v2 module is not usable by built-in KFD");
-#endif
->>>>>>> rebase
 	return 0;
 }
 
@@ -85,10 +73,6 @@ static inline int kfd_iommu_add_perf_counters(struct kfd_topology_device *kdev)
 	return 0;
 }
 
-<<<<<<< HEAD
 #endif /* defined(CONFIG_AMD_IOMMU_V2) */
-=======
-#endif /* IS_REACHABLE(CONFIG_AMD_IOMMU_V2) */
->>>>>>> rebase
 
 #endif /* __KFD_IOMMU_H__ */

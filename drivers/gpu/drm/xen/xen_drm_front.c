@@ -410,11 +410,7 @@ static int xen_drm_drv_dumb_create(struct drm_file *filp,
 	args->size = args->pitch * args->height;
 
 	obj = xen_drm_front_gem_create(dev, args->size);
-<<<<<<< HEAD
 	if (IS_ERR_OR_NULL(obj)) {
-=======
-	if (IS_ERR(obj)) {
->>>>>>> rebase
 		ret = PTR_ERR(obj);
 		goto fail;
 	}

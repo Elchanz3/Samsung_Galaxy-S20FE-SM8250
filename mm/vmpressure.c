@@ -22,11 +22,8 @@
 #include <linux/slab.h>
 #include <linux/swap.h>
 #include <linux/printk.h>
-<<<<<<< HEAD
 #include <linux/notifier.h>
 #include <linux/init.h>
-=======
->>>>>>> rebase
 #include <linux/vmpressure.h>
 
 /*
@@ -43,11 +40,7 @@
  * TODO: Make the window size depend on machine size, as we do for vmstat
  * thresholds. Currently we set it to 512 pages (2MB for 4KB pages).
  */
-<<<<<<< HEAD
 static unsigned long vmpressure_win = SWAP_CLUSTER_MAX * 16;
-=======
-static const unsigned long vmpressure_win = SWAP_CLUSTER_MAX * 16;
->>>>>>> rebase
 
 /*
  * These thresholds are used when we account memory pressure through
@@ -58,7 +51,6 @@ static const unsigned long vmpressure_win = SWAP_CLUSTER_MAX * 16;
 static const unsigned int vmpressure_level_med = 60;
 static const unsigned int vmpressure_level_critical = 95;
 
-<<<<<<< HEAD
 static struct vmpressure global_vmpressure;
 static BLOCKING_NOTIFIER_HEAD(vmpressure_notifier);
 
@@ -77,8 +69,6 @@ static void vmpressure_notify(unsigned long pressure)
 	blocking_notifier_call_chain(&vmpressure_notifier, pressure, NULL);
 }
 
-=======
->>>>>>> rebase
 /*
  * When there are too little pages left to scan, vmpressure() may miss the
  * critical pressure as number of pages will be less than "window size".
@@ -105,10 +95,7 @@ static struct vmpressure *work_to_vmpressure(struct work_struct *work)
 	return container_of(work, struct vmpressure, work);
 }
 
-<<<<<<< HEAD
 #ifdef CONFIG_MEMCG
-=======
->>>>>>> rebase
 static struct vmpressure *vmpressure_parent(struct vmpressure *vmpr)
 {
 	struct cgroup_subsys_state *css = vmpressure_to_css(vmpr);
@@ -119,15 +106,12 @@ static struct vmpressure *vmpressure_parent(struct vmpressure *vmpr)
 		return NULL;
 	return memcg_to_vmpressure(memcg);
 }
-<<<<<<< HEAD
 #else
 static struct vmpressure *vmpressure_parent(struct vmpressure *vmpr)
 {
 	return NULL;
 }
 #endif
-=======
->>>>>>> rebase
 
 enum vmpressure_levels {
 	VMPRESSURE_LOW = 0,
@@ -164,11 +148,7 @@ static enum vmpressure_levels vmpressure_level(unsigned long pressure)
 	return VMPRESSURE_LOW;
 }
 
-<<<<<<< HEAD
 static unsigned long vmpressure_calc_pressure(unsigned long scanned,
-=======
-static enum vmpressure_levels vmpressure_calc_level(unsigned long scanned,
->>>>>>> rebase
 						    unsigned long reclaimed)
 {
 	unsigned long scale = scanned + reclaimed;
@@ -195,11 +175,7 @@ out:
 	pr_debug("%s: %3lu  (s: %lu  r: %lu)\n", __func__, pressure,
 		 scanned, reclaimed);
 
-<<<<<<< HEAD
 	return pressure;
-=======
-	return vmpressure_level(pressure);
->>>>>>> rebase
 }
 
 struct vmpressure_event {
@@ -237,10 +213,7 @@ static void vmpressure_work_fn(struct work_struct *work)
 	struct vmpressure *vmpr = work_to_vmpressure(work);
 	unsigned long scanned;
 	unsigned long reclaimed;
-<<<<<<< HEAD
 	unsigned long pressure;
-=======
->>>>>>> rebase
 	enum vmpressure_levels level;
 	bool ancestor = false;
 	bool signalled = false;
@@ -265,13 +238,9 @@ static void vmpressure_work_fn(struct work_struct *work)
 	vmpr->tree_reclaimed = 0;
 	spin_unlock(&vmpr->sr_lock);
 
-<<<<<<< HEAD
 	pressure = vmpressure_calc_pressure(scanned, reclaimed);
 	vmpr->pressure = pressure;
 	level = vmpressure_level(pressure);
-=======
-	level = vmpressure_calc_level(scanned, reclaimed);
->>>>>>> rebase
 
 	do {
 		if (vmpressure_event(vmpr, level, ancestor, signalled))
@@ -280,33 +249,8 @@ static void vmpressure_work_fn(struct work_struct *work)
 	} while ((vmpr = vmpressure_parent(vmpr)));
 }
 
-<<<<<<< HEAD
 #ifdef CONFIG_MEMCG
 static void vmpressure_memcg(gfp_t gfp, struct mem_cgroup *memcg, bool tree,
-=======
-/**
- * vmpressure() - Account memory pressure through scanned/reclaimed ratio
- * @gfp:	reclaimer's gfp mask
- * @memcg:	cgroup memory controller handle
- * @tree:	legacy subtree mode
- * @scanned:	number of pages scanned
- * @reclaimed:	number of pages reclaimed
- *
- * This function should be called from the vmscan reclaim path to account
- * "instantaneous" memory pressure (scanned/reclaimed ratio). The raw
- * pressure index is then further refined and averaged over time.
- *
- * If @tree is set, vmpressure is in traditional userspace reporting
- * mode: @memcg is considered the pressure root and userspace is
- * notified of the entire subtree's reclaim efficiency.
- *
- * If @tree is not set, reclaim efficiency is recorded for @memcg, and
- * only in-kernel users are notified.
- *
- * This function does not return any value.
- */
-void vmpressure(gfp_t gfp, struct mem_cgroup *memcg, bool tree,
->>>>>>> rebase
 		unsigned long scanned, unsigned long reclaimed)
 {
 	struct vmpressure *vmpr = memcg_to_vmpressure(memcg);
@@ -347,10 +291,7 @@ void vmpressure(gfp_t gfp, struct mem_cgroup *memcg, bool tree,
 		schedule_work(&vmpr->work);
 	} else {
 		enum vmpressure_levels level;
-<<<<<<< HEAD
 		unsigned long pressure;
-=======
->>>>>>> rebase
 
 		/* For now, no users for root-level efficiency */
 		if (!memcg || memcg == root_mem_cgroup)
@@ -366,12 +307,8 @@ void vmpressure(gfp_t gfp, struct mem_cgroup *memcg, bool tree,
 		vmpr->scanned = vmpr->reclaimed = 0;
 		spin_unlock(&vmpr->sr_lock);
 
-<<<<<<< HEAD
 		pressure = vmpressure_calc_pressure(scanned, reclaimed);
 		level = vmpressure_level(pressure);
-=======
-		level = vmpressure_calc_level(scanned, reclaimed);
->>>>>>> rebase
 
 		if (level > VMPRESSURE_LOW) {
 			/*
@@ -386,7 +323,6 @@ void vmpressure(gfp_t gfp, struct mem_cgroup *memcg, bool tree,
 		}
 	}
 }
-<<<<<<< HEAD
 #else
 static void vmpressure_memcg(gfp_t gfp, struct mem_cgroup *memcg, bool tree,
 		unsigned long scanned, unsigned long reclaimed)
@@ -481,8 +417,6 @@ void vmpressure(gfp_t gfp, struct mem_cgroup *memcg, bool tree,
 	if (IS_ENABLED(CONFIG_MEMCG))
 		vmpressure_memcg(gfp, memcg, tree, scanned, reclaimed);
 }
-=======
->>>>>>> rebase
 
 /**
  * vmpressure_prio() - Account memory pressure through reclaimer priority level
@@ -644,7 +578,6 @@ void vmpressure_cleanup(struct vmpressure *vmpr)
 	 */
 	flush_work(&vmpr->work);
 }
-<<<<<<< HEAD
 
 static int vmpressure_global_init(void)
 {
@@ -652,5 +585,3 @@ static int vmpressure_global_init(void)
 	return 0;
 }
 late_initcall(vmpressure_global_init);
-=======
->>>>>>> rebase

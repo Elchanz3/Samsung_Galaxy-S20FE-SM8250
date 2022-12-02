@@ -553,11 +553,6 @@ static int p9_check_errors(struct p9_client *c, struct p9_req_t *req)
 		kfree(ename);
 	} else {
 		err = p9pdu_readf(&req->rc, c->proto_version, "d", &ecode);
-<<<<<<< HEAD
-=======
-		if (err)
-			goto out_err;
->>>>>>> rebase
 		err = -ecode;
 
 		p9_debug(P9_DEBUG_9P, "<<< RLERROR (%d)\n", -ecode);
@@ -911,7 +906,6 @@ static struct p9_fid *p9_fid_create(struct p9_client *clnt)
 	struct p9_fid *fid;
 
 	p9_debug(P9_DEBUG_FID, "clnt %p\n", clnt);
-<<<<<<< HEAD
 	fid = kmalloc(sizeof(struct p9_fid), GFP_KERNEL);
 	if (!fid)
 		return NULL;
@@ -922,15 +916,6 @@ static struct p9_fid *p9_fid_create(struct p9_client *clnt)
 	fid->clnt = clnt;
 	fid->rdir = NULL;
 	fid->fid = 0;
-=======
-	fid = kzalloc(sizeof(struct p9_fid), GFP_KERNEL);
-	if (!fid)
-		return NULL;
-
-	fid->mode = -1;
-	fid->uid = current_fsuid();
-	fid->clnt = clnt;
->>>>>>> rebase
 
 	idr_preload(GFP_KERNEL);
 	spin_lock_irq(&clnt->lock);

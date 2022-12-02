@@ -179,7 +179,6 @@ pmd_t * __meminit vmemmap_pmd_populate(pud_t *pud, unsigned long addr, int node)
 
 pud_t * __meminit vmemmap_pud_populate(p4d_t *p4d, unsigned long addr, int node)
 {
-<<<<<<< HEAD
 	void *p = NULL;
 	pud_t *pud = pud_offset(p4d, addr);
 	if (pud_none(*pud)) {
@@ -188,11 +187,6 @@ pud_t * __meminit vmemmap_pud_populate(p4d_t *p4d, unsigned long addr, int node)
 #else
 		p = vmemmap_alloc_block_zero(PAGE_SIZE, node);
 #endif
-=======
-	pud_t *pud = pud_offset(p4d, addr);
-	if (pud_none(*pud)) {
-		void *p = vmemmap_alloc_block_zero(PAGE_SIZE, node);
->>>>>>> rebase
 		if (!p)
 			return NULL;
 		pud_populate(&init_mm, pud, p);

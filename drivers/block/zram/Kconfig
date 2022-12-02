@@ -15,7 +15,6 @@ config ZRAM
 
 	  See Documentation/blockdev/zram.txt for more information.
 
-<<<<<<< HEAD
 config ZRAM_DEDUP
 	bool "Deduplication support for ZRAM data"
 	depends on ZRAM
@@ -34,24 +33,15 @@ config ZRAM_WRITEBACK
        bool "Write back incompressible or idle page to backing device"
        depends on ZRAM
        default y
-=======
-config ZRAM_WRITEBACK
-       bool "Write back incompressible page to backing device"
-       depends on ZRAM
-       default n
->>>>>>> rebase
        help
 	 With incompressible page, there is no memory saving to keep it
 	 in memory. Instead, write it out to backing device.
 	 For this feature, admin should set up backing device via
 	 /sys/block/zramX/backing_dev.
 
-<<<<<<< HEAD
 	 With /sys/block/zramX/{idle,writeback}, application could ask
 	 idle page's writeback to the backing device to save in memory.
 
-=======
->>>>>>> rebase
 	 See Documentation/blockdev/zram.txt for more information.
 
 config ZRAM_MEMORY_TRACKING
@@ -63,7 +53,6 @@ config ZRAM_MEMORY_TRACKING
 	  /sys/kernel/debug/zram/zramX/block_state.
 
 	  See Documentation/blockdev/zram.txt for more information.
-<<<<<<< HEAD
 
 config ZRAM_LRU_WRITEBACK
 	bool
@@ -76,5 +65,3 @@ config ZRAM_LRU_WRITEBACK_LIMIT
 	int "Limit zram lru writeback"
 	default 1024
 	depends on ZRAM_LRU_WRITEBACK
-=======
->>>>>>> rebase

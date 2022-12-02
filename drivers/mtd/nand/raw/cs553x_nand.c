@@ -241,11 +241,7 @@ static int __init cs553x_init_one(int cs, int mmio, unsigned long adr)
 	}
 
 	/* Scan to find existence of the device */
-<<<<<<< HEAD
 	err = nand_scan(new_mtd, 1);
-=======
-	err = nand_scan(this, 1);
->>>>>>> rebase
 	if (err)
 		goto out_free;
 
@@ -340,11 +336,7 @@ static void __exit cs553x_cleanup(void)
 		mmio_base = this->IO_ADDR_R;
 
 		/* Release resources, unregister device */
-<<<<<<< HEAD
 		nand_release(mtd);
-=======
-		nand_release(this);
->>>>>>> rebase
 		kfree(mtd->name);
 		cs553x_mtd[i] = NULL;
 

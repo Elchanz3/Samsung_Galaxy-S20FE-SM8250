@@ -95,10 +95,6 @@ config TOUCHSCREEN_AD7879_SPI
 config TOUCHSCREEN_ADC
 	tristate "Generic ADC based resistive touchscreen"
 	depends on IIO
-<<<<<<< HEAD
-=======
-	select IIO_BUFFER
->>>>>>> rebase
 	select IIO_BUFFER_CB
 	help
 	  Say Y here if you want to use the generic ADC
@@ -860,7 +856,6 @@ config TOUCHSCREEN_WM97XX_ZYLONITE
 	  To compile this driver as a module, choose M here: the
 	  module will be called zylonite-wm97xx.
 
-<<<<<<< HEAD
 config SECURE_TOUCH_SYNAPTICS_DSX
 	bool "Secure Touch"
 	depends on TOUCHSCREEN_SYNAPTICS_DSX_I2C
@@ -872,8 +867,6 @@ config SECURE_TOUCH_SYNAPTICS_DSX
 	  To compile the supported driver with Secure Touch enabled,
 	  choose M here.
 
-=======
->>>>>>> rebase
 config TOUCHSCREEN_USB_COMPOSITE
 	tristate "USB Touchscreen Driver"
 	depends on USB_ARCH_HAS_HCD
@@ -1317,7 +1310,6 @@ config TOUCHSCREEN_ROHM_BU21023
 	  To compile this driver as a module, choose M here: the
 	  module will be called bu21023_ts.
 
-<<<<<<< HEAD
 config TOUCHSCREEN_ST
 	tristate "STMicroelectronics Touchscreen Driver"
 	depends on I2C
@@ -1377,6 +1369,4 @@ source "drivers/input/touchscreen/focaltech_touch/Kconfig"
 
 source "drivers/input/touchscreen/nt36xxx/Kconfig"
 
-=======
->>>>>>> rebase
 endif

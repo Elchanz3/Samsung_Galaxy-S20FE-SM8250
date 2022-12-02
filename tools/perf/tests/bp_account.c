@@ -22,11 +22,7 @@
 #include "perf.h"
 #include "cloexec.h"
 
-<<<<<<< HEAD
 volatile long the_var;
-=======
-static volatile long the_var;
->>>>>>> rebase
 
 static noinline int test_function(void)
 {

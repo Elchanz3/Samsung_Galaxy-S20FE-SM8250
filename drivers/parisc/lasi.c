@@ -167,10 +167,7 @@ static int __init lasi_init_chip(struct parisc_device *dev)
 {
 	extern void (*chassis_power_off)(void);
 	struct gsc_asic *lasi;
-<<<<<<< HEAD
 	struct gsc_irq gsc_irq;
-=======
->>>>>>> rebase
 	int ret;
 
 	lasi = kzalloc(sizeof(*lasi), GFP_KERNEL);
@@ -192,11 +189,7 @@ static int __init lasi_init_chip(struct parisc_device *dev)
 	lasi_init_irq(lasi);
 
 	/* the IRQ lasi should use */
-<<<<<<< HEAD
 	dev->irq = gsc_alloc_irq(&gsc_irq);
-=======
-	dev->irq = gsc_alloc_irq(&lasi->gsc_irq);
->>>>>>> rebase
 	if (dev->irq < 0) {
 		printk(KERN_ERR "%s(): cannot get GSC irq\n",
 				__func__);
@@ -204,15 +197,9 @@ static int __init lasi_init_chip(struct parisc_device *dev)
 		return -EBUSY;
 	}
 
-<<<<<<< HEAD
 	lasi->eim = ((u32) gsc_irq.txn_addr) | gsc_irq.txn_data;
 
 	ret = request_irq(gsc_irq.irq, gsc_asic_intr, 0, "lasi", lasi);
-=======
-	lasi->eim = ((u32) lasi->gsc_irq.txn_addr) | lasi->gsc_irq.txn_data;
-
-	ret = request_irq(lasi->gsc_irq.irq, gsc_asic_intr, 0, "lasi", lasi);
->>>>>>> rebase
 	if (ret < 0) {
 		kfree(lasi);
 		return ret;

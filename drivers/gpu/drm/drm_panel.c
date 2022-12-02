@@ -48,10 +48,7 @@ static LIST_HEAD(panel_list);
 void drm_panel_init(struct drm_panel *panel)
 {
 	INIT_LIST_HEAD(&panel->list);
-<<<<<<< HEAD
 	BLOCKING_INIT_NOTIFIER_HEAD(&panel->nh);
-=======
->>>>>>> rebase
 }
 EXPORT_SYMBOL(drm_panel_init);
 
@@ -173,7 +170,6 @@ struct drm_panel *of_drm_find_panel(const struct device_node *np)
 EXPORT_SYMBOL(of_drm_find_panel);
 #endif
 
-<<<<<<< HEAD
 int drm_panel_notifier_register(struct drm_panel *panel,
 	struct notifier_block *nb)
 {
@@ -195,8 +191,6 @@ int drm_panel_notifier_call_chain(struct drm_panel *panel,
 }
 EXPORT_SYMBOL(drm_panel_notifier_call_chain);
 
-=======
->>>>>>> rebase
 MODULE_AUTHOR("Thierry Reding <treding@nvidia.com>");
 MODULE_DESCRIPTION("DRM panel infrastructure");
 MODULE_LICENSE("GPL and additional rights");

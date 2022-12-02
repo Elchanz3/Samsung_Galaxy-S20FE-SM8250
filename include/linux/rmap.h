@@ -12,14 +12,11 @@
 #include <linux/memcontrol.h>
 #include <linux/highmem.h>
 
-<<<<<<< HEAD
 extern int isolate_lru_page(struct page *page);
 extern void putback_lru_page(struct page *page);
 extern unsigned long reclaim_pages_from_list(struct list_head *page_list,
 					     struct vm_area_struct *vma);
 
-=======
->>>>>>> rebase
 /*
  * The anon_vma heads a list of private "related" vmas, to scan if
  * an anonymous page pointing to this anon_vma needs to be unmapped:
@@ -47,23 +44,12 @@ struct anon_vma {
 	atomic_t refcount;
 
 	/*
-<<<<<<< HEAD
 	 * Count of child anon_vmas and VMAs which points to this anon_vma.
-=======
-	 * Count of child anon_vmas. Equals to the count of all anon_vmas that
-	 * have ->parent pointing to this one, including itself.
->>>>>>> rebase
 	 *
 	 * This counter is used for making decision about reusing anon_vma
 	 * instead of forking new one. See comments in function anon_vma_clone.
 	 */
-<<<<<<< HEAD
 	unsigned degree;
-=======
-	unsigned long num_children;
-	/* Count of VMAs whose ->anon_vma pointer points to this object. */
-	unsigned long num_active_vmas;
->>>>>>> rebase
 
 	struct anon_vma *parent;	/* Parent of this anon_vma */
 
@@ -117,12 +103,7 @@ enum ttu_flags {
 					 * do a final flush if necessary */
 	TTU_RMAP_LOCKED		= 0x80,	/* do not grab rmap lock:
 					 * caller holds it */
-<<<<<<< HEAD
 	TTU_SPLIT_FREEZE	= 0x100,		/* freeze pte under splitting thp */
-=======
-	TTU_SPLIT_FREEZE	= 0x100, /* freeze pte under splitting thp */
-	TTU_SYNC		= 0x200, /* avoid racy checks with PVMW_SYNC */
->>>>>>> rebase
 };
 
 #ifdef CONFIG_MMU
@@ -198,7 +179,6 @@ void page_add_anon_rmap(struct page *, struct vm_area_struct *,
 		unsigned long, bool);
 void do_page_add_anon_rmap(struct page *, struct vm_area_struct *,
 			   unsigned long, int);
-<<<<<<< HEAD
 void __page_add_new_anon_rmap(struct page *page, struct vm_area_struct *vma,
 			      unsigned long address, bool compound);
 static inline void page_add_new_anon_rmap(struct page *page,
@@ -209,10 +189,6 @@ static inline void page_add_new_anon_rmap(struct page *page,
 	__page_add_new_anon_rmap(page, vma, address, compound);
 }
 
-=======
-void page_add_new_anon_rmap(struct page *, struct vm_area_struct *,
-		unsigned long, bool);
->>>>>>> rebase
 void page_add_file_rmap(struct page *, bool);
 void page_remove_rmap(struct page *, bool);
 
@@ -232,12 +208,8 @@ static inline void page_dup_rmap(struct page *page, bool compound)
 int page_referenced(struct page *, int is_locked,
 			struct mem_cgroup *memcg, unsigned long *vm_flags);
 
-<<<<<<< HEAD
 bool try_to_unmap(struct page *page, enum ttu_flags flags,
 				struct vm_area_struct *vma);
-=======
-bool try_to_unmap(struct page *, enum ttu_flags flags);
->>>>>>> rebase
 
 /* Avoid racy checks */
 #define PVMW_SYNC		(1 << 0)
@@ -256,12 +228,7 @@ struct page_vma_mapped_walk {
 
 static inline void page_vma_mapped_walk_done(struct page_vma_mapped_walk *pvmw)
 {
-<<<<<<< HEAD
 	if (pvmw->pte)
-=======
-	/* HugeTLB pte is set to the relevant page table entry without pte_mapped. */
-	if (pvmw->pte && !PageHuge(pvmw->page))
->>>>>>> rebase
 		pte_unmap(pvmw->pte);
 	if (pvmw->ptl)
 		spin_unlock(pvmw->ptl);
@@ -308,20 +275,14 @@ int page_mapped_in_vma(struct page *page, struct vm_area_struct *vma);
  */
 struct rmap_walk_control {
 	void *arg;
-<<<<<<< HEAD
 	struct vm_area_struct *target_vma;
-=======
->>>>>>> rebase
 	/*
 	 * Return false if page table scanning in rmap_walk should be stopped.
 	 * Otherwise, return true.
 	 */
-<<<<<<< HEAD
 #ifdef CONFIG_PAGE_BOOST
 	int ret;
 #endif
-=======
->>>>>>> rebase
 	bool (*rmap_one)(struct page *page, struct vm_area_struct *vma,
 					unsigned long addr, void *arg);
 	int (*done)(struct page *page);
@@ -346,11 +307,7 @@ static inline int page_referenced(struct page *page, int is_locked,
 	return 0;
 }
 
-<<<<<<< HEAD
 #define try_to_unmap(page, refs, vma) false
-=======
-#define try_to_unmap(page, refs) false
->>>>>>> rebase
 
 static inline int page_mkclean(struct page *page)
 {

@@ -23,13 +23,8 @@
 struct pi3usb30532 {
 	struct i2c_client *client;
 	struct mutex lock; /* protects the cached conf register */
-<<<<<<< HEAD
 	struct typec_switch *sw;
 	struct typec_mux *mux;
-=======
-	struct typec_switch sw;
-	struct typec_mux mux;
->>>>>>> rebase
 	u8 conf;
 };
 
@@ -53,11 +48,7 @@ static int pi3usb30532_set_conf(struct pi3usb30532 *pi, u8 new_conf)
 static int pi3usb30532_sw_set(struct typec_switch *sw,
 			      enum typec_orientation orientation)
 {
-<<<<<<< HEAD
 	struct pi3usb30532 *pi = typec_switch_get_drvdata(sw);
-=======
-	struct pi3usb30532 *pi = container_of(sw, struct pi3usb30532, sw);
->>>>>>> rebase
 	u8 new_conf;
 	int ret;
 
@@ -84,11 +75,7 @@ static int pi3usb30532_sw_set(struct typec_switch *sw,
 
 static int pi3usb30532_mux_set(struct typec_mux *mux, int state)
 {
-<<<<<<< HEAD
 	struct pi3usb30532 *pi = typec_mux_get_drvdata(mux);
-=======
-	struct pi3usb30532 *pi = container_of(mux, struct pi3usb30532, mux);
->>>>>>> rebase
 	u8 new_conf;
 	int ret;
 
@@ -125,11 +112,8 @@ static int pi3usb30532_mux_set(struct typec_mux *mux, int state)
 static int pi3usb30532_probe(struct i2c_client *client)
 {
 	struct device *dev = &client->dev;
-<<<<<<< HEAD
 	struct typec_switch_desc sw_desc;
 	struct typec_mux_desc mux_desc;
-=======
->>>>>>> rebase
 	struct pi3usb30532 *pi;
 	int ret;
 
@@ -138,13 +122,6 @@ static int pi3usb30532_probe(struct i2c_client *client)
 		return -ENOMEM;
 
 	pi->client = client;
-<<<<<<< HEAD
-=======
-	pi->sw.dev = dev;
-	pi->sw.set = pi3usb30532_sw_set;
-	pi->mux.dev = dev;
-	pi->mux.set = pi3usb30532_mux_set;
->>>>>>> rebase
 	mutex_init(&pi->lock);
 
 	ret = i2c_smbus_read_byte_data(client, PI3USB30532_CONF);
@@ -154,7 +131,6 @@ static int pi3usb30532_probe(struct i2c_client *client)
 	}
 	pi->conf = ret;
 
-<<<<<<< HEAD
 	sw_desc.drvdata = pi;
 	sw_desc.fwnode = dev->fwnode;
 	sw_desc.set = pi3usb30532_sw_set;
@@ -176,19 +152,6 @@ static int pi3usb30532_probe(struct i2c_client *client)
 		dev_err(dev, "Error registering typec mux: %ld\n",
 			PTR_ERR(pi->mux));
 		return PTR_ERR(pi->mux);
-=======
-	ret = typec_switch_register(&pi->sw);
-	if (ret) {
-		dev_err(dev, "Error registering typec switch: %d\n", ret);
-		return ret;
-	}
-
-	ret = typec_mux_register(&pi->mux);
-	if (ret) {
-		typec_switch_unregister(&pi->sw);
-		dev_err(dev, "Error registering typec mux: %d\n", ret);
-		return ret;
->>>>>>> rebase
 	}
 
 	i2c_set_clientdata(client, pi);
@@ -199,13 +162,8 @@ static int pi3usb30532_remove(struct i2c_client *client)
 {
 	struct pi3usb30532 *pi = i2c_get_clientdata(client);
 
-<<<<<<< HEAD
 	typec_mux_unregister(pi->mux);
 	typec_switch_unregister(pi->sw);
-=======
-	typec_mux_unregister(&pi->mux);
-	typec_switch_unregister(&pi->sw);
->>>>>>> rebase
 	return 0;
 }
 

@@ -208,7 +208,6 @@ config LEDS_NET48XX
 	  This option enables support for the Soekris net4801 and net4826 error
 	  LED.
 
-<<<<<<< HEAD
 config LEDS_QTI_FLASH
 	tristate "Support for QTI Flash LEDs"
 	depends on LEDS_CLASS_FLASH
@@ -224,8 +223,6 @@ config LEDS_QTI_FLASH
 	  To compile this driver as a module, choose M here: the
 	  module will be called leds-qti-flash.
 
-=======
->>>>>>> rebase
 config LEDS_FSG
 	tristate "LED Support for the Freecom FSG-3"
 	depends on LEDS_CLASS
@@ -774,7 +771,6 @@ config LEDS_NIC78BX
 	  To compile this driver as a module, choose M here: the module
 	  will be called leds-nic78bx.
 
-<<<<<<< HEAD
 config LEDS_QTI_TRI_LED
 	tristate "LED support for Qualcomm Technologies, Inc. TRI_LED"
 	depends on LEDS_CLASS && MFD_SPMI_PMIC && PWM && OF
@@ -821,8 +817,6 @@ config LEDS_RT8547
 	help
 	  This option enables support for the LEDs on the RT8547.
 
-=======
->>>>>>> rebase
 comment "LED Triggers"
 source "drivers/leds/trigger/Kconfig"
 

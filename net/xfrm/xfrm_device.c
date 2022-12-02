@@ -33,11 +33,7 @@ struct sk_buff *validate_xmit_xfrm(struct sk_buff *skb, netdev_features_t featur
 	netdev_features_t esp_features = features;
 	struct xfrm_offload *xo = xfrm_offload(skb);
 
-<<<<<<< HEAD
 	if (!xo)
-=======
-	if (!xo || (xo->flags & XFRM_XMIT))
->>>>>>> rebase
 		return skb;
 
 	if (!(features & NETIF_F_HW_ESP))
@@ -57,11 +53,6 @@ struct sk_buff *validate_xmit_xfrm(struct sk_buff *skb, netdev_features_t featur
 		return skb;
 	}
 
-<<<<<<< HEAD
-=======
-	xo->flags |= XFRM_XMIT;
-
->>>>>>> rebase
 	if (skb_is_gso(skb)) {
 		struct net_device *dev = skb->dev;
 
@@ -160,12 +151,6 @@ int xfrm_dev_state_add(struct net *net, struct xfrm_state *x,
 	if (x->encap || x->tfcpad)
 		return -EINVAL;
 
-<<<<<<< HEAD
-=======
-	if (xuo->flags & ~(XFRM_OFFLOAD_IPV6 | XFRM_OFFLOAD_INBOUND))
-		return -EINVAL;
-
->>>>>>> rebase
 	dev = dev_get_by_index(net, xuo->ifindex);
 	if (!dev) {
 		if (!(xuo->flags & XFRM_OFFLOAD_INBOUND)) {
@@ -203,12 +188,7 @@ int xfrm_dev_state_add(struct net *net, struct xfrm_state *x,
 
 	xso->dev = dev;
 	xso->num_exthdrs = 1;
-<<<<<<< HEAD
 	xso->flags = xuo->flags;
-=======
-	/* Don't forward bit that is not implemented */
-	xso->flags = xuo->flags & ~XFRM_OFFLOAD_IPV6;
->>>>>>> rebase
 
 	err = dev->xfrmdev_ops->xdo_dev_state_add(x);
 	if (err) {
@@ -352,10 +332,6 @@ static int xfrm_dev_event(struct notifier_block *this, unsigned long event, void
 		return xfrm_dev_feat_change(dev);
 
 	case NETDEV_DOWN:
-<<<<<<< HEAD
-=======
-	case NETDEV_UNREGISTER:
->>>>>>> rebase
 		return xfrm_dev_down(dev);
 	}
 	return NOTIFY_DONE;

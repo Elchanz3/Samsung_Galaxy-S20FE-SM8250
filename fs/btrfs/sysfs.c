@@ -10,10 +10,6 @@
 #include <linux/kobject.h>
 #include <linux/bug.h>
 #include <linux/debugfs.h>
-<<<<<<< HEAD
-=======
-#include <linux/sched/mm.h>
->>>>>>> rebase
 
 #include "ctree.h"
 #include "disk-io.h"
@@ -770,13 +766,7 @@ int btrfs_sysfs_add_device_link(struct btrfs_fs_devices *fs_devices,
 {
 	int error = 0;
 	struct btrfs_device *dev;
-<<<<<<< HEAD
 
-=======
-	unsigned int nofs_flag;
-
-	nofs_flag = memalloc_nofs_save();
->>>>>>> rebase
 	list_for_each_entry(dev, &fs_devices->devices, dev_list) {
 		struct hd_struct *disk;
 		struct kobject *disk_kobj;
@@ -795,10 +785,6 @@ int btrfs_sysfs_add_device_link(struct btrfs_fs_devices *fs_devices,
 		if (error)
 			break;
 	}
-<<<<<<< HEAD
-=======
-	memalloc_nofs_restore(nofs_flag);
->>>>>>> rebase
 
 	return error;
 }

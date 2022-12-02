@@ -1377,13 +1377,8 @@ static int aux_output_begin(struct perf_output_handle *handle,
 		idx = aux->empty_mark + 1;
 		for (i = 0; i < range_scan; i++, idx++) {
 			te = aux_sdb_trailer(aux, idx);
-<<<<<<< HEAD
 			te->flags = te->flags & ~SDB_TE_BUFFER_FULL_MASK;
 			te->flags = te->flags & ~SDB_TE_ALERT_REQ_MASK;
-=======
-			te->flags &= ~(SDB_TE_BUFFER_FULL_MASK |
-				       SDB_TE_ALERT_REQ_MASK);
->>>>>>> rebase
 			te->overflow = 0;
 		}
 		/* Save the position of empty SDBs */
@@ -1430,12 +1425,8 @@ static bool aux_set_alert(struct aux_buffer *aux, unsigned long alert_index,
 	te = aux_sdb_trailer(aux, alert_index);
 	do {
 		orig_flags = te->flags;
-<<<<<<< HEAD
 		orig_overflow = te->overflow;
 		*overflow = orig_overflow;
-=======
-		*overflow = orig_overflow = te->overflow;
->>>>>>> rebase
 		if (orig_flags & SDB_TE_BUFFER_FULL_MASK) {
 			/*
 			 * SDB is already set by hardware.
@@ -1546,10 +1537,6 @@ static void hw_collect_aux(struct cpu_hw_sf *cpuhw)
 	perf_aux_output_end(handle, size);
 	num_sdb = aux->sfb.num_sdb;
 
-<<<<<<< HEAD
-=======
-	num_sdb = aux->sfb.num_sdb;
->>>>>>> rebase
 	while (!done) {
 		/* Get an output handle */
 		aux = perf_aux_output_begin(handle, cpuhw->event);
@@ -1672,11 +1659,7 @@ static void *aux_buffer_setup(struct perf_event *event, void **pages,
 	}
 
 	/* Allocate aux_buffer struct for the event */
-<<<<<<< HEAD
 	aux = kmalloc(sizeof(struct aux_buffer), GFP_KERNEL);
-=======
-	aux = kzalloc(sizeof(struct aux_buffer), GFP_KERNEL);
->>>>>>> rebase
 	if (!aux)
 		goto no_aux;
 	sfb = &aux->sfb;
@@ -2114,8 +2097,4 @@ out:
 	return err;
 }
 arch_initcall(init_cpum_sampling_pmu);
-<<<<<<< HEAD
 core_param(cpum_sfb_size, CPUM_SF_MAX_SDB, sfb_size, 0640);
-=======
-core_param(cpum_sfb_size, CPUM_SF_MAX_SDB, sfb_size, 0644);
->>>>>>> rebase

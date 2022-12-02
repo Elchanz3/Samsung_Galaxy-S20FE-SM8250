@@ -471,11 +471,7 @@ static int ct_sip_walk_headers(const struct nf_conn *ct, const char *dptr,
 				return ret;
 			if (ret == 0)
 				break;
-<<<<<<< HEAD
 			dataoff += *matchoff;
-=======
-			dataoff = *matchoff;
->>>>>>> rebase
 		}
 		*in_header = 0;
 	}
@@ -487,11 +483,7 @@ static int ct_sip_walk_headers(const struct nf_conn *ct, const char *dptr,
 			break;
 		if (ret == 0)
 			return ret;
-<<<<<<< HEAD
 		dataoff += *matchoff;
-=======
-		dataoff = *matchoff;
->>>>>>> rebase
 	}
 
 	if (in_header)

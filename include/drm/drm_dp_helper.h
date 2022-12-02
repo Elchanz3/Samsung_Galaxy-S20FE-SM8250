@@ -550,11 +550,8 @@
 # define DP_TEST_LINK_EDID_READ		    (1 << 2)
 # define DP_TEST_LINK_PHY_TEST_PATTERN	    (1 << 3) /* DPCD >= 1.1 */
 # define DP_TEST_LINK_FAUX_PATTERN	    (1 << 4) /* DPCD >= 1.2 */
-<<<<<<< HEAD
 # define DP_TEST_LINK_AUDIO_PATTERN     (1 << 5)
 # define DP_TEST_LINK_AUDIO_DISABLED_VIDEO (1 << 6)
-=======
->>>>>>> rebase
 
 #define DP_TEST_LINK_RATE		    0x219
 # define DP_LINK_RATE_162		    (0x6)
@@ -632,7 +629,6 @@
 # define DP_TEST_COUNT_MASK		    0xf
 
 #define DP_TEST_PHY_PATTERN                 0x248
-<<<<<<< HEAD
 # define DP_TEST_PHY_PATTERN_NONE			0x0
 # define DP_TEST_PHY_PATTERN_D10_2_NO_SCRAMBLING	0x1
 # define DP_TEST_PHY_PATTERN_SYMBOL_ERR_MEASUREMENT_CNT 0x2
@@ -641,8 +637,6 @@
 # define DP_TEST_PHY_PATTERN_CP2520_PATTERN_1		0x5
 # define DP_TEST_PHY_PATTERN_CP2520_PATTERN_2		0x6
 # define DP_TEST_PHY_PATTERN_CP2520_PATTERN_3		0x7
-=======
->>>>>>> rebase
 #define DP_TEST_80BIT_CUSTOM_PATTERN_7_0    0x250
 #define	DP_TEST_80BIT_CUSTOM_PATTERN_15_8   0x251
 #define	DP_TEST_80BIT_CUSTOM_PATTERN_23_16  0x252
@@ -664,7 +658,6 @@
 #define DP_TEST_SINK			    0x270
 # define DP_TEST_SINK_START		    (1 << 0)
 
-<<<<<<< HEAD
 #define DP_TEST_AUDIO_MODE		    0x271
 
 #define DP_TEST_AUDIO_PATTERN_TYPE	    0x272
@@ -678,8 +671,6 @@
 #define DP_TEST_AUDIO_PERIOD_CH7	    0x279
 #define DP_TEST_AUDIO_PERIOD_CH8	    0x27A
 
-=======
->>>>>>> rebase
 #define DP_FEC_STATUS			    0x280    /* 1.4 */
 # define DP_FEC_DECODE_EN_DETECTED	    (1 << 0)
 # define DP_FEC_DECODE_DIS_DETECTED	    (1 << 1)
@@ -1175,10 +1166,7 @@ struct drm_dp_aux {
 	struct device *dev;
 	struct drm_crtc *crtc;
 	struct mutex hw_mutex;
-<<<<<<< HEAD
 	struct mutex i2c_mutex;
-=======
->>>>>>> rebase
 	struct work_struct crc_work;
 	u8 crc_count;
 	ssize_t (*transfer)(struct drm_dp_aux *aux,
@@ -1201,13 +1189,10 @@ ssize_t drm_dp_dpcd_read(struct drm_dp_aux *aux, unsigned int offset,
 			 void *buffer, size_t size);
 ssize_t drm_dp_dpcd_write(struct drm_dp_aux *aux, unsigned int offset,
 			  void *buffer, size_t size);
-<<<<<<< HEAD
 #ifdef CONFIG_SEC_DISPLAYPORT
 ssize_t drm_dp_i2c_read(struct drm_dp_aux *aux, void *buffer, size_t size);
 ssize_t drm_dp_i2c_write(struct drm_dp_aux *aux, void *buffer, size_t size);
 #endif
-=======
->>>>>>> rebase
 
 /**
  * drm_dp_dpcd_readb() - read a single byte from the DPCD

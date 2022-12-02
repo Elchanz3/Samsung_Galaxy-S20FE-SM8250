@@ -53,7 +53,6 @@
 	};
 };
 
-<<<<<<< HEAD
 &clks {
 	assigned-clocks = <&clks IMX6QDL_CLK_LDB_DI0_SEL>,
 			  <&clks IMX6QDL_CLK_LDB_DI1_SEL>,
@@ -65,8 +64,6 @@
 				 <&clks IMX6QDL_CLK_PLL2_PFD2_396M>;
 };
 
-=======
->>>>>>> rebase
 &ldb {
 	fsl,dual-channel;
 	status = "okay";

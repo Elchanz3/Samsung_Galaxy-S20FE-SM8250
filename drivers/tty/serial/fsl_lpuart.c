@@ -563,11 +563,7 @@ static void lpuart32_poll_put_char(struct uart_port *port, unsigned char c)
 
 static int lpuart32_poll_get_char(struct uart_port *port)
 {
-<<<<<<< HEAD
 	if (!(lpuart32_read(port, UARTSTAT) & UARTSTAT_RDRF))
-=======
-	if (!(lpuart32_read(port, UARTWATER) >> UARTWATER_RXCNT_OFF))
->>>>>>> rebase
 		return NO_POLL_CHAR;
 
 	return lpuart32_read(port, UARTDATA);
@@ -1106,15 +1102,9 @@ static int lpuart_config_rs485(struct uart_port *port,
 		 * Note: UART is assumed to be active high.
 		 */
 		if (rs485->flags & SER_RS485_RTS_ON_SEND)
-<<<<<<< HEAD
 			modem &= ~UARTMODEM_TXRTSPOL;
 		else if (rs485->flags & SER_RS485_RTS_AFTER_SEND)
 			modem |= UARTMODEM_TXRTSPOL;
-=======
-			modem |= UARTMODEM_TXRTSPOL;
-		else if (rs485->flags & SER_RS485_RTS_AFTER_SEND)
-			modem &= ~UARTMODEM_TXRTSPOL;
->>>>>>> rebase
 	}
 
 	/* Store the new configuration */
@@ -2002,12 +1992,6 @@ lpuart32_console_get_options(struct lpuart_port *sport, int *baud,
 
 	bd = lpuart32_read(&sport->port, UARTBAUD);
 	bd &= UARTBAUD_SBR_MASK;
-<<<<<<< HEAD
-=======
-	if (!bd)
-		return;
-
->>>>>>> rebase
 	sbr = bd;
 	uartclk = clk_get_rate(sport->clk);
 	/*
@@ -2177,11 +2161,7 @@ static int lpuart_probe(struct platform_device *pdev)
 		return PTR_ERR(sport->port.membase);
 
 	sport->port.membase += sdata->reg_off;
-<<<<<<< HEAD
 	sport->port.mapbase = res->start;
-=======
-	sport->port.mapbase = res->start + sdata->reg_off;
->>>>>>> rebase
 	sport->port.dev = &pdev->dev;
 	sport->port.type = PORT_LPUART;
 	ret = platform_get_irq(pdev, 0);

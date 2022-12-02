@@ -9,10 +9,7 @@
 #include <linux/mm_types.h>
 #include <asm/dma.h>
 #include <asm/processor.h>
-<<<<<<< HEAD
 #include <linux/memblock.h>
-=======
->>>>>>> rebase
 
 /*
  *  simple boot-time physical memory area allocator.
@@ -190,12 +187,9 @@ void __memblock_free_late(phys_addr_t base, phys_addr_t size);
 static inline void * __init memblock_virt_alloc(
 					phys_addr_t size,  phys_addr_t align)
 {
-<<<<<<< HEAD
 	memblock_dbg("%s: %llu bytes align=0x%llx %pS\n",
 			__func__, (u64)size, (u64)align, (void *)_RET_IP_);
 
-=======
->>>>>>> rebase
 	return memblock_virt_alloc_try_nid(size, align, BOOTMEM_LOW_LIMIT,
 					    BOOTMEM_ALLOC_ACCESSIBLE,
 					    NUMA_NO_NODE);

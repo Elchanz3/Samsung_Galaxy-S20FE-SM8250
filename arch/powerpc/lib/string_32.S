@@ -17,11 +17,7 @@ CACHELINE_BYTES = L1_CACHE_BYTES
 LG_CACHELINE_BYTES = L1_CACHE_SHIFT
 CACHELINE_MASK = (L1_CACHE_BYTES-1)
 
-<<<<<<< HEAD
 _GLOBAL(__clear_user)
-=======
-_GLOBAL(__arch_clear_user)
->>>>>>> rebase
 /*
  * Use dcbz on the complete cache lines in the destination
  * to set them to zero.  This requires that the destination
@@ -91,8 +87,4 @@ _GLOBAL(__arch_clear_user)
 	EX_TABLE(8b, 91b)
 	EX_TABLE(9b, 91b)
 
-<<<<<<< HEAD
 EXPORT_SYMBOL(__clear_user)
-=======
-EXPORT_SYMBOL(__arch_clear_user)
->>>>>>> rebase

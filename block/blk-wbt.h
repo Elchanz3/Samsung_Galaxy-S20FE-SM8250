@@ -34,10 +34,6 @@ enum {
 enum {
 	WBT_STATE_ON_DEFAULT	= 1,
 	WBT_STATE_ON_MANUAL	= 2,
-<<<<<<< HEAD
-=======
-	WBT_STATE_OFF_DEFAULT
->>>>>>> rebase
 };
 
 struct rq_wb {

@@ -1825,10 +1825,6 @@ int mlxsw_pci_driver_register(struct pci_driver *pci_driver)
 {
 	pci_driver->probe = mlxsw_pci_probe;
 	pci_driver->remove = mlxsw_pci_remove;
-<<<<<<< HEAD
-=======
-	pci_driver->shutdown = mlxsw_pci_remove;
->>>>>>> rebase
 	return pci_register_driver(pci_driver);
 }
 EXPORT_SYMBOL(mlxsw_pci_driver_register);

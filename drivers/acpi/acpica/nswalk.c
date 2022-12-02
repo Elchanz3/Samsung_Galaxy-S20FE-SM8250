@@ -169,12 +169,6 @@ acpi_ns_walk_namespace(acpi_object_type type,
 
 	if (start_node == ACPI_ROOT_OBJECT) {
 		start_node = acpi_gbl_root_node;
-<<<<<<< HEAD
-=======
-		if (!start_node) {
-			return_ACPI_STATUS(AE_NO_NAMESPACE);
-		}
->>>>>>> rebase
 	}
 
 	/* Null child means "get first node" */

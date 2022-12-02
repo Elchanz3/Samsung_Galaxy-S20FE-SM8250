@@ -2888,10 +2888,6 @@ static int igbvf_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
 	return 0;
 
 err_hw_init:
-<<<<<<< HEAD
-=======
-	netif_napi_del(&adapter->rx_ring->napi);
->>>>>>> rebase
 	kfree(adapter->tx_ring);
 	kfree(adapter->rx_ring);
 err_sw_init:

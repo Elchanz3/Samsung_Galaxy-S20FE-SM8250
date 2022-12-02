@@ -101,7 +101,6 @@ config SCSI_UFS_QCOM
 	  Select this if you have UFS controller on QCOM chipset.
 	  If unsure, say N.
 
-<<<<<<< HEAD
 config UFS_DATA_LOG
 	bool "Samsung UFS DATA logging"
 	depends on SCSI_UFSHCD && SCSI_UFSHCD_PLATFORM
@@ -138,8 +137,6 @@ config SCSI_UFSHCD_CMD_LOGGING
 	  Select this if you want above mentioned debug information captured.
 	  If unsure, say N.
 
-=======
->>>>>>> rebase
 config SCSI_UFS_HISI
 	tristate "Hisilicon specific hooks to UFS controller platform driver"
 	depends on (ARCH_HISI || COMPILE_TEST) && SCSI_UFSHCD_PLATFORM
@@ -148,7 +145,6 @@ config SCSI_UFS_HISI
 
 	  Select this if you have UFS controller on Hisilicon chipset.
 	  If unsure, say N.
-<<<<<<< HEAD
 
 config SCSI_UFS_CRYPTO
 	bool "UFS Crypto Engine Support"
@@ -214,5 +210,3 @@ config SCSI_UFS_TEST_MODE
 	---help---
 	  This selects support for test mode for debugging.
 	  Select this option if this feature is needed on working.
-=======
->>>>>>> rebase

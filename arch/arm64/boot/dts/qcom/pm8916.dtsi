@@ -99,11 +99,7 @@
 
 		wcd_codec: codec@f000 {
 			compatible = "qcom,pm8916-wcd-analog-codec";
-<<<<<<< HEAD
 			reg = <0xf000 0x200>;
-=======
-			reg = <0xf000>;
->>>>>>> rebase
 			reg-names = "pmic-codec-core";
 			clocks = <&gcc GCC_CODEC_DIGCODEC_CLK>;
 			clock-names = "mclk";

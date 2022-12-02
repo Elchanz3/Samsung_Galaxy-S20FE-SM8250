@@ -1,10 +1,6 @@
 // SPDX-License-Identifier: GPL-2.0
 /*
-<<<<<<< HEAD
  * Copyright (c) 2012-2015, 2019 The Linux Foundation. All rights reserved.
-=======
- * Copyright (c) 2012-2015, The Linux Foundation. All rights reserved.
->>>>>>> rebase
  * Copyright (C) 2017 Linaro Ltd.
  */
 #include <linux/slab.h>
@@ -538,13 +534,8 @@ static int qmi_decode_string_elem(struct qmi_elem_info *ei_array,
 		decoded_bytes += rc;
 	}
 
-<<<<<<< HEAD
 	if (string_len >= temp_ei->elem_len) {
 		pr_err("%s: String len %d >= Max Len %d\n",
-=======
-	if (string_len > temp_ei->elem_len) {
-		pr_err("%s: String len %d > Max Len %d\n",
->>>>>>> rebase
 		       __func__, string_len, temp_ei->elem_len);
 		return -ETOOSMALL;
 	} else if (string_len > tlv_len) {

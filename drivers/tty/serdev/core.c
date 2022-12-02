@@ -30,7 +30,6 @@ static ssize_t modalias_show(struct device *dev,
 	if (len != -ENODEV)
 		return len;
 
-<<<<<<< HEAD
 	len = of_device_modalias(dev, buf, PAGE_SIZE);
 	if (len != -ENODEV)
 		return len;
@@ -43,9 +42,6 @@ static ssize_t modalias_show(struct device *dev,
 	}
 
 	return len;
-=======
-	return of_device_modalias(dev, buf, PAGE_SIZE);
->>>>>>> rebase
 }
 static DEVICE_ATTR_RO(modalias);
 
@@ -59,16 +55,10 @@ static int serdev_device_uevent(struct device *dev, struct kobj_uevent_env *env)
 {
 	int rc;
 
-<<<<<<< HEAD
-=======
-	/* TODO: platform modalias */
-
->>>>>>> rebase
 	rc = acpi_device_uevent_modalias(dev, env);
 	if (rc != -ENODEV)
 		return rc;
 
-<<<<<<< HEAD
 	rc = of_device_uevent_modalias(dev, env);
 	if (rc != -ENODEV)
 		return rc;
@@ -77,9 +67,6 @@ static int serdev_device_uevent(struct device *dev, struct kobj_uevent_env *env)
 		rc = dev->parent->parent->bus->uevent(dev->parent->parent, env);
 
 	return rc;
-=======
-	return of_device_uevent_modalias(dev, env);
->>>>>>> rebase
 }
 
 static void serdev_device_release(struct device *dev)
@@ -115,7 +102,6 @@ static int serdev_device_match(struct device *dev, struct device_driver *drv)
 	if (!is_serdev_device(dev))
 		return 0;
 
-<<<<<<< HEAD
 	if (acpi_driver_match_device(dev, drv))
 		return 1;
 
@@ -127,13 +113,6 @@ static int serdev_device_match(struct device *dev, struct device_driver *drv)
 		return 1;
 
 	return 0;
-=======
-	/* TODO: platform matching */
-	if (acpi_driver_match_device(dev, drv))
-		return 1;
-
-	return of_driver_match_device(dev, drv);
->>>>>>> rebase
 }
 
 /**
@@ -617,7 +596,6 @@ static inline int acpi_serdev_register_devices(struct serdev_controller *ctrl)
 }
 #endif /* CONFIG_ACPI */
 
-<<<<<<< HEAD
 static int platform_serdev_register_devices(struct serdev_controller *ctrl)
 {
 	struct serdev_device *serdev;
@@ -657,18 +635,6 @@ static int platform_serdev_register_devices(struct serdev_controller *ctrl)
 int serdev_controller_add_platform(struct serdev_controller *ctrl, bool platform)
 {
 	int ret, ret_of, ret_acpi, ret_platform = -ENODEV;
-=======
-/**
- * serdev_controller_add() - Add an serdev controller
- * @ctrl:	controller to be registered.
- *
- * Register a controller previously allocated via serdev_controller_alloc() with
- * the serdev core.
- */
-int serdev_controller_add(struct serdev_controller *ctrl)
-{
-	int ret_of, ret_acpi, ret;
->>>>>>> rebase
 
 	/* Can't register until after driver model init */
 	if (WARN_ON(!is_registered))
@@ -682,18 +648,12 @@ int serdev_controller_add(struct serdev_controller *ctrl)
 
 	ret_of = of_serdev_register_devices(ctrl);
 	ret_acpi = acpi_serdev_register_devices(ctrl);
-<<<<<<< HEAD
 	if (platform)
 		ret_platform = platform_serdev_register_devices(ctrl);
 	if (ret_of && ret_acpi && ret_platform) {
 		dev_dbg(&ctrl->dev, "no devices registered: of:%d acpi:%d "
 				    "platform:%d\n",
 				    ret_of, ret_acpi, ret_platform);
-=======
-	if (ret_of && ret_acpi) {
-		dev_dbg(&ctrl->dev, "no devices registered: of:%d acpi:%d\n",
-			ret_of, ret_acpi);
->>>>>>> rebase
 		ret = -ENODEV;
 		goto err_rpm_disable;
 	}
@@ -707,11 +667,7 @@ err_rpm_disable:
 	device_del(&ctrl->dev);
 	return ret;
 };
-<<<<<<< HEAD
 EXPORT_SYMBOL_GPL(serdev_controller_add_platform);
-=======
-EXPORT_SYMBOL_GPL(serdev_controller_add);
->>>>>>> rebase
 
 /* Remove a device associated with a controller */
 static int serdev_remove_device(struct device *dev, void *data)

@@ -113,15 +113,11 @@ restart:
 			if (mnt != parent) {
 				dentry = READ_ONCE(mnt->mnt_mountpoint);
 				mnt = parent;
-<<<<<<< HEAD
 #ifdef CONFIG_KDP_NS
 				vfsmnt = mnt->mnt;
 #else
 				vfsmnt = &mnt->mnt;
 #endif
-=======
-				vfsmnt = &mnt->mnt;
->>>>>>> rebase
 				continue;
 			}
 			if (!error)
@@ -212,10 +208,7 @@ char *d_absolute_path(const struct path *path,
 		return ERR_PTR(error);
 	return res;
 }
-<<<<<<< HEAD
 EXPORT_SYMBOL(d_absolute_path);
-=======
->>>>>>> rebase
 
 /*
  * same as __d_path but appends "(deleted)" for unlinked files.

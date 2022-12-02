@@ -26,11 +26,7 @@ struct key *ima_blacklist_keyring;
 /*
  * Allocate the IMA blacklist keyring
  */
-<<<<<<< HEAD
 __init int ima_mok_init(void)
-=======
-static __init int ima_mok_init(void)
->>>>>>> rebase
 {
 	struct key_restriction *restriction;
 
@@ -47,21 +43,13 @@ static __init int ima_mok_init(void)
 				(KEY_POS_ALL & ~KEY_POS_SETATTR) |
 				KEY_USR_VIEW | KEY_USR_READ |
 				KEY_USR_WRITE | KEY_USR_SEARCH,
-<<<<<<< HEAD
 				KEY_ALLOC_NOT_IN_QUOTA,
-=======
-				KEY_ALLOC_NOT_IN_QUOTA |
-				KEY_ALLOC_SET_KEEP,
->>>>>>> rebase
 				restriction, NULL);
 
 	if (IS_ERR(ima_blacklist_keyring))
 		panic("Can't allocate IMA blacklist keyring.");
-<<<<<<< HEAD
 
 	set_bit(KEY_FLAG_KEEP, &ima_blacklist_keyring->flags);
-=======
->>>>>>> rebase
 	return 0;
 }
 device_initcall(ima_mok_init);

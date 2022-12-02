@@ -29,10 +29,6 @@
 
 #include "power.h"
 
-<<<<<<< HEAD
-=======
-static bool need_wait;
->>>>>>> rebase
 
 #define SNAPSHOT_MINOR	231
 
@@ -86,11 +82,7 @@ static int snapshot_open(struct inode *inode, struct file *filp)
 		 * Resuming.  We may need to wait for the image device to
 		 * appear.
 		 */
-<<<<<<< HEAD
 		wait_for_device_probe();
-=======
-		need_wait = true;
->>>>>>> rebase
 
 		data->swap = -1;
 		data->mode = O_WRONLY;
@@ -182,14 +174,6 @@ static ssize_t snapshot_write(struct file *filp, const char __user *buf,
 	ssize_t res;
 	loff_t pg_offp = *offp & ~PAGE_MASK;
 
-<<<<<<< HEAD
-=======
-	if (need_wait) {
-		wait_for_device_probe();
-		need_wait = false;
-	}
-
->>>>>>> rebase
 	lock_system_sleep();
 
 	data = filp->private_data;
@@ -225,14 +209,6 @@ static long snapshot_ioctl(struct file *filp, unsigned int cmd,
 	loff_t size;
 	sector_t offset;
 
-<<<<<<< HEAD
-=======
-	if (need_wait) {
-		wait_for_device_probe();
-		need_wait = false;
-	}
-
->>>>>>> rebase
 	if (_IOC_TYPE(cmd) != SNAPSHOT_IOC_MAGIC)
 		return -ENOTTY;
 	if (_IOC_NR(cmd) > SNAPSHOT_IOC_MAXNR)

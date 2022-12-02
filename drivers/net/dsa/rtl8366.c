@@ -36,27 +36,13 @@ int rtl8366_mc_is_used(struct realtek_smi *smi, int mc_index, int *used)
 }
 EXPORT_SYMBOL_GPL(rtl8366_mc_is_used);
 
-<<<<<<< HEAD
 int rtl8366_set_vlan(struct realtek_smi *smi, int vid, u32 member,
 		     u32 untag, u32 fid)
-=======
-/**
- * rtl8366_obtain_mc() - retrieve or allocate a VLAN member configuration
- * @smi: the Realtek SMI device instance
- * @vid: the VLAN ID to look up or allocate
- * @vlanmc: the pointer will be assigned to a pointer to a valid member config
- * if successful
- * @return: index of a new member config or negative error number
- */
-static int rtl8366_obtain_mc(struct realtek_smi *smi, int vid,
-			     struct rtl8366_vlan_mc *vlanmc)
->>>>>>> rebase
 {
 	struct rtl8366_vlan_4k vlan4k;
 	int ret;
 	int i;
 
-<<<<<<< HEAD
 	/* Update the 4K table */
 	ret = smi->ops->get_vlan_4k(smi, vid, &vlan4k);
 	if (ret)
@@ -133,24 +119,10 @@ int rtl8366_set_pvid(struct realtek_smi *smi, unsigned int port,
 			ret = smi->ops->set_mc_index(smi, port, i);
 			return ret;
 		}
-=======
-	/* Try to find an existing member config entry for this VID */
-	for (i = 0; i < smi->num_vlan_mc; i++) {
-		ret = smi->ops->get_vlan_mc(smi, i, vlanmc);
-		if (ret) {
-			dev_err(smi->dev, "error searching for VLAN MC %d for VID %d\n",
-				i, vid);
-			return ret;
-		}
-
-		if (vid == vlanmc->vid)
-			return i;
->>>>>>> rebase
 	}
 
 	/* We have no MC entry for this VID, try to find an empty one */
 	for (i = 0; i < smi->num_vlan_mc; i++) {
-<<<<<<< HEAD
 		ret = smi->ops->get_vlan_mc(smi, i, &vlanmc);
 		if (ret)
 			return ret;
@@ -171,38 +143,6 @@ int rtl8366_set_pvid(struct realtek_smi *smi, unsigned int port,
 
 			ret = smi->ops->set_mc_index(smi, port, i);
 			return ret;
-=======
-		ret = smi->ops->get_vlan_mc(smi, i, vlanmc);
-		if (ret) {
-			dev_err(smi->dev, "error searching for VLAN MC %d for VID %d\n",
-				i, vid);
-			return ret;
-		}
-
-		if (vlanmc->vid == 0 && vlanmc->member == 0) {
-			/* Update the entry from the 4K table */
-			ret = smi->ops->get_vlan_4k(smi, vid, &vlan4k);
-			if (ret) {
-				dev_err(smi->dev, "error looking for 4K VLAN MC %d for VID %d\n",
-					i, vid);
-				return ret;
-			}
-
-			vlanmc->vid = vid;
-			vlanmc->member = vlan4k.member;
-			vlanmc->untag = vlan4k.untag;
-			vlanmc->fid = vlan4k.fid;
-			ret = smi->ops->set_vlan_mc(smi, i, vlanmc);
-			if (ret) {
-				dev_err(smi->dev, "unable to set/update VLAN MC %d for VID %d\n",
-					i, vid);
-				return ret;
-			}
-
-			dev_dbg(smi->dev, "created new MC at index %d for VID %d\n",
-				i, vid);
-			return i;
->>>>>>> rebase
 		}
 	}
 
@@ -220,7 +160,6 @@ int rtl8366_set_pvid(struct realtek_smi *smi, unsigned int port,
 			if (ret)
 				return ret;
 
-<<<<<<< HEAD
 			vlanmc.vid = vid;
 			vlanmc.member = vlan4k.member;
 			vlanmc.untag = vlan4k.untag;
@@ -239,112 +178,6 @@ int rtl8366_set_pvid(struct realtek_smi *smi, unsigned int port,
 
 	return -ENOSPC;
 }
-=======
-			vlanmc->vid = vid;
-			vlanmc->member = vlan4k.member;
-			vlanmc->untag = vlan4k.untag;
-			vlanmc->fid = vlan4k.fid;
-			ret = smi->ops->set_vlan_mc(smi, i, vlanmc);
-			if (ret) {
-				dev_err(smi->dev, "unable to set/update VLAN MC %d for VID %d\n",
-					i, vid);
-				return ret;
-			}
-			dev_dbg(smi->dev, "recycled MC at index %i for VID %d\n",
-				i, vid);
-			return i;
-		}
-	}
-
-	dev_err(smi->dev, "all VLAN member configurations are in use\n");
-	return -ENOSPC;
-}
-
-int rtl8366_set_vlan(struct realtek_smi *smi, int vid, u32 member,
-		     u32 untag, u32 fid)
-{
-	struct rtl8366_vlan_mc vlanmc;
-	struct rtl8366_vlan_4k vlan4k;
-	int mc;
-	int ret;
-
-	if (!smi->ops->is_vlan_valid(smi, vid))
-		return -EINVAL;
-
-	dev_dbg(smi->dev,
-		"setting VLAN%d 4k members: 0x%02x, untagged: 0x%02x\n",
-		vid, member, untag);
-
-	/* Update the 4K table */
-	ret = smi->ops->get_vlan_4k(smi, vid, &vlan4k);
-	if (ret)
-		return ret;
-
-	vlan4k.member |= member;
-	vlan4k.untag |= untag;
-	vlan4k.fid = fid;
-	ret = smi->ops->set_vlan_4k(smi, &vlan4k);
-	if (ret)
-		return ret;
-
-	dev_dbg(smi->dev,
-		"resulting VLAN%d 4k members: 0x%02x, untagged: 0x%02x\n",
-		vid, vlan4k.member, vlan4k.untag);
-
-	/* Find or allocate a member config for this VID */
-	ret = rtl8366_obtain_mc(smi, vid, &vlanmc);
-	if (ret < 0)
-		return ret;
-	mc = ret;
-
-	/* Update the MC entry */
-	vlanmc.member |= member;
-	vlanmc.untag |= untag;
-	vlanmc.fid = fid;
-
-	/* Commit updates to the MC entry */
-	ret = smi->ops->set_vlan_mc(smi, mc, &vlanmc);
-	if (ret)
-		dev_err(smi->dev, "failed to commit changes to VLAN MC index %d for VID %d\n",
-			mc, vid);
-	else
-		dev_dbg(smi->dev,
-			"resulting VLAN%d MC members: 0x%02x, untagged: 0x%02x\n",
-			vid, vlanmc.member, vlanmc.untag);
-
-	return ret;
-}
-EXPORT_SYMBOL_GPL(rtl8366_set_vlan);
-
-int rtl8366_set_pvid(struct realtek_smi *smi, unsigned int port,
-		     unsigned int vid)
-{
-	struct rtl8366_vlan_mc vlanmc;
-	int mc;
-	int ret;
-
-	if (!smi->ops->is_vlan_valid(smi, vid))
-		return -EINVAL;
-
-	/* Find or allocate a member config for this VID */
-	ret = rtl8366_obtain_mc(smi, vid, &vlanmc);
-	if (ret < 0)
-		return ret;
-	mc = ret;
-
-	ret = smi->ops->set_mc_index(smi, port, mc);
-	if (ret) {
-		dev_err(smi->dev, "set PVID: failed to set MC index %d for port %d\n",
-			mc, port);
-		return ret;
-	}
-
-	dev_dbg(smi->dev, "set PVID: the PVID for port %d set to %d using existing MC index %d\n",
-		port, vid, mc);
-
-	return 0;
-}
->>>>>>> rebase
 EXPORT_SYMBOL_GPL(rtl8366_set_pvid);
 
 int rtl8366_enable_vlan4k(struct realtek_smi *smi, bool enable)
@@ -543,12 +376,7 @@ void rtl8366_vlan_add(struct dsa_switch *ds, int port,
 		if (!smi->ops->is_vlan_valid(smi, vid))
 			return;
 
-<<<<<<< HEAD
 	dev_info(smi->dev, "add VLAN on port %d, %s, %s\n",
-=======
-	dev_info(smi->dev, "add VLAN %d on port %d, %s, %s\n",
-		 vlan->vid_begin,
->>>>>>> rebase
 		 port,
 		 untagged ? "untagged" : "tagged",
 		 pvid ? " PVID" : "no PVID");
@@ -556,20 +384,15 @@ void rtl8366_vlan_add(struct dsa_switch *ds, int port,
 	if (dsa_is_dsa_port(ds, port) || dsa_is_cpu_port(ds, port))
 		dev_err(smi->dev, "port is DSA or CPU port\n");
 
-<<<<<<< HEAD
 	for (vid = vlan->vid_begin; vid <= vlan->vid_end; ++vid) {
 		int pvid_val = 0;
 
 		dev_info(smi->dev, "add VLAN %04x\n", vid);
-=======
-	for (vid = vlan->vid_begin; vid <= vlan->vid_end; vid++) {
->>>>>>> rebase
 		member |= BIT(port);
 
 		if (untagged)
 			untag |= BIT(port);
 
-<<<<<<< HEAD
 		/* To ensure that we have a valid MC entry for this VLAN,
 		 * initialize the port VLAN ID here.
 		 */
@@ -591,27 +414,6 @@ void rtl8366_vlan_add(struct dsa_switch *ds, int port,
 		dev_err(smi->dev,
 			"failed to set up VLAN %04x",
 			vid);
-=======
-		ret = rtl8366_set_vlan(smi, vid, member, untag, 0);
-		if (ret)
-			dev_err(smi->dev,
-				"failed to set up VLAN %04x",
-				vid);
-
-		if (!pvid)
-			continue;
-
-		ret = rtl8366_set_pvid(smi, port, vid);
-		if (ret)
-			dev_err(smi->dev,
-				"failed to set PVID on port %d to VLAN %04x",
-				port, vid);
-
-		if (!ret)
-			dev_dbg(smi->dev, "VLAN add: added VLAN %d with PVID on port %d\n",
-				vid, port);
-	}
->>>>>>> rebase
 }
 EXPORT_SYMBOL_GPL(rtl8366_vlan_add);
 
@@ -637,7 +439,6 @@ int rtl8366_vlan_del(struct dsa_switch *ds, int port,
 				return ret;
 
 			if (vid == vlanmc.vid) {
-<<<<<<< HEAD
 				/* clear VLAN member configurations */
 				vlanmc.vid = 0;
 				vlanmc.priority = 0;
@@ -645,21 +446,6 @@ int rtl8366_vlan_del(struct dsa_switch *ds, int port,
 				vlanmc.untag = 0;
 				vlanmc.fid = 0;
 
-=======
-				/* Remove this port from the VLAN */
-				vlanmc.member &= ~BIT(port);
-				vlanmc.untag &= ~BIT(port);
-				/*
-				 * If no ports are members of this VLAN
-				 * anymore then clear the whole member
-				 * config so it can be reused.
-				 */
-				if (!vlanmc.member && vlanmc.untag) {
-					vlanmc.vid = 0;
-					vlanmc.priority = 0;
-					vlanmc.fid = 0;
-				}
->>>>>>> rebase
 				ret = smi->ops->set_vlan_mc(smi, i, &vlanmc);
 				if (ret) {
 					dev_err(smi->dev,

@@ -479,27 +479,12 @@ static void iommu_enable_irq_remapping(struct intel_iommu *iommu)
 
 	/* Enable interrupt-remapping */
 	iommu->gcmd |= DMA_GCMD_IRE;
-<<<<<<< HEAD
 	iommu->gcmd &= ~DMA_GCMD_CFI;  /* Block compatibility-format MSIs */
 	writel(iommu->gcmd, iommu->reg + DMAR_GCMD_REG);
 
 	IOMMU_WAIT_OP(iommu, DMAR_GSTS_REG,
 		      readl, (sts & DMA_GSTS_IRES), sts);
 
-=======
-	writel(iommu->gcmd, iommu->reg + DMAR_GCMD_REG);
-	IOMMU_WAIT_OP(iommu, DMAR_GSTS_REG,
-		      readl, (sts & DMA_GSTS_IRES), sts);
-
-	/* Block compatibility-format MSIs */
-	if (sts & DMA_GSTS_CFIS) {
-		iommu->gcmd &= ~DMA_GCMD_CFI;
-		writel(iommu->gcmd, iommu->reg + DMAR_GCMD_REG);
-		IOMMU_WAIT_OP(iommu, DMAR_GSTS_REG,
-			      readl, !(sts & DMA_GSTS_CFIS), sts);
-	}
-
->>>>>>> rebase
 	/*
 	 * With CFI clear in the Global Command register, we should be
 	 * protected from dangerous (i.e. compatibility) interrupts
@@ -551,16 +536,10 @@ static int intel_setup_irq_remapping(struct intel_iommu *iommu)
 					    0, INTR_REMAP_TABLE_ENTRIES,
 					    fn, &intel_ir_domain_ops,
 					    iommu);
-<<<<<<< HEAD
 	irq_domain_free_fwnode(fn);
 	if (!iommu->ir_domain) {
 		pr_err("IR%d: failed to allocate irqdomain\n", iommu->seq_id);
 		goto out_free_bitmap;
-=======
-	if (!iommu->ir_domain) {
-		pr_err("IR%d: failed to allocate irqdomain\n", iommu->seq_id);
-		goto out_free_fwnode;
->>>>>>> rebase
 	}
 	iommu->ir_msi_domain =
 		arch_create_remap_msi_irq_domain(iommu->ir_domain,
@@ -584,11 +563,7 @@ static int intel_setup_irq_remapping(struct intel_iommu *iommu)
 
 		if (dmar_enable_qi(iommu)) {
 			pr_err("Failed to enable queued invalidation\n");
-<<<<<<< HEAD
 			goto out_free_bitmap;
-=======
-			goto out_free_ir_domain;
->>>>>>> rebase
 		}
 	}
 
@@ -612,17 +587,6 @@ static int intel_setup_irq_remapping(struct intel_iommu *iommu)
 
 	return 0;
 
-<<<<<<< HEAD
-=======
-out_free_ir_domain:
-	if (iommu->ir_msi_domain)
-		irq_domain_remove(iommu->ir_msi_domain);
-	iommu->ir_msi_domain = NULL;
-	irq_domain_remove(iommu->ir_domain);
-	iommu->ir_domain = NULL;
-out_free_fwnode:
-	irq_domain_free_fwnode(fn);
->>>>>>> rebase
 out_free_bitmap:
 	kfree(bitmap);
 out_free_pages:
@@ -637,7 +601,6 @@ out_free_table:
 
 static void intel_teardown_irq_remapping(struct intel_iommu *iommu)
 {
-<<<<<<< HEAD
 	if (iommu && iommu->ir_table) {
 		if (iommu->ir_msi_domain) {
 			irq_domain_remove(iommu->ir_msi_domain);
@@ -645,23 +608,6 @@ static void intel_teardown_irq_remapping(struct intel_iommu *iommu)
 		}
 		if (iommu->ir_domain) {
 			irq_domain_remove(iommu->ir_domain);
-=======
-	struct fwnode_handle *fn;
-
-	if (iommu && iommu->ir_table) {
-		if (iommu->ir_msi_domain) {
-			fn = iommu->ir_msi_domain->fwnode;
-
-			irq_domain_remove(iommu->ir_msi_domain);
-			irq_domain_free_fwnode(fn);
-			iommu->ir_msi_domain = NULL;
-		}
-		if (iommu->ir_domain) {
-			fn = iommu->ir_domain->fwnode;
-
-			irq_domain_remove(iommu->ir_domain);
-			irq_domain_free_fwnode(fn);
->>>>>>> rebase
 			iommu->ir_domain = NULL;
 		}
 		free_pages((unsigned long)iommu->ir_table->base,
@@ -1413,11 +1359,6 @@ static int intel_irq_remapping_alloc(struct irq_domain *domain,
 		irq_data = irq_domain_get_irq_data(domain, virq + i);
 		irq_cfg = irqd_cfg(irq_data);
 		if (!irq_data || !irq_cfg) {
-<<<<<<< HEAD
-=======
-			if (!i)
-				kfree(data);
->>>>>>> rebase
 			ret = -EINVAL;
 			goto out_free_data;
 		}

@@ -164,7 +164,6 @@ A driver's probe() may return a negative errno value to indicate that
 the driver did not bind to this device, in which case it should have
 released all resources it allocated.
 
-<<<<<<< HEAD
 	void (*sync_state)(struct device *dev);
 
 sync_state is called only once for a device. It's called when all the consumer
@@ -208,8 +207,6 @@ over management of devices from the bootloader, the usage of sync_state() is
 not restricted to that. Use it whenever it makes sense to take an action after
 all the consumers of a device have probed.
 
-=======
->>>>>>> rebase
 	int 	(*remove)	(struct device * dev);
 
 remove is called to unbind a driver from a device. This may be

@@ -534,11 +534,7 @@ static int m88rs6000t_get_rf_strength(struct dvb_frontend *fe, u16 *strength)
 	PGA2_cri = PGA2_GC >> 2;
 	PGA2_crf = PGA2_GC & 0x03;
 
-<<<<<<< HEAD
 	for (i = 0; i <= RF_GC; i++)
-=======
-	for (i = 0; i <= RF_GC && i < ARRAY_SIZE(RFGS); i++)
->>>>>>> rebase
 		RFG += RFGS[i];
 
 	if (RF_GC == 0)
@@ -550,20 +546,12 @@ static int m88rs6000t_get_rf_strength(struct dvb_frontend *fe, u16 *strength)
 	if (RF_GC == 3)
 		RFG += 100;
 
-<<<<<<< HEAD
 	for (i = 0; i <= IF_GC; i++)
-=======
-	for (i = 0; i <= IF_GC && i < ARRAY_SIZE(IFGS); i++)
->>>>>>> rebase
 		IFG += IFGS[i];
 
 	TIAG = TIA_GC * TIA_GS;
 
-<<<<<<< HEAD
 	for (i = 0; i <= BB_GC; i++)
-=======
-	for (i = 0; i <= BB_GC && i < ARRAY_SIZE(BBGS); i++)
->>>>>>> rebase
 		BBG += BBGS[i];
 
 	PGA2G = PGA2_cri * PGA2_cri_GS + PGA2_crf * PGA2_crf_GS;

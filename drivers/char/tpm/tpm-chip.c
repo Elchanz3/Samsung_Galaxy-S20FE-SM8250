@@ -163,7 +163,6 @@ static void tpm_dev_release(struct device *dev)
 	kfree(chip);
 }
 
-<<<<<<< HEAD
 static void tpm_devs_release(struct device *dev)
 {
 	struct tpm_chip *chip = container_of(dev, struct tpm_chip, devs);
@@ -172,8 +171,6 @@ static void tpm_devs_release(struct device *dev)
 	put_device(&chip->dev);
 }
 
-=======
->>>>>>> rebase
 /**
  * tpm_class_shutdown() - prepare the TPM device for loss of power.
  * @dev: device to which the chip is associated.
@@ -237,10 +234,7 @@ struct tpm_chip *tpm_chip_alloc(struct device *pdev,
 	chip->dev_num = rc;
 
 	device_initialize(&chip->dev);
-<<<<<<< HEAD
 	device_initialize(&chip->devs);
-=======
->>>>>>> rebase
 
 	chip->dev.class = tpm_class;
 	chip->dev.class->shutdown_pre = tpm_class_shutdown;
@@ -248,7 +242,6 @@ struct tpm_chip *tpm_chip_alloc(struct device *pdev,
 	chip->dev.parent = pdev;
 	chip->dev.groups = chip->groups;
 
-<<<<<<< HEAD
 	chip->devs.parent = pdev;
 	chip->devs.class = tpmrm_class;
 	chip->devs.release = tpm_devs_release;
@@ -260,14 +253,11 @@ struct tpm_chip *tpm_chip_alloc(struct device *pdev,
 	if (chip->flags & TPM_CHIP_FLAG_TPM2)
 		get_device(&chip->dev);
 
-=======
->>>>>>> rebase
 	if (chip->dev_num == 0)
 		chip->dev.devt = MKDEV(MISC_MAJOR, TPM_MINOR);
 	else
 		chip->dev.devt = MKDEV(MAJOR(tpm_devt), chip->dev_num);
 
-<<<<<<< HEAD
 	chip->devs.devt =
 		MKDEV(MAJOR(tpm_devt), chip->dev_num + TPM_NUM_DEVICES);
 
@@ -277,17 +267,11 @@ struct tpm_chip *tpm_chip_alloc(struct device *pdev,
 	rc = dev_set_name(&chip->devs, "tpmrm%d", chip->dev_num);
 	if (rc)
 		goto out;
-=======
-	rc = dev_set_name(&chip->dev, "tpm%d", chip->dev_num);
-	if (rc)
-		goto out;
->>>>>>> rebase
 
 	if (!pdev)
 		chip->flags |= TPM_CHIP_FLAG_VIRTUAL;
 
 	cdev_init(&chip->cdev, &tpm_fops);
-<<<<<<< HEAD
 	cdev_init(&chip->cdevs, &tpmrm_fops);
 	chip->cdev.owner = THIS_MODULE;
 	chip->cdevs.owner = THIS_MODULE;
@@ -299,12 +283,6 @@ struct tpm_chip *tpm_chip_alloc(struct device *pdev,
 	}
 	chip->work_space.session_buf = kzalloc(PAGE_SIZE, GFP_KERNEL);
 	if (!chip->work_space.session_buf) {
-=======
-	chip->cdev.owner = THIS_MODULE;
-
-	rc = tpm2_init_space(&chip->work_space, TPM2_SPACE_BUFFER_SIZE);
-	if (rc) {
->>>>>>> rebase
 		rc = -ENOMEM;
 		goto out;
 	}
@@ -313,10 +291,7 @@ struct tpm_chip *tpm_chip_alloc(struct device *pdev,
 	return chip;
 
 out:
-<<<<<<< HEAD
 	put_device(&chip->devs);
-=======
->>>>>>> rebase
 	put_device(&chip->dev);
 	return ERR_PTR(rc);
 }
@@ -365,7 +340,6 @@ static int tpm_add_char_device(struct tpm_chip *chip)
 	}
 
 	if (chip->flags & TPM_CHIP_FLAG_TPM2) {
-<<<<<<< HEAD
 		rc = cdev_device_add(&chip->cdevs, &chip->devs);
 		if (rc) {
 			dev_err(&chip->devs,
@@ -374,11 +348,6 @@ static int tpm_add_char_device(struct tpm_chip *chip)
 				MINOR(chip->devs.devt), rc);
 			return rc;
 		}
-=======
-		rc = tpm_devs_add(chip);
-		if (rc)
-			goto err_del_cdev;
->>>>>>> rebase
 	}
 
 	/* Make the chip available. */
@@ -386,13 +355,6 @@ static int tpm_add_char_device(struct tpm_chip *chip)
 	idr_replace(&dev_nums_idr, chip, chip->dev_num);
 	mutex_unlock(&idr_lock);
 
-<<<<<<< HEAD
-=======
-	return 0;
-
-err_del_cdev:
-	cdev_device_del(&chip->cdev, &chip->dev);
->>>>>>> rebase
 	return rc;
 }
 
@@ -501,13 +463,9 @@ int tpm_chip_register(struct tpm_chip *chip)
 
 	tpm_sysfs_add_device(chip);
 
-<<<<<<< HEAD
 	rc = tpm_bios_log_setup(chip);
 	if (rc != 0 && rc != -ENODEV)
 		return rc;
-=======
-	tpm_bios_log_setup(chip);
->>>>>>> rebase
 
 	tpm_add_ppi(chip);
 
@@ -557,11 +515,7 @@ void tpm_chip_unregister(struct tpm_chip *chip)
 		hwrng_unregister(&chip->hwrng);
 	tpm_bios_log_teardown(chip);
 	if (chip->flags & TPM_CHIP_FLAG_TPM2)
-<<<<<<< HEAD
 		cdev_device_del(&chip->cdevs, &chip->devs);
-=======
-		tpm_devs_remove(chip);
->>>>>>> rebase
 	tpm_del_char_device(chip);
 }
 EXPORT_SYMBOL_GPL(tpm_chip_unregister);

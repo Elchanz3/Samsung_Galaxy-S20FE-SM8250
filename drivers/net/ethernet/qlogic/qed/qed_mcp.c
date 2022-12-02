@@ -498,7 +498,6 @@ _qed_mcp_cmd_and_union(struct qed_hwfn *p_hwfn,
 
 		spin_lock_bh(&p_hwfn->mcp_info->cmd_lock);
 
-<<<<<<< HEAD
 		if (!qed_mcp_has_pending_cmd(p_hwfn))
 			break;
 
@@ -507,20 +506,6 @@ _qed_mcp_cmd_and_union(struct qed_hwfn *p_hwfn,
 			break;
 		else if (rc != -EAGAIN)
 			goto err;
-=======
-		if (!qed_mcp_has_pending_cmd(p_hwfn)) {
-			spin_unlock_bh(&p_hwfn->mcp_info->cmd_lock);
-			break;
-		}
-
-		rc = qed_mcp_update_pending_cmd(p_hwfn, p_ptt);
-		if (!rc) {
-			spin_unlock_bh(&p_hwfn->mcp_info->cmd_lock);
-			break;
-		} else if (rc != -EAGAIN) {
-			goto err;
-		}
->>>>>>> rebase
 
 		spin_unlock_bh(&p_hwfn->mcp_info->cmd_lock);
 
@@ -537,11 +522,6 @@ _qed_mcp_cmd_and_union(struct qed_hwfn *p_hwfn,
 		return -EAGAIN;
 	}
 
-<<<<<<< HEAD
-=======
-	spin_lock_bh(&p_hwfn->mcp_info->cmd_lock);
-
->>>>>>> rebase
 	/* Send the mailbox command */
 	qed_mcp_reread_offsets(p_hwfn, p_ptt);
 	seq_num = ++p_hwfn->mcp_info->drv_mb_seq;
@@ -568,7 +548,6 @@ _qed_mcp_cmd_and_union(struct qed_hwfn *p_hwfn,
 
 		spin_lock_bh(&p_hwfn->mcp_info->cmd_lock);
 
-<<<<<<< HEAD
 		if (p_cmd_elem->b_is_completed)
 			break;
 
@@ -577,20 +556,6 @@ _qed_mcp_cmd_and_union(struct qed_hwfn *p_hwfn,
 			break;
 		else if (rc != -EAGAIN)
 			goto err;
-=======
-		if (p_cmd_elem->b_is_completed) {
-			spin_unlock_bh(&p_hwfn->mcp_info->cmd_lock);
-			break;
-		}
-
-		rc = qed_mcp_update_pending_cmd(p_hwfn, p_ptt);
-		if (!rc) {
-			spin_unlock_bh(&p_hwfn->mcp_info->cmd_lock);
-			break;
-		} else if (rc != -EAGAIN) {
-			goto err;
-		}
->>>>>>> rebase
 
 		spin_unlock_bh(&p_hwfn->mcp_info->cmd_lock);
 	} while (++cnt < max_retries);
@@ -611,10 +576,6 @@ _qed_mcp_cmd_and_union(struct qed_hwfn *p_hwfn,
 		return -EAGAIN;
 	}
 
-<<<<<<< HEAD
-=======
-	spin_lock_bh(&p_hwfn->mcp_info->cmd_lock);
->>>>>>> rebase
 	qed_mcp_cmd_del_elem(p_hwfn, p_cmd_elem);
 	spin_unlock_bh(&p_hwfn->mcp_info->cmd_lock);
 
@@ -2869,10 +2830,6 @@ qed_mcp_get_nvm_image_att(struct qed_hwfn *p_hwfn,
 			  struct qed_nvm_image_att *p_image_att)
 {
 	enum nvm_image_type type;
-<<<<<<< HEAD
-=======
-	int rc;
->>>>>>> rebase
 	u32 i;
 
 	/* Translate image_id into MFW definitions */
@@ -2898,14 +2855,7 @@ qed_mcp_get_nvm_image_att(struct qed_hwfn *p_hwfn,
 		return -EINVAL;
 	}
 
-<<<<<<< HEAD
 	qed_mcp_nvm_info_populate(p_hwfn);
-=======
-	rc = qed_mcp_nvm_info_populate(p_hwfn);
-	if (rc)
-		return rc;
-
->>>>>>> rebase
 	for (i = 0; i < p_hwfn->nvm_info.num_images; i++)
 		if (type == p_hwfn->nvm_info.image_att[i].image_type)
 			break;

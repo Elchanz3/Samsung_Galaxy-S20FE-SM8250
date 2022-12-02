@@ -26,10 +26,7 @@
 #define __MSM_DRM_H__
 
 #include "drm.h"
-<<<<<<< HEAD
 #include "sde_drm.h"
-=======
->>>>>>> rebase
 
 #if defined(__cplusplus)
 extern "C" {
@@ -71,7 +68,6 @@ struct drm_msm_timespec {
 	__s64 tv_nsec;         /* nanoseconds */
 };
 
-<<<<<<< HEAD
 /*
  * Colorimetry Data Block values
  * These bit nums are defined as per the CTA spec
@@ -138,8 +134,6 @@ struct drm_msm_ext_hdr_properties {
 	__u32 hdr_plus_supported;     /* HDR10+ supported */
 };
 
-=======
->>>>>>> rebase
 #define MSM_PARAM_GPU_ID     0x01
 #define MSM_PARAM_GMEM_SIZE  0x02
 #define MSM_PARAM_CHIP_ID    0x03
@@ -221,15 +215,11 @@ struct drm_msm_gem_cpu_fini {
  */
 struct drm_msm_gem_submit_reloc {
 	__u32 submit_offset;  /* in, offset from submit_bo */
-<<<<<<< HEAD
 #ifdef __cplusplus
 	__u32 or_val;
 #else
 	__u32 or;             /* in, value OR'd with result */
 #endif
-=======
-	__u32 or;             /* in, value OR'd with result */
->>>>>>> rebase
 	__s32 shift;          /* in, amount of left shift (can be negative) */
 	__u32 reloc_idx;      /* in, index of reloc_bo buffer */
 	__u64 reloc_offset;   /* in, offset from start of reloc_bo */
@@ -340,7 +330,6 @@ struct drm_msm_gem_madvise {
 	__u32 retained;       /* out, whether backing store still exists */
 };
 
-<<<<<<< HEAD
 /* HDR WRGB x and y index */
 #define DISPLAY_PRIMARIES_WX 0
 #define DISPLAY_PRIMARIES_WY 1
@@ -398,8 +387,6 @@ struct drm_msm_event_resp {
 	__u8 data[];
 };
 
-=======
->>>>>>> rebase
 /*
  * Draw queues allow the user to set specific submission parameter. Command
  * submissions specify a specific submitqueue to use.  ID 0 is reserved for
@@ -414,7 +401,6 @@ struct drm_msm_submitqueue {
 	__u32 id;      /* out, identifier */
 };
 
-<<<<<<< HEAD
 /**
  * struct drm_msm_power_ctrl: Payload to enable/disable the power vote
  * @enable: enable/disable the power vote
@@ -425,8 +411,6 @@ struct drm_msm_power_ctrl {
 	__u32 flags;
 };
 
-=======
->>>>>>> rebase
 #define DRM_MSM_GET_PARAM              0x00
 /* placeholder:
 #define DRM_MSM_SET_PARAM              0x01
@@ -443,7 +427,6 @@ struct drm_msm_power_ctrl {
  */
 #define DRM_MSM_SUBMITQUEUE_NEW        0x0A
 #define DRM_MSM_SUBMITQUEUE_CLOSE      0x0B
-<<<<<<< HEAD
 #define DRM_SDE_WB_CONFIG              0x40
 #define DRM_MSM_REGISTER_EVENT         0x41
 #define DRM_MSM_DEREGISTER_EVENT       0x42
@@ -462,8 +445,6 @@ struct drm_msm_power_ctrl {
 #define DRM_EVENT_LTM_HIST 0X80000008
 #define DRM_EVENT_LTM_WB_PB 0X80000009
 #define DRM_EVENT_LTM_OFF 0X8000000A
-=======
->>>>>>> rebase
 
 #define DRM_IOCTL_MSM_GET_PARAM        DRM_IOWR(DRM_COMMAND_BASE + DRM_MSM_GET_PARAM, struct drm_msm_param)
 #define DRM_IOCTL_MSM_GEM_NEW          DRM_IOWR(DRM_COMMAND_BASE + DRM_MSM_GEM_NEW, struct drm_msm_gem_new)
@@ -473,7 +454,6 @@ struct drm_msm_power_ctrl {
 #define DRM_IOCTL_MSM_GEM_SUBMIT       DRM_IOWR(DRM_COMMAND_BASE + DRM_MSM_GEM_SUBMIT, struct drm_msm_gem_submit)
 #define DRM_IOCTL_MSM_WAIT_FENCE       DRM_IOW (DRM_COMMAND_BASE + DRM_MSM_WAIT_FENCE, struct drm_msm_wait_fence)
 #define DRM_IOCTL_MSM_GEM_MADVISE      DRM_IOWR(DRM_COMMAND_BASE + DRM_MSM_GEM_MADVISE, struct drm_msm_gem_madvise)
-<<<<<<< HEAD
 #define DRM_IOCTL_SDE_WB_CONFIG \
 	DRM_IOW((DRM_COMMAND_BASE + DRM_SDE_WB_CONFIG), struct sde_drm_wb_cfg)
 #define DRM_IOCTL_MSM_REGISTER_EVENT   DRM_IOW((DRM_COMMAND_BASE + \
@@ -486,10 +466,6 @@ struct drm_msm_power_ctrl {
 #define DRM_IOCTL_MSM_SUBMITQUEUE_CLOSE  DRM_IOW (DRM_COMMAND_BASE + DRM_MSM_SUBMITQUEUE_CLOSE, __u32)
 #define DRM_IOCTL_MSM_POWER_CTRL DRM_IOW((DRM_COMMAND_BASE + \
 			DRM_MSM_POWER_CTRL), struct drm_msm_power_ctrl)
-=======
-#define DRM_IOCTL_MSM_SUBMITQUEUE_NEW    DRM_IOWR(DRM_COMMAND_BASE + DRM_MSM_SUBMITQUEUE_NEW, struct drm_msm_submitqueue)
-#define DRM_IOCTL_MSM_SUBMITQUEUE_CLOSE  DRM_IOW (DRM_COMMAND_BASE + DRM_MSM_SUBMITQUEUE_CLOSE, __u32)
->>>>>>> rebase
 
 #if defined(__cplusplus)
 }

@@ -196,10 +196,6 @@ struct otg_fsm {
 	struct mutex lock;
 	u8 *host_req_flag;
 	struct delayed_work hnp_polling_work;
-<<<<<<< HEAD
-=======
-	bool hnp_work_inited;
->>>>>>> rebase
 	bool state_changed;
 };
 

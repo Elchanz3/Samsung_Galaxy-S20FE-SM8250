@@ -218,13 +218,7 @@ int mls_context_isvalid(struct policydb *p, struct context *c)
 /*
  * Set the MLS fields in the security context structure
  * `context' based on the string representation in
-<<<<<<< HEAD
  * the string `scontext'.
-=======
- * the string `*scontext'.  Update `*scontext' to
- * point to the end of the string representation of
- * the MLS fields.
->>>>>>> rebase
  *
  * This function modifies the string in place, inserting
  * NULL characters to terminate the MLS fields.
@@ -239,16 +233,11 @@ int mls_context_isvalid(struct policydb *p, struct context *c)
  */
 int mls_context_to_sid(struct policydb *pol,
 		       char oldc,
-<<<<<<< HEAD
 		       char *scontext,
-=======
-		       char **scontext,
->>>>>>> rebase
 		       struct context *context,
 		       struct sidtab *s,
 		       u32 def_sid)
 {
-<<<<<<< HEAD
 	char *sensitivity, *cur_cat, *next_cat, *rngptr;
 	struct level_datum *levdatum;
 	struct cat_datum *catdatum, *rngdatum;
@@ -259,19 +248,6 @@ int mls_context_to_sid(struct policydb *pol,
 		if ((def_sid != SECSID_NULL && oldc) || (*scontext) == '\0')
 			return 0;
 		return -EINVAL;
-=======
-
-	char delim;
-	char *scontextp, *p, *rngptr;
-	struct level_datum *levdatum;
-	struct cat_datum *catdatum, *rngdatum;
-	int l, rc = -EINVAL;
-
-	if (!pol->mls_enabled) {
-		if (def_sid != SECSID_NULL && oldc)
-			*scontext += strlen(*scontext) + 1;
-		return 0;
->>>>>>> rebase
 	}
 
 	/*
@@ -282,7 +258,6 @@ int mls_context_to_sid(struct policydb *pol,
 		struct context *defcon;
 
 		if (def_sid == SECSID_NULL)
-<<<<<<< HEAD
 			return -EINVAL;
 
 		defcon = sidtab_search(s, def_sid);
@@ -363,122 +338,14 @@ int mls_context_to_sid(struct policydb *pol,
 
 	/* If we didn't see a '-', the range start is also the range end. */
 	if (rangep[1] == NULL) {
-=======
-			goto out;
-
-		defcon = sidtab_search(s, def_sid);
-		if (!defcon)
-			goto out;
-
-		rc = mls_context_cpy(context, defcon);
-		goto out;
-	}
-
-	/* Extract low sensitivity. */
-	scontextp = p = *scontext;
-	while (*p && *p != ':' && *p != '-')
-		p++;
-
-	delim = *p;
-	if (delim != '\0')
-		*p++ = '\0';
-
-	for (l = 0; l < 2; l++) {
-		levdatum = hashtab_search(pol->p_levels.table, scontextp);
-		if (!levdatum) {
-			rc = -EINVAL;
-			goto out;
-		}
-
-		context->range.level[l].sens = levdatum->level->sens;
-
-		if (delim == ':') {
-			/* Extract category set. */
-			while (1) {
-				scontextp = p;
-				while (*p && *p != ',' && *p != '-')
-					p++;
-				delim = *p;
-				if (delim != '\0')
-					*p++ = '\0';
-
-				/* Separate into range if exists */
-				rngptr = strchr(scontextp, '.');
-				if (rngptr != NULL) {
-					/* Remove '.' */
-					*rngptr++ = '\0';
-				}
-
-				catdatum = hashtab_search(pol->p_cats.table,
-							  scontextp);
-				if (!catdatum) {
-					rc = -EINVAL;
-					goto out;
-				}
-
-				rc = ebitmap_set_bit(&context->range.level[l].cat,
-						     catdatum->value - 1, 1);
-				if (rc)
-					goto out;
-
-				/* If range, set all categories in range */
-				if (rngptr) {
-					int i;
-
-					rngdatum = hashtab_search(pol->p_cats.table, rngptr);
-					if (!rngdatum) {
-						rc = -EINVAL;
-						goto out;
-					}
-
-					if (catdatum->value >= rngdatum->value) {
-						rc = -EINVAL;
-						goto out;
-					}
-
-					for (i = catdatum->value; i < rngdatum->value; i++) {
-						rc = ebitmap_set_bit(&context->range.level[l].cat, i, 1);
-						if (rc)
-							goto out;
-					}
-				}
-
-				if (delim != ',')
-					break;
-			}
-		}
-		if (delim == '-') {
-			/* Extract high sensitivity. */
-			scontextp = p;
-			while (*p && *p != ':')
-				p++;
-
-			delim = *p;
-			if (delim != '\0')
-				*p++ = '\0';
-		} else
-			break;
-	}
-
-	if (l == 0) {
->>>>>>> rebase
 		context->range.level[1].sens = context->range.level[0].sens;
 		rc = ebitmap_cpy(&context->range.level[1].cat,
 				 &context->range.level[0].cat);
 		if (rc)
-<<<<<<< HEAD
 			return rc;
 	}
 
 	return 0;
-=======
-			goto out;
-	}
-	*scontext = ++p;
-	rc = 0;
-out:
-	return rc;
->>>>>>> rebase
 }
 
 /*
@@ -490,17 +357,12 @@ out:
 int mls_from_string(struct policydb *p, char *str, struct context *context,
 		    gfp_t gfp_mask)
 {
-<<<<<<< HEAD
 	char *tmpstr;
-=======
-	char *tmpstr, *freestr;
->>>>>>> rebase
 	int rc;
 
 	if (!p->mls_enabled)
 		return -EINVAL;
 
-<<<<<<< HEAD
 	tmpstr = kstrdup(str, gfp_mask);
 	if (!tmpstr) {
 		rc = -ENOMEM;
@@ -508,17 +370,6 @@ int mls_from_string(struct policydb *p, char *str, struct context *context,
 		rc = mls_context_to_sid(p, ':', tmpstr, context,
 					NULL, SECSID_NULL);
 		kfree(tmpstr);
-=======
-	/* we need freestr because mls_context_to_sid will change
-	   the value of tmpstr */
-	tmpstr = freestr = kstrdup(str, gfp_mask);
-	if (!tmpstr) {
-		rc = -ENOMEM;
-	} else {
-		rc = mls_context_to_sid(p, ':', &tmpstr, context,
-					NULL, SECSID_NULL);
-		kfree(freestr);
->>>>>>> rebase
 	}
 
 	return rc;
@@ -585,7 +436,6 @@ int mls_setup_user_range(struct policydb *p,
 
 /*
  * Convert the MLS fields in the security context
-<<<<<<< HEAD
  * structure `oldc' from the values specified in the
  * policy `oldp' to the values specified in the policy `newp',
  * storing the resulting context in `newc'.
@@ -597,18 +447,6 @@ int mls_convert_context(struct policydb *oldp,
 {
 	struct level_datum *levdatum;
 	struct cat_datum *catdatum;
-=======
- * structure `c' from the values specified in the
- * policy `oldp' to the values specified in the policy `newp'.
- */
-int mls_convert_context(struct policydb *oldp,
-			struct policydb *newp,
-			struct context *c)
-{
-	struct level_datum *levdatum;
-	struct cat_datum *catdatum;
-	struct ebitmap bitmap;
->>>>>>> rebase
 	struct ebitmap_node *node;
 	int l, i;
 
@@ -618,7 +456,6 @@ int mls_convert_context(struct policydb *oldp,
 	for (l = 0; l < 2; l++) {
 		levdatum = hashtab_search(newp->p_levels.table,
 					  sym_name(oldp, SYM_LEVELS,
-<<<<<<< HEAD
 						   oldc->range.level[l].sens - 1));
 
 		if (!levdatum)
@@ -627,38 +464,17 @@ int mls_convert_context(struct policydb *oldp,
 
 		ebitmap_for_each_positive_bit(&oldc->range.level[l].cat,
 					      node, i) {
-=======
-						   c->range.level[l].sens - 1));
-
-		if (!levdatum)
-			return -EINVAL;
-		c->range.level[l].sens = levdatum->level->sens;
-
-		ebitmap_init(&bitmap);
-		ebitmap_for_each_positive_bit(&c->range.level[l].cat, node, i) {
->>>>>>> rebase
 			int rc;
 
 			catdatum = hashtab_search(newp->p_cats.table,
 						  sym_name(oldp, SYM_CATS, i));
 			if (!catdatum)
 				return -EINVAL;
-<<<<<<< HEAD
 			rc = ebitmap_set_bit(&newc->range.level[l].cat,
 					     catdatum->value - 1, 1);
 			if (rc)
 				return rc;
 		}
-=======
-			rc = ebitmap_set_bit(&bitmap, catdatum->value - 1, 1);
-			if (rc)
-				return rc;
-
-			cond_resched();
-		}
-		ebitmap_destroy(&c->range.level[l].cat);
-		c->range.level[l].cat = bitmap;
->>>>>>> rebase
 	}
 
 	return 0;

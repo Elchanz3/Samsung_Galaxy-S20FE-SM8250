@@ -192,10 +192,6 @@
 					fixed-link {
 						speed = <1000>;
 						full-duplex;
-<<<<<<< HEAD
-=======
-						pause;
->>>>>>> rebase
 					};
 				};
 			};

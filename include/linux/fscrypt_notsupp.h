@@ -24,14 +24,6 @@ static inline bool fscrypt_dummy_context_enabled(struct inode *inode)
 	return false;
 }
 
-<<<<<<< HEAD
-=======
-static inline bool fscrypt_is_nokey_name(const struct dentry *dentry)
-{
-	return false;
-}
-
->>>>>>> rebase
 /* crypto.c */
 static inline void fscrypt_enqueue_decrypt_work(struct work_struct *work)
 {
@@ -120,11 +112,7 @@ static inline int fscrypt_setup_filename(struct inode *dir,
 	if (IS_ENCRYPTED(dir))
 		return -EOPNOTSUPP;
 
-<<<<<<< HEAD
 	memset(fname, 0, sizeof(struct fscrypt_name));
-=======
-	memset(fname, 0, sizeof(*fname));
->>>>>>> rebase
 	fname->usr_fname = iname;
 	fname->disk_name.name = (unsigned char *)iname->name;
 	fname->disk_name.len = iname->len;
@@ -195,13 +183,8 @@ static inline int fscrypt_file_open(struct inode *inode, struct file *filp)
 	return 0;
 }
 
-<<<<<<< HEAD
 static inline int __fscrypt_prepare_link(struct inode *inode,
 					 struct inode *dir)
-=======
-static inline int __fscrypt_prepare_link(struct inode *inode, struct inode *dir,
-					 struct dentry *dentry)
->>>>>>> rebase
 {
 	return -EOPNOTSUPP;
 }
@@ -216,12 +199,7 @@ static inline int __fscrypt_prepare_rename(struct inode *old_dir,
 }
 
 static inline int __fscrypt_prepare_lookup(struct inode *dir,
-<<<<<<< HEAD
 					   struct dentry *dentry)
-=======
-					   struct dentry *dentry,
-					   struct fscrypt_name *fname)
->>>>>>> rebase
 {
 	return -EOPNOTSUPP;
 }
@@ -250,13 +228,4 @@ static inline const char *fscrypt_get_symlink(struct inode *inode,
 	return ERR_PTR(-EOPNOTSUPP);
 }
 
-<<<<<<< HEAD
-=======
-static inline int fscrypt_symlink_getattr(const struct path *path,
-					  struct kstat *stat)
-{
-	return -EOPNOTSUPP;
-}
-
->>>>>>> rebase
 #endif	/* _LINUX_FSCRYPT_NOTSUPP_H */

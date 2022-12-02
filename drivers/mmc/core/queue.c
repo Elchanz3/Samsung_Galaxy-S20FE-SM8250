@@ -10,10 +10,7 @@
 #include <linux/slab.h>
 #include <linux/module.h>
 #include <linux/blkdev.h>
-<<<<<<< HEAD
 #include <linux/backing-dev.h>
-=======
->>>>>>> rebase
 #include <linux/freezer.h>
 #include <linux/kthread.h>
 #include <linux/scatterlist.h>
@@ -107,12 +104,9 @@ static enum blk_eh_timer_return mmc_cqe_timed_out(struct request *req)
 	enum mmc_issue_type issue_type = mmc_issue_type(mq, req);
 	bool recovery_needed = false;
 
-<<<<<<< HEAD
 	mmc_log_string(host,
 			"Request timed out! Active reqs: %d Req: %p Tag: %d\n",
 			mmc_cqe_qcnt(mq), req, req->tag);
-=======
->>>>>>> rebase
 	switch (issue_type) {
 	case MMC_ISSUE_ASYNC:
 	case MMC_ISSUE_DCMD:
@@ -121,7 +115,6 @@ static enum blk_eh_timer_return mmc_cqe_timed_out(struct request *req)
 				mmc_cqe_recovery_notifier(mrq);
 			return BLK_EH_RESET_TIMER;
 		}
-<<<<<<< HEAD
 
 		pr_info("%s: %s: Timeout even before req reaching LDD, completing the req. Active reqs: %d Req: %p Tag: %d\n",
 				mmc_hostname(host), __func__,
@@ -129,8 +122,6 @@ static enum blk_eh_timer_return mmc_cqe_timed_out(struct request *req)
 		mmc_log_string(host,
 				"Timeout even before req reaching LDD,completing the req. Active reqs: %d Req: %p Tag: %d\n",
 				mmc_cqe_qcnt(mq), req, req->tag);
-=======
->>>>>>> rebase
 		/* The request has gone already */
 		return BLK_EH_DONE;
 	default:
@@ -145,7 +136,6 @@ static enum blk_eh_timer_return mmc_mq_timed_out(struct request *req,
 	struct request_queue *q = req->q;
 	struct mmc_queue *mq = q->queuedata;
 	unsigned long flags;
-<<<<<<< HEAD
 	int ret;
 
 	spin_lock_irqsave(q->queue_lock, flags);
@@ -159,15 +149,6 @@ static enum blk_eh_timer_return mmc_mq_timed_out(struct request *req,
 	}
 
 	return ret;
-=======
-	bool ignore_tout;
-
-	spin_lock_irqsave(q->queue_lock, flags);
-	ignore_tout = mq->recovery_needed || !mq->use_cqe;
-	spin_unlock_irqrestore(q->queue_lock, flags);
-
-	return ignore_tout ? BLK_EH_RESET_TIMER : mmc_cqe_timed_out(req);
->>>>>>> rebase
 }
 
 static void mmc_mq_recovery_handler(struct work_struct *work)
@@ -221,11 +202,7 @@ static void mmc_queue_setup_discard(struct request_queue *q,
 	q->limits.discard_granularity = card->pref_erase << 9;
 	/* granularity must not be greater than max. discard */
 	if (card->pref_erase > max_discard)
-<<<<<<< HEAD
 		q->limits.discard_granularity = 0;
-=======
-		q->limits.discard_granularity = SECTOR_SIZE;
->>>>>>> rebase
 	if (mmc_can_secure_erase_trim(card))
 		blk_queue_flag_set(QUEUE_FLAG_SECERASE, q);
 }
@@ -240,16 +217,11 @@ static int __mmc_init_request(struct mmc_queue *mq, struct request *req,
 			      gfp_t gfp)
 {
 	struct mmc_queue_req *mq_rq = req_to_mmc_queue_req(req);
-<<<<<<< HEAD
 	struct mmc_host *host;
 
 	if (!mq)
 		return -ENODEV;
 	host = mq->card->host;
-=======
-	struct mmc_card *card = mq->card;
-	struct mmc_host *host = card->host;
->>>>>>> rebase
 
 	mq_rq->sg = mmc_alloc_sg(host->max_segs, gfp);
 	if (!mq_rq->sg)
@@ -333,10 +305,7 @@ static blk_status_t mmc_mq_queue_rq(struct blk_mq_hw_ctx *hctx,
 	mq->busy = true;
 
 	mq->in_flight[issue_type] += 1;
-<<<<<<< HEAD
 	atomic_inc(&host->active_reqs);
-=======
->>>>>>> rebase
 	get_card = (mmc_tot_in_flight(mq) == 1);
 	cqe_retune_ok = (mmc_cqe_qcnt(mq) == 1);
 
@@ -376,10 +345,7 @@ static blk_status_t mmc_mq_queue_rq(struct blk_mq_hw_ctx *hctx,
 
 		spin_lock_irq(q->queue_lock);
 		mq->in_flight[issue_type] -= 1;
-<<<<<<< HEAD
 		atomic_dec(&host->active_reqs);
-=======
->>>>>>> rebase
 		if (mmc_tot_in_flight(mq) == 0)
 			put_card = true;
 		mq->busy = false;
@@ -420,18 +386,11 @@ static void mmc_setup_queue(struct mmc_queue *mq, struct mmc_card *card)
 		min(host->max_blk_count, host->max_req_size / 512));
 	blk_queue_max_segments(mq->queue, host->max_segs);
 
-<<<<<<< HEAD
 	if (host->ops->init)
 		host->ops->init(host);
 
 	if (mmc_card_mmc(card))
 		block_size = card->ext_csd.data_sector_size;
-=======
-	if (mmc_card_mmc(card) && card->ext_csd.data_sector_size) {
-		block_size = card->ext_csd.data_sector_size;
-		WARN_ON(block_size != 512 && block_size != 4096);
-	}
->>>>>>> rebase
 
 	blk_queue_logical_block_size(mq->queue, block_size);
 	blk_queue_max_segment_size(mq->queue,
@@ -440,7 +399,6 @@ static void mmc_setup_queue(struct mmc_queue *mq, struct mmc_card *card)
 	INIT_WORK(&mq->recovery_work, mmc_mq_recovery_handler);
 	INIT_WORK(&mq->complete_work, mmc_blk_mq_complete_work);
 
-<<<<<<< HEAD
 	if (mmc_card_sd(card)) {
 		/* decrease max # of requests to 32. The goal of this tuning is
 		 * reducing the time for draining elevator when elevator_switch
@@ -469,11 +427,6 @@ static void mmc_setup_queue(struct mmc_queue *mq, struct mmc_card *card)
 
 	if (host->cqe_ops && host->cqe_ops->cqe_crypto_update_queue)
 		host->cqe_ops->cqe_crypto_update_queue(host, mq->queue);
-=======
-	mutex_init(&mq->complete_lock);
-
-	init_waitqueue_head(&mq->wait);
->>>>>>> rebase
 }
 
 static int mmc_mq_init_queue(struct mmc_queue *mq, int q_depth,
@@ -584,15 +537,12 @@ void mmc_cleanup_queue(struct mmc_queue *mq)
 {
 	struct request_queue *q = mq->queue;
 
-<<<<<<< HEAD
 #ifdef CONFIG_LARGE_DIRTY_BUFFER
 	/* Restore bdi min/max ratio before device removal */
 	bdi_set_min_ratio(q->backing_dev_info, 0);
 	bdi_set_max_ratio(q->backing_dev_info, 100);
 #endif
 
-=======
->>>>>>> rebase
 	/*
 	 * The legacy code handled the possibility of being suspended,
 	 * so do that here too.
@@ -600,12 +550,8 @@ void mmc_cleanup_queue(struct mmc_queue *mq)
 	if (blk_queue_quiesced(q))
 		blk_mq_unquiesce_queue(q);
 
-<<<<<<< HEAD
 	if (likely(!blk_queue_dead(q)))
 		blk_cleanup_queue(q);
-=======
-	blk_cleanup_queue(q);
->>>>>>> rebase
 	blk_mq_free_tag_set(&mq->tag_set);
 
 	/*

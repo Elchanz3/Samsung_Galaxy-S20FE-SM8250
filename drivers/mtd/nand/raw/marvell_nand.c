@@ -637,11 +637,7 @@ static int marvell_nfc_wait_op(struct nand_chip *chip, unsigned int timeout_ms)
 	 * In case the interrupt was not served in the required time frame,
 	 * check if the ISR was not served or if something went actually wrong.
 	 */
-<<<<<<< HEAD
 	if (ret && !pending) {
-=======
-	if (!ret && !pending) {
->>>>>>> rebase
 		dev_err(nfc->dev, "Timeout waiting for RB signal\n");
 		return -ETIMEDOUT;
 	}
@@ -2555,11 +2551,7 @@ static int marvell_nand_chip_init(struct device *dev, struct marvell_nfc *nfc,
 
 	chip->options |= NAND_BUSWIDTH_AUTO;
 
-<<<<<<< HEAD
 	ret = nand_scan(mtd, marvell_nand->nsels);
-=======
-	ret = nand_scan(chip, marvell_nand->nsels);
->>>>>>> rebase
 	if (ret) {
 		dev_err(dev, "could not scan the nand chip\n");
 		return ret;
@@ -2572,11 +2564,7 @@ static int marvell_nand_chip_init(struct device *dev, struct marvell_nfc *nfc,
 		ret = mtd_device_register(mtd, NULL, 0);
 	if (ret) {
 		dev_err(dev, "failed to register mtd device: %d\n", ret);
-<<<<<<< HEAD
 		nand_release(mtd);
-=======
-		nand_cleanup(chip);
->>>>>>> rebase
 		return ret;
 	}
 
@@ -2585,19 +2573,6 @@ static int marvell_nand_chip_init(struct device *dev, struct marvell_nfc *nfc,
 	return 0;
 }
 
-<<<<<<< HEAD
-=======
-static void marvell_nand_chips_cleanup(struct marvell_nfc *nfc)
-{
-	struct marvell_nand_chip *entry, *temp;
-
-	list_for_each_entry_safe(entry, temp, &nfc->chips, node) {
-		nand_release(&entry->chip);
-		list_del(&entry->node);
-	}
-}
-
->>>>>>> rebase
 static int marvell_nand_chips_init(struct device *dev, struct marvell_nfc *nfc)
 {
 	struct device_node *np = dev->of_node;
@@ -2632,16 +2607,11 @@ static int marvell_nand_chips_init(struct device *dev, struct marvell_nfc *nfc)
 		ret = marvell_nand_chip_init(dev, nfc, nand_np);
 		if (ret) {
 			of_node_put(nand_np);
-<<<<<<< HEAD
 			return ret;
-=======
-			goto cleanup_chips;
->>>>>>> rebase
 		}
 	}
 
 	return 0;
-<<<<<<< HEAD
 }
 
 static void marvell_nand_chips_cleanup(struct marvell_nfc *nfc)
@@ -2652,13 +2622,6 @@ static void marvell_nand_chips_cleanup(struct marvell_nfc *nfc)
 		nand_release(nand_to_mtd(&entry->chip));
 		list_del(&entry->node);
 	}
-=======
-
-cleanup_chips:
-	marvell_nand_chips_cleanup(nfc);
-
-	return ret;
->>>>>>> rebase
 }
 
 static int marvell_nfc_init_dma(struct marvell_nfc *nfc)
@@ -2912,15 +2875,8 @@ static int __maybe_unused marvell_nfc_resume(struct device *dev)
 		return ret;
 
 	ret = clk_prepare_enable(nfc->reg_clk);
-<<<<<<< HEAD
 	if (ret < 0)
 		return ret;
-=======
-	if (ret < 0) {
-		clk_disable_unprepare(nfc->core_clk);
-		return ret;
-	}
->>>>>>> rebase
 
 	/*
 	 * Reset nfc->selected_chip so the next command will cause the timing

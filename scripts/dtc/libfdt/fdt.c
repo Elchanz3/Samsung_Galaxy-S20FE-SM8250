@@ -71,7 +71,6 @@ int fdt_check_header(const void *fdt)
 		return -FDT_ERR_BADMAGIC;
 	}
 
-<<<<<<< HEAD
 	if (fdt_off_dt_struct(fdt) > (UINT_MAX - fdt_size_dt_struct(fdt)))
 		return FDT_ERR_BADOFFSET;
 
@@ -86,8 +85,6 @@ int fdt_check_header(const void *fdt)
 	    > fdt_totalsize(fdt))
 		return FDT_ERR_BADOFFSET;
 
-=======
->>>>>>> rebase
 	return 0;
 }
 

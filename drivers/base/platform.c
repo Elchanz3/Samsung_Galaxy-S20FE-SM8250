@@ -700,11 +700,6 @@ int __init_or_module __platform_driver_probe(struct platform_driver *drv,
 	/* temporary section violation during probe() */
 	drv->probe = probe;
 	retval = code = __platform_driver_register(drv, module);
-<<<<<<< HEAD
-=======
-	if (retval)
-		return retval;
->>>>>>> rebase
 
 	/*
 	 * Fixup that section violation, being paranoid about code scanning

@@ -200,14 +200,6 @@ nfsd3_proc_write(struct svc_rqst *rqstp)
 				(unsigned long long) argp->offset,
 				argp->stable? " stable" : "");
 
-<<<<<<< HEAD
-=======
-	resp->status = nfserr_fbig;
-	if (argp->offset > (u64)OFFSET_MAX ||
-	    argp->offset + argp->len > (u64)OFFSET_MAX)
-		return rpc_success;
-
->>>>>>> rebase
 	fh_copy(&resp->fh, &argp->fh);
 	resp->committed = argp->stable;
 	nvecs = svc_fill_write_vector(rqstp, rqstp->rq_arg.pages,

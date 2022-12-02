@@ -96,7 +96,6 @@ nouveau_sgdma_create_ttm(struct ttm_buffer_object *bo, uint32_t page_flags)
 	else
 		nvbe->ttm.ttm.func = &nv50_sgdma_backend;
 
-<<<<<<< HEAD
 	if (ttm_dma_tt_init(&nvbe->ttm, bo, page_flags))
 		/*
 		 * A failing ttm_dma_tt_init() will call ttm_tt_destroy()
@@ -104,11 +103,5 @@ nouveau_sgdma_create_ttm(struct ttm_buffer_object *bo, uint32_t page_flags)
 		 * to free nvbe here.
 		 */
 		return NULL;
-=======
-	if (ttm_dma_tt_init(&nvbe->ttm, bo, page_flags)) {
-		kfree(nvbe);
-		return NULL;
-	}
->>>>>>> rebase
 	return &nvbe->ttm.ttm;
 }

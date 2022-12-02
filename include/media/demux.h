@@ -36,11 +36,8 @@
  * Common definitions
  */
 
-<<<<<<< HEAD
 #define DMX_EVENT_QUEUE_SIZE 500 /* number of events */
 
-=======
->>>>>>> rebase
 /*
  * DMX_MAX_FILTER_SIZE: Maximum length (in bytes) of a section/PES filter.
  */
@@ -61,7 +58,6 @@
 #define DMX_MAX_SECFEED_SIZE (DMX_MAX_SECTION_SIZE + 188)
 #endif
 
-<<<<<<< HEAD
 #define DMX_FAILURE 1	/* General failure */
 /*
  * enum dmx_success: Success codes for the Demux Callback API.
@@ -165,8 +161,6 @@ struct data_buffer {
 	struct ion_dma_buff_info buff_dma_info;
 
 };
-=======
->>>>>>> rebase
 /*
  * TS packet reception
  */
@@ -202,7 +196,6 @@ enum ts_filter_type {
  * Using this API, the client can set the filtering properties to start/stop
  * filtering TS packets on a particular TS feed.
  */
-<<<<<<< HEAD
 struct dmx_ts_feed;
 
 typedef int (*dmx_ts_data_ready_cb)(
@@ -215,17 +208,10 @@ struct dmx_ts_feed {
 	struct data_buffer buffer;
 	void *priv;
 	struct dmx_decoder_buffers *decoder_buffers;
-=======
-struct dmx_ts_feed {
-	int is_filtering;
-	struct dmx_demux *parent;
-	void *priv;
->>>>>>> rebase
 	int (*set)(struct dmx_ts_feed *feed,
 		   u16 pid,
 		   int type,
 		   enum dmx_ts_pes pes_type,
-<<<<<<< HEAD
 		   size_t circular_buffer_size,
 		   ktime_t timeout);
 	int (*start_filtering)(struct dmx_ts_feed *feed);
@@ -258,11 +244,6 @@ struct dmx_ts_feed {
 			char *data, size_t size);
 	int (*get_scrambling_bits)(struct dmx_ts_feed *feed, u8 *value);
 	int (*flush_buffer)(struct dmx_ts_feed *feed, size_t length);
-=======
-		   ktime_t timeout);
-	int (*start_filtering)(struct dmx_ts_feed *feed);
-	int (*stop_filtering)(struct dmx_ts_feed *feed);
->>>>>>> rebase
 };
 
 /*
@@ -287,16 +268,12 @@ struct dmx_ts_feed {
  * corresponding bits are compared. The filter only accepts sections that are
  * equal to filter_value in all the tested bit positions.
  */
-<<<<<<< HEAD
 
 struct dmx_section_feed;
-=======
->>>>>>> rebase
 struct dmx_section_filter {
 	u8 filter_value[DMX_MAX_FILTER_SIZE];
 	u8 filter_mask[DMX_MAX_FILTER_SIZE];
 	u8 filter_mode[DMX_MAX_FILTER_SIZE];
-<<<<<<< HEAD
 	struct dmx_section_feed *parent; /* Back-pointer */
 	struct data_buffer buffer;
 	void *priv; /* Pointer to private data of the API client */
@@ -305,12 +282,6 @@ struct dmx_section_filter {
 typedef int (*dmx_section_data_ready_cb)(
 		struct dmx_section_filter *source,
 		struct dmx_data_ready *dmx_data_ready);
-=======
-	struct dmx_section_feed *parent;
-
-	void *priv;
-};
->>>>>>> rebase
 
 /**
  * struct dmx_section_feed - Structure that contains a section feed filter
@@ -354,10 +325,7 @@ struct dmx_section_feed {
 	/* public: */
 	int (*set)(struct dmx_section_feed *feed,
 		   u16 pid,
-<<<<<<< HEAD
 		   size_t circular_buffer_size,
-=======
->>>>>>> rebase
 		   int check_crc);
 	int (*allocate_filter)(struct dmx_section_feed *feed,
 			       struct dmx_section_filter **filter);
@@ -365,7 +333,6 @@ struct dmx_section_feed {
 			      struct dmx_section_filter *filter);
 	int (*start_filtering)(struct dmx_section_feed *feed);
 	int (*stop_filtering)(struct dmx_section_feed *feed);
-<<<<<<< HEAD
 	int (*data_ready_cb)(struct dmx_section_feed *feed,
 			dmx_section_data_ready_cb callback);
 	int (*notify_data_read)(struct dmx_section_filter *filter,
@@ -378,8 +345,6 @@ struct dmx_section_feed {
 				struct dmx_oob_command *cmd);
 	int (*get_scrambling_bits)(struct dmx_section_feed *feed, u8 *value);
 	int (*flush_buffer)(struct dmx_section_feed *feed, size_t length);
-=======
->>>>>>> rebase
 };
 
 /**
@@ -495,7 +460,6 @@ typedef int (*dmx_section_cb)(const u8 *buffer1,
 			      struct dmx_section_filter *source,
 			      u32 *buffer_flags);
 
-<<<<<<< HEAD
 typedef int (*dmx_ts_fullness) (
 				struct dmx_ts_feed *source,
 				int required_space,
@@ -506,8 +470,6 @@ typedef int (*dmx_section_fullness) (
 				int required_space,
 				int wait);
 
-=======
->>>>>>> rebase
 /*
  * DVB Front-End
  */
@@ -525,7 +487,6 @@ typedef int (*dmx_section_fullness) (
 enum dmx_frontend_source {
 	DMX_MEMORY_FE,
 	DMX_FRONTEND_0,
-<<<<<<< HEAD
 	DMX_FRONTEND_1,
 	DMX_FRONTEND_2,
 	DMX_FRONTEND_3,
@@ -533,8 +494,6 @@ enum dmx_frontend_source {
 	DMX_STREAM_1,
 	DMX_STREAM_2,
 	DMX_STREAM_3
-=======
->>>>>>> rebase
 };
 
 /**
@@ -568,16 +527,11 @@ struct dmx_frontend {
  */
 enum dmx_demux_caps {
 	DMX_TS_FILTERING = 1,
-<<<<<<< HEAD
 	DMX_PES_FILTERING = 2,
 	DMX_SECTION_FILTERING = 4,
 	DMX_MEMORY_BASED_FILTERING = 8,
 	DMX_CRC_CHECKING = 16,
 	DMX_TS_DESCRAMBLING = 32
-=======
-	DMX_SECTION_FILTERING = 4,
-	DMX_MEMORY_BASED_FILTERING = 8,
->>>>>>> rebase
 };
 
 /*
@@ -788,13 +742,10 @@ struct dmx_demux {
 	enum dmx_demux_caps capabilities;
 	struct dmx_frontend *frontend;
 	void *priv;
-<<<<<<< HEAD
 	struct data_buffer dvr_input; /* DVR input buffer */
 	int dvr_input_protected;
 	struct dentry *debugfs_demux_dir; /* debugfs dir */
 
-=======
->>>>>>> rebase
 	int (*open)(struct dmx_demux *demux);
 	int (*close)(struct dmx_demux *demux);
 	int (*write)(struct dmx_demux *demux, const char __user *buf,
@@ -820,7 +771,6 @@ struct dmx_demux {
 
 	int (*get_pes_pids)(struct dmx_demux *demux, u16 *pids);
 
-<<<<<<< HEAD
 	int (*get_caps)(struct dmx_demux *demux, struct dmx_caps *caps);
 
 	int (*set_source)(struct dmx_demux *demux,
@@ -836,8 +786,6 @@ struct dmx_demux {
 
 	int (*write_cancel)(struct dmx_demux *demux);
 
-=======
->>>>>>> rebase
 	/* private: */
 
 	/*
@@ -847,7 +795,6 @@ struct dmx_demux {
 	 */
 	int (*get_stc)(struct dmx_demux *demux, unsigned int num,
 		       u64 *stc, unsigned int *base);
-<<<<<<< HEAD
 
 	int (*map_buffer)(struct dmx_demux *demux,
 			struct dmx_buffer *dmx_buffer,
@@ -857,8 +804,6 @@ struct dmx_demux {
 			struct ion_dma_buff_info *dma_buffer);
 
 	int (*get_tsp_size)(struct dmx_demux *demux);
-=======
->>>>>>> rebase
 };
 
 #endif /* #ifndef __DEMUX_H */

@@ -1,25 +1,7 @@
-<<<<<<< HEAD
 // SPDX-License-Identifier: ISC
 /*
  * Copyright (c) 2012-2017 Qualcomm Atheros, Inc.
  * Copyright (c) 2018-2019, The Linux Foundation. All rights reserved.
-=======
-/*
- * Copyright (c) 2012-2017 Qualcomm Atheros, Inc.
- * Copyright (c) 2018-2019, The Linux Foundation. All rights reserved.
- *
- * Permission to use, copy, modify, and/or distribute this software for any
- * purpose with or without fee is hereby granted, provided that the above
- * copyright notice and this permission notice appear in all copies.
- *
- * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
- * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
- * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
- * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
- * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
- * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
- * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
->>>>>>> rebase
  */
 
 #include <linux/interrupt.h>
@@ -51,11 +33,7 @@
 				    (~(BIT_DMA_EP_RX_ICR_RX_HTRSH)))
 #define WIL6210_IMC_TX		(BIT_DMA_EP_TX_ICR_TX_DONE | \
 				BIT_DMA_EP_TX_ICR_TX_DONE_N(0))
-<<<<<<< HEAD
 #define WIL6210_IMC_TX_EDMA		(0xFFFFFFFFUL)
-=======
-#define WIL6210_IMC_TX_EDMA		BIT_TX_STATUS_IRQ
->>>>>>> rebase
 #define WIL6210_IMC_RX_EDMA		BIT_RX_STATUS_IRQ
 #define WIL6210_IMC_MISC_NO_HALP	(ISR_MISC_FW_READY | \
 					 ISR_MISC_MBOX_EVT | \
@@ -237,10 +215,7 @@ void wil_unmask_irq(struct wil6210_priv *wil)
 void wil_configure_interrupt_moderation_edma(struct wil6210_priv *wil)
 {
 	u32 moderation;
-<<<<<<< HEAD
 	int i, num_int_lines = 2 /* Rx + Tx status */;
-=======
->>>>>>> rebase
 
 	wil_s(wil, RGF_INT_GEN_IDLE_TIME_LIMIT, WIL_EDMA_IDLE_TIME_LIMIT_USEC);
 
@@ -249,16 +224,11 @@ void wil_configure_interrupt_moderation_edma(struct wil6210_priv *wil)
 	/* Update RX and TX moderation */
 	moderation = wil->rx_max_burst_duration |
 		(WIL_EDMA_AGG_WATERMARK << WIL_EDMA_AGG_WATERMARK_POS);
-<<<<<<< HEAD
 	if (wil->ipa_handle)
 		/* additional int per client, for Tx desc ring */
 		num_int_lines += max_assoc_sta;
 	for (i = 0; i < num_int_lines; i++)
 		wil_w(wil, i * 4 + RGF_INT_CTRL_INT_GEN_CFG, moderation);
-=======
-	wil_w(wil, RGF_INT_CTRL_INT_GEN_CFG_0, moderation);
-	wil_w(wil, RGF_INT_CTRL_INT_GEN_CFG_1, moderation);
->>>>>>> rebase
 
 	/* Treat special events as regular
 	 * (set bit 0 to 0x1 and clear bits 1-8)
@@ -564,11 +534,7 @@ static bool wil_validate_mbox_regs(struct wil6210_priv *wil)
 	return true;
 }
 
-<<<<<<< HEAD
 irqreturn_t wil6210_irq_misc(int irq, void *cookie)
-=======
-static irqreturn_t wil6210_irq_misc(int irq, void *cookie)
->>>>>>> rebase
 {
 	struct wil6210_priv *wil = cookie;
 	u32 isr;
@@ -618,19 +584,11 @@ static irqreturn_t wil6210_irq_misc(int irq, void *cookie)
 
 	if (isr & BIT_DMA_EP_MISC_ICR_HALP) {
 		isr &= ~BIT_DMA_EP_MISC_ICR_HALP;
-<<<<<<< HEAD
 		if (atomic_read(&wil->halp.handle_icr)) {
 			/* no need to handle HALP ICRs until next vote */
 			atomic_set(&wil->halp.handle_icr, 0);
 			wil_dbg_irq(wil, "irq_misc: HALP IRQ invoked\n");
 			wil6210_mask_irq_misc(wil, true);
-=======
-		if (wil->halp.handle_icr) {
-			/* no need to handle HALP ICRs until next vote */
-			wil->halp.handle_icr = false;
-			wil_dbg_irq(wil, "irq_misc: HALP IRQ invoked\n");
-			wil6210_mask_halp(wil);
->>>>>>> rebase
 			complete(&wil->halp.comp);
 		}
 	}
@@ -645,11 +603,7 @@ static irqreturn_t wil6210_irq_misc(int irq, void *cookie)
 	}
 }
 
-<<<<<<< HEAD
 irqreturn_t wil6210_irq_misc_thread(int irq, void *cookie)
-=======
-static irqreturn_t wil6210_irq_misc_thread(int irq, void *cookie)
->>>>>>> rebase
 {
 	struct wil6210_priv *wil = cookie;
 	u32 isr = wil->isr_misc;

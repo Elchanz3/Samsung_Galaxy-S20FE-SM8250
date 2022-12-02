@@ -83,10 +83,6 @@ void static_key_slow_inc_cpuslocked(struct static_key *key)
 	int v, v1;
 
 	STATIC_KEY_CHECK_USE(key);
-<<<<<<< HEAD
-=======
-	lockdep_assert_cpus_held();
->>>>>>> rebase
 
 	/*
 	 * Careful if we get concurrent static_key_slow_inc() calls;
@@ -132,10 +128,6 @@ EXPORT_SYMBOL_GPL(static_key_slow_inc);
 void static_key_enable_cpuslocked(struct static_key *key)
 {
 	STATIC_KEY_CHECK_USE(key);
-<<<<<<< HEAD
-=======
-	lockdep_assert_cpus_held();
->>>>>>> rebase
 
 	if (atomic_read(&key->enabled) > 0) {
 		WARN_ON_ONCE(atomic_read(&key->enabled) != 1);
@@ -166,10 +158,6 @@ EXPORT_SYMBOL_GPL(static_key_enable);
 void static_key_disable_cpuslocked(struct static_key *key)
 {
 	STATIC_KEY_CHECK_USE(key);
-<<<<<<< HEAD
-=======
-	lockdep_assert_cpus_held();
->>>>>>> rebase
 
 	if (atomic_read(&key->enabled) != 1) {
 		WARN_ON_ONCE(atomic_read(&key->enabled) != 0);
@@ -195,13 +183,6 @@ static void __static_key_slow_dec_cpuslocked(struct static_key *key,
 					   unsigned long rate_limit,
 					   struct delayed_work *work)
 {
-<<<<<<< HEAD
-=======
-	int val;
-
-	lockdep_assert_cpus_held();
-
->>>>>>> rebase
 	/*
 	 * The negative count check is valid even when a negative
 	 * key->enabled is in use by static_key_slow_inc(); a
@@ -209,7 +190,6 @@ static void __static_key_slow_dec_cpuslocked(struct static_key *key,
 	 * returns is unbalanced, because all other static_key_slow_inc()
 	 * instances block while the update is in progress.
 	 */
-<<<<<<< HEAD
 	if (!atomic_dec_and_mutex_lock(&key->enabled, &jump_label_mutex)) {
 		WARN(atomic_read(&key->enabled) < 0,
 		     "jump label: negative count!\n");
@@ -221,22 +201,6 @@ static void __static_key_slow_dec_cpuslocked(struct static_key *key,
 		schedule_delayed_work(work, rate_limit);
 	} else {
 		jump_label_update(key);
-=======
-	val = atomic_fetch_add_unless(&key->enabled, -1, 1);
-	if (val != 1) {
-		WARN(val < 0, "jump label: negative count!\n");
-		return;
-	}
-
-	jump_label_lock();
-	if (atomic_dec_and_test(&key->enabled)) {
-		if (rate_limit) {
-			atomic_inc(&key->enabled);
-			schedule_delayed_work(work, rate_limit);
-		} else {
-			jump_label_update(key);
-		}
->>>>>>> rebase
 	}
 	jump_label_unlock();
 }

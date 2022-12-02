@@ -1,15 +1,8 @@
 /* SPDX-License-Identifier: GPL-2.0 */
 /*
-<<<<<<< HEAD
  * Copyright (c) 2016-2020, The Linux Foundation. All rights reserved.
  */
 
-=======
- * Copyright (c) 2016-2018, The Linux Foundation. All rights reserved.
- */
-
-
->>>>>>> rebase
 #ifndef __RPM_INTERNAL_H__
 #define __RPM_INTERNAL_H__
 
@@ -34,10 +27,6 @@ struct rsc_drv;
  * @offset:    start of the TCS group relative to the TCSes in the RSC
  * @num_tcs:   number of TCSes in this type
  * @ncpt:      number of commands in each TCS
-<<<<<<< HEAD
-=======
- * @lock:      lock for synchronizing this TCS writes
->>>>>>> rebase
  * @req:       requests that are sent from the TCS
  * @cmd_cache: flattened cache of cmds in sleep/wake TCS
  * @slots:     indicates which of @cmd_addr are occupied
@@ -49,10 +38,6 @@ struct tcs_group {
 	u32 offset;
 	int num_tcs;
 	int ncpt;
-<<<<<<< HEAD
-=======
-	spinlock_t lock;
->>>>>>> rebase
 	const struct tcs_request *req[MAX_TCS_PER_TYPE];
 	u32 *cmd_cache;
 	DECLARE_BITMAP(slots, MAX_TCS_SLOTS);
@@ -84,20 +69,14 @@ struct rpmh_request {
  * @cache_lock: synchronize access to the cache data
  * @dirty: was the cache updated since flush
  * @batch_cache: Cache sleep and wake requests sent as batch
-<<<<<<< HEAD
  * @in_solver_mode: Controller is busy in solver mode
-=======
->>>>>>> rebase
  */
 struct rpmh_ctrlr {
 	struct list_head cache;
 	spinlock_t cache_lock;
 	bool dirty;
 	struct list_head batch_cache;
-<<<<<<< HEAD
 	bool in_solver_mode;
-=======
->>>>>>> rebase
 };
 
 /**
@@ -105,21 +84,15 @@ struct rpmh_ctrlr {
  * Resource State Coordinator controller (RSC)
  *
  * @name:       controller identifier
-<<<<<<< HEAD
  * @base:       start address of the RSC's DRV registers
  * @tcs_base:   start address of the TCS registers in this controller
  * @id:         instance id in the controller (Direct Resource Voter)
  * @in_solver_mode: Controller is in solver mode
-=======
- * @tcs_base:   start address of the TCS registers in this controller
- * @id:         instance id in the controller (Direct Resource Voter)
->>>>>>> rebase
  * @num_tcs:    number of TCSes in this DRV
  * @tcs:        TCS groups
  * @tcs_in_use: s/w state of the TCS
  * @lock:       synchronize state of the controller
  * @client:     handle to the DRV's client.
-<<<<<<< HEAD
  * @irq:        IRQ at gic
  * @ipc_log_ctx IPC logger handle
  */
@@ -129,34 +102,21 @@ struct rsc_drv {
 	void __iomem *tcs_base;
 	int id;
 	bool in_solver_mode;
-=======
- */
-struct rsc_drv {
-	const char *name;
-	void __iomem *tcs_base;
-	int id;
->>>>>>> rebase
 	int num_tcs;
 	struct tcs_group tcs[TCS_TYPE_NR];
 	DECLARE_BITMAP(tcs_in_use, MAX_TCS_NR);
 	spinlock_t lock;
 	struct rpmh_ctrlr client;
-<<<<<<< HEAD
 	int irq;
 	void *ipc_log_ctx;
 };
 
 extern bool rpmh_standalone;
 
-=======
-};
-
->>>>>>> rebase
 int rpmh_rsc_send_data(struct rsc_drv *drv, const struct tcs_request *msg);
 int rpmh_rsc_write_ctrl_data(struct rsc_drv *drv,
 			     const struct tcs_request *msg);
 int rpmh_rsc_invalidate(struct rsc_drv *drv);
-<<<<<<< HEAD
 bool rpmh_rsc_ctrlr_is_idle(struct rsc_drv *drv);
 int rpmh_rsc_write_pdc_data(struct rsc_drv *drv, const struct tcs_request *msg);
 void rpmh_rsc_mode_solver_set(struct rsc_drv *drv, bool enable);
@@ -164,9 +124,4 @@ void rpmh_rsc_mode_solver_set(struct rsc_drv *drv, bool enable);
 void rpmh_tx_done(const struct tcs_request *msg, int r);
 
 void rpmh_rsc_debug(struct rsc_drv *drv, struct completion *compl);
-=======
-
-void rpmh_tx_done(const struct tcs_request *msg, int r);
-
->>>>>>> rebase
 #endif /* __RPM_INTERNAL_H__ */

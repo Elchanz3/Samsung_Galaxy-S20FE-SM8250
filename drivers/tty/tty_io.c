@@ -1460,13 +1460,10 @@ static void release_one_tty(struct work_struct *work)
 
 	put_pid(tty->pgrp);
 	put_pid(tty->session);
-<<<<<<< HEAD
 #if defined(CONFIG_TTY_FLUSH_LOCAL_ECHO)
 	if (tty->echo_delayed_work.work.func)
 		cancel_delayed_work_sync(&tty->echo_delayed_work);
 #endif
-=======
->>>>>>> rebase
 	free_tty_struct(tty);
 }
 
@@ -2180,11 +2177,8 @@ static int tty_fasync(int fd, struct file *filp, int on)
  *	Locking:
  *		Called functions take tty_ldiscs_lock
  *		current->signal->tty check is safe without locks
-<<<<<<< HEAD
  *
  *	FIXME: may race normal receive processing
-=======
->>>>>>> rebase
  */
 
 static int tiocsti(struct tty_struct *tty, char __user *p)
@@ -2200,15 +2194,8 @@ static int tiocsti(struct tty_struct *tty, char __user *p)
 	ld = tty_ldisc_ref_wait(tty);
 	if (!ld)
 		return -EIO;
-<<<<<<< HEAD
 	if (ld->ops->receive_buf)
 		ld->ops->receive_buf(tty, &ch, &mbz, 1);
-=======
-	tty_buffer_lock_exclusive(tty->port);
-	if (ld->ops->receive_buf)
-		ld->ops->receive_buf(tty, &ch, &mbz, 1);
-	tty_buffer_unlock_exclusive(tty->port);
->>>>>>> rebase
 	tty_ldisc_deref(ld);
 	return 0;
 }
@@ -2449,22 +2436,14 @@ out:
  *	@p: pointer to result
  *
  *	Obtain the modem status bits from the tty driver if the feature
-<<<<<<< HEAD
  *	is supported. Return -EINVAL if it is not available.
-=======
- *	is supported. Return -ENOTTY if it is not available.
->>>>>>> rebase
  *
  *	Locking: none (up to the driver)
  */
 
 static int tty_tiocmget(struct tty_struct *tty, int __user *p)
 {
-<<<<<<< HEAD
 	int retval = -EINVAL;
-=======
-	int retval = -ENOTTY;
->>>>>>> rebase
 
 	if (tty->ops->tiocmget) {
 		retval = tty->ops->tiocmget(tty);
@@ -2482,11 +2461,7 @@ static int tty_tiocmget(struct tty_struct *tty, int __user *p)
  *	@p: pointer to desired bits
  *
  *	Set the modem status bits from the tty driver if the feature
-<<<<<<< HEAD
  *	is supported. Return -EINVAL if it is not available.
-=======
- *	is supported. Return -ENOTTY if it is not available.
->>>>>>> rebase
  *
  *	Locking: none (up to the driver)
  */
@@ -2498,11 +2473,7 @@ static int tty_tiocmset(struct tty_struct *tty, unsigned int cmd,
 	unsigned int set, clear, val;
 
 	if (tty->ops->tiocmset == NULL)
-<<<<<<< HEAD
 		return -EINVAL;
-=======
-		return -ENOTTY;
->>>>>>> rebase
 
 	retval = get_user(val, p);
 	if (retval)

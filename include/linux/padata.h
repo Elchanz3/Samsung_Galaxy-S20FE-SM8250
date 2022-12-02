@@ -24,10 +24,7 @@
 #include <linux/workqueue.h>
 #include <linux/spinlock.h>
 #include <linux/list.h>
-<<<<<<< HEAD
 #include <linux/timer.h>
-=======
->>>>>>> rebase
 #include <linux/notifier.h>
 #include <linux/kobject.h>
 
@@ -88,26 +85,18 @@ struct padata_serial_queue {
  * @serial: List to wait for serialization after reordering.
  * @pwork: work struct for parallelization.
  * @swork: work struct for serialization.
-<<<<<<< HEAD
  * @pd: Backpointer to the internal control structure.
  * @work: work struct for parallelization.
  * @reorder_work: work struct for reordering.
-=======
- * @work: work struct for parallelization.
->>>>>>> rebase
  * @num_obj: Number of objects that are processed by this cpu.
  * @cpu_index: Index of the cpu.
  */
 struct padata_parallel_queue {
        struct padata_list    parallel;
        struct padata_list    reorder;
-<<<<<<< HEAD
        struct parallel_data *pd;
        struct work_struct    work;
        struct work_struct    reorder_work;
-=======
-       struct work_struct    work;
->>>>>>> rebase
        atomic_t              num_obj;
        int                   cpu_index;
 };
@@ -133,17 +122,10 @@ struct padata_cpumask {
  * @reorder_objects: Number of objects waiting in the reorder queues.
  * @refcnt: Number of objects holding a reference on this parallel_data.
  * @max_seq_nr:  Maximal used sequence number.
-<<<<<<< HEAD
  * @cpumask: The cpumasks in use for parallel and serial workers.
  * @lock: Reorder lock.
  * @processed: Number of already processed objects.
  * @timer: Reorder timer.
-=======
- * @cpu: Next CPU to be processed.
- * @cpumask: The cpumasks in use for parallel and serial workers.
- * @reorder_work: work struct for reordering.
- * @lock: Reorder lock.
->>>>>>> rebase
  */
 struct parallel_data {
 	struct padata_instance		*pinst;
@@ -152,28 +134,16 @@ struct parallel_data {
 	atomic_t			reorder_objects;
 	atomic_t			refcnt;
 	atomic_t			seq_nr;
-<<<<<<< HEAD
 	struct padata_cpumask		cpumask;
 	spinlock_t                      lock ____cacheline_aligned;
 	unsigned int			processed;
 	struct timer_list		timer;
-=======
-	int				cpu;
-	struct padata_cpumask		cpumask;
-	struct work_struct		reorder_work;
-	spinlock_t                      lock ____cacheline_aligned;
->>>>>>> rebase
 };
 
 /**
  * struct padata_instance - The overall control structure.
  *
-<<<<<<< HEAD
  * @cpu_notifier: cpu hotplug notifier.
-=======
- * @cpu_online_node: Linkage for CPU online callback.
- * @cpu_dead_node: Linkage for CPU offline callback.
->>>>>>> rebase
  * @wq: The workqueue in use.
  * @pd: The internal control structure.
  * @cpumask: User supplied cpumasks for parallel and serial works.
@@ -185,12 +155,7 @@ struct parallel_data {
  * @flags: padata flags.
  */
 struct padata_instance {
-<<<<<<< HEAD
 	struct hlist_node		 node;
-=======
-	struct hlist_node		cpu_online_node;
-	struct hlist_node		cpu_dead_node;
->>>>>>> rebase
 	struct workqueue_struct		*wq;
 	struct parallel_data		*pd;
 	struct padata_cpumask		cpumask;

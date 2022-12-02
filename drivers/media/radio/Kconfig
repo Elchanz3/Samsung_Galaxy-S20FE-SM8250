@@ -506,7 +506,6 @@ config RADIO_ZOLTRIX_PORT
 
 endif # V4L_RADIO_ISA_DRIVERS
 
-<<<<<<< HEAD
 config I2C_RTC6226_QCA
 	tristate "Richwave RTC6226 FM Radio Receiver support with I2C for QCA"
 	depends on I2C && VIDEO_V4L2
@@ -520,6 +519,4 @@ config I2C_RTC6226_QCA
 	  To compile this driver as a module, choose M here: the
 	  module will be called radio-i2c-RTC6226_QCA.
 
-=======
->>>>>>> rebase
 endif # RADIO_ADAPTERS

@@ -103,10 +103,6 @@ int mtk_vcodec_init_dec_pm(struct mtk_vcodec_dev *mtkdev)
 void mtk_vcodec_release_dec_pm(struct mtk_vcodec_dev *dev)
 {
 	pm_runtime_disable(dev->pm.dev);
-<<<<<<< HEAD
-=======
-	put_device(dev->pm.larbvdec);
->>>>>>> rebase
 }
 
 void mtk_vcodec_dec_pw_on(struct mtk_vcodec_pm *pm)

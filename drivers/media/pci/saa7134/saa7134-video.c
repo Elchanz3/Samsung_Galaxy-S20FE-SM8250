@@ -1202,11 +1202,7 @@ static int video_release(struct file *file)
 
 	saa_call_all(dev, tuner, standby);
 	if (vdev->vfl_type == VFL_TYPE_RADIO)
-<<<<<<< HEAD
 		saa_call_all(dev, core, ioctl, SAA6588_CMD_CLOSE, &cmd);
-=======
-		saa_call_all(dev, core, command, SAA6588_CMD_CLOSE, &cmd);
->>>>>>> rebase
 	mutex_unlock(&dev->lock);
 
 	return 0;
@@ -1225,11 +1221,7 @@ static ssize_t radio_read(struct file *file, char __user *data,
 	cmd.result = -ENODEV;
 
 	mutex_lock(&dev->lock);
-<<<<<<< HEAD
 	saa_call_all(dev, core, ioctl, SAA6588_CMD_READ, &cmd);
-=======
-	saa_call_all(dev, core, command, SAA6588_CMD_READ, &cmd);
->>>>>>> rebase
 	mutex_unlock(&dev->lock);
 
 	return cmd.result;
@@ -1245,11 +1237,7 @@ static __poll_t radio_poll(struct file *file, poll_table *wait)
 	cmd.event_list = wait;
 	cmd.poll_mask = 0;
 	mutex_lock(&dev->lock);
-<<<<<<< HEAD
 	saa_call_all(dev, core, ioctl, SAA6588_CMD_POLL, &cmd);
-=======
-	saa_call_all(dev, core, command, SAA6588_CMD_POLL, &cmd);
->>>>>>> rebase
 	mutex_unlock(&dev->lock);
 
 	return rc | cmd.poll_mask;

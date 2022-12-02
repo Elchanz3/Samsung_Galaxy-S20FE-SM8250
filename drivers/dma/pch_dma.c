@@ -873,10 +873,6 @@ static int pch_dma_probe(struct pci_dev *pdev,
 	}
 
 	pci_set_master(pdev);
-<<<<<<< HEAD
-=======
-	pd->dma.dev = &pdev->dev;
->>>>>>> rebase
 
 	err = request_irq(pdev->irq, pd_irq, IRQF_SHARED, DRV_NAME, pd);
 	if (err) {
@@ -892,10 +888,7 @@ static int pch_dma_probe(struct pci_dev *pdev,
 		goto err_free_irq;
 	}
 
-<<<<<<< HEAD
 	pd->dma.dev = &pdev->dev;
-=======
->>>>>>> rebase
 
 	INIT_LIST_HEAD(&pd->dma.channels);
 
@@ -979,10 +972,7 @@ static void pch_dma_remove(struct pci_dev *pdev)
 }
 
 /* PCI Device ID of DMA device */
-<<<<<<< HEAD
 #define PCI_VENDOR_ID_ROHM             0x10DB
-=======
->>>>>>> rebase
 #define PCI_DEVICE_ID_EG20T_PCH_DMA_8CH        0x8810
 #define PCI_DEVICE_ID_EG20T_PCH_DMA_4CH        0x8815
 #define PCI_DEVICE_ID_ML7213_DMA1_8CH	0x8026

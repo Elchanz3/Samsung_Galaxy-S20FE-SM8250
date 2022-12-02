@@ -21,10 +21,6 @@
 
 #include <asm/msr.h>
 #include <asm/cpufeature.h>
-<<<<<<< HEAD
-=======
-#include <asm/cpu_device_id.h>
->>>>>>> rebase
 
 #include "cpufreq_ondemand.h"
 

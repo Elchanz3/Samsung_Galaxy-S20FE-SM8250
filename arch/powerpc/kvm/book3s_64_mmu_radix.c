@@ -171,17 +171,7 @@ static struct kmem_cache *kvm_pmd_cache;
 
 static pte_t *kvmppc_pte_alloc(void)
 {
-<<<<<<< HEAD
 	return kmem_cache_alloc(kvm_pte_cache, GFP_KERNEL);
-=======
-	pte_t *pte;
-
-	pte = kmem_cache_alloc(kvm_pte_cache, GFP_KERNEL);
-	/* pmd_populate() will only reference _pa(pte). */
-	kmemleak_ignore(pte);
-
-	return pte;
->>>>>>> rebase
 }
 
 static void kvmppc_pte_free(pte_t *ptep)
@@ -197,17 +187,7 @@ static inline int pmd_is_leaf(pmd_t pmd)
 
 static pmd_t *kvmppc_pmd_alloc(void)
 {
-<<<<<<< HEAD
 	return kmem_cache_alloc(kvm_pmd_cache, GFP_KERNEL);
-=======
-	pmd_t *pmd;
-
-	pmd = kmem_cache_alloc(kvm_pmd_cache, GFP_KERNEL);
-	/* pud_populate() will only reference _pa(pmd). */
-	kmemleak_ignore(pmd);
-
-	return pmd;
->>>>>>> rebase
 }
 
 static void kvmppc_pmd_free(pmd_t *pmdp)

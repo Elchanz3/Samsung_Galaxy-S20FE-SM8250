@@ -1928,13 +1928,6 @@ static netdev_tx_t mpi_start_xmit(struct sk_buff *skb,
 		airo_print_err(dev->name, "%s: skb == NULL!",__func__);
 		return NETDEV_TX_OK;
 	}
-<<<<<<< HEAD
-=======
-	if (skb_padto(skb, ETH_ZLEN)) {
-		dev->stats.tx_dropped++;
-		return NETDEV_TX_OK;
-	}
->>>>>>> rebase
 	npacks = skb_queue_len (&ai->txq);
 
 	if (npacks >= MAXTXQ - 1) {
@@ -2137,13 +2130,6 @@ static netdev_tx_t airo_start_xmit(struct sk_buff *skb,
 		airo_print_err(dev->name, "%s: skb == NULL!", __func__);
 		return NETDEV_TX_OK;
 	}
-<<<<<<< HEAD
-=======
-	if (skb_padto(skb, ETH_ZLEN)) {
-		dev->stats.tx_dropped++;
-		return NETDEV_TX_OK;
-	}
->>>>>>> rebase
 
 	/* Find a vacant FID */
 	for( i = 0; i < MAX_FIDS / 2 && (fids[i] & 0xffff0000); i++ );
@@ -2218,13 +2204,6 @@ static netdev_tx_t airo_start_xmit11(struct sk_buff *skb,
 		airo_print_err(dev->name, "%s: skb == NULL!", __func__);
 		return NETDEV_TX_OK;
 	}
-<<<<<<< HEAD
-=======
-	if (skb_padto(skb, ETH_ZLEN)) {
-		dev->stats.tx_dropped++;
-		return NETDEV_TX_OK;
-	}
->>>>>>> rebase
 
 	/* Find a vacant FID */
 	for( i = MAX_FIDS / 2; i < MAX_FIDS && (fids[i] & 0xffff0000); i++ );

@@ -481,32 +481,6 @@ static noinline void __init copy_user_test(void)
 	kfree(kmem);
 }
 
-<<<<<<< HEAD
-=======
-static noinline void __init use_after_scope_test(void)
-{
-	volatile char *volatile p;
-
-	pr_info("use-after-scope on int\n");
-	{
-		int local = 0;
-
-		p = (char *)&local;
-	}
-	p[0] = 1;
-	p[3] = 1;
-
-	pr_info("use-after-scope on array\n");
-	{
-		char local[1024] = {0};
-
-		p = local;
-	}
-	p[0] = 1;
-	p[1023] = 1;
-}
-
->>>>>>> rebase
 static noinline void __init kasan_alloca_oob_left(void)
 {
 	volatile int i = 10;
@@ -583,7 +557,6 @@ static noinline void __init kmem_cache_invalid_free(void)
 	kmem_cache_destroy(cache);
 }
 
-<<<<<<< HEAD
 static noinline void __init kasan_memchr(void)
 {
 	char *ptr;
@@ -651,8 +624,6 @@ static noinline void __init kasan_strings(void)
 	strnlen(ptr, 1);
 }
 
-=======
->>>>>>> rebase
 static int __init kmalloc_tests_init(void)
 {
 	/*
@@ -689,17 +660,11 @@ static int __init kmalloc_tests_init(void)
 	kasan_alloca_oob_right();
 	ksize_unpoisons_memory();
 	copy_user_test();
-<<<<<<< HEAD
 	kmem_cache_double_free();
 	kmem_cache_invalid_free();
 	kasan_memchr();
 	kasan_memcmp();
 	kasan_strings();
-=======
-	use_after_scope_test();
-	kmem_cache_double_free();
-	kmem_cache_invalid_free();
->>>>>>> rebase
 
 	kasan_restore_multi_shot(multishot);
 

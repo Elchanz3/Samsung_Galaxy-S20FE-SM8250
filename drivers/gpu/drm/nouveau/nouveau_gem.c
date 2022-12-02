@@ -46,15 +46,8 @@ nouveau_gem_object_del(struct drm_gem_object *gem)
 	int ret;
 
 	ret = pm_runtime_get_sync(dev);
-<<<<<<< HEAD
 	if (WARN_ON(ret < 0 && ret != -EACCES))
 		return;
-=======
-	if (WARN_ON(ret < 0 && ret != -EACCES)) {
-		pm_runtime_put_autosuspend(dev);
-		return;
-	}
->>>>>>> rebase
 
 	if (gem->import_attach)
 		drm_prime_gem_destroy(gem, nvbo->bo.sg);
@@ -87,15 +80,8 @@ nouveau_gem_object_open(struct drm_gem_object *gem, struct drm_file *file_priv)
 		return ret;
 
 	ret = pm_runtime_get_sync(dev);
-<<<<<<< HEAD
 	if (ret < 0 && ret != -EACCES)
 		goto out;
-=======
-	if (ret < 0 && ret != -EACCES) {
-		pm_runtime_put_autosuspend(dev);
-		goto out;
-	}
->>>>>>> rebase
 
 	ret = nouveau_vma_new(nvbo, &cli->vmm, &vma);
 	pm_runtime_mark_last_busy(dev);

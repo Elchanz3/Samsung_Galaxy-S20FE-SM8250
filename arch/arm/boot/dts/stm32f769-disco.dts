@@ -74,19 +74,12 @@
 		};
 	};
 
-<<<<<<< HEAD
 	gpio_keys {
 		compatible = "gpio-keys";
 		#address-cells = <1>;
 		#size-cells = <0>;
 		autorepeat;
 		button@0 {
-=======
-	gpio-keys {
-		compatible = "gpio-keys";
-		autorepeat;
-		button-0 {
->>>>>>> rebase
 			label = "User";
 			linux,code = <KEY_HOME>;
 			gpios = <&gpioa 0 GPIO_ACTIVE_HIGH>;

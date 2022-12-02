@@ -976,19 +976,11 @@ static void qedi_cleanup_active_cmd_list(struct qedi_conn *qedi_conn)
 {
 	struct qedi_cmd *cmd, *cmd_tmp;
 
-<<<<<<< HEAD
-=======
-	spin_lock(&qedi_conn->list_lock);
->>>>>>> rebase
 	list_for_each_entry_safe(cmd, cmd_tmp, &qedi_conn->active_cmd_list,
 				 io_cmd) {
 		list_del_init(&cmd->io_cmd);
 		qedi_conn->active_cmd_count--;
 	}
-<<<<<<< HEAD
-=======
-	spin_unlock(&qedi_conn->list_lock);
->>>>>>> rebase
 }
 
 static void qedi_ep_disconnect(struct iscsi_endpoint *ep)
@@ -1008,12 +1000,7 @@ static void qedi_ep_disconnect(struct iscsi_endpoint *ep)
 	if (qedi_ep->state == EP_STATE_OFLDCONN_START)
 		goto ep_exit_recover;
 
-<<<<<<< HEAD
 	flush_work(&qedi_ep->offload_work);
-=======
-	if (qedi_ep->state != EP_STATE_OFLDCONN_NONE)
-		flush_work(&qedi_ep->offload_work);
->>>>>>> rebase
 
 	if (qedi_ep->conn) {
 		qedi_conn = qedi_ep->conn;
@@ -1077,12 +1064,6 @@ static void qedi_ep_disconnect(struct iscsi_endpoint *ep)
 		break;
 	}
 
-<<<<<<< HEAD
-=======
-	if (!abrt_conn)
-		wait_delay += qedi->pf_params.iscsi_pf_params.two_msl_timer;
-
->>>>>>> rebase
 	qedi_ep->state = EP_STATE_DISCONN_START;
 	ret = qedi_ops->destroy_conn(qedi->cdev, qedi_ep->handle, abrt_conn);
 	if (ret) {
@@ -1236,13 +1217,6 @@ static int qedi_set_path(struct Scsi_Host *shost, struct iscsi_path *path_data)
 	}
 
 	iscsi_cid = (u32)path_data->handle;
-<<<<<<< HEAD
-=======
-	if (iscsi_cid >= qedi->max_active_conns) {
-		ret = -EINVAL;
-		goto set_path_exit;
-	}
->>>>>>> rebase
 	qedi_ep = qedi->ep_tbl[iscsi_cid];
 	QEDI_INFO(&qedi->dbg_ctx, QEDI_LOG_INFO,
 		  "iscsi_cid=0x%x, qedi_ep=%p\n", iscsi_cid, qedi_ep);

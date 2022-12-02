@@ -43,7 +43,6 @@ struct pr_ops;
 struct rq_qos;
 struct blk_queue_stats;
 struct blk_stat_callback;
-<<<<<<< HEAD
 struct keyslot_manager;
 
 #define BLKDEV_MIN_RQ	4
@@ -52,11 +51,6 @@ struct keyslot_manager;
 #else
 #define BLKDEV_MAX_RQ  128     /* Default maximum */
 #endif
-=======
-
-#define BLKDEV_MIN_RQ	4
-#define BLKDEV_MAX_RQ	128	/* Default maximum */
->>>>>>> rebase
 
 /* Must be consistent with blk_mq_poll_stats_bkt() */
 #define BLK_MQ_POLL_STATS_BKTS 16
@@ -67,17 +61,6 @@ struct keyslot_manager;
  */
 #define BLKCG_MAX_POLS		5
 
-<<<<<<< HEAD
-=======
-static inline int blk_validate_block_size(unsigned int bsize)
-{
-	if (bsize < 512 || bsize > PAGE_SIZE || !is_power_of_2(bsize))
-		return -EINVAL;
-
-	return 0;
-}
-
->>>>>>> rebase
 typedef void (rq_end_io_fn)(struct request *, blk_status_t);
 
 #define BLK_RL_SYNCFULL		(1U << 0)
@@ -452,7 +435,6 @@ static inline int blkdev_reset_zones_ioctl(struct block_device *bdev,
 
 #endif /* CONFIG_BLK_DEV_ZONED */
 
-<<<<<<< HEAD
 #ifdef CONFIG_BLK_IO_VOLUME
 struct block_io_volume {
 	int			queuing_rqs;
@@ -533,8 +515,6 @@ void blk_account_tw_io(struct request_queue *q, int opf, int bytes);
 #define blk_account_tw_io(q,opf,bytes)			do {} while (0)
 #endif
 
-=======
->>>>>>> rebase
 struct request_queue {
 	/*
 	 * Together with queue_head for cacheline sharing
@@ -672,11 +652,8 @@ struct request_queue {
 
 	unsigned int		nr_sorted;
 	unsigned int		in_flight[2];
-<<<<<<< HEAD
 	unsigned long long	in_flight_time;
 	ktime_t			in_flight_stamp;
-=======
->>>>>>> rebase
 
 	/*
 	 * Number of active block driver functions for which blk_drain_queue()
@@ -684,13 +661,10 @@ struct request_queue {
 	 * queue_lock internally, e.g. scsi_request_fn().
 	 */
 	unsigned int		request_fn_active;
-<<<<<<< HEAD
 #ifdef CONFIG_BLK_INLINE_ENCRYPTION
 	/* Inline crypto capabilities */
 	struct keyslot_manager *ksm;
 #endif
-=======
->>>>>>> rebase
 
 	unsigned int		rq_timeout;
 	int			poll_nsec;
@@ -741,44 +715,26 @@ struct request_queue {
 	unsigned int		sg_reserved_size;
 	int			node;
 #ifdef CONFIG_BLK_DEV_IO_TRACE
-<<<<<<< HEAD
 	struct blk_trace	*blk_trace;
-=======
-	struct blk_trace __rcu	*blk_trace;
->>>>>>> rebase
 	struct mutex		blk_trace_mutex;
 #endif
 	/*
 	 * for flush operations
 	 */
 	struct blk_flush_queue	*fq;
-<<<<<<< HEAD
 	unsigned long		flush_ios;
-=======
->>>>>>> rebase
 
 	struct list_head	requeue_list;
 	spinlock_t		requeue_lock;
 	struct delayed_work	requeue_work;
 
 	struct mutex		sysfs_lock;
-<<<<<<< HEAD
-=======
-	struct mutex		sysfs_dir_lock;
->>>>>>> rebase
 
 	int			bypass_depth;
 	atomic_t		mq_freeze_depth;
 
-<<<<<<< HEAD
 	bsg_job_fn		*bsg_job_fn;
 	struct bsg_class_device bsg_dev;
-=======
-#if defined(CONFIG_BLK_DEV_BSG)
-	bsg_job_fn		*bsg_job_fn;
-	struct bsg_class_device bsg_dev;
-#endif
->>>>>>> rebase
 
 #ifdef CONFIG_BLK_DEV_THROTTLING
 	/* Throttle data */
@@ -807,7 +763,6 @@ struct request_queue {
 
 #define BLK_MAX_WRITE_HINTS	5
 	u64			write_hints[BLK_MAX_WRITE_HINTS];
-<<<<<<< HEAD
 
 #ifdef CONFIG_BLK_IO_VOLUME
 	struct block_io_volume	blk_io_vol[BLK_MAX_IO_VOLS];
@@ -816,8 +771,6 @@ struct request_queue {
 #ifdef CONFIG_BLK_TURBO_WRITE
 	struct blk_turbo_write	*tw;
 #endif
-=======
->>>>>>> rebase
 };
 
 #define QUEUE_FLAG_QUEUED	0	/* uses generic tag queueing */
@@ -888,10 +841,6 @@ bool blk_queue_flag_test_and_clear(unsigned int flag, struct request_queue *q);
 #define blk_queue_quiesced(q)	test_bit(QUEUE_FLAG_QUIESCED, &(q)->queue_flags)
 #define blk_queue_pm_only(q)	atomic_read(&(q)->pm_only)
 #define blk_queue_fua(q)	test_bit(QUEUE_FLAG_FUA, &(q)->queue_flags)
-<<<<<<< HEAD
-=======
-#define blk_queue_registered(q)	test_bit(QUEUE_FLAG_REGISTERED, &(q)->queue_flags)
->>>>>>> rebase
 
 extern void blk_set_pm_only(struct request_queue *q);
 extern void blk_clear_pm_only(struct request_queue *q);
@@ -1145,10 +1094,7 @@ extern void blk_sync_queue(struct request_queue *q);
 extern void __blk_stop_queue(struct request_queue *q);
 extern void __blk_run_queue(struct request_queue *q);
 extern void __blk_run_queue_uncond(struct request_queue *q);
-<<<<<<< HEAD
 extern void __blk_drain_queue(struct request_queue *q, bool drain_all);
-=======
->>>>>>> rebase
 extern void blk_run_queue(struct request_queue *);
 extern void blk_run_queue_async(struct request_queue *q);
 extern int blk_rq_map_user(struct request_queue *, struct request *,
@@ -1586,11 +1532,7 @@ extern int blk_verify_command(unsigned char *cmd, fmode_t mode);
 enum blk_default_limits {
 	BLK_MAX_SEGMENTS	= 128,
 	BLK_SAFE_MAX_SECTORS	= 255,
-<<<<<<< HEAD
 	BLK_DEF_MAX_SECTORS	= 1024,
-=======
-	BLK_DEF_MAX_SECTORS	= 2560,
->>>>>>> rebase
 	BLK_MAX_SEGMENT_SIZE	= 65536,
 	BLK_SEG_BOUNDARY_MASK	= 0xFFFFFFFFUL,
 };
@@ -2258,7 +2200,6 @@ static inline int blkdev_issue_flush(struct block_device *bdev, gfp_t gfp_mask,
 
 #endif /* CONFIG_BLOCK */
 
-<<<<<<< HEAD
 #if !defined(CONFIG_SAMSUNG_PRODUCT_SHIP)
 #define SIO_PATCH_VERSION(name, major, minor, description)	\
 	static const char *sio_##name##_##major##_##minor __attribute__ ((used, section("sio_patches"))) = (#name " " #major "." #minor " " description)
@@ -2266,6 +2207,4 @@ static inline int blkdev_issue_flush(struct block_device *bdev, gfp_t gfp_mask,
 #define SIO_PATCH_VERSION(name, major, minor, description)
 #endif
 
-=======
->>>>>>> rebase
 #endif

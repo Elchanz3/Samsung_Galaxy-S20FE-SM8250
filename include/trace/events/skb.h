@@ -51,7 +51,6 @@ TRACE_EVENT(consume_skb,
 	TP_printk("skbaddr=%p", __entry->skbaddr)
 );
 
-<<<<<<< HEAD
 TRACE_EVENT(print_skb_gso,
 
 	TP_PROTO(struct sk_buff *skb, __be16 src, __be16 dest),
@@ -79,8 +78,6 @@ TRACE_EVENT(print_skb_gso,
 		be16_to_cpu(__entry->src), be16_to_cpu(__entry->dest))
 );
 
-=======
->>>>>>> rebase
 TRACE_EVENT(skb_copy_datagram_iovec,
 
 	TP_PROTO(const struct sk_buff *skb, int len),

@@ -29,17 +29,11 @@
 #include <linux/syscore_ops.h>
 #include <linux/swait.h>
 #include <linux/ftrace.h>
-<<<<<<< HEAD
 #include <linux/rtc.h>
 #include <trace/events/power.h>
 #include <linux/compiler.h>
 #include <linux/moduleparam.h>
 #include <linux/wakeup_reason.h>
-=======
-#include <trace/events/power.h>
-#include <linux/compiler.h>
-#include <linux/moduleparam.h>
->>>>>>> rebase
 
 #include "power.h"
 
@@ -369,7 +363,6 @@ static int suspend_prepare(suspend_state_t state)
 		goto Finish;
 	}
 
-<<<<<<< HEAD
 #ifndef CONFIG_SUSPEND_SKIP_SYNC
 	trace_suspend_resume(TPS("sync_filesystems"), 0, true);
 	pr_info("Syncing filesystems ... ");
@@ -383,8 +376,6 @@ static int suspend_prepare(suspend_state_t state)
 	trace_suspend_resume(TPS("sync_filesystems"), 0, false);
 #endif
 
-=======
->>>>>>> rebase
 	trace_suspend_resume(TPS("freeze_processes"), 0, true);
 	error = suspend_freeze_processes();
 	trace_suspend_resume(TPS("freeze_processes"), 0, false);
@@ -420,12 +411,8 @@ void __weak arch_suspend_enable_irqs(void)
  */
 static int suspend_enter(suspend_state_t state, bool *wakeup)
 {
-<<<<<<< HEAD
 	char suspend_abort[MAX_SUSPEND_ABORT_LEN];
 	int error, last_dev;
-=======
-	int error;
->>>>>>> rebase
 
 	error = platform_suspend_prepare(state);
 	if (error)
@@ -433,15 +420,11 @@ static int suspend_enter(suspend_state_t state, bool *wakeup)
 
 	error = dpm_suspend_late(PMSG_SUSPEND);
 	if (error) {
-<<<<<<< HEAD
 		last_dev = suspend_stats.last_failed_dev + REC_FAILED_NUM - 1;
 		last_dev %= REC_FAILED_NUM;
 		pr_err("late suspend of devices failed\n");
 		log_suspend_abort_reason("%s device failed to power down",
 			suspend_stats.failed_devs[last_dev]);
-=======
-		pr_err("late suspend of devices failed\n");
->>>>>>> rebase
 		goto Platform_finish;
 	}
 	error = platform_suspend_prepare_late(state);
@@ -455,15 +438,11 @@ static int suspend_enter(suspend_state_t state, bool *wakeup)
 
 	error = dpm_suspend_noirq(PMSG_SUSPEND);
 	if (error) {
-<<<<<<< HEAD
 		last_dev = suspend_stats.last_failed_dev + REC_FAILED_NUM - 1;
 		last_dev %= REC_FAILED_NUM;
 		pr_err("noirq suspend of devices failed\n");
 		log_suspend_abort_reason("noirq suspend of %s device failed",
 			suspend_stats.failed_devs[last_dev]);
-=======
-		pr_err("noirq suspend of devices failed\n");
->>>>>>> rebase
 		goto Platform_early_resume;
 	}
 	error = platform_suspend_prepare_noirq(state);
@@ -474,15 +453,10 @@ static int suspend_enter(suspend_state_t state, bool *wakeup)
 		goto Platform_wake;
 
 	error = disable_nonboot_cpus();
-<<<<<<< HEAD
 	if (error || suspend_test(TEST_CPUS)) {
 		log_suspend_abort_reason("Disabling non-boot cpus failed");
 		goto Enable_cpus;
 	}
-=======
-	if (error || suspend_test(TEST_CPUS))
-		goto Enable_cpus;
->>>>>>> rebase
 
 	arch_suspend_disable_irqs();
 	BUG_ON(!irqs_disabled());
@@ -499,12 +473,9 @@ static int suspend_enter(suspend_state_t state, bool *wakeup)
 			trace_suspend_resume(TPS("machine_suspend"),
 				state, false);
 		} else if (*wakeup) {
-<<<<<<< HEAD
 			pm_get_active_wakeup_sources(suspend_abort,
 				MAX_SUSPEND_ABORT_LEN);
 			log_suspend_abort_reason(suspend_abort);
-=======
->>>>>>> rebase
 			error = -EBUSY;
 		}
 		syscore_resume();
@@ -539,11 +510,7 @@ static int suspend_enter(suspend_state_t state, bool *wakeup)
  */
 int suspend_devices_and_enter(suspend_state_t state)
 {
-<<<<<<< HEAD
 	int error, last_dev;
-=======
-	int error;
->>>>>>> rebase
 	bool wakeup = false;
 
 	if (!sleep_state_supported(state))
@@ -559,15 +526,11 @@ int suspend_devices_and_enter(suspend_state_t state)
 	suspend_test_start();
 	error = dpm_suspend_start(PMSG_SUSPEND);
 	if (error) {
-<<<<<<< HEAD
 		last_dev = suspend_stats.last_failed_dev + REC_FAILED_NUM - 1;
 		last_dev %= REC_FAILED_NUM;
 		pr_err("Some devices failed to suspend, or early wake event detected\n");
 		log_suspend_abort_reason("%s device failed to suspend, or early wake event detected",
 			suspend_stats.failed_devs[last_dev]);
-=======
-		pr_err("Some devices failed to suspend, or early wake event detected\n");
->>>>>>> rebase
 		goto Recover_platform;
 	}
 	suspend_test_finish("suspend devices");
@@ -638,19 +601,7 @@ static int enter_state(suspend_state_t state)
 	if (state == PM_SUSPEND_TO_IDLE)
 		s2idle_begin();
 
-<<<<<<< HEAD
 	pr_info("Preparing system for sleep (%s)\n", mem_sleep_labels[state]);
-=======
-#ifndef CONFIG_SUSPEND_SKIP_SYNC
-	trace_suspend_resume(TPS("sync_filesystems"), 0, true);
-	pr_info("Syncing filesystems ... ");
-	ksys_sync();
-	pr_cont("done.\n");
-	trace_suspend_resume(TPS("sync_filesystems"), 0, false);
-#endif
-
-	pm_pr_dbg("Preparing system for sleep (%s)\n", mem_sleep_labels[state]);
->>>>>>> rebase
 	pm_suspend_clear_flags();
 	error = suspend_prepare(state);
 	if (error)
@@ -660,29 +611,20 @@ static int enter_state(suspend_state_t state)
 		goto Finish;
 
 	trace_suspend_resume(TPS("suspend_enter"), state, false);
-<<<<<<< HEAD
 	pr_info("Suspending system (%s)\n", mem_sleep_labels[state]);
-=======
-	pm_pr_dbg("Suspending system (%s)\n", mem_sleep_labels[state]);
->>>>>>> rebase
 	pm_restrict_gfp_mask();
 	error = suspend_devices_and_enter(state);
 	pm_restore_gfp_mask();
 
  Finish:
 	events_check_enabled = false;
-<<<<<<< HEAD
 	pr_info("Finishing wakeup.\n");
-=======
-	pm_pr_dbg("Finishing wakeup.\n");
->>>>>>> rebase
 	suspend_finish();
  Unlock:
 	mutex_unlock(&system_transition_mutex);
 	return error;
 }
 
-<<<<<<< HEAD
 static void pm_suspend_marker(char *annotation)
 {
 	struct timespec ts;
@@ -695,8 +637,6 @@ static void pm_suspend_marker(char *annotation)
 		tm.tm_hour, tm.tm_min, tm.tm_sec, ts.tv_nsec);
 }
 
-=======
->>>>>>> rebase
 /**
  * pm_suspend - Externally visible function for suspending the system.
  * @state: System sleep state to enter.
@@ -711,11 +651,7 @@ int pm_suspend(suspend_state_t state)
 	if (state <= PM_SUSPEND_ON || state >= PM_SUSPEND_MAX)
 		return -EINVAL;
 
-<<<<<<< HEAD
 	pm_suspend_marker("entry");
-=======
-	pr_info("suspend entry (%s)\n", mem_sleep_labels[state]);
->>>>>>> rebase
 	error = enter_state(state);
 	if (error) {
 		suspend_stats.fail++;
@@ -723,11 +659,7 @@ int pm_suspend(suspend_state_t state)
 	} else {
 		suspend_stats.success++;
 	}
-<<<<<<< HEAD
 	pm_suspend_marker("exit");
-=======
-	pr_info("suspend exit\n");
->>>>>>> rebase
 	return error;
 }
 EXPORT_SYMBOL(pm_suspend);

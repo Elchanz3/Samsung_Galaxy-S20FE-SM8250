@@ -406,10 +406,7 @@ int __init seg6_hmac_init(void)
 {
 	return seg6_hmac_init_algo();
 }
-<<<<<<< HEAD
 EXPORT_SYMBOL(seg6_hmac_init);
-=======
->>>>>>> rebase
 
 int __net_init seg6_hmac_net_init(struct net *net)
 {
@@ -419,10 +416,7 @@ int __net_init seg6_hmac_net_init(struct net *net)
 
 	return 0;
 }
-<<<<<<< HEAD
 EXPORT_SYMBOL(seg6_hmac_net_init);
-=======
->>>>>>> rebase
 
 void seg6_hmac_exit(void)
 {

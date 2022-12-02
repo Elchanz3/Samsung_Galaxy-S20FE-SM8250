@@ -269,11 +269,7 @@
 &macb1 {
 	status = "okay";
 
-<<<<<<< HEAD
 	phy-mode = "rgmii";
-=======
-	phy-mode = "rmii";
->>>>>>> rebase
 
 	#address-cells = <1>;
 	#size-cells = <0>;

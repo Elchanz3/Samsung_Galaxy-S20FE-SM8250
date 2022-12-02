@@ -67,13 +67,10 @@
 #include <uapi/linux/module.h>
 #include "module-internal.h"
 
-<<<<<<< HEAD
 #ifdef CONFIG_SEC_DEBUG
 #include <linux/sec_debug.h>
 #endif
 
-=======
->>>>>>> rebase
 #define CREATE_TRACE_POINTS
 #include <trace/events/module.h>
 
@@ -81,7 +78,6 @@
 #define ARCH_SHF_SMALL 0
 #endif
 
-<<<<<<< HEAD
 #ifdef CONFIG_UH_LKM_BLOCK
 /* Return codes for lkm_block */
 #define	RET_UH_LKM_OK					0x00000000
@@ -91,8 +87,6 @@
 #define	RET_LKM_BLOCK_SUCCESS				0
 #define	RET_LKM_BLOCK_FAIL				-1
 #endif
-=======
->>>>>>> rebase
 /*
  * Modules' sections will be aligned on page boundaries
  * to ensure complete separation of code and data
@@ -176,7 +170,6 @@ static struct mod_tree_root {
 #define module_addr_min mod_tree.addr_min
 #define module_addr_max mod_tree.addr_max
 
-<<<<<<< HEAD
 #ifdef CONFIG_SEC_DEBUG_MODULE_INFO
 void sec_debug_coreinfo_module(void)
 {
@@ -200,8 +193,6 @@ void sec_debug_coreinfo_module(void)
 }
 #endif
 
-=======
->>>>>>> rebase
 static noinline void __mod_tree_insert(struct mod_tree_node *node)
 {
 	latch_tree_insert(&node->node, &mod_tree.root, &mod_tree_ops);
@@ -313,24 +304,9 @@ static void module_assert_mutex_or_preempt(void)
 #endif
 }
 
-<<<<<<< HEAD
 static bool sig_enforce = IS_ENABLED(CONFIG_MODULE_SIG_FORCE);
 module_param(sig_enforce, bool_enable_only, 0644);
 
-=======
-#ifdef CONFIG_MODULE_SIG
-static bool sig_enforce = IS_ENABLED(CONFIG_MODULE_SIG_FORCE);
-module_param(sig_enforce, bool_enable_only, 0644);
-
-void set_module_sig_enforced(void)
-{
-	sig_enforce = true;
-}
-#else
-#define sig_enforce false
-#endif
-
->>>>>>> rebase
 /*
  * Export sig_enforce kernel cmdline parameter to allow other subsystems rely
  * on that instead of directly to CONFIG_MODULE_SIG_FORCE config.
@@ -475,11 +451,7 @@ static bool each_symbol_in_section(const struct symsearch *arr,
 }
 
 /* Returns true as soon as fn returns true, otherwise false. */
-<<<<<<< HEAD
 bool each_symbol_section(bool (*fn)(const struct symsearch *arr,
-=======
-static bool each_symbol_section(bool (*fn)(const struct symsearch *arr,
->>>>>>> rebase
 				    struct module *owner,
 				    void *data),
 			 void *data)
@@ -540,10 +512,7 @@ static bool each_symbol_section(bool (*fn)(const struct symsearch *arr,
 	}
 	return false;
 }
-<<<<<<< HEAD
 EXPORT_SYMBOL_GPL(each_symbol_section);
-=======
->>>>>>> rebase
 
 struct find_symbol_arg {
 	/* Input */
@@ -555,10 +524,6 @@ struct find_symbol_arg {
 	struct module *owner;
 	const s32 *crc;
 	const struct kernel_symbol *sym;
-<<<<<<< HEAD
-=======
-	enum mod_license license;
->>>>>>> rebase
 };
 
 static bool check_symbol(const struct symsearch *syms,
@@ -568,15 +533,9 @@ static bool check_symbol(const struct symsearch *syms,
 	struct find_symbol_arg *fsa = data;
 
 	if (!fsa->gplok) {
-<<<<<<< HEAD
 		if (syms->licence == GPL_ONLY)
 			return false;
 		if (syms->licence == WILL_BE_GPL_ONLY && fsa->warn) {
-=======
-		if (syms->license == GPL_ONLY)
-			return false;
-		if (syms->license == WILL_BE_GPL_ONLY && fsa->warn) {
->>>>>>> rebase
 			pr_warn("Symbol %s is being used by a non-GPL module, "
 				"which will not be allowed in the future\n",
 				fsa->name);
@@ -598,10 +557,6 @@ static bool check_symbol(const struct symsearch *syms,
 	fsa->owner = owner;
 	fsa->crc = symversion(syms->crcs, symnum);
 	fsa->sym = &syms->start[symnum];
-<<<<<<< HEAD
-=======
-	fsa->license = syms->license;
->>>>>>> rebase
 	return true;
 }
 
@@ -649,16 +604,9 @@ static bool find_symbol_in_section(const struct symsearch *syms,
 
 /* Find a symbol and return it, along with, (optional) crc and
  * (optional) module which owns it.  Needs preempt disabled or module_mutex. */
-<<<<<<< HEAD
 const struct kernel_symbol *find_symbol(const char *name,
 					struct module **owner,
 					const s32 **crc,
-=======
-static const struct kernel_symbol *find_symbol(const char *name,
-					struct module **owner,
-					const s32 **crc,
-					enum mod_license *license,
->>>>>>> rebase
 					bool gplok,
 					bool warn)
 {
@@ -673,21 +621,13 @@ static const struct kernel_symbol *find_symbol(const char *name,
 			*owner = fsa.owner;
 		if (crc)
 			*crc = fsa.crc;
-<<<<<<< HEAD
-=======
-		if (license)
-			*license = fsa.license;
->>>>>>> rebase
 		return fsa.sym;
 	}
 
 	pr_debug("Failed to find symbol %s\n", name);
 	return NULL;
 }
-<<<<<<< HEAD
 EXPORT_SYMBOL_GPL(find_symbol);
-=======
->>>>>>> rebase
 
 /*
  * Search for module by name: must hold module_mutex (or preempt disabled
@@ -947,11 +887,7 @@ static int add_module_usage(struct module *a, struct module *b)
 }
 
 /* Module a uses b: caller needs module_mutex() */
-<<<<<<< HEAD
 int ref_module(struct module *a, struct module *b)
-=======
-static int ref_module(struct module *a, struct module *b)
->>>>>>> rebase
 {
 	int err;
 
@@ -970,10 +906,7 @@ static int ref_module(struct module *a, struct module *b)
 	}
 	return 0;
 }
-<<<<<<< HEAD
 EXPORT_SYMBOL_GPL(ref_module);
-=======
->>>>>>> rebase
 
 /* Clear the unload stuff of the module. */
 static void module_unload_free(struct module *mod)
@@ -1162,11 +1095,7 @@ void __symbol_put(const char *symbol)
 	struct module *owner;
 
 	preempt_disable();
-<<<<<<< HEAD
 	if (!find_symbol(symbol, &owner, NULL, true, false))
-=======
-	if (!find_symbol(symbol, &owner, NULL, NULL, true, false))
->>>>>>> rebase
 		BUG();
 	module_put(owner);
 	preempt_enable();
@@ -1258,18 +1187,11 @@ static inline void module_unload_free(struct module *mod)
 {
 }
 
-<<<<<<< HEAD
 int ref_module(struct module *a, struct module *b)
 {
 	return strong_try_module_get(b);
 }
 EXPORT_SYMBOL_GPL(ref_module);
-=======
-static int ref_module(struct module *a, struct module *b)
-{
-	return strong_try_module_get(b);
-}
->>>>>>> rebase
 
 static inline int module_unload_init(struct module *mod)
 {
@@ -1452,11 +1374,7 @@ static inline int check_modstruct_version(const struct load_info *info,
 	 * locking is necessary -- use preempt_disable() to placate lockdep.
 	 */
 	preempt_disable();
-<<<<<<< HEAD
 	if (!find_symbol("module_layout", NULL, &crc, true, false)) {
-=======
-	if (!find_symbol("module_layout", NULL, &crc, NULL, true, false)) {
->>>>>>> rebase
 		preempt_enable();
 		BUG();
 	}
@@ -1496,28 +1414,6 @@ static inline int same_magic(const char *amagic, const char *bmagic,
 }
 #endif /* CONFIG_MODVERSIONS */
 
-<<<<<<< HEAD
-=======
-static bool inherit_taint(struct module *mod, struct module *owner)
-{
-	if (!owner || !test_bit(TAINT_PROPRIETARY_MODULE, &owner->taints))
-		return true;
-
-	if (mod->using_gplonly_symbols) {
-		pr_err("%s: module using GPL-only symbols uses symbols from proprietary module %s.\n",
-			mod->name, owner->name);
-		return false;
-	}
-
-	if (!test_bit(TAINT_PROPRIETARY_MODULE, &mod->taints)) {
-		pr_warn("%s: module uses symbols from proprietary module %s, inheriting taint.\n",
-			mod->name, owner->name);
-		set_bit(TAINT_PROPRIETARY_MODULE, &mod->taints);
-	}
-	return true;
-}
-
->>>>>>> rebase
 /* Resolve a symbol for this module.  I.e. if we find one, record usage. */
 static const struct kernel_symbol *resolve_symbol(struct module *mod,
 						  const struct load_info *info,
@@ -1527,10 +1423,6 @@ static const struct kernel_symbol *resolve_symbol(struct module *mod,
 	struct module *owner;
 	const struct kernel_symbol *sym;
 	const s32 *crc;
-<<<<<<< HEAD
-=======
-	enum mod_license license;
->>>>>>> rebase
 	int err;
 
 	/*
@@ -1540,26 +1432,11 @@ static const struct kernel_symbol *resolve_symbol(struct module *mod,
 	 */
 	sched_annotate_sleep();
 	mutex_lock(&module_mutex);
-<<<<<<< HEAD
 	sym = find_symbol(name, &owner, &crc,
-=======
-	sym = find_symbol(name, &owner, &crc, &license,
->>>>>>> rebase
 			  !(mod->taints & (1 << TAINT_PROPRIETARY_MODULE)), true);
 	if (!sym)
 		goto unlock;
 
-<<<<<<< HEAD
-=======
-	if (license == GPL_ONLY)
-		mod->using_gplonly_symbols = true;
-
-	if (!inherit_taint(mod, owner)) {
-		sym = NULL;
-		goto getname;
-	}
-
->>>>>>> rebase
 	if (!check_version(info, name, mod, crc)) {
 		sym = ERR_PTR(-EINVAL);
 		goto getname;
@@ -1610,12 +1487,8 @@ static inline bool sect_empty(const Elf_Shdr *sect)
 }
 
 struct module_sect_attr {
-<<<<<<< HEAD
 	struct module_attribute mattr;
 	char *name;
-=======
-	struct bin_attribute battr;
->>>>>>> rebase
 	unsigned long address;
 };
 
@@ -1625,7 +1498,6 @@ struct module_sect_attrs {
 	struct module_sect_attr attrs[0];
 };
 
-<<<<<<< HEAD
 static ssize_t module_sect_show(struct module_attribute *mattr,
 				struct module_kobject *mk, char *buf)
 {
@@ -1633,36 +1505,6 @@ static ssize_t module_sect_show(struct module_attribute *mattr,
 		container_of(mattr, struct module_sect_attr, mattr);
 	return sprintf(buf, "0x%px\n", kptr_restrict < 2 ?
 		       (void *)sattr->address : NULL);
-=======
-#define MODULE_SECT_READ_SIZE (3 /* "0x", "\n" */ + (BITS_PER_LONG / 4))
-static ssize_t module_sect_read(struct file *file, struct kobject *kobj,
-				struct bin_attribute *battr,
-				char *buf, loff_t pos, size_t count)
-{
-	struct module_sect_attr *sattr =
-		container_of(battr, struct module_sect_attr, battr);
-	char bounce[MODULE_SECT_READ_SIZE + 1];
-	size_t wrote;
-
-	if (pos != 0)
-		return -EINVAL;
-
-	/*
-	 * Since we're a binary read handler, we must account for the
-	 * trailing NUL byte that sprintf will write: if "buf" is
-	 * too small to hold the NUL, or the NUL is exactly the last
-	 * byte, the read will look like it got truncated by one byte.
-	 * Since there is no way to ask sprintf nicely to not write
-	 * the NUL, we have to use a bounce buffer.
-	 */
-	wrote = scnprintf(bounce, sizeof(bounce), "0x%px\n",
-			 kallsyms_show_value(file->f_cred)
-				? (void *)sattr->address : NULL);
-	count = min(count, wrote);
-	memcpy(buf, bounce, count);
-
-	return count;
->>>>>>> rebase
 }
 
 static void free_sect_attrs(struct module_sect_attrs *sect_attrs)
@@ -1670,11 +1512,7 @@ static void free_sect_attrs(struct module_sect_attrs *sect_attrs)
 	unsigned int section;
 
 	for (section = 0; section < sect_attrs->nsections; section++)
-<<<<<<< HEAD
 		kfree(sect_attrs->attrs[section].name);
-=======
-		kfree(sect_attrs->attrs[section].battr.attr.name);
->>>>>>> rebase
 	kfree(sect_attrs);
 }
 
@@ -1683,50 +1521,31 @@ static void add_sect_attrs(struct module *mod, const struct load_info *info)
 	unsigned int nloaded = 0, i, size[2];
 	struct module_sect_attrs *sect_attrs;
 	struct module_sect_attr *sattr;
-<<<<<<< HEAD
 	struct attribute **gattr;
-=======
-	struct bin_attribute **gattr;
->>>>>>> rebase
 
 	/* Count loaded sections and allocate structures */
 	for (i = 0; i < info->hdr->e_shnum; i++)
 		if (!sect_empty(&info->sechdrs[i]))
 			nloaded++;
-<<<<<<< HEAD
 	size[0] = ALIGN(sizeof(*sect_attrs)
 			+ nloaded * sizeof(sect_attrs->attrs[0]),
 			sizeof(sect_attrs->grp.attrs[0]));
 	size[1] = (nloaded + 1) * sizeof(sect_attrs->grp.attrs[0]);
-=======
-	size[0] = ALIGN(struct_size(sect_attrs, attrs, nloaded),
-			sizeof(sect_attrs->grp.bin_attrs[0]));
-	size[1] = (nloaded + 1) * sizeof(sect_attrs->grp.bin_attrs[0]);
->>>>>>> rebase
 	sect_attrs = kzalloc(size[0] + size[1], GFP_KERNEL);
 	if (sect_attrs == NULL)
 		return;
 
 	/* Setup section attributes. */
 	sect_attrs->grp.name = "sections";
-<<<<<<< HEAD
 	sect_attrs->grp.attrs = (void *)sect_attrs + size[0];
 
 	sect_attrs->nsections = 0;
 	sattr = &sect_attrs->attrs[0];
 	gattr = &sect_attrs->grp.attrs[0];
-=======
-	sect_attrs->grp.bin_attrs = (void *)sect_attrs + size[0];
-
-	sect_attrs->nsections = 0;
-	sattr = &sect_attrs->attrs[0];
-	gattr = &sect_attrs->grp.bin_attrs[0];
->>>>>>> rebase
 	for (i = 0; i < info->hdr->e_shnum; i++) {
 		Elf_Shdr *sec = &info->sechdrs[i];
 		if (sect_empty(sec))
 			continue;
-<<<<<<< HEAD
 		sattr->address = sec->sh_addr;
 		sattr->name = kstrdup(info->secstrings + sec->sh_name,
 					GFP_KERNEL);
@@ -1739,19 +1558,6 @@ static void add_sect_attrs(struct module *mod, const struct load_info *info)
 		sattr->mattr.attr.name = sattr->name;
 		sattr->mattr.attr.mode = S_IRUSR;
 		*(gattr++) = &(sattr++)->mattr.attr;
-=======
-		sysfs_bin_attr_init(&sattr->battr);
-		sattr->address = sec->sh_addr;
-		sattr->battr.attr.name =
-			kstrdup(info->secstrings + sec->sh_name, GFP_KERNEL);
-		if (sattr->battr.attr.name == NULL)
-			goto out;
-		sect_attrs->nsections++;
-		sattr->battr.read = module_sect_read;
-		sattr->battr.size = MODULE_SECT_READ_SIZE;
-		sattr->battr.attr.mode = 0400;
-		*(gattr++) = &(sattr++)->battr;
->>>>>>> rebase
 	}
 	*gattr = NULL;
 
@@ -1841,11 +1647,7 @@ static void add_notes_attrs(struct module *mod, const struct load_info *info)
 			continue;
 		if (info->sechdrs[i].sh_type == SHT_NOTE) {
 			sysfs_bin_attr_init(nattr);
-<<<<<<< HEAD
 			nattr->attr.name = mod->sect_attrs->attrs[loaded].name;
-=======
-			nattr->attr.name = mod->sect_attrs->attrs[loaded].battr.attr.name;
->>>>>>> rebase
 			nattr->attr.mode = S_IRUGO;
 			nattr->size = info->sechdrs[i].sh_size;
 			nattr->private = (void *) info->sechdrs[i].sh_addr;
@@ -2022,10 +1824,7 @@ static int mod_sysfs_init(struct module *mod)
 	if (err)
 		mod_kobject_put(mod);
 
-<<<<<<< HEAD
 	/* delay uevent until full sysfs population */
-=======
->>>>>>> rebase
 out:
 	return err;
 }
@@ -2062,10 +1861,7 @@ static int mod_sysfs_setup(struct module *mod,
 	add_sect_attrs(mod, info);
 	add_notes_attrs(mod, info);
 
-<<<<<<< HEAD
 	kobject_uevent(&mod->mkobj.kobj, KOBJ_ADD);
-=======
->>>>>>> rebase
 	return 0;
 
 out_unreg_modinfo_attrs:
@@ -2390,11 +2186,8 @@ void __weak module_arch_freeing_init(struct module *mod)
 {
 }
 
-<<<<<<< HEAD
 static void cfi_cleanup(struct module *mod);
 
-=======
->>>>>>> rebase
 /* Free a module, remove from lists, etc. */
 static void free_module(struct module *mod)
 {
@@ -2436,13 +2229,10 @@ static void free_module(struct module *mod)
 
 	/* This may be empty, but that's OK */
 	disable_ro_nx(&mod->init_layout);
-<<<<<<< HEAD
 
 	/* Clean up CFI for the module. */
 	cfi_cleanup(mod);
 
-=======
->>>>>>> rebase
 	module_arch_freeing_init(mod);
 	module_memfree(mod->init_layout.base);
 	kfree(mod->args);
@@ -2453,13 +2243,10 @@ static void free_module(struct module *mod)
 
 	/* Finally, free the core (containing the module structure) */
 	disable_ro_nx(&mod->core_layout);
-<<<<<<< HEAD
 #ifdef CONFIG_DEBUG_MODULE_LOAD_INFO
 	pr_info("Unloaded %s: module core layout, start: 0x%pK size: 0x%x\n",
 		mod->name, mod->core_layout.base, mod->core_layout.size);
 #endif
-=======
->>>>>>> rebase
 	module_memfree(mod->core_layout.base);
 }
 
@@ -2469,11 +2256,7 @@ void *__symbol_get(const char *symbol)
 	const struct kernel_symbol *sym;
 
 	preempt_disable();
-<<<<<<< HEAD
 	sym = find_symbol(symbol, &owner, NULL, true, true);
-=======
-	sym = find_symbol(symbol, &owner, NULL, NULL, true, true);
->>>>>>> rebase
 	if (sym && strong_try_module_get(owner))
 		sym = NULL;
 	preempt_enable();
@@ -2509,11 +2292,7 @@ static int verify_export_symbols(struct module *mod)
 	for (i = 0; i < ARRAY_SIZE(arr); i++) {
 		for (s = arr[i].sym; s < arr[i].sym + arr[i].num; s++) {
 			if (find_symbol(kernel_symbol_name(s), &owner, NULL,
-<<<<<<< HEAD
 					true, false)) {
-=======
-					NULL, true, false)) {
->>>>>>> rebase
 				pr_err("%s: exports duplicate symbol %s"
 				       " (owned by %s)\n",
 				       mod->name, kernel_symbol_name(s),
@@ -2525,24 +2304,6 @@ static int verify_export_symbols(struct module *mod)
 	return 0;
 }
 
-<<<<<<< HEAD
-=======
-static bool ignore_undef_symbol(Elf_Half emachine, const char *name)
-{
-	/*
-	 * On x86, PIC code and Clang non-PIC code may have call foo@PLT. GNU as
-	 * before 2.37 produces an unreferenced _GLOBAL_OFFSET_TABLE_ on x86-64.
-	 * i386 has a similar problem but may not deserve a fix.
-	 *
-	 * If we ever have to ignore many symbols, consider refactoring the code to
-	 * only warn if referenced by a relocation.
-	 */
-	if (emachine == EM_386 || emachine == EM_X86_64)
-		return !strcmp(name, "_GLOBAL_OFFSET_TABLE_");
-	return false;
-}
-
->>>>>>> rebase
 /* Change all symbols so that st_value encodes the pointer directly. */
 static int simplify_symbols(struct module *mod, const struct load_info *info)
 {
@@ -2588,15 +2349,8 @@ static int simplify_symbols(struct module *mod, const struct load_info *info)
 				break;
 			}
 
-<<<<<<< HEAD
 			/* Ok if weak.  */
 			if (!ksym && ELF_ST_BIND(sym[i].st_info) == STB_WEAK)
-=======
-			/* Ok if weak or ignored.  */
-			if (!ksym &&
-			    (ELF_ST_BIND(sym[i].st_info) == STB_WEAK ||
-			     ignore_undef_symbol(info->hdr->e_machine, name)))
->>>>>>> rebase
 				break;
 
 			ret = PTR_ERR(ksym) ?: -ENOENT;
@@ -3030,7 +2784,6 @@ static void add_kallsyms(struct module *mod, const struct load_info *info)
 }
 #endif /* CONFIG_KALLSYMS */
 
-<<<<<<< HEAD
 #ifdef CONFIG_UH_LKM_BLOCK
 static int lkm_block()
 {
@@ -3038,8 +2791,6 @@ static int lkm_block()
 }
 #endif
 
-=======
->>>>>>> rebase
 static void dynamic_debug_setup(struct module *mod, struct _ddebug *debug, unsigned int num)
 {
 	if (!debug)
@@ -3143,15 +2894,12 @@ static int elf_header_check(struct load_info *info)
 		info->len - info->hdr->e_shoff))
 		return -ENOEXEC;
 
-<<<<<<< HEAD
 #ifdef CONFIG_UH_LKM_BLOCK
 	if (lkm_block() != RET_LKM_BLOCK_SUCCESS) {
 		pr_warn("UH: LKM is not allowed by Samsung security policy.\n");
 		return -ENOEXEC;
 	}
 #endif
-=======
->>>>>>> rebase
 	return 0;
 }
 
@@ -3688,11 +3436,8 @@ int __weak module_finalize(const Elf_Ehdr *hdr,
 	return 0;
 }
 
-<<<<<<< HEAD
 static void cfi_init(struct module *mod);
 
-=======
->>>>>>> rebase
 static int post_relocation(struct module *mod, const struct load_info *info)
 {
 	/* Sort exception table now relocations are done. */
@@ -3705,12 +3450,9 @@ static int post_relocation(struct module *mod, const struct load_info *info)
 	/* Setup kallsyms-specific fields. */
 	add_kallsyms(mod, info);
 
-<<<<<<< HEAD
 	/* Setup CFI for the module. */
 	cfi_init(mod);
 
-=======
->>>>>>> rebase
 	/* Arch-specific module finalizing. */
 	return module_finalize(info->hdr, info->sechdrs, mod);
 }
@@ -3777,15 +3519,12 @@ static noinline int do_init_module(struct module *mod)
 	}
 	freeinit->module_init = mod->init_layout.base;
 
-<<<<<<< HEAD
 	/*
 	 * We want to find out whether @mod uses async during init.  Clear
 	 * PF_USED_ASYNC.  async_schedule*() will set it.
 	 */
 	current->flags &= ~PF_USED_ASYNC;
 
-=======
->>>>>>> rebase
 	do_mod_ctors(mod);
 	/* Start the module */
 	if (mod->init != NULL)
@@ -3806,7 +3545,6 @@ static noinline int do_init_module(struct module *mod)
 	blocking_notifier_call_chain(&module_notify_list,
 				     MODULE_STATE_LIVE, mod);
 
-<<<<<<< HEAD
 	/*
 	 * We need to finish all async code before the module init sequence
 	 * is done.  This has potential to deadlock.  For example, a newly
@@ -3825,20 +3563,6 @@ static noinline int do_init_module(struct module *mod)
 	 * http://thread.gmane.org/gmane.linux.kernel/1420814
 	 */
 	if (!mod->async_probe_requested && (current->flags & PF_USED_ASYNC))
-=======
-	/* Delay uevent until module has finished its init routine */
-	kobject_uevent(&mod->mkobj.kobj, KOBJ_ADD);
-
-	/*
-	 * We need to finish all async code before the module init sequence
-	 * is done. This has potential to deadlock if synchronous module
-	 * loading is requested from async (which is not allowed!).
-	 *
-	 * See commit 0fdff3ec6d87 ("async, kmod: warn on synchronous
-	 * request_module() from async workers") for more details.
-	 */
-	if (!mod->async_probe_requested)
->>>>>>> rebase
 		async_synchronize_full();
 
 	ftrace_free_mem(mod, mod->init_layout.base, mod->init_layout.base +
@@ -4163,10 +3887,6 @@ static int load_module(struct load_info *info, const char __user *uargs,
 				     MODULE_STATE_GOING, mod);
 	klp_module_going(mod);
  bug_cleanup:
-<<<<<<< HEAD
-=======
-	mod->state = MODULE_STATE_GOING;
->>>>>>> rebase
 	/* module_bug_cleanup needs module_mutex protection */
 	mutex_lock(&module_mutex);
 	module_bug_cleanup(mod);
@@ -4501,7 +4221,6 @@ int module_kallsyms_on_each_symbol(int (*fn)(void *, const char *,
 }
 #endif /* CONFIG_KALLSYMS */
 
-<<<<<<< HEAD
 static void cfi_init(struct module *mod)
 {
 #ifdef CONFIG_CFI_CLANG
@@ -4518,8 +4237,6 @@ static void cfi_cleanup(struct module *mod)
 #endif
 }
 
-=======
->>>>>>> rebase
 /* Maximum number of characters written by module_flags() */
 #define MODULE_FLAGS_BUF_SIZE (TAINT_FLAGS_COUNT + 4)
 
@@ -4621,11 +4338,7 @@ static int modules_open(struct inode *inode, struct file *file)
 
 	if (!err) {
 		struct seq_file *m = file->private_data;
-<<<<<<< HEAD
 		m->private = kallsyms_show_value() ? NULL : (void *)8ul;
-=======
-		m->private = kallsyms_show_value(file->f_cred) ? NULL : (void *)8ul;
->>>>>>> rebase
 	}
 
 	return err;
@@ -4715,10 +4428,7 @@ struct module *__module_address(unsigned long addr)
 	}
 	return mod;
 }
-<<<<<<< HEAD
 EXPORT_SYMBOL_GPL(__module_address);
-=======
->>>>>>> rebase
 
 /*
  * is_module_text_address - is this address inside module code?
@@ -4757,10 +4467,7 @@ struct module *__module_text_address(unsigned long addr)
 	}
 	return mod;
 }
-<<<<<<< HEAD
 EXPORT_SYMBOL_GPL(__module_text_address);
-=======
->>>>>>> rebase
 
 /* Don't grab lock, we're oopsing. */
 void print_modules(void)

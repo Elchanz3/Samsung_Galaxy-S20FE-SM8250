@@ -137,10 +137,7 @@ source "drivers/media/platform/am437x/Kconfig"
 source "drivers/media/platform/xilinx/Kconfig"
 source "drivers/media/platform/rcar-vin/Kconfig"
 source "drivers/media/platform/atmel/Kconfig"
-<<<<<<< HEAD
 source "drivers/media/platform/msm/Kconfig"
-=======
->>>>>>> rebase
 
 config VIDEO_TI_CAL
 	tristate "TI CAL (Camera Adaptation Layer) driver"
@@ -155,7 +152,6 @@ config VIDEO_TI_CAL
 	  In TI Technical Reference Manual this module is referred as
 	  Camera Interface Subsystem (CAMSS).
 
-<<<<<<< HEAD
 config VIDEO_V4L2_VIDEOBUF2_CORE
 	tristate "V4L2 Videobuf2 Core"
 	depends on VIDEO_V4L2
@@ -168,8 +164,6 @@ config VIDEO_V4L2_VIDEOBUF2_CORE
 	  So this will enable v4l2 module dependencies
 	  for video.
 
-=======
->>>>>>> rebase
 endif # V4L_PLATFORM_DRIVERS
 
 menuconfig V4L_MEM2MEM_DRIVERS
@@ -549,11 +543,8 @@ if DVB_PLATFORM_DRIVERS
 source "drivers/media/platform/sti/c8sectpfe/Kconfig"
 endif #DVB_PLATFORM_DRIVERS
 
-<<<<<<< HEAD
 source "drivers/media/platform/msm/Kconfig"
 
-=======
->>>>>>> rebase
 menuconfig CEC_PLATFORM_DRIVERS
 	bool "CEC platform devices"
 	depends on MEDIA_CEC_SUPPORT
@@ -665,7 +656,4 @@ config VIDEO_RCAR_DRIF
 	  will be called rcar_drif.
 
 endif # SDR_PLATFORM_DRIVERS
-<<<<<<< HEAD
 source "drivers/media/platform/msm/Kconfig"
-=======
->>>>>>> rebase

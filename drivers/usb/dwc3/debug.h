@@ -12,7 +12,6 @@
 #define __DWC3_DEBUG_H
 
 #include "core.h"
-<<<<<<< HEAD
 #include <linux/ipc_logging.h>
 
 /*
@@ -52,9 +51,6 @@
 #define dbg_log_string(fmt, ...) \
 	ipc_log_string(dwc->dwc_ipc_log_ctxt,\
 			"%s: " fmt, __func__, ##__VA_ARGS__)
-=======
-
->>>>>>> rebase
 /**
  * dwc3_gadget_ep_cmd_string - returns endpoint command string
  * @cmd: command code
@@ -693,7 +689,6 @@ static inline const char *dwc3_gadget_generic_cmd_status_string(int status)
 	}
 }
 
-<<<<<<< HEAD
 void dwc3_dbg_print(struct dwc3 *dwc, u8 ep_num,
 		const char *name, int status, const char *extra);
 void dwc3_dbg_done(struct dwc3 *dwc, u8 ep_num,
@@ -719,16 +714,6 @@ void dwc3_dbg_dma_unmap(struct dwc3 *dwc, u8 ep_num,
 extern void dwc3_debugfs_init(struct dwc3 *);
 extern void dwc3_debugfs_exit(struct dwc3 *);
 #else
-=======
-
-#ifdef CONFIG_DEBUG_FS
-extern void dwc3_debugfs_create_endpoint_dir(struct dwc3_ep *dep);
-extern void dwc3_debugfs_init(struct dwc3 *);
-extern void dwc3_debugfs_exit(struct dwc3 *);
-#else
-static inline void dwc3_debugfs_create_endpoint_dir(struct dwc3_ep *dep)
-{  }
->>>>>>> rebase
 static inline void dwc3_debugfs_init(struct dwc3 *d)
 {  }
 static inline void dwc3_debugfs_exit(struct dwc3 *d)

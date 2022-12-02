@@ -53,11 +53,8 @@ config SND_SOC_ALL_CODECS
 	select SND_SOC_CS35L33 if I2C
 	select SND_SOC_CS35L34 if I2C
 	select SND_SOC_CS35L35 if I2C
-<<<<<<< HEAD
 	select SND_SOC_CS35L41_I2C if I2C
 	select SND_SOC_CS35L41_SPI if SPI_MASTER
-=======
->>>>>>> rebase
 	select SND_SOC_CS42L42 if I2C
 	select SND_SOC_CS42L51_I2C if I2C
 	select SND_SOC_CS42L52 if I2C && INPUT
@@ -282,10 +279,7 @@ config SND_SOC_WM_ADSP
 	default m if SND_SOC_WM5102=m
 	default m if SND_SOC_WM5110=m
 	default m if SND_SOC_WM2200=m
-<<<<<<< HEAD
 	default y if SND_SOC_CS35L41=y
-=======
->>>>>>> rebase
 
 config SND_SOC_AB8500_CODEC
 	tristate
@@ -470,7 +464,6 @@ config SND_SOC_CS35L35
 	tristate "Cirrus Logic CS35L35 CODEC"
 	depends on I2C
 
-<<<<<<< HEAD
 config SND_SOC_CS35L41
 	tristate "Cirrus Logic CS35L41 CODEC"
 	select SND_SOC_WM_ADSP
@@ -483,8 +476,6 @@ config SND_SOC_CS35L41_3SPK
 	tristate "Cirrus Logic CS35L41 CODEC"
 	select SND_SOC_CS35L41
 
-=======
->>>>>>> rebase
 config SND_SOC_CS42L42
 	tristate "Cirrus Logic CS42L42 CODEC"
 	depends on I2C
@@ -606,10 +597,7 @@ config SND_SOC_HDMI_CODEC
 	select SND_PCM_ELD
 	select SND_PCM_IEC958
 	select HDMI
-<<<<<<< HEAD
 	default y if SND_SOC
-=======
->>>>>>> rebase
 
 config SND_SOC_ES7134
        tristate "Everest Semi ES7134 CODEC"

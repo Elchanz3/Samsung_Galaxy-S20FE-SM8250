@@ -276,11 +276,8 @@ static void ubifs_i_callback(struct rcu_head *head)
 {
 	struct inode *inode = container_of(head, struct inode, i_rcu);
 	struct ubifs_inode *ui = ubifs_inode(inode);
-<<<<<<< HEAD
 
 	fscrypt_free_inode(inode);
-=======
->>>>>>> rebase
 	kmem_cache_free(ubifs_inode_slab, ui);
 }
 
@@ -339,7 +336,6 @@ static int ubifs_write_inode(struct inode *inode, struct writeback_control *wbc)
 	return err;
 }
 
-<<<<<<< HEAD
 static int ubifs_drop_inode(struct inode *inode)
 {
 	int drop = generic_drop_inode(inode);
@@ -350,8 +346,6 @@ static int ubifs_drop_inode(struct inode *inode)
 	return drop;
 }
 
-=======
->>>>>>> rebase
 static void ubifs_evict_inode(struct inode *inode)
 {
 	int err;
@@ -1748,10 +1742,7 @@ out:
 		kthread_stop(c->bgt);
 		c->bgt = NULL;
 	}
-<<<<<<< HEAD
 	free_wbufs(c);
-=======
->>>>>>> rebase
 	kfree(c->write_reserve_buf);
 	c->write_reserve_buf = NULL;
 	vfree(c->ileb_buf);
@@ -1944,10 +1935,7 @@ const struct super_operations ubifs_super_operations = {
 	.destroy_inode = ubifs_destroy_inode,
 	.put_super     = ubifs_put_super,
 	.write_inode   = ubifs_write_inode,
-<<<<<<< HEAD
 	.drop_inode    = ubifs_drop_inode,
-=======
->>>>>>> rebase
 	.evict_inode   = ubifs_evict_inode,
 	.statfs        = ubifs_statfs,
 	.dirty_inode   = ubifs_dirty_inode,
@@ -2112,11 +2100,7 @@ static int ubifs_fill_super(struct super_block *sb, void *data, int silent)
 #ifdef CONFIG_UBIFS_FS_XATTR
 	sb->s_xattr = ubifs_xattr_handlers;
 #endif
-<<<<<<< HEAD
 #ifdef CONFIG_FS_ENCRYPTION
-=======
-#ifdef CONFIG_UBIFS_FS_ENCRYPTION
->>>>>>> rebase
 	sb->s_cop = &ubifs_crypt_operations;
 #endif
 

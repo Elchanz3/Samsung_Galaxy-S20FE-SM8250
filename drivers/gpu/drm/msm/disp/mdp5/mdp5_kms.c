@@ -1,9 +1,5 @@
 /*
-<<<<<<< HEAD
  * Copyright (c) 2014-2019, The Linux Foundation. All rights reserved.
-=======
- * Copyright (c) 2014, The Linux Foundation. All rights reserved.
->>>>>>> rebase
  * Copyright (C) 2013 Red Hat
  * Author: Rob Clark <robdclark@gmail.com>
  *
@@ -1025,12 +1021,7 @@ static int mdp5_init(struct platform_device *pdev, struct drm_device *dev)
 
 	return 0;
 fail:
-<<<<<<< HEAD
 	mdp5_destroy(pdev);
-=======
-	if (mdp5_kms)
-		mdp5_destroy(pdev);
->>>>>>> rebase
 	return ret;
 }
 

@@ -35,10 +35,7 @@ enum freezer_state_flags {
 	CGROUP_FREEZING_SELF	= (1 << 1), /* this freezer is freezing */
 	CGROUP_FREEZING_PARENT	= (1 << 2), /* the parent freezer is freezing */
 	CGROUP_FROZEN		= (1 << 3), /* this and its descendants frozen */
-<<<<<<< HEAD
 	CGROUP_FREEZER_KILLABLE = (1 << 4), /* frozen pocesses can be killed */
-=======
->>>>>>> rebase
 
 	/* mask for all FREEZING flags */
 	CGROUP_FREEZING		= CGROUP_FREEZING_SELF | CGROUP_FREEZING_PARENT,
@@ -77,7 +74,6 @@ bool cgroup_freezing(struct task_struct *task)
 	return ret;
 }
 
-<<<<<<< HEAD
 bool cgroup_freezer_killable(struct task_struct* task)
 {
 	bool ret;
@@ -89,8 +85,6 @@ bool cgroup_freezer_killable(struct task_struct* task)
 	return ret;
 }
 
-=======
->>>>>>> rebase
 static const char *freezer_state_strs(unsigned int state)
 {
 	if (state & CGROUP_FROZEN)
@@ -120,23 +114,15 @@ freezer_css_alloc(struct cgroup_subsys_state *parent_css)
  * parent's freezing state while holding both parent's and our
  * freezer->lock.
  */
-<<<<<<< HEAD
 static int freezer_css_online(struct cgroup_subsys_state* css)
 {
 	struct freezer* freezer = css_freezer(css);
 	struct freezer* parent = parent_freezer(freezer);
-=======
-static int freezer_css_online(struct cgroup_subsys_state *css)
-{
-	struct freezer *freezer = css_freezer(css);
-	struct freezer *parent = parent_freezer(freezer);
->>>>>>> rebase
 
 	mutex_lock(&freezer_mutex);
 
 	freezer->state |= CGROUP_FREEZER_ONLINE;
 
-<<<<<<< HEAD
 	if (parent) {
 		if (parent->state & CGROUP_FREEZER_KILLABLE)
 			freezer->state |= CGROUP_FREEZER_KILLABLE;
@@ -150,15 +136,6 @@ static int freezer_css_online(struct cgroup_subsys_state *css)
 
 	mutex_unlock(&freezer_mutex);
 	return (bool)(freezer->state & CGROUP_FREEZING_PARENT);
-=======
-	if (parent && (parent->state & CGROUP_FREEZING)) {
-		freezer->state |= CGROUP_FREEZING_PARENT | CGROUP_FROZEN;
-		atomic_inc(&system_freezing_cnt);
-	}
-
-	mutex_unlock(&freezer_mutex);
-	return 0;
->>>>>>> rebase
 }
 
 /**
@@ -491,7 +468,6 @@ static u64 freezer_parent_freezing_read(struct cgroup_subsys_state *css,
 	return (bool)(freezer->state & CGROUP_FREEZING_PARENT);
 }
 
-<<<<<<< HEAD
 #ifdef CONFIG_SAMSUNG_FREECESS
 /**
  * Check if the task is allowed to be added to the freezer group
@@ -565,8 +541,6 @@ out:
 	return 0;
 }
 
-=======
->>>>>>> rebase
 static struct cftype files[] = {
 	{
 		.name = "state",
@@ -584,15 +558,12 @@ static struct cftype files[] = {
 		.flags = CFTYPE_NOT_ON_ROOT,
 		.read_u64 = freezer_parent_freezing_read,
 	},
-<<<<<<< HEAD
 	{
 		.name = "killable",
 		.flags = CFTYPE_NOT_ON_ROOT,
 		.write_u64 = freezer_killable_write,
 		.read_u64 = freezer_killable_read,
 	},
-=======
->>>>>>> rebase
 	{ }	/* terminate */
 };
 
@@ -604,11 +575,8 @@ struct cgroup_subsys freezer_cgrp_subsys = {
 	.attach		= freezer_attach,
 	.fork		= freezer_fork,
 	.legacy_cftypes	= files,
-<<<<<<< HEAD
 #ifdef CONFIG_SAMSUNG_FREECESS
 	.can_attach   = freezer_can_attach,
 	.cancel_attach  = freezer_cancel_attach,
 #endif
-=======
->>>>>>> rebase
 };

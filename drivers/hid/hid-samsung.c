@@ -130,7 +130,6 @@ static int samsung_kbd_mouse_input_mapping(struct hid_device *hdev,
 	return 1;
 }
 
-<<<<<<< HEAD
 static int samsung_kbd_input_mapping(struct hid_device *hdev,
 	struct hid_input *hi, struct hid_field *field, struct hid_usage *usage,
 	unsigned long **bit, int *max)
@@ -479,8 +478,6 @@ static int samsung_universal_kbd_input_mapping(struct hid_device *hdev,
 	return 1;
 }
 
-=======
->>>>>>> rebase
 static __u8 *samsung_report_fixup(struct hid_device *hdev, __u8 *rdesc,
 	unsigned int *rsize)
 {
@@ -498,7 +495,6 @@ static int samsung_input_mapping(struct hid_device *hdev, struct hid_input *hi,
 	if (USB_DEVICE_ID_SAMSUNG_WIRELESS_KBD_MOUSE == hdev->product)
 		ret = samsung_kbd_mouse_input_mapping(hdev,
 			hi, field, usage, bit, max);
-<<<<<<< HEAD
     else if (hdev->product == USB_DEVICE_ID_SAMSUNG_WIRELESS_KBD)
 		ret = samsung_kbd_input_mapping(hdev,
 			hi, field, usage, bit, max);
@@ -514,8 +510,6 @@ static int samsung_input_mapping(struct hid_device *hdev, struct hid_input *hi,
 	else if (hdev->product == USB_DEVICE_ID_SAMSUNG_WIRELESS_MULTI_HOGP_KBD)
 		ret = samsung_universal_kbd_input_mapping(hdev,
 			hi, field, usage, bit, max);
-=======
->>>>>>> rebase
 
 	return ret;
 }
@@ -526,12 +520,6 @@ static int samsung_probe(struct hid_device *hdev,
 	int ret;
 	unsigned int cmask = HID_CONNECT_DEFAULT;
 
-<<<<<<< HEAD
-=======
-	if (!hid_is_usb(hdev))
-		return -EINVAL;
-
->>>>>>> rebase
 	ret = hid_parse(hdev);
 	if (ret) {
 		hid_err(hdev, "parse failed\n");
@@ -560,14 +548,11 @@ err_free:
 static const struct hid_device_id samsung_devices[] = {
 	{ HID_USB_DEVICE(USB_VENDOR_ID_SAMSUNG, USB_DEVICE_ID_SAMSUNG_IR_REMOTE) },
 	{ HID_USB_DEVICE(USB_VENDOR_ID_SAMSUNG, USB_DEVICE_ID_SAMSUNG_WIRELESS_KBD_MOUSE) },
-<<<<<<< HEAD
     { HID_BLUETOOTH_DEVICE(USB_VENDOR_ID_SAMSUNG_ELECTRONICS, USB_DEVICE_ID_SAMSUNG_WIRELESS_KBD) },
 	{ HID_BLUETOOTH_DEVICE(USB_VENDOR_ID_SAMSUNG_ELECTRONICS, USB_DEVICE_ID_SAMSUNG_WIRELESS_GAMEPAD) },
 	{ HID_BLUETOOTH_DEVICE(USB_VENDOR_ID_SAMSUNG_ELECTRONICS, USB_DEVICE_ID_SAMSUNG_WIRELESS_ACTIONMOUSE) },
 	{ HID_BLUETOOTH_DEVICE(USB_VENDOR_ID_SAMSUNG_ELECTRONICS, USB_DEVICE_ID_SAMSUNG_WIRELESS_UNIVERSAL_KBD) },
 	{ HID_BLUETOOTH_DEVICE(USB_VENDOR_ID_SAMSUNG_ELECTRONICS, USB_DEVICE_ID_SAMSUNG_WIRELESS_MULTI_HOGP_KBD) },
-=======
->>>>>>> rebase
 	{ }
 };
 MODULE_DEVICE_TABLE(hid, samsung_devices);

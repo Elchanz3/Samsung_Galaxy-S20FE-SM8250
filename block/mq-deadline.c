@@ -29,16 +29,11 @@
 static const int read_expire = HZ / 2;  /* max time before a read is submitted. */
 static const int write_expire = 5 * HZ; /* ditto for writes, these limits are SOFT! */
 static const int writes_starved = 2;    /* max times reads can starve a write */
-<<<<<<< HEAD
 /* IOPP-mq_dd_max_async_dispatch-v2.0.k5.4 */
 static const int fifo_batch;		/* # of sequential requests treated as one
 				     by the above parameters. For throughput. */
 static const int async_write_percent = 25;     /* max tags percentige for async write */
 static const unsigned int max_async_write_tags = 8;    /* max tags for async write. */
-=======
-static const int fifo_batch = 16;       /* # of sequential requests treated as one
-				     by the above parameters. For throughput. */
->>>>>>> rebase
 
 struct deadline_data {
 	/*
@@ -65,11 +60,8 @@ struct deadline_data {
 	int fifo_batch;
 	int writes_starved;
 	int front_merges;
-<<<<<<< HEAD
 	int async_write_depth;	/* async write depth for each tag map */
 	atomic_t async_write_cnt;
-=======
->>>>>>> rebase
 
 	spinlock_t lock;
 	spinlock_t zone_lock;
@@ -402,7 +394,6 @@ static struct request *dd_dispatch_request(struct blk_mq_hw_ctx *hctx)
 	return rq;
 }
 
-<<<<<<< HEAD
 static unsigned int dd_sched_tags_map_nr(struct request_queue *q)
 {
 	return q->queue_hw_ctx[0]->sched_tags->bitmap_tags.sb.map_nr;
@@ -467,8 +458,6 @@ static int dd_init_hctx(struct blk_mq_hw_ctx *hctx, unsigned int hctx_idx)
 	return 0;
 }
 
-=======
->>>>>>> rebase
 static void dd_exit_queue(struct elevator_queue *e)
 {
 	struct deadline_data *dd = e->elevator_data;
@@ -507,10 +496,7 @@ static int dd_init_queue(struct request_queue *q, struct elevator_type *e)
 	dd->writes_starved = writes_starved;
 	dd->front_merges = 1;
 	dd->fifo_batch = fifo_batch;
-<<<<<<< HEAD
 	atomic_set(&dd->async_write_cnt, 0);
-=======
->>>>>>> rebase
 	spin_lock_init(&dd->lock);
 	spin_lock_init(&dd->zone_lock);
 	INIT_LIST_HEAD(&dd->dispatch);
@@ -625,13 +611,10 @@ static void dd_insert_requests(struct blk_mq_hw_ctx *hctx,
  */
 static void dd_prepare_request(struct request *rq, struct bio *bio)
 {
-<<<<<<< HEAD
 	struct deadline_data *dd = rq->q->elevator->elevator_data;
 
 	if (dd_op_is_async_write(rq->cmd_flags))
 		atomic_inc(&dd->async_write_cnt);
-=======
->>>>>>> rebase
 }
 
 /*
@@ -651,15 +634,9 @@ static void dd_prepare_request(struct request *rq, struct bio *bio)
 static void dd_finish_request(struct request *rq)
 {
 	struct request_queue *q = rq->q;
-<<<<<<< HEAD
 	struct deadline_data *dd = q->elevator->elevator_data;
 
 	if (blk_queue_is_zoned(q)) {
-=======
-
-	if (blk_queue_is_zoned(q)) {
-		struct deadline_data *dd = q->elevator->elevator_data;
->>>>>>> rebase
 		unsigned long flags;
 
 		spin_lock_irqsave(&dd->zone_lock, flags);
@@ -672,15 +649,12 @@ static void dd_finish_request(struct request *rq)
 		}
 		spin_unlock_irqrestore(&dd->zone_lock, flags);
 	}
-<<<<<<< HEAD
 
 	if (unlikely(!(rq->rq_flags & RQF_ELVPRIV)))
 		return;
 
 	if (dd_op_is_async_write(rq->cmd_flags))
 		atomic_dec(&dd->async_write_cnt);
-=======
->>>>>>> rebase
 }
 
 static bool dd_has_work(struct blk_mq_hw_ctx *hctx)
@@ -723,10 +697,7 @@ SHOW_FUNCTION(deadline_write_expire_show, dd->fifo_expire[WRITE], 1);
 SHOW_FUNCTION(deadline_writes_starved_show, dd->writes_starved, 0);
 SHOW_FUNCTION(deadline_front_merges_show, dd->front_merges, 0);
 SHOW_FUNCTION(deadline_fifo_batch_show, dd->fifo_batch, 0);
-<<<<<<< HEAD
 SHOW_FUNCTION(deadline_async_write_depth_show, dd->async_write_depth, 0);
-=======
->>>>>>> rebase
 #undef SHOW_FUNCTION
 
 #define STORE_FUNCTION(__FUNC, __PTR, MIN, MAX, __CONV)			\
@@ -755,22 +726,16 @@ STORE_FUNCTION(deadline_fifo_batch_store, &dd->fifo_batch, 0, INT_MAX, 0);
 #define DD_ATTR(name) \
 	__ATTR(name, 0644, deadline_##name##_show, deadline_##name##_store)
 
-<<<<<<< HEAD
 #define DD_ATTR_RO(name) \
 	__ATTR(name, 0444, deadline_##name##_show, NULL)
 
-=======
->>>>>>> rebase
 static struct elv_fs_entry deadline_attrs[] = {
 	DD_ATTR(read_expire),
 	DD_ATTR(write_expire),
 	DD_ATTR(writes_starved),
 	DD_ATTR(front_merges),
 	DD_ATTR(fifo_batch),
-<<<<<<< HEAD
 	DD_ATTR_RO(async_write_depth),
-=======
->>>>>>> rebase
 	__ATTR_NULL
 };
 
@@ -906,12 +871,9 @@ static struct elevator_type mq_deadline = {
 		.requests_merged	= dd_merged_requests,
 		.request_merged		= dd_request_merged,
 		.has_work		= dd_has_work,
-<<<<<<< HEAD
 		.limit_depth		= dd_limit_depth,
 		.depth_updated          = dd_depth_updated,
 		.init_hctx		= dd_init_hctx,
-=======
->>>>>>> rebase
 		.init_sched		= dd_init_queue,
 		.exit_sched		= dd_exit_queue,
 	},

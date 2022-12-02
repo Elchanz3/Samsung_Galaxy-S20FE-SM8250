@@ -1,9 +1,5 @@
-<<<<<<< HEAD
 /* SPDX-License-Identifier: GPL-2.0-only */
 /* Copyright (c) 2015-2020, The Linux Foundation. All rights reserved.
-=======
-/* Copyright (c) 2015, The Linux Foundation. All rights reserved.
->>>>>>> rebase
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -25,10 +21,7 @@
 #include <linux/wait.h>
 #include <linux/irqreturn.h>
 #include <asm/io.h>
-<<<<<<< HEAD
 #include <linux/keyslot-manager.h>
-=======
->>>>>>> rebase
 
 /* registers */
 /* version */
@@ -39,22 +32,16 @@
 
 /* capabilities */
 #define CQHCI_CAP			0x04
-<<<<<<< HEAD
 #define CQHCI_CAP_CS			(1 << 28)
 #define CQHCI_CCAP			0x100
 #define CQHCI_CRYPTOCAP			0x104
 
-=======
->>>>>>> rebase
 /* configuration */
 #define CQHCI_CFG			0x08
 #define CQHCI_DCMD			0x00001000
 #define CQHCI_TASK_DESC_SZ		0x00000100
 #define CQHCI_ENABLE			0x00000001
-<<<<<<< HEAD
 #define CQHCI_ICE_ENABLE		0x00000002
-=======
->>>>>>> rebase
 
 /* control */
 #define CQHCI_CTL			0x0C
@@ -67,16 +54,11 @@
 #define CQHCI_IS_TCC			BIT(1)
 #define CQHCI_IS_RED			BIT(2)
 #define CQHCI_IS_TCL			BIT(3)
-<<<<<<< HEAD
 #define CQHCI_IS_GCE			BIT(4)
 #define CQHCI_IS_ICCE			BIT(5)
 
 #define CQHCI_IS_MASK (CQHCI_IS_TCC | CQHCI_IS_RED | \
 			CQHCI_IS_GCE | CQHCI_IS_ICCE)
-=======
-
-#define CQHCI_IS_MASK (CQHCI_IS_TCC | CQHCI_IS_RED)
->>>>>>> rebase
 
 /* interrupt status enable */
 #define CQHCI_ISTE			0x14
@@ -120,15 +102,12 @@
 /* send status config 2 */
 #define CQHCI_SSC2			0x44
 
-<<<<<<< HEAD
 /*
  * Value n means CQE would send CMD13 during the transfer of data block
  * BLOCK_CNT-n
  */
 #define SEND_QSR_INTERVAL 0x70001
 
-=======
->>>>>>> rebase
 /* response for dcmd */
 #define CQHCI_CRDCT			0x48
 
@@ -151,7 +130,6 @@
 /* command response argument */
 #define CQHCI_CRA			0x5C
 
-<<<<<<< HEAD
 /*
  * Add new macro for updated CQ vendor specific
  * register address for SDHC v5.0 onwards.
@@ -160,8 +138,6 @@
 #define CQHCI_VENDOR_CFG   0x100
 #define CMDQ_SEND_STATUS_TRIGGER (1 << 31)
 
-=======
->>>>>>> rebase
 #define CQHCI_INT_ALL			0xF
 #define CQHCI_IC_DEFAULT_ICCTH		31
 #define CQHCI_IC_DEFAULT_ICTOVAL	1
@@ -192,7 +168,6 @@
 #define CQHCI_DAT_LENGTH(x)		(((x) & 0xFFFF) << 16)
 #define CQHCI_DAT_ADDR_LO(x)		(((x) & 0xFFFFFFFF) << 32)
 #define CQHCI_DAT_ADDR_HI(x)		(((x) & 0xFFFFFFFF) << 0)
-<<<<<<< HEAD
 #define DATA_UNIT_NUM(x)		(((u64)(x) & 0xFFFFFFFF) << 0)
 #define CRYPTO_CONFIG_INDEX(x)		(((u64)(x) & 0xFF) << 32)
 #define CRYPTO_ENABLE(x)		(((u64)(x) & 0x1) << 47)
@@ -201,13 +176,10 @@
 #define CQHCI_TASK_DESC_ICE_PARAM_OFFSET	8
 /* ICE descriptor size */
 #define CQHCI_TASK_DESC_ICE_PARAMS_SIZE		8
-=======
->>>>>>> rebase
 
 struct cqhci_host_ops;
 struct mmc_host;
 struct cqhci_slot;
-<<<<<<< HEAD
 struct cqhci_host;
 
 /* CCAP - Crypto Capability 100h */
@@ -292,16 +264,11 @@ struct cqhci_host_crypto_variant_ops {
 			   int slot);
 	void *priv;
 };
-=======
->>>>>>> rebase
 
 struct cqhci_host {
 	const struct cqhci_host_ops *ops;
 	void __iomem *mmio;
-<<<<<<< HEAD
 	void __iomem *icemmio;
-=======
->>>>>>> rebase
 	struct mmc_host *mmc;
 
 	spinlock_t lock;
@@ -317,10 +284,7 @@ struct cqhci_host {
 	u32 dcmd_slot;
 	u32 caps;
 #define CQHCI_TASK_DESC_SZ_128		0x1
-<<<<<<< HEAD
 #define CQHCI_CAP_CRYPTO_SUPPORT	0x2
-=======
->>>>>>> rebase
 
 	u32 quirks;
 #define CQHCI_QUIRK_SHORT_TXFR_DESC_SZ	0x1
@@ -331,10 +295,7 @@ struct cqhci_host {
 	bool activated;
 	bool waiting_for_idle;
 	bool recovery_halt;
-<<<<<<< HEAD
 	bool offset_changed;
-=======
->>>>>>> rebase
 
 	size_t desc_size;
 	size_t data_size;
@@ -360,7 +321,6 @@ struct cqhci_host {
 	struct completion halt_comp;
 	wait_queue_head_t wait_queue;
 	struct cqhci_slot *slot;
-<<<<<<< HEAD
 	const struct cqhci_host_crypto_variant_ops *crypto_vops;
 
 #ifdef CONFIG_MMC_CQHCI_CRYPTO
@@ -371,8 +331,6 @@ struct cqhci_host {
 	struct keyslot_manager *ksm;
 #endif /* CONFIG_BLK_INLINE_ENCRYPTION */
 #endif /* CONFIG_SCSI_CQHCI_CRYPTO */
-=======
->>>>>>> rebase
 };
 
 struct cqhci_host_ops {
@@ -385,11 +343,7 @@ struct cqhci_host_ops {
 
 static inline void cqhci_writel(struct cqhci_host *host, u32 val, int reg)
 {
-<<<<<<< HEAD
 	if (unlikely(host->ops && host->ops->write_l))
-=======
-	if (unlikely(host->ops->write_l))
->>>>>>> rebase
 		host->ops->write_l(host, val, reg);
 	else
 		writel_relaxed(val, host->mmio + reg);
@@ -397,11 +351,7 @@ static inline void cqhci_writel(struct cqhci_host *host, u32 val, int reg)
 
 static inline u32 cqhci_readl(struct cqhci_host *host, int reg)
 {
-<<<<<<< HEAD
 	if (unlikely(host->ops && host->ops->read_l))
-=======
-	if (unlikely(host->ops->read_l))
->>>>>>> rebase
 		return host->ops->read_l(host, reg);
 	else
 		return readl_relaxed(host->mmio + reg);

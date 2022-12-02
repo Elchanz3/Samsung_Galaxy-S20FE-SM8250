@@ -97,14 +97,8 @@ noinline void lkdtm_CORRUPT_STACK(void)
 	/* Use default char array length that triggers stack protection. */
 	char data[8] __aligned(sizeof(void *));
 
-<<<<<<< HEAD
 	pr_info("Corrupting stack containing char array ...\n");
 	__lkdtm_CORRUPT_STACK((void *)&data);
-=======
-	__lkdtm_CORRUPT_STACK(&data);
-
-	pr_info("Corrupted stack containing char array ...\n");
->>>>>>> rebase
 }
 
 /* Same as above but will only get a canary with -fstack-protector-strong */
@@ -115,14 +109,8 @@ noinline void lkdtm_CORRUPT_STACK_STRONG(void)
 		unsigned long *ptr;
 	} data __aligned(sizeof(void *));
 
-<<<<<<< HEAD
 	pr_info("Corrupting stack containing union ...\n");
 	__lkdtm_CORRUPT_STACK((void *)&data);
-=======
-	__lkdtm_CORRUPT_STACK(&data);
-
-	pr_info("Corrupted stack containing union ...\n");
->>>>>>> rebase
 }
 
 void lkdtm_UNALIGNED_LOAD_STORE_WRITE(void)

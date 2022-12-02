@@ -112,31 +112,17 @@ int drm_getunique(struct drm_device *dev, void *data,
 		  struct drm_file *file_priv)
 {
 	struct drm_unique *u = data;
-<<<<<<< HEAD
 	struct drm_master *master = file_priv->master;
 
 	mutex_lock(&master->dev->master_mutex);
 	if (u->unique_len >= master->unique_len) {
 		if (copy_to_user(u->unique, master->unique, master->unique_len)) {
 			mutex_unlock(&master->dev->master_mutex);
-=======
-	struct drm_master *master;
-
-	mutex_lock(&dev->master_mutex);
-	master = file_priv->master;
-	if (u->unique_len >= master->unique_len) {
-		if (copy_to_user(u->unique, master->unique, master->unique_len)) {
-			mutex_unlock(&dev->master_mutex);
->>>>>>> rebase
 			return -EFAULT;
 		}
 	}
 	u->unique_len = master->unique_len;
-<<<<<<< HEAD
 	mutex_unlock(&master->dev->master_mutex);
-=======
-	mutex_unlock(&dev->master_mutex);
->>>>>>> rebase
 
 	return 0;
 }
@@ -335,16 +321,7 @@ drm_setclientcap(struct drm_device *dev, void *data, struct drm_file *file_priv)
 	case DRM_CLIENT_CAP_ATOMIC:
 		if (!drm_core_check_feature(dev, DRIVER_ATOMIC))
 			return -EINVAL;
-<<<<<<< HEAD
 		if (req->value > 1)
-=======
-		/* The modesetting DDX has a totally broken idea of atomic. */
-		if (current->comm[0] == 'X' && req->value == 1) {
-			pr_info("broken atomic modeset userspace detected, disabling atomic\n");
-			return -EOPNOTSUPP;
-		}
-		if (req->value > 2)
->>>>>>> rebase
 			return -EINVAL;
 		file_priv->atomic = req->value;
 		file_priv->universal_planes = req->value;
@@ -475,17 +452,7 @@ EXPORT_SYMBOL(drm_invalid_op);
  */
 static int drm_copy_field(char __user *buf, size_t *buf_len, const char *value)
 {
-<<<<<<< HEAD
 	int len;
-=======
-	size_t len;
-
-	/* don't attempt to copy a NULL pointer */
-	if (WARN_ONCE(!value, "BUG: the value to copy was not set!")) {
-		*buf_len = 0;
-		return 0;
-	}
->>>>>>> rebase
 
 	/* don't overflow userbuf */
 	len = strlen(value);
@@ -683,15 +650,9 @@ static const struct drm_ioctl_desc drm_ioctls[] = {
 	DRM_IOCTL_DEF(DRM_IOCTL_MODE_RMFB, drm_mode_rmfb_ioctl, DRM_UNLOCKED),
 	DRM_IOCTL_DEF(DRM_IOCTL_MODE_PAGE_FLIP, drm_mode_page_flip_ioctl, DRM_MASTER|DRM_UNLOCKED),
 	DRM_IOCTL_DEF(DRM_IOCTL_MODE_DIRTYFB, drm_mode_dirtyfb_ioctl, DRM_MASTER|DRM_UNLOCKED),
-<<<<<<< HEAD
 	DRM_IOCTL_DEF(DRM_IOCTL_MODE_CREATE_DUMB, drm_mode_create_dumb_ioctl, DRM_UNLOCKED|DRM_RENDER_ALLOW),
 	DRM_IOCTL_DEF(DRM_IOCTL_MODE_MAP_DUMB, drm_mode_mmap_dumb_ioctl, DRM_UNLOCKED|DRM_RENDER_ALLOW),
 	DRM_IOCTL_DEF(DRM_IOCTL_MODE_DESTROY_DUMB, drm_mode_destroy_dumb_ioctl, DRM_UNLOCKED|DRM_RENDER_ALLOW),
-=======
-	DRM_IOCTL_DEF(DRM_IOCTL_MODE_CREATE_DUMB, drm_mode_create_dumb_ioctl, DRM_UNLOCKED),
-	DRM_IOCTL_DEF(DRM_IOCTL_MODE_MAP_DUMB, drm_mode_mmap_dumb_ioctl, DRM_UNLOCKED),
-	DRM_IOCTL_DEF(DRM_IOCTL_MODE_DESTROY_DUMB, drm_mode_destroy_dumb_ioctl, DRM_UNLOCKED),
->>>>>>> rebase
 	DRM_IOCTL_DEF(DRM_IOCTL_MODE_OBJ_GETPROPERTIES, drm_mode_obj_get_properties_ioctl, DRM_UNLOCKED),
 	DRM_IOCTL_DEF(DRM_IOCTL_MODE_OBJ_SETPROPERTY, drm_mode_obj_set_property_ioctl, DRM_MASTER|DRM_UNLOCKED),
 	DRM_IOCTL_DEF(DRM_IOCTL_MODE_CURSOR2, drm_mode_cursor2_ioctl, DRM_MASTER|DRM_UNLOCKED),
@@ -830,12 +791,6 @@ long drm_ioctl(struct file *filp,
 	if (drm_dev_is_unplugged(dev))
 		return -ENODEV;
 
-<<<<<<< HEAD
-=======
-       if (DRM_IOCTL_TYPE(cmd) != DRM_IOCTL_BASE)
-               return -ENOTTY;
-
->>>>>>> rebase
 	is_driver_ioctl = nr >= DRM_COMMAND_BASE && nr < DRM_COMMAND_END;
 
 	if (is_driver_ioctl) {

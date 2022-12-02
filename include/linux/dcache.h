@@ -146,10 +146,7 @@ struct dentry_operations {
 	struct vfsmount *(*d_automount)(struct path *);
 	int (*d_manage)(const struct path *, bool);
 	struct dentry *(*d_real)(struct dentry *, const struct inode *);
-<<<<<<< HEAD
 	void (*d_canonical_path)(const struct path *, struct path *);
-=======
->>>>>>> rebase
 } ____cacheline_aligned;
 
 /*

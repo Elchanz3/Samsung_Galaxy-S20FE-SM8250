@@ -722,15 +722,12 @@ static int mmp_pdma_config(struct dma_chan *dchan,
 
 	chan->dir = cfg->direction;
 	chan->dev_addr = addr;
-<<<<<<< HEAD
 	/* FIXME: drivers should be ported over to use the filter
 	 * function. Once that's done, the following two lines can
 	 * be removed.
 	 */
 	if (cfg->slave_id)
 		chan->drcmr = cfg->slave_id;
-=======
->>>>>>> rebase
 
 	return 0;
 }

@@ -34,10 +34,7 @@ struct regmap_range_cfg;
 struct regmap_field;
 struct snd_ac97;
 struct sdw_slave;
-<<<<<<< HEAD
 struct swr_device;
-=======
->>>>>>> rebase
 
 /* An enum of all the supported cache types */
 enum regcache_type {
@@ -614,13 +611,10 @@ struct regmap *__devm_regmap_init_slimbus(struct slim_device *slimbus,
 				 const struct regmap_config *config,
 				 struct lock_class_key *lock_key,
 				 const char *lock_name);
-<<<<<<< HEAD
 struct regmap *__devm_regmap_init_swr(struct swr_device *dev,
 				      const struct regmap_config *config,
 				      struct lock_class_key *lock_key,
 				      const char *lock_name);
-=======
->>>>>>> rebase
 /*
  * Wrapper for regmap_init macros to include a unique lockdep key and name
  * for each call. No-op if CONFIG_LOCKDEP is not set.
@@ -807,7 +801,6 @@ bool regmap_ac97_default_volatile(struct device *dev, unsigned int reg);
 	__regmap_lockdep_wrapper(__regmap_init_sdw, #config,		\
 				sdw, config)
 
-<<<<<<< HEAD
 /**
  * regmap_init_swr(): Initialise register map
  *
@@ -820,8 +813,6 @@ bool regmap_ac97_default_volatile(struct device *dev, unsigned int reg);
 #define regmap_init_swr(swr, config)					\
 	__regmap_lockdep_wrapper(__regmap_init_swr, #config,		\
 				swr, config)
-=======
->>>>>>> rebase
 
 /**
  * devm_regmap_init() - Initialise managed register map
@@ -994,7 +985,6 @@ bool regmap_ac97_default_volatile(struct device *dev, unsigned int reg);
 #define devm_regmap_init_slimbus(slimbus, config)			\
 	__regmap_lockdep_wrapper(__devm_regmap_init_slimbus, #config,	\
 				slimbus, config)
-<<<<<<< HEAD
 /**
  * devm_regmap_init_swr(): Initialise managed register map
  *
@@ -1009,8 +999,6 @@ bool regmap_ac97_default_volatile(struct device *dev, unsigned int reg);
 	__regmap_lockdep_wrapper(__devm_regmap_init_swr, #config,       \
 				swr, config)
 
-=======
->>>>>>> rebase
 int regmap_mmio_attach_clk(struct regmap *map, struct clk *clk);
 void regmap_mmio_detach_clk(struct regmap *map);
 void regmap_exit(struct regmap *map);
@@ -1188,10 +1176,7 @@ struct regmap_irq_chip {
 	unsigned int wake_base;
 	unsigned int type_base;
 	unsigned int irq_reg_stride;
-<<<<<<< HEAD
 	unsigned int clear_ack;
-=======
->>>>>>> rebase
 	bool mask_writeonly:1;
 	bool init_ack_masked:1;
 	bool mask_invert:1;

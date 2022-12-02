@@ -399,12 +399,7 @@ static int flctl_dma_fifo0_transfer(struct sh_flctl *flctl, unsigned long *buf,
 	dma_addr_t dma_addr;
 	dma_cookie_t cookie;
 	uint32_t reg;
-<<<<<<< HEAD
 	int ret;
-=======
-	int ret = 0;
-	unsigned long time_left;
->>>>>>> rebase
 
 	if (dir == DMA_FROM_DEVICE) {
 		chan = flctl->chan_fifo0_rx;
@@ -445,7 +440,6 @@ static int flctl_dma_fifo0_transfer(struct sh_flctl *flctl, unsigned long *buf,
 		goto out;
 	}
 
-<<<<<<< HEAD
 	ret =
 	wait_for_completion_timeout(&flctl->dma_complete,
 				msecs_to_jiffies(3000));
@@ -453,16 +447,6 @@ static int flctl_dma_fifo0_transfer(struct sh_flctl *flctl, unsigned long *buf,
 	if (ret <= 0) {
 		dmaengine_terminate_all(chan);
 		dev_err(&flctl->pdev->dev, "wait_for_completion_timeout\n");
-=======
-	time_left =
-	wait_for_completion_timeout(&flctl->dma_complete,
-				msecs_to_jiffies(3000));
-
-	if (time_left == 0) {
-		dmaengine_terminate_all(chan);
-		dev_err(&flctl->pdev->dev, "wait_for_completion_timeout\n");
-		ret = -ETIMEDOUT;
->>>>>>> rebase
 	}
 
 out:
@@ -472,11 +456,7 @@ out:
 
 	dma_unmap_single(chan->device->dev, dma_addr, len, dir);
 
-<<<<<<< HEAD
 	/* ret > 0 is success */
-=======
-	/* ret == 0 is success */
->>>>>>> rebase
 	return ret;
 }
 
@@ -500,11 +480,7 @@ static void read_fiforeg(struct sh_flctl *flctl, int rlen, int offset)
 
 	/* initiate DMA transfer */
 	if (flctl->chan_fifo0_rx && rlen >= 32 &&
-<<<<<<< HEAD
 		flctl_dma_fifo0_transfer(flctl, buf, rlen, DMA_FROM_DEVICE) > 0)
-=======
-		!flctl_dma_fifo0_transfer(flctl, buf, rlen, DMA_FROM_DEVICE))
->>>>>>> rebase
 			goto convert;	/* DMA success */
 
 	/* do polling transfer */
@@ -563,11 +539,7 @@ static void write_ec_fiforeg(struct sh_flctl *flctl, int rlen,
 
 	/* initiate DMA transfer */
 	if (flctl->chan_fifo0_tx && rlen >= 32 &&
-<<<<<<< HEAD
 		flctl_dma_fifo0_transfer(flctl, buf, rlen, DMA_TO_DEVICE) > 0)
-=======
-		!flctl_dma_fifo0_transfer(flctl, buf, rlen, DMA_TO_DEVICE))
->>>>>>> rebase
 			return;	/* DMA success */
 
 	/* do polling transfer */
@@ -1231,11 +1203,7 @@ static int flctl_probe(struct platform_device *pdev)
 	flctl_setup_dma(flctl);
 
 	nand->dummy_controller.ops = &flctl_nand_controller_ops;
-<<<<<<< HEAD
 	ret = nand_scan(flctl_mtd, 1);
-=======
-	ret = nand_scan(nand, 1);
->>>>>>> rebase
 	if (ret)
 		goto err_chip;
 
@@ -1258,11 +1226,7 @@ static int flctl_remove(struct platform_device *pdev)
 	struct sh_flctl *flctl = platform_get_drvdata(pdev);
 
 	flctl_release_dma(flctl);
-<<<<<<< HEAD
 	nand_release(nand_to_mtd(&flctl->chip));
-=======
-	nand_release(&flctl->chip);
->>>>>>> rebase
 	pm_runtime_disable(&pdev->dev);
 
 	return 0;

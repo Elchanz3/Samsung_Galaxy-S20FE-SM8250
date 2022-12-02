@@ -16,15 +16,8 @@
 		#interrupt-cells = <2>;
 		#address-cells = <1>;
 		#size-cells = <0>;
-<<<<<<< HEAD
 		spi-max-frequency = <3000000>;
 		spi-cs-high;
-=======
-		spi-max-frequency = <9600000>;
-		spi-cs-high;
-		spi-cpol;
-		spi-cpha;
->>>>>>> rebase
 
 		cpcap_adc: adc {
 			compatible = "motorola,mapphone-cpcap-adc";
@@ -170,20 +163,12 @@
 		regulator-enable-ramp-delay = <1000>;
 	};
 
-<<<<<<< HEAD
 	/* Used by DSS */
-=======
-	/* Used by DSS and is the "zerov_regulator" trigger for SoC off mode */
->>>>>>> rebase
 	vcsi: VCSI {
 		regulator-min-microvolt = <1800000>;
 		regulator-max-microvolt = <1800000>;
 		regulator-enable-ramp-delay = <1000>;
-<<<<<<< HEAD
 		regulator-boot-on;
-=======
-		regulator-always-on;
->>>>>>> rebase
 	};
 
 	vdac: VDAC {

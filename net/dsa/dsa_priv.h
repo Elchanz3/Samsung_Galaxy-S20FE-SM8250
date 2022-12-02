@@ -15,10 +15,6 @@
 #include <linux/netdevice.h>
 #include <linux/netpoll.h>
 #include <net/dsa.h>
-<<<<<<< HEAD
-=======
-#include <net/gro_cells.h>
->>>>>>> rebase
 
 enum {
 	DSA_NOTIFIER_AGEING_TIME,
@@ -76,11 +72,6 @@ struct dsa_slave_priv {
 
 	struct pcpu_sw_netstats	*stats64;
 
-<<<<<<< HEAD
-=======
-	struct gro_cells	gcells;
-
->>>>>>> rebase
 	/* DSA port data, such as switch, port index, etc. */
 	struct dsa_port		*dp;
 

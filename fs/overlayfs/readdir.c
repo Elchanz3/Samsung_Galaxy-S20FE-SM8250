@@ -289,11 +289,7 @@ static int ovl_check_whiteouts(struct dentry *dir, struct ovl_readdir_data *rdd)
 		}
 		inode_unlock(dir->d_inode);
 	}
-<<<<<<< HEAD
 	ovl_revert_creds(old_cred);
-=======
-	revert_creds(old_cred);
->>>>>>> rebase
 
 	return err;
 }
@@ -304,11 +300,7 @@ static inline int ovl_dir_read(struct path *realpath,
 	struct file *realfile;
 	int err;
 
-<<<<<<< HEAD
 	realfile = ovl_path_open(realpath, O_RDONLY | O_LARGEFILE);
-=======
-	realfile = ovl_path_open(realpath, O_RDONLY | O_DIRECTORY);
->>>>>>> rebase
 	if (IS_ERR(realfile))
 		return PTR_ERR(realfile);
 
@@ -743,15 +735,10 @@ static int ovl_iterate(struct file *file, struct dir_context *ctx)
 	struct ovl_dir_file *od = file->private_data;
 	struct dentry *dentry = file->f_path.dentry;
 	struct ovl_cache_entry *p;
-<<<<<<< HEAD
 	const struct cred *old_cred;
 	int err;
 
 	old_cred = ovl_override_creds(dentry->d_sb);
-=======
-	int err;
-
->>>>>>> rebase
 	if (!ctx->pos)
 		ovl_dir_reset(file);
 
@@ -765,31 +752,20 @@ static int ovl_iterate(struct file *file, struct dir_context *ctx)
 		    (ovl_same_sb(dentry->d_sb) &&
 		     (ovl_is_impure_dir(file) ||
 		      OVL_TYPE_MERGE(ovl_path_type(dentry->d_parent))))) {
-<<<<<<< HEAD
 			err = ovl_iterate_real(file, ctx);
 		} else {
 			err = iterate_dir(od->realfile, ctx);
 		}
 		goto out;
-=======
-			return ovl_iterate_real(file, ctx);
-		}
-		return iterate_dir(od->realfile, ctx);
->>>>>>> rebase
 	}
 
 	if (!od->cache) {
 		struct ovl_dir_cache *cache;
 
 		cache = ovl_cache_get(dentry);
-<<<<<<< HEAD
 		err = PTR_ERR(cache);
 		if (IS_ERR(cache))
 			goto out;
-=======
-		if (IS_ERR(cache))
-			return PTR_ERR(cache);
->>>>>>> rebase
 
 		od->cache = cache;
 		ovl_seek_cursor(od, ctx->pos);
@@ -801,11 +777,7 @@ static int ovl_iterate(struct file *file, struct dir_context *ctx)
 			if (!p->ino) {
 				err = ovl_cache_update_ino(&file->f_path, p);
 				if (err)
-<<<<<<< HEAD
 					goto out;
-=======
-					return err;
->>>>>>> rebase
 			}
 			if (!dir_emit(ctx, p->name, p->len, p->ino, p->type))
 				break;
@@ -813,14 +785,10 @@ static int ovl_iterate(struct file *file, struct dir_context *ctx)
 		od->cursor = p->l_node.next;
 		ctx->pos++;
 	}
-<<<<<<< HEAD
 	err = 0;
 out:
 	ovl_revert_creds(old_cred);
 	return err;
-=======
-	return 0;
->>>>>>> rebase
 }
 
 static loff_t ovl_dir_llseek(struct file *file, loff_t offset, int origin)
@@ -863,7 +831,6 @@ out_unlock:
 	return res;
 }
 
-<<<<<<< HEAD
 static struct file *ovl_dir_open_realfile(struct file *file,
 					  struct path *realpath)
 {
@@ -877,8 +844,6 @@ static struct file *ovl_dir_open_realfile(struct file *file,
 	return res;
 }
 
-=======
->>>>>>> rebase
 static int ovl_dir_fsync(struct file *file, loff_t start, loff_t end,
 			 int datasync)
 {
@@ -901,11 +866,7 @@ static int ovl_dir_fsync(struct file *file, loff_t start, loff_t end,
 			struct path upperpath;
 
 			ovl_path_upper(dentry, &upperpath);
-<<<<<<< HEAD
 			realfile = ovl_dir_open_realfile(file, &upperpath);
-=======
-			realfile = ovl_path_open(&upperpath, O_RDONLY);
->>>>>>> rebase
 
 			inode_lock(inode);
 			if (!od->upperfile) {
@@ -956,11 +917,7 @@ static int ovl_dir_open(struct inode *inode, struct file *file)
 		return -ENOMEM;
 
 	type = ovl_path_real(file->f_path.dentry, &realpath);
-<<<<<<< HEAD
 	realfile = ovl_dir_open_realfile(file, &realpath);
-=======
-	realfile = ovl_path_open(&realpath, file->f_flags);
->>>>>>> rebase
 	if (IS_ERR(realfile)) {
 		kfree(od);
 		return PTR_ERR(realfile);
@@ -991,11 +948,7 @@ int ovl_check_empty_dir(struct dentry *dentry, struct list_head *list)
 
 	old_cred = ovl_override_creds(dentry->d_sb);
 	err = ovl_dir_read_merged(dentry, list, &root);
-<<<<<<< HEAD
 	ovl_revert_creds(old_cred);
-=======
-	revert_creds(old_cred);
->>>>>>> rebase
 	if (err)
 		return err;
 

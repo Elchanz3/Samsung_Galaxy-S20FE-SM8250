@@ -25,10 +25,7 @@ config ARM
 	select ARCH_USE_BUILTIN_BSWAP
 	select ARCH_USE_CMPXCHG_LOCKREF
 	select ARCH_WANT_IPC_PARSE_VERSION
-<<<<<<< HEAD
 	select ARM_PSCI_FW if PM
-=======
->>>>>>> rebase
 	select BUILDTIME_EXTABLE_SORT if MMU
 	select CLONE_BACKWARDS
 	select CPU_PM if (SUSPEND || CPU_IDLE)
@@ -72,14 +69,8 @@ config ARM
 	select HAVE_EFFICIENT_UNALIGNED_ACCESS if (CPU_V6 || CPU_V6K || CPU_V7) && MMU
 	select HAVE_EXIT_THREAD
 	select HAVE_FTRACE_MCOUNT_RECORD if (!XIP_KERNEL)
-<<<<<<< HEAD
 	select HAVE_FUNCTION_GRAPH_TRACER if (!THUMB2_KERNEL)
 	select HAVE_FUNCTION_TRACER if (!XIP_KERNEL) && (CC_IS_GCC || CLANG_VERSION >= 100000)
-=======
-	select HAVE_FUNCTION_GRAPH_TRACER if (!THUMB2_KERNEL && !CC_IS_CLANG)
-	select HAVE_FUNCTION_TRACER if (!XIP_KERNEL)
-	select HAVE_FUTEX_CMPXCHG if FUTEX
->>>>>>> rebase
 	select HAVE_GCC_PLUGINS
 	select HAVE_GENERIC_DMA_COHERENT
 	select HAVE_HW_BREAKPOINT if (PERF_EVENTS && (CPU_V6 || CPU_V6K || CPU_V7))
@@ -107,10 +98,7 @@ config ARM
 	select HAVE_SYSCALL_TRACEPOINTS
 	select HAVE_UID16
 	select HAVE_VIRT_CPU_ACCOUNTING_GEN
-<<<<<<< HEAD
 	select IOMMU_DMA if IOMMU_SUPPORT
-=======
->>>>>>> rebase
 	select IRQ_FORCED_THREADING
 	select MODULES_USE_ELF_REL
 	select NEED_DMA_MAP_STATE
@@ -147,11 +135,7 @@ if ARM_DMA_USE_IOMMU
 config ARM_DMA_IOMMU_ALIGNMENT
 	int "Maximum PAGE_SIZE order of alignment for DMA IOMMU buffers"
 	range 4 9
-<<<<<<< HEAD
 	default 9
-=======
-	default 8
->>>>>>> rebase
 	help
 	  DMA mapping framework by default aligns all buffers to the smallest
 	  PAGE_SIZE order which is greater than or equal to the requested buffer
@@ -557,7 +541,6 @@ config ARCH_PXA
 	help
 	  Support for Intel/Marvell's PXA2xx/PXA3xx processor line.
 
-<<<<<<< HEAD
 config ARCH_QCOM
        bool "Qualcomm MSM (non-multiplatform)"
        select ARCH_REQUIRE_GPIOLIB
@@ -586,8 +569,6 @@ config ARCH_QCOM
          stack and controls some vital subsystems
          (clock and power control, etc).
 
-=======
->>>>>>> rebase
 config ARCH_RPC
 	bool "RiscPC"
 	depends on MMU
@@ -641,15 +622,8 @@ config ARCH_S3C24XX
 	select HAVE_S3C2410_WATCHDOG if WATCHDOG
 	select HAVE_S3C_RTC if RTC_CLASS
 	select NEED_MACH_IO_H
-<<<<<<< HEAD
 	select SAMSUNG_ATAGS
 	select USE_OF
-=======
-	select S3C2410_WATCHDOG
-	select SAMSUNG_ATAGS
-	select USE_OF
-	select WATCHDOG
->>>>>>> rebase
 	help
 	  Samsung S3C2410, S3C2412, S3C2413, S3C2416, S3C2440, S3C2442, S3C2443
 	  and S3C2450 SoCs based systems, such as the Simtec Electronics BAST
@@ -1524,11 +1498,7 @@ config ARCH_NR_GPIO
 	int
 	default 2048 if ARCH_SOCFPGA
 	default 1024 if ARCH_BRCMSTB || ARCH_RENESAS || ARCH_TEGRA || \
-<<<<<<< HEAD
 		ARCH_ZYNQ || ARCH_QCOM
-=======
-		ARCH_ZYNQ
->>>>>>> rebase
 	default 512 if ARCH_EXYNOS || ARCH_KEYSTONE || SOC_OMAP5 || \
 		SOC_DRA7XX || ARCH_S3C24XX || ARCH_S3C64XX || ARCH_S5PV210
 	default 416 if ARCH_SUNXI
@@ -1777,7 +1747,6 @@ config ARM_MODULE_PLTS
 	  Disabling this is usually safe for small single-platform
 	  configurations. If unsure, say y.
 
-<<<<<<< HEAD
 choice
 	prompt "Virtual Memory Reclaim"
 	default ENABLE_VMALLOC_SAVING
@@ -1807,8 +1776,6 @@ config NO_VM_RECLAIM
 
 endchoice
 
-=======
->>>>>>> rebase
 config FORCE_MAX_ZONEORDER
 	int "Maximum zone order"
 	default "12" if SOC_AM33XX
@@ -1934,7 +1901,6 @@ config DEPRECATED_PARAM_STRUCT
 	  This was deprecated in 2001 and announced to live on for 5 years.
 	  Some old boot loaders still use this way.
 
-<<<<<<< HEAD
 config BUILD_ARM_APPENDED_DTB_IMAGE
 	bool "Build a concatenated zImage/dtb by default"
 	depends on OF
@@ -1950,8 +1916,6 @@ config BUILD_ARM_APPENDED_DTB_IMAGE_NAMES
 	  Space separated list of names of dtbs to append when
 	  building a concatenated zImage-dtb.
 
-=======
->>>>>>> rebase
 # Compressed boot loader in ROM.  Yes, we really want to ask about
 # TEXT and BSS so we preserve their values in the config files.
 config ZBOOT_ROM_TEXT
@@ -2050,10 +2014,7 @@ config CMDLINE
 choice
 	prompt "Kernel command line type" if CMDLINE != ""
 	default CMDLINE_FROM_BOOTLOADER
-<<<<<<< HEAD
 	depends on ATAGS
-=======
->>>>>>> rebase
 
 config CMDLINE_FROM_BOOTLOADER
 	bool "Use bootloader kernel arguments if available"

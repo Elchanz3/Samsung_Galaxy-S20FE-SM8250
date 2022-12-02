@@ -16,11 +16,7 @@ subdir-y += lg
 subdir-y += marvell
 subdir-y += mediatek
 subdir-y += nvidia
-<<<<<<< HEAD
 # subdir-y += qcom
-=======
-subdir-y += qcom
->>>>>>> rebase
 subdir-y += realtek
 subdir-y += renesas
 subdir-y += rockchip
@@ -30,7 +26,6 @@ subdir-y += synaptics
 subdir-y += ti
 subdir-y += xilinx
 subdir-y += zte
-<<<<<<< HEAD
 subdir-y += samsung
 
 
@@ -58,5 +53,3 @@ targets += $(DTB_LIST)
 dtbs: $(addprefix $(obj)/, $(DTB_LIST))
 
 clean-files := dts/*.dtb *.dtb
-=======
->>>>>>> rebase

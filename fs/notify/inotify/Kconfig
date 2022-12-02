@@ -1,9 +1,5 @@
 config INOTIFY_USER
 	bool "Inotify support for userspace"
-<<<<<<< HEAD
-=======
-	select ANON_INODES
->>>>>>> rebase
 	select FSNOTIFY
 	default y
 	---help---

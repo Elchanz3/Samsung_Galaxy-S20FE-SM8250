@@ -248,10 +248,6 @@ config FW_CFG_SYSFS_CMDLINE
 config QCOM_SCM
 	bool
 	depends on ARM || ARM64
-<<<<<<< HEAD
-=======
-	depends on HAVE_ARM_SMCCC
->>>>>>> rebase
 	select RESET_CONTROLLER
 
 config QCOM_SCM_32
@@ -296,9 +292,6 @@ source "drivers/firmware/google/Kconfig"
 source "drivers/firmware/efi/Kconfig"
 source "drivers/firmware/meson/Kconfig"
 source "drivers/firmware/tegra/Kconfig"
-<<<<<<< HEAD
 source "drivers/firmware/qcom/Kconfig"
-=======
->>>>>>> rebase
 
 endmenu

@@ -60,7 +60,6 @@ archive_builtin()
 	${AR} rcsTP${KBUILD_ARFLAGS} built-in.a			\
 				${KBUILD_VMLINUX_INIT}		\
 				${KBUILD_VMLINUX_MAIN}
-<<<<<<< HEAD
 
 	# rebuild with llvm-ar to update the symbol table
 	if [ -n "${CONFIG_LTO_CLANG}" ]; then
@@ -94,8 +93,6 @@ lto_lds()
 	fi
 
 	echo "-T .tmp_lto.lds"
-=======
->>>>>>> rebase
 }
 
 # Link of vmlinux.o used for section mismatch analysis
@@ -111,7 +108,6 @@ modpost_link()
 		${KBUILD_VMLINUX_LIBS}				\
 		--end-group"
 
-<<<<<<< HEAD
 	if [ -n "${CONFIG_LTO_CLANG}" ]; then
 		# This might take a while, so indicate that we're doing
 		# an LTO link
@@ -132,9 +128,6 @@ recordmcount()
 	if [ -n "${CONFIG_FTRACE_MCOUNT_RECORD}" ]; then
 		scripts/recordmcount ${RECORDMCOUNT_FLAGS} $*
 	fi
-=======
-	${LD} ${KBUILD_LDFLAGS} -r -o ${1} ${objects}
->>>>>>> rebase
 }
 
 # Link of vmlinux
@@ -146,7 +139,6 @@ vmlinux_link()
 	local objects
 
 	if [ "${SRCARCH}" != "um" ]; then
-<<<<<<< HEAD
 		if [ -z "${CONFIG_LTO_CLANG}" ]; then
 			objects="--whole-archive		\
 				built-in.a			\
@@ -161,15 +153,6 @@ vmlinux_link()
 				--end-group			\
 				${1}"
 		fi
-=======
-		objects="--whole-archive			\
-			built-in.a				\
-			--no-whole-archive			\
-			--start-group				\
-			${KBUILD_VMLINUX_LIBS}			\
-			--end-group				\
-			${1}"
->>>>>>> rebase
 
 		${LD} ${KBUILD_LDFLAGS} ${LDFLAGS_vmlinux} -o ${2}	\
 			-T ${lds} ${objects}
@@ -190,10 +173,6 @@ vmlinux_link()
 	fi
 }
 
-<<<<<<< HEAD
-=======
-
->>>>>>> rebase
 # Create ${2} .o file with all symbols from the ${1} object file
 kallsyms()
 {
@@ -221,7 +200,6 @@ kallsyms()
 	${CC} ${aflags} -c -o ${2} ${afile}
 }
 
-<<<<<<< HEAD
 # Generates ${2} .o file with RTIC MP's from the ${1} object file (vmlinux)
 # ${3} the file name where the sizes of the RTIC MP structure are stored
 # just in case, save copy of the RTIC mp to ${4}
@@ -247,8 +225,6 @@ rtic_mp()
 	# does not cause kernel compilation to fail.
 }
 
-=======
->>>>>>> rebase
 # Create map file with all symbols from ${1}
 # See mksymap for additional details
 mksysmap()
@@ -266,20 +242,14 @@ cleanup()
 {
 	rm -f .tmp_System.map
 	rm -f .tmp_kallsyms*
-<<<<<<< HEAD
 	rm -f .tmp_lto.lds
-=======
->>>>>>> rebase
 	rm -f .tmp_vmlinux*
 	rm -f built-in.a
 	rm -f System.map
 	rm -f vmlinux
 	rm -f vmlinux.o
-<<<<<<< HEAD
 	rm -f .tmp_rtic_mp_sz*
 	rm -f rtic_mp.*
-=======
->>>>>>> rebase
 }
 
 on_exit()
@@ -311,18 +281,7 @@ if [ "$1" = "clean" ]; then
 fi
 
 # We need access to CONFIG_ symbols
-<<<<<<< HEAD
 . include/config/auto.conf
-=======
-case "${KCONFIG_CONFIG}" in
-*/*)
-	. "${KCONFIG_CONFIG}"
-	;;
-*)
-	# Force using a file from the current directory
-	. "./${KCONFIG_CONFIG}"
-esac
->>>>>>> rebase
 
 # Update version
 info GEN .version
@@ -340,16 +299,11 @@ ${MAKE} -f "${srctree}/scripts/Makefile.build" obj=init
 archive_builtin
 
 #link vmlinux.o
-<<<<<<< HEAD
-=======
-info LD vmlinux.o
->>>>>>> rebase
 modpost_link vmlinux.o
 
 # modpost vmlinux.o to check for section mismatches
 ${MAKE} -f "${srctree}/scripts/Makefile.modpost" vmlinux.o
 
-<<<<<<< HEAD
 if [ -n "${CONFIG_LTO_CLANG}" ]; then
 	# Call recordmcount if needed
 	recordmcount vmlinux.o
@@ -364,8 +318,6 @@ if [ ! -z ${RTIC_MPGEN+x} ]; then
 	KBUILD_VMLINUX_LIBS+=$RTIC_MP_O
 fi
 
-=======
->>>>>>> rebase
 kallsymso=""
 kallsyms_vmlinux=""
 if [ -n "${CONFIG_KALLSYMS}" ]; then
@@ -418,7 +370,6 @@ if [ -n "${CONFIG_KALLSYMS}" ]; then
 	fi
 fi
 
-<<<<<<< HEAD
 # Update RTIC MP object by replacing the place holder
 # with actual MP data of the same size
 # Also double check that object size did not change
@@ -435,8 +386,6 @@ if [ ! -z ${RTIC_MP_O} ]; then
 	fi
 fi
 
-=======
->>>>>>> rebase
 info LD vmlinux
 vmlinux_link "${kallsymso}" vmlinux
 
@@ -458,7 +407,6 @@ if [ -n "${CONFIG_KALLSYMS}" ]; then
 		exit 1
 	fi
 fi
-<<<<<<< HEAD
 
 # CFP instrumentation will change binary, need to be before FIPS
 if [ -n "${CONFIG_CFP}" ]; then
@@ -486,5 +434,3 @@ if [ ! -z ${RTIC_MPGEN+x} ]; then
 	# RTIC MP DTS generation command fails and it ensures rtic mp
 	# failure does not cause kernel compilation to fail.
 fi
-=======
->>>>>>> rebase

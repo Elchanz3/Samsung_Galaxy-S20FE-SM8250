@@ -60,10 +60,6 @@ static void drm_client_close(struct drm_client_dev *client)
 
 	drm_file_free(client->file);
 }
-<<<<<<< HEAD
-=======
-EXPORT_SYMBOL(drm_client_close);
->>>>>>> rebase
 
 /**
  * drm_client_init - Initialise a DRM client

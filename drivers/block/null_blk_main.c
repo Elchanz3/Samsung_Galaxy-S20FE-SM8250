@@ -571,10 +571,6 @@ static struct nullb_cmd *__alloc_cmd(struct nullb_queue *nq)
 	if (tag != -1U) {
 		cmd = &nq->cmds[tag];
 		cmd->tag = tag;
-<<<<<<< HEAD
-=======
-		cmd->error = BLK_STS_OK;
->>>>>>> rebase
 		cmd->nq = nq;
 		if (nq->dev->irqmode == NULL_IRQ_TIMER) {
 			hrtimer_init(&cmd->timer, CLOCK_MONOTONIC,
@@ -1089,11 +1085,7 @@ static int null_handle_rq(struct nullb_cmd *cmd)
 		len = bvec.bv_len;
 		err = null_transfer(nullb, bvec.bv_page, len, bvec.bv_offset,
 				     op_is_write(req_op(rq)), sector,
-<<<<<<< HEAD
 				     req_op(rq) & REQ_FUA);
-=======
-				     rq->cmd_flags & REQ_FUA);
->>>>>>> rebase
 		if (err) {
 			spin_unlock_irq(&nullb->lock);
 			return err;
@@ -1441,10 +1433,6 @@ static blk_status_t null_queue_rq(struct blk_mq_hw_ctx *hctx,
 		cmd->timer.function = null_cmd_timer_expired;
 	}
 	cmd->rq = bd->rq;
-<<<<<<< HEAD
-=======
-	cmd->error = BLK_STS_OK;
->>>>>>> rebase
 	cmd->nq = nq;
 
 	blk_mq_start_request(bd->rq);
@@ -1492,16 +1480,7 @@ static void cleanup_queues(struct nullb *nullb)
 
 static void null_del_dev(struct nullb *nullb)
 {
-<<<<<<< HEAD
 	struct nullb_device *dev = nullb->dev;
-=======
-	struct nullb_device *dev;
-
-	if (!nullb)
-		return;
-
-	dev = nullb->dev;
->>>>>>> rebase
 
 	ida_simple_remove(&nullb_indexes, nullb->index);
 
@@ -1833,18 +1812,8 @@ static int null_add_dev(struct nullb_device *dev)
 	blk_queue_flag_clear(QUEUE_FLAG_ADD_RANDOM, nullb->q);
 
 	mutex_lock(&lock);
-<<<<<<< HEAD
 	nullb->index = ida_simple_get(&nullb_indexes, 0, 0, GFP_KERNEL);
 	dev->index = nullb->index;
-=======
-	rv = ida_simple_get(&nullb_indexes, 0, 0, GFP_KERNEL);
-	if (rv < 0) {
-		mutex_unlock(&lock);
-		goto out_cleanup_zone;
-	}
-	nullb->index = rv;
-	dev->index = rv;
->>>>>>> rebase
 	mutex_unlock(&lock);
 
 	blk_queue_logical_block_size(nullb->q, dev->blocksize);
@@ -1856,23 +1825,13 @@ static int null_add_dev(struct nullb_device *dev)
 
 	rv = null_gendisk_register(nullb);
 	if (rv)
-<<<<<<< HEAD
 		goto out_cleanup_zone;
-=======
-		goto out_ida_free;
->>>>>>> rebase
 
 	mutex_lock(&lock);
 	list_add_tail(&nullb->list, &nullb_list);
 	mutex_unlock(&lock);
 
 	return 0;
-<<<<<<< HEAD
-=======
-
-out_ida_free:
-	ida_free(&nullb_indexes, nullb->index);
->>>>>>> rebase
 out_cleanup_zone:
 	if (dev->zoned)
 		null_zone_exit(dev);
@@ -1885,10 +1844,6 @@ out_cleanup_queues:
 	cleanup_queues(nullb);
 out_free_nullb:
 	kfree(nullb);
-<<<<<<< HEAD
-=======
-	dev->nullb = NULL;
->>>>>>> rebase
 out:
 	return rv;
 }

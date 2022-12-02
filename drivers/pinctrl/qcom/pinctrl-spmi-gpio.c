@@ -1,20 +1,6 @@
-<<<<<<< HEAD
 // SPDX-License-Identifier: GPL-2.0-only
 /*
  * Copyright (c) 2012-2014, 2016-2018 The Linux Foundation. All rights reserved.
-=======
-/*
- * Copyright (c) 2012-2014, The Linux Foundation. All rights reserved.
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License version 2 and
- * only version 2 as published by the Free Software Foundation.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
->>>>>>> rebase
  */
 
 #include <linux/gpio.h>
@@ -143,10 +129,7 @@ enum pmic_gpio_func_index {
  * struct pmic_gpio_pad - keep current GPIO settings
  * @base: Address base in SPMI device.
  * @irq: IRQ number which this GPIO generate.
-<<<<<<< HEAD
  * @gpio_idx: The index in GPIO's hardware number space (1-based)
-=======
->>>>>>> rebase
  * @is_enabled: Set to false when GPIO should be put in high Z state.
  * @out_value: Cached pin output value
  * @have_buffer: Set to true if GPIO output could be configured in push-pull,
@@ -167,10 +150,7 @@ enum pmic_gpio_func_index {
 struct pmic_gpio_pad {
 	u16		base;
 	int		irq;
-<<<<<<< HEAD
 	int		gpio_idx;
-=======
->>>>>>> rebase
 	bool		is_enabled;
 	bool		out_value;
 	bool		have_buffer;
@@ -193,10 +173,7 @@ struct pmic_gpio_state {
 	struct regmap	*map;
 	struct pinctrl_dev *ctrl;
 	struct gpio_chip chip;
-<<<<<<< HEAD
 	const char **gpio_groups;
-=======
->>>>>>> rebase
 };
 
 static const struct pinconf_generic_params pmic_gpio_bindings[] = {
@@ -310,13 +287,9 @@ static int pmic_gpio_get_function_groups(struct pinctrl_dev *pctldev,
 					 const char *const **groups,
 					 unsigned *const num_qgroups)
 {
-<<<<<<< HEAD
 	struct pmic_gpio_state *state = pinctrl_dev_get_drvdata(pctldev);
 
 	*groups = state->gpio_groups;
-=======
-	*groups = pmic_gpio_groups;
->>>>>>> rebase
 	*num_qgroups = pctldev->desc->npins;
 	return 0;
 }
@@ -456,12 +429,9 @@ static int pmic_gpio_config_get(struct pinctrl_dev *pctldev,
 			return -EINVAL;
 		arg = 1;
 		break;
-<<<<<<< HEAD
 	case PIN_CONFIG_OUTPUT_ENABLE:
 		arg = pad->output_enabled;
 		break;
-=======
->>>>>>> rebase
 	case PIN_CONFIG_OUTPUT:
 		arg = pad->out_value;
 		break;
@@ -541,12 +511,9 @@ static int pmic_gpio_config_set(struct pinctrl_dev *pctldev, unsigned int pin,
 		case PIN_CONFIG_INPUT_ENABLE:
 			pad->input_enabled = arg ? true : false;
 			break;
-<<<<<<< HEAD
 		case PIN_CONFIG_OUTPUT_ENABLE:
 			pad->output_enabled = arg ? true : false;
 			break;
-=======
->>>>>>> rebase
 		case PIN_CONFIG_OUTPUT:
 			pad->output_enabled = true;
 			pad->out_value = arg;
@@ -557,11 +524,7 @@ static int pmic_gpio_config_set(struct pinctrl_dev *pctldev, unsigned int pin,
 			pad->pullup = arg;
 			break;
 		case PMIC_GPIO_CONF_STRENGTH:
-<<<<<<< HEAD
 			if (arg > PMIC_GPIO_STRENGTH_HIGH)
-=======
-			if (arg > PMIC_GPIO_STRENGTH_LOW)
->>>>>>> rebase
 				return -EINVAL;
 			pad->strength = arg;
 			break;
@@ -684,11 +647,7 @@ static void pmic_gpio_config_dbg_show(struct pinctrl_dev *pctldev,
 
 	pad = pctldev->desc->pins[pin].drv_data;
 
-<<<<<<< HEAD
 	seq_printf(s, " gpio%-2d:", pad->gpio_idx);
-=======
-	seq_printf(s, " gpio%-2d:", pin + PMIC_GPIO_PHYSICAL_OFFSET);
->>>>>>> rebase
 
 	val = pmic_gpio_read(state, pad, PMIC_GPIO_REG_EN_CTL);
 
@@ -729,7 +688,6 @@ static void pmic_gpio_config_dbg_show(struct pinctrl_dev *pctldev,
 	}
 }
 
-<<<<<<< HEAD
 #if defined(CONFIG_SEC_PM)
 static void pmic_gpio_sec_dbg_show(struct pinctrl_dev *pctldev,
 				      struct seq_file *s)
@@ -838,20 +796,15 @@ static void pmic_gpio_sec_dbg_print(struct pinctrl_dev *pctldev)
 }
 #endif /* CONFIG_SEC_PM */
 
-=======
->>>>>>> rebase
 static const struct pinconf_ops pmic_gpio_pinconf_ops = {
 	.is_generic			= true,
 	.pin_config_group_get		= pmic_gpio_config_get,
 	.pin_config_group_set		= pmic_gpio_config_set,
 	.pin_config_group_dbg_show	= pmic_gpio_config_dbg_show,
-<<<<<<< HEAD
 #if defined(CONFIG_SEC_PM)
 	.pin_config_sec_dbg_show	= pmic_gpio_sec_dbg_show,
 	.pin_config_sec_dbg_print	= pmic_gpio_sec_dbg_print,
 #endif /* CONFIG_SEC_PM */
-=======
->>>>>>> rebase
 };
 
 static int pmic_gpio_direction_input(struct gpio_chip *chip, unsigned pin)
@@ -911,21 +864,17 @@ static int pmic_gpio_of_xlate(struct gpio_chip *chip,
 			      const struct of_phandle_args *gpio_desc,
 			      u32 *flags)
 {
-<<<<<<< HEAD
 	int i;
 	struct pmic_gpio_state *state = gpiochip_get_data(chip);
 	struct pinctrl_desc *desc = state->ctrl->desc;
 	struct pmic_gpio_pad *pad;
 
-=======
->>>>>>> rebase
 	if (chip->of_gpio_n_cells < 2)
 		return -EINVAL;
 
 	if (flags)
 		*flags = gpio_desc->args[1];
 
-<<<<<<< HEAD
 	for (i = 0; i < chip->ngpio; i++) {
 		pad = desc->pins[i].drv_data;
 		if (pad->gpio_idx == gpio_desc->args[0]) {
@@ -938,9 +887,6 @@ static int pmic_gpio_of_xlate(struct gpio_chip *chip,
 	dev_err(state->dev, "Couldn't find pin for gpio %d\n",
 				gpio_desc->args[0]);
 	return -ENODEV;
-=======
-	return gpio_desc->args[0] - PMIC_GPIO_PHYSICAL_OFFSET;
->>>>>>> rebase
 }
 
 static int pmic_gpio_to_irq(struct gpio_chip *chip, unsigned pin)
@@ -1127,7 +1073,6 @@ static int pmic_gpio_probe(struct platform_device *pdev)
 	struct pinctrl_desc *pctrldesc;
 	struct pmic_gpio_pad *pad, *pads;
 	struct pmic_gpio_state *state;
-<<<<<<< HEAD
 	int ret, npins, ngpios, i, j, pin_idx;
 	int disallowed_count = 0;
 	u32 reg[2], start, size;
@@ -1216,35 +1161,12 @@ static int pmic_gpio_probe(struct platform_device *pdev)
 		ret = -ENOMEM;
 		goto err_free;
 	}
-=======
-	int ret, npins, i;
-	u32 reg;
-
-	ret = of_property_read_u32(dev->of_node, "reg", &reg);
-	if (ret < 0) {
-		dev_err(dev, "missing base address");
-		return ret;
-	}
-
-	npins = platform_irq_count(pdev);
-	if (!npins)
-		return -EINVAL;
-	if (npins < 0)
-		return npins;
-
-	BUG_ON(npins > ARRAY_SIZE(pmic_gpio_groups));
-
-	state = devm_kzalloc(dev, sizeof(*state), GFP_KERNEL);
-	if (!state)
-		return -ENOMEM;
->>>>>>> rebase
 
 	platform_set_drvdata(pdev, state);
 
 	state->dev = &pdev->dev;
 	state->map = dev_get_regmap(dev->parent, NULL);
 
-<<<<<<< HEAD
 	state->gpio_groups = devm_kcalloc(dev, sizeof(*state->gpio_groups),
 						npins, GFP_KERNEL);
 	if (!state->gpio_groups) {
@@ -1269,19 +1191,6 @@ static int pmic_gpio_probe(struct platform_device *pdev)
 		ret = -ENOMEM;
 		goto err_free;
 	}
-=======
-	pindesc = devm_kcalloc(dev, npins, sizeof(*pindesc), GFP_KERNEL);
-	if (!pindesc)
-		return -ENOMEM;
-
-	pads = devm_kcalloc(dev, npins, sizeof(*pads), GFP_KERNEL);
-	if (!pads)
-		return -ENOMEM;
-
-	pctrldesc = devm_kzalloc(dev, sizeof(*pctrldesc), GFP_KERNEL);
-	if (!pctrldesc)
-		return -ENOMEM;
->>>>>>> rebase
 
 	pctrldesc->pctlops = &pmic_gpio_pinctrl_ops;
 	pctrldesc->pmxops = &pmic_gpio_pinmux_ops;
@@ -1295,7 +1204,6 @@ static int pmic_gpio_probe(struct platform_device *pdev)
 #ifdef CONFIG_DEBUG_FS
 	pctrldesc->custom_conf_items = pmic_conf_items;
 #endif
-<<<<<<< HEAD
 	for (pin_idx = 0, i = 0; i < ngpios; i++) {
 		for (j = 0; j < disallowed_count; j++) {
 			if (i + PMIC_GPIO_PHYSICAL_OFFSET == disallowed[j])
@@ -1332,24 +1240,6 @@ static int pmic_gpio_probe(struct platform_device *pdev)
 		}
 		pindesc++;
 		pin_idx++;
-=======
-
-	for (i = 0; i < npins; i++, pindesc++) {
-		pad = &pads[i];
-		pindesc->drv_data = pad;
-		pindesc->number = i;
-		pindesc->name = pmic_gpio_groups[i];
-
-		pad->irq = platform_get_irq(pdev, i);
-		if (pad->irq < 0)
-			return pad->irq;
-
-		pad->base = reg + i * PMIC_GPIO_ADDRESS_RANGE;
-
-		ret = pmic_gpio_populate(state, pad);
-		if (ret < 0)
-			return ret;
->>>>>>> rebase
 	}
 
 	state->chip = pmic_gpio_gpio_template;
@@ -1361,7 +1251,6 @@ static int pmic_gpio_probe(struct platform_device *pdev)
 	state->chip.can_sleep = false;
 
 	state->ctrl = devm_pinctrl_register(dev, pctrldesc, state);
-<<<<<<< HEAD
 	if (IS_ERR(state->ctrl)) {
 		ret = PTR_ERR(state->ctrl);
 		dev_err(state->dev, "failed to register pinctrl device, ret=%d\n",
@@ -1373,15 +1262,6 @@ static int pmic_gpio_probe(struct platform_device *pdev)
 	if (ret) {
 		dev_err(state->dev, "can't add gpio chip, ret=%d\n", ret);
 		goto err_free;
-=======
-	if (IS_ERR(state->ctrl))
-		return PTR_ERR(state->ctrl);
-
-	ret = gpiochip_add_data(&state->chip, state);
-	if (ret) {
-		dev_err(state->dev, "can't add gpio chip\n");
-		return ret;
->>>>>>> rebase
 	}
 
 	/*
@@ -1399,7 +1279,6 @@ static int pmic_gpio_probe(struct platform_device *pdev)
 					     npins);
 		if (ret) {
 			dev_err(dev, "failed to add pin range\n");
-<<<<<<< HEAD
 			gpiochip_remove(&state->chip);
 			goto err_free;
 		}
@@ -1408,16 +1287,6 @@ static int pmic_gpio_probe(struct platform_device *pdev)
 err_free:
 	kfree(disallowed);
 
-=======
-			goto err_range;
-		}
-	}
-
-	return 0;
-
-err_range:
-	gpiochip_remove(&state->chip);
->>>>>>> rebase
 	return ret;
 }
 

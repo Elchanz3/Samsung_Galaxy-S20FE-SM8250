@@ -923,11 +923,7 @@ static int ixgbe_alloc_q_vector(struct ixgbe_adapter *adapter,
 		ring->queue_index = txr_idx;
 
 		/* assign ring to adapter */
-<<<<<<< HEAD
 		adapter->tx_ring[txr_idx] = ring;
-=======
-		WRITE_ONCE(adapter->tx_ring[txr_idx], ring);
->>>>>>> rebase
 
 		/* update count and index */
 		txr_count--;
@@ -954,11 +950,7 @@ static int ixgbe_alloc_q_vector(struct ixgbe_adapter *adapter,
 		set_ring_xdp(ring);
 
 		/* assign ring to adapter */
-<<<<<<< HEAD
 		adapter->xdp_ring[xdp_idx] = ring;
-=======
-		WRITE_ONCE(adapter->xdp_ring[xdp_idx], ring);
->>>>>>> rebase
 
 		/* update count and index */
 		xdp_count--;
@@ -1001,11 +993,7 @@ static int ixgbe_alloc_q_vector(struct ixgbe_adapter *adapter,
 		ring->queue_index = rxr_idx;
 
 		/* assign ring to adapter */
-<<<<<<< HEAD
 		adapter->rx_ring[rxr_idx] = ring;
-=======
-		WRITE_ONCE(adapter->rx_ring[rxr_idx], ring);
->>>>>>> rebase
 
 		/* update count and index */
 		rxr_count--;
@@ -1034,7 +1022,6 @@ static void ixgbe_free_q_vector(struct ixgbe_adapter *adapter, int v_idx)
 
 	ixgbe_for_each_ring(ring, q_vector->tx) {
 		if (ring_is_xdp(ring))
-<<<<<<< HEAD
 			adapter->xdp_ring[ring->queue_index] = NULL;
 		else
 			adapter->tx_ring[ring->queue_index] = NULL;
@@ -1042,15 +1029,6 @@ static void ixgbe_free_q_vector(struct ixgbe_adapter *adapter, int v_idx)
 
 	ixgbe_for_each_ring(ring, q_vector->rx)
 		adapter->rx_ring[ring->queue_index] = NULL;
-=======
-			WRITE_ONCE(adapter->xdp_ring[ring->queue_index], NULL);
-		else
-			WRITE_ONCE(adapter->tx_ring[ring->queue_index], NULL);
-	}
-
-	ixgbe_for_each_ring(ring, q_vector->rx)
-		WRITE_ONCE(adapter->rx_ring[ring->queue_index], NULL);
->>>>>>> rebase
 
 	adapter->q_vector[v_idx] = NULL;
 	napi_hash_del(&q_vector->napi);

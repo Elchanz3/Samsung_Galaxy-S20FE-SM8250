@@ -19,12 +19,9 @@
 
 #include "u_serial.h"
 
-<<<<<<< HEAD
 #ifdef CONFIG_USB_DUN_SUPPORT
 #include "serial_acm.c"
 #endif
-=======
->>>>>>> rebase
 
 /*
  * This CDC ACM function support just wraps control functions and
@@ -339,11 +336,8 @@ static void acm_complete_set_line_coding(struct usb_ep *ep,
 	}
 }
 
-<<<<<<< HEAD
 static int acm_cdc_notify(struct f_acm *acm, u8 type, u16 value, void *data, unsigned length);
 
-=======
->>>>>>> rebase
 static int acm_setup(struct usb_function *f, const struct usb_ctrlrequest *ctrl)
 {
 	struct f_acm		*acm = func_to_acm(f);
@@ -399,7 +393,6 @@ static int acm_setup(struct usb_function *f, const struct usb_ctrlrequest *ctrl)
 		 * host sets the ACM_CTRL_DTR bit; and when it clears
 		 * that bit, we should return to that no-flow state.
 		 */
-<<<<<<< HEAD
 #ifdef CONFIG_USB_DUN_SUPPORT
 		notify_control_line_state((unsigned long)w_value);
 #endif
@@ -419,9 +412,6 @@ static int acm_setup(struct usb_function *f, const struct usb_ctrlrequest *ctrl)
 		pr_debug("%s: USB_CDC_REQ_SET_CONTROL_LINE_STATE: DTR:%d RST:%d\n",
 				__func__, w_value & ACM_CTRL_DTR ? 1 : 0,
 				w_value & ACM_CTRL_RTS ? 1 : 0);
-=======
-		acm->port_handshake_bits = w_value;
->>>>>>> rebase
 		break;
 
 	default:
@@ -568,11 +558,7 @@ static int acm_notify_serial_state(struct f_acm *acm)
 	__le16			serial_state;
 
 	spin_lock(&acm->lock);
-<<<<<<< HEAD
 	if (acm->notify_req && (acm->port_handshake_bits & ACM_CTRL_DTR)) {
-=======
-	if (acm->notify_req) {
->>>>>>> rebase
 		dev_dbg(&cdev->gadget->dev, "acm ttyGS%d serial state %04x\n",
 			acm->port_num, acm->serial_state);
 		serial_state = cpu_to_le16(acm->serial_state);
@@ -604,7 +590,6 @@ static void acm_cdc_notify_complete(struct usb_ep *ep, struct usb_request *req)
 		acm_notify_serial_state(acm);
 }
 
-<<<<<<< HEAD
 #ifdef CONFIG_USB_DUN_SUPPORT
 void acm_notify(void *dev, u16 state)
 {
@@ -618,8 +603,6 @@ void acm_notify(void *dev, u16 state)
 EXPORT_SYMBOL(acm_notify);
 #endif
 
-=======
->>>>>>> rebase
 /* connect == the TTY link is open */
 
 static void acm_connect(struct gserial *port)
@@ -660,13 +643,9 @@ acm_bind(struct usb_configuration *c, struct usb_function *f)
 {
 	struct usb_composite_dev *cdev = c->cdev;
 	struct f_acm		*acm = func_to_acm(f);
-<<<<<<< HEAD
 #ifndef CONFIG_USB_ANDROID_SAMSUNG_COMPOSITE
 	struct usb_string	*us;
 #endif
-=======
-	struct usb_string	*us;
->>>>>>> rebase
 	int			status;
 	struct usb_ep		*ep;
 
@@ -675,7 +654,6 @@ acm_bind(struct usb_configuration *c, struct usb_function *f)
 	 */
 
 	/* maybe allocate device-global string IDs, and patch descriptors */
-<<<<<<< HEAD
 #ifdef CONFIG_USB_ANDROID_SAMSUNG_COMPOSITE
 	if (acm_string_defs[0].id == 0) {
 		status = usb_string_ids_tab(c->cdev, acm_string_defs);
@@ -688,8 +666,6 @@ acm_bind(struct usb_configuration *c, struct usb_function *f)
 		acm_iad_descriptor.iFunction = acm_string_defs[ACM_IAD_IDX].id;
 	}
 #else
-=======
->>>>>>> rebase
 	us = usb_gstrings_attach(cdev, acm_strings,
 			ARRAY_SIZE(acm_string_defs));
 	if (IS_ERR(us))
@@ -697,10 +673,7 @@ acm_bind(struct usb_configuration *c, struct usb_function *f)
 	acm_control_interface_desc.iInterface = us[ACM_CTRL_IDX].id;
 	acm_data_interface_desc.iInterface = us[ACM_DATA_IDX].id;
 	acm_iad_descriptor.iFunction = us[ACM_IAD_IDX].id;
-<<<<<<< HEAD
 #endif
-=======
->>>>>>> rebase
 
 	/* allocate instance-specific interface IDs, and patch descriptors */
 	status = usb_interface_id(c, f);
@@ -773,24 +746,17 @@ acm_bind(struct usb_configuration *c, struct usb_function *f)
 		gadget_is_dualspeed(c->cdev->gadget) ? "dual" : "full",
 		acm->port.in->name, acm->port.out->name,
 		acm->notify->name);
-<<<<<<< HEAD
 	/* To notify serial state by datarouter*/
 #ifdef CONFIG_USB_DUN_SUPPORT
 	modem_register(acm);
 #endif
-=======
->>>>>>> rebase
 	return 0;
 
 fail:
 	if (acm->notify_req)
 		gs_free_req(acm->notify, acm->notify_req);
 
-<<<<<<< HEAD
 	ERROR(cdev, "%s/%pK: can't bind, err %d\n", f->name, f, status);
-=======
-	ERROR(cdev, "%s/%p: can't bind, err %d\n", f->name, f, status);
->>>>>>> rebase
 
 	return status;
 }
@@ -799,7 +765,6 @@ static void acm_unbind(struct usb_configuration *c, struct usb_function *f)
 {
 	struct f_acm		*acm = func_to_acm(f);
 
-<<<<<<< HEAD
 	/* To notify serial state by datarouter*/
 #ifdef CONFIG_USB_DUN_SUPPORT
 	modem_unregister();
@@ -807,9 +772,6 @@ static void acm_unbind(struct usb_configuration *c, struct usb_function *f)
 #ifndef CONFIG_USB_ANDROID_SAMSUNG_COMPOSITE
 	acm_string_defs[0].id = 0;
 #endif
-=======
-	acm_string_defs[0].id = 0;
->>>>>>> rebase
 	usb_free_all_descriptors(f);
 	if (acm->notify_req)
 		gs_free_req(acm->notify, acm->notify_req);
@@ -837,7 +799,6 @@ static struct usb_function *acm_alloc_func(struct usb_function_instance *fi)
 	acm->port.disconnect = acm_disconnect;
 	acm->port.send_break = acm_send_break;
 
-<<<<<<< HEAD
 	opts = container_of(fi, struct f_serial_opts, func_inst);
 
 #ifdef CONFIG_USB_ANDROID_SAMSUNG_COMPOSITE
@@ -845,9 +806,6 @@ static struct usb_function *acm_alloc_func(struct usb_function_instance *fi)
 #else
 	acm->port.func.name = "acm";
 #endif
-=======
-	acm->port.func.name = "acm";
->>>>>>> rebase
 	acm->port.func.strings = acm_strings;
 	/* descriptors are per-instance copies */
 	acm->port.func.bind = acm_bind;
@@ -855,10 +813,6 @@ static struct usb_function *acm_alloc_func(struct usb_function_instance *fi)
 	acm->port.func.setup = acm_setup;
 	acm->port.func.disable = acm_disable;
 
-<<<<<<< HEAD
-=======
-	opts = container_of(fi, struct f_serial_opts, func_inst);
->>>>>>> rebase
 	acm->port_num = opts->port_num;
 	acm->port.func.unbind = acm_unbind;
 	acm->port.func.free_func = acm_free_func;

@@ -69,10 +69,6 @@ struct pci_epc_ops {
  * @bitmap: bitmap to manage the PCI address space
  * @pages: number of bits representing the address region
  * @page_size: size of each page
-<<<<<<< HEAD
-=======
- * @lock: mutex to protect bitmap
->>>>>>> rebase
  */
 struct pci_epc_mem {
 	phys_addr_t	phys_base;
@@ -80,11 +76,6 @@ struct pci_epc_mem {
 	unsigned long	*bitmap;
 	size_t		page_size;
 	int		pages;
-<<<<<<< HEAD
-=======
-	/* mutex to protect against concurrent access for memory allocation*/
-	struct mutex	lock;
->>>>>>> rebase
 };
 
 /**

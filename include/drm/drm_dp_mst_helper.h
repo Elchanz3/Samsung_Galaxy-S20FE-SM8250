@@ -27,10 +27,7 @@
 #include <drm/drm_atomic.h>
 
 struct drm_dp_mst_branch;
-<<<<<<< HEAD
 struct drm_dp_mst_port;
-=======
->>>>>>> rebase
 
 /**
  * struct drm_dp_vcpi - Virtual Channel Payload Identifier
@@ -46,7 +43,6 @@ struct drm_dp_vcpi {
 	int num_slots;
 };
 
-<<<<<<< HEAD
 struct drm_dp_mst_dsc_dpcd_cache {
 	bool valid;
 	bool use_parent_dpcd;
@@ -59,8 +55,6 @@ struct drm_dp_mst_dsc_info {
 	struct drm_dp_mst_dsc_dpcd_cache dsc_dpcd_cache;
 };
 
-=======
->>>>>>> rebase
 /**
  * struct drm_dp_mst_port - MST port
  * @kref: reference count for this port.
@@ -81,11 +75,8 @@ struct drm_dp_mst_dsc_info {
  * @vcpi: Virtual Channel Payload info for this port.
  * @connector: DRM connector this port is connected to.
  * @mgr: topology manager this port lives under.
-<<<<<<< HEAD
  * @fec_capability: Tracks full path fec capability.
  * @dsc_info: stores dpcd and configuration information.
-=======
->>>>>>> rebase
  *
  * This structure represents an MST port endpoint on a device somewhere
  * in the MST topology.
@@ -122,7 +113,6 @@ struct drm_dp_mst_port {
 	 * audio-capable.
 	 */
 	bool has_audio;
-<<<<<<< HEAD
 	/**
 	 * @fec_capability: Tracks full path fec capability as reported by
 	 * enum path resources.
@@ -133,8 +123,6 @@ struct drm_dp_mst_port {
 	 * port where dsc decoding will be enabled.
 	 */
 	struct drm_dp_mst_dsc_info dsc_info;
-=======
->>>>>>> rebase
 };
 
 /**
@@ -328,10 +316,7 @@ struct drm_dp_port_number_req {
 
 struct drm_dp_enum_path_resources_ack_reply {
 	u8 port_number;
-<<<<<<< HEAD
 	bool fec_capability;
-=======
->>>>>>> rebase
 	u16 full_payload_bw_number;
 	u16 avail_payload_bw_number;
 };
@@ -629,13 +614,10 @@ enum drm_connector_status drm_dp_mst_detect_port(struct drm_connector *connector
 
 bool drm_dp_mst_port_has_audio(struct drm_dp_mst_topology_mgr *mgr,
 					struct drm_dp_mst_port *port);
-<<<<<<< HEAD
 
 bool drm_dp_mst_has_fec(struct drm_dp_mst_topology_mgr *mgr,
 		struct drm_dp_mst_port *port);
 
-=======
->>>>>>> rebase
 struct edid *drm_dp_mst_get_edid(struct drm_connector *connector, struct drm_dp_mst_topology_mgr *mgr, struct drm_dp_mst_port *port);
 
 
@@ -682,7 +664,6 @@ int drm_dp_atomic_release_vcpi_slots(struct drm_atomic_state *state,
 int drm_dp_send_power_updown_phy(struct drm_dp_mst_topology_mgr *mgr,
 				 struct drm_dp_mst_port *port, bool power_up);
 
-<<<<<<< HEAD
 int drm_dp_mst_get_dsc_info(struct drm_dp_mst_topology_mgr *mgr,
 		struct drm_dp_mst_port *port,
 		struct drm_dp_mst_dsc_info *dsc_info);
@@ -703,6 +684,4 @@ int drm_dp_mst_get_max_sdp_streams_supported(
 		struct drm_dp_mst_topology_mgr *mgr,
 		struct drm_dp_mst_port *port);
 
-=======
->>>>>>> rebase
 #endif

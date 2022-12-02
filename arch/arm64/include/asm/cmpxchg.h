@@ -30,7 +30,6 @@
  * barrier case is generated as release+dmb for the former and
  * acquire+release for the latter.
  */
-<<<<<<< HEAD
 #define __XCHG_CASE(w, sz, name, mb, nop_lse, acq, acq_lse, rel, cl)	\
 static inline unsigned long __xchg_case_##name(unsigned long x,		\
 					       volatile void *ptr)	\
@@ -71,48 +70,6 @@ __XCHG_CASE(w, b,  mb_1, dmb ish, nop,  , a, l, "memory")
 __XCHG_CASE(w, h,  mb_2, dmb ish, nop,  , a, l, "memory")
 __XCHG_CASE(w,  ,  mb_4, dmb ish, nop,  , a, l, "memory")
 __XCHG_CASE( ,  ,  mb_8, dmb ish, nop,  , a, l, "memory")
-=======
-#define __XCHG_CASE(w, sfx, name, sz, mb, nop_lse, acq, acq_lse, rel, cl)	\
-static inline u##sz __xchg_case_##name##sz(u##sz x, volatile void *ptr)		\
-{										\
-	u##sz ret;								\
-	unsigned long tmp;							\
-										\
-	asm volatile(ARM64_LSE_ATOMIC_INSN(					\
-	/* LL/SC */								\
-	"	prfm	pstl1strm, %2\n"					\
-	"1:	ld" #acq "xr" #sfx "\t%" #w "0, %2\n"				\
-	"	st" #rel "xr" #sfx "\t%w1, %" #w "3, %2\n"			\
-	"	cbnz	%w1, 1b\n"						\
-	"	" #mb,								\
-	/* LSE atomics */							\
-	"	swp" #acq_lse #rel #sfx "\t%" #w "3, %" #w "0, %2\n"		\
-		__nops(3)							\
-	"	" #nop_lse)							\
-	: "=&r" (ret), "=&r" (tmp), "+Q" (*(u##sz *)ptr)			\
-	: "r" (x)								\
-	: cl);									\
-										\
-	return ret;								\
-}
-
-__XCHG_CASE(w, b,     ,  8,        ,    ,  ,  ,  ,         )
-__XCHG_CASE(w, h,     , 16,        ,    ,  ,  ,  ,         )
-__XCHG_CASE(w,  ,     , 32,        ,    ,  ,  ,  ,         )
-__XCHG_CASE( ,  ,     , 64,        ,    ,  ,  ,  ,         )
-__XCHG_CASE(w, b, acq_,  8,        ,    , a, a,  , "memory")
-__XCHG_CASE(w, h, acq_, 16,        ,    , a, a,  , "memory")
-__XCHG_CASE(w,  , acq_, 32,        ,    , a, a,  , "memory")
-__XCHG_CASE( ,  , acq_, 64,        ,    , a, a,  , "memory")
-__XCHG_CASE(w, b, rel_,  8,        ,    ,  ,  , l, "memory")
-__XCHG_CASE(w, h, rel_, 16,        ,    ,  ,  , l, "memory")
-__XCHG_CASE(w,  , rel_, 32,        ,    ,  ,  , l, "memory")
-__XCHG_CASE( ,  , rel_, 64,        ,    ,  ,  , l, "memory")
-__XCHG_CASE(w, b,  mb_,  8, dmb ish, nop,  , a, l, "memory")
-__XCHG_CASE(w, h,  mb_, 16, dmb ish, nop,  , a, l, "memory")
-__XCHG_CASE(w,  ,  mb_, 32, dmb ish, nop,  , a, l, "memory")
-__XCHG_CASE( ,  ,  mb_, 64, dmb ish, nop,  , a, l, "memory")
->>>>>>> rebase
 
 #undef __XCHG_CASE
 
@@ -123,7 +80,6 @@ static __always_inline  unsigned long __xchg##sfx(unsigned long x,	\
 {									\
 	switch (size) {							\
 	case 1:								\
-<<<<<<< HEAD
 		return __xchg_case##sfx##_1(x, ptr);			\
 	case 2:								\
 		return __xchg_case##sfx##_2(x, ptr);			\
@@ -131,15 +87,6 @@ static __always_inline  unsigned long __xchg##sfx(unsigned long x,	\
 		return __xchg_case##sfx##_4(x, ptr);			\
 	case 8:								\
 		return __xchg_case##sfx##_8(x, ptr);			\
-=======
-		return __xchg_case##sfx##_8(x, ptr);			\
-	case 2:								\
-		return __xchg_case##sfx##_16(x, ptr);			\
-	case 4:								\
-		return __xchg_case##sfx##_32(x, ptr);			\
-	case 8:								\
-		return __xchg_case##sfx##_64(x, ptr);			\
->>>>>>> rebase
 	default:							\
 		BUILD_BUG();						\
 	}								\
@@ -176,7 +123,6 @@ static __always_inline unsigned long __cmpxchg##sfx(volatile void *ptr,	\
 {									\
 	switch (size) {							\
 	case 1:								\
-<<<<<<< HEAD
 		return __cmpxchg_case##sfx##_1(ptr, (u8)old, new);	\
 	case 2:								\
 		return __cmpxchg_case##sfx##_2(ptr, (u16)old, new);	\
@@ -184,15 +130,6 @@ static __always_inline unsigned long __cmpxchg##sfx(volatile void *ptr,	\
 		return __cmpxchg_case##sfx##_4(ptr, old, new);		\
 	case 8:								\
 		return __cmpxchg_case##sfx##_8(ptr, old, new);		\
-=======
-		return __cmpxchg_case##sfx##_8(ptr, (u8)old, new);	\
-	case 2:								\
-		return __cmpxchg_case##sfx##_16(ptr, (u16)old, new);	\
-	case 4:								\
-		return __cmpxchg_case##sfx##_32(ptr, old, new);		\
-	case 8:								\
-		return __cmpxchg_case##sfx##_64(ptr, old, new);		\
->>>>>>> rebase
 	default:							\
 		BUILD_BUG();						\
 	}								\
@@ -260,26 +197,16 @@ __CMPXCHG_GEN(_mb)
 	__ret; \
 })
 
-<<<<<<< HEAD
 #define __CMPWAIT_CASE(w, sz, name)					\
 static inline void __cmpwait_case_##name(volatile void *ptr,		\
 					 unsigned long val)		\
-=======
-#define __CMPWAIT_CASE(w, sfx, sz)					\
-static inline void __cmpwait_case_##sz(volatile void *ptr,		\
-				       unsigned long val)		\
->>>>>>> rebase
 {									\
 	unsigned long tmp;						\
 									\
 	asm volatile(							\
 	"	sevl\n"							\
 	"	wfe\n"							\
-<<<<<<< HEAD
 	"	ldxr" #sz "\t%" #w "[tmp], %[v]\n"			\
-=======
-	"	ldxr" #sfx "\t%" #w "[tmp], %[v]\n"			\
->>>>>>> rebase
 	"	eor	%" #w "[tmp], %" #w "[tmp], %" #w "[val]\n"	\
 	"	cbnz	%" #w "[tmp], 1f\n"				\
 	"	wfe\n"							\
@@ -288,17 +215,10 @@ static inline void __cmpwait_case_##sz(volatile void *ptr,		\
 	: [val] "r" (val));						\
 }
 
-<<<<<<< HEAD
 __CMPWAIT_CASE(w, b, 1);
 __CMPWAIT_CASE(w, h, 2);
 __CMPWAIT_CASE(w,  , 4);
 __CMPWAIT_CASE( ,  , 8);
-=======
-__CMPWAIT_CASE(w, b, 8);
-__CMPWAIT_CASE(w, h, 16);
-__CMPWAIT_CASE(w,  , 32);
-__CMPWAIT_CASE( ,  , 64);
->>>>>>> rebase
 
 #undef __CMPWAIT_CASE
 
@@ -309,7 +229,6 @@ static __always_inline void __cmpwait##sfx(volatile void *ptr,		\
 {									\
 	switch (size) {							\
 	case 1:								\
-<<<<<<< HEAD
 		return __cmpwait_case##sfx##_1(ptr, (u8)val);		\
 	case 2:								\
 		return __cmpwait_case##sfx##_2(ptr, (u16)val);		\
@@ -317,15 +236,6 @@ static __always_inline void __cmpwait##sfx(volatile void *ptr,		\
 		return __cmpwait_case##sfx##_4(ptr, val);		\
 	case 8:								\
 		return __cmpwait_case##sfx##_8(ptr, val);		\
-=======
-		return __cmpwait_case##sfx##_8(ptr, (u8)val);		\
-	case 2:								\
-		return __cmpwait_case##sfx##_16(ptr, (u16)val);		\
-	case 4:								\
-		return __cmpwait_case##sfx##_32(ptr, val);		\
-	case 8:								\
-		return __cmpwait_case##sfx##_64(ptr, val);		\
->>>>>>> rebase
 	default:							\
 		BUILD_BUG();						\
 	}								\

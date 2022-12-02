@@ -90,7 +90,6 @@ The following cgroupfs files are created by cgroup freezer.
   Shows the parent-state.  0 if none of the cgroup's ancestors is
   frozen; otherwise, 1.
 
-<<<<<<< HEAD
 * freezer.killable: Read-write
 
   When read, returns the killable state of a cgroup - "1" if frozen
@@ -103,8 +102,6 @@ The following cgroupfs files are created by cgroup freezer.
   state of frozen tasks to TASK_UNINTERRUPTIBLE and they won't respond
   to signals unless thawed or unfrozen.
 
-=======
->>>>>>> rebase
 The root cgroup is non-freezable and the above interface files don't
 exist.
 

@@ -114,11 +114,7 @@ static unsigned long get_memory_block_size(void)
  * uses.
  */
 
-<<<<<<< HEAD
 static ssize_t phys_index_show(struct device *dev,
-=======
-static ssize_t show_mem_start_phys_index(struct device *dev,
->>>>>>> rebase
 			struct device_attribute *attr, char *buf)
 {
 	struct memory_block *mem = to_memory_block(dev);
@@ -448,7 +444,6 @@ out:
 static DEVICE_ATTR(valid_zones, 0444, show_valid_zones, NULL);
 #endif
 
-<<<<<<< HEAD
 #ifdef CONFIG_MEMORY_HOTPLUG
 static int count_num_free_block_pages(struct zone *zone, int bid)
 {
@@ -505,12 +500,6 @@ static DEVICE_ATTR(removable, 0444, show_mem_removable, NULL);
 #ifdef CONFIG_MEMORY_HOTPLUG
 static DEVICE_ATTR(allocated_bytes, 0444, allocated_bytes_show, NULL);
 #endif
-=======
-static DEVICE_ATTR(phys_index, 0444, show_mem_start_phys_index, NULL);
-static DEVICE_ATTR(state, 0644, show_mem_state, store_mem_state);
-static DEVICE_ATTR(phys_device, 0444, show_phys_device, NULL);
-static DEVICE_ATTR(removable, 0444, show_mem_removable, NULL);
->>>>>>> rebase
 
 /*
  * Block size attribute stuff
@@ -595,7 +584,6 @@ out:
 }
 
 static DEVICE_ATTR(probe, S_IWUSR, NULL, memory_probe_store);
-<<<<<<< HEAD
 
 #ifdef CONFIG_MEMORY_HOTREMOVE
 static ssize_t
@@ -626,9 +614,6 @@ memory_remove_store(struct device *dev,
 static DEVICE_ATTR(remove, S_IWUSR, NULL, memory_remove_store);
 #endif /* CONFIG_MEMORY_HOTREMOVE */
 #endif /* CONFIG_ARCH_MEMORY_PROBE */
-=======
-#endif
->>>>>>> rebase
 
 #ifdef CONFIG_MEMORY_FAILURE
 /*
@@ -735,12 +720,9 @@ static struct attribute *memory_memblk_attrs[] = {
 #ifdef CONFIG_MEMORY_HOTREMOVE
 	&dev_attr_valid_zones.attr,
 #endif
-<<<<<<< HEAD
 #ifdef CONFIG_MEMORY_HOTPLUG
 	&dev_attr_allocated_bytes.attr,
 #endif
-=======
->>>>>>> rebase
 	NULL
 };
 
@@ -863,11 +845,8 @@ int create_memory_block_devices(unsigned long start, unsigned long size)
 		for (block_id = start_block_id; block_id != end_block_id;
 		     block_id++) {
 			mem = find_memory_block_by_id(block_id, NULL);
-<<<<<<< HEAD
 			if (WARN_ON_ONCE(!mem))
 				continue;
-=======
->>>>>>> rebase
 			mem->section_count = 0;
 			unregister_memory(mem);
 		}
@@ -913,12 +892,9 @@ bool is_memblock_offlined(struct memory_block *mem)
 static struct attribute *memory_root_attrs[] = {
 #ifdef CONFIG_ARCH_MEMORY_PROBE
 	&dev_attr_probe.attr,
-<<<<<<< HEAD
 #ifdef CONFIG_MEMORY_HOTREMOVE
 	&dev_attr_remove.attr,
 #endif
-=======
->>>>>>> rebase
 #endif
 
 #ifdef CONFIG_MEMORY_FAILURE

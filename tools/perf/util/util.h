@@ -22,11 +22,7 @@ static inline void *zalloc(size_t size)
 	return calloc(1, size);
 }
 
-<<<<<<< HEAD
 #define zfree(ptr) ({ free(*ptr); *ptr = NULL; })
-=======
-#define zfree(ptr) ({ free((void *)*ptr); *ptr = NULL; })
->>>>>>> rebase
 
 struct dirent;
 struct nsinfo;
@@ -61,13 +57,6 @@ int fetch_kernel_version(unsigned int *puint,
 
 const char *perf_tip(const char *dirpath);
 
-<<<<<<< HEAD
-=======
-#ifndef HAVE_GET_CURRENT_DIR_NAME
-char *get_current_dir_name(void);
-#endif
-
->>>>>>> rebase
 #ifndef HAVE_SCHED_GETCPU_SUPPORT
 int sched_getcpu(void);
 #endif

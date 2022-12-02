@@ -755,14 +755,9 @@ static int mei_cl_device_remove(struct device *dev)
 
 	mei_cl_bus_module_put(cldev);
 	module_put(THIS_MODULE);
-<<<<<<< HEAD
 	dev->driver = NULL;
 	return ret;
 
-=======
-
-	return ret;
->>>>>>> rebase
 }
 
 static ssize_t name_show(struct device *dev, struct device_attribute *a,

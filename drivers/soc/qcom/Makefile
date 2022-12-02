@@ -1,41 +1,26 @@
-<<<<<<< HEAD
 CFLAGS_rpmh-rsc.o := -I$(src)
 obj-$(CONFIG_QCOM_COMMAND_DB) += cmd-db.o
 obj-$(CONFIG_QCOM_GLINK_SSR) +=	glink_ssr.o
 obj-$(CONFIG_QCOM_CPUSS_DUMP) += cpuss_dump.o
-=======
-# SPDX-License-Identifier: GPL-2.0
-CFLAGS_rpmh-rsc.o := -I$(src)
-obj-$(CONFIG_QCOM_GENI_SE) +=	qcom-geni-se.o
-obj-$(CONFIG_QCOM_COMMAND_DB) += cmd-db.o
-obj-$(CONFIG_QCOM_GLINK_SSR) +=	glink_ssr.o
->>>>>>> rebase
 obj-$(CONFIG_QCOM_GSBI)	+=	qcom_gsbi.o
 obj-$(CONFIG_QCOM_MDT_LOADER)	+= mdt_loader.o
 obj-$(CONFIG_QCOM_PM)	+=	spm.o
 obj-$(CONFIG_QCOM_QMI_HELPERS)	+= qmi_helpers.o
 qmi_helpers-y	+= qmi_encdec.o qmi_interface.o
-<<<<<<< HEAD
 obj-$(CONFIG_QCOM_QMI_RMNET)	+= qmi_rmnet.o
 obj-$(CONFIG_QCOM_QMI_DFC)	+= dfc_qmi.o dfc_qmap.o
 obj-$(CONFIG_QCOM_QMI_POWER_COLLAPSE) += wda_qmi.o
-=======
->>>>>>> rebase
 obj-$(CONFIG_QCOM_RMTFS_MEM)	+= rmtfs_mem.o
 obj-$(CONFIG_QCOM_RPMH)		+= qcom_rpmh.o
 qcom_rpmh-y			+= rpmh-rsc.o
 qcom_rpmh-y			+= rpmh.o
 obj-$(CONFIG_QCOM_SMD_RPM)	+= smd-rpm.o
 obj-$(CONFIG_QCOM_SMEM) +=	smem.o
-<<<<<<< HEAD
 obj-$(CONFIG_MSM_SPM) += msm-spm.o spm_devices.o
-=======
->>>>>>> rebase
 obj-$(CONFIG_QCOM_SMEM_STATE) += smem_state.o
 obj-$(CONFIG_QCOM_SMP2P)	+= smp2p.o
 obj-$(CONFIG_QCOM_SMSM)	+= smsm.o
 obj-$(CONFIG_QCOM_WCNSS_CTRL) += wcnss_ctrl.o
-<<<<<<< HEAD
 obj-$(CONFIG_QCOM_IPCC) += qcom_ipcc.o
 obj-$(CONFIG_QCOM_LLCC) += llcc-slice.o
 obj-$(CONFIG_QCOM_KONA_LLCC) += llcc-kona.o
@@ -122,8 +107,3 @@ obj-$(CONFIG_QTI_CRYPTO_COMMON) += crypto-qti-common.o
 obj-$(CONFIG_QTI_CRYPTO_TZ) += crypto-qti-tz.o
 obj-$(CONFIG_QTI_HW_KEY_MANAGER) += hwkm_qti.o
 hwkm_qti-y += hwkm.o
-=======
-obj-$(CONFIG_QCOM_APR) += apr.o
-obj-$(CONFIG_QCOM_LLCC) += llcc-slice.o
-obj-$(CONFIG_QCOM_SDM845_LLCC) += llcc-sdm845.o
->>>>>>> rebase

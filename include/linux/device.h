@@ -55,11 +55,8 @@ struct bus_attribute {
 	struct bus_attribute bus_attr_##_name = __ATTR_RW(_name)
 #define BUS_ATTR_RO(_name) \
 	struct bus_attribute bus_attr_##_name = __ATTR_RO(_name)
-<<<<<<< HEAD
 #define BUS_ATTR_WO(_name) \
 	struct bus_attribute bus_attr_##_name = __ATTR_WO(_name)
-=======
->>>>>>> rebase
 
 extern int __must_check bus_create_file(struct bus_type *,
 					struct bus_attribute *);
@@ -84,7 +81,6 @@ extern void bus_remove_file(struct bus_type *, struct bus_attribute *);
  *		that generate uevents to add the environment variables.
  * @probe:	Called when a new device or driver add to this bus, and callback
  *		the specific driver's probe to initial the matched device.
-<<<<<<< HEAD
  * @sync_state:	Called to sync device state to software state after all the
  *		state tracking consumers linked to this device (present at
  *		the time of late_initcall) have successfully bound to a
@@ -92,8 +88,6 @@ extern void bus_remove_file(struct bus_type *, struct bus_attribute *);
  *		be called at late_initcall_sync level. If the device has
  *		consumers that are never bound to a driver, this function
  *		will never get called until they do.
-=======
->>>>>>> rebase
  * @remove:	Called when a device removed from this bus.
  * @shutdown:	Called at shut-down time to quiesce the device.
  *
@@ -137,10 +131,7 @@ struct bus_type {
 	int (*match)(struct device *dev, struct device_driver *drv);
 	int (*uevent)(struct device *dev, struct kobj_uevent_env *env);
 	int (*probe)(struct device *dev);
-<<<<<<< HEAD
 	void (*sync_state)(struct device *dev);
-=======
->>>>>>> rebase
 	int (*remove)(struct device *dev);
 	void (*shutdown)(struct device *dev);
 
@@ -270,7 +261,6 @@ enum probe_type {
  * @probe:	Called to query the existence of a specific device,
  *		whether this driver can work with it, and bind the driver
  *		to a specific device.
-<<<<<<< HEAD
  * @sync_state:	Called to sync device state to software state after all the
  *		state tracking consumers linked to this device (present at
  *		the time of late_initcall) have successfully bound to a
@@ -278,8 +268,6 @@ enum probe_type {
  *		be called at late_initcall_sync level. If the device has
  *		consumers that are never bound to a driver, this function
  *		will never get called until they do.
-=======
->>>>>>> rebase
  * @remove:	Called when the device is removed from the system to
  *		unbind a device from this driver.
  * @shutdown:	Called at shut-down time to quiesce the device.
@@ -317,10 +305,7 @@ struct device_driver {
 	const struct acpi_device_id	*acpi_match_table;
 
 	int (*probe) (struct device *dev);
-<<<<<<< HEAD
 	void (*sync_state)(struct device *dev);
-=======
->>>>>>> rebase
 	int (*remove) (struct device *dev);
 	void (*shutdown) (struct device *dev);
 	int (*suspend) (struct device *dev, pm_message_t state);
@@ -788,7 +773,6 @@ struct device_dma_parameters {
 
 /**
  * struct device_connection - Device Connection Descriptor
-<<<<<<< HEAD
  * @fwnode: The device node of the connected device
  * @endpoint: The names of the two devices connected together
  * @id: Unique identifier for the connection
@@ -800,13 +784,6 @@ struct device_dma_parameters {
  */
 struct device_connection {
 	struct fwnode_handle	*fwnode;
-=======
- * @endpoint: The names of the two devices connected together
- * @id: Unique identifier for the connection
- * @list: List head, private, for internal use only
- */
-struct device_connection {
->>>>>>> rebase
 	const char		*endpoint[2];
 	const char		*id;
 	struct list_head	list;
@@ -874,10 +851,7 @@ enum device_link_state {
  * AUTOREMOVE_SUPPLIER: Remove the link automatically on supplier driver unbind.
  * AUTOPROBE_CONSUMER: Probe consumer driver automatically after supplier binds.
  * MANAGED: The core tracks presence of supplier/consumer drivers (internal).
-<<<<<<< HEAD
  * SYNC_STATE_ONLY: Link only affects sync_state() behavior.
-=======
->>>>>>> rebase
  */
 #define DL_FLAG_STATELESS		BIT(0)
 #define DL_FLAG_AUTOREMOVE_CONSUMER	BIT(1)
@@ -886,10 +860,7 @@ enum device_link_state {
 #define DL_FLAG_AUTOREMOVE_SUPPLIER	BIT(4)
 #define DL_FLAG_AUTOPROBE_CONSUMER	BIT(5)
 #define DL_FLAG_MANAGED			BIT(6)
-<<<<<<< HEAD
 #define DL_FLAG_SYNC_STATE_ONLY		BIT(7)
-=======
->>>>>>> rebase
 
 /**
  * struct device_link - Device link representation.
@@ -936,24 +907,18 @@ enum dl_dev_state {
  * struct dev_links_info - Device data related to device links.
  * @suppliers: List of links to supplier devices.
  * @consumers: List of links to consumer devices.
-<<<<<<< HEAD
  * @needs_suppliers: Hook to global list of devices waiting for suppliers.
  * @defer_sync: Hook to global list of devices that have deferred sync_state.
  * @need_for_probe: If needs_suppliers is on a list, this indicates if the
  *		    suppliers are needed for probe or not.
-=======
->>>>>>> rebase
  * @status: Driver status information.
  */
 struct dev_links_info {
 	struct list_head suppliers;
 	struct list_head consumers;
-<<<<<<< HEAD
 	struct list_head needs_suppliers;
 	struct list_head defer_sync;
 	bool need_for_probe;
-=======
->>>>>>> rebase
 	enum dl_dev_state status;
 };
 
@@ -1026,12 +991,9 @@ struct dev_links_info {
  * @offline:	Set after successful invocation of bus type's .offline().
  * @of_node_reused: Set if the device-tree node is shared with an ancestor
  *              device.
-<<<<<<< HEAD
  * @state_synced: The hardware state of this device has been synced to match
  *		  the software state of this device by calling the driver/bus
  *		  sync_state() callback.
-=======
->>>>>>> rebase
  *
  * At the lowest level, every device in a Linux system is represented by an
  * instance of struct device. The device structure contains the information
@@ -1072,10 +1034,6 @@ struct device {
 	struct dev_pin_info	*pins;
 #endif
 #ifdef CONFIG_GENERIC_MSI_IRQ
-<<<<<<< HEAD
-=======
-	raw_spinlock_t		msi_lock;
->>>>>>> rebase
 	struct list_head	msi_list;
 #endif
 
@@ -1102,10 +1060,7 @@ struct device {
 	struct cma *cma_area;		/* contiguous memory area for dma
 					   allocations */
 #endif
-<<<<<<< HEAD
 	struct removed_region *removed_mem;
-=======
->>>>>>> rebase
 	/* arch specific additions */
 	struct dev_archdata	archdata;
 
@@ -1129,10 +1084,7 @@ struct device {
 	bool			offline_disabled:1;
 	bool			offline:1;
 	bool			of_node_reused:1;
-<<<<<<< HEAD
 	bool			state_synced:1;
-=======
->>>>>>> rebase
 };
 
 static inline struct device *kobj_to_dev(struct kobject *kobj)
@@ -1237,7 +1189,6 @@ static inline bool device_async_suspend_enabled(struct device *dev)
 	return !!dev->power.async_suspend;
 }
 
-<<<<<<< HEAD
 static inline bool device_pm_not_required(struct device *dev)
 {
 	return dev->power.no_pm;
@@ -1248,8 +1199,6 @@ static inline void device_set_pm_not_required(struct device *dev)
 	dev->power.no_pm = true;
 }
 
-=======
->>>>>>> rebase
 static inline void dev_pm_syscore_device(struct device *dev, bool val)
 {
 #ifdef CONFIG_PM_SLEEP
@@ -1299,7 +1248,6 @@ static inline struct device_node *dev_of_node(struct device *dev)
 	return dev->of_node;
 }
 
-<<<<<<< HEAD
 static inline bool dev_has_sync_state(struct device *dev)
 {
 	if (!dev)
@@ -1311,8 +1259,6 @@ static inline bool dev_has_sync_state(struct device *dev)
 	return false;
 }
 
-=======
->>>>>>> rebase
 void driver_init(void);
 
 /*
@@ -1344,10 +1290,7 @@ static inline bool device_supports_offline(struct device *dev)
 extern void lock_device_hotplug(void);
 extern void unlock_device_hotplug(void);
 extern int lock_device_hotplug_sysfs(void);
-<<<<<<< HEAD
 extern void lock_device_hotplug_assert(void);
-=======
->>>>>>> rebase
 extern int device_offline(struct device *dev);
 extern int device_online(struct device *dev);
 extern void set_primary_fwnode(struct device *dev, struct fwnode_handle *fwnode);
@@ -1479,11 +1422,8 @@ struct device_link *device_link_add(struct device *consumer,
 				    struct device *supplier, u32 flags);
 void device_link_del(struct device_link *link);
 void device_link_remove(void *consumer, struct device *supplier);
-<<<<<<< HEAD
 void device_links_supplier_sync_state_pause(void);
 void device_links_supplier_sync_state_resume(void);
-=======
->>>>>>> rebase
 
 #ifndef dev_fmt
 #define dev_fmt(fmt) fmt

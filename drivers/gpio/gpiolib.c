@@ -1909,15 +1909,11 @@ static int gpiochip_add_irqchip(struct gpio_chip *gpiochip,
 		type = IRQ_TYPE_NONE;
 	}
 
-<<<<<<< HEAD
 #ifdef CONFIG_IRQ_DOMAIN_HIERARCHY
 	if (!gpiochip->to_irq)
 #endif
 		gpiochip->to_irq = gpiochip_to_irq;
 
-=======
-	gpiochip->to_irq = gpiochip_to_irq;
->>>>>>> rebase
 	gpiochip->irq.default_type = type;
 	gpiochip->irq.lock_key = lock_key;
 	gpiochip->irq.request_key = request_key;
@@ -1927,7 +1923,6 @@ static int gpiochip_add_irqchip(struct gpio_chip *gpiochip,
 	else
 		ops = &gpiochip_domain_ops;
 
-<<<<<<< HEAD
 #ifdef CONFIG_IRQ_DOMAIN_HIERARCHY
 	if (gpiochip->irq.parent_domain)
 		gpiochip->irq.domain = irq_domain_add_hierarchy(gpiochip->irq.parent_domain,
@@ -1938,11 +1933,6 @@ static int gpiochip_add_irqchip(struct gpio_chip *gpiochip,
 		gpiochip->irq.domain = irq_domain_add_simple(np, gpiochip->ngpio,
 							     gpiochip->irq.first,
 							     ops, gpiochip);
-=======
-	gpiochip->irq.domain = irq_domain_add_simple(np, gpiochip->ngpio,
-						     gpiochip->irq.first,
-						     ops, gpiochip);
->>>>>>> rebase
 	if (!gpiochip->irq.domain)
 		return -EINVAL;
 

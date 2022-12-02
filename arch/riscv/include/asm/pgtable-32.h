@@ -22,9 +22,4 @@
 #define PGDIR_SIZE      (_AC(1, UL) << PGDIR_SHIFT)
 #define PGDIR_MASK      (~(PGDIR_SIZE - 1))
 
-<<<<<<< HEAD
-=======
-#define MAX_POSSIBLE_PHYSMEM_BITS 34
-
->>>>>>> rebase
 #endif /* _ASM_RISCV_PGTABLE_32_H */

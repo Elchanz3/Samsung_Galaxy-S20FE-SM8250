@@ -125,14 +125,11 @@ obj-$(CONFIG_FB_PUV3_UNIGFX)      += fb-puv3.o
 obj-$(CONFIG_FB_HYPERV)		  += hyperv_fb.o
 obj-$(CONFIG_FB_OPENCORES)	  += ocfb.o
 obj-$(CONFIG_FB_SM712)		  += sm712fb.o
-<<<<<<< HEAD
 ifeq ($(CONFIG_FB_MSM),y)
 obj-y                             += msm/
 else
 obj-$(CONFIG_MSM_DBA)             += msm/msm_dba/
 endif
-=======
->>>>>>> rebase
 
 # Platform or fallback drivers go here
 obj-$(CONFIG_FB_UVESA)            += uvesafb.o

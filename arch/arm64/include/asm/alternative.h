@@ -73,7 +73,6 @@ static inline void apply_alternatives_module(void *start, size_t length) { }
 	".pushsection .altinstructions,\"a\"\n"				\
 	ALTINSTR_ENTRY(feature)						\
 	".popsection\n"							\
-<<<<<<< HEAD
 	".pushsection .altinstr_replacement, \"a\"\n"			\
 	"663:\n\t"							\
 	newinstr "\n"							\
@@ -81,15 +80,6 @@ static inline void apply_alternatives_module(void *start, size_t length) { }
 	".popsection\n\t"						\
 	".org	. - (664b-663b) + (662b-661b)\n\t"			\
 	".org	. - (662b-661b) + (664b-663b)\n"			\
-=======
-	".subsection 1\n"						\
-	"663:\n\t"							\
-	newinstr "\n"							\
-	"664:\n\t"							\
-	".org	. - (664b-663b) + (662b-661b)\n\t"			\
-	".org	. - (662b-661b) + (664b-663b)\n\t"			\
-	".previous\n"							\
->>>>>>> rebase
 	".endif\n"
 
 #define __ALTERNATIVE_CFG_CB(oldinstr, feature, cfg_enabled, cb)	\
@@ -127,19 +117,11 @@ static inline void apply_alternatives_module(void *start, size_t length) { }
 662:	.pushsection .altinstructions, "a"
 	altinstruction_entry 661b, 663f, \cap, 662b-661b, 664f-663f
 	.popsection
-<<<<<<< HEAD
 	.pushsection .altinstr_replacement, "ax"
 663:	\insn2
 664:	.popsection
 	.org	. - (664b-663b) + (662b-661b)
 	.org	. - (662b-661b) + (664b-663b)
-=======
-	.subsection 1
-663:	\insn2
-664:	.org	. - (664b-663b) + (662b-661b)
-	.org	. - (662b-661b) + (664b-663b)
-	.previous
->>>>>>> rebase
 	.endif
 .endm
 
@@ -178,11 +160,7 @@ static inline void apply_alternatives_module(void *start, size_t length) { }
 	.pushsection .altinstructions, "a"
 	altinstruction_entry 663f, 661f, \cap, 664f-663f, 662f-661f
 	.popsection
-<<<<<<< HEAD
 	.pushsection .altinstr_replacement, "ax"
-=======
-	.subsection 1
->>>>>>> rebase
 	.align 2	/* So GAS knows label 661 is suitably aligned */
 661:
 .endm
@@ -201,15 +179,9 @@ static inline void apply_alternatives_module(void *start, size_t length) { }
 .macro alternative_else
 662:
 	.if .Lasm_alt_mode==0
-<<<<<<< HEAD
 	.pushsection .altinstr_replacement, "ax"
 	.else
 	.popsection
-=======
-	.subsection 1
-	.else
-	.previous
->>>>>>> rebase
 	.endif
 663:
 .endm
@@ -219,19 +191,11 @@ static inline void apply_alternatives_module(void *start, size_t length) { }
  */
 .macro alternative_endif
 664:
-<<<<<<< HEAD
 	.if .Lasm_alt_mode==0
 	.popsection
 	.endif
 	.org	. - (664b-663b) + (662b-661b)
 	.org	. - (662b-661b) + (664b-663b)
-=======
-	.org	. - (664b-663b) + (662b-661b)
-	.org	. - (662b-661b) + (664b-663b)
-	.if .Lasm_alt_mode==0
-	.previous
-	.endif
->>>>>>> rebase
 .endm
 
 /*
@@ -257,11 +221,7 @@ alternative_endif
 
 .macro user_alt, label, oldinstr, newinstr, cond
 9999:	alternative_insn "\oldinstr", "\newinstr", \cond
-<<<<<<< HEAD
 	_ASM_EXTABLE 9999b, \label
-=======
-	_asm_extable 9999b, \label
->>>>>>> rebase
 .endm
 
 /*

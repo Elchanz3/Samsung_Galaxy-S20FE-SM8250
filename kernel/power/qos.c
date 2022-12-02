@@ -43,12 +43,9 @@
 #include <linux/kernel.h>
 #include <linux/debugfs.h>
 #include <linux/seq_file.h>
-<<<<<<< HEAD
 #include <linux/irq.h>
 #include <linux/irqdesc.h>
 #include <linux/cpumask.h>
-=======
->>>>>>> rebase
 
 #include <linux/uaccess.h>
 #include <linux/export.h>
@@ -73,11 +70,8 @@ static BLOCKING_NOTIFIER_HEAD(cpu_dma_lat_notifier);
 static struct pm_qos_constraints cpu_dma_constraints = {
 	.list = PLIST_HEAD_INIT(cpu_dma_constraints.list),
 	.target_value = PM_QOS_CPU_DMA_LAT_DEFAULT_VALUE,
-<<<<<<< HEAD
 	.target_per_cpu = { [0 ... (NR_CPUS - 1)] =
 				PM_QOS_CPU_DMA_LAT_DEFAULT_VALUE },
-=======
->>>>>>> rebase
 	.default_value = PM_QOS_CPU_DMA_LAT_DEFAULT_VALUE,
 	.no_constraint_value = PM_QOS_CPU_DMA_LAT_DEFAULT_VALUE,
 	.type = PM_QOS_MIN,
@@ -92,11 +86,8 @@ static BLOCKING_NOTIFIER_HEAD(network_lat_notifier);
 static struct pm_qos_constraints network_lat_constraints = {
 	.list = PLIST_HEAD_INIT(network_lat_constraints.list),
 	.target_value = PM_QOS_NETWORK_LAT_DEFAULT_VALUE,
-<<<<<<< HEAD
 	.target_per_cpu = { [0 ... (NR_CPUS - 1)] =
 				PM_QOS_NETWORK_LAT_DEFAULT_VALUE },
-=======
->>>>>>> rebase
 	.default_value = PM_QOS_NETWORK_LAT_DEFAULT_VALUE,
 	.no_constraint_value = PM_QOS_NETWORK_LAT_DEFAULT_VALUE,
 	.type = PM_QOS_MIN,
@@ -107,19 +98,12 @@ static struct pm_qos_object network_lat_pm_qos = {
 	.name = "network_latency",
 };
 
-<<<<<<< HEAD
-=======
-
->>>>>>> rebase
 static BLOCKING_NOTIFIER_HEAD(network_throughput_notifier);
 static struct pm_qos_constraints network_tput_constraints = {
 	.list = PLIST_HEAD_INIT(network_tput_constraints.list),
 	.target_value = PM_QOS_NETWORK_THROUGHPUT_DEFAULT_VALUE,
-<<<<<<< HEAD
 	.target_per_cpu = { [0 ... (NR_CPUS - 1)] =
 				PM_QOS_NETWORK_THROUGHPUT_DEFAULT_VALUE },
-=======
->>>>>>> rebase
 	.default_value = PM_QOS_NETWORK_THROUGHPUT_DEFAULT_VALUE,
 	.no_constraint_value = PM_QOS_NETWORK_THROUGHPUT_DEFAULT_VALUE,
 	.type = PM_QOS_MAX,
@@ -144,7 +128,6 @@ static struct pm_qos_object memory_bandwidth_pm_qos = {
 	.constraints = &memory_bw_constraints,
 	.name = "memory_bandwidth",
 };
-<<<<<<< HEAD
  
 static BLOCKING_NOTIFIER_HEAD(bias_hyst_notifier);
 static struct pm_qos_constraints bias_hyst_constraints = {
@@ -159,8 +142,6 @@ static struct pm_qos_object bias_hyst_pm_qos = {
 	.constraints = &bias_hyst_constraints,
 	.name = "bias_hyst",
 };
-=======
->>>>>>> rebase
 
 
 static struct pm_qos_object *pm_qos_array[] = {
@@ -169,10 +150,7 @@ static struct pm_qos_object *pm_qos_array[] = {
 	&network_lat_pm_qos,
 	&network_throughput_pm_qos,
 	&memory_bandwidth_pm_qos,
-<<<<<<< HEAD
 	&bias_hyst_pm_qos,
-=======
->>>>>>> rebase
 };
 
 static ssize_t pm_qos_power_write(struct file *filp, const char __user *buf,
@@ -303,7 +281,6 @@ static const struct file_operations pm_qos_debug_fops = {
 	.release        = single_release,
 };
 
-<<<<<<< HEAD
 static inline int pm_qos_set_value_for_cpus(struct pm_qos_constraints *c,
 		struct cpumask *cpus)
 {
@@ -345,8 +322,6 @@ static inline int pm_qos_set_value_for_cpus(struct pm_qos_constraints *c,
 	return 0;
 }
 
-=======
->>>>>>> rebase
 /**
  * pm_qos_update_target - manages the constraints list and calls the notifiers
  *  if needed
@@ -363,10 +338,7 @@ int pm_qos_update_target(struct pm_qos_constraints *c, struct plist_node *node,
 {
 	unsigned long flags;
 	int prev_value, curr_value, new_value;
-<<<<<<< HEAD
 	struct cpumask cpus;
-=======
->>>>>>> rebase
 	int ret;
 
 	spin_lock_irqsave(&pm_qos_lock, flags);
@@ -398,18 +370,13 @@ int pm_qos_update_target(struct pm_qos_constraints *c, struct plist_node *node,
 	}
 
 	curr_value = pm_qos_get_value(c);
-<<<<<<< HEAD
 	cpumask_clear(&cpus);
 	pm_qos_set_value(c, curr_value);
 	ret = pm_qos_set_value_for_cpus(c, &cpus);
-=======
-	pm_qos_set_value(c, curr_value);
->>>>>>> rebase
 
 	spin_unlock_irqrestore(&pm_qos_lock, flags);
 
 	trace_pm_qos_update_target(action, prev_value, curr_value);
-<<<<<<< HEAD
 
 	/*
 	 * if cpu mask bits are set, call the notifier call chain
@@ -422,14 +389,6 @@ int pm_qos_update_target(struct pm_qos_constraints *c, struct plist_node *node,
 		if (c->notifiers)
 			blocking_notifier_call_chain(c->notifiers,
 				     (unsigned long)curr_value, &cpus);
-=======
-	if (prev_value != curr_value) {
-		ret = 1;
-		if (c->notifiers)
-			blocking_notifier_call_chain(c->notifiers,
-						     (unsigned long)curr_value,
-						     NULL);
->>>>>>> rebase
 	} else {
 		ret = 0;
 	}
@@ -513,7 +472,6 @@ int pm_qos_request(int pm_qos_class)
 }
 EXPORT_SYMBOL_GPL(pm_qos_request);
 
-<<<<<<< HEAD
 int pm_qos_request_for_cpu(int pm_qos_class, int cpu)
 {
 	if (cpu_isolated(cpu))
@@ -523,15 +481,12 @@ int pm_qos_request_for_cpu(int pm_qos_class, int cpu)
 }
 EXPORT_SYMBOL(pm_qos_request_for_cpu);
 
-=======
->>>>>>> rebase
 int pm_qos_request_active(struct pm_qos_request *req)
 {
 	return req->pm_qos_class != 0;
 }
 EXPORT_SYMBOL_GPL(pm_qos_request_active);
 
-<<<<<<< HEAD
 int pm_qos_request_for_cpumask(int pm_qos_class, struct cpumask *mask)
 {
 	unsigned long irqflags;
@@ -564,8 +519,6 @@ int pm_qos_request_for_cpumask(int pm_qos_class, struct cpumask *mask)
 }
 EXPORT_SYMBOL(pm_qos_request_for_cpumask);
 
-=======
->>>>>>> rebase
 static void __pm_qos_update_request(struct pm_qos_request *req,
 			   s32 new_value)
 {
@@ -592,7 +545,6 @@ static void pm_qos_work_fn(struct work_struct *work)
 	__pm_qos_update_request(req, PM_QOS_DEFAULT_VALUE);
 }
 
-<<<<<<< HEAD
 #ifdef CONFIG_SMP
 static void pm_qos_irq_release(struct kref *ref)
 {
@@ -639,8 +591,6 @@ static void pm_qos_irq_notify(struct irq_affinity_notify *notify,
 }
 #endif
 
-=======
->>>>>>> rebase
 /**
  * pm_qos_add_request - inserts new qos request into the list
  * @req: pointer to a preallocated handle
@@ -664,7 +614,6 @@ void pm_qos_add_request(struct pm_qos_request *req,
 		WARN(1, KERN_ERR "pm_qos_add_request() called for already added request\n");
 		return;
 	}
-<<<<<<< HEAD
 
 	switch (req->type) {
 	case PM_QOS_REQ_AFFINE_CORES:
@@ -714,14 +663,11 @@ void pm_qos_add_request(struct pm_qos_request *req,
 		break;
 	}
 
-=======
->>>>>>> rebase
 	req->pm_qos_class = pm_qos_class;
 	INIT_DELAYED_WORK(&req->work, pm_qos_work_fn);
 	trace_pm_qos_add_request(pm_qos_class, value);
 	pm_qos_update_target(pm_qos_array[pm_qos_class]->constraints,
 			     &req->node, PM_QOS_ADD_REQ, value);
-<<<<<<< HEAD
 
 #ifdef CONFIG_SMP
 	if (req->type == PM_QOS_REQ_AFFINE_IRQ &&
@@ -740,8 +686,6 @@ void pm_qos_add_request(struct pm_qos_request *req,
 		}
 	}
 #endif
-=======
->>>>>>> rebase
 }
 EXPORT_SYMBOL_GPL(pm_qos_add_request);
 
@@ -815,17 +759,12 @@ void pm_qos_remove_request(struct pm_qos_request *req)
 		/* silent return to keep pcm code cleaner */
 
 	if (!pm_qos_request_active(req)) {
-<<<<<<< HEAD
 		WARN(1, "%s called for unknown object\n", __func__);
-=======
-		WARN(1, KERN_ERR "pm_qos_remove_request() called for unknown object\n");
->>>>>>> rebase
 		return;
 	}
 
 	cancel_delayed_work_sync(&req->work);
 
-<<<<<<< HEAD
 #ifdef CONFIG_SMP
 	if (req->type == PM_QOS_REQ_AFFINE_IRQ) {
 		int ret = 0;
@@ -836,8 +775,6 @@ void pm_qos_remove_request(struct pm_qos_request *req)
 	}
 #endif
 
-=======
->>>>>>> rebase
 	trace_pm_qos_remove_request(req->pm_qos_class, PM_QOS_DEFAULT_VALUE);
 	pm_qos_update_target(pm_qos_array[req->pm_qos_class]->constraints,
 			     &req->node, PM_QOS_REMOVE_REQ,

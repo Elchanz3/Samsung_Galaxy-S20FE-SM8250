@@ -5,11 +5,7 @@
  */
 #include "lkdtm.h"
 
-<<<<<<< HEAD
 void notrace lkdtm_rodata_do_nothing(void)
-=======
-void noinstr lkdtm_rodata_do_nothing(void)
->>>>>>> rebase
 {
 	/* Does nothing. We just want an architecture agnostic "return". */
 }

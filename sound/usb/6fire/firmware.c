@@ -166,11 +166,7 @@ static int usb6fire_fw_ezusb_write(struct usb_device *device,
 
 	ret = usb_control_msg(device, usb_sndctrlpipe(device, 0), type,
 			USB_DIR_OUT | USB_TYPE_VENDOR | USB_RECIP_DEVICE,
-<<<<<<< HEAD
 			value, 0, data, len, HZ);
-=======
-			value, 0, data, len, 1000);
->>>>>>> rebase
 	if (ret < 0)
 		return ret;
 	else if (ret != len)
@@ -183,11 +179,7 @@ static int usb6fire_fw_ezusb_read(struct usb_device *device,
 {
 	int ret = usb_control_msg(device, usb_rcvctrlpipe(device, 0), type,
 			USB_DIR_IN | USB_TYPE_VENDOR | USB_RECIP_DEVICE, value,
-<<<<<<< HEAD
 			0, data, len, HZ);
-=======
-			0, data, len, 1000);
->>>>>>> rebase
 	if (ret < 0)
 		return ret;
 	else if (ret != len)
@@ -202,11 +194,7 @@ static int usb6fire_fw_fpga_write(struct usb_device *device,
 	int ret;
 
 	ret = usb_bulk_msg(device, usb_sndbulkpipe(device, FPGA_EP), data, len,
-<<<<<<< HEAD
 			&actual_len, HZ);
-=======
-			&actual_len, 1000);
->>>>>>> rebase
 	if (ret < 0)
 		return ret;
 	else if (actual_len != len)

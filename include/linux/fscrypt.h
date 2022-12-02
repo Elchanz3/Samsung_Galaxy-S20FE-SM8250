@@ -2,14 +2,8 @@
 /*
  * fscrypt.h: declarations for per-file encryption
  *
-<<<<<<< HEAD
  * Filesystems that implement per-file encryption must include this header
  * file.
-=======
- * Filesystems that implement per-file encryption include this header
- * file with the __FS_HAS_ENCRYPTION set according to whether that filesystem
- * is being built with encryption support or not.
->>>>>>> rebase
  *
  * Copyright (C) 2015, Google, Inc.
  *
@@ -20,19 +14,12 @@
 #define _LINUX_FSCRYPT_H
 
 #include <linux/fs.h>
-<<<<<<< HEAD
 #include <linux/mm.h>
 #include <linux/slab.h>
 #include <uapi/linux/fscrypt.h>
 
 #define FS_CRYPTO_BLOCK_SIZE		16
 
-=======
-
-#define FS_CRYPTO_BLOCK_SIZE		16
-
-struct fscrypt_ctx;
->>>>>>> rebase
 struct fscrypt_info;
 
 struct fscrypt_str {
@@ -55,7 +42,6 @@ struct fscrypt_name {
 #define fname_len(p)		((p)->disk_name.len)
 
 /* Maximum value for the third parameter of fscrypt_operations.set_context(). */
-<<<<<<< HEAD
 #if defined(CONFIG_FSCRYPT_SDP) || defined(CONFIG_DDAR)
 #define FSCRYPT_SET_CONTEXT_MAX_SIZE	44
 #else
@@ -665,14 +651,6 @@ fscrypt_inode_should_skip_dm_default_key(const struct inode *inode)
 {
 	return false;
 }
-=======
-#define FSCRYPT_SET_CONTEXT_MAX_SIZE	28
-
-#if __FS_HAS_ENCRYPTION
-#include <linux/fscrypt_supp.h>
-#else
-#include <linux/fscrypt_notsupp.h>
->>>>>>> rebase
 #endif
 
 /**
@@ -773,14 +751,9 @@ static inline int fscrypt_prepare_rename(struct inode *old_dir,
  * filenames are presented in encrypted form.  Therefore, we'll try to set up
  * the directory's encryption key, but even without it the lookup can continue.
  *
-<<<<<<< HEAD
  * After calling this function, a filesystem should ensure that it's dentry
  * operations contain fscrypt_d_revalidate if DCACHE_ENCRYPTED_NAME was set,
  * so that the dentry can be invalidated if the key is later added.
-=======
- * This also installs a custom ->d_revalidate() method which will invalidate the
- * dentry if it was created without the key and the key is later added.
->>>>>>> rebase
  *
  * Return: 0 on success; -ENOENT if key is unavailable but the filename isn't a
  * correctly formed encoded ciphertext name, so a negative dentry should be
@@ -889,7 +862,6 @@ static inline int fscrypt_encrypt_symlink(struct inode *inode,
 	return 0;
 }
 
-<<<<<<< HEAD
 /* If *pagep is a bounce page, free it and set *pagep to the pagecache page */
 static inline void fscrypt_finalize_bounce_page(struct page **pagep)
 {
@@ -900,6 +872,4 @@ static inline void fscrypt_finalize_bounce_page(struct page **pagep)
 		fscrypt_free_bounce_page(page);
 	}
 }
-=======
->>>>>>> rebase
 #endif	/* _LINUX_FSCRYPT_H */

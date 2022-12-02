@@ -65,11 +65,7 @@ int initrd_is_mapped = 0;
 extern int initrd_below_start_ok;
 #endif
 
-<<<<<<< HEAD
 #ifdef CONFIG_OF
-=======
-#ifdef CONFIG_USE_OF
->>>>>>> rebase
 void *dtb_start = __dtb_start;
 #endif
 
@@ -131,11 +127,7 @@ __tagtable(BP_TAG_INITRD, parse_tag_initrd);
 
 #endif /* CONFIG_BLK_DEV_INITRD */
 
-<<<<<<< HEAD
 #ifdef CONFIG_OF
-=======
-#ifdef CONFIG_USE_OF
->>>>>>> rebase
 
 static int __init parse_tag_fdt(const bp_tag_t *tag)
 {
@@ -145,11 +137,7 @@ static int __init parse_tag_fdt(const bp_tag_t *tag)
 
 __tagtable(BP_TAG_FDT, parse_tag_fdt);
 
-<<<<<<< HEAD
 #endif /* CONFIG_OF */
-=======
-#endif /* CONFIG_USE_OF */
->>>>>>> rebase
 
 static int __init parse_tag_cmdline(const bp_tag_t* tag)
 {
@@ -197,11 +185,7 @@ static int __init parse_bootparam(const bp_tag_t *tag)
 }
 #endif
 
-<<<<<<< HEAD
 #ifdef CONFIG_OF
-=======
-#ifdef CONFIG_USE_OF
->>>>>>> rebase
 
 #if !XCHAL_HAVE_PTP_MMU || XCHAL_HAVE_SPANNING_WAY
 unsigned long xtensa_kio_paddr = XCHAL_KIO_DEFAULT_PADDR;
@@ -250,11 +234,7 @@ void __init early_init_devtree(void *params)
 		strlcpy(command_line, boot_command_line, COMMAND_LINE_SIZE);
 }
 
-<<<<<<< HEAD
 #endif /* CONFIG_OF */
-=======
-#endif /* CONFIG_USE_OF */
->>>>>>> rebase
 
 /*
  * Initialize architecture. (Early stage)
@@ -275,11 +255,7 @@ void __init init_arch(bp_tag_t *bp_start)
 	if (bp_start)
 		parse_bootparam(bp_start);
 
-<<<<<<< HEAD
 #ifdef CONFIG_OF
-=======
-#ifdef CONFIG_USE_OF
->>>>>>> rebase
 	early_init_devtree(dtb_start);
 #endif
 
@@ -744,12 +720,7 @@ c_start(struct seq_file *f, loff_t *pos)
 static void *
 c_next(struct seq_file *f, void *v, loff_t *pos)
 {
-<<<<<<< HEAD
 	return NULL;
-=======
-	++*pos;
-	return c_start(f, pos);
->>>>>>> rebase
 }
 
 static void

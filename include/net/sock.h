@@ -73,13 +73,10 @@
 #include <linux/net_tstamp.h>
 #include <net/smc.h>
 #include <net/l3mdev.h>
-<<<<<<< HEAD
 // SEC_PRODUCT_FEATURE_KNOX_SUPPORT_NPA {
 #define NAP_PROCESS_NAME_LEN	128
 #define NAP_DOMAIN_NAME_LEN	255
 // SEC_PRODUCT_FEATURE_KNOX_SUPPORT_NPA }
-=======
->>>>>>> rebase
 
 /*
  * This structure really needs to be cleaned up.
@@ -408,11 +405,7 @@ struct sock {
 #ifdef CONFIG_XFRM
 	struct xfrm_policy __rcu *sk_policy[2];
 #endif
-<<<<<<< HEAD
 	struct dst_entry	*sk_rx_dst;
-=======
-	struct dst_entry __rcu	*sk_rx_dst;
->>>>>>> rebase
 	struct dst_entry __rcu	*sk_dst_cache;
 	atomic_t		sk_omem_alloc;
 	int			sk_sndbuf;
@@ -482,15 +475,8 @@ struct sock {
 	u32			sk_ack_backlog;
 	u32			sk_max_ack_backlog;
 	kuid_t			sk_uid;
-<<<<<<< HEAD
 	struct pid		*sk_peer_pid;
 	const struct cred	*sk_peer_cred;
-=======
-	spinlock_t		sk_peer_lock;
-	struct pid		*sk_peer_pid;
-	const struct cred	*sk_peer_cred;
-
->>>>>>> rebase
 	long			sk_rcvtimeo;
 	ktime_t			sk_stamp;
 #if BITS_PER_LONG==32
@@ -513,7 +499,6 @@ struct sock {
 #endif
 	struct sock_cgroup_data	sk_cgrp_data;
 	struct mem_cgroup	*sk_memcg;
-<<<<<<< HEAD
 	// SEC_PRODUCT_FEATURE_KNOX_SUPPORT_NPA {
 	uid_t			knox_uid;
 	pid_t			knox_pid;
@@ -526,8 +511,6 @@ struct sock {
 	pid_t			knox_dns_pid;
 	char 			dns_process_name[NAP_PROCESS_NAME_LEN];
 	// SEC_PRODUCT_FEATURE_KNOX_SUPPORT_NPA }
-=======
->>>>>>> rebase
 	void			(*sk_state_change)(struct sock *sk);
 	void			(*sk_data_ready)(struct sock *sk);
 	void			(*sk_write_space)(struct sock *sk);
@@ -848,12 +831,9 @@ enum sock_flags {
 	SOCK_SELECT_ERR_QUEUE, /* Wake select on error queue */
 	SOCK_RCU_FREE, /* wait rcu grace period in sk_destruct() */
 	SOCK_TXTIME,
-<<<<<<< HEAD
 #ifdef CONFIG_MPTCP
 	SOCK_MPTCP, /* MPTCP set on this socket */
 #endif
-=======
->>>>>>> rebase
 };
 
 #define SK_FLAGS_TIMESTAMP ((1UL << SOCK_TIMESTAMP) | (1UL << SOCK_TIMESTAMPING_RX_SOFTWARE))
@@ -884,11 +864,6 @@ static inline int sk_memalloc_socks(void)
 {
 	return static_branch_unlikely(&memalloc_socks_key);
 }
-<<<<<<< HEAD
-=======
-
-void __receive_sock(struct file *file);
->>>>>>> rebase
 #else
 
 static inline int sk_memalloc_socks(void)
@@ -896,11 +871,6 @@ static inline int sk_memalloc_socks(void)
 	return 0;
 }
 
-<<<<<<< HEAD
-=======
-static inline void __receive_sock(struct file *file)
-{ }
->>>>>>> rebase
 #endif
 
 static inline gfp_t sk_gfp_mask(const struct sock *sk, gfp_t gfp_mask)
@@ -945,19 +915,11 @@ static inline void __sk_add_backlog(struct sock *sk, struct sk_buff *skb)
 	skb_dst_force(skb);
 
 	if (!sk->sk_backlog.tail)
-<<<<<<< HEAD
 		sk->sk_backlog.head = skb;
 	else
 		sk->sk_backlog.tail->next = skb;
 
 	sk->sk_backlog.tail = skb;
-=======
-		WRITE_ONCE(sk->sk_backlog.head, skb);
-	else
-		sk->sk_backlog.tail->next = skb;
-
-	WRITE_ONCE(sk->sk_backlog.tail, skb);
->>>>>>> rebase
 	skb->next = NULL;
 }
 
@@ -1175,13 +1137,9 @@ struct proto {
 	void			(*unhash)(struct sock *sk);
 	void			(*rehash)(struct sock *sk);
 	int			(*get_port)(struct sock *sk, unsigned short snum);
-<<<<<<< HEAD
 #ifdef CONFIG_MPTCP
 	void			(*clear_sk)(struct sock *sk, int size);
 #endif
-=======
-
->>>>>>> rebase
 	/* Keeping track of sockets in use */
 #ifdef CONFIG_PROC_FS
 	unsigned int		inuse_idx;
@@ -1438,11 +1396,7 @@ void __sk_mem_reclaim(struct sock *sk, int amount);
 /* sysctl_mem values are in pages, we convert them in SK_MEM_QUANTUM units */
 static inline long sk_prot_mem_limits(const struct sock *sk, int index)
 {
-<<<<<<< HEAD
 	long val = sk->sk_prot->sysctl_mem[index];
-=======
-	long val = READ_ONCE(sk->sk_prot->sysctl_mem[index]);
->>>>>>> rebase
 
 #if PAGE_SIZE > SK_MEM_QUANTUM
 	val <<= PAGE_SHIFT - SK_MEM_QUANTUM_SHIFT;
@@ -1842,10 +1796,7 @@ static inline int sk_rx_queue_get(const struct sock *sk)
 
 static inline void sk_set_socket(struct sock *sk, struct socket *sock)
 {
-<<<<<<< HEAD
 	sk_tx_queue_clear(sk);
-=======
->>>>>>> rebase
 	sk->sk_socket = sock;
 }
 
@@ -1899,12 +1850,7 @@ static inline u32 net_tx_rndhash(void)
 
 static inline void sk_set_txhash(struct sock *sk)
 {
-<<<<<<< HEAD
 	sk->sk_txhash = net_tx_rndhash();
-=======
-	/* This pairs with READ_ONCE() in skb_set_hash_from_sk() */
-	WRITE_ONCE(sk->sk_txhash, net_tx_rndhash());
->>>>>>> rebase
 }
 
 static inline void sk_rethink_txhash(struct sock *sk)
@@ -2175,18 +2121,9 @@ static inline void sock_poll_wait(struct file *filp, struct socket *sock,
 
 static inline void skb_set_hash_from_sk(struct sk_buff *skb, struct sock *sk)
 {
-<<<<<<< HEAD
 	if (sk->sk_txhash) {
 		skb->l4_hash = 1;
 		skb->hash = sk->sk_txhash;
-=======
-	/* This pairs with WRITE_ONCE() in sk_set_txhash() */
-	u32 txhash = READ_ONCE(sk->sk_txhash);
-
-	if (txhash) {
-		skb->l4_hash = 1;
-		skb->hash = txhash;
->>>>>>> rebase
 	}
 }
 
@@ -2475,7 +2412,6 @@ static inline void sock_recv_ts_and_drops(struct msghdr *msg, struct sock *sk,
 void __sock_tx_timestamp(__u16 tsflags, __u8 *tx_flags);
 
 /**
-<<<<<<< HEAD
  * sock_tx_timestamp - checks whether the outgoing packet is to be time stamped
  * @sk:		socket sending this packet
  * @tsflags:	timestamping flags to use
@@ -2488,44 +2424,10 @@ static inline void sock_tx_timestamp(const struct sock *sk, __u16 tsflags,
 {
 	if (unlikely(tsflags))
 		__sock_tx_timestamp(tsflags, tx_flags);
-=======
- * _sock_tx_timestamp - checks whether the outgoing packet is to be time stamped
- * @sk:		socket sending this packet
- * @tsflags:	timestamping flags to use
- * @tx_flags:	completed with instructions for time stamping
- * @tskey:      filled in with next sk_tskey (not for TCP, which uses seqno)
- *
- * Note: callers should take care of initial ``*tx_flags`` value (usually 0)
- */
-static inline void _sock_tx_timestamp(struct sock *sk, __u16 tsflags,
-				      __u8 *tx_flags, __u32 *tskey)
-{
-	if (unlikely(tsflags)) {
-		__sock_tx_timestamp(tsflags, tx_flags);
-		if (tsflags & SOF_TIMESTAMPING_OPT_ID && tskey &&
-		    tsflags & SOF_TIMESTAMPING_TX_RECORD_MASK)
-			*tskey = sk->sk_tskey++;
-	}
->>>>>>> rebase
 	if (unlikely(sock_flag(sk, SOCK_WIFI_STATUS)))
 		*tx_flags |= SKBTX_WIFI_STATUS;
 }
 
-<<<<<<< HEAD
-=======
-static inline void sock_tx_timestamp(struct sock *sk, __u16 tsflags,
-				     __u8 *tx_flags)
-{
-	_sock_tx_timestamp(sk, tsflags, tx_flags, NULL);
-}
-
-static inline void skb_setup_tx_timestamp(struct sk_buff *skb, __u16 tsflags)
-{
-	_sock_tx_timestamp(skb->sk, tsflags, &skb_shinfo(skb)->tx_flags,
-			   &skb_shinfo(skb)->tskey);
-}
-
->>>>>>> rebase
 /**
  * sk_eat_skb - Release a skb if it is no longer needed
  * @sk: socket to eat this skb from
@@ -2628,12 +2530,6 @@ extern int sysctl_optmem_max;
 extern __u32 sysctl_wmem_default;
 extern __u32 sysctl_rmem_default;
 
-<<<<<<< HEAD
-=======
-/* On 32bit arches, an skb frag is limited to 2^15 */
-#define SKB_FRAG_PAGE_ORDER	get_order(32768)
-
->>>>>>> rebase
 static inline int sk_get_wmem0(const struct sock *sk, const struct proto *proto)
 {
 	/* Does this proto have per netns sysctl_wmem ? */
@@ -2662,7 +2558,6 @@ static inline void sk_pacing_shift_update(struct sock *sk, int val)
 		return;
 	sk->sk_pacing_shift = val;
 }
-<<<<<<< HEAD
 /* SOCKEV Notifier Events */
 #define SOCKEV_SOCKET   0x00
 #define SOCKEV_BIND     0x01
@@ -2673,8 +2568,6 @@ static inline void sk_pacing_shift_update(struct sock *sk, int val)
 
 int sockev_register_notify(struct notifier_block *nb);
 int sockev_unregister_notify(struct notifier_block *nb);
-=======
->>>>>>> rebase
 
 /* if a socket is bound to a device, check that the given device
  * index is either the same or that the socket is bound to an L3

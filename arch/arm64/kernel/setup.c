@@ -69,15 +69,12 @@ static struct resource *standard_resources;
 
 phys_addr_t __fdt_pointer __initdata;
 
-<<<<<<< HEAD
 unsigned int boot_reason;
 EXPORT_SYMBOL(boot_reason);
 
 unsigned int cold_boot;
 EXPORT_SYMBOL(cold_boot);
 
-=======
->>>>>>> rebase
 /*
  * Standard memory resources
  */
@@ -295,11 +292,8 @@ arch_initcall(reserve_memblock_reserved_regions);
 
 u64 __cpu_logical_map[NR_CPUS] = { [0 ... NR_CPUS-1] = INVALID_HWID };
 
-<<<<<<< HEAD
 void __init __weak init_random_pool(void) { }
 
-=======
->>>>>>> rebase
 void __init setup_arch(char **cmdline_p)
 {
 	init_mm.start_code = (unsigned long) _text;
@@ -314,14 +308,11 @@ void __init setup_arch(char **cmdline_p)
 
 	setup_machine_fdt(__fdt_pointer);
 
-<<<<<<< HEAD
 	/*
 	 * Initialise the static keys early as they may be enabled by the
 	 * cpufeature code and early parameters.
 	 */
 	jump_label_init();
-=======
->>>>>>> rebase
 	parse_early_param();
 
 	/*
@@ -368,12 +359,9 @@ void __init setup_arch(char **cmdline_p)
 	smp_init_cpus();
 	smp_build_mpidr_hash();
 
-<<<<<<< HEAD
 	/* Init percpu seeds for random tags after cpus are set up. */
 	kasan_init_tags();
 
-=======
->>>>>>> rebase
 #ifdef CONFIG_ARM64_SW_TTBR0_PAN
 	/*
 	 * Make sure init_thread_info.ttbr0 always generates translation
@@ -396,11 +384,8 @@ void __init setup_arch(char **cmdline_p)
 			"This indicates a broken bootloader or old kernel\n",
 			boot_args[1], boot_args[2], boot_args[3]);
 	}
-<<<<<<< HEAD
 
 	init_random_pool();
-=======
->>>>>>> rebase
 }
 
 static int __init topology_init(void)
@@ -418,11 +403,7 @@ static int __init topology_init(void)
 
 	return 0;
 }
-<<<<<<< HEAD
 postcore_initcall(topology_init);
-=======
-subsys_initcall(topology_init);
->>>>>>> rebase
 
 /*
  * Dump out kernel offset information on panic.

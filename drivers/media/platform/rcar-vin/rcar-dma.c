@@ -1323,15 +1323,8 @@ int rvin_set_channel_routing(struct rvin_dev *vin, u8 chsel)
 	int ret;
 
 	ret = pm_runtime_get_sync(vin->dev);
-<<<<<<< HEAD
 	if (ret < 0)
 		return ret;
-=======
-	if (ret < 0) {
-		pm_runtime_put_noidle(vin->dev);
-		return ret;
-	}
->>>>>>> rebase
 
 	/* Make register writes take effect immediately. */
 	vnmc = rvin_read(vin, VNMC_REG);

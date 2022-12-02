@@ -42,11 +42,8 @@
 #include <linux/syscore_ops.h>
 #include <linux/version.h>
 #include <linux/ctype.h>
-<<<<<<< HEAD
 #include <linux/mm.h>
 #include <linux/mempolicy.h>
-=======
->>>>>>> rebase
 
 #include <linux/compat.h>
 #include <linux/syscalls.h>
@@ -76,13 +73,10 @@
 #include <asm/io.h>
 #include <asm/unistd.h>
 
-<<<<<<< HEAD
 #ifdef CONFIG_SECURITY_DEFEX
 #include <linux/defex.h>
 #endif
 
-=======
->>>>>>> rebase
 #include "uid16.h"
 
 #ifndef SET_UNALIGN_CTL
@@ -133,15 +127,12 @@
 #ifndef SVE_GET_VL
 # define SVE_GET_VL()		(-EINVAL)
 #endif
-<<<<<<< HEAD
 #ifndef SET_TAGGED_ADDR_CTRL
 # define SET_TAGGED_ADDR_CTRL(a)	(-EINVAL)
 #endif
 #ifndef GET_TAGGED_ADDR_CTRL
 # define GET_TAGGED_ADDR_CTRL()		(-EINVAL)
 #endif
-=======
->>>>>>> rebase
 
 /*
  * this is where the system-wide overflow UID and GID are defined, for
@@ -826,14 +817,11 @@ long __sys_setfsuid(uid_t uid)
 	if (!uid_valid(kuid))
 		return old_fsuid;
 
-<<<<<<< HEAD
 #ifdef CONFIG_SECURITY_DEFEX
 	if (task_defex_enforce(current, NULL, -__NR_setfsuid))
 		return old_fsuid;
 #endif
 
-=======
->>>>>>> rebase
 	new = prepare_creds();
 	if (!new)
 		return old_fsuid;
@@ -878,14 +866,11 @@ long __sys_setfsgid(gid_t gid)
 	if (!gid_valid(kgid))
 		return old_fsgid;
 
-<<<<<<< HEAD
 #ifdef CONFIG_SECURITY_DEFEX
 	if (task_defex_enforce(current, NULL, -__NR_setfsgid))
 		return old_fsgid;
 #endif
 
-=======
->>>>>>> rebase
 	new = prepare_creds();
 	if (!new)
 		return old_fsgid;
@@ -1312,20 +1297,11 @@ SYSCALL_DEFINE1(uname, struct old_utsname __user *, name)
 
 SYSCALL_DEFINE1(olduname, struct oldold_utsname __user *, name)
 {
-<<<<<<< HEAD
 	struct oldold_utsname tmp = {};
-=======
-	struct oldold_utsname tmp;
->>>>>>> rebase
 
 	if (!name)
 		return -EFAULT;
 
-<<<<<<< HEAD
-=======
-	memset(&tmp, 0, sizeof(tmp));
-
->>>>>>> rebase
 	down_read(&uts_sem);
 	memcpy(&tmp.sysname, &utsname()->sysname, __OLD_UTS_LEN);
 	memcpy(&tmp.nodename, &utsname()->nodename, __OLD_UTS_LEN);
@@ -1976,7 +1952,6 @@ static int validate_prctl_map(struct prctl_mm_map *prctl_map)
 	error = -EINVAL;
 
 	/*
-<<<<<<< HEAD
 	 * @brk should be after @end_data in traditional maps.
 	 */
 	if (prctl_map->start_brk <= prctl_map->end_data ||
@@ -1984,8 +1959,6 @@ static int validate_prctl_map(struct prctl_mm_map *prctl_map)
 		goto out;
 
 	/*
-=======
->>>>>>> rebase
 	 * Neither we should allow to override limits if they set.
 	 */
 	if (check_data_rlimit(rlimit(RLIMIT_DATA), prctl_map->brk,
@@ -2307,7 +2280,6 @@ int __weak arch_prctl_spec_ctrl_set(struct task_struct *t, unsigned long which,
 	return -EINVAL;
 }
 
-<<<<<<< HEAD
 #ifdef CONFIG_MMU
 static int prctl_update_vma_anon_name(struct vm_area_struct *vma,
 		struct vm_area_struct **prev,
@@ -2455,8 +2427,6 @@ static int prctl_set_vma(unsigned long opt, unsigned long start,
 }
 #endif
 
-=======
->>>>>>> rebase
 SYSCALL_DEFINE5(prctl, int, option, unsigned long, arg2, unsigned long, arg3,
 		unsigned long, arg4, unsigned long, arg5)
 {
@@ -2675,7 +2645,6 @@ SYSCALL_DEFINE5(prctl, int, option, unsigned long, arg2, unsigned long, arg3,
 			return -EINVAL;
 		error = arch_prctl_spec_ctrl_set(me, arg2, arg3);
 		break;
-<<<<<<< HEAD
 	case PR_SET_VMA:
 		error = prctl_set_vma(arg2, arg3, arg4, arg5);
 		break;
@@ -2689,8 +2658,6 @@ SYSCALL_DEFINE5(prctl, int, option, unsigned long, arg2, unsigned long, arg3,
 			return -EINVAL;
 		error = GET_TAGGED_ADDR_CTRL();
 		break;
-=======
->>>>>>> rebase
 	default:
 		error = -EINVAL;
 		break;

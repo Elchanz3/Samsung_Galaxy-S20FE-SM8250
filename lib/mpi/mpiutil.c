@@ -91,11 +91,7 @@ int mpi_resize(MPI a, unsigned nlimbs)
 		return 0;	/* no need to do it */
 
 	if (a->d) {
-<<<<<<< HEAD
 		p = kmalloc_array(nlimbs, sizeof(mpi_limb_t), GFP_KERNEL);
-=======
-		p = kcalloc(nlimbs, sizeof(mpi_limb_t), GFP_KERNEL);
->>>>>>> rebase
 		if (!p)
 			return -ENOMEM;
 		memcpy(p, a->d, a->alloced * sizeof(mpi_limb_t));

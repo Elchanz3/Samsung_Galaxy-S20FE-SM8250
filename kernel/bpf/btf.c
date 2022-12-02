@@ -1660,11 +1660,7 @@ static int btf_struct_resolve(struct btf_verifier_env *env,
 	if (v->next_member) {
 		const struct btf_type *last_member_type;
 		const struct btf_member *last_member;
-<<<<<<< HEAD
 		u16 last_member_type_id;
-=======
-		u32 last_member_type_id;
->>>>>>> rebase
 
 		last_member = btf_type_member(v->t) + v->next_member - 1;
 		last_member_type_id = last_member->type;
@@ -1767,11 +1763,7 @@ static int btf_enum_check_member(struct btf_verifier_env *env,
 
 	struct_size = struct_type->size;
 	bytes_offset = BITS_ROUNDDOWN_BYTES(struct_bits_off);
-<<<<<<< HEAD
 	if (struct_size - bytes_offset < sizeof(int)) {
-=======
-	if (struct_size - bytes_offset < member_type->size) {
->>>>>>> rebase
 		btf_verifier_log_member(env, struct_type, member,
 					"Member exceeds struct_size");
 		return -EINVAL;

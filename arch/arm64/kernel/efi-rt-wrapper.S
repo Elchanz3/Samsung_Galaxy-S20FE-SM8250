@@ -37,7 +37,6 @@ ENTRY(__efi_rt_asm_wrapper)
 	ldp	x29, x30, [sp], #32
 	b.ne	0f
 	ret
-<<<<<<< HEAD
 0:
 #ifdef CONFIG_SHADOW_CALL_STACK
 	/*
@@ -48,7 +47,4 @@ ENTRY(__efi_rt_asm_wrapper)
 	mov	x18, x2
 #endif
 	b	efi_handle_corrupted_x18	// tail call
-=======
-0:	b	efi_handle_corrupted_x18	// tail call
->>>>>>> rebase
 ENDPROC(__efi_rt_asm_wrapper)

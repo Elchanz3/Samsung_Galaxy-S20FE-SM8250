@@ -24,10 +24,6 @@ MODULE_DESCRIPTION("RPC/RDMA Transport");
 MODULE_LICENSE("Dual BSD/GPL");
 MODULE_ALIAS("svcrdma");
 MODULE_ALIAS("xprtrdma");
-<<<<<<< HEAD
-=======
-MODULE_ALIAS("rpcrdma6");
->>>>>>> rebase
 
 static void __exit rpc_rdma_cleanup(void)
 {

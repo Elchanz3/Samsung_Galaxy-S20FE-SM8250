@@ -223,33 +223,21 @@
 		cpu_on	      = <0x84000003>;
 	};
 
-<<<<<<< HEAD
 	clk26m: oscillator@0 {
-=======
-	clk26m: oscillator0 {
->>>>>>> rebase
 		compatible = "fixed-clock";
 		#clock-cells = <0>;
 		clock-frequency = <26000000>;
 		clock-output-names = "clk26m";
 	};
 
-<<<<<<< HEAD
 	clk32k: oscillator@1 {
-=======
-	clk32k: oscillator1 {
->>>>>>> rebase
 		compatible = "fixed-clock";
 		#clock-cells = <0>;
 		clock-frequency = <32000>;
 		clock-output-names = "clk32k";
 	};
 
-<<<<<<< HEAD
 	cpum_ck: oscillator@2 {
-=======
-	cpum_ck: oscillator2 {
->>>>>>> rebase
 		compatible = "fixed-clock";
 		#clock-cells = <0>;
 		clock-frequency = <0>;
@@ -265,31 +253,19 @@
 			sustainable-power = <1500>; /* milliwatts */
 
 			trips {
-<<<<<<< HEAD
 				threshold: trip-point@0 {
-=======
-				threshold: trip-point0 {
->>>>>>> rebase
 					temperature = <68000>;
 					hysteresis = <2000>;
 					type = "passive";
 				};
 
-<<<<<<< HEAD
 				target: trip-point@1 {
-=======
-				target: trip-point1 {
->>>>>>> rebase
 					temperature = <85000>;
 					hysteresis = <2000>;
 					type = "passive";
 				};
 
-<<<<<<< HEAD
 				cpu_crit: cpu_crit@0 {
-=======
-				cpu_crit: cpu_crit0 {
->>>>>>> rebase
 					temperature = <115000>;
 					hysteresis = <2000>;
 					type = "critical";
@@ -297,20 +273,12 @@
 			};
 
 			cooling-maps {
-<<<<<<< HEAD
 				map@0 {
-=======
-				map0 {
->>>>>>> rebase
 					trip = <&target>;
 					cooling-device = <&cpu0 0 0>;
 					contribution = <3072>;
 				};
-<<<<<<< HEAD
 				map@1 {
-=======
-				map1 {
->>>>>>> rebase
 					trip = <&target>;
 					cooling-device = <&cpu2 0 0>;
 					contribution = <1024>;
@@ -323,11 +291,7 @@
 		#address-cells = <2>;
 		#size-cells = <2>;
 		ranges;
-<<<<<<< HEAD
 		vpu_dma_reserved: vpu_dma_mem_region {
-=======
-		vpu_dma_reserved: vpu_dma_mem_region@b7000000 {
->>>>>>> rebase
 			compatible = "shared-dma-pool";
 			reg = <0 0xb7000000 0 0x500000>;
 			alignment = <0x1000>;
@@ -379,11 +343,7 @@
 			reg = <0 0x10005000 0 0x1000>;
 		};
 
-<<<<<<< HEAD
 		pio: pinctrl@10005000 {
-=======
-		pio: pinctrl@1000b000 {
->>>>>>> rebase
 			compatible = "mediatek,mt8173-pinctrl";
 			reg = <0 0x1000b000 0 0x1000>;
 			mediatek,pctl-regmap = <&syscfg_pctl_a>;
@@ -581,11 +541,7 @@
 			status = "disabled";
 		};
 
-<<<<<<< HEAD
 		gic: interrupt-controller@10220000 {
-=======
-		gic: interrupt-controller@10221000 {
->>>>>>> rebase
 			compatible = "arm,gic-400";
 			#interrupt-cells = <3>;
 			interrupt-parent = <&gic>;
@@ -1155,11 +1111,7 @@
 				 <&mmsys CLK_MM_DSI1_DIGITAL>,
 				 <&mipi_tx1>;
 			clock-names = "engine", "digital", "hs";
-<<<<<<< HEAD
 			phy = <&mipi_tx1>;
-=======
-			phys = <&mipi_tx1>;
->>>>>>> rebase
 			phy-names = "dphy";
 			status = "disabled";
 		};

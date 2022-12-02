@@ -117,7 +117,6 @@ static inline void snd_mask_reset_range(struct snd_mask *mask,
 
 static inline void snd_mask_leave(struct snd_mask *mask, unsigned int val)
 {
-<<<<<<< HEAD
 	unsigned int v, bits_index;
 
 	bits_index = MASK_OFS(val);
@@ -126,12 +125,6 @@ static inline void snd_mask_leave(struct snd_mask *mask, unsigned int val)
 		snd_mask_none(mask);
 		mask->bits[bits_index] = v;
 	}
-=======
-	unsigned int v;
-	v = mask->bits[MASK_OFS(val)] & MASK_BIT(val);
-	snd_mask_none(mask);
-	mask->bits[MASK_OFS(val)] = v;
->>>>>>> rebase
 }
 
 static inline void snd_mask_intersect(struct snd_mask *mask,

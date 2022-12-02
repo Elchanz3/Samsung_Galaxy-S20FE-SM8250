@@ -2376,11 +2376,6 @@ int qedr_modify_qp(struct ib_qp *ibqp, struct ib_qp_attr *attr,
 					1 << max_t(int, attr->timeout - 8, 0);
 		else
 			qp_params.ack_timeout = 0;
-<<<<<<< HEAD
-=======
-
-		qp->timeout = attr->timeout;
->>>>>>> rebase
 	}
 
 	if (attr_mask & IB_QP_RETRY_CNT) {
@@ -2505,7 +2500,6 @@ int qedr_query_qp(struct ib_qp *ibqp,
 	int rc = 0;
 
 	memset(&params, 0, sizeof(params));
-<<<<<<< HEAD
 
 	rc = dev->ops->rdma_query_qp(dev->rdma_ctx, qp->qed_qp, &params);
 	if (rc)
@@ -2515,20 +2509,6 @@ int qedr_query_qp(struct ib_qp *ibqp,
 	memset(qp_init_attr, 0, sizeof(*qp_init_attr));
 
 	qp_attr->qp_state = qedr_get_ibqp_state(params.state);
-=======
-	memset(qp_attr, 0, sizeof(*qp_attr));
-	memset(qp_init_attr, 0, sizeof(*qp_init_attr));
-
-	if (qp->qp_type != IB_QPT_GSI) {
-		rc = dev->ops->rdma_query_qp(dev->rdma_ctx, qp->qed_qp, &params);
-		if (rc)
-			goto err;
-		qp_attr->qp_state = qedr_get_ibqp_state(params.state);
-	} else {
-		qp_attr->qp_state = qedr_get_ibqp_state(QED_ROCE_QP_STATE_RTS);
-	}
-
->>>>>>> rebase
 	qp_attr->cur_qp_state = qedr_get_ibqp_state(params.state);
 	qp_attr->path_mtu = ib_mtu_int_to_enum(params.mtu);
 	qp_attr->path_mig_state = IB_MIG_MIGRATED;
@@ -2542,11 +2522,7 @@ int qedr_query_qp(struct ib_qp *ibqp,
 	qp_attr->cap.max_recv_wr = qp->rq.max_wr;
 	qp_attr->cap.max_send_sge = qp->sq.max_sges;
 	qp_attr->cap.max_recv_sge = qp->rq.max_sges;
-<<<<<<< HEAD
 	qp_attr->cap.max_inline_data = ROCE_REQ_MAX_INLINE_DATA_SIZE;
-=======
-	qp_attr->cap.max_inline_data = dev->attr.max_inline;
->>>>>>> rebase
 	qp_init_attr->cap = qp_attr->cap;
 
 	qp_attr->ah_attr.type = RDMA_AH_ATTR_TYPE_ROCE;
@@ -2556,11 +2532,7 @@ int qedr_query_qp(struct ib_qp *ibqp,
 	rdma_ah_set_dgid_raw(&qp_attr->ah_attr, &params.dgid.bytes[0]);
 	rdma_ah_set_port_num(&qp_attr->ah_attr, 1);
 	rdma_ah_set_sl(&qp_attr->ah_attr, 0);
-<<<<<<< HEAD
 	qp_attr->timeout = params.timeout;
-=======
-	qp_attr->timeout = qp->timeout;
->>>>>>> rebase
 	qp_attr->rnr_retry = params.rnr_retry;
 	qp_attr->retry_cnt = params.retry_cnt;
 	qp_attr->min_rnr_timer = params.min_rnr_nak_timer;
@@ -3605,11 +3577,7 @@ static u32 qedr_srq_elem_left(struct qedr_srq_hwq_info *hw_srq)
 	 * count and consumer count and subtract it from max
 	 * work request supported so that we get elements left.
 	 */
-<<<<<<< HEAD
 	used = hw_srq->wr_prod_cnt - hw_srq->wr_cons_cnt;
-=======
-	used = hw_srq->wr_prod_cnt - (u32)atomic_read(&hw_srq->wr_cons_cnt);
->>>>>>> rebase
 
 	return hw_srq->max_wr - used;
 }
@@ -3624,10 +3592,7 @@ int qedr_post_srq_recv(struct ib_srq *ibsrq, const struct ib_recv_wr *wr,
 	unsigned long flags;
 	int status = 0;
 	u32 num_sge;
-<<<<<<< HEAD
 	u32 offset;
-=======
->>>>>>> rebase
 
 	spin_lock_irqsave(&srq->lock, flags);
 
@@ -3640,12 +3605,7 @@ int qedr_post_srq_recv(struct ib_srq *ibsrq, const struct ib_recv_wr *wr,
 		if (!qedr_srq_elem_left(hw_srq) ||
 		    wr->num_sge > srq->hw_srq.max_sges) {
 			DP_ERR(dev, "Can't post WR  (%d,%d) || (%d > %d)\n",
-<<<<<<< HEAD
 			       hw_srq->wr_prod_cnt, hw_srq->wr_cons_cnt,
-=======
-			       hw_srq->wr_prod_cnt,
-			       atomic_read(&hw_srq->wr_cons_cnt),
->>>>>>> rebase
 			       wr->num_sge, srq->hw_srq.max_sges);
 			status = -ENOMEM;
 			*bad_wr = wr;
@@ -3679,23 +3639,15 @@ int qedr_post_srq_recv(struct ib_srq *ibsrq, const struct ib_recv_wr *wr,
 			hw_srq->sge_prod++;
 		}
 
-<<<<<<< HEAD
 		/* Flush WQE and SGE information before
 		 * updating producer.
 		 */
 		wmb();
-=======
-		/* Update WQE and SGE information before
-		 * updating producer.
-		 */
-		dma_wmb();
->>>>>>> rebase
 
 		/* SRQ producer is 8 bytes. Need to update SGE producer index
 		 * in first 4 bytes and need to update WQE producer in
 		 * next 4 bytes.
 		 */
-<<<<<<< HEAD
 		*srq->hw_srq.virt_prod_pair_addr = hw_srq->sge_prod;
 		offset = offsetof(struct rdma_srq_producers, wqe_prod);
 		*((u8 *)srq->hw_srq.virt_prod_pair_addr + offset) =
@@ -3703,13 +3655,6 @@ int qedr_post_srq_recv(struct ib_srq *ibsrq, const struct ib_recv_wr *wr,
 
 		/* Flush producer after updating it. */
 		wmb();
-=======
-		srq->hw_srq.virt_prod_pair_addr->sge_prod = hw_srq->sge_prod;
-		/* Make sure sge producer is updated first */
-		dma_wmb();
-		srq->hw_srq.virt_prod_pair_addr->wqe_prod = hw_srq->wqe_prod;
-
->>>>>>> rebase
 		wr = wr->next;
 	}
 
@@ -4132,11 +4077,7 @@ static int process_resp_one_srq(struct qedr_dev *dev, struct qedr_qp *qp,
 	} else {
 		__process_resp_one(dev, qp, cq, wc, resp, wr_id);
 	}
-<<<<<<< HEAD
 	srq->hw_srq.wr_cons_cnt++;
-=======
-	atomic_inc(&srq->hw_srq.wr_cons_cnt);
->>>>>>> rebase
 
 	return 1;
 }

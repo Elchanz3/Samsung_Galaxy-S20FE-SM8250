@@ -658,11 +658,7 @@ int ubifs_read_superblock(struct ubifs_info *c)
 		goto out;
 	}
 
-<<<<<<< HEAD
 #ifndef CONFIG_FS_ENCRYPTION
-=======
-#ifndef CONFIG_UBIFS_FS_ENCRYPTION
->>>>>>> rebase
 	if (c->encrypted) {
 		ubifs_err(c, "file system contains encrypted files but UBIFS"
 			     " was built without crypto support.");

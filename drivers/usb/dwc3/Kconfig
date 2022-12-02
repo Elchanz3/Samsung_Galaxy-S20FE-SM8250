@@ -11,13 +11,10 @@ config USB_DWC3
 
 if USB_DWC3
 
-<<<<<<< HEAD
 config USB_PORT_POWER_OPTIMIZATION
 	default n
 	bool "USB3.0 Link port power optimization"
 
-=======
->>>>>>> rebase
 config USB_DWC3_ULPI
 	bool "Register ULPI PHY Interface"
 	depends on USB_ULPI_BUS=y || USB_ULPI_BUS=USB_DWC3
@@ -119,15 +116,12 @@ config USB_DWC3_ST
 	  inside (i.e. STiH407).
 	  Say 'Y' or 'M' if you have one such device.
 
-<<<<<<< HEAD
 config ENABLE_USB_SUSPEND_STATE
 	bool "Enable USB suspend current state"
 	default n
 	help
 	  Say Y to enable USB supend current state.
 
-=======
->>>>>>> rebase
 config USB_DWC3_QCOM
 	tristate "Qualcomm Platform"
 	depends on ARCH_QCOM || COMPILE_TEST
@@ -141,7 +135,6 @@ config USB_DWC3_QCOM
 	  for peripheral mode support.
 	  Say 'Y' or 'M' if you have one such device.
 
-<<<<<<< HEAD
 config USB_DWC3_MSM
 	tristate "QTI MSM Platforms"
 	depends on ARCH_QCOM || COMPILE_TEST
@@ -157,6 +150,4 @@ config USB_CHARGING_EVENT
 	help
 	  For satisfy BC1.2 specification
 	  In unconfigured state or suspend state, Set vbus current to 100mA
-=======
->>>>>>> rebase
 endif

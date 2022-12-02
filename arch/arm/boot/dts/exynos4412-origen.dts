@@ -87,11 +87,7 @@
 };
 
 &ehci {
-<<<<<<< HEAD
 	samsung,vbus-gpio = <&gpx3 5 1>;
-=======
-	samsung,vbus-gpio = <&gpx3 5 GPIO_ACTIVE_HIGH>;
->>>>>>> rebase
 	status = "okay";
 
 	port@1 {

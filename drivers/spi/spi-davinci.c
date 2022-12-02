@@ -1086,20 +1086,13 @@ static int davinci_spi_remove(struct platform_device *pdev)
 	spi_bitbang_stop(&dspi->bitbang);
 
 	clk_disable_unprepare(dspi->clk);
-<<<<<<< HEAD
 	spi_master_put(master);
-=======
->>>>>>> rebase
 
 	if (dspi->dma_rx) {
 		dma_release_channel(dspi->dma_rx);
 		dma_release_channel(dspi->dma_tx);
 	}
 
-<<<<<<< HEAD
-=======
-	spi_master_put(master);
->>>>>>> rebase
 	return 0;
 }
 

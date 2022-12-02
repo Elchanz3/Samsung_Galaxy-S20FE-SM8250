@@ -649,11 +649,6 @@ serial_txx9_set_termios(struct uart_port *port, struct ktermios *termios,
 	case CS6:	/* not supported */
 	case CS8:
 		cval |= TXX9_SILCR_UMODE_8BIT;
-<<<<<<< HEAD
-=======
-		termios->c_cflag &= ~CSIZE;
-		termios->c_cflag |= CS8;
->>>>>>> rebase
 		break;
 	}
 
@@ -1289,12 +1284,6 @@ static int __init serial_txx9_init(void)
 
 #ifdef ENABLE_SERIAL_TXX9_PCI
 	ret = pci_register_driver(&serial_txx9_pci_driver);
-<<<<<<< HEAD
-=======
-	if (ret) {
-		platform_driver_unregister(&serial_txx9_plat_driver);
-	}
->>>>>>> rebase
 #endif
 	if (ret == 0)
 		goto out;

@@ -244,7 +244,6 @@ failed:
 }
 
 /**
-<<<<<<< HEAD
  * efi_capsule_flush - called by file close or file flush
  * @file: file pointer
  * @id: not used
@@ -268,8 +267,6 @@ static int efi_capsule_flush(struct file *file, fl_owner_t id)
 }
 
 /**
-=======
->>>>>>> rebase
  * efi_capsule_release - called by file close
  * @inode: not used
  * @file: file pointer
@@ -281,16 +278,6 @@ static int efi_capsule_release(struct inode *inode, struct file *file)
 {
 	struct capsule_info *cap_info = file->private_data;
 
-<<<<<<< HEAD
-=======
-	if (cap_info->index > 0 &&
-	    (cap_info->header.headersize == 0 ||
-	     cap_info->count < cap_info->total_size)) {
-		pr_err("capsule upload not complete\n");
-		efi_free_all_buff_pages(cap_info);
-	}
-
->>>>>>> rebase
 	kfree(cap_info->pages);
 	kfree(cap_info->phys);
 	kfree(file->private_data);
@@ -338,10 +325,7 @@ static const struct file_operations efi_capsule_fops = {
 	.owner = THIS_MODULE,
 	.open = efi_capsule_open,
 	.write = efi_capsule_write,
-<<<<<<< HEAD
 	.flush = efi_capsule_flush,
-=======
->>>>>>> rebase
 	.release = efi_capsule_release,
 	.llseek = no_llseek,
 };

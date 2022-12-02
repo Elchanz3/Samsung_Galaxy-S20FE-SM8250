@@ -2,7 +2,6 @@
 #ifndef __UM_TIMEX_H
 #define __UM_TIMEX_H
 
-<<<<<<< HEAD
 typedef unsigned long cycles_t;
 
 static inline cycles_t get_cycles (void)
@@ -12,10 +11,4 @@ static inline cycles_t get_cycles (void)
 
 #define CLOCK_TICK_RATE (HZ)
 
-=======
-#define CLOCK_TICK_RATE (HZ)
-
-#include <asm-generic/timex.h>
-
->>>>>>> rebase
 #endif

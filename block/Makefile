@@ -37,7 +37,6 @@ obj-$(CONFIG_BLK_WBT)		+= blk-wbt.o
 obj-$(CONFIG_BLK_DEBUG_FS)	+= blk-mq-debugfs.o
 obj-$(CONFIG_BLK_DEBUG_FS_ZONED)+= blk-mq-debugfs-zoned.o
 obj-$(CONFIG_BLK_SED_OPAL)	+= sed-opal.o
-<<<<<<< HEAD
 obj-$(CONFIG_BLK_INLINE_ENCRYPTION)	+= keyslot-manager.o bio-crypt-ctx.o \
 					   blk-crypto.o
 obj-$(CONFIG_BLK_INLINE_ENCRYPTION_FALLBACK)	+= blk-crypto-fallback.o
@@ -53,5 +52,3 @@ CFLAGS_elevator.o = -Wformat
 CFLAGS_cfq-iosched.o = -Wformat
 CFLAGS_genhd.o = -Wformat
 
-=======
->>>>>>> rebase

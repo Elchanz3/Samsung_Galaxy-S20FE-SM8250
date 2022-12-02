@@ -182,14 +182,6 @@ int do_pin_fd(int fd, const char *name)
 		goto out;
 
 	file = malloc(strlen(name) + 1);
-<<<<<<< HEAD
-=======
-	if (!file) {
-		p_err("mem alloc failed");
-		return -1;
-	}
-
->>>>>>> rebase
 	strcpy(file, name);
 	dir = dirname(file);
 

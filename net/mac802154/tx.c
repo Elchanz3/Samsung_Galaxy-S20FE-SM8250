@@ -42,19 +42,11 @@ void ieee802154_xmit_worker(struct work_struct *work)
 	if (res)
 		goto err_tx;
 
-<<<<<<< HEAD
 	ieee802154_xmit_complete(&local->hw, skb, false);
 
 	dev->stats.tx_packets++;
 	dev->stats.tx_bytes += skb->len;
 
-=======
-	dev->stats.tx_packets++;
-	dev->stats.tx_bytes += skb->len;
-
-	ieee802154_xmit_complete(&local->hw, skb, false);
-
->>>>>>> rebase
 	return;
 
 err_tx:
@@ -94,11 +86,6 @@ ieee802154_tx(struct ieee802154_local *local, struct sk_buff *skb)
 
 	/* async is priority, otherwise sync is fallback */
 	if (local->ops->xmit_async) {
-<<<<<<< HEAD
-=======
-		unsigned int len = skb->len;
-
->>>>>>> rebase
 		ret = drv_xmit_async(local, skb);
 		if (ret) {
 			ieee802154_wake_queue(&local->hw);
@@ -106,11 +93,7 @@ ieee802154_tx(struct ieee802154_local *local, struct sk_buff *skb)
 		}
 
 		dev->stats.tx_packets++;
-<<<<<<< HEAD
 		dev->stats.tx_bytes += skb->len;
-=======
-		dev->stats.tx_bytes += len;
->>>>>>> rebase
 	} else {
 		local->tx_skb = skb;
 		queue_work(local->workqueue, &local->tx_work);

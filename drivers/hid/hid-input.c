@@ -93,11 +93,8 @@ static bool match_index(struct hid_usage *usage,
 
 typedef bool (*hid_usage_cmp_t)(struct hid_usage *usage,
 				unsigned int cur_idx, unsigned int val);
-<<<<<<< HEAD
                 
 extern bool lcd_is_on;      
-=======
->>>>>>> rebase
 
 static struct hid_usage *hidinput_find_key(struct hid_device *hid,
 					   hid_usage_cmp_t match,
@@ -336,14 +333,6 @@ static const struct hid_device_id hid_battery_quirks[] = {
 	{ HID_BLUETOOTH_DEVICE(USB_VENDOR_ID_ASUSTEK,
 		USB_DEVICE_ID_ASUSTEK_T100CHI_KEYBOARD),
 	  HID_BATTERY_QUIRK_IGNORE },
-<<<<<<< HEAD
-=======
-	{ HID_BLUETOOTH_DEVICE(USB_VENDOR_ID_LOGITECH,
-		USB_DEVICE_ID_LOGITECH_DINOVO_EDGE_KBD),
-	  HID_BATTERY_QUIRK_IGNORE },
-	{ HID_USB_DEVICE(USB_VENDOR_ID_ELAN, USB_DEVICE_ID_ASUS_UX550_TOUCHSCREEN),
-	  HID_BATTERY_QUIRK_IGNORE },
->>>>>>> rebase
 	{}
 };
 
@@ -375,7 +364,6 @@ static int hidinput_query_battery_capacity(struct hid_device *dev)
 	u8 *buf;
 	int ret;
 
-<<<<<<< HEAD
 	buf = kmalloc(2, GFP_KERNEL);
 	if (!buf)
 		return -ENOMEM;
@@ -383,15 +371,6 @@ static int hidinput_query_battery_capacity(struct hid_device *dev)
 	ret = hid_hw_raw_request(dev, dev->battery_report_id, buf, 2,
 				 dev->battery_report_type, HID_REQ_GET_REPORT);
 	if (ret != 2) {
-=======
-	buf = kmalloc(4, GFP_KERNEL);
-	if (!buf)
-		return -ENOMEM;
-
-	ret = hid_hw_raw_request(dev, dev->battery_report_id, buf, 4,
-				 dev->battery_report_type, HID_REQ_GET_REPORT);
-	if (ret < 2) {
->>>>>>> rebase
 		kfree(buf);
 		return -ENODATA;
 	}
@@ -445,11 +424,8 @@ static int hidinput_get_battery_property(struct power_supply *psy,
 
 		if (dev->battery_status == HID_BATTERY_UNKNOWN)
 			val->intval = POWER_SUPPLY_STATUS_UNKNOWN;
-<<<<<<< HEAD
 		else if (dev->battery_capacity == 100)
 			val->intval = POWER_SUPPLY_STATUS_FULL;
-=======
->>>>>>> rebase
 		else
 			val->intval = POWER_SUPPLY_STATUS_DISCHARGING;
 		break;
@@ -822,11 +798,7 @@ static void hidinput_configure_usage(struct hid_input *hidinput, struct hid_fiel
 		case 0x3b: /* Battery Strength */
 			hidinput_setup_battery(device, HID_INPUT_REPORT, field);
 			usage->type = EV_PWR;
-<<<<<<< HEAD
 			goto ignore;
-=======
-			return;
->>>>>>> rebase
 
 		case 0x3c: /* Invert */
 			map_key_clear(BTN_TOOL_RUBBER);
@@ -1064,11 +1036,6 @@ static void hidinput_configure_usage(struct hid_input *hidinput, struct hid_fiel
 		case 0x28b: map_key_clear(KEY_FORWARDMAIL);	break;
 		case 0x28c: map_key_clear(KEY_SEND);		break;
 
-<<<<<<< HEAD
-=======
-		case 0x2a2: map_key_clear(KEY_ALL_APPLICATIONS);	break;
-
->>>>>>> rebase
 		case 0x2c7: map_key_clear(KEY_KBDINPUTASSIST_PREV);		break;
 		case 0x2c8: map_key_clear(KEY_KBDINPUTASSIST_NEXT);		break;
 		case 0x2c9: map_key_clear(KEY_KBDINPUTASSIST_PREVGROUP);		break;
@@ -1087,11 +1054,7 @@ static void hidinput_configure_usage(struct hid_input *hidinput, struct hid_fiel
 		case HID_DC_BATTERYSTRENGTH:
 			hidinput_setup_battery(device, HID_INPUT_REPORT, field);
 			usage->type = EV_PWR;
-<<<<<<< HEAD
 			goto ignore;
-=======
-			return;
->>>>>>> rebase
 		}
 		goto unknown;
 
@@ -1282,15 +1245,6 @@ void hidinput_hid_event(struct hid_device *hid, struct hid_field *field, struct 
 
 	input = field->hidinput->input;
 
-<<<<<<< HEAD
-=======
-	if (usage->type == EV_ABS &&
-	    (((*quirks & HID_QUIRK_X_INVERT) && usage->code == ABS_X) ||
-	     ((*quirks & HID_QUIRK_Y_INVERT) && usage->code == ABS_Y))) {
-		value = field->logical_maximum - value;
-	}
-
->>>>>>> rebase
 	if (usage->hat_min < usage->hat_max || usage->hat_dir) {
 		int hat_dir = usage->hat_dir;
 		if (!hat_dir)
@@ -1514,15 +1468,12 @@ static void hidinput_led_worker(struct work_struct *work)
 	buf = hid_alloc_report_buf(report, GFP_KERNEL);
 	if (!buf)
 		return;
-<<<<<<< HEAD
     
     if (!lcd_is_on) {
         printk(KERN_DEBUG "lcd is OFF, don't report LED event\n");
 		kfree(buf);
 		return;
 	}
-=======
->>>>>>> rebase
 
 	hid_output_report(report, buf);
 	/* synchronous output report */

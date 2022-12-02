@@ -190,11 +190,7 @@ static int __init afs_init(void)
 		goto error_cache;
 #endif
 
-<<<<<<< HEAD
 	ret = register_pernet_subsys(&afs_net_ops);
-=======
-	ret = register_pernet_device(&afs_net_ops);
->>>>>>> rebase
 	if (ret < 0)
 		goto error_net;
 
@@ -204,13 +200,8 @@ static int __init afs_init(void)
 		goto error_fs;
 
 	afs_proc_symlink = proc_symlink("fs/afs", NULL, "../self/net/afs");
-<<<<<<< HEAD
 	if (IS_ERR(afs_proc_symlink)) {
 		ret = PTR_ERR(afs_proc_symlink);
-=======
-	if (!afs_proc_symlink) {
-		ret = -ENOMEM;
->>>>>>> rebase
 		goto error_proc;
 	}
 
@@ -219,11 +210,7 @@ static int __init afs_init(void)
 error_proc:
 	afs_fs_exit();
 error_fs:
-<<<<<<< HEAD
 	unregister_pernet_subsys(&afs_net_ops);
-=======
-	unregister_pernet_device(&afs_net_ops);
->>>>>>> rebase
 error_net:
 #ifdef CONFIG_AFS_FSCACHE
 	fscache_unregister_netfs(&afs_cache_netfs);
@@ -254,11 +241,7 @@ static void __exit afs_exit(void)
 
 	proc_remove(afs_proc_symlink);
 	afs_fs_exit();
-<<<<<<< HEAD
 	unregister_pernet_subsys(&afs_net_ops);
-=======
-	unregister_pernet_device(&afs_net_ops);
->>>>>>> rebase
 #ifdef CONFIG_AFS_FSCACHE
 	fscache_unregister_netfs(&afs_cache_netfs);
 #endif

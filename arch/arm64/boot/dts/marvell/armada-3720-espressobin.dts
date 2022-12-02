@@ -19,19 +19,6 @@
 	model = "Globalscale Marvell ESPRESSOBin Board";
 	compatible = "globalscale,espressobin", "marvell,armada3720", "marvell,armada3710";
 
-<<<<<<< HEAD
-=======
-	aliases {
-		ethernet0 = &eth0;
-		/* for dsa slave device */
-		ethernet1 = &switch0port1;
-		ethernet2 = &switch0port2;
-		ethernet3 = &switch0port3;
-		serial0 = &uart0;
-		serial1 = &uart1;
-	};
-
->>>>>>> rebase
 	chosen {
 		stdout-path = "serial0:115200n8";
 	};
@@ -58,12 +45,6 @@
 
 /* J9 */
 &pcie0 {
-<<<<<<< HEAD
-=======
-	pinctrl-names = "default";
-	pinctrl-0 = <&pcie_reset_pins &pcie_clkreq_pins>;
-	reset-gpios = <&gpiosb 3 GPIO_ACTIVE_LOW>;
->>>>>>> rebase
 	status = "okay";
 };
 
@@ -149,41 +130,25 @@
 			#address-cells = <1>;
 			#size-cells = <0>;
 
-<<<<<<< HEAD
 			port@0 {
-=======
-			switch0port0: port@0 {
->>>>>>> rebase
 				reg = <0>;
 				label = "cpu";
 				ethernet = <&eth0>;
 			};
 
-<<<<<<< HEAD
 			port@1 {
-=======
-			switch0port1: port@1 {
->>>>>>> rebase
 				reg = <1>;
 				label = "wan";
 				phy-handle = <&switch0phy0>;
 			};
 
-<<<<<<< HEAD
 			port@2 {
-=======
-			switch0port2: port@2 {
->>>>>>> rebase
 				reg = <2>;
 				label = "lan0";
 				phy-handle = <&switch0phy1>;
 			};
 
-<<<<<<< HEAD
 			port@3 {
-=======
-			switch0port3: port@3 {
->>>>>>> rebase
 				reg = <3>;
 				label = "lan1";
 				phy-handle = <&switch0phy2>;

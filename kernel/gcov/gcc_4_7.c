@@ -19,13 +19,7 @@
 #include <linux/vmalloc.h>
 #include "gcov.h"
 
-<<<<<<< HEAD
 #if (__GNUC__ >= 7)
-=======
-#if (__GNUC__ >= 10)
-#define GCOV_COUNTERS			8
-#elif (__GNUC__ >= 7)
->>>>>>> rebase
 #define GCOV_COUNTERS			9
 #elif (__GNUC__ > 5) || (__GNUC__ == 5 && __GNUC_MINOR__ >= 1)
 #define GCOV_COUNTERS			10
@@ -37,16 +31,6 @@
 
 #define GCOV_TAG_FUNCTION_LENGTH	3
 
-<<<<<<< HEAD
-=======
-/* Since GCC 12.1 sizes are in BYTES and not in WORDS (4B). */
-#if (__GNUC__ >= 12)
-#define GCOV_UNIT_SIZE				4
-#else
-#define GCOV_UNIT_SIZE				1
-#endif
-
->>>>>>> rebase
 static struct gcov_info *gcov_info_head;
 
 /**
@@ -166,7 +150,6 @@ void gcov_info_unlink(struct gcov_info *prev, struct gcov_info *info)
 		gcov_info_head = info->next;
 }
 
-<<<<<<< HEAD
 /**
  * gcov_info_within_module - check if a profiling data set belongs to a module
  * @info: profiling data set
@@ -179,8 +162,6 @@ bool gcov_info_within_module(struct gcov_info *info, struct module *mod)
 	return within_module((unsigned long)info, mod);
 }
 
-=======
->>>>>>> rebase
 /* Symbolic links to be created for each profiling data file. */
 const struct gcov_link gcov_link[] = {
 	{ OBJ_TREE, "gcno" },	/* Link to .gcno file in $(objtree). */
@@ -468,25 +449,12 @@ static size_t convert_to_gcda(char *buffer, struct gcov_info *info)
 	pos += store_gcov_u32(buffer, pos, info->version);
 	pos += store_gcov_u32(buffer, pos, info->stamp);
 
-<<<<<<< HEAD
-=======
-#if (__GNUC__ >= 12)
-	/* Use zero as checksum of the compilation unit. */
-	pos += store_gcov_u32(buffer, pos, 0);
-#endif
-
->>>>>>> rebase
 	for (fi_idx = 0; fi_idx < info->n_functions; fi_idx++) {
 		fi_ptr = info->functions[fi_idx];
 
 		/* Function record. */
 		pos += store_gcov_u32(buffer, pos, GCOV_TAG_FUNCTION);
-<<<<<<< HEAD
 		pos += store_gcov_u32(buffer, pos, GCOV_TAG_FUNCTION_LENGTH);
-=======
-		pos += store_gcov_u32(buffer, pos,
-			GCOV_TAG_FUNCTION_LENGTH * GCOV_UNIT_SIZE);
->>>>>>> rebase
 		pos += store_gcov_u32(buffer, pos, fi_ptr->ident);
 		pos += store_gcov_u32(buffer, pos, fi_ptr->lineno_checksum);
 		pos += store_gcov_u32(buffer, pos, fi_ptr->cfg_checksum);
@@ -500,12 +468,7 @@ static size_t convert_to_gcda(char *buffer, struct gcov_info *info)
 			/* Counter record. */
 			pos += store_gcov_u32(buffer, pos,
 					      GCOV_TAG_FOR_COUNTER(ct_idx));
-<<<<<<< HEAD
 			pos += store_gcov_u32(buffer, pos, ci_ptr->num * 2);
-=======
-			pos += store_gcov_u32(buffer, pos,
-				ci_ptr->num * 2 * GCOV_UNIT_SIZE);
->>>>>>> rebase
 
 			for (cv_idx = 0; cv_idx < ci_ptr->num; cv_idx++) {
 				pos += store_gcov_u64(buffer, pos,

@@ -25,10 +25,7 @@
 #include <linux/percpu.h>
 #include <linux/task_work.h>
 #include <linux/ima.h>
-<<<<<<< HEAD
 #include <linux/task_integrity.h>
-=======
->>>>>>> rebase
 #include <linux/swap.h>
 
 #include <linux/atomic.h>
@@ -45,7 +42,6 @@ static struct kmem_cache *filp_cachep __read_mostly;
 
 static struct percpu_counter nr_files __cacheline_aligned_in_smp;
 
-<<<<<<< HEAD
 
 #ifdef CONFIG_SEC_DEBUG_FPUT_WATCHDOG
 #include <linux/sched/debug.h>
@@ -127,8 +123,6 @@ static void fput_watchdog_clear(struct fput_watchdog *wd)
 #define fput_watchdog_clear(x)
 #endif
 
-=======
->>>>>>> rebase
 static void file_free_rcu(struct rcu_head *head)
 {
 	struct file *f = container_of(head, struct file, f_u.fu_rcuhead);
@@ -343,20 +337,13 @@ static void __fput(struct file *file)
 	struct dentry *dentry = file->f_path.dentry;
 	struct vfsmount *mnt = file->f_path.mnt;
 	struct inode *inode = file->f_inode;
-<<<<<<< HEAD
 	DECLARE_FPUT_WATCHDOG_ON_STACK(wd);
-=======
->>>>>>> rebase
 
 	if (unlikely(!(file->f_mode & FMODE_OPENED)))
 		goto out;
 
 	might_sleep();
-<<<<<<< HEAD
 	fput_watchdog_set(&wd, file);
-=======
-
->>>>>>> rebase
 	fsnotify_close(file);
 	/*
 	 * The function eventpoll_release() should be the first called
@@ -370,10 +357,7 @@ static void __fput(struct file *file)
 		if (file->f_op->fasync)
 			file->f_op->fasync(-1, file, 0);
 	}
-<<<<<<< HEAD
 	five_file_free(file);
-=======
->>>>>>> rebase
 	if (file->f_op->release)
 		file->f_op->release(inode, file);
 	if (unlikely(S_ISCHR(inode->i_mode) && inode->i_cdev != NULL &&
@@ -390,10 +374,7 @@ static void __fput(struct file *file)
 	}
 	dput(dentry);
 	mntput(mnt);
-<<<<<<< HEAD
 	fput_watchdog_clear(&wd);
-=======
->>>>>>> rebase
 out:
 	file_free(file);
 }
@@ -430,7 +411,6 @@ void flush_delayed_fput(void)
 
 static DECLARE_DELAYED_WORK(delayed_fput_work, delayed_fput);
 
-<<<<<<< HEAD
 void flush_delayed_fput_wait(void)
 {
 	delayed_fput(NULL);
@@ -440,11 +420,6 @@ void flush_delayed_fput_wait(void)
 void fput(struct file *file)
 {
 	if (atomic_long_dec_and_test(&file->f_count)) {
-=======
-void fput_many(struct file *file, unsigned int refs)
-{
-	if (atomic_long_sub_and_test(refs, &file->f_count)) {
->>>>>>> rebase
 		struct task_struct *task = current;
 
 		if (likely(!in_interrupt() && !(task->flags & PF_KTHREAD))) {
@@ -463,14 +438,6 @@ void fput_many(struct file *file, unsigned int refs)
 	}
 }
 
-<<<<<<< HEAD
-=======
-void fput(struct file *file)
-{
-	fput_many(file, 1);
-}
-
->>>>>>> rebase
 /*
  * synchronous analog of fput(); for kernel threads that might be needed
  * in some umount() (and thus can't use flush_delayed_fput() without
@@ -510,8 +477,4 @@ void __init files_maxfiles_init(void)
 	n = ((totalram_pages - memreserve) * (PAGE_SIZE / 1024)) / 10;
 
 	files_stat.max_files = max_t(unsigned long, n, NR_FILE);
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> rebase

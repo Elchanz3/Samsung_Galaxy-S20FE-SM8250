@@ -367,10 +367,6 @@ static int __init gpio_mockup_init(void)
 	err = platform_driver_register(&gpio_mockup_driver);
 	if (err) {
 		gpio_mockup_err("error registering platform driver\n");
-<<<<<<< HEAD
-=======
-		debugfs_remove_recursive(gpio_mockup_dbg_dir);
->>>>>>> rebase
 		return err;
 	}
 
@@ -390,10 +386,6 @@ static int __init gpio_mockup_init(void)
 			gpio_mockup_err("error registering device");
 			platform_driver_unregister(&gpio_mockup_driver);
 			gpio_mockup_unregister_pdevs();
-<<<<<<< HEAD
-=======
-			debugfs_remove_recursive(gpio_mockup_dbg_dir);
->>>>>>> rebase
 			return PTR_ERR(pdev);
 		}
 

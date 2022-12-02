@@ -11,10 +11,6 @@
  * more details.
  */
 
-<<<<<<< HEAD
-=======
-#include <linux/backing-dev.h>
->>>>>>> rebase
 #include <linux/moduleparam.h>
 #include <trace/events/block.h>
 #include "nvme.h"
@@ -76,24 +72,17 @@ void nvme_set_disk_name(char *disk_name, struct nvme_ns *ns,
 	}
 }
 
-<<<<<<< HEAD
 void nvme_failover_req(struct request *req)
-=======
-bool nvme_failover_req(struct request *req)
->>>>>>> rebase
 {
 	struct nvme_ns *ns = req->q->queuedata;
 	u16 status = nvme_req(req)->status;
 	unsigned long flags;
 
-<<<<<<< HEAD
 	spin_lock_irqsave(&ns->head->requeue_lock, flags);
 	blk_steal_bios(&ns->head->requeue_list, req);
 	spin_unlock_irqrestore(&ns->head->requeue_lock, flags);
 	blk_mq_end_request(req, 0);
 
-=======
->>>>>>> rebase
 	switch (status & 0x7ff) {
 	case NVME_SC_ANA_TRANSITION:
 	case NVME_SC_ANA_INACCESSIBLE:
@@ -121,7 +110,6 @@ bool nvme_failover_req(struct request *req)
 		nvme_mpath_clear_current_path(ns);
 		break;
 	default:
-<<<<<<< HEAD
 		/*
 		 * Reset the controller for any non-ANA error as we don't know
 		 * what caused the error.
@@ -131,19 +119,6 @@ bool nvme_failover_req(struct request *req)
 	}
 
 	kblockd_schedule_work(&ns->head->requeue_work);
-=======
-		/* This was a non-ANA error so follow the normal error path. */
-		return false;
-	}
-
-	spin_lock_irqsave(&ns->head->requeue_lock, flags);
-	blk_steal_bios(&ns->head->requeue_list, req);
-	spin_unlock_irqrestore(&ns->head->requeue_lock, flags);
-	blk_mq_end_request(req, 0);
-
-	kblockd_schedule_work(&ns->head->requeue_work);
-	return true;
->>>>>>> rebase
 }
 
 void nvme_kick_requeue_lists(struct nvme_ctrl *ctrl)
@@ -340,7 +315,6 @@ static void nvme_mpath_set_live(struct nvme_ns *ns)
 	if (!head->disk)
 		return;
 
-<<<<<<< HEAD
 	if (!(head->disk->flags & GENHD_FL_UP)) {
 		device_add_disk(&head->subsys->dev, head->disk);
 		if (sysfs_create_group(&disk_to_dev(head->disk)->kobj,
@@ -348,11 +322,6 @@ static void nvme_mpath_set_live(struct nvme_ns *ns)
 			dev_warn(&head->subsys->dev,
 				 "failed to create id group.\n");
 	}
-=======
-	if (!(head->disk->flags & GENHD_FL_UP))
-		device_add_disk(&head->subsys->dev, head->disk,
-				nvme_ns_id_attr_groups);
->>>>>>> rebase
 
 	synchronize_srcu(&ns->head->srcu);
 	kblockd_schedule_work(&ns->head->requeue_work);
@@ -433,33 +402,18 @@ static int nvme_update_ana_state(struct nvme_ctrl *ctrl,
 	if (!nr_nsids)
 		return 0;
 
-<<<<<<< HEAD
 	down_write(&ctrl->namespaces_rwsem);
 	list_for_each_entry(ns, &ctrl->namespaces, list) {
 		unsigned nsid = le32_to_cpu(desc->nsids[n]);
 
-=======
-	down_read(&ctrl->namespaces_rwsem);
-	list_for_each_entry(ns, &ctrl->namespaces, list) {
-		unsigned nsid;
-again:
-		nsid = le32_to_cpu(desc->nsids[n]);
->>>>>>> rebase
 		if (ns->head->ns_id < nsid)
 			continue;
 		if (ns->head->ns_id == nsid)
 			nvme_update_ns_ana_state(desc, ns);
 		if (++n == nr_nsids)
 			break;
-<<<<<<< HEAD
 	}
 	up_write(&ctrl->namespaces_rwsem);
-=======
-		if (ns->head->ns_id > nsid)
-			goto again;
-	}
-	up_read(&ctrl->namespaces_rwsem);
->>>>>>> rebase
 	return 0;
 }
 
@@ -541,7 +495,6 @@ static ssize_t ana_state_show(struct device *dev, struct device_attribute *attr,
 }
 DEVICE_ATTR_RO(ana_state);
 
-<<<<<<< HEAD
 static int nvme_set_ns_ana_state(struct nvme_ctrl *ctrl,
 		struct nvme_ana_group_desc *desc, void *data)
 {
@@ -553,80 +506,32 @@ static int nvme_set_ns_ana_state(struct nvme_ctrl *ctrl,
 	}
 
 	return 0;
-=======
-static int nvme_lookup_ana_group_desc(struct nvme_ctrl *ctrl,
-		struct nvme_ana_group_desc *desc, void *data)
-{
-	struct nvme_ana_group_desc *dst = data;
-
-	if (desc->grpid != dst->grpid)
-		return 0;
-
-	*dst = *desc;
-	return -ENXIO; /* just break out of the loop */
->>>>>>> rebase
 }
 
 void nvme_mpath_add_disk(struct nvme_ns *ns, struct nvme_id_ns *id)
 {
 	if (nvme_ctrl_use_ana(ns->ctrl)) {
-<<<<<<< HEAD
 		mutex_lock(&ns->ctrl->ana_lock);
 		ns->ana_grpid = le32_to_cpu(id->anagrpid);
 		nvme_parse_ana_log(ns->ctrl, ns, nvme_set_ns_ana_state);
 		mutex_unlock(&ns->ctrl->ana_lock);
-=======
-		struct nvme_ana_group_desc desc = {
-			.grpid = id->anagrpid,
-			.state = 0,
-		};
-
-		mutex_lock(&ns->ctrl->ana_lock);
-		ns->ana_grpid = le32_to_cpu(id->anagrpid);
-		nvme_parse_ana_log(ns->ctrl, &desc, nvme_lookup_ana_group_desc);
-		mutex_unlock(&ns->ctrl->ana_lock);
-		if (desc.state) {
-			/* found the group desc: update */
-			nvme_update_ns_ana_state(&desc, ns);
-		} else {
-			/* group desc not found: trigger a re-read */
-			set_bit(NVME_NS_ANA_PENDING, &ns->flags);
-			queue_work(nvme_wq, &ns->ctrl->ana_work);
-		}
->>>>>>> rebase
 	} else {
 		mutex_lock(&ns->head->lock);
 		ns->ana_state = NVME_ANA_OPTIMIZED; 
 		nvme_mpath_set_live(ns);
 		mutex_unlock(&ns->head->lock);
 	}
-<<<<<<< HEAD
-=======
-
-	if (bdi_cap_stable_pages_required(ns->queue->backing_dev_info)) {
-		struct gendisk *disk = ns->head->disk;
-
-		if (disk)
-			disk->queue->backing_dev_info->capabilities |=
-					BDI_CAP_STABLE_WRITES;
-	}
->>>>>>> rebase
 }
 
 void nvme_mpath_remove_disk(struct nvme_ns_head *head)
 {
 	if (!head->disk)
 		return;
-<<<<<<< HEAD
 	if (head->disk->flags & GENHD_FL_UP) {
 		sysfs_remove_group(&disk_to_dev(head->disk)->kobj,
 				   &nvme_ns_id_attr_group);
 		del_gendisk(head->disk);
 	}
-=======
-	if (head->disk->flags & GENHD_FL_UP)
-		del_gendisk(head->disk);
->>>>>>> rebase
 	blk_set_queue_dying(head->disk->queue);
 	/* make sure all pending bios are cleaned up */
 	kblockd_schedule_work(&head->requeue_work);

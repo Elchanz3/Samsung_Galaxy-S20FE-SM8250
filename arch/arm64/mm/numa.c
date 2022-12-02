@@ -58,15 +58,7 @@ EXPORT_SYMBOL(node_to_cpumask_map);
  */
 const struct cpumask *cpumask_of_node(int node)
 {
-<<<<<<< HEAD
 	if (WARN_ON(node >= nr_node_ids))
-=======
-
-	if (node == NUMA_NO_NODE)
-		return cpu_all_mask;
-
-	if (WARN_ON(node < 0 || node >= nr_node_ids))
->>>>>>> rebase
 		return cpu_none_mask;
 
 	if (WARN_ON(node_to_cpumask_map[node] == NULL))

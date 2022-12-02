@@ -942,17 +942,6 @@ void sas_task_abort(struct sas_task *task)
 	}
 }
 
-<<<<<<< HEAD
-=======
-int sas_slave_alloc(struct scsi_device *sdev)
-{
-	if (dev_is_sata(sdev_to_domain_dev(sdev)) && sdev->lun)
-		return -ENXIO;
-
-	return 0;
-}
-
->>>>>>> rebase
 void sas_target_destroy(struct scsi_target *starget)
 {
 	struct domain_device *found_dev = starget->hostdata;
@@ -999,9 +988,5 @@ EXPORT_SYMBOL_GPL(sas_task_abort);
 EXPORT_SYMBOL_GPL(sas_phy_reset);
 EXPORT_SYMBOL_GPL(sas_eh_device_reset_handler);
 EXPORT_SYMBOL_GPL(sas_eh_target_reset_handler);
-<<<<<<< HEAD
-=======
-EXPORT_SYMBOL_GPL(sas_slave_alloc);
->>>>>>> rebase
 EXPORT_SYMBOL_GPL(sas_target_destroy);
 EXPORT_SYMBOL_GPL(sas_ioctl);

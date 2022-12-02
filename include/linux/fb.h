@@ -304,7 +304,6 @@ struct fb_ops {
 	int (*fb_ioctl)(struct fb_info *info, unsigned int cmd,
 			unsigned long arg);
 
-<<<<<<< HEAD
 	/* perform fb specific ioctl v2 (optional) - provides file param */
 	int (*fb_ioctl_v2)(struct fb_info *info, unsigned int cmd,
 					unsigned long arg, struct file *file);
@@ -317,12 +316,6 @@ struct fb_ops {
 	int (*fb_compat_ioctl_v2)(struct fb_info *info, unsigned int cmd,
 				  unsigned long arg, struct file *file);
 
-=======
-	/* Handle 32bit compat ioctl (optional) */
-	int (*fb_compat_ioctl)(struct fb_info *info, unsigned cmd,
-			unsigned long arg);
-
->>>>>>> rebase
 	/* perform fb specific mmap */
 	int (*fb_mmap)(struct fb_info *info, struct vm_area_struct *vma);
 
@@ -496,10 +489,7 @@ struct fb_info {
 	struct fb_cmap cmap;		/* Current cmap */
 	struct list_head modelist;      /* mode list */
 	struct fb_videomode *mode;	/* current mode */
-<<<<<<< HEAD
 	struct file *file;		/* current file node */
-=======
->>>>>>> rebase
 
 #ifdef CONFIG_FB_BACKLIGHT
 	/* assigned backlight device */

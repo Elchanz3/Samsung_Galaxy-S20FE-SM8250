@@ -1683,15 +1683,6 @@ static int do_jit(struct bpf_prog *bpf_prog, int *addrs, u8 *image,
 			i++;
 			break;
 		}
-<<<<<<< HEAD
-=======
-		/* speculation barrier */
-		case BPF_ST | BPF_NOSPEC:
-			if (boot_cpu_has(X86_FEATURE_XMM2))
-				/* Emit 'lfence' */
-				EMIT3(0x0F, 0xAE, 0xE8);
-			break;
->>>>>>> rebase
 		/* ST: *(u8*)(dst_reg + off) = imm */
 		case BPF_ST | BPF_MEM | BPF_H:
 		case BPF_ST | BPF_MEM | BPF_B:
@@ -1839,13 +1830,7 @@ static int do_jit(struct bpf_prog *bpf_prog, int *addrs, u8 *image,
 					      STACK_VAR(dst_hi));
 					EMIT(0x0, 4);
 				} else {
-<<<<<<< HEAD
 					EMIT3(0xC7, add_1reg(0xC0, dst_hi), 0);
-=======
-					/* xor dst_hi,dst_hi */
-					EMIT2(0x33,
-					      add_2reg(0xC0, dst_hi, dst_hi));
->>>>>>> rebase
 				}
 				break;
 			case BPF_DW:
@@ -1983,13 +1968,8 @@ static int do_jit(struct bpf_prog *bpf_prog, int *addrs, u8 *image,
 			goto emit_cond_jmp_signed;
 		}
 		case BPF_JMP | BPF_JSET | BPF_X: {
-<<<<<<< HEAD
 			u8 dreg_lo = dstk ? IA32_EAX : dst_lo;
 			u8 dreg_hi = dstk ? IA32_EDX : dst_hi;
-=======
-			u8 dreg_lo = IA32_EAX;
-			u8 dreg_hi = IA32_EDX;
->>>>>>> rebase
 			u8 sreg_lo = sstk ? IA32_ECX : src_lo;
 			u8 sreg_hi = sstk ? IA32_EBX : src_hi;
 
@@ -1998,15 +1978,6 @@ static int do_jit(struct bpf_prog *bpf_prog, int *addrs, u8 *image,
 				      STACK_VAR(dst_lo));
 				EMIT3(0x8B, add_2reg(0x40, IA32_EBP, IA32_EDX),
 				      STACK_VAR(dst_hi));
-<<<<<<< HEAD
-=======
-			} else {
-				/* mov dreg_lo,dst_lo */
-				EMIT2(0x89, add_2reg(0xC0, dreg_lo, dst_lo));
-				/* mov dreg_hi,dst_hi */
-				EMIT2(0x89,
-				      add_2reg(0xC0, dreg_hi, dst_hi));
->>>>>>> rebase
 			}
 
 			if (sstk) {
@@ -2025,13 +1996,8 @@ static int do_jit(struct bpf_prog *bpf_prog, int *addrs, u8 *image,
 		}
 		case BPF_JMP | BPF_JSET | BPF_K: {
 			u32 hi;
-<<<<<<< HEAD
 			u8 dreg_lo = dstk ? IA32_EAX : dst_lo;
 			u8 dreg_hi = dstk ? IA32_EDX : dst_hi;
-=======
-			u8 dreg_lo = IA32_EAX;
-			u8 dreg_hi = IA32_EDX;
->>>>>>> rebase
 			u8 sreg_lo = IA32_ECX;
 			u8 sreg_hi = IA32_EBX;
 
@@ -2040,15 +2006,6 @@ static int do_jit(struct bpf_prog *bpf_prog, int *addrs, u8 *image,
 				      STACK_VAR(dst_lo));
 				EMIT3(0x8B, add_2reg(0x40, IA32_EBP, IA32_EDX),
 				      STACK_VAR(dst_hi));
-<<<<<<< HEAD
-=======
-			} else {
-				/* mov dreg_lo,dst_lo */
-				EMIT2(0x89, add_2reg(0xC0, dreg_lo, dst_lo));
-				/* mov dreg_hi,dst_hi */
-				EMIT2(0x89,
-				      add_2reg(0xC0, dreg_hi, dst_hi));
->>>>>>> rebase
 			}
 			hi = imm32 & (1<<31) ? (u32)~0 : 0;
 
@@ -2230,20 +2187,7 @@ notyet:
 		}
 
 		if (image) {
-<<<<<<< HEAD
 			if (unlikely(proglen + ilen > oldproglen)) {
-=======
-			/*
-			 * When populating the image, assert that:
-			 *
-			 *  i) We do not write beyond the allocated space, and
-			 * ii) addrs[i] did not change from the prior run, in order
-			 *     to validate assumptions made for computing branch
-			 *     displacements.
-			 */
-			if (unlikely(proglen + ilen > oldproglen ||
-				     proglen + ilen != addrs[i])) {
->>>>>>> rebase
 				pr_err("bpf_jit: fatal error\n");
 				return -EFAULT;
 			}

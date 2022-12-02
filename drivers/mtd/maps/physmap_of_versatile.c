@@ -107,10 +107,6 @@ static int ap_flash_init(struct platform_device *pdev)
 		return -ENODEV;
 	}
 	ebi_base = of_iomap(ebi, 0);
-<<<<<<< HEAD
-=======
-	of_node_put(ebi);
->>>>>>> rebase
 	if (!ebi_base)
 		return -ENODEV;
 
@@ -225,10 +221,6 @@ int of_flash_probe_versatile(struct platform_device *pdev,
 
 		versatile_flashprot = (enum versatile_flashprot)devid->data;
 		rmap = syscon_node_to_regmap(sysnp);
-<<<<<<< HEAD
-=======
-		of_node_put(sysnp);
->>>>>>> rebase
 		if (IS_ERR(rmap))
 			return PTR_ERR(rmap);
 

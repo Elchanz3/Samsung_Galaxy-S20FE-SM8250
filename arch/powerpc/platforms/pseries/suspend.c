@@ -26,10 +26,7 @@
 #include <asm/mmu.h>
 #include <asm/rtas.h>
 #include <asm/topology.h>
-<<<<<<< HEAD
 #include "../../kernel/cacheinfo.h"
-=======
->>>>>>> rebase
 
 static u64 stream_id;
 static struct device suspend_dev;
@@ -94,13 +91,9 @@ static void pseries_suspend_enable_irqs(void)
 	 * Update configuration which can be modified based on device tree
 	 * changes during resume.
 	 */
-<<<<<<< HEAD
 	cacheinfo_cpu_offline(smp_processor_id());
 	post_mobility_fixup();
 	cacheinfo_cpu_online(smp_processor_id());
-=======
-	post_mobility_fixup();
->>>>>>> rebase
 }
 
 /**
@@ -230,10 +223,7 @@ static struct bus_type suspend_subsys = {
 
 static const struct platform_suspend_ops pseries_suspend_ops = {
 	.valid		= suspend_valid_only_mem,
-<<<<<<< HEAD
 	.begin		= pseries_suspend_begin,
-=======
->>>>>>> rebase
 	.prepare_late	= pseries_prepare_late,
 	.enter		= pseries_suspend_enter,
 };

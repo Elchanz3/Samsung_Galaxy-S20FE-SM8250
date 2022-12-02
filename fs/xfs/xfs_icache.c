@@ -902,16 +902,7 @@ xfs_eofblocks_worker(
 {
 	struct xfs_mount *mp = container_of(to_delayed_work(work),
 				struct xfs_mount, m_eofblocks_work);
-<<<<<<< HEAD
 	xfs_icache_free_eofblocks(mp, NULL);
-=======
-
-	if (!sb_start_write_trylock(mp->m_super))
-		return;
-	xfs_icache_free_eofblocks(mp, NULL);
-	sb_end_write(mp->m_super);
-
->>>>>>> rebase
 	xfs_queue_eofblocks(mp);
 }
 
@@ -938,16 +929,7 @@ xfs_cowblocks_worker(
 {
 	struct xfs_mount *mp = container_of(to_delayed_work(work),
 				struct xfs_mount, m_cowblocks_work);
-<<<<<<< HEAD
 	xfs_icache_free_cowblocks(mp, NULL);
-=======
-
-	if (!sb_start_write_trylock(mp->m_super))
-		return;
-	xfs_icache_free_cowblocks(mp, NULL);
-	sb_end_write(mp->m_super);
-
->>>>>>> rebase
 	xfs_queue_cowblocks(mp);
 }
 
@@ -1135,11 +1117,7 @@ restart:
 			goto out_ifunlock;
 		xfs_iunpin_wait(ip);
 	}
-<<<<<<< HEAD
 	if (xfs_iflags_test(ip, XFS_ISTALE) || xfs_inode_clean(ip)) {
-=======
-	if (xfs_inode_clean(ip)) {
->>>>>>> rebase
 		xfs_ifunlock(ip);
 		goto reclaim;
 	}
@@ -1226,10 +1204,6 @@ reclaim:
 	xfs_ilock(ip, XFS_ILOCK_EXCL);
 	xfs_qm_dqdetach(ip);
 	xfs_iunlock(ip, XFS_ILOCK_EXCL);
-<<<<<<< HEAD
-=======
-	ASSERT(xfs_inode_clean(ip));
->>>>>>> rebase
 
 	__xfs_inode_free(ip);
 	return error;

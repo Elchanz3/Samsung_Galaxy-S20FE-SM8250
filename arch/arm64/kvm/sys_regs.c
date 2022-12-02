@@ -426,22 +426,14 @@ static bool trap_bvr(struct kvm_vcpu *vcpu,
 		     struct sys_reg_params *p,
 		     const struct sys_reg_desc *rd)
 {
-<<<<<<< HEAD
 	u64 *dbg_reg = &vcpu->arch.vcpu_debug_state.dbg_bvr[rd->reg];
-=======
-	u64 *dbg_reg = &vcpu->arch.vcpu_debug_state.dbg_bvr[rd->CRm];
->>>>>>> rebase
 
 	if (p->is_write)
 		reg_to_dbg(vcpu, p, dbg_reg);
 	else
 		dbg_to_reg(vcpu, p, dbg_reg);
 
-<<<<<<< HEAD
 	trace_trap_reg(__func__, rd->reg, p->is_write, *dbg_reg);
-=======
-	trace_trap_reg(__func__, rd->CRm, p->is_write, *dbg_reg);
->>>>>>> rebase
 
 	return true;
 }
@@ -449,11 +441,7 @@ static bool trap_bvr(struct kvm_vcpu *vcpu,
 static int set_bvr(struct kvm_vcpu *vcpu, const struct sys_reg_desc *rd,
 		const struct kvm_one_reg *reg, void __user *uaddr)
 {
-<<<<<<< HEAD
 	__u64 *r = &vcpu->arch.vcpu_debug_state.dbg_bvr[rd->reg];
-=======
-	__u64 *r = &vcpu->arch.vcpu_debug_state.dbg_bvr[rd->CRm];
->>>>>>> rebase
 
 	if (copy_from_user(r, uaddr, KVM_REG_SIZE(reg->id)) != 0)
 		return -EFAULT;
@@ -463,11 +451,7 @@ static int set_bvr(struct kvm_vcpu *vcpu, const struct sys_reg_desc *rd,
 static int get_bvr(struct kvm_vcpu *vcpu, const struct sys_reg_desc *rd,
 	const struct kvm_one_reg *reg, void __user *uaddr)
 {
-<<<<<<< HEAD
 	__u64 *r = &vcpu->arch.vcpu_debug_state.dbg_bvr[rd->reg];
-=======
-	__u64 *r = &vcpu->arch.vcpu_debug_state.dbg_bvr[rd->CRm];
->>>>>>> rebase
 
 	if (copy_to_user(uaddr, r, KVM_REG_SIZE(reg->id)) != 0)
 		return -EFAULT;
@@ -477,33 +461,21 @@ static int get_bvr(struct kvm_vcpu *vcpu, const struct sys_reg_desc *rd,
 static void reset_bvr(struct kvm_vcpu *vcpu,
 		      const struct sys_reg_desc *rd)
 {
-<<<<<<< HEAD
 	vcpu->arch.vcpu_debug_state.dbg_bvr[rd->reg] = rd->val;
-=======
-	vcpu->arch.vcpu_debug_state.dbg_bvr[rd->CRm] = rd->val;
->>>>>>> rebase
 }
 
 static bool trap_bcr(struct kvm_vcpu *vcpu,
 		     struct sys_reg_params *p,
 		     const struct sys_reg_desc *rd)
 {
-<<<<<<< HEAD
 	u64 *dbg_reg = &vcpu->arch.vcpu_debug_state.dbg_bcr[rd->reg];
-=======
-	u64 *dbg_reg = &vcpu->arch.vcpu_debug_state.dbg_bcr[rd->CRm];
->>>>>>> rebase
 
 	if (p->is_write)
 		reg_to_dbg(vcpu, p, dbg_reg);
 	else
 		dbg_to_reg(vcpu, p, dbg_reg);
 
-<<<<<<< HEAD
 	trace_trap_reg(__func__, rd->reg, p->is_write, *dbg_reg);
-=======
-	trace_trap_reg(__func__, rd->CRm, p->is_write, *dbg_reg);
->>>>>>> rebase
 
 	return true;
 }
@@ -511,11 +483,7 @@ static bool trap_bcr(struct kvm_vcpu *vcpu,
 static int set_bcr(struct kvm_vcpu *vcpu, const struct sys_reg_desc *rd,
 		const struct kvm_one_reg *reg, void __user *uaddr)
 {
-<<<<<<< HEAD
 	__u64 *r = &vcpu->arch.vcpu_debug_state.dbg_bcr[rd->reg];
-=======
-	__u64 *r = &vcpu->arch.vcpu_debug_state.dbg_bcr[rd->CRm];
->>>>>>> rebase
 
 	if (copy_from_user(r, uaddr, KVM_REG_SIZE(reg->id)) != 0)
 		return -EFAULT;
@@ -526,11 +494,7 @@ static int set_bcr(struct kvm_vcpu *vcpu, const struct sys_reg_desc *rd,
 static int get_bcr(struct kvm_vcpu *vcpu, const struct sys_reg_desc *rd,
 	const struct kvm_one_reg *reg, void __user *uaddr)
 {
-<<<<<<< HEAD
 	__u64 *r = &vcpu->arch.vcpu_debug_state.dbg_bcr[rd->reg];
-=======
-	__u64 *r = &vcpu->arch.vcpu_debug_state.dbg_bcr[rd->CRm];
->>>>>>> rebase
 
 	if (copy_to_user(uaddr, r, KVM_REG_SIZE(reg->id)) != 0)
 		return -EFAULT;
@@ -540,35 +504,22 @@ static int get_bcr(struct kvm_vcpu *vcpu, const struct sys_reg_desc *rd,
 static void reset_bcr(struct kvm_vcpu *vcpu,
 		      const struct sys_reg_desc *rd)
 {
-<<<<<<< HEAD
 	vcpu->arch.vcpu_debug_state.dbg_bcr[rd->reg] = rd->val;
-=======
-	vcpu->arch.vcpu_debug_state.dbg_bcr[rd->CRm] = rd->val;
->>>>>>> rebase
 }
 
 static bool trap_wvr(struct kvm_vcpu *vcpu,
 		     struct sys_reg_params *p,
 		     const struct sys_reg_desc *rd)
 {
-<<<<<<< HEAD
 	u64 *dbg_reg = &vcpu->arch.vcpu_debug_state.dbg_wvr[rd->reg];
-=======
-	u64 *dbg_reg = &vcpu->arch.vcpu_debug_state.dbg_wvr[rd->CRm];
->>>>>>> rebase
 
 	if (p->is_write)
 		reg_to_dbg(vcpu, p, dbg_reg);
 	else
 		dbg_to_reg(vcpu, p, dbg_reg);
 
-<<<<<<< HEAD
 	trace_trap_reg(__func__, rd->reg, p->is_write,
 		vcpu->arch.vcpu_debug_state.dbg_wvr[rd->reg]);
-=======
-	trace_trap_reg(__func__, rd->CRm, p->is_write,
-		vcpu->arch.vcpu_debug_state.dbg_wvr[rd->CRm]);
->>>>>>> rebase
 
 	return true;
 }
@@ -576,11 +527,7 @@ static bool trap_wvr(struct kvm_vcpu *vcpu,
 static int set_wvr(struct kvm_vcpu *vcpu, const struct sys_reg_desc *rd,
 		const struct kvm_one_reg *reg, void __user *uaddr)
 {
-<<<<<<< HEAD
 	__u64 *r = &vcpu->arch.vcpu_debug_state.dbg_wvr[rd->reg];
-=======
-	__u64 *r = &vcpu->arch.vcpu_debug_state.dbg_wvr[rd->CRm];
->>>>>>> rebase
 
 	if (copy_from_user(r, uaddr, KVM_REG_SIZE(reg->id)) != 0)
 		return -EFAULT;
@@ -590,11 +537,7 @@ static int set_wvr(struct kvm_vcpu *vcpu, const struct sys_reg_desc *rd,
 static int get_wvr(struct kvm_vcpu *vcpu, const struct sys_reg_desc *rd,
 	const struct kvm_one_reg *reg, void __user *uaddr)
 {
-<<<<<<< HEAD
 	__u64 *r = &vcpu->arch.vcpu_debug_state.dbg_wvr[rd->reg];
-=======
-	__u64 *r = &vcpu->arch.vcpu_debug_state.dbg_wvr[rd->CRm];
->>>>>>> rebase
 
 	if (copy_to_user(uaddr, r, KVM_REG_SIZE(reg->id)) != 0)
 		return -EFAULT;
@@ -604,33 +547,21 @@ static int get_wvr(struct kvm_vcpu *vcpu, const struct sys_reg_desc *rd,
 static void reset_wvr(struct kvm_vcpu *vcpu,
 		      const struct sys_reg_desc *rd)
 {
-<<<<<<< HEAD
 	vcpu->arch.vcpu_debug_state.dbg_wvr[rd->reg] = rd->val;
-=======
-	vcpu->arch.vcpu_debug_state.dbg_wvr[rd->CRm] = rd->val;
->>>>>>> rebase
 }
 
 static bool trap_wcr(struct kvm_vcpu *vcpu,
 		     struct sys_reg_params *p,
 		     const struct sys_reg_desc *rd)
 {
-<<<<<<< HEAD
 	u64 *dbg_reg = &vcpu->arch.vcpu_debug_state.dbg_wcr[rd->reg];
-=======
-	u64 *dbg_reg = &vcpu->arch.vcpu_debug_state.dbg_wcr[rd->CRm];
->>>>>>> rebase
 
 	if (p->is_write)
 		reg_to_dbg(vcpu, p, dbg_reg);
 	else
 		dbg_to_reg(vcpu, p, dbg_reg);
 
-<<<<<<< HEAD
 	trace_trap_reg(__func__, rd->reg, p->is_write, *dbg_reg);
-=======
-	trace_trap_reg(__func__, rd->CRm, p->is_write, *dbg_reg);
->>>>>>> rebase
 
 	return true;
 }
@@ -638,11 +569,7 @@ static bool trap_wcr(struct kvm_vcpu *vcpu,
 static int set_wcr(struct kvm_vcpu *vcpu, const struct sys_reg_desc *rd,
 		const struct kvm_one_reg *reg, void __user *uaddr)
 {
-<<<<<<< HEAD
 	__u64 *r = &vcpu->arch.vcpu_debug_state.dbg_wcr[rd->reg];
-=======
-	__u64 *r = &vcpu->arch.vcpu_debug_state.dbg_wcr[rd->CRm];
->>>>>>> rebase
 
 	if (copy_from_user(r, uaddr, KVM_REG_SIZE(reg->id)) != 0)
 		return -EFAULT;
@@ -652,11 +579,7 @@ static int set_wcr(struct kvm_vcpu *vcpu, const struct sys_reg_desc *rd,
 static int get_wcr(struct kvm_vcpu *vcpu, const struct sys_reg_desc *rd,
 	const struct kvm_one_reg *reg, void __user *uaddr)
 {
-<<<<<<< HEAD
 	__u64 *r = &vcpu->arch.vcpu_debug_state.dbg_wcr[rd->reg];
-=======
-	__u64 *r = &vcpu->arch.vcpu_debug_state.dbg_wcr[rd->CRm];
->>>>>>> rebase
 
 	if (copy_to_user(uaddr, r, KVM_REG_SIZE(reg->id)) != 0)
 		return -EFAULT;
@@ -666,11 +589,7 @@ static int get_wcr(struct kvm_vcpu *vcpu, const struct sys_reg_desc *rd,
 static void reset_wcr(struct kvm_vcpu *vcpu,
 		      const struct sys_reg_desc *rd)
 {
-<<<<<<< HEAD
 	vcpu->arch.vcpu_debug_state.dbg_wcr[rd->reg] = rd->val;
-=======
-	vcpu->arch.vcpu_debug_state.dbg_wcr[rd->CRm] = rd->val;
->>>>>>> rebase
 }
 
 static void reset_amair_el1(struct kvm_vcpu *vcpu, const struct sys_reg_desc *r)
@@ -700,13 +619,6 @@ static void reset_pmcr(struct kvm_vcpu *vcpu, const struct sys_reg_desc *r)
 {
 	u64 pmcr, val;
 
-<<<<<<< HEAD
-=======
-	/* No PMU available, PMCR_EL0 may UNDEF... */
-	if (!kvm_arm_support_pmu_v3())
-		return;
-
->>>>>>> rebase
 	pmcr = read_sysreg(pmcr_el0);
 	/*
 	 * Writable bits of PMCR_EL0 (ARMV8_PMU_PMCR_MASK) are reset to UNKNOWN
@@ -1373,11 +1285,7 @@ static const struct sys_reg_desc sys_reg_descs[] = {
 	/* CRm=6 */
 	ID_SANITISED(ID_AA64ISAR0_EL1),
 	ID_SANITISED(ID_AA64ISAR1_EL1),
-<<<<<<< HEAD
 	ID_UNALLOCATED(6,2),
-=======
-	ID_SANITISED(ID_AA64ISAR2_EL1),
->>>>>>> rebase
 	ID_UNALLOCATED(6,3),
 	ID_UNALLOCATED(6,4),
 	ID_UNALLOCATED(6,5),
@@ -1647,15 +1555,9 @@ static const struct sys_reg_desc cp14_regs[] = {
 	{ Op1( 0), CRn( 0), CRm( 1), Op2( 0), trap_raz_wi },
 	DBG_BCR_BVR_WCR_WVR(1),
 	/* DBGDCCINT */
-<<<<<<< HEAD
 	{ Op1( 0), CRn( 0), CRm( 2), Op2( 0), trap_debug32 },
 	/* DBGDSCRext */
 	{ Op1( 0), CRn( 0), CRm( 2), Op2( 2), trap_debug32 },
-=======
-	{ Op1( 0), CRn( 0), CRm( 2), Op2( 0), trap_debug32, NULL, cp14_DBGDCCINT },
-	/* DBGDSCRext */
-	{ Op1( 0), CRn( 0), CRm( 2), Op2( 2), trap_debug32, NULL, cp14_DBGDSCRext },
->>>>>>> rebase
 	DBG_BCR_BVR_WCR_WVR(2),
 	/* DBGDTR[RT]Xint */
 	{ Op1( 0), CRn( 0), CRm( 3), Op2( 0), trap_raz_wi },
@@ -1670,11 +1572,7 @@ static const struct sys_reg_desc cp14_regs[] = {
 	{ Op1( 0), CRn( 0), CRm( 6), Op2( 2), trap_raz_wi },
 	DBG_BCR_BVR_WCR_WVR(6),
 	/* DBGVCR */
-<<<<<<< HEAD
 	{ Op1( 0), CRn( 0), CRm( 7), Op2( 0), trap_debug32 },
-=======
-	{ Op1( 0), CRn( 0), CRm( 7), Op2( 0), trap_debug32, NULL, cp14_DBGVCR },
->>>>>>> rebase
 	DBG_BCR_BVR_WCR_WVR(7),
 	DBG_BCR_BVR_WCR_WVR(8),
 	DBG_BCR_BVR_WCR_WVR(9),
@@ -1763,10 +1661,6 @@ static const struct sys_reg_desc cp15_regs[] = {
 	{ Op1( 0), CRn( 2), CRm( 0), Op2( 0), access_vm_reg, NULL, c2_TTBR0 },
 	{ Op1( 0), CRn( 2), CRm( 0), Op2( 1), access_vm_reg, NULL, c2_TTBR1 },
 	{ Op1( 0), CRn( 2), CRm( 0), Op2( 2), access_vm_reg, NULL, c2_TTBCR },
-<<<<<<< HEAD
-=======
-	{ Op1( 0), CRn( 2), CRm( 0), Op2( 3), access_vm_reg, NULL, c2_TTBCR2 },
->>>>>>> rebase
 	{ Op1( 0), CRn( 3), CRm( 0), Op2( 0), access_vm_reg, NULL, c3_DACR },
 	{ Op1( 0), CRn( 5), CRm( 0), Op2( 0), access_vm_reg, NULL, c5_DFSR },
 	{ Op1( 0), CRn( 5), CRm( 0), Op2( 1), access_vm_reg, NULL, c5_IFSR },

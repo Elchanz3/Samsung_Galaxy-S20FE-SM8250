@@ -507,11 +507,7 @@ static unsigned int sata_fsl_fill_sg(struct ata_queued_cmd *qc, void *cmd_desc,
 	return num_prde;
 }
 
-<<<<<<< HEAD
 static void sata_fsl_qc_prep(struct ata_queued_cmd *qc)
-=======
-static enum ata_completion_errors sata_fsl_qc_prep(struct ata_queued_cmd *qc)
->>>>>>> rebase
 {
 	struct ata_port *ap = qc->ap;
 	struct sata_fsl_port_priv *pp = ap->private_data;
@@ -557,11 +553,6 @@ static enum ata_completion_errors sata_fsl_qc_prep(struct ata_queued_cmd *qc)
 
 	VPRINTK("SATA FSL : xx_qc_prep, di = 0x%x, ttl = %d, num_prde = %d\n",
 		desc_info, ttl_dwords, num_prde);
-<<<<<<< HEAD
-=======
-
-	return AC_ERR_OK;
->>>>>>> rebase
 }
 
 static unsigned int sata_fsl_qc_issue(struct ata_queued_cmd *qc)
@@ -1406,17 +1397,6 @@ static int sata_fsl_init_controller(struct ata_host *host)
 	return 0;
 }
 
-<<<<<<< HEAD
-=======
-static void sata_fsl_host_stop(struct ata_host *host)
-{
-        struct sata_fsl_host_priv *host_priv = host->private_data;
-
-        iounmap(host_priv->hcr_base);
-        kfree(host_priv);
-}
-
->>>>>>> rebase
 /*
  * scsi mid-layer and libata interface structures
  */
@@ -1449,11 +1429,6 @@ static struct ata_port_operations sata_fsl_ops = {
 	.port_start = sata_fsl_port_start,
 	.port_stop = sata_fsl_port_stop,
 
-<<<<<<< HEAD
-=======
-	.host_stop      = sata_fsl_host_stop,
-
->>>>>>> rebase
 	.pmp_attach = sata_fsl_pmp_attach,
 	.pmp_detach = sata_fsl_pmp_detach,
 };
@@ -1508,15 +1483,9 @@ static int sata_fsl_probe(struct platform_device *ofdev)
 	host_priv->ssr_base = ssr_base;
 	host_priv->csr_base = csr_base;
 
-<<<<<<< HEAD
 	irq = irq_of_parse_and_map(ofdev->dev.of_node, 0);
 	if (!irq) {
 		dev_err(&ofdev->dev, "invalid irq from platform\n");
-=======
-	irq = platform_get_irq(ofdev, 0);
-	if (irq < 0) {
-		retval = irq;
->>>>>>> rebase
 		goto error_exit_with_cleanup;
 	}
 	host_priv->irq = irq;
@@ -1591,13 +1560,10 @@ static int sata_fsl_remove(struct platform_device *ofdev)
 
 	ata_host_detach(host);
 
-<<<<<<< HEAD
 	irq_dispose_mapping(host_priv->irq);
 	iounmap(host_priv->hcr_base);
 	kfree(host_priv);
 
-=======
->>>>>>> rebase
 	return 0;
 }
 

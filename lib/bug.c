@@ -48,11 +48,8 @@
 #include <linux/sched.h>
 #include <linux/rculist.h>
 
-<<<<<<< HEAD
 #include <linux/sec_debug.h>
 
-=======
->>>>>>> rebase
 extern struct bug_entry __start___bug_table[], __stop___bug_table[];
 
 static inline unsigned long bug_addr(const struct bug_entry *bug)
@@ -160,7 +157,6 @@ enum bug_trap_type report_bug(unsigned long bugaddr, struct pt_regs *regs)
 
 	file = NULL;
 	line = 0;
-<<<<<<< HEAD
 	warning = 0;
 
 	if (bug) {
@@ -185,29 +181,6 @@ enum bug_trap_type report_bug(unsigned long bugaddr, struct pt_regs *regs)
 			 */
 			bug->flags |= BUGFLAG_DONE;
 		}
-=======
-
-#ifdef CONFIG_DEBUG_BUGVERBOSE
-#ifndef CONFIG_GENERIC_BUG_RELATIVE_POINTERS
-	file = bug->file;
-#else
-	file = (const char *)bug + bug->file_disp;
-#endif
-	line = bug->line;
-#endif
-	warning = (bug->flags & BUGFLAG_WARNING) != 0;
-	once = (bug->flags & BUGFLAG_ONCE) != 0;
-	done = (bug->flags & BUGFLAG_DONE) != 0;
-
-	if (warning && once) {
-		if (done)
-			return BUG_TRAP_TYPE_WARN;
-
-		/*
-		 * Since this is the only store, concurrency is not an issue.
-		 */
-		bug->flags |= BUGFLAG_DONE;
->>>>>>> rebase
 	}
 
 	if (warning) {
@@ -217,11 +190,8 @@ enum bug_trap_type report_bug(unsigned long bugaddr, struct pt_regs *regs)
 		return BUG_TRAP_TYPE_WARN;
 	}
 
-<<<<<<< HEAD
 	sec_debug_store_bug_string(file, line);
 
-=======
->>>>>>> rebase
 	printk(KERN_DEFAULT CUT_HERE);
 
 	if (file)

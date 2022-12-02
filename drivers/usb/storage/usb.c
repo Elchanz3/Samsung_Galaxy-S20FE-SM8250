@@ -224,7 +224,6 @@ EXPORT_SYMBOL_GPL(usb_stor_reset_resume);
 
 int usb_stor_pre_reset(struct usb_interface *iface)
 {
-<<<<<<< HEAD
 	struct us_data *us;
 	unsigned long jiffies_expire = jiffies + HZ;
 	int mu_lock = 1;
@@ -294,12 +293,6 @@ skip:
 	set_bit(US_FLIDX_RESETTING, &us->dflags);
 	us->is_mu_lock = mu_lock;
 	pr_info("%s - mu_lock=%d\n", __func__, us->is_mu_lock);
-=======
-	struct us_data *us = usb_get_intfdata(iface);
-
-	/* Make sure no command runs during the reset */
-	mutex_lock(&us->dev_mutex);
->>>>>>> rebase
 	return 0;
 }
 EXPORT_SYMBOL_GPL(usb_stor_pre_reset);
@@ -308,10 +301,7 @@ int usb_stor_post_reset(struct usb_interface *iface)
 {
 	struct us_data *us = usb_get_intfdata(iface);
 
-<<<<<<< HEAD
 	pr_info("%s +\n", __func__);
-=======
->>>>>>> rebase
 	/* Report the reset to the SCSI core */
 	usb_stor_report_bus_reset(us);
 
@@ -320,7 +310,6 @@ int usb_stor_post_reset(struct usb_interface *iface)
 	 * this is where the callback would be invoked.
 	 */
 
-<<<<<<< HEAD
 	clear_bit(US_FLIDX_RESETTING, &us->dflags);
 	clear_bit(US_FLIDX_ABORTING, &us->dflags);
 	if (us->is_mu_lock) {
@@ -329,9 +318,6 @@ int usb_stor_post_reset(struct usb_interface *iface)
 		pr_info("%s mutex_unlock\n", __func__);
 	}
 	pr_info("%s -\n", __func__);
-=======
-	mutex_unlock(&us->dev_mutex);
->>>>>>> rebase
 	return 0;
 }
 EXPORT_SYMBOL_GPL(usb_stor_post_reset);
@@ -491,13 +477,10 @@ SkipForAbort:
 			/* Allow USB transfers to resume */
 			clear_bit(US_FLIDX_ABORTING, &us->dflags);
 			clear_bit(US_FLIDX_TIMED_OUT, &us->dflags);
-<<<<<<< HEAD
 #ifdef CONFIG_USB_DEBUG_DETAILED_LOG
 			printk(KERN_ERR USB_STORAGE "%s clear TIMED_OUT\n",
 				__func__);
 #endif
-=======
->>>>>>> rebase
 		}
 
 		/* finished working on this command */
@@ -635,12 +618,6 @@ void usb_stor_adjust_quirks(struct usb_device *udev, unsigned long *fflags)
 		case 'j':
 			f |= US_FL_NO_REPORT_LUNS;
 			break;
-<<<<<<< HEAD
-=======
-		case 'k':
-			f |= US_FL_NO_SAME;
-			break;
->>>>>>> rebase
 		case 'l':
 			f |= US_FL_NOT_LOCKABLE;
 			break;
@@ -1055,12 +1032,9 @@ int usb_stor_probe1(struct us_data **pus,
 	/*
 	 * Allow 16-byte CDBs and thus > 2TB
 	 */
-<<<<<<< HEAD
 #ifdef CONFIG_USB_STORAGE_DETECT
 	host->by_usb = 1;
 #endif
-=======
->>>>>>> rebase
 	host->max_cmd_len = 16;
 	host->sg_tablesize = usb_stor_sg_tablesize(intf);
 	*pus = us = host_to_us(host);
@@ -1186,7 +1160,6 @@ EXPORT_SYMBOL_GPL(usb_stor_probe2);
 void usb_stor_disconnect(struct usb_interface *intf)
 {
 	struct us_data *us = usb_get_intfdata(intf);
-<<<<<<< HEAD
 #ifdef CONFIG_USB_STORAGE_DETECT
 	pr_info("%s enter\n", __func__);
 #endif
@@ -1199,11 +1172,6 @@ void usb_stor_disconnect(struct usb_interface *intf)
 #ifdef CONFIG_USB_STORAGE_DETECT
 	pr_info("%s exit\n", __func__);
 #endif
-=======
-
-	quiesce_and_remove_host(us);
-	release_everything(us);
->>>>>>> rebase
 }
 EXPORT_SYMBOL_GPL(usb_stor_disconnect);
 

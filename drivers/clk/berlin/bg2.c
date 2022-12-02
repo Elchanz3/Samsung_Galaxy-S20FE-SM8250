@@ -499,23 +499,12 @@ static void __init berlin2_clock_setup(struct device_node *np)
 	int n, ret;
 
 	clk_data = kzalloc(struct_size(clk_data, hws, MAX_CLKS), GFP_KERNEL);
-<<<<<<< HEAD
 	if (!clk_data)
 		return;
-=======
-	if (!clk_data) {
-		of_node_put(parent_np);
-		return;
-	}
->>>>>>> rebase
 	clk_data->num = MAX_CLKS;
 	hws = clk_data->hws;
 
 	gbase = of_iomap(parent_np, 0);
-<<<<<<< HEAD
-=======
-	of_node_put(parent_np);
->>>>>>> rebase
 	if (!gbase)
 		return;
 

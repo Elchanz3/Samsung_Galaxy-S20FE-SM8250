@@ -42,11 +42,7 @@ static int of_pmem_region_probe(struct platform_device *pdev)
 		return -ENOMEM;
 
 	priv->bus_desc.attr_groups = bus_attr_groups;
-<<<<<<< HEAD
 	priv->bus_desc.provider_name = kstrdup(pdev->name, GFP_KERNEL);
-=======
-	priv->bus_desc.provider_name = "of_pmem";
->>>>>>> rebase
 	priv->bus_desc.module = THIS_MODULE;
 	priv->bus_desc.of_node = np;
 
@@ -112,10 +108,6 @@ static struct platform_driver of_pmem_region_driver = {
 	.remove = of_pmem_region_remove,
 	.driver = {
 		.name = "of_pmem",
-<<<<<<< HEAD
-=======
-		.owner = THIS_MODULE,
->>>>>>> rebase
 		.of_match_table = of_pmem_region_match,
 	},
 };

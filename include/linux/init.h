@@ -47,11 +47,7 @@
 
 /* These are for everybody (although not all archs will actually
    discard it in modules) */
-<<<<<<< HEAD
 #define __init		__section(.init.text) __cold  __latent_entropy __noinitretpoline __nocfi
-=======
-#define __init		__section(.init.text) __cold  __latent_entropy __noinitretpoline
->>>>>>> rebase
 #define __initdata	__section(.init.data)
 #define __initconst	__section(.init.rodata)
 #define __exitdata	__section(.exit.data)
@@ -195,7 +191,6 @@ extern bool initcall_debug;
 	    ".long	" #fn " - .			\n"	\
 	    ".previous					\n");
 #else
-<<<<<<< HEAD
 #ifdef CONFIG_LTO_CLANG
   /*
    * With LTO, the compiler doesn't necessarily obey link order for
@@ -226,12 +221,6 @@ extern bool initcall_debug;
 #ifdef CONFIG_DEFERRED_INITCALLS
 #define deferred_initcall(fn, id)	___define_initcall(fn, id, .deferred_initcall##id)
 #endif
-=======
-#define ___define_initcall(fn, id, __sec) \
-	static initcall_t __initcall_##fn##id __used \
-		__attribute__((__section__(#__sec ".init"))) = fn;
-#endif
->>>>>>> rebase
 
 #define __define_initcall(fn, id) ___define_initcall(fn, id, .initcall##id)
 
@@ -272,13 +261,8 @@ extern bool initcall_debug;
 #define __exitcall(fn)						\
 	static exitcall_t __exitcall_##fn __exit_call = fn
 
-<<<<<<< HEAD
 #define console_initcall(fn)	___define_initcall(fn, con, .con_initcall)
 #define security_initcall(fn)	___define_initcall(fn, security, .security_initcall)
-=======
-#define console_initcall(fn)	___define_initcall(fn,, .con_initcall)
-#define security_initcall(fn)	___define_initcall(fn,, .security_initcall)
->>>>>>> rebase
 
 struct obs_kernel_param {
 	const char *str;
@@ -333,7 +317,6 @@ void __init parse_early_param(void);
 void __init parse_early_options(char *cmdline);
 #endif /* __ASSEMBLY__ */
 
-<<<<<<< HEAD
 #ifdef CONFIG_DEFERRED_INITCALLS
 #define deferred_module_init(fn) deferred_initcall(fn, 0)
 #define deferred_module_init_sync(fn) deferred_initcall(fn, 0s)
@@ -345,10 +328,6 @@ void __init parse_early_options(char *cmdline);
 #define deferred_module_init(fn) module_init(fn)
 #endif
 
-=======
-#else /* MODULE */
-
->>>>>>> rebase
 #define __setup_param(str, unique_id, fn)	/* nothing */
 #define __setup(str, func) 			/* nothing */
 #endif
@@ -356,11 +335,8 @@ void __init parse_early_options(char *cmdline);
 /* Data marked not to be saved by software suspend */
 #define __nosavedata __section(.data..nosave)
 
-<<<<<<< HEAD
 #define __rticdata  __attribute__((section(".bss.rtic")))
 
-=======
->>>>>>> rebase
 #ifdef MODULE
 #define __exit_p(x) x
 #else

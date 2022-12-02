@@ -9,10 +9,7 @@
 #include <linux/device.h>
 #include <linux/module.h>
 #include <linux/mutex.h>
-<<<<<<< HEAD
 #include <linux/property.h>
-=======
->>>>>>> rebase
 #include <linux/slab.h>
 
 #include "bus.h"
@@ -208,23 +205,18 @@ static void typec_altmode_put_partner(struct altmode *altmode)
 	put_device(&adev->dev);
 }
 
-<<<<<<< HEAD
 static int typec_port_fwnode_match(struct device *dev, const void *fwnode)
 {
 	return dev_fwnode(dev) == fwnode;
 }
 
 static int typec_port_name_match(struct device *dev, const void *name)
-=======
-static int __typec_port_match(struct device *dev, const void *name)
->>>>>>> rebase
 {
 	return !strcmp((const char *)name, dev_name(dev));
 }
 
 static void *typec_port_match(struct device_connection *con, int ep, void *data)
 {
-<<<<<<< HEAD
 	struct device *dev;
 
 	/*
@@ -239,10 +231,6 @@ static void *typec_port_match(struct device_connection *con, int ep, void *data)
 				typec_port_name_match);
 
 	return dev ? dev : ERR_PTR(-EPROBE_DEFER);
-=======
-	return class_find_device(typec_class, NULL, con->endpoint[ep],
-				 __typec_port_match);
->>>>>>> rebase
 }
 
 struct typec_altmode *
@@ -307,11 +295,7 @@ void typec_altmode_update_active(struct typec_altmode *adev, bool active)
 	if (adev->active == active)
 		return;
 
-<<<<<<< HEAD
 	if (!is_typec_port(adev->dev.parent) && adev->dev.driver) {
-=======
-	if (!is_typec_port(adev->dev.parent)) {
->>>>>>> rebase
 		if (!active)
 			module_put(adev->dev.driver->owner);
 		else
@@ -515,15 +499,8 @@ typec_register_altmode(struct device *parent,
 	int ret;
 
 	alt = kzalloc(sizeof(*alt), GFP_KERNEL);
-<<<<<<< HEAD
 	if (!alt)
 		return ERR_PTR(-ENOMEM);
-=======
-	if (!alt) {
-		altmode_id_remove(parent, id);
-		return ERR_PTR(-ENOMEM);
-	}
->>>>>>> rebase
 
 	alt->adev.svid = desc->svid;
 	alt->adev.mode = desc->mode;
@@ -705,10 +682,7 @@ struct typec_partner *typec_register_partner(struct typec_port *port,
 	partner->dev.type = &typec_partner_dev_type;
 	dev_set_name(&partner->dev, "%s-partner", dev_name(&port->dev));
 
-<<<<<<< HEAD
 	pr_info("%s\n", __func__);
-=======
->>>>>>> rebase
 	ret = device_register(&partner->dev);
 	if (ret) {
 		dev_err(&port->dev, "failed to register partner (%d)\n", ret);
@@ -728,15 +702,10 @@ EXPORT_SYMBOL_GPL(typec_register_partner);
  */
 void typec_unregister_partner(struct typec_partner *partner)
 {
-<<<<<<< HEAD
 	if (!IS_ERR_OR_NULL(partner)) {
 		pr_info("%s\n", __func__);
 		device_unregister(&partner->dev);
 	}
-=======
-	if (!IS_ERR_OR_NULL(partner))
-		device_unregister(&partner->dev);
->>>>>>> rebase
 }
 EXPORT_SYMBOL_GPL(typec_unregister_partner);
 
@@ -1050,18 +1019,12 @@ static ssize_t data_role_store(struct device *dev,
 		return -EOPNOTSUPP;
 	}
 
-<<<<<<< HEAD
 	pr_info("%s %s +\n", __func__, buf);
 	ret = sysfs_match_string(typec_data_roles, buf);
 	if (ret < 0) {
 		pr_err("%s error -\n", __func__);
 		return ret;
 	}
-=======
-	ret = sysfs_match_string(typec_data_roles, buf);
-	if (ret < 0)
-		return ret;
->>>>>>> rebase
 
 	mutex_lock(&port->port_type_lock);
 	if (port->cap->data != TYPEC_PORT_DRD) {
@@ -1076,10 +1039,7 @@ static ssize_t data_role_store(struct device *dev,
 	ret = size;
 unlock_and_ret:
 	mutex_unlock(&port->port_type_lock);
-<<<<<<< HEAD
 	pr_info("%s -\n", __func__);
-=======
->>>>>>> rebase
 	return ret;
 }
 
@@ -1118,18 +1078,12 @@ static ssize_t power_role_store(struct device *dev,
 		return -EIO;
 	}
 
-<<<<<<< HEAD
 	pr_info("%s %s +\n", __func__, buf);
 	ret = sysfs_match_string(typec_roles, buf);
 	if (ret < 0) {
 		pr_err("%s error -\n", __func__);
 		return ret;
 	}
-=======
-	ret = sysfs_match_string(typec_roles, buf);
-	if (ret < 0)
-		return ret;
->>>>>>> rebase
 
 	mutex_lock(&port->port_type_lock);
 	if (port->port_type != TYPEC_PORT_DRP) {
@@ -1146,10 +1100,7 @@ static ssize_t power_role_store(struct device *dev,
 	ret = size;
 unlock_and_ret:
 	mutex_unlock(&port->port_type_lock);
-<<<<<<< HEAD
 	pr_info("%s -\n", __func__);
-=======
->>>>>>> rebase
 	return ret;
 }
 
@@ -1179,35 +1130,23 @@ port_type_store(struct device *dev, struct device_attribute *attr,
 		return -EOPNOTSUPP;
 	}
 
-<<<<<<< HEAD
 	pr_info("%s %s +\n", __func__, buf);
 	ret = sysfs_match_string(typec_port_power_roles, buf);
 	if (ret < 0) {
 		pr_err("%s error -\n", __func__);
 		return ret;
 	}
-=======
-	ret = sysfs_match_string(typec_port_power_roles, buf);
-	if (ret < 0)
-		return ret;
->>>>>>> rebase
 
 	type = ret;
 	mutex_lock(&port->port_type_lock);
 
-<<<<<<< HEAD
 //temp
 #if 0
-=======
->>>>>>> rebase
 	if (port->port_type == type) {
 		ret = size;
 		goto unlock_and_ret;
 	}
-<<<<<<< HEAD
 #endif
-=======
->>>>>>> rebase
 
 	ret = port->cap->port_type_set(port->cap, type);
 	if (ret)
@@ -1218,10 +1157,7 @@ port_type_store(struct device *dev, struct device_attribute *attr,
 
 unlock_and_ret:
 	mutex_unlock(&port->port_type_lock);
-<<<<<<< HEAD
 	pr_info("%s -\n", __func__);
-=======
->>>>>>> rebase
 	return ret;
 }
 
@@ -1394,10 +1330,7 @@ const struct device_type typec_port_dev_type = {
  */
 void typec_set_data_role(struct typec_port *port, enum typec_data_role role)
 {
-<<<<<<< HEAD
 	pr_info("%s data_role=%d role=%d\n", __func__, port->data_role, role);
-=======
->>>>>>> rebase
 	if (port->data_role == role)
 		return;
 
@@ -1416,10 +1349,7 @@ EXPORT_SYMBOL_GPL(typec_set_data_role);
  */
 void typec_set_pwr_role(struct typec_port *port, enum typec_role role)
 {
-<<<<<<< HEAD
 	pr_info("%s pwr_role=%d role=%d\n", __func__, port->pwr_role, role);
-=======
->>>>>>> rebase
 	if (port->pwr_role == role)
 		return;
 
@@ -1439,10 +1369,7 @@ EXPORT_SYMBOL_GPL(typec_set_pwr_role);
  */
 void typec_set_vconn_role(struct typec_port *port, enum typec_role role)
 {
-<<<<<<< HEAD
 	pr_info("%s vconn_role=%d role=%d\n", __func__, port->vconn_role, role);
-=======
->>>>>>> rebase
 	if (port->vconn_role == role)
 		return;
 
@@ -1472,10 +1399,7 @@ void typec_set_pwr_opmode(struct typec_port *port,
 {
 	struct device *partner_dev;
 
-<<<<<<< HEAD
 	pr_info("%s pwr_opmode=%d opmode=%d\n", __func__, port->pwr_opmode, opmode);
-=======
->>>>>>> rebase
 	if (port->pwr_opmode == opmode)
 		return;
 
@@ -1491,10 +1415,6 @@ void typec_set_pwr_opmode(struct typec_port *port,
 			partner->usb_pd = 1;
 			sysfs_notify(&partner_dev->kobj, NULL,
 				     "supports_usb_power_delivery");
-<<<<<<< HEAD
-=======
-			kobject_uevent(&partner_dev->kobj, KOBJ_CHANGE);
->>>>>>> rebase
 		}
 		put_device(partner_dev);
 	}
@@ -1616,16 +1536,8 @@ typec_port_register_altmode(struct typec_port *port,
 {
 	struct typec_altmode *adev;
 	struct typec_mux *mux;
-<<<<<<< HEAD
 
 	mux = typec_mux_get(&port->dev, desc);
-=======
-	char id[10];
-
-	sprintf(id, "id%04xm%02x", desc->svid, desc->mode);
-
-	mux = typec_mux_get(&port->dev, id);
->>>>>>> rebase
 	if (IS_ERR(mux))
 		return ERR_CAST(mux);
 
@@ -1719,11 +1631,7 @@ struct typec_port *typec_register_port(struct device *parent,
 		return ERR_PTR(ret);
 	}
 
-<<<<<<< HEAD
 	port->mux = typec_mux_get(&port->dev, NULL);
-=======
-	port->mux = typec_mux_get(&port->dev, "typec-mux");
->>>>>>> rebase
 	if (IS_ERR(port->mux)) {
 		ret = PTR_ERR(port->mux);
 		put_device(&port->dev);
@@ -1762,7 +1670,6 @@ static int __init typec_init(void)
 	if (ret)
 		return ret;
 
-<<<<<<< HEAD
 	ret = class_register(&typec_mux_class);
 	if (ret)
 		goto err_unregister_bus;
@@ -1782,15 +1689,6 @@ err_unregister_bus:
 	bus_unregister(&typec_bus);
 
 	return ret;
-=======
-	typec_class = class_create(THIS_MODULE, "typec");
-	if (IS_ERR(typec_class)) {
-		bus_unregister(&typec_bus);
-		return PTR_ERR(typec_class);
-	}
-
-	return 0;
->>>>>>> rebase
 }
 subsys_initcall(typec_init);
 
@@ -1799,10 +1697,7 @@ static void __exit typec_exit(void)
 	class_destroy(typec_class);
 	ida_destroy(&typec_index_ida);
 	bus_unregister(&typec_bus);
-<<<<<<< HEAD
 	class_unregister(&typec_mux_class);
-=======
->>>>>>> rebase
 }
 module_exit(typec_exit);
 

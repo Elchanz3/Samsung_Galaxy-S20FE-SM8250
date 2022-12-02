@@ -567,7 +567,6 @@ config QCOM_PM8XXX_XOADC
 	  To compile this driver as a module, choose M here: the module
 	  will be called qcom-pm8xxx-xoadc.
 
-<<<<<<< HEAD
 config QCOM_SPMI_ADC5
 	tristate "Qualcomm Technologies Inc. SPMI PMIC5 ADC"
 	depends on SPMI
@@ -612,8 +611,6 @@ config QCOM_RRADC
 	  To compile this driver as a module, choose M here: the module will
 	  be called qcom-rradc.
 
-=======
->>>>>>> rebase
 config QCOM_SPMI_IADC
 	tristate "Qualcomm SPMI PMIC current ADC"
 	depends on SPMI
@@ -705,10 +702,6 @@ config STM32_ADC_CORE
 	depends on ARCH_STM32 || COMPILE_TEST
 	depends on OF
 	depends on REGULATOR
-<<<<<<< HEAD
-=======
-	depends on HAS_IOMEM
->>>>>>> rebase
 	select IIO_BUFFER
 	select MFD_STM32_TIMERS
 	select IIO_STM32_TIMER_TRIGGER

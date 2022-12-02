@@ -49,7 +49,6 @@ struct udp_sock {
 	unsigned int	 corkflag;	/* Cork is required */
 	__u8		 encap_type;	/* Is this an Encapsulation socket? */
 	unsigned char	 no_check6_tx:1,/* Send zero UDP6 checksums on TX? */
-<<<<<<< HEAD
 			 no_check6_rx:1,/* Allow zero UDP6 checksums on RX? */
 			 encap_enabled:1, /* This socket enabled encap
 					   * processing; UDP tunnels and
@@ -57,9 +56,6 @@ struct udp_sock {
 					   * this
 					   */
 			 gro_enabled:1;	/* Can accept GRO packets */
-=======
-			 no_check6_rx:1;/* Allow zero UDP6 checksums on RX? */
->>>>>>> rebase
 	/*
 	 * Following member retains the information to create a UDP header
 	 * when the socket is uncorked.
@@ -125,7 +121,6 @@ static inline bool udp_get_no_check6_rx(struct sock *sk)
 	return udp_sk(sk)->no_check6_rx;
 }
 
-<<<<<<< HEAD
 static inline void udp_cmsg_recv(struct msghdr *msg, struct sock *sk,
 				 struct sk_buff *skb)
 {
@@ -143,8 +138,6 @@ static inline bool udp_unexpected_gso(struct sock *sk, struct sk_buff *skb)
 	       skb_shinfo(skb)->gso_type & SKB_GSO_UDP_L4;
 }
 
-=======
->>>>>>> rebase
 #define udp_portaddr_for_each_entry(__sk, list) \
 	hlist_for_each_entry(__sk, list, __sk_common.skc_portaddr_node)
 

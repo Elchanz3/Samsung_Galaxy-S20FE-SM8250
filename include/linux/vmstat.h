@@ -29,10 +29,7 @@ struct reclaim_stat {
 	unsigned nr_activate;
 	unsigned nr_ref_keep;
 	unsigned nr_unmap_fail;
-<<<<<<< HEAD
 	unsigned nr_lazyfree_fail;
-=======
->>>>>>> rebase
 };
 
 #ifdef CONFIG_VM_EVENT_COUNTERS
@@ -209,7 +206,6 @@ static inline unsigned long zone_page_state(struct zone *zone,
 	return x;
 }
 
-<<<<<<< HEAD
 static inline unsigned long zone_available_simple(struct zone *zone)
 {
 	return zone_page_state(zone, NR_FREE_PAGES)
@@ -217,8 +213,6 @@ static inline unsigned long zone_available_simple(struct zone *zone)
 		+ zone_page_state(zone, NR_ZONE_ACTIVE_FILE);
 }
 
-=======
->>>>>>> rebase
 /*
  * More accurate version that also considers the currently pending
  * deltas. For that we need to loop over all cpus to find the current

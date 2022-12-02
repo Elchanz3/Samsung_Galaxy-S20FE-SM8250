@@ -1,9 +1,5 @@
 /*
-<<<<<<< HEAD
  * Copyright (c) 2016-2019, The Linux Foundation. All rights reserved.
-=======
- * Copyright (c) 2016-2018, The Linux Foundation. All rights reserved.
->>>>>>> rebase
  * Copyright (C) 2013 Red Hat
  * Author: Rob Clark <robdclark@gmail.com>
  *
@@ -30,7 +26,6 @@
 
 #define MAX_PLANE	4
 
-<<<<<<< HEAD
 #if defined(CONFIG_DISPLAY_SAMSUNG)
 enum mdss_intf_events {
 	SS_EVENT_FRAME_UPDATE_POST = 0,
@@ -46,8 +41,6 @@ enum mdss_intf_events {
 };
 #endif
 
-=======
->>>>>>> rebase
 /* As there are different display controller blocks depending on the
  * snapdragon version, the kms support is split out and the appropriate
  * implementation is loaded at runtime.  The kms module is responsible
@@ -64,17 +57,11 @@ struct msm_kms_funcs {
 	int (*enable_vblank)(struct msm_kms *kms, struct drm_crtc *crtc);
 	void (*disable_vblank)(struct msm_kms *kms, struct drm_crtc *crtc);
 	/* modeset, bracketing atomic_commit(): */
-<<<<<<< HEAD
 	void (*prepare_commit)(struct msm_kms *kms,
 				struct drm_atomic_state *state);
 	void (*commit)(struct msm_kms *kms, struct drm_atomic_state *state);
 	void (*complete_commit)(struct msm_kms *kms,
 				struct drm_atomic_state *state);
-=======
-	void (*prepare_commit)(struct msm_kms *kms, struct drm_atomic_state *state);
-	void (*commit)(struct msm_kms *kms, struct drm_atomic_state *state);
-	void (*complete_commit)(struct msm_kms *kms, struct drm_atomic_state *state);
->>>>>>> rebase
 	/* functions to wait for atomic commit completed on each CRTC */
 	void (*wait_for_crtc_commit_done)(struct msm_kms *kms,
 					struct drm_crtc *crtc);
@@ -106,14 +93,11 @@ struct msm_kms_funcs {
 	/* debugfs: */
 	int (*debugfs_init)(struct msm_kms *kms, struct drm_minor *minor);
 #endif
-<<<<<<< HEAD
 
 #if defined(CONFIG_DISPLAY_SAMSUNG)
 	int (*ss_callback)(int display_ndx,
 			enum mdss_intf_events event, void *arg);
 #endif
-=======
->>>>>>> rebase
 };
 
 struct msm_kms {

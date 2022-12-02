@@ -1060,11 +1060,7 @@ static int bpf_map_find_btf_info(struct bpf_map *map, const struct btf *btf)
 int bpf_map__reuse_fd(struct bpf_map *map, int fd)
 {
 	struct bpf_map_info info = {};
-<<<<<<< HEAD
 	__u32 len = sizeof(info);
-=======
-	__u32 len = sizeof(info), name_len;
->>>>>>> rebase
 	int new_fd, err;
 	char *new_name;
 
@@ -1072,16 +1068,7 @@ int bpf_map__reuse_fd(struct bpf_map *map, int fd)
 	if (err)
 		return err;
 
-<<<<<<< HEAD
 	new_name = strdup(info.name);
-=======
-	name_len = strlen(info.name);
-	if (name_len == BPF_OBJ_NAME_LEN - 1 && strncmp(map->name, info.name, name_len) == 0)
-		new_name = strdup(map->name);
-	else
-		new_name = strdup(info.name);
-
->>>>>>> rebase
 	if (!new_name)
 		return -errno;
 

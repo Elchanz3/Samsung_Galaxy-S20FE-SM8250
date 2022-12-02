@@ -336,11 +336,7 @@ struct x86_hw_tss {
 #define INVALID_IO_BITMAP_OFFSET	0x8000
 
 struct entry_stack {
-<<<<<<< HEAD
 	unsigned long		words[64];
-=======
-	char	stack[PAGE_SIZE];
->>>>>>> rebase
 };
 
 struct entry_stack_page {
@@ -526,7 +522,6 @@ static inline void arch_thread_struct_whitelist(unsigned long *offset,
 }
 
 /*
-<<<<<<< HEAD
  * Thread-synchronous status.
  *
  * This is different from the flags in that nobody else
@@ -536,8 +531,6 @@ static inline void arch_thread_struct_whitelist(unsigned long *offset,
 #define TS_COMPAT		0x0002	/* 32bit syscall active (64BIT)*/
 
 /*
-=======
->>>>>>> rebase
  * Set IOPL bits in EFLAGS from given mask
  */
 static inline void native_set_iopl_mask(unsigned mask)

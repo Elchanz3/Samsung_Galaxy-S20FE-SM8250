@@ -182,7 +182,6 @@ static int lpass_cpu_daiops_hw_params(struct snd_pcm_substream *substream,
 	return 0;
 }
 
-<<<<<<< HEAD
 static int lpass_cpu_daiops_hw_free(struct snd_pcm_substream *substream,
 		struct snd_soc_dai *dai)
 {
@@ -198,8 +197,6 @@ static int lpass_cpu_daiops_hw_free(struct snd_pcm_substream *substream,
 	return ret;
 }
 
-=======
->>>>>>> rebase
 static int lpass_cpu_daiops_prepare(struct snd_pcm_substream *substream,
 		struct snd_soc_dai *dai)
 {
@@ -280,10 +277,7 @@ const struct snd_soc_dai_ops asoc_qcom_lpass_cpu_dai_ops = {
 	.startup	= lpass_cpu_daiops_startup,
 	.shutdown	= lpass_cpu_daiops_shutdown,
 	.hw_params	= lpass_cpu_daiops_hw_params,
-<<<<<<< HEAD
 	.hw_free	= lpass_cpu_daiops_hw_free,
-=======
->>>>>>> rebase
 	.prepare	= lpass_cpu_daiops_prepare,
 	.trigger	= lpass_cpu_daiops_trigger,
 };

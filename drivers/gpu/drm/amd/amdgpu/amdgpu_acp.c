@@ -276,11 +276,7 @@ static int acp_hw_init(void *handle)
 	u32 val = 0;
 	u32 count = 0;
 	struct device *dev;
-<<<<<<< HEAD
 	struct i2s_platform_data *i2s_pdata;
-=======
-	struct i2s_platform_data *i2s_pdata = NULL;
->>>>>>> rebase
 
 	struct amdgpu_device *adev = (struct amdgpu_device *)handle;
 
@@ -321,7 +317,6 @@ static int acp_hw_init(void *handle)
 	adev->acp.acp_cell = kcalloc(ACP_DEVS, sizeof(struct mfd_cell),
 							GFP_KERNEL);
 
-<<<<<<< HEAD
 	if (adev->acp.acp_cell == NULL)
 		return -ENOMEM;
 
@@ -329,29 +324,13 @@ static int acp_hw_init(void *handle)
 	if (adev->acp.acp_res == NULL) {
 		kfree(adev->acp.acp_cell);
 		return -ENOMEM;
-=======
-	if (adev->acp.acp_cell == NULL) {
-		r = -ENOMEM;
-		goto failure;
-	}
-
-	adev->acp.acp_res = kcalloc(5, sizeof(struct resource), GFP_KERNEL);
-	if (adev->acp.acp_res == NULL) {
-		r = -ENOMEM;
-		goto failure;
->>>>>>> rebase
 	}
 
 	i2s_pdata = kcalloc(3, sizeof(struct i2s_platform_data), GFP_KERNEL);
 	if (i2s_pdata == NULL) {
-<<<<<<< HEAD
 		kfree(adev->acp.acp_res);
 		kfree(adev->acp.acp_cell);
 		return -ENOMEM;
-=======
-		r = -ENOMEM;
-		goto failure;
->>>>>>> rebase
 	}
 
 	switch (adev->asic_type) {
@@ -448,11 +427,7 @@ static int acp_hw_init(void *handle)
 	r = mfd_add_hotplug_devices(adev->acp.parent, adev->acp.acp_cell,
 								ACP_DEVS);
 	if (r)
-<<<<<<< HEAD
 		return r;
-=======
-		goto failure;
->>>>>>> rebase
 
 	if (adev->asic_type != CHIP_STONEY) {
 		for (i = 0; i < ACP_DEVS ; i++) {
@@ -460,11 +435,7 @@ static int acp_hw_init(void *handle)
 			r = pm_genpd_add_device(&adev->acp.acp_genpd->gpd, dev);
 			if (r) {
 				dev_err(dev, "Failed to add dev to genpd\n");
-<<<<<<< HEAD
 				return r;
-=======
-				goto failure;
->>>>>>> rebase
 			}
 		}
 	}
@@ -483,12 +454,7 @@ static int acp_hw_init(void *handle)
 			break;
 		if (--count == 0) {
 			dev_err(&adev->pdev->dev, "Failed to reset ACP\n");
-<<<<<<< HEAD
 			return -ETIMEDOUT;
-=======
-			r = -ETIMEDOUT;
-			goto failure;
->>>>>>> rebase
 		}
 		udelay(100);
 	}
@@ -505,12 +471,7 @@ static int acp_hw_init(void *handle)
 			break;
 		if (--count == 0) {
 			dev_err(&adev->pdev->dev, "Failed to reset ACP\n");
-<<<<<<< HEAD
 			return -ETIMEDOUT;
-=======
-			r = -ETIMEDOUT;
-			goto failure;
->>>>>>> rebase
 		}
 		udelay(100);
 	}
@@ -519,16 +480,6 @@ static int acp_hw_init(void *handle)
 	val &= ~ACP_SOFT_RESET__SoftResetAud_MASK;
 	cgs_write_register(adev->acp.cgs_device, mmACP_SOFT_RESET, val);
 	return 0;
-<<<<<<< HEAD
-=======
-
-failure:
-	kfree(i2s_pdata);
-	kfree(adev->acp.acp_res);
-	kfree(adev->acp.acp_cell);
-	kfree(adev->acp.acp_genpd);
-	return r;
->>>>>>> rebase
 }
 
 /**

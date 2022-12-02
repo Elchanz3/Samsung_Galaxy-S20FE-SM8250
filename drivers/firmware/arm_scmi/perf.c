@@ -427,7 +427,6 @@ static int scmi_dvfs_freq_get(const struct scmi_handle *handle, u32 domain,
 	return ret;
 }
 
-<<<<<<< HEAD
 static int scmi_dvfs_est_power_get(const struct scmi_handle *handle, u32 domain,
 				   unsigned long *freq, unsigned long *power)
 {
@@ -455,8 +454,6 @@ static int scmi_dvfs_est_power_get(const struct scmi_handle *handle, u32 domain,
 	return ret;
 }
 
-=======
->>>>>>> rebase
 static struct scmi_perf_ops perf_ops = {
 	.limits_set = scmi_perf_limits_set,
 	.limits_get = scmi_perf_limits_get,
@@ -467,10 +464,7 @@ static struct scmi_perf_ops perf_ops = {
 	.device_opps_add = scmi_dvfs_device_opps_add,
 	.freq_set = scmi_dvfs_freq_set,
 	.freq_get = scmi_dvfs_freq_get,
-<<<<<<< HEAD
 	.est_power_get = scmi_dvfs_est_power_get,
-=======
->>>>>>> rebase
 };
 
 static int scmi_perf_protocol_init(struct scmi_handle *handle)

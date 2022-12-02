@@ -788,14 +788,7 @@ out_close:
 		svc_xprt_put(xprt);
 	}
 out_err:
-<<<<<<< HEAD
 	nfsd_destroy(net);
-=======
-	if (!list_empty(&nn->nfsd_serv->sv_permsocks))
-		nn->nfsd_serv->sv_nrthreads--;
-	 else
-		nfsd_destroy(net);
->>>>>>> rebase
 	return err;
 }
 

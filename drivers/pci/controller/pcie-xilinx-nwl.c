@@ -6,10 +6,6 @@
  * (C) Copyright 2014 - 2015, Xilinx, Inc.
  */
 
-<<<<<<< HEAD
-=======
-#include <linux/clk.h>
->>>>>>> rebase
 #include <linux/delay.h>
 #include <linux/interrupt.h>
 #include <linux/irq.h>
@@ -173,10 +169,6 @@ struct nwl_pcie {
 	u8 root_busno;
 	struct nwl_msi msi;
 	struct irq_domain *legacy_irq_domain;
-<<<<<<< HEAD
-=======
-	struct clk *clk;
->>>>>>> rebase
 	raw_spinlock_t leg_mask_lock;
 };
 
@@ -857,19 +849,6 @@ static int nwl_pcie_probe(struct platform_device *pdev)
 		return err;
 	}
 
-<<<<<<< HEAD
-=======
-	pcie->clk = devm_clk_get(dev, NULL);
-	if (IS_ERR(pcie->clk))
-		return PTR_ERR(pcie->clk);
-
-	err = clk_prepare_enable(pcie->clk);
-	if (err) {
-		dev_err(dev, "can't enable PCIe ref clock\n");
-		return err;
-	}
-
->>>>>>> rebase
 	err = nwl_pcie_bridge_init(pcie);
 	if (err) {
 		dev_err(dev, "HW Initialization failed\n");

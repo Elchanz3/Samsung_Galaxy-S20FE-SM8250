@@ -4,16 +4,6 @@
 
 #include <sound/info.h>
 
-<<<<<<< HEAD
-=======
-struct usbmix_connector_map {
-	u8 id;
-	u8 delegated_id;
-	u8 control;
-	u8 channel;
-};
-
->>>>>>> rebase
 struct usb_mixer_interface {
 	struct snd_usb_audio *chip;
 	struct usb_host_interface *hostif;
@@ -26,12 +16,6 @@ struct usb_mixer_interface {
 	/* the usb audio specification version this interface complies to */
 	int protocol;
 
-<<<<<<< HEAD
-=======
-	/* optional connector delegation map */
-	const struct usbmix_connector_map *connector_map;
-
->>>>>>> rebase
 	/* Sound Blaster remote control stuff */
 	const struct rc_config *rc_cfg;
 	u32 rc_code;
@@ -65,10 +49,6 @@ struct usb_mixer_elem_list {
 	struct usb_mixer_elem_list *next_id_elem; /* list of controls with same id */
 	struct snd_kcontrol *kctl;
 	unsigned int id;
-<<<<<<< HEAD
-=======
-	bool is_std_info;
->>>>>>> rebase
 	usb_mixer_elem_dump_func_t dump;
 	usb_mixer_elem_resume_func_t resume;
 };
@@ -106,17 +86,8 @@ void snd_usb_mixer_notify_id(struct usb_mixer_interface *mixer, int unitid);
 int snd_usb_mixer_set_ctl_value(struct usb_mixer_elem_info *cval,
 				int request, int validx, int value_set);
 
-<<<<<<< HEAD
 int snd_usb_mixer_add_control(struct usb_mixer_elem_list *list,
 			      struct snd_kcontrol *kctl);
-=======
-int snd_usb_mixer_add_list(struct usb_mixer_elem_list *list,
-			   struct snd_kcontrol *kctl,
-			   bool is_std_info);
-
-#define snd_usb_mixer_add_control(list, kctl) \
-	snd_usb_mixer_add_list(list, kctl, true)
->>>>>>> rebase
 
 void snd_usb_mixer_elem_init_std(struct usb_mixer_elem_list *list,
 				 struct usb_mixer_interface *mixer,

@@ -3,10 +3,6 @@
 
 # Kselftest framework requirement - SKIP code is 4.
 ksft_skip=4
-<<<<<<< HEAD
-=======
-ret=$ksft_skip
->>>>>>> rebase
 
 msg="skip all tests:"
 if [ $UID != 0 ]; then
@@ -28,11 +24,7 @@ do
 	fi
 done
 
-<<<<<<< HEAD
 if [ -n $LIRCDEV ];
-=======
-if [ -n "$LIRCDEV" ];
->>>>>>> rebase
 then
 	TYPE=lirc_mode2
 	./test_lirc_mode2_user $LIRCDEV
@@ -43,8 +35,3 @@ then
 		echo -e ${GREEN}"PASS: $TYPE"${NC}
 	fi
 fi
-<<<<<<< HEAD
-=======
-
-exit $ret
->>>>>>> rebase

@@ -181,11 +181,7 @@ static void tipc_bcbase_xmit(struct net *net, struct sk_buff_head *xmitq)
 	}
 
 	/* We have to transmit across all bearers */
-<<<<<<< HEAD
 	skb_queue_head_init(&_xmitq);
-=======
-	__skb_queue_head_init(&_xmitq);
->>>>>>> rebase
 	for (bearer_id = 0; bearer_id < MAX_BEARERS; bearer_id++) {
 		if (!bb->dests[bearer_id])
 			continue;
@@ -241,11 +237,7 @@ static int tipc_bcast_xmit(struct net *net, struct sk_buff_head *pkts,
 	struct sk_buff_head xmitq;
 	int rc = 0;
 
-<<<<<<< HEAD
 	skb_queue_head_init(&xmitq);
-=======
-	__skb_queue_head_init(&xmitq);
->>>>>>> rebase
 	tipc_bcast_lock(net);
 	if (tipc_link_bc_peers(l))
 		rc = tipc_link_xmit(l, pkts, &xmitq);
@@ -275,11 +267,7 @@ static int tipc_rcast_xmit(struct net *net, struct sk_buff_head *pkts,
 	u32 dnode, selector;
 
 	selector = msg_link_selector(buf_msg(skb_peek(pkts)));
-<<<<<<< HEAD
 	skb_queue_head_init(&_pkts);
-=======
-	__skb_queue_head_init(&_pkts);
->>>>>>> rebase
 
 	list_for_each_entry_safe(dst, tmp, &dests->list, list) {
 		dnode = dst->node;
@@ -311,11 +299,7 @@ int tipc_mcast_xmit(struct net *net, struct sk_buff_head *pkts,
 	int rc = 0;
 
 	skb_queue_head_init(&inputq);
-<<<<<<< HEAD
 	skb_queue_head_init(&localq);
-=======
-	__skb_queue_head_init(&localq);
->>>>>>> rebase
 
 	/* Clone packets before they are consumed by next call */
 	if (dests->local && !tipc_msg_reassemble(pkts, &localq)) {

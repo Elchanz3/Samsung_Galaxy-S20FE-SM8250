@@ -136,11 +136,7 @@ static int fsl_guts_probe(struct platform_device *pdev)
 	struct device *dev = &pdev->dev;
 	struct resource *res;
 	const struct fsl_soc_die_attr *soc_die;
-<<<<<<< HEAD
 	const char *machine;
-=======
-	const char *machine = NULL;
->>>>>>> rebase
 	u32 svr;
 
 	/* Initialize guts */

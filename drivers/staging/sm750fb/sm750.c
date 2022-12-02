@@ -897,10 +897,6 @@ static int lynxfb_set_fbinfo(struct fb_info *info, int index)
 		fix->visual = FB_VISUAL_PSEUDOCOLOR;
 		break;
 	case 16:
-<<<<<<< HEAD
-=======
-	case 24:
->>>>>>> rebase
 	case 32:
 		fix->visual = FB_VISUAL_TRUECOLOR;
 		break;

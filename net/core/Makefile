@@ -11,11 +11,7 @@ obj-$(CONFIG_SYSCTL) += sysctl_net_core.o
 obj-y		     += dev.o ethtool.o dev_addr_lists.o dst.o netevent.o \
 			neighbour.o rtnetlink.o utils.o link_watch.o filter.o \
 			sock_diag.o dev_ioctl.o tso.o sock_reuseport.o \
-<<<<<<< HEAD
 			fib_notifier.o xdp.o net_ipc_log.o
-=======
-			fib_notifier.o xdp.o
->>>>>>> rebase
 
 obj-y += net-sysfs.o
 obj-$(CONFIG_PAGE_POOL) += page_pool.o
@@ -31,16 +27,10 @@ obj-$(CONFIG_CGROUP_NET_PRIO) += netprio_cgroup.o
 obj-$(CONFIG_CGROUP_NET_CLASSID) += netclassid_cgroup.o
 obj-$(CONFIG_LWTUNNEL) += lwtunnel.o
 obj-$(CONFIG_LWTUNNEL_BPF) += lwt_bpf.o
-<<<<<<< HEAD
 obj-$(CONFIG_SOCKEV_NLMCAST) += sockev_nlmcast.o
-=======
->>>>>>> rebase
 obj-$(CONFIG_DST_CACHE) += dst_cache.o
 obj-$(CONFIG_HWBM) += hwbm.o
 obj-$(CONFIG_NET_DEVLINK) += devlink.o
 obj-$(CONFIG_GRO_CELLS) += gro_cells.o
 obj-$(CONFIG_FAILOVER) += failover.o
-<<<<<<< HEAD
 obj-$(CONFIG_NET_ANALYTICS) += analytics_logger.o
-=======
->>>>>>> rebase

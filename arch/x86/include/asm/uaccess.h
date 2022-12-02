@@ -717,23 +717,16 @@ static __must_check inline bool user_access_begin(int type,
 {
 	if (unlikely(!access_ok(type, ptr, len)))
 		return 0;
-<<<<<<< HEAD
 	__uaccess_begin();
-=======
-	__uaccess_begin_nospec();
->>>>>>> rebase
 	return 1;
 }
 
 #define user_access_begin(a, b, c)	user_access_begin(a, b, c)
 #define user_access_end()	__uaccess_end()
 
-<<<<<<< HEAD
 #define user_access_save()	smap_save()
 #define user_access_restore(x)	smap_restore(x)
 
-=======
->>>>>>> rebase
 #define unsafe_put_user(x, ptr, err_label)					\
 do {										\
 	int __pu_err;								\

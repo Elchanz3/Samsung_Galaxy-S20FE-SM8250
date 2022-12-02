@@ -106,11 +106,7 @@ config SERIAL_8250_CONSOLE
 
 config SERIAL_8250_GSC
 	tristate
-<<<<<<< HEAD
 	depends on SERIAL_8250 && GSC
-=======
-	depends on SERIAL_8250 && PARISC
->>>>>>> rebase
 	default SERIAL_8250
 
 config SERIAL_8250_DMA

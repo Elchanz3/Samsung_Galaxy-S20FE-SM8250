@@ -430,22 +430,11 @@ out:
 #ifdef CONFIG_PPC_BOOK3S_64
 	BUG_ON(get_paca()->in_nmi == 0);
 	if (get_paca()->in_nmi > 1)
-<<<<<<< HEAD
 		nmi_panic(regs, "Unrecoverable nested System Reset");
 #endif
 	/* Must die if the interrupt is not recoverable */
 	if (!(regs->msr & MSR_RI))
 		nmi_panic(regs, "Unrecoverable System Reset");
-=======
-		die("Unrecoverable nested System Reset", regs, SIGABRT);
-#endif
-	/* Must die if the interrupt is not recoverable */
-	if (!(regs->msr & MSR_RI)) {
-		/* For the reason explained in die_mce, nmi_exit before die */
-		nmi_exit();
-		die("Unrecoverable System Reset", regs, SIGABRT);
-	}
->>>>>>> rebase
 
 	if (!nested)
 		nmi_exit();
@@ -786,11 +775,7 @@ void machine_check_exception(struct pt_regs *regs)
 
 	/* Must die if the interrupt is not recoverable */
 	if (!(regs->msr & MSR_RI))
-<<<<<<< HEAD
 		nmi_panic(regs, "Unrecoverable Machine check");
-=======
-		die("Unrecoverable Machine check", regs, SIGBUS);
->>>>>>> rebase
 
 	return;
 
@@ -809,11 +794,7 @@ static void p9_hmi_special_emu(struct pt_regs *regs)
 {
 	unsigned int ra, rb, t, i, sel, instr, rc;
 	const void __user *addr;
-<<<<<<< HEAD
 	u8 vbuf[16], *vdst;
-=======
-	u8 vbuf[16] __aligned(16), *vdst;
->>>>>>> rebase
 	unsigned long ea, msr, msr_mask;
 	bool swap;
 

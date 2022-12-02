@@ -49,11 +49,6 @@
 #define STM32F7_I2C_CR1_RXDMAEN			BIT(15)
 #define STM32F7_I2C_CR1_TXDMAEN			BIT(14)
 #define STM32F7_I2C_CR1_ANFOFF			BIT(12)
-<<<<<<< HEAD
-=======
-#define STM32F7_I2C_CR1_DNF_MASK		GENMASK(11, 8)
-#define STM32F7_I2C_CR1_DNF(n)			(((n) & 0xf) << 8)
->>>>>>> rebase
 #define STM32F7_I2C_CR1_ERRIE			BIT(7)
 #define STM32F7_I2C_CR1_TCIE			BIT(6)
 #define STM32F7_I2C_CR1_STOPIE			BIT(5)
@@ -152,11 +147,7 @@
 #define STM32F7_I2C_MAX_SLAVE			0x2
 
 #define STM32F7_I2C_DNF_DEFAULT			0
-<<<<<<< HEAD
 #define STM32F7_I2C_DNF_MAX			16
-=======
-#define STM32F7_I2C_DNF_MAX			15
->>>>>>> rebase
 
 #define STM32F7_I2C_ANALOG_FILTER_ENABLE	1
 #define STM32F7_I2C_ANALOG_FILTER_DELAY_MIN	50	/* ns */
@@ -654,16 +645,6 @@ static void stm32f7_i2c_hw_config(struct stm32f7_i2c_dev *i2c_dev)
 	else
 		stm32f7_i2c_set_bits(i2c_dev->base + STM32F7_I2C_CR1,
 				     STM32F7_I2C_CR1_ANFOFF);
-<<<<<<< HEAD
-=======
-
-	/* Program the Digital Filter */
-	stm32f7_i2c_clr_bits(i2c_dev->base + STM32F7_I2C_CR1,
-			     STM32F7_I2C_CR1_DNF_MASK);
-	stm32f7_i2c_set_bits(i2c_dev->base + STM32F7_I2C_CR1,
-			     STM32F7_I2C_CR1_DNF(i2c_dev->setup.dnf));
-
->>>>>>> rebase
 	stm32f7_i2c_set_bits(i2c_dev->base + STM32F7_I2C_CR1,
 			     STM32F7_I2C_CR1_PE);
 }
@@ -1389,10 +1370,6 @@ static irqreturn_t stm32f7_i2c_isr_event(int irq, void *data)
 {
 	struct stm32f7_i2c_dev *i2c_dev = data;
 	struct stm32f7_i2c_msg *f7_msg = &i2c_dev->f7_msg;
-<<<<<<< HEAD
-=======
-	struct stm32_i2c_dma *dma = i2c_dev->dma;
->>>>>>> rebase
 	void __iomem *base = i2c_dev->base;
 	u32 status, mask;
 	int ret = IRQ_HANDLED;
@@ -1417,13 +1394,6 @@ static irqreturn_t stm32f7_i2c_isr_event(int irq, void *data)
 	if (status & STM32F7_I2C_ISR_NACKF) {
 		dev_dbg(i2c_dev->dev, "<%s>: Receive NACK\n", __func__);
 		writel_relaxed(STM32F7_I2C_ICR_NACKCF, base + STM32F7_I2C_ICR);
-<<<<<<< HEAD
-=======
-		if (i2c_dev->use_dma) {
-			stm32f7_i2c_disable_dma_req(i2c_dev);
-			dmaengine_terminate_all(dma->chan_using);
-		}
->>>>>>> rebase
 		f7_msg->result = -ENXIO;
 	}
 
@@ -1439,11 +1409,7 @@ static irqreturn_t stm32f7_i2c_isr_event(int irq, void *data)
 		/* Clear STOP flag */
 		writel_relaxed(STM32F7_I2C_ICR_STOPCF, base + STM32F7_I2C_ICR);
 
-<<<<<<< HEAD
 		if (i2c_dev->use_dma) {
-=======
-		if (i2c_dev->use_dma && !f7_msg->result) {
->>>>>>> rebase
 			ret = IRQ_WAKE_THREAD;
 		} else {
 			i2c_dev->master_mode = false;
@@ -1456,11 +1422,7 @@ static irqreturn_t stm32f7_i2c_isr_event(int irq, void *data)
 		if (f7_msg->stop) {
 			mask = STM32F7_I2C_CR2_STOP;
 			stm32f7_i2c_set_bits(base + STM32F7_I2C_CR2, mask);
-<<<<<<< HEAD
 		} else if (i2c_dev->use_dma) {
-=======
-		} else if (i2c_dev->use_dma && !f7_msg->result) {
->>>>>>> rebase
 			ret = IRQ_WAKE_THREAD;
 		} else if (f7_msg->smbus) {
 			stm32f7_i2c_smbus_rep_start(i2c_dev);
@@ -1608,10 +1570,6 @@ static int stm32f7_i2c_xfer(struct i2c_adapter *i2c_adap,
 			i2c_dev->msg->addr);
 		if (i2c_dev->use_dma)
 			dmaengine_terminate_all(dma->chan_using);
-<<<<<<< HEAD
-=======
-		stm32f7_i2c_wait_free_bus(i2c_dev);
->>>>>>> rebase
 		ret = -ETIMEDOUT;
 	}
 
@@ -1662,10 +1620,6 @@ static int stm32f7_i2c_smbus_xfer(struct i2c_adapter *adapter, u16 addr,
 		dev_dbg(dev, "Access to slave 0x%x timed out\n", f7_msg->addr);
 		if (i2c_dev->use_dma)
 			dmaengine_terminate_all(dma->chan_using);
-<<<<<<< HEAD
-=======
-		stm32f7_i2c_wait_free_bus(i2c_dev);
->>>>>>> rebase
 		ret = -ETIMEDOUT;
 		goto clk_free;
 	}

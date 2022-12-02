@@ -18,10 +18,6 @@
  */
 struct sigcontext {
 	struct user_regs_struct regs;
-<<<<<<< HEAD
-=======
-	struct user_regs_arcv2 v2abi;
->>>>>>> rebase
 };
 
 #endif /* _ASM_ARC_SIGCONTEXT_H */

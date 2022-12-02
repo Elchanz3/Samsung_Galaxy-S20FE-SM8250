@@ -342,7 +342,6 @@ lpfc_nvme_remoteport_delete(struct nvme_fc_remote_port *remoteport)
 	if (ndlp->upcall_flags & NLP_WAIT_FOR_UNREG) {
 		ndlp->nrport = NULL;
 		ndlp->upcall_flags &= ~NLP_WAIT_FOR_UNREG;
-<<<<<<< HEAD
 	}
 	spin_unlock_irq(&vport->phba->hbalock);
 
@@ -350,17 +349,6 @@ lpfc_nvme_remoteport_delete(struct nvme_fc_remote_port *remoteport)
 	 * won't reference this rport/remoteport any further.
 	 */
 	lpfc_nlp_put(ndlp);
-=======
-		spin_unlock_irq(&vport->phba->hbalock);
-
-		/* Remove original register reference. The host transport
-		 * won't reference this rport/remoteport any further.
-		 */
-		lpfc_nlp_put(ndlp);
-	} else {
-		spin_unlock_irq(&vport->phba->hbalock);
-	}
->>>>>>> rebase
 
  rport_err:
 	return;
@@ -1915,11 +1903,8 @@ lpfc_nvme_fcp_abort(struct nvme_fc_local_port *pnvme_lport,
 
 /* Declare and initialization an instance of the FC NVME template. */
 static struct nvme_fc_port_template lpfc_nvme_template = {
-<<<<<<< HEAD
 	.module	= THIS_MODULE,
 
-=======
->>>>>>> rebase
 	/* initiator-based functions */
 	.localport_delete  = lpfc_nvme_localport_delete,
 	.remoteport_delete = lpfc_nvme_remoteport_delete,

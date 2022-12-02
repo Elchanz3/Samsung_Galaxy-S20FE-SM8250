@@ -238,10 +238,7 @@ struct genfs {
 /* The policy database */
 struct policydb {
 	int mls_enabled;
-<<<<<<< HEAD
 	int android_netlink_route;
-=======
->>>>>>> rebase
 
 	/* symbol tables */
 	struct symtab symtab[SYM_NUM];
@@ -328,10 +325,7 @@ extern int policydb_write(struct policydb *p, void *fp);
 #define PERM_SYMTAB_SIZE 32
 
 #define POLICYDB_CONFIG_MLS    1
-<<<<<<< HEAD
 #define POLICYDB_CONFIG_ANDROID_NETLINK_ROUTE    (1 << 31)
-=======
->>>>>>> rebase
 
 /* the config flags related to unknown classes/perms are bits 2 and 3 */
 #define REJECT_UNKNOWN	0x00000002
@@ -368,11 +362,6 @@ static inline int put_entry(const void *buf, size_t bytes, int num, struct polic
 {
 	size_t len = bytes * num;
 
-<<<<<<< HEAD
-=======
-	if (len > fp->len)
-		return -EINVAL;
->>>>>>> rebase
 	memcpy(fp->data, buf, len);
 	fp->data += len;
 	fp->len -= len;

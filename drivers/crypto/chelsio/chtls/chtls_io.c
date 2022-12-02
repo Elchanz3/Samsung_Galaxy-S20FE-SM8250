@@ -686,11 +686,7 @@ int chtls_push_frames(struct chtls_sock *csk, int comp)
 				make_tx_data_wr(sk, skb, immdlen, len,
 						credits_needed, completion);
 			tp->snd_nxt += len;
-<<<<<<< HEAD
 			tp->lsndtime = tcp_time_stamp(tp);
-=======
-			tp->lsndtime = tcp_jiffies32;
->>>>>>> rebase
 			if (completion)
 				ULP_SKB_CB(skb)->flags &= ~ULPCB_FLAG_NEED_HDR;
 		} else {
@@ -918,15 +914,9 @@ static int tls_header_read(struct tls_hdr *thdr, struct iov_iter *from)
 	return (__force int)cpu_to_be16(thdr->length);
 }
 
-<<<<<<< HEAD
 static int csk_mem_free(struct chtls_dev *cdev, struct sock *sk)
 {
 	return (cdev->max_host_sndbuf - sk->sk_wmem_queued);
-=======
-static bool csk_mem_free(struct chtls_dev *cdev, struct sock *sk)
-{
-	return (cdev->max_host_sndbuf - sk->sk_wmem_queued > 0);
->>>>>>> rebase
 }
 
 static int csk_wait_memory(struct chtls_dev *cdev,
@@ -1227,10 +1217,6 @@ int chtls_sendpage(struct sock *sk, struct page *page,
 	copied = 0;
 	csk = rcu_dereference_sk_user_data(sk);
 	cdev = csk->cdev;
-<<<<<<< HEAD
-=======
-	lock_sock(sk);
->>>>>>> rebase
 	timeo = sock_sndtimeo(sk, flags & MSG_DONTWAIT);
 
 	err = sk_stream_wait_connect(sk, &timeo);
@@ -1463,11 +1449,7 @@ static int chtls_pt_recvmsg(struct sock *sk, struct msghdr *msg, size_t len,
 				      csk->wr_max_credits))
 			sk->sk_write_space(sk);
 
-<<<<<<< HEAD
 		if (copied >= target && !sk->sk_backlog.tail)
-=======
-		if (copied >= target && !READ_ONCE(sk->sk_backlog.tail))
->>>>>>> rebase
 			break;
 
 		if (copied) {
@@ -1500,11 +1482,7 @@ static int chtls_pt_recvmsg(struct sock *sk, struct msghdr *msg, size_t len,
 				break;
 			}
 		}
-<<<<<<< HEAD
 		if (sk->sk_backlog.tail) {
-=======
-		if (READ_ONCE(sk->sk_backlog.tail)) {
->>>>>>> rebase
 			release_sock(sk);
 			lock_sock(sk);
 			chtls_cleanup_rbuf(sk, copied);
@@ -1570,10 +1548,6 @@ skip_copy:
 			tp->urg_data = 0;
 
 		if ((avail + offset) >= skb->len) {
-<<<<<<< HEAD
-=======
-			struct sk_buff *next_skb;
->>>>>>> rebase
 			if (ULP_SKB_CB(skb)->flags & ULPCB_FLAG_TLS_HDR) {
 				tp->copied_seq += skb->len;
 				hws->rcvpld = skb->hdr_len;
@@ -1583,15 +1557,8 @@ skip_copy:
 			chtls_free_skb(sk, skb);
 			buffers_freed++;
 			hws->copied_seq = 0;
-<<<<<<< HEAD
 			if (copied >= target &&
 			    !skb_peek(&sk->sk_receive_queue))
-=======
-			next_skb = skb_peek(&sk->sk_receive_queue);
-			if (copied >= target && !next_skb)
-				break;
-			if (ULP_SKB_CB(next_skb)->flags & ULPCB_FLAG_TLS_HDR)
->>>>>>> rebase
 				break;
 		}
 	} while (len > 0);
@@ -1660,11 +1627,7 @@ static int peekmsg(struct sock *sk, struct msghdr *msg,
 			break;
 		}
 
-<<<<<<< HEAD
 		if (sk->sk_backlog.tail) {
-=======
-		if (READ_ONCE(sk->sk_backlog.tail)) {
->>>>>>> rebase
 			/* Do not sleep, just process backlog. */
 			release_sock(sk);
 			lock_sock(sk);
@@ -1796,11 +1759,7 @@ int chtls_recvmsg(struct sock *sk, struct msghdr *msg, size_t len,
 				      csk->wr_max_credits))
 			sk->sk_write_space(sk);
 
-<<<<<<< HEAD
 		if (copied >= target && !sk->sk_backlog.tail)
-=======
-		if (copied >= target && !READ_ONCE(sk->sk_backlog.tail))
->>>>>>> rebase
 			break;
 
 		if (copied) {
@@ -1831,11 +1790,7 @@ int chtls_recvmsg(struct sock *sk, struct msghdr *msg, size_t len,
 			}
 		}
 
-<<<<<<< HEAD
 		if (sk->sk_backlog.tail) {
-=======
-		if (READ_ONCE(sk->sk_backlog.tail)) {
->>>>>>> rebase
 			release_sock(sk);
 			lock_sock(sk);
 			chtls_cleanup_rbuf(sk, copied);

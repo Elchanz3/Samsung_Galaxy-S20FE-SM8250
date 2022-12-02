@@ -143,7 +143,6 @@ static inline int device_property_read_u64(struct device *dev,
 	return device_property_read_u64_array(dev, propname, val, 1);
 }
 
-<<<<<<< HEAD
 static inline int device_property_count_u8(struct device *dev, const char *propname)
 {
 	return device_property_read_u8_array(dev, propname, NULL, 0);
@@ -164,8 +163,6 @@ static inline int device_property_count_u64(struct device *dev, const char *prop
 	return device_property_read_u64_array(dev, propname, NULL, 0);
 }
 
-=======
->>>>>>> rebase
 static inline bool fwnode_property_read_bool(const struct fwnode_handle *fwnode,
 					     const char *propname)
 {
@@ -196,7 +193,6 @@ static inline int fwnode_property_read_u64(const struct fwnode_handle *fwnode,
 	return fwnode_property_read_u64_array(fwnode, propname, val, 1);
 }
 
-<<<<<<< HEAD
 static inline int fwnode_property_count_u8(const struct fwnode_handle *fwnode,
 					   const char *propname)
 {
@@ -221,8 +217,6 @@ static inline int fwnode_property_count_u64(const struct fwnode_handle *fwnode,
 	return fwnode_property_read_u64_array(fwnode, propname, NULL, 0);
 }
 
-=======
->>>>>>> rebase
 /**
  * struct property_entry - "Built-in" device property representation.
  * @name: Name of the property.

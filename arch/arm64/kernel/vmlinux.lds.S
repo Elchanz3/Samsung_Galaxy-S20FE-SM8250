@@ -24,16 +24,6 @@ ENTRY(_text)
 
 jiffies = jiffies_64;
 
-<<<<<<< HEAD
-=======
-
-#define HYPERVISOR_EXTABLE					\
-	. = ALIGN(SZ_8);					\
-	__start___kvm_ex_table = .;				\
-	*(__kvm_ex_table)					\
-	__stop___kvm_ex_table = .;
-
->>>>>>> rebase
 #define HYPERVISOR_TEXT					\
 	/*						\
 	 * Align to 4 KB so that			\
@@ -49,10 +39,6 @@ jiffies = jiffies_64;
 	__hyp_idmap_text_end = .;			\
 	__hyp_text_start = .;				\
 	*(.hyp.text)					\
-<<<<<<< HEAD
-=======
-	HYPERVISOR_EXTABLE				\
->>>>>>> rebase
 	__hyp_text_end = .;
 
 #define IDMAP_TEXT					\
@@ -82,13 +68,10 @@ jiffies = jiffies_64;
 #define TRAMP_TEXT
 #endif
 
-<<<<<<< HEAD
 #define RTIC_BSS					\
 	. = ALIGN(PAGE_SIZE);				\
 	KEEP(*(.bss.rtic));			\
 	. = ALIGN(PAGE_SIZE);				\
-=======
->>>>>>> rebase
 /*
  * The size of the PE/COFF section that covers the kernel image, which
  * runs from stext to _edata, must be a round multiple of the PE/COFF
@@ -175,12 +158,9 @@ SECTIONS
 		*(.altinstructions)
 		__alt_instructions_end = .;
 	}
-<<<<<<< HEAD
 	.altinstr_replacement : {
 		*(.altinstr_replacement)
 	}
-=======
->>>>>>> rebase
 
 	. = ALIGN(PAGE_SIZE);
 	__inittext_end = .;
@@ -208,7 +188,6 @@ SECTIONS
 	__rela_offset	= ABSOLUTE(ADDR(.rela.dyn) - KIMAGE_VADDR);
 	__rela_size	= SIZEOF(.rela.dyn);
 
-<<<<<<< HEAD
 #ifdef CONFIG_RELR
 	.relr.dyn : ALIGN(8) {
 		*(.relr.dyn)
@@ -218,8 +197,6 @@ SECTIONS
 	__relr_size	= SIZEOF(.relr.dyn);
 #endif
 
-=======
->>>>>>> rebase
 	. = ALIGN(SEGMENT_ALIGN);
 	__initdata_end = .;
 	__init_end = .;
@@ -228,13 +205,10 @@ SECTIONS
 	_sdata = .;
 	RW_DATA_SECTION(L1_CACHE_BYTES, PAGE_SIZE, THREAD_ALIGN)
 
-<<<<<<< HEAD
 	.test_modules : {
 		KUNIT_TEST_MODULES
 	}
 
-=======
->>>>>>> rebase
 	/*
 	 * Data written with the MMU off but read with the MMU on requires
 	 * cache lines to be invalidated, discarding up to a Cache Writeback
@@ -260,10 +234,7 @@ SECTIONS
 	BSS_SECTION(0, 0, 0)
 
 	. = ALIGN(PAGE_SIZE);
-<<<<<<< HEAD
 #ifndef CONFIG_UH_RKP
-=======
->>>>>>> rebase
 	idmap_pg_dir = .;
 	. += IDMAP_DIR_SIZE;
 
@@ -279,24 +250,17 @@ SECTIONS
 	swapper_pg_dir = .;
 	. += SWAPPER_DIR_SIZE;
 	swapper_pg_end = .;
-<<<<<<< HEAD
 #endif
-=======
-
->>>>>>> rebase
 	__pecoff_data_size = ABSOLUTE(. - __initdata_begin);
 	_end = .;
 
 	STABS_DEBUG
 
 	HEAD_SYMBOLS
-<<<<<<< HEAD
 
 	.bss : {			/* bss segment		*/
          RTIC_BSS
 	}
-=======
->>>>>>> rebase
 }
 
 /*
@@ -312,11 +276,7 @@ ASSERT(__hibernate_exit_text_end - (__hibernate_exit_text_start & ~(SZ_4K - 1))
 	<= SZ_4K, "Hibernate exit text too big or misaligned")
 #endif
 #ifdef CONFIG_UNMAP_KERNEL_AT_EL0
-<<<<<<< HEAD
 ASSERT((__entry_tramp_text_end - __entry_tramp_text_start) == PAGE_SIZE,
-=======
-ASSERT((__entry_tramp_text_end - __entry_tramp_text_start) <= 3*PAGE_SIZE,
->>>>>>> rebase
 	"Entry trampoline text too big")
 #endif
 /*

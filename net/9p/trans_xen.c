@@ -138,11 +138,7 @@ static bool p9_xen_write_todo(struct xen_9pfs_dataring *ring, RING_IDX size)
 
 static int p9_xen_request(struct p9_client *client, struct p9_req_t *p9_req)
 {
-<<<<<<< HEAD
 	struct xen_9pfs_front_priv *priv = NULL;
-=======
-	struct xen_9pfs_front_priv *priv;
->>>>>>> rebase
 	RING_IDX cons, prod, masked_cons, masked_prod;
 	unsigned long flags;
 	u32 size = p9_req->tc.size;
@@ -155,11 +151,7 @@ static int p9_xen_request(struct p9_client *client, struct p9_req_t *p9_req)
 			break;
 	}
 	read_unlock(&xen_9pfs_lock);
-<<<<<<< HEAD
 	if (!priv || priv->client != client)
-=======
-	if (list_entry_is_head(priv, &xen_9pfs_devs, list))
->>>>>>> rebase
 		return -EINVAL;
 
 	num = p9_req->tc.tag % priv->num_rings;
@@ -309,15 +301,9 @@ static void xen_9pfs_front_free(struct xen_9pfs_front_priv *priv)
 				ref = priv->rings[i].intf->ref[j];
 				gnttab_end_foreign_access(ref, 0, 0);
 			}
-<<<<<<< HEAD
 			free_pages((unsigned long)priv->rings[i].data.in,
 				   XEN_9PFS_RING_ORDER -
 				   (PAGE_SHIFT - XEN_PAGE_SHIFT));
-=======
-			free_pages_exact(priv->rings[i].data.in,
-				   1UL << (XEN_9PFS_RING_ORDER +
-					   XEN_PAGE_SHIFT));
->>>>>>> rebase
 		}
 		gnttab_end_foreign_access(priv->rings[i].ref, 0, 0);
 		free_page((unsigned long)priv->rings[i].intf);
@@ -355,13 +341,8 @@ static int xen_9pfs_front_alloc_dataring(struct xenbus_device *dev,
 	if (ret < 0)
 		goto out;
 	ring->ref = ret;
-<<<<<<< HEAD
 	bytes = (void *)__get_free_pages(GFP_KERNEL | __GFP_ZERO,
 			XEN_9PFS_RING_ORDER - (PAGE_SHIFT - XEN_PAGE_SHIFT));
-=======
-	bytes = alloc_pages_exact(1UL << (XEN_9PFS_RING_ORDER + XEN_PAGE_SHIFT),
-				  GFP_KERNEL | __GFP_ZERO);
->>>>>>> rebase
 	if (!bytes) {
 		ret = -ENOMEM;
 		goto out;
@@ -392,13 +373,9 @@ out:
 	if (bytes) {
 		for (i--; i >= 0; i--)
 			gnttab_end_foreign_access(ring->intf->ref[i], 0, 0);
-<<<<<<< HEAD
 		free_pages((unsigned long)bytes,
 			   XEN_9PFS_RING_ORDER -
 			   (PAGE_SHIFT - XEN_PAGE_SHIFT));
-=======
-		free_pages_exact(bytes, 1UL << (XEN_9PFS_RING_ORDER + XEN_PAGE_SHIFT));
->>>>>>> rebase
 	}
 	gnttab_end_foreign_access(ring->ref, 0, 0);
 	free_page((unsigned long)ring->intf);

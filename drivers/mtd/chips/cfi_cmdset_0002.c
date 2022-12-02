@@ -49,13 +49,6 @@
 #define SST49LF008A		0x005a
 #define AT49BV6416		0x00d6
 
-<<<<<<< HEAD
-=======
-enum cfi_quirks {
-	CFI_QUIRK_DQ_TRUE_DATA = BIT(0),
-};
-
->>>>>>> rebase
 static int cfi_amdstd_read (struct mtd_info *, loff_t, size_t, size_t *, u_char *);
 static int cfi_amdstd_write_words(struct mtd_info *, loff_t, size_t, size_t *, const u_char *);
 static int cfi_amdstd_write_buffers(struct mtd_info *, loff_t, size_t, size_t *, const u_char *);
@@ -372,18 +365,6 @@ static void fixup_s29ns512p_sectors(struct mtd_info *mtd)
 		mtd->name);
 }
 
-<<<<<<< HEAD
-=======
-static void fixup_quirks(struct mtd_info *mtd)
-{
-	struct map_info *map = mtd->priv;
-	struct cfi_private *cfi = map->fldrv_priv;
-
-	if (cfi->mfr == CFI_MFR_AMD && cfi->id == 0x0c01)
-		cfi->quirks |= CFI_QUIRK_DQ_TRUE_DATA;
-}
-
->>>>>>> rebase
 /* Used to fix CFI-Tables of chips without Extended Query Tables */
 static struct cfi_fixup cfi_nopri_fixup_table[] = {
 	{ CFI_MFR_SST, 0x234a, fixup_sst39vf }, /* SST39VF1602 */
@@ -422,10 +403,6 @@ static struct cfi_fixup cfi_fixup_table[] = {
 #if !FORCE_WORD_WRITE
 	{ CFI_MFR_ANY, CFI_ID_ANY, fixup_use_write_buffers },
 #endif
-<<<<<<< HEAD
-=======
-	{ CFI_MFR_ANY, CFI_ID_ANY, fixup_quirks },
->>>>>>> rebase
 	{ 0, 0, NULL }
 };
 static struct cfi_fixup jedec_fixup_table[] = {
@@ -750,15 +727,11 @@ static struct mtd_info *cfi_amdstd_setup(struct mtd_info *mtd)
 	kfree(mtd->eraseregions);
 	kfree(mtd);
 	kfree(cfi->cmdset_priv);
-<<<<<<< HEAD
 	kfree(cfi->cfiq);
-=======
->>>>>>> rebase
 	return NULL;
 }
 
 /*
-<<<<<<< HEAD
  * Return true if the chip is ready.
  *
  * Ready is one of: read mode, query mode, erase-suspend-read mode (in any
@@ -784,12 +757,6 @@ static int __xipram chip_ready(struct map_info *map, unsigned long addr)
  *
  * Ready is one of: read mode, query mode, erase-suspend-read mode (in any
  * non-suspended sector) and it is indicated by no bits toggling.
-=======
- * Return true if the chip is ready and has the correct value.
- *
- * Ready is one of: read mode, query mode, erase-suspend-read mode (in any
- * non-suspended sector) and is indicated by no toggle bits toggling.
->>>>>>> rebase
  *
  * Error are indicated by toggling bits or bits held with the wrong value,
  * or with bits toggling.
@@ -798,7 +765,6 @@ static int __xipram chip_ready(struct map_info *map, unsigned long addr)
  * (including checking DQ5 for an error status) is tricky to get working
  * correctly and is therefore not done	(particularly with interleaved chips
  * as each chip must be checked independently of the others).
-<<<<<<< HEAD
  *
  */
 static int __xipram chip_good(struct map_info *map, unsigned long addr, map_word expected)
@@ -810,36 +776,6 @@ static int __xipram chip_good(struct map_info *map, unsigned long addr, map_word
 
 	return	map_word_equal(map, oldd, curd) &&
 		map_word_equal(map, curd, expected);
-=======
- */
-static int __xipram chip_ready(struct map_info *map, unsigned long addr,
-			       map_word *expected)
-{
-	map_word d, t;
-	int ret;
-
-	d = map_read(map, addr);
-	t = map_read(map, addr);
-
-	ret = map_word_equal(map, d, t);
-
-	if (!ret || !expected)
-		return ret;
-
-	return map_word_equal(map, t, *expected);
-}
-
-static int __xipram chip_good(struct map_info *map, unsigned long addr,
-			      map_word *expected)
-{
-	struct cfi_private *cfi = map->fldrv_priv;
-	map_word *datum = expected;
-
-	if (cfi->quirks & CFI_QUIRK_DQ_TRUE_DATA)
-		datum = NULL;
-
-	return chip_ready(map, addr, datum);
->>>>>>> rebase
 }
 
 static int get_chip(struct map_info *map, struct flchip *chip, unsigned long adr, int mode)
@@ -856,11 +792,7 @@ static int get_chip(struct map_info *map, struct flchip *chip, unsigned long adr
 
 	case FL_STATUS:
 		for (;;) {
-<<<<<<< HEAD
 			if (chip_ready(map, adr))
-=======
-			if (chip_ready(map, adr, NULL))
->>>>>>> rebase
 				break;
 
 			if (time_after(jiffies, timeo)) {
@@ -898,11 +830,7 @@ static int get_chip(struct map_info *map, struct flchip *chip, unsigned long adr
 		chip->state = FL_ERASE_SUSPENDING;
 		chip->erase_suspended = 1;
 		for (;;) {
-<<<<<<< HEAD
 			if (chip_ready(map, adr))
-=======
-			if (chip_ready(map, adr, NULL))
->>>>>>> rebase
 				break;
 
 			if (time_after(jiffies, timeo)) {
@@ -1433,11 +1361,7 @@ static int do_otp_lock(struct map_info *map, struct flchip *chip, loff_t adr,
 	/* wait for chip to become ready */
 	timeo = jiffies + msecs_to_jiffies(2);
 	for (;;) {
-<<<<<<< HEAD
 		if (chip_ready(map, adr))
-=======
-		if (chip_ready(map, adr, NULL))
->>>>>>> rebase
 			break;
 
 		if (time_after(jiffies, timeo)) {
@@ -1707,12 +1631,7 @@ static int __xipram do_write_oneword(struct map_info *map, struct flchip *chip,
 		 * We check "time_after" and "!chip_good" before checking
 		 * "chip_good" to avoid the failure due to scheduling.
 		 */
-<<<<<<< HEAD
 		if (time_after(jiffies, timeo) && !chip_good(map, adr, datum)) {
-=======
-		if (time_after(jiffies, timeo) &&
-		    !chip_good(map, adr, &datum)) {
->>>>>>> rebase
 			xip_enable(map, chip, adr);
 			printk(KERN_WARNING "MTD %s(): software timeout\n", __func__);
 			xip_disable(map, chip, adr);
@@ -1720,11 +1639,7 @@ static int __xipram do_write_oneword(struct map_info *map, struct flchip *chip,
 			break;
 		}
 
-<<<<<<< HEAD
 		if (chip_good(map, adr, datum))
-=======
-		if (chip_good(map, adr, &datum))
->>>>>>> rebase
 			break;
 
 		/* Latency issues. Drop the lock, wait a while and retry */
@@ -1967,21 +1882,10 @@ static int __xipram do_write_buffer(struct map_info *map, struct flchip *chip,
 			continue;
 		}
 
-<<<<<<< HEAD
 		if (time_after(jiffies, timeo) && !chip_ready(map, adr))
 			break;
 
 		if (chip_good(map, adr, datum)) {
-=======
-		/*
-		 * We check "time_after" and "!chip_good" before checking
-		 * "chip_good" to avoid the failure due to scheduling.
-		 */
-		if (time_after(jiffies, timeo) && !chip_good(map, adr, &datum))
-			break;
-
-		if (chip_good(map, adr, &datum)) {
->>>>>>> rebase
 			xip_enable(map, chip, adr);
 			goto op_done;
 		}
@@ -2115,11 +2019,7 @@ static int cfi_amdstd_panic_wait(struct map_info *map, struct flchip *chip,
 	 * If the driver thinks the chip is idle, and no toggle bits
 	 * are changing, then the chip is actually idle for sure.
 	 */
-<<<<<<< HEAD
 	if (chip->state == FL_READY && chip_ready(map, adr))
-=======
-	if (chip->state == FL_READY && chip_ready(map, adr, NULL))
->>>>>>> rebase
 		return 0;
 
 	/*
@@ -2136,11 +2036,7 @@ static int cfi_amdstd_panic_wait(struct map_info *map, struct flchip *chip,
 
 		/* wait for the chip to become ready */
 		for (i = 0; i < jiffies_to_usecs(timeo); i++) {
-<<<<<<< HEAD
 			if (chip_ready(map, adr))
-=======
-			if (chip_ready(map, adr, NULL))
->>>>>>> rebase
 				return 0;
 
 			udelay(1);
@@ -2204,21 +2100,13 @@ retry:
 	map_write(map, datum, adr);
 
 	for (i = 0; i < jiffies_to_usecs(uWriteTimeout); i++) {
-<<<<<<< HEAD
 		if (chip_ready(map, adr))
-=======
-		if (chip_ready(map, adr, NULL))
->>>>>>> rebase
 			break;
 
 		udelay(1);
 	}
 
-<<<<<<< HEAD
 	if (!chip_good(map, adr, datum)) {
-=======
-	if (!chip_ready(map, adr, &datum)) {
->>>>>>> rebase
 		/* reset on all failures. */
 		map_write(map, CMD(0xF0), chip->start);
 		/* FIXME - should have reset delay before continuing */
@@ -2359,10 +2247,6 @@ static int __xipram do_erase_chip(struct map_info *map, struct flchip *chip)
 	DECLARE_WAITQUEUE(wait, current);
 	int ret = 0;
 	int retry_cnt = 0;
-<<<<<<< HEAD
-=======
-	map_word datum = map_word_ff(map);
->>>>>>> rebase
 
 	adr = cfi->addr_unlock1;
 
@@ -2417,11 +2301,7 @@ static int __xipram do_erase_chip(struct map_info *map, struct flchip *chip)
 			chip->erase_suspended = 0;
 		}
 
-<<<<<<< HEAD
 		if (chip_good(map, adr, map_word_ff(map)))
-=======
-		if (chip_ready(map, adr, &datum))
->>>>>>> rebase
 			break;
 
 		if (time_after(jiffies, timeo)) {
@@ -2463,10 +2343,6 @@ static int __xipram do_erase_oneblock(struct map_info *map, struct flchip *chip,
 	DECLARE_WAITQUEUE(wait, current);
 	int ret = 0;
 	int retry_cnt = 0;
-<<<<<<< HEAD
-=======
-	map_word datum = map_word_ff(map);
->>>>>>> rebase
 
 	adr += chip->start;
 
@@ -2521,11 +2397,7 @@ static int __xipram do_erase_oneblock(struct map_info *map, struct flchip *chip,
 			chip->erase_suspended = 0;
 		}
 
-<<<<<<< HEAD
 		if (chip_good(map, adr, map_word_ff(map)))
-=======
-		if (chip_ready(map, adr, &datum))
->>>>>>> rebase
 			break;
 
 		if (time_after(jiffies, timeo)) {
@@ -2718,11 +2590,7 @@ static int __maybe_unused do_ppb_xxlock(struct map_info *map,
 	 */
 	timeo = jiffies + msecs_to_jiffies(2000);	/* 2s max (un)locking */
 	for (;;) {
-<<<<<<< HEAD
 		if (chip_ready(map, adr))
-=======
-		if (chip_ready(map, adr, NULL))
->>>>>>> rebase
 			break;
 
 		if (time_after(jiffies, timeo)) {

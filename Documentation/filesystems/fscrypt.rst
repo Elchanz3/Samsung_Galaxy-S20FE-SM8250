@@ -72,12 +72,9 @@ Online attacks
 fscrypt (and storage encryption in general) can only provide limited
 protection, if any at all, against online attacks.  In detail:
 
-<<<<<<< HEAD
 Side-channel attacks
 ~~~~~~~~~~~~~~~~~~~~
 
-=======
->>>>>>> rebase
 fscrypt is only resistant to side-channel attacks, such as timing or
 electromagnetic attacks, to the extent that the underlying Linux
 Cryptographic API algorithms are.  If a vulnerable algorithm is used,
@@ -86,7 +83,6 @@ attacker to mount a side channel attack against the online system.
 Side channel attacks may also be mounted against applications
 consuming decrypted data.
 
-<<<<<<< HEAD
 Unauthorized file access
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -171,31 +167,6 @@ attacks:
 All the above problems are fixed with v2 encryption policies.  For
 this reason among others, it is recommended to use v2 encryption
 policies on all new encrypted directories.
-=======
-After an encryption key has been provided, fscrypt is not designed to
-hide the plaintext file contents or filenames from other users on the
-same system, regardless of the visibility of the keyring key.
-Instead, existing access control mechanisms such as file mode bits,
-POSIX ACLs, LSMs, or mount namespaces should be used for this purpose.
-Also note that as long as the encryption keys are *anywhere* in
-memory, an online attacker can necessarily compromise them by mounting
-a physical attack or by exploiting any kernel security vulnerability
-which provides an arbitrary memory read primitive.
-
-While it is ostensibly possible to "evict" keys from the system,
-recently accessed encrypted files will remain accessible at least
-until the filesystem is unmounted or the VFS caches are dropped, e.g.
-using ``echo 2 > /proc/sys/vm/drop_caches``.  Even after that, if the
-RAM is compromised before being powered off, it will likely still be
-possible to recover portions of the plaintext file contents, if not
-some of the encryption keys as well.  (Since Linux v4.12, all
-in-kernel keys related to fscrypt are sanitized before being freed.
-However, userspace would need to do its part as well.)
-
-Currently, fscrypt does not prevent a user from maliciously providing
-an incorrect key for another user's existing encrypted files.  A
-protection against this is planned.
->>>>>>> rebase
 
 Key hierarchy
 =============
@@ -216,7 +187,6 @@ appropriate master key.  There can be any number of master keys, each
 of which protects any number of directory trees on any number of
 filesystems.
 
-<<<<<<< HEAD
 Master keys must be real cryptographic keys, i.e. indistinguishable
 from random bytestrings of the same length.  This implies that users
 **must not** directly use a password as a master key, zero-pad a
@@ -355,65 +325,6 @@ SipHash-2-4 key per directory in order to hash filenames.  This works
 just like deriving a per-file encryption key, except that a different
 KDF context is used.  Currently, only casefolded ("case-insensitive")
 encrypted directories use this style of hashing.
-=======
-Userspace should generate master keys either using a cryptographically
-secure random number generator, or by using a KDF (Key Derivation
-Function).  Note that whenever a KDF is used to "stretch" a
-lower-entropy secret such as a passphrase, it is critical that a KDF
-designed for this purpose be used, such as scrypt, PBKDF2, or Argon2.
-
-Per-file keys
--------------
-
-Master keys are not used to encrypt file contents or names directly.
-Instead, a unique key is derived for each encrypted file, including
-each regular file, directory, and symbolic link.  This has several
-advantages:
-
-- In cryptosystems, the same key material should never be used for
-  different purposes.  Using the master key as both an XTS key for
-  contents encryption and as a CTS-CBC key for filenames encryption
-  would violate this rule.
-- Per-file keys simplify the choice of IVs (Initialization Vectors)
-  for contents encryption.  Without per-file keys, to ensure IV
-  uniqueness both the inode and logical block number would need to be
-  encoded in the IVs.  This would make it impossible to renumber
-  inodes, which e.g. ``resize2fs`` can do when resizing an ext4
-  filesystem.  With per-file keys, it is sufficient to encode just the
-  logical block number in the IVs.
-- Per-file keys strengthen the encryption of filenames, where IVs are
-  reused out of necessity.  With a unique key per directory, IV reuse
-  is limited to within a single directory.
-- Per-file keys allow individual files to be securely erased simply by
-  securely erasing their keys.  (Not yet implemented.)
-
-A KDF (Key Derivation Function) is used to derive per-file keys from
-the master key.  This is done instead of wrapping a randomly-generated
-key for each file because it reduces the size of the encryption xattr,
-which for some filesystems makes the xattr more likely to fit in-line
-in the filesystem's inode table.  With a KDF, only a 16-byte nonce is
-required --- long enough to make key reuse extremely unlikely.  A
-wrapped key, on the other hand, would need to be up to 64 bytes ---
-the length of an AES-256-XTS key.  Furthermore, currently there is no
-requirement to support unlocking a file with multiple alternative
-master keys or to support rotating master keys.  Instead, the master
-keys may be wrapped in userspace, e.g. as done by the `fscrypt
-<https://github.com/google/fscrypt>`_ tool.
-
-The current KDF encrypts the master key using the 16-byte nonce as an
-AES-128-ECB key.  The output is used as the derived key.  If the
-output is longer than needed, then it is truncated to the needed
-length.  Truncation is the norm for directories and symlinks, since
-those use the CTS-CBC encryption mode which requires a key half as
-long as that required by the XTS encryption mode.
-
-Note: this KDF meets the primary security requirement, which is to
-produce unique derived keys that preserve the entropy of the master
-key, assuming that the master key is already a good pseudorandom key.
-However, it is nonstandard and has some problems such as being
-reversible, so it is generally considered to be a mistake!  It may be
-replaced with HKDF or another more standard KDF in the future.
->>>>>>> rebase
 
 Encryption modes and usage
 ==========================
@@ -425,7 +336,6 @@ Currently, the following pairs of encryption modes are supported:
 
 - AES-256-XTS for contents and AES-256-CTS-CBC for filenames
 - AES-128-CBC for contents and AES-128-CTS-CBC for filenames
-<<<<<<< HEAD
 - Adiantum for both contents and filenames
 
 If unsure, you should use the (AES-256-XTS, AES-256-CTS-CBC) pair.
@@ -446,19 +356,12 @@ processors" (https://eprint.iacr.org/2018/720.pdf) for more details.
 To use Adiantum, CONFIG_CRYPTO_ADIANTUM must be enabled.  Also, fast
 implementations of ChaCha and NHPoly1305 should be enabled, e.g.
 CONFIG_CRYPTO_CHACHA20_NEON and CONFIG_CRYPTO_NHPOLY1305_NEON for ARM.
-=======
-
-It is strongly recommended to use AES-256-XTS for contents encryption.
-AES-128-CBC was added only for low-powered embedded devices with
-crypto accelerators such as CAAM or CESA that do not support XTS.
->>>>>>> rebase
 
 New encryption modes can be added relatively easily, without changes
 to individual filesystems.  However, authenticated encryption (AE)
 modes are not currently supported because of the difficulty of dealing
 with ciphertext expansion.
 
-<<<<<<< HEAD
 Contents encryption
 -------------------
 
@@ -521,46 +424,6 @@ produce duplicate plaintexts.
 Symbolic link targets are considered a type of filename and are
 encrypted in the same way as filenames in directory entries, except
 that IV reuse is not a problem as each symlink has its own inode.
-=======
-For file contents, each filesystem block is encrypted independently.
-Currently, only the case where the filesystem block size is equal to
-the system's page size (usually 4096 bytes) is supported.  With the
-XTS mode of operation (recommended), the logical block number within
-the file is used as the IV.  With the CBC mode of operation (not
-recommended), ESSIV is used; specifically, the IV for CBC is the
-logical block number encrypted with AES-256, where the AES-256 key is
-the SHA-256 hash of the inode's data encryption key.
-
-For filenames, the full filename is encrypted at once.  Because of the
-requirements to retain support for efficient directory lookups and
-filenames of up to 255 bytes, a constant initialization vector (IV) is
-used.  However, each encrypted directory uses a unique key, which
-limits IV reuse to within a single directory.  Note that IV reuse in
-the context of CTS-CBC encryption means that when the original
-filenames share a common prefix at least as long as the cipher block
-size (16 bytes for AES), the corresponding encrypted filenames will
-also share a common prefix.  This is undesirable; it may be fixed in
-the future by switching to an encryption mode that is a strong
-pseudorandom permutation on arbitrary-length messages, e.g. the HEH
-(Hash-Encrypt-Hash) mode.
-
-Since filenames are encrypted with the CTS-CBC mode of operation, the
-plaintext and ciphertext filenames need not be multiples of the AES
-block size, i.e. 16 bytes.  However, the minimum size that can be
-encrypted is 16 bytes, so shorter filenames are NUL-padded to 16 bytes
-before being encrypted.  In addition, to reduce leakage of filename
-lengths via their ciphertexts, all filenames are NUL-padded to the
-next 4, 8, 16, or 32-byte boundary (configurable).  32 is recommended
-since this provides the best confidentiality, at the cost of making
-directory entries consume slightly more space.  Note that since NUL
-(``\0``) is not otherwise a valid character in filenames, the padding
-will never produce duplicate plaintexts.
-
-Symbolic link targets are considered a type of filename and are
-encrypted in the same way as filenames in directory entries.  Each
-symlink also uses a unique key; hence, the hardcoded IV is not a
-problem for symlinks.
->>>>>>> rebase
 
 User API
 ========
@@ -568,7 +431,6 @@ User API
 Setting an encryption policy
 ----------------------------
 
-<<<<<<< HEAD
 FS_IOC_SET_ENCRYPTION_POLICY
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -581,21 +443,10 @@ fscrypt_policy_v2`, defined as follows::
     #define FSCRYPT_POLICY_V1               0
     #define FSCRYPT_KEY_DESCRIPTOR_SIZE     8
     struct fscrypt_policy_v1 {
-=======
-The FS_IOC_SET_ENCRYPTION_POLICY ioctl sets an encryption policy on an
-empty directory or verifies that a directory or regular file already
-has the specified encryption policy.  It takes in a pointer to a
-:c:type:`struct fscrypt_policy`, defined as follows::
-
-    #define FS_KEY_DESCRIPTOR_SIZE  8
-
-    struct fscrypt_policy {
->>>>>>> rebase
             __u8 version;
             __u8 contents_encryption_mode;
             __u8 filenames_encryption_mode;
             __u8 flags;
-<<<<<<< HEAD
             __u8 master_key_descriptor[FSCRYPT_KEY_DESCRIPTOR_SIZE];
     };
     #define fscrypt_policy  fscrypt_policy_v1
@@ -609,14 +460,10 @@ has the specified encryption policy.  It takes in a pointer to a
             __u8 flags;
             __u8 __reserved[4];
             __u8 master_key_identifier[FSCRYPT_KEY_IDENTIFIER_SIZE];
-=======
-            __u8 master_key_descriptor[FS_KEY_DESCRIPTOR_SIZE];
->>>>>>> rebase
     };
 
 This structure must be initialized as follows:
 
-<<<<<<< HEAD
 - ``version`` must be FSCRYPT_POLICY_V1 (0) if the struct is
   :c:type:`fscrypt_policy_v1` or FSCRYPT_POLICY_V2 (2) if the struct
   is :c:type:`fscrypt_policy_v2`.  (Note: we refer to the original
@@ -652,31 +499,11 @@ This structure must be initialized as follows:
   to find the master key in a keyring; see `Adding keys`_.  It is up
   to userspace to choose a unique ``master_key_descriptor`` for each
   master key.  The e4crypt and fscrypt tools use the first 8 bytes of
-=======
-- ``version`` must be 0.
-
-- ``contents_encryption_mode`` and ``filenames_encryption_mode`` must
-  be set to constants from ``<linux/fs.h>`` which identify the
-  encryption modes to use.  If unsure, use
-  FS_ENCRYPTION_MODE_AES_256_XTS (1) for ``contents_encryption_mode``
-  and FS_ENCRYPTION_MODE_AES_256_CTS (4) for
-  ``filenames_encryption_mode``.
-
-- ``flags`` must be set to a value from ``<linux/fs.h>`` which
-  identifies the amount of NUL-padding to use when encrypting
-  filenames.  If unsure, use FS_POLICY_FLAGS_PAD_32 (0x3).
-
-- ``master_key_descriptor`` specifies how to find the master key in
-  the keyring; see `Adding keys`_.  It is up to userspace to choose a
-  unique ``master_key_descriptor`` for each master key.  The e4crypt
-  and fscrypt tools use the first 8 bytes of
->>>>>>> rebase
   ``SHA-512(SHA-512(master_key))``, but this particular scheme is not
   required.  Also, the master key need not be in the keyring yet when
   FS_IOC_SET_ENCRYPTION_POLICY is executed.  However, it must be added
   before any files can be created in the encrypted directory.
 
-<<<<<<< HEAD
   For v2 encryption policies, ``master_key_descriptor`` has been
   replaced with ``master_key_identifier``, which is longer and cannot
   be arbitrarily chosen.  Instead, the key must first be added using
@@ -685,8 +512,6 @@ This structure must be initialized as follows:
   be used as the ``master_key_identifier`` in the :c:type:`struct
   fscrypt_policy_v2`.
 
-=======
->>>>>>> rebase
 If the file is not yet encrypted, then FS_IOC_SET_ENCRYPTION_POLICY
 verifies that the file is an empty directory.  If so, the specified
 encryption policy is assigned to the directory, turning it into an
@@ -702,7 +527,6 @@ policy exactly matches the actual one.  If they match, then the ioctl
 returns 0.  Otherwise, it fails with EEXIST.  This works on both
 regular files and directories, including nonempty directories.
 
-<<<<<<< HEAD
 When a v2 encryption policy is assigned to a directory, it is also
 required that either the specified key has been added by the current
 user or that the caller has CAP_FOWNER in the initial user namespace.
@@ -712,8 +536,6 @@ FS_IOC_SET_ENCRYPTION_POLICY is executing.  However, if the new
 encrypted directory does not need to be accessed immediately, then the
 key can be removed right away afterwards.
 
-=======
->>>>>>> rebase
 Note that the ext4 filesystem does not allow the root directory to be
 encrypted, even if it is empty.  Users who want to encrypt an entire
 filesystem with one key should consider using dm-crypt instead.
@@ -726,7 +548,6 @@ FS_IOC_SET_ENCRYPTION_POLICY can fail with the following errors:
 - ``EEXIST``: the file is already encrypted with an encryption policy
   different from the one specified
 - ``EINVAL``: an invalid encryption policy was specified (invalid
-<<<<<<< HEAD
   version, mode(s), or flags; or reserved bits were set); or a v1
   encryption policy was specified but the directory has the casefold
   flag enabled (casefolding is incompatible with v1 policies).
@@ -734,23 +555,14 @@ FS_IOC_SET_ENCRYPTION_POLICY can fail with the following errors:
   the specified ``master_key_identifier`` has not been added, nor does
   the process have the CAP_FOWNER capability in the initial user
   namespace
-=======
-  version, mode(s), or flags)
->>>>>>> rebase
 - ``ENOTDIR``: the file is unencrypted and is a regular file, not a
   directory
 - ``ENOTEMPTY``: the file is unencrypted and is a nonempty directory
 - ``ENOTTY``: this type of filesystem does not implement encryption
 - ``EOPNOTSUPP``: the kernel was not configured with encryption
-<<<<<<< HEAD
   support for filesystems, or the filesystem superblock has not
   had encryption enabled on it.  (For example, to use encryption on an
   ext4 filesystem, CONFIG_FS_ENCRYPTION must be enabled in the
-=======
-  support for this filesystem, or the filesystem superblock has not
-  had encryption enabled on it.  (For example, to use encryption on an
-  ext4 filesystem, CONFIG_EXT4_ENCRYPTION must be enabled in the
->>>>>>> rebase
   kernel config, and the superblock must have had the "encrypt"
   feature flag enabled using ``tune2fs -O encrypt`` or ``mkfs.ext4 -O
   encrypt``.)
@@ -761,7 +573,6 @@ FS_IOC_SET_ENCRYPTION_POLICY can fail with the following errors:
 Getting an encryption policy
 ----------------------------
 
-<<<<<<< HEAD
 Two ioctls are available to get a file's encryption policy:
 
 - `FS_IOC_GET_ENCRYPTION_POLICY_EX`_
@@ -813,28 +624,12 @@ FS_IOC_GET_ENCRYPTION_POLICY_EX can fail with the following errors:
 - ``EOVERFLOW``: the file is encrypted and uses a recognized
   encryption policy version, but the policy struct does not fit into
   the provided buffer
-=======
-The FS_IOC_GET_ENCRYPTION_POLICY ioctl retrieves the :c:type:`struct
-fscrypt_policy`, if any, for a directory or regular file.  See above
-for the struct definition.  No additional permissions are required
-beyond the ability to open the file.
-
-FS_IOC_GET_ENCRYPTION_POLICY can fail with the following errors:
-
-- ``EINVAL``: the file is encrypted, but it uses an unrecognized
-  encryption context format
-- ``ENODATA``: the file is not encrypted
-- ``ENOTTY``: this type of filesystem does not implement encryption
-- ``EOPNOTSUPP``: the kernel was not configured with encryption
-  support for this filesystem
->>>>>>> rebase
 
 Note: if you only need to know whether a file is encrypted or not, on
 most filesystems it is also possible to use the FS_IOC_GETFLAGS ioctl
 and check for FS_ENCRYPT_FL, or to use the statx() system call and
 check for STATX_ATTR_ENCRYPTED in stx_attributes.
 
-<<<<<<< HEAD
 FS_IOC_GET_ENCRYPTION_POLICY
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -851,8 +646,6 @@ for FS_IOC_GET_ENCRYPTION_POLICY_EX, except that
 FS_IOC_GET_ENCRYPTION_POLICY also returns ``EINVAL`` if the file is
 encrypted using a newer encryption policy version.
 
-=======
->>>>>>> rebase
 Getting the per-filesystem salt
 -------------------------------
 
@@ -865,7 +658,6 @@ from a passphrase or other low-entropy user credential.
 FS_IOC_GET_ENCRYPTION_PWSALT is deprecated.  Instead, prefer to
 generate and manage any needed salt(s) in userspace.
 
-<<<<<<< HEAD
 Getting a file's encryption nonce
 ---------------------------------
 
@@ -1018,13 +810,6 @@ access encrypted files.
 
 Nevertheless, to add a key to one of the process-subscribed keyrings,
 the add_key() system call can be used (see:
-=======
-Adding keys
------------
-
-To provide a master key, userspace must add it to an appropriate
-keyring using the add_key() system call (see:
->>>>>>> rebase
 ``Documentation/security/keys/core.rst``).  The key type must be
 "logon"; keys of this type are kept in kernel memory and cannot be
 read back by userspace.  The key description must be "fscrypt:"
@@ -1032,21 +817,12 @@ followed by the 16-character lower case hex representation of the
 ``master_key_descriptor`` that was set in the encryption policy.  The
 key payload must conform to the following structure::
 
-<<<<<<< HEAD
     #define FSCRYPT_MAX_KEY_SIZE            64
 
     struct fscrypt_key {
             __u32 mode;
             __u8 raw[FSCRYPT_MAX_KEY_SIZE];
             __u32 size;
-=======
-    #define FS_MAX_KEY_SIZE 64
-
-    struct fscrypt_key {
-            u32 mode;
-            u8 raw[FS_MAX_KEY_SIZE];
-            u32 size;
->>>>>>> rebase
     };
 
 ``mode`` is ignored; just set it to 0.  The actual key is provided in
@@ -1058,7 +834,6 @@ with a filesystem-specific prefix such as "ext4:".  However, the
 filesystem-specific prefixes are deprecated and should not be used in
 new programs.
 
-<<<<<<< HEAD
 Removing keys
 -------------
 
@@ -1247,28 +1022,6 @@ the filesystem-level keyring, i.e. the keyring managed by
 cannot get the status of a key that has only been added for use by v1
 encryption policies using the legacy mechanism involving
 process-subscribed keyrings.
-=======
-There are several different types of keyrings in which encryption keys
-may be placed, such as a session keyring, a user session keyring, or a
-user keyring.  Each key must be placed in a keyring that is "attached"
-to all processes that might need to access files encrypted with it, in
-the sense that request_key() will find the key.  Generally, if only
-processes belonging to a specific user need to access a given
-encrypted directory and no session keyring has been installed, then
-that directory's key should be placed in that user's user session
-keyring or user keyring.  Otherwise, a session keyring should be
-installed if needed, and the key should be linked into that session
-keyring, or in a keyring linked into that session keyring.
-
-Note: introducing the complex visibility semantics of keyrings here
-was arguably a mistake --- especially given that by design, after any
-process successfully opens an encrypted file (thereby setting up the
-per-file key), possessing the keyring key is not actually required for
-any process to read/write the file until its in-memory inode is
-evicted.  In the future there probably should be a way to provide keys
-directly to the filesystem instead, which would make the intended
-semantics clearer.
->>>>>>> rebase
 
 Access semantics
 ================
@@ -1331,11 +1084,7 @@ Without the key
 
 Some filesystem operations may be performed on encrypted regular
 files, directories, and symlinks even before their encryption key has
-<<<<<<< HEAD
 been added, or after their encryption key has been removed:
-=======
-been provided:
->>>>>>> rebase
 
 - File metadata may be read, e.g. using stat().
 
@@ -1400,7 +1149,6 @@ Encryption context
 ------------------
 
 An encryption policy is represented on-disk by a :c:type:`struct
-<<<<<<< HEAD
 fscrypt_context_v1` or a :c:type:`struct fscrypt_context_v2`.  It is
 up to individual filesystems to decide where to store it, but normally
 it would be stored in a hidden extended attribute.  It should *not* be
@@ -1439,35 +1187,6 @@ context structs also contain a nonce.  The nonce is randomly generated
 by the kernel and is used as KDF input or as a tweak to cause
 different files to be encrypted differently; see `Per-file encryption
 keys`_ and `DIRECT_KEY policies`_.
-=======
-fscrypt_context`.  It is up to individual filesystems to decide where
-to store it, but normally it would be stored in a hidden extended
-attribute.  It should *not* be exposed by the xattr-related system
-calls such as getxattr() and setxattr() because of the special
-semantics of the encryption xattr.  (In particular, there would be
-much confusion if an encryption policy were to be added to or removed
-from anything other than an empty directory.)  The struct is defined
-as follows::
-
-    #define FS_KEY_DESCRIPTOR_SIZE  8
-    #define FS_KEY_DERIVATION_NONCE_SIZE 16
-
-    struct fscrypt_context {
-            u8 format;
-            u8 contents_encryption_mode;
-            u8 filenames_encryption_mode;
-            u8 flags;
-            u8 master_key_descriptor[FS_KEY_DESCRIPTOR_SIZE];
-            u8 nonce[FS_KEY_DERIVATION_NONCE_SIZE];
-    };
-
-Note that :c:type:`struct fscrypt_context` contains the same
-information as :c:type:`struct fscrypt_policy` (see `Setting an
-encryption policy`_), except that :c:type:`struct fscrypt_context`
-also contains a nonce.  The nonce is randomly generated by the kernel
-and is used to derive the inode's encryption key as described in
-`Per-file keys`_.
->>>>>>> rebase
 
 Data path changes
 -----------------
@@ -1519,17 +1238,12 @@ filesystem-specific hash(es) needed for directory lookups.  This
 allows the filesystem to still, with a high degree of confidence, map
 the filename given in ->lookup() back to a particular directory entry
 that was previously listed by readdir().  See :c:type:`struct
-<<<<<<< HEAD
 fscrypt_nokey_name` in the source for more details.
-=======
-fscrypt_digested_name` in the source for more details.
->>>>>>> rebase
 
 Note that the precise way that filenames are presented to userspace
 without the key is subject to change in the future.  It is only meant
 as a way to temporarily present valid filenames so that commands like
 ``rm -r`` work as expected on encrypted directories.
-<<<<<<< HEAD
 
 Tests
 =====
@@ -1569,5 +1283,3 @@ much longer to run; so also consider using `gce-xfstests
 instead of kvm-xfstests::
 
     gce-xfstests -c ext4/encrypt,f2fs/encrypt -g auto
-=======
->>>>>>> rebase

@@ -156,13 +156,8 @@ static int netlbl_cipsov4_add_std(struct genl_info *info,
 		return -ENOMEM;
 	doi_def->map.std = kzalloc(sizeof(*doi_def->map.std), GFP_KERNEL);
 	if (doi_def->map.std == NULL) {
-<<<<<<< HEAD
 		ret_val = -ENOMEM;
 		goto add_std_failure;
-=======
-		kfree(doi_def);
-		return -ENOMEM;
->>>>>>> rebase
 	}
 	doi_def->type = CIPSO_V4_MAP_TRANS;
 
@@ -203,22 +198,14 @@ static int netlbl_cipsov4_add_std(struct genl_info *info,
 		}
 	doi_def->map.std->lvl.local = kcalloc(doi_def->map.std->lvl.local_size,
 					      sizeof(u32),
-<<<<<<< HEAD
 					      GFP_KERNEL);
-=======
-					      GFP_KERNEL | __GFP_NOWARN);
->>>>>>> rebase
 	if (doi_def->map.std->lvl.local == NULL) {
 		ret_val = -ENOMEM;
 		goto add_std_failure;
 	}
 	doi_def->map.std->lvl.cipso = kcalloc(doi_def->map.std->lvl.cipso_size,
 					      sizeof(u32),
-<<<<<<< HEAD
 					      GFP_KERNEL);
-=======
-					      GFP_KERNEL | __GFP_NOWARN);
->>>>>>> rebase
 	if (doi_def->map.std->lvl.cipso == NULL) {
 		ret_val = -ENOMEM;
 		goto add_std_failure;
@@ -286,11 +273,7 @@ static int netlbl_cipsov4_add_std(struct genl_info *info,
 		doi_def->map.std->cat.local = kcalloc(
 					      doi_def->map.std->cat.local_size,
 					      sizeof(u32),
-<<<<<<< HEAD
 					      GFP_KERNEL);
-=======
-					      GFP_KERNEL | __GFP_NOWARN);
->>>>>>> rebase
 		if (doi_def->map.std->cat.local == NULL) {
 			ret_val = -ENOMEM;
 			goto add_std_failure;
@@ -298,11 +281,7 @@ static int netlbl_cipsov4_add_std(struct genl_info *info,
 		doi_def->map.std->cat.cipso = kcalloc(
 					      doi_def->map.std->cat.cipso_size,
 					      sizeof(u32),
-<<<<<<< HEAD
 					      GFP_KERNEL);
-=======
-					      GFP_KERNEL | __GFP_NOWARN);
->>>>>>> rebase
 		if (doi_def->map.std->cat.cipso == NULL) {
 			ret_val = -ENOMEM;
 			goto add_std_failure;
@@ -602,10 +581,6 @@ list_start:
 
 		break;
 	}
-<<<<<<< HEAD
-=======
-	cipso_v4_doi_putdef(doi_def);
->>>>>>> rebase
 	rcu_read_unlock();
 
 	genlmsg_end(ans_skb, data);
@@ -614,20 +589,12 @@ list_start:
 list_retry:
 	/* XXX - this limit is a guesstimate */
 	if (nlsze_mult < 4) {
-<<<<<<< HEAD
-=======
-		cipso_v4_doi_putdef(doi_def);
->>>>>>> rebase
 		rcu_read_unlock();
 		kfree_skb(ans_skb);
 		nlsze_mult *= 2;
 		goto list_start;
 	}
 list_failure_lock:
-<<<<<<< HEAD
-=======
-	cipso_v4_doi_putdef(doi_def);
->>>>>>> rebase
 	rcu_read_unlock();
 list_failure:
 	kfree_skb(ans_skb);

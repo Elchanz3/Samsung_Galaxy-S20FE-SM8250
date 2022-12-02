@@ -403,11 +403,7 @@ static void zfcp_fsf_req_complete(struct zfcp_fsf_req *req)
 		return;
 	}
 
-<<<<<<< HEAD
 	del_timer(&req->timer);
-=======
-	del_timer_sync(&req->timer);
->>>>>>> rebase
 	zfcp_fsf_protstatus_eval(req);
 	zfcp_fsf_fsfstatus_eval(req);
 	req->handler(req);
@@ -762,11 +758,7 @@ static int zfcp_fsf_req_send(struct zfcp_fsf_req *req)
 	req->qdio_req.qdio_outb_usage = atomic_read(&qdio->req_q_free);
 	req->issued = get_tod_clock();
 	if (zfcp_qdio_send(qdio, &req->qdio_req)) {
-<<<<<<< HEAD
 		del_timer(&req->timer);
-=======
-		del_timer_sync(&req->timer);
->>>>>>> rebase
 		/* lookup request again, list might have changed */
 		zfcp_reqlist_find_rm(adapter->req_list, req_id);
 		zfcp_erp_adapter_reopen(adapter, 0, "fsrs__1");
@@ -1600,11 +1592,7 @@ static void zfcp_fsf_open_wka_port_handler(struct zfcp_fsf_req *req)
 		wka_port->status = ZFCP_FC_WKA_PORT_ONLINE;
 	}
 out:
-<<<<<<< HEAD
 	wake_up(&wka_port->completion_wq);
-=======
-	wake_up(&wka_port->opened);
->>>>>>> rebase
 }
 
 /**
@@ -1662,11 +1650,7 @@ static void zfcp_fsf_close_wka_port_handler(struct zfcp_fsf_req *req)
 	}
 
 	wka_port->status = ZFCP_FC_WKA_PORT_OFFLINE;
-<<<<<<< HEAD
 	wake_up(&wka_port->completion_wq);
-=======
-	wake_up(&wka_port->closed);
->>>>>>> rebase
 }
 
 /**

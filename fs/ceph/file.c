@@ -446,15 +446,6 @@ int ceph_atomic_open(struct inode *dir, struct dentry *dentry,
 	if (dentry->d_name.len > NAME_MAX)
 		return -ENAMETOOLONG;
 
-<<<<<<< HEAD
-=======
-	/*
-	 * Do not truncate the file, since atomic_open is called before the
-	 * permission check. The caller will do the truncation afterward.
-	 */
-	flags &= ~O_TRUNC;
-
->>>>>>> rebase
 	if (flags & O_CREAT) {
 		if (ceph_quota_is_max_files_exceeded(dir))
 			return -EDQUOT;
@@ -487,13 +478,9 @@ int ceph_atomic_open(struct inode *dir, struct dentry *dentry,
 
 	req->r_parent = dir;
 	set_bit(CEPH_MDS_R_PARENT_LOCKED, &req->r_req_flags);
-<<<<<<< HEAD
 	err = ceph_mdsc_do_request(mdsc,
 				   (flags & (O_CREAT|O_TRUNC)) ? dir : NULL,
 				   req);
-=======
-	err = ceph_mdsc_do_request(mdsc, (flags & O_CREAT) ? dir : NULL, req);
->>>>>>> rebase
 	err = ceph_handle_snapdir(req, dentry, err);
 	if (err)
 		goto out_req;
@@ -1397,18 +1384,9 @@ static ssize_t ceph_write_iter(struct kiocb *iocb, struct iov_iter *from)
 	struct inode *inode = file_inode(file);
 	struct ceph_inode_info *ci = ceph_inode(inode);
 	struct ceph_fs_client *fsc = ceph_inode_to_client(inode);
-<<<<<<< HEAD
 	struct ceph_cap_flush *prealloc_cf;
 	ssize_t count, written = 0;
 	int err, want, got;
-=======
-	struct ceph_osd_client *osdc = &fsc->client->osdc;
-	struct ceph_cap_flush *prealloc_cf;
-	ssize_t count, written = 0;
-	int err, want, got;
-	u32 map_flags;
-	u64 pool_flags;
->>>>>>> rebase
 	loff_t pos;
 	loff_t limit = max(i_size_read(inode), fsc->max_file_size);
 
@@ -1463,17 +1441,8 @@ retry_snap:
 			goto out;
 	}
 
-<<<<<<< HEAD
 	/* FIXME: not complete since it doesn't account for being at quota */
 	if (ceph_osdmap_flag(&fsc->client->osdc, CEPH_OSDMAP_FULL)) {
-=======
-	down_read(&osdc->lock);
-	map_flags = osdc->osdmap->flags;
-	pool_flags = ceph_pg_pool_flags(osdc->osdmap, ci->i_layout.pool_id);
-	up_read(&osdc->lock);
-	if ((map_flags & CEPH_OSDMAP_FULL) ||
-	    (pool_flags & CEPH_POOL_FLAG_FULL)) {
->>>>>>> rebase
 		err = -ENOSPC;
 		goto out;
 	}
@@ -1563,12 +1532,7 @@ retry_snap:
 	}
 
 	if (written >= 0) {
-<<<<<<< HEAD
 		if (ceph_osdmap_flag(&fsc->client->osdc, CEPH_OSDMAP_NEARFULL))
-=======
-		if ((map_flags & CEPH_OSDMAP_NEARFULL) ||
-		    (pool_flags & CEPH_POOL_FLAG_NEARFULL))
->>>>>>> rebase
 			iocb->ki_flags |= IOCB_DSYNC;
 		written = generic_write_sync(iocb, written);
 	}
@@ -1847,10 +1811,6 @@ const struct file_operations ceph_file_fops = {
 	.mmap = ceph_mmap,
 	.fsync = ceph_fsync,
 	.lock = ceph_lock,
-<<<<<<< HEAD
-=======
-	.setlease = simple_nosetlease,
->>>>>>> rebase
 	.flock = ceph_flock,
 	.splice_read = generic_file_splice_read,
 	.splice_write = iter_file_splice_write,

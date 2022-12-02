@@ -96,11 +96,7 @@ static struct shash_desc *init_desc(char type, uint8_t hash_algo)
 		algo = hash_algo_name[hash_algo];
 	}
 
-<<<<<<< HEAD
 	if (*tfm == NULL) {
-=======
-	if (IS_ERR_OR_NULL(*tfm)) {
->>>>>>> rebase
 		mutex_lock(&mutex);
 		if (*tfm)
 			goto out;
@@ -219,11 +215,7 @@ static int evm_calc_hmac_or_hash(struct dentry *dentry,
 	data->hdr.length = crypto_shash_digestsize(desc->tfm);
 
 	error = -ENODATA;
-<<<<<<< HEAD
 	list_for_each_entry_rcu(xattr, &evm_config_xattrnames, list) {
-=======
-	list_for_each_entry_lockless(xattr, &evm_config_xattrnames, list) {
->>>>>>> rebase
 		bool is_ima = false;
 
 		if (strcmp(xattr->name, XATTR_NAME_IMA) == 0)
@@ -257,11 +249,7 @@ static int evm_calc_hmac_or_hash(struct dentry *dentry,
 
 	/* Portable EVM signatures must include an IMA hash */
 	if (type == EVM_XATTR_PORTABLE_DIGSIG && !ima_present)
-<<<<<<< HEAD
 		return -EPERM;
-=======
-		error = -EPERM;
->>>>>>> rebase
 out:
 	kfree(xattr_value);
 	kfree(desc);

@@ -252,47 +252,11 @@ static int uvc_v4l2_try_format(struct uvc_streaming *stream,
 	if (ret < 0)
 		goto done;
 
-<<<<<<< HEAD
-=======
-	/* After the probe, update fmt with the values returned from
-	 * negotiation with the device. Some devices return invalid bFormatIndex
-	 * and bFrameIndex values, in which case we can only assume they have
-	 * accepted the requested format as-is.
-	 */
-	for (i = 0; i < stream->nformats; ++i) {
-		if (probe->bFormatIndex == stream->format[i].index) {
-			format = &stream->format[i];
-			break;
-		}
-	}
-
-	if (i == stream->nformats)
-		uvc_trace(UVC_TRACE_FORMAT,
-			  "Unknown bFormatIndex %u, using default\n",
-			  probe->bFormatIndex);
-
-	for (i = 0; i < format->nframes; ++i) {
-		if (probe->bFrameIndex == format->frame[i].bFrameIndex) {
-			frame = &format->frame[i];
-			break;
-		}
-	}
-
-	if (i == format->nframes)
-		uvc_trace(UVC_TRACE_FORMAT,
-			  "Unknown bFrameIndex %u, using default\n",
-			  probe->bFrameIndex);
-
->>>>>>> rebase
 	fmt->fmt.pix.width = frame->wWidth;
 	fmt->fmt.pix.height = frame->wHeight;
 	fmt->fmt.pix.field = V4L2_FIELD_NONE;
 	fmt->fmt.pix.bytesperline = uvc_v4l2_get_bytesperline(format, frame);
 	fmt->fmt.pix.sizeimage = probe->dwMaxVideoFrameSize;
-<<<<<<< HEAD
-=======
-	fmt->fmt.pix.pixelformat = format->fcc;
->>>>>>> rebase
 	fmt->fmt.pix.colorspace = format->colorspace;
 	fmt->fmt.pix.priv = 0;
 
@@ -480,20 +444,10 @@ static int uvc_v4l2_set_streamparm(struct uvc_streaming *stream,
 	uvc_simplify_fraction(&timeperframe.numerator,
 		&timeperframe.denominator, 8, 333);
 
-<<<<<<< HEAD
 	if (parm->type == V4L2_BUF_TYPE_VIDEO_CAPTURE)
 		parm->parm.capture.timeperframe = timeperframe;
 	else
 		parm->parm.output.timeperframe = timeperframe;
-=======
-	if (parm->type == V4L2_BUF_TYPE_VIDEO_CAPTURE) {
-		parm->parm.capture.timeperframe = timeperframe;
-		parm->parm.capture.capability = V4L2_CAP_TIMEPERFRAME;
-	} else {
-		parm->parm.output.timeperframe = timeperframe;
-		parm->parm.output.capability = V4L2_CAP_TIMEPERFRAME;
-	}
->>>>>>> rebase
 
 	return 0;
 }
@@ -878,19 +832,13 @@ static int uvc_ioctl_enum_input(struct file *file, void *fh,
 	struct uvc_video_chain *chain = handle->chain;
 	const struct uvc_entity *selector = chain->selector;
 	struct uvc_entity *iterm = NULL;
-<<<<<<< HEAD
 	u32 index = input->index;
 	int pin = 0;
-=======
-	struct uvc_entity *it;
-	u32 index = input->index;
->>>>>>> rebase
 
 	if (selector == NULL ||
 	    (chain->dev->quirks & UVC_QUIRK_IGNORE_SELECTOR_UNIT)) {
 		if (index != 0)
 			return -EINVAL;
-<<<<<<< HEAD
 		list_for_each_entry(iterm, &chain->entities, chain) {
 			if (UVC_ENTITY_IS_ITERM(iterm))
 				break;
@@ -907,26 +855,6 @@ static int uvc_ioctl_enum_input(struct file *file, void *fh,
 	}
 
 	if (iterm == NULL || iterm->id != pin)
-=======
-		list_for_each_entry(it, &chain->entities, chain) {
-			if (UVC_ENTITY_IS_ITERM(it)) {
-				iterm = it;
-				break;
-			}
-		}
-	} else if (index < selector->bNrInPins) {
-		list_for_each_entry(it, &chain->entities, chain) {
-			if (!UVC_ENTITY_IS_ITERM(it))
-				continue;
-			if (it->id == selector->baSourceID[index]) {
-				iterm = it;
-				break;
-			}
-		}
-	}
-
-	if (iterm == NULL)
->>>>>>> rebase
 		return -EINVAL;
 
 	memset(input, 0, sizeof(*input));
@@ -942,13 +870,8 @@ static int uvc_ioctl_g_input(struct file *file, void *fh, unsigned int *input)
 {
 	struct uvc_fh *handle = fh;
 	struct uvc_video_chain *chain = handle->chain;
-<<<<<<< HEAD
 	int ret;
 	u8 i;
-=======
-	u8 *buf;
-	int ret;
->>>>>>> rebase
 
 	if (chain->selector == NULL ||
 	    (chain->dev->quirks & UVC_QUIRK_IGNORE_SELECTOR_UNIT)) {
@@ -956,7 +879,6 @@ static int uvc_ioctl_g_input(struct file *file, void *fh, unsigned int *input)
 		return 0;
 	}
 
-<<<<<<< HEAD
 	ret = uvc_query_ctrl(chain->dev, UVC_GET_CUR, chain->selector->id,
 			     chain->dev->intfnum,  UVC_SU_INPUT_SELECT_CONTROL,
 			     &i, 1);
@@ -965,34 +887,14 @@ static int uvc_ioctl_g_input(struct file *file, void *fh, unsigned int *input)
 
 	*input = i - 1;
 	return 0;
-=======
-	buf = kmalloc(1, GFP_KERNEL);
-	if (!buf)
-		return -ENOMEM;
-
-	ret = uvc_query_ctrl(chain->dev, UVC_GET_CUR, chain->selector->id,
-			     chain->dev->intfnum,  UVC_SU_INPUT_SELECT_CONTROL,
-			     buf, 1);
-	if (!ret)
-		*input = *buf - 1;
-
-	kfree(buf);
-
-	return ret;
->>>>>>> rebase
 }
 
 static int uvc_ioctl_s_input(struct file *file, void *fh, unsigned int input)
 {
 	struct uvc_fh *handle = fh;
 	struct uvc_video_chain *chain = handle->chain;
-<<<<<<< HEAD
 	int ret;
 	u32 i;
-=======
-	u8 *buf;
-	int ret;
->>>>>>> rebase
 
 	ret = uvc_acquire_privileges(handle);
 	if (ret < 0)
@@ -1008,24 +910,10 @@ static int uvc_ioctl_s_input(struct file *file, void *fh, unsigned int input)
 	if (input >= chain->selector->bNrInPins)
 		return -EINVAL;
 
-<<<<<<< HEAD
 	i = input + 1;
 	return uvc_query_ctrl(chain->dev, UVC_SET_CUR, chain->selector->id,
 			      chain->dev->intfnum, UVC_SU_INPUT_SELECT_CONTROL,
 			      &i, 1);
-=======
-	buf = kmalloc(1, GFP_KERNEL);
-	if (!buf)
-		return -ENOMEM;
-
-	*buf = input + 1;
-	ret = uvc_query_ctrl(chain->dev, UVC_SET_CUR, chain->selector->id,
-			     chain->dev->intfnum, UVC_SU_INPUT_SELECT_CONTROL,
-			     buf, 1);
-	kfree(buf);
-
-	return ret;
->>>>>>> rebase
 }
 
 static int uvc_ioctl_queryctrl(struct file *file, void *fh,

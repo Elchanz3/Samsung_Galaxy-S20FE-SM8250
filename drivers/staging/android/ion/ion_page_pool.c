@@ -12,7 +12,6 @@
 
 #include "ion.h"
 
-<<<<<<< HEAD
 #ifdef CONFIG_HUGEPAGE_POOL
 #include <linux/hugepage_pool.h>
 #endif
@@ -59,13 +58,10 @@ static bool pool_refill_ok(struct ion_page_pool *pool)
 	return true;
 }
 
-=======
->>>>>>> rebase
 static inline struct page *ion_page_pool_alloc_pages(struct ion_page_pool *pool)
 {
 	if (fatal_signal_pending(current))
 		return NULL;
-<<<<<<< HEAD
 
 #ifdef CONFIG_HUGEPAGE_POOL
 	/* we assume that this path is only being used by system heap */
@@ -77,9 +73,6 @@ static inline struct page *ion_page_pool_alloc_pages(struct ion_page_pool *pool)
 #else
 	return alloc_pages(pool->gfp_mask, pool->order);
 #endif
-=======
-	return alloc_pages(pool->gfp_mask, pool->order);
->>>>>>> rebase
 }
 
 static void ion_page_pool_free_pages(struct ion_page_pool *pool,
@@ -99,7 +92,6 @@ static void ion_page_pool_add(struct ion_page_pool *pool, struct page *page)
 		pool->low_count++;
 	}
 
-<<<<<<< HEAD
 	atomic_inc(&pool->count);
 	nr_total_pages += 1 << pool->order;
 	mod_node_page_state(page_pgdat(page), NR_KERNEL_MISC_RECLAIMABLE,
@@ -129,13 +121,6 @@ void ion_page_pool_refill(struct ion_page_pool *pool)
 	}
 }
 
-=======
-	mod_node_page_state(page_pgdat(page), NR_INDIRECTLY_RECLAIMABLE_BYTES,
-			    (1 << (PAGE_SHIFT + pool->order)));
-	mutex_unlock(&pool->mutex);
-}
-
->>>>>>> rebase
 static struct page *ion_page_pool_remove(struct ion_page_pool *pool, bool high)
 {
 	struct page *page;
@@ -150,7 +135,6 @@ static struct page *ion_page_pool_remove(struct ion_page_pool *pool, bool high)
 		pool->low_count--;
 	}
 
-<<<<<<< HEAD
 	atomic_dec(&pool->count);
 	list_del(&page->lru);
 	nr_total_pages -= 1 << pool->order;
@@ -160,21 +144,11 @@ static struct page *ion_page_pool_remove(struct ion_page_pool *pool, bool high)
 }
 
 struct page *ion_page_pool_only_alloc(struct ion_page_pool *pool)
-=======
-	list_del(&page->lru);
-	mod_node_page_state(page_pgdat(page), NR_INDIRECTLY_RECLAIMABLE_BYTES,
-			    -(1 << (PAGE_SHIFT + pool->order)));
-	return page;
-}
-
-struct page *ion_page_pool_alloc(struct ion_page_pool *pool)
->>>>>>> rebase
 {
 	struct page *page = NULL;
 
 	BUG_ON(!pool);
 
-<<<<<<< HEAD
 	if (!pool->high_count && !pool->low_count)
 		goto done;
 
@@ -235,24 +209,11 @@ struct page *ion_page_pool_alloc_pool_only(struct ion_page_pool *pool)
 
 	if (!page)
 		return ERR_PTR(-ENOMEM);
-=======
-	mutex_lock(&pool->mutex);
-	if (pool->high_count)
-		page = ion_page_pool_remove(pool, true);
-	else if (pool->low_count)
-		page = ion_page_pool_remove(pool, false);
-	mutex_unlock(&pool->mutex);
-
-	if (!page)
-		page = ion_page_pool_alloc_pages(pool);
-
->>>>>>> rebase
 	return page;
 }
 
 void ion_page_pool_free(struct ion_page_pool *pool, struct page *page)
 {
-<<<<<<< HEAD
 	ion_page_pool_add(pool, page);
 }
 
@@ -262,14 +223,6 @@ void ion_page_pool_free_immediate(struct ion_page_pool *pool, struct page *page)
 }
 
 int ion_page_pool_total(struct ion_page_pool *pool, bool high)
-=======
-	BUG_ON(pool->order != compound_order(page));
-
-	ion_page_pool_add(pool, page);
-}
-
-static int ion_page_pool_total(struct ion_page_pool *pool, bool high)
->>>>>>> rebase
 {
 	int count = pool->low_count;
 
@@ -279,7 +232,6 @@ static int ion_page_pool_total(struct ion_page_pool *pool, bool high)
 	return count << pool->order;
 }
 
-<<<<<<< HEAD
 #ifdef CONFIG_ION_SYSTEM_HEAP
 long ion_page_pool_nr_pages(void)
 {
@@ -290,8 +242,6 @@ long ion_page_pool_nr_pages(void)
 }
 #endif
 
-=======
->>>>>>> rebase
 int ion_page_pool_shrink(struct ion_page_pool *pool, gfp_t gfp_mask,
 			 int nr_to_scan)
 {
@@ -326,7 +276,6 @@ int ion_page_pool_shrink(struct ion_page_pool *pool, gfp_t gfp_mask,
 	return freed;
 }
 
-<<<<<<< HEAD
 struct ion_page_pool *ion_page_pool_create(gfp_t gfp_mask, unsigned int order,
 					   bool cached)
 {
@@ -342,22 +291,6 @@ struct ion_page_pool *ion_page_pool_create(gfp_t gfp_mask, unsigned int order,
 	plist_node_init(&pool->list, order);
 	if (cached)
 		pool->cached = true;
-=======
-struct ion_page_pool *ion_page_pool_create(gfp_t gfp_mask, unsigned int order)
-{
-	struct ion_page_pool *pool = kmalloc(sizeof(*pool), GFP_KERNEL);
-
-	if (!pool)
-		return NULL;
-	pool->high_count = 0;
-	pool->low_count = 0;
-	INIT_LIST_HEAD(&pool->low_items);
-	INIT_LIST_HEAD(&pool->high_items);
-	pool->gfp_mask = gfp_mask | __GFP_COMP;
-	pool->order = order;
-	mutex_init(&pool->mutex);
-	plist_node_init(&pool->list, order);
->>>>>>> rebase
 
 	return pool;
 }

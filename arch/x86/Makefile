@@ -34,20 +34,12 @@ M16_CFLAGS	 := $(call cc-option, -m16, $(CODE16GCC_CFLAGS))
 REALMODE_CFLAGS	:= $(M16_CFLAGS) -g -Os -DDISABLE_BRANCH_PROFILING \
 		   -Wall -Wstrict-prototypes -march=i386 -mregparm=3 \
 		   -fno-strict-aliasing -fomit-frame-pointer -fno-pic \
-<<<<<<< HEAD
 		   -mno-mmx -mno-sse
-=======
-		   -mno-mmx -mno-sse $(call cc-option,-fcf-protection=none)
->>>>>>> rebase
 
 REALMODE_CFLAGS += $(call __cc-option, $(CC), $(REALMODE_CFLAGS), -ffreestanding)
 REALMODE_CFLAGS += $(call __cc-option, $(CC), $(REALMODE_CFLAGS), -fno-stack-protector)
 REALMODE_CFLAGS += $(call __cc-option, $(CC), $(REALMODE_CFLAGS), -Wno-address-of-packed-member)
 REALMODE_CFLAGS += $(call __cc-option, $(CC), $(REALMODE_CFLAGS), $(cc_stack_align4))
-<<<<<<< HEAD
-=======
-REALMODE_CFLAGS += $(CLANG_FLAGS)
->>>>>>> rebase
 export REALMODE_CFLAGS
 
 # BITS is used as extension for files which are available in a 32 bit
@@ -69,12 +61,6 @@ endif
 KBUILD_CFLAGS += -mno-sse -mno-mmx -mno-sse2 -mno-3dnow
 KBUILD_CFLAGS += $(call cc-option,-mno-avx,)
 
-<<<<<<< HEAD
-=======
-# Intel CET isn't enabled in the kernel
-KBUILD_CFLAGS += $(call cc-option,-fcf-protection=none)
-
->>>>>>> rebase
 ifeq ($(CONFIG_X86_32),y)
         BITS := 32
         UTS_MACHINE := i386
@@ -229,14 +215,11 @@ ifdef CONFIG_X86_64
 KBUILD_LDFLAGS += $(call ld-option, -z max-page-size=0x200000)
 endif
 
-<<<<<<< HEAD
 ifdef CONFIG_LTO_CLANG
 KBUILD_LDFLAGS	+= -plugin-opt=-code-model=kernel \
 		   -plugin-opt=-stack-alignment=$(if $(CONFIG_X86_32),4,8)
 endif
 
-=======
->>>>>>> rebase
 # Speed up the build
 KBUILD_CFLAGS += -pipe
 # Workaround for a gcc prelease that unfortunately was shipped in a suse release
@@ -328,13 +311,6 @@ vdso_install:
 
 archprepare: checkbin
 checkbin:
-<<<<<<< HEAD
-=======
-ifndef CONFIG_CC_HAS_ASM_GOTO
-	@echo Compiler lacks asm-goto support.
-	@exit 1
-endif
->>>>>>> rebase
 ifdef CONFIG_RETPOLINE
 ifeq ($(RETPOLINE_CFLAGS),)
 	@echo "You are building kernel with non-retpoline compiler." >&2

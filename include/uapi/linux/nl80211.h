@@ -52,14 +52,11 @@
 #define NL80211_MULTICAST_GROUP_NAN		"nan"
 #define NL80211_MULTICAST_GROUP_TESTMODE	"testmode"
 
-<<<<<<< HEAD
 #define NL80211_EDMG_BW_CONFIG_MIN	4
 #define NL80211_EDMG_BW_CONFIG_MAX	15
 #define NL80211_EDMG_CHANNELS_MIN	1
 #define NL80211_EDMG_CHANNELS_MAX	0x3c /* 0b00111100 */
 
-=======
->>>>>>> rebase
 /**
  * DOC: Station handling
  *
@@ -1041,7 +1038,6 @@
  *	%NL80211_ATTR_CHANNEL_WIDTH,%NL80211_ATTR_NSS attributes with its
  *	address(specified in %NL80211_ATTR_MAC).
  *
-<<<<<<< HEAD
  * @NL80211_CMD_GET_FTM_RESPONDER_STATS: Retrieve FTM responder statistics, in
  *	the %NL80211_ATTR_FTM_RESPONDER_STATS attribute.
  *
@@ -1079,8 +1075,6 @@
  *	OWE AKM by the host drivers that implement SME but rely
  *	on the user space for the cryptographic/DH IE processing in AP mode.
  *
-=======
->>>>>>> rebase
  * @NL80211_CMD_MAX: highest used command number
  * @__NL80211_CMD_AFTER_LAST: internal use
  */
@@ -1293,7 +1287,6 @@ enum nl80211_commands {
 
 	NL80211_CMD_CONTROL_PORT_FRAME,
 
-<<<<<<< HEAD
 	NL80211_CMD_GET_FTM_RESPONDER_STATS,
 
 	NL80211_CMD_PEER_MEASUREMENT_START,
@@ -1304,8 +1297,6 @@ enum nl80211_commands {
 
 	NL80211_CMD_UPDATE_OWE_INFO,
 
-=======
->>>>>>> rebase
 	/* add new commands above here */
 
 	/* used to define NL80211_CMD_MAX below */
@@ -2281,17 +2272,10 @@ enum nl80211_commands {
  *     &enum nl80211_external_auth_action value). This is used with the
  *     %NL80211_CMD_EXTERNAL_AUTH request event.
  * @NL80211_ATTR_EXTERNAL_AUTH_SUPPORT: Flag attribute indicating that the user
-<<<<<<< HEAD
  *	space supports external authentication. This attribute shall be used
  *	with %NL80211_CMD_CONNECT and %NL80211_CMD_START_AP request. The driver
  *	may offload authentication processing to user space if this capability
  *	is indicated in the respective requests from the user space.
-=======
- *     space supports external authentication. This attribute shall be used
- *     only with %NL80211_CMD_CONNECT request. The driver may offload
- *     authentication processing to user space if this capability is indicated
- *     in NL80211_CMD_CONNECT requests from the user space.
->>>>>>> rebase
  *
  * @NL80211_ATTR_NSS: Station's New/updated  RX_NSS value notified using this
  *	u8 attribute. This is used with %NL80211_CMD_STA_OPMODE_CHANGED.
@@ -2309,7 +2293,6 @@ enum nl80211_commands {
  *	association request when used with NL80211_CMD_NEW_STATION). Can be set
  *	only if %NL80211_STA_FLAG_WME is set.
  *
-<<<<<<< HEAD
  * @NL80211_ATTR_FTM_RESPONDER: nested attribute which user-space can include
  *      in %NL80211_CMD_START_AP or %NL80211_CMD_SET_BEACON for fine timing
  *      measurement (FTM) responder functionality and containing parameters as
@@ -2368,8 +2351,6 @@ enum nl80211_commands {
  *	%NL80211_ATTR_AKM_SUITES are default capabilities if AKM suites not
  *	advertised for a specific interface type.
  *
-=======
->>>>>>> rebase
  * @NUM_NL80211_ATTR: total number of nl80211_attrs available
  * @NL80211_ATTR_MAX: highest attribute number currently defined
  * @__NL80211_ATTR_AFTER_LAST: internal use
@@ -2811,7 +2792,6 @@ enum nl80211_attrs {
 
 	NL80211_ATTR_HE_CAPABILITY,
 
-<<<<<<< HEAD
 	NL80211_ATTR_FTM_RESPONDER,
 
 	NL80211_ATTR_FTM_RESPONDER_STATS,
@@ -2839,8 +2819,6 @@ enum nl80211_attrs {
 
 	NL80211_ATTR_IFTYPE_AKM_SUITES,
 
-=======
->>>>>>> rebase
 	/* add attributes here, update the policy in nl80211.c */
 
 	__NL80211_ATTR_AFTER_LAST,
@@ -3211,15 +3189,12 @@ enum nl80211_sta_bss_param {
  * @NL80211_STA_INFO_ACK_SIGNAL: signal strength of the last ACK frame(u8, dBm)
  * @NL80211_STA_INFO_DATA_ACK_SIGNAL_AVG: avg signal strength of (data)
  *	ACK frame (s8, dBm)
-<<<<<<< HEAD
  * @NL80211_STA_INFO_RX_MPDUS: total number of received packets (MPDUs)
  *	(u32, from this station)
  * @NL80211_STA_INFO_FCS_ERROR_COUNT: total number of packets (MPDUs) received
  *	with an FCS error (u32, from this station). This count may not include
  *	some packets with an FCS error due to TA corruption. Hence this counter
  *	might not be fully accurate.
-=======
->>>>>>> rebase
  * @__NL80211_STA_INFO_AFTER_LAST: internal
  * @NL80211_STA_INFO_MAX: highest possible station info attribute
  */
@@ -3260,11 +3235,8 @@ enum nl80211_sta_info {
 	NL80211_STA_INFO_PAD,
 	NL80211_STA_INFO_ACK_SIGNAL,
 	NL80211_STA_INFO_DATA_ACK_SIGNAL_AVG,
-<<<<<<< HEAD
 	NL80211_STA_INFO_RX_MPDUS,
 	NL80211_STA_INFO_FCS_ERROR_COUNT,
-=======
->>>>>>> rebase
 
 	/* keep last */
 	__NL80211_STA_INFO_AFTER_LAST,
@@ -3438,15 +3410,12 @@ enum nl80211_band_iftype_attr {
  * @NL80211_BAND_ATTR_VHT_CAPA: VHT capabilities, as in the HT information IE
  * @NL80211_BAND_ATTR_IFTYPE_DATA: nested array attribute, with each entry using
  *	attributes from &enum nl80211_band_iftype_attr
-<<<<<<< HEAD
  * @NL80211_BAND_ATTR_EDMG_CHANNELS: bitmap that indicates the 2.16 GHz
  *      channel(s) that are allowed to be used for EDMG transmissions.
  *      Defined by IEEE P802.11ay/D4.0 section 9.4.2.251.
  * @NL80211_BAND_ATTR_EDMG_BW_CONFIG: Channel BW Configuration subfield encodes
  *      the allowed channel bandwidth configurations.
  *      Defined by IEEE P802.11ay/D4.0 section 9.4.2.251, Table 13.
-=======
->>>>>>> rebase
  * @NL80211_BAND_ATTR_MAX: highest band attribute currently defined
  * @__NL80211_BAND_ATTR_AFTER_LAST: internal use
  */
@@ -3464,12 +3433,9 @@ enum nl80211_band_attr {
 	NL80211_BAND_ATTR_VHT_CAPA,
 	NL80211_BAND_ATTR_IFTYPE_DATA,
 
-<<<<<<< HEAD
 	NL80211_BAND_ATTR_EDMG_CHANNELS,
 	NL80211_BAND_ATTR_EDMG_BW_CONFIG,
 
-=======
->>>>>>> rebase
 	/* keep last */
 	__NL80211_BAND_ATTR_AFTER_LAST,
 	NL80211_BAND_ATTR_MAX = __NL80211_BAND_ATTR_AFTER_LAST - 1
@@ -4459,13 +4425,10 @@ enum nl80211_key_default_types {
  * @NL80211_KEY_DEFAULT_TYPES: A nested attribute containing flags
  *	attributes, specifying what a key should be set as default as.
  *	See &enum nl80211_key_default_types.
-<<<<<<< HEAD
  * @NL80211_KEY_MODE: the mode from enum nl80211_key_mode.
  *	Defaults to @NL80211_KEY_RX_TX.
  * @NL80211_KEY_DEFAULT_BEACON: flag indicating default Beacon frame key
  *
-=======
->>>>>>> rebase
  * @__NL80211_KEY_AFTER_LAST: internal
  * @NL80211_KEY_MAX: highest key attribute
  */
@@ -4479,11 +4442,8 @@ enum nl80211_key_attributes {
 	NL80211_KEY_DEFAULT_MGMT,
 	NL80211_KEY_TYPE,
 	NL80211_KEY_DEFAULT_TYPES,
-<<<<<<< HEAD
 	NL80211_KEY_MODE,
 	NL80211_KEY_DEFAULT_BEACON,
-=======
->>>>>>> rebase
 
 	/* keep last */
 	__NL80211_KEY_AFTER_LAST,
@@ -4539,10 +4499,7 @@ enum nl80211_txrate_gi {
  * @NL80211_BAND_2GHZ: 2.4 GHz ISM band
  * @NL80211_BAND_5GHZ: around 5 GHz band (4.9 - 5.7 GHz)
  * @NL80211_BAND_60GHZ: around 60 GHz band (58.32 - 64.80 GHz)
-<<<<<<< HEAD
  * @NL80211_BAND_6GHZ: around 6 GHz band (5.9 - 7.2 GHz)
-=======
->>>>>>> rebase
  * @NUM_NL80211_BANDS: number of bands, avoid using this in userspace
  *	since newer kernel versions may support more bands
  */
@@ -4550,10 +4507,7 @@ enum nl80211_band {
 	NL80211_BAND_2GHZ,
 	NL80211_BAND_5GHZ,
 	NL80211_BAND_60GHZ,
-<<<<<<< HEAD
 	NL80211_BAND_6GHZ,
-=======
->>>>>>> rebase
 
 	NUM_NL80211_BANDS,
 };
@@ -5431,7 +5385,6 @@ enum nl80211_feature_flags {
  * @NL80211_EXT_FEATURE_SCAN_MIN_PREQ_CONTENT: Driver/device can omit all data
  *	except for supported rates from the probe request content if requested
  *	by the %NL80211_SCAN_FLAG_MIN_PREQ_CONTENT flag.
-<<<<<<< HEAD
  * @NL80211_EXT_FEATURE_ENABLE_FTM_RESPONDER: Driver supports enabling fine
  *	timing measurement responder role.
  *
@@ -5466,8 +5419,6 @@ enum nl80211_feature_flags {
  *
  * @NL80211_EXT_FEATURE_BEACON_PROTECTION: The driver supports Beacon protection
  *	and can receive key configuration for BIGTK using key indexes 6 and 7.
-=======
->>>>>>> rebase
  *
  * @NUM_NL80211_EXT_FEATURES: number of extended features.
  * @MAX_NL80211_EXT_FEATURES: highest extended feature index.
@@ -5504,7 +5455,6 @@ enum nl80211_ext_feature_index {
 	NL80211_EXT_FEATURE_TXQS,
 	NL80211_EXT_FEATURE_SCAN_RANDOM_SN,
 	NL80211_EXT_FEATURE_SCAN_MIN_PREQ_CONTENT,
-<<<<<<< HEAD
 	NL80211_EXT_FEATURE_CAN_REPLACE_PTK0,
 	NL80211_EXT_FEATURE_ENABLE_FTM_RESPONDER,
 	NL80211_EXT_FEATURE_AIRTIME_FAIRNESS,
@@ -5516,8 +5466,6 @@ enum nl80211_ext_feature_index {
 	NL80211_EXT_FEATURE_VLAN_OFFLOAD,
 	NL80211_EXT_FEATURE_AQL,
 	NL80211_EXT_FEATURE_BEACON_PROTECTION,
-=======
->>>>>>> rebase
 
 	/* add new features before the definition below */
 	NUM_NL80211_EXT_FEATURES,
@@ -5769,7 +5717,6 @@ enum nl80211_crit_proto_id {
  * Used by cfg80211_rx_mgmt()
  *
  * @NL80211_RXMGMT_FLAG_ANSWERED: frame was answered by device/driver.
-<<<<<<< HEAD
  * @NL80211_RXMGMT_FLAG_EXTERNAL_AUTH: Host driver intends to offload
  *	the authentication. Exclusively defined for host drivers that
  *	advertises the SME functionality but would like the userspace
@@ -5778,11 +5725,6 @@ enum nl80211_crit_proto_id {
 enum nl80211_rxmgmt_flags {
 	NL80211_RXMGMT_FLAG_ANSWERED = 1 << 0,
 	NL80211_RXMGMT_FLAG_EXTERNAL_AUTH = 1 << 1,
-=======
- */
-enum nl80211_rxmgmt_flags {
-	NL80211_RXMGMT_FLAG_ANSWERED = 1 << 0,
->>>>>>> rebase
 };
 
 /*
@@ -6068,7 +6010,6 @@ enum nl80211_external_auth_action {
 	NL80211_EXTERNAL_AUTH_ABORT,
 };
 
-<<<<<<< HEAD
 /**
  * enum nl80211_iftype_akm_attributes - interface type AKM attributes
  * @__NL80211_IFTYPE_AKM_ATTR_INVALID: Invalid
@@ -6093,6 +6034,4 @@ enum nl80211_iftype_akm_attributes {
 	NL80211_IFTYPE_AKM_ATTR_MAX = __NL80211_IFTYPE_AKM_ATTR_LAST - 1,
 };
 
-=======
->>>>>>> rebase
 #endif /* __LINUX_NL80211_H */

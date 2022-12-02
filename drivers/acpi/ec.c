@@ -1081,7 +1081,6 @@ void acpi_ec_dispatch_gpe(void)
                                 Event Management
    -------------------------------------------------------------------------- */
 static struct acpi_ec_query_handler *
-<<<<<<< HEAD
 acpi_ec_get_query_handler(struct acpi_ec_query_handler *handler)
 {
 	if (handler)
@@ -1094,31 +1093,16 @@ acpi_ec_get_query_handler_by_value(struct acpi_ec *ec, u8 value)
 {
 	struct acpi_ec_query_handler *handler;
 	bool found = false;
-=======
-acpi_ec_get_query_handler_by_value(struct acpi_ec *ec, u8 value)
-{
-	struct acpi_ec_query_handler *handler;
->>>>>>> rebase
 
 	mutex_lock(&ec->mutex);
 	list_for_each_entry(handler, &ec->list, node) {
 		if (value == handler->query_bit) {
-<<<<<<< HEAD
 			found = true;
 			break;
 		}
 	}
 	mutex_unlock(&ec->mutex);
 	return found ? acpi_ec_get_query_handler(handler) : NULL;
-=======
-			kref_get(&handler->kref);
-			mutex_unlock(&ec->mutex);
-			return handler;
-		}
-	}
-	mutex_unlock(&ec->mutex);
-	return NULL;
->>>>>>> rebase
 }
 
 static void acpi_ec_query_handler_release(struct kref *kref)
@@ -1928,25 +1912,6 @@ static const struct dmi_system_id ec_dmi_table[] __initconst = {
 	DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
 	DMI_MATCH(DMI_PRODUCT_NAME, "GL702VMK"),}, NULL},
 	{
-<<<<<<< HEAD
-=======
-	ec_honor_ecdt_gpe, "ASUSTeK COMPUTER INC. X505BA", {
-	DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
-	DMI_MATCH(DMI_PRODUCT_NAME, "X505BA"),}, NULL},
-	{
-	ec_honor_ecdt_gpe, "ASUSTeK COMPUTER INC. X505BP", {
-	DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
-	DMI_MATCH(DMI_PRODUCT_NAME, "X505BP"),}, NULL},
-	{
-	ec_honor_ecdt_gpe, "ASUSTeK COMPUTER INC. X542BA", {
-	DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
-	DMI_MATCH(DMI_PRODUCT_NAME, "X542BA"),}, NULL},
-	{
-	ec_honor_ecdt_gpe, "ASUSTeK COMPUTER INC. X542BP", {
-	DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
-	DMI_MATCH(DMI_PRODUCT_NAME, "X542BP"),}, NULL},
-	{
->>>>>>> rebase
 	ec_honor_ecdt_gpe, "ASUS X550VXK", {
 	DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
 	DMI_MATCH(DMI_PRODUCT_NAME, "X550VXK"),}, NULL},
@@ -2146,7 +2111,6 @@ static const struct dmi_system_id acpi_ec_no_wakeup[] = {
 		},
 	},
 	{
-<<<<<<< HEAD
 		.ident = "ThinkPad X1 Carbon 6th",
 		.matches = {
 			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
@@ -2154,8 +2118,6 @@ static const struct dmi_system_id acpi_ec_no_wakeup[] = {
 		},
 	},
 	{
-=======
->>>>>>> rebase
 		.ident = "ThinkPad X1 Yoga 3rd",
 		.matches = {
 			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),

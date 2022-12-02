@@ -8,12 +8,9 @@ menu "File systems"
 config DCACHE_WORD_ACCESS
        bool
 
-<<<<<<< HEAD
 config INTERRUPTIBLE_SYNC
         bool "Support interruptible sync for Samsung Mobile Device"
 
-=======
->>>>>>> rebase
 if BLOCK
 
 config FS_IOMAP
@@ -111,11 +108,8 @@ config MANDATORY_FILE_LOCKING
 
 source "fs/crypto/Kconfig"
 
-<<<<<<< HEAD
 source "fs/verity/Kconfig"
 
-=======
->>>>>>> rebase
 source "fs/notify/Kconfig"
 
 source "fs/quota/Kconfig"
@@ -123,10 +117,7 @@ source "fs/quota/Kconfig"
 source "fs/autofs/Kconfig"
 source "fs/fuse/Kconfig"
 source "fs/overlayfs/Kconfig"
-<<<<<<< HEAD
 source "fs/incfs/Kconfig"
-=======
->>>>>>> rebase
 
 menu "Caches"
 
@@ -148,10 +139,7 @@ if BLOCK
 menu "DOS/FAT/NT Filesystems"
 
 source "fs/fat/Kconfig"
-<<<<<<< HEAD
 source "fs/sdfat/Kconfig"
-=======
->>>>>>> rebase
 source "fs/ntfs/Kconfig"
 
 endmenu
@@ -253,10 +241,7 @@ source "fs/orangefs/Kconfig"
 source "fs/adfs/Kconfig"
 source "fs/affs/Kconfig"
 source "fs/ecryptfs/Kconfig"
-<<<<<<< HEAD
 source "fs/sdcardfs/Kconfig"
-=======
->>>>>>> rebase
 source "fs/hfs/Kconfig"
 source "fs/hfsplus/Kconfig"
 source "fs/befs/Kconfig"
@@ -336,7 +321,6 @@ endif # NETWORK_FILESYSTEMS
 
 source "fs/nls/Kconfig"
 source "fs/dlm/Kconfig"
-<<<<<<< HEAD
 source "fs/unicode/Kconfig"
 
 config SEC_DEBUG_FPUT_WATCHDOG
@@ -356,7 +340,5 @@ config SEC_DEBUG_FPUT_WATCHDOG_TIMEOUT
 config FS_HPB
 	bool "Support HPB on Filesystem"
 	default n
-=======
->>>>>>> rebase
 
 endmenu

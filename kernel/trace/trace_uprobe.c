@@ -800,11 +800,7 @@ static void __uprobe_trace_func(struct trace_uprobe *tu,
 
 	memcpy(data, ucb->buf, tu->tp.size + dsize);
 
-<<<<<<< HEAD
 	event_trigger_unlock_commit(trace_file, buffer, event, entry, 0, 0, 0);
-=======
-	event_trigger_unlock_commit(trace_file, buffer, event, entry, 0, 0);
->>>>>>> rebase
 }
 
 /* uprobe handler */

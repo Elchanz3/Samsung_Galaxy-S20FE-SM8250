@@ -33,12 +33,8 @@
 
 #define DM_BUFIO_MEMORY_PERCENT		2
 #define DM_BUFIO_VMALLOC_PERCENT	25
-<<<<<<< HEAD
 #define DM_BUFIO_WRITEBACK_RATIO	3
 #define DM_BUFIO_LOW_WATERMARK_RATIO	16
-=======
-#define DM_BUFIO_WRITEBACK_PERCENT	75
->>>>>>> rebase
 
 /*
  * Check buffer ages in this interval (seconds)
@@ -53,11 +49,7 @@
 /*
  * The nr of bytes of cached data to keep around.
  */
-<<<<<<< HEAD
 #define DM_BUFIO_DEFAULT_RETAIN_BYTES   (1024 * 1024)
-=======
-#define DM_BUFIO_DEFAULT_RETAIN_BYTES   (256 * 1024)
->>>>>>> rebase
 
 /*
  * Align buffer writes to this boundary.
@@ -141,20 +133,14 @@ enum data_mode {
 struct dm_buffer {
 	struct rb_node node;
 	struct list_head lru_list;
-<<<<<<< HEAD
 	struct list_head global_list;
-=======
->>>>>>> rebase
 	sector_t block;
 	void *data;
 	unsigned char data_mode;		/* DATA_MODE_* */
 	unsigned char list_mode;		/* LIST_* */
 	blk_status_t read_error;
 	blk_status_t write_error;
-<<<<<<< HEAD
 	unsigned accessed;
-=======
->>>>>>> rebase
 	unsigned hold_count;
 	unsigned long state;
 	unsigned long last_accessed;
@@ -209,15 +195,11 @@ static unsigned long dm_bufio_cache_size;
  */
 static unsigned long dm_bufio_cache_size_latch;
 
-<<<<<<< HEAD
 static DEFINE_SPINLOCK(global_spinlock);
 
 static LIST_HEAD(global_queue);
 
 static unsigned long global_num = 0;
-=======
-static DEFINE_SPINLOCK(param_spinlock);
->>>>>>> rebase
 
 /*
  * Buffers are freed after this timeout
@@ -234,14 +216,6 @@ static unsigned long dm_bufio_current_allocated;
 /*----------------------------------------------------------------*/
 
 /*
-<<<<<<< HEAD
-=======
- * Per-client cache: dm_bufio_cache_size / dm_bufio_client_count
- */
-static unsigned long dm_bufio_cache_size_per_client;
-
-/*
->>>>>>> rebase
  * The current number of clients.
  */
 static int dm_bufio_client_count;
@@ -252,7 +226,6 @@ static int dm_bufio_client_count;
 static LIST_HEAD(dm_bufio_all_clients);
 
 /*
-<<<<<<< HEAD
  * This mutex protects dm_bufio_cache_size_latch and dm_bufio_client_count
  */
 static DEFINE_MUTEX(dm_bufio_clients_lock);
@@ -262,13 +235,6 @@ static struct delayed_work dm_bufio_cleanup_old_work;
 static struct work_struct dm_bufio_replacement_work;
 
 
-=======
- * This mutex protects dm_bufio_cache_size_latch,
- * dm_bufio_cache_size_per_client and dm_bufio_client_count
- */
-static DEFINE_MUTEX(dm_bufio_clients_lock);
-
->>>>>>> rebase
 #ifdef CONFIG_DM_DEBUG_BLOCK_STACK_TRACING
 static void buffer_record_stack(struct dm_buffer *b)
 {
@@ -329,32 +295,23 @@ static void __remove(struct dm_bufio_client *c, struct dm_buffer *b)
 
 /*----------------------------------------------------------------*/
 
-<<<<<<< HEAD
 static void adjust_total_allocated(struct dm_buffer *b, bool unlink)
 {
 	unsigned char data_mode;
 	long diff;
 
-=======
-static void adjust_total_allocated(unsigned char data_mode, long diff)
-{
->>>>>>> rebase
 	static unsigned long * const class_ptr[DATA_MODE_LIMIT] = {
 		&dm_bufio_allocated_kmem_cache,
 		&dm_bufio_allocated_get_free_pages,
 		&dm_bufio_allocated_vmalloc,
 	};
 
-<<<<<<< HEAD
 	data_mode = b->data_mode;
 	diff = (long)b->c->block_size;
 	if (unlink)
 		diff = -diff;
 
 	spin_lock(&global_spinlock);
-=======
-	spin_lock(&param_spinlock);
->>>>>>> rebase
 
 	*class_ptr[data_mode] += diff;
 
@@ -363,7 +320,6 @@ static void adjust_total_allocated(unsigned char data_mode, long diff)
 	if (dm_bufio_current_allocated > dm_bufio_peak_allocated)
 		dm_bufio_peak_allocated = dm_bufio_current_allocated;
 
-<<<<<<< HEAD
 	b->accessed = 1;
 
 	if (!unlink) {
@@ -377,9 +333,6 @@ static void adjust_total_allocated(unsigned char data_mode, long diff)
 	}
 
 	spin_unlock(&global_spinlock);
-=======
-	spin_unlock(&param_spinlock);
->>>>>>> rebase
 }
 
 /*
@@ -400,12 +353,6 @@ static void __cache_size_refresh(void)
 			      dm_bufio_default_cache_size);
 		dm_bufio_cache_size_latch = dm_bufio_default_cache_size;
 	}
-<<<<<<< HEAD
-=======
-
-	dm_bufio_cache_size_per_client = dm_bufio_cache_size_latch /
-					 (dm_bufio_client_count ? : 1);
->>>>>>> rebase
 }
 
 /*
@@ -511,11 +458,6 @@ static struct dm_buffer *alloc_buffer(struct dm_bufio_client *c, gfp_t gfp_mask)
 		return NULL;
 	}
 
-<<<<<<< HEAD
-=======
-	adjust_total_allocated(b->data_mode, (long)c->block_size);
-
->>>>>>> rebase
 #ifdef CONFIG_DM_DEBUG_BLOCK_STACK_TRACING
 	memset(&b->stack_trace, 0, sizeof(b->stack_trace));
 #endif
@@ -529,11 +471,6 @@ static void free_buffer(struct dm_buffer *b)
 {
 	struct dm_bufio_client *c = b->c;
 
-<<<<<<< HEAD
-=======
-	adjust_total_allocated(b->data_mode, -(long)c->block_size);
-
->>>>>>> rebase
 	free_buffer_data(c, b->data, b->data_mode);
 	kmem_cache_free(c->slab_buffer, b);
 }
@@ -551,11 +488,8 @@ static void __link_buffer(struct dm_buffer *b, sector_t block, int dirty)
 	list_add(&b->lru_list, &c->lru[dirty]);
 	__insert(b->c, b);
 	b->last_accessed = jiffies;
-<<<<<<< HEAD
 
 	adjust_total_allocated(b, false);
-=======
->>>>>>> rebase
 }
 
 /*
@@ -570,11 +504,8 @@ static void __unlink_buffer(struct dm_buffer *b)
 	c->n_buffers[b->list_mode]--;
 	__remove(b->c, b);
 	list_del(&b->lru_list);
-<<<<<<< HEAD
 
 	adjust_total_allocated(b, true);
-=======
->>>>>>> rebase
 }
 
 /*
@@ -584,11 +515,8 @@ static void __relink_lru(struct dm_buffer *b, int dirty)
 {
 	struct dm_bufio_client *c = b->c;
 
-<<<<<<< HEAD
 	b->accessed = 1;
 
-=======
->>>>>>> rebase
 	BUG_ON(!c->n_buffers[b->list_mode]);
 
 	c->n_buffers[b->list_mode]--;
@@ -1008,39 +936,6 @@ static void __write_dirty_buffers_async(struct dm_bufio_client *c, int no_wait,
 }
 
 /*
-<<<<<<< HEAD
-=======
- * Get writeback threshold and buffer limit for a given client.
- */
-static void __get_memory_limit(struct dm_bufio_client *c,
-			       unsigned long *threshold_buffers,
-			       unsigned long *limit_buffers)
-{
-	unsigned long buffers;
-
-	if (unlikely(READ_ONCE(dm_bufio_cache_size) != dm_bufio_cache_size_latch)) {
-		if (mutex_trylock(&dm_bufio_clients_lock)) {
-			__cache_size_refresh();
-			mutex_unlock(&dm_bufio_clients_lock);
-		}
-	}
-
-	buffers = dm_bufio_cache_size_per_client;
-	if (likely(c->sectors_per_block_bits >= 0))
-		buffers >>= c->sectors_per_block_bits + SECTOR_SHIFT;
-	else
-		buffers /= c->block_size;
-
-	if (buffers < c->minimum_buffers)
-		buffers = c->minimum_buffers;
-
-	*limit_buffers = buffers;
-	*threshold_buffers = mult_frac(buffers,
-				       DM_BUFIO_WRITEBACK_PERCENT, 100);
-}
-
-/*
->>>>>>> rebase
  * Check if we're over watermark.
  * If we are over threshold_buffers, start freeing buffers.
  * If we're over "limit_buffers", block until we get under the limit.
@@ -1048,27 +943,7 @@ static void __get_memory_limit(struct dm_bufio_client *c,
 static void __check_watermark(struct dm_bufio_client *c,
 			      struct list_head *write_list)
 {
-<<<<<<< HEAD
 	if (c->n_buffers[LIST_DIRTY] > c->n_buffers[LIST_CLEAN] * DM_BUFIO_WRITEBACK_RATIO)
-=======
-	unsigned long threshold_buffers, limit_buffers;
-
-	__get_memory_limit(c, &threshold_buffers, &limit_buffers);
-
-	while (c->n_buffers[LIST_CLEAN] + c->n_buffers[LIST_DIRTY] >
-	       limit_buffers) {
-
-		struct dm_buffer *b = __get_unclaimed_buffer(c);
-
-		if (!b)
-			return;
-
-		__free_buffer_wake(b);
-		cond_resched();
-	}
-
-	if (c->n_buffers[LIST_DIRTY] > threshold_buffers)
->>>>>>> rebase
 		__write_dirty_buffers_async(c, 1, write_list);
 }
 
@@ -1567,13 +1442,6 @@ EXPORT_SYMBOL_GPL(dm_bufio_get_block_size);
 sector_t dm_bufio_get_device_size(struct dm_bufio_client *c)
 {
 	sector_t s = i_size_read(c->bdev->bd_inode) >> SECTOR_SHIFT;
-<<<<<<< HEAD
-=======
-	if (s >= c->start)
-		s -= c->start;
-	else
-		s = 0;
->>>>>>> rebase
 	if (likely(c->sectors_per_block_bits >= 0))
 		s >>= c->sectors_per_block_bits;
 	else
@@ -1582,15 +1450,6 @@ sector_t dm_bufio_get_device_size(struct dm_bufio_client *c)
 }
 EXPORT_SYMBOL_GPL(dm_bufio_get_device_size);
 
-<<<<<<< HEAD
-=======
-struct dm_io_client *dm_bufio_get_dm_io_client(struct dm_bufio_client *c)
-{
-	return c->dm_io;
-}
-EXPORT_SYMBOL_GPL(dm_bufio_get_dm_io_client);
-
->>>>>>> rebase
 sector_t dm_bufio_get_block_number(struct dm_buffer *b)
 {
 	return b->block;
@@ -1964,7 +1823,6 @@ static void __evict_old_buffers(struct dm_bufio_client *c, unsigned long age_hz)
 	dm_bufio_unlock(c);
 }
 
-<<<<<<< HEAD
 static void do_global_cleanup(struct work_struct *w)
 {
 	struct dm_bufio_client *locked_client = NULL;
@@ -2033,8 +1891,6 @@ get_next:
 	mutex_unlock(&dm_bufio_clients_lock);
 }
 
-=======
->>>>>>> rebase
 static void cleanup_old_buffers(void)
 {
 	unsigned long max_age_hz = get_max_age_hz();
@@ -2050,21 +1906,11 @@ static void cleanup_old_buffers(void)
 	mutex_unlock(&dm_bufio_clients_lock);
 }
 
-<<<<<<< HEAD
-=======
-static struct workqueue_struct *dm_bufio_wq;
-static struct delayed_work dm_bufio_work;
-
->>>>>>> rebase
 static void work_fn(struct work_struct *w)
 {
 	cleanup_old_buffers();
 
-<<<<<<< HEAD
 	queue_delayed_work(dm_bufio_wq, &dm_bufio_cleanup_old_work,
-=======
-	queue_delayed_work(dm_bufio_wq, &dm_bufio_work,
->>>>>>> rebase
 			   DM_BUFIO_WORK_TIMER_SECS * HZ);
 }
 
@@ -2106,14 +1952,9 @@ static int __init dm_bufio_init(void)
 	if (!dm_bufio_wq)
 		return -ENOMEM;
 
-<<<<<<< HEAD
 	INIT_DELAYED_WORK(&dm_bufio_cleanup_old_work, work_fn);
 	INIT_WORK(&dm_bufio_replacement_work, do_global_cleanup);
 	queue_delayed_work(dm_bufio_wq, &dm_bufio_cleanup_old_work,
-=======
-	INIT_DELAYED_WORK(&dm_bufio_work, work_fn);
-	queue_delayed_work(dm_bufio_wq, &dm_bufio_work,
->>>>>>> rebase
 			   DM_BUFIO_WORK_TIMER_SECS * HZ);
 
 	return 0;
@@ -2126,12 +1967,8 @@ static void __exit dm_bufio_exit(void)
 {
 	int bug = 0;
 
-<<<<<<< HEAD
 	cancel_delayed_work_sync(&dm_bufio_cleanup_old_work);
 	flush_workqueue(dm_bufio_wq);
-=======
-	cancel_delayed_work_sync(&dm_bufio_work);
->>>>>>> rebase
 	destroy_workqueue(dm_bufio_wq);
 
 	if (dm_bufio_client_count) {

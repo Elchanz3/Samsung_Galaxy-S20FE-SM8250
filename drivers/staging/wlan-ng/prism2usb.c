@@ -61,23 +61,11 @@ static int prism2sta_probe_usb(struct usb_interface *interface,
 			       const struct usb_device_id *id)
 {
 	struct usb_device *dev;
-<<<<<<< HEAD
 
-=======
-	struct usb_endpoint_descriptor *bulk_in, *bulk_out;
-	struct usb_host_interface *iface_desc = interface->cur_altsetting;
->>>>>>> rebase
 	struct wlandevice *wlandev = NULL;
 	struct hfa384x *hw = NULL;
 	int result = 0;
 
-<<<<<<< HEAD
-=======
-	result = usb_find_common_endpoints(iface_desc, &bulk_in, &bulk_out, NULL, NULL);
-	if (result)
-		goto failed;
-
->>>>>>> rebase
 	dev = interface_to_usbdev(interface);
 	wlandev = create_wlan();
 	if (!wlandev) {
@@ -94,11 +82,6 @@ static int prism2sta_probe_usb(struct usb_interface *interface,
 	}
 
 	/* Initialize the hw data */
-<<<<<<< HEAD
-=======
-	hw->endp_in = usb_rcvbulkpipe(dev, bulk_in->bEndpointAddress);
-	hw->endp_out = usb_sndbulkpipe(dev, bulk_out->bEndpointAddress);
->>>>>>> rebase
 	hfa384x_create(hw, dev);
 	hw->wlandev = wlandev;
 
@@ -197,10 +180,6 @@ static void prism2sta_disconnect_usb(struct usb_interface *interface)
 
 		cancel_work_sync(&hw->link_bh);
 		cancel_work_sync(&hw->commsqual_bh);
-<<<<<<< HEAD
-=======
-		cancel_work_sync(&hw->usb_work);
->>>>>>> rebase
 
 		/* Now we complete any outstanding commands
 		 * and tell everyone who is waiting for their

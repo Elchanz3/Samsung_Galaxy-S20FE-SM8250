@@ -861,7 +861,6 @@ struct rtl8192eu_efuse {
 	u8 usb_optional_function;
 	u8 res9[2];
 	u8 mac_addr[ETH_ALEN];		/* 0xd7 */
-<<<<<<< HEAD
 	u8 res10[2];
 	u8 vendor_name[7];
 	u8 res11[2];
@@ -871,12 +870,6 @@ struct rtl8192eu_efuse {
 	u8 res13[0x30];
 	u8 unknown[0x0d];		/* 0x130 */
 	u8 res14[0xc3];
-=======
-	u8 device_info[80];
-	u8 res11[3];
-	u8 unknown[0x0d];		/* 0x130 */
-	u8 res12[0xc3];
->>>>>>> rebase
 };
 
 struct rtl8xxxu_reg8val {

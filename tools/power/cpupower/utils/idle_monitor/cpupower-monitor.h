@@ -27,11 +27,7 @@
 #endif
 #define CSTATE_DESC_LEN 60
 
-<<<<<<< HEAD
 int cpu_count;
-=======
-extern int cpu_count;
->>>>>>> rebase
 
 /* Hard to define the right names ...: */
 enum power_range_e {

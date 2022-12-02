@@ -18,7 +18,6 @@ config SECURITY_DMESG_RESTRICT
 
 	  If you are unsure how to answer this question, answer N.
 
-<<<<<<< HEAD
 config SECURITY_PERF_EVENTS_RESTRICT
 	bool "Restrict unprivileged use of performance events"
 	depends on PERF_EVENTS
@@ -28,8 +27,6 @@ config SECURITY_PERF_EVENTS_RESTRICT
 	  perf_event_open syscall will be permitted unless it is
 	  changed.
 
-=======
->>>>>>> rebase
 config SECURITY
 	bool "Enable different security models"
 	depends on SYSFS
@@ -203,12 +200,6 @@ config HARDENED_USERCOPY_PAGESPAN
 config FORTIFY_SOURCE
 	bool "Harden common str/mem functions against buffer overflows"
 	depends on ARCH_HAS_FORTIFY_SOURCE
-<<<<<<< HEAD
-=======
-	# https://bugs.llvm.org/show_bug.cgi?id=50322
-	# https://bugs.llvm.org/show_bug.cgi?id=41459
-	depends on !CC_IS_CLANG
->>>>>>> rebase
 	help
 	  Detect overflows of buffers in common string and memory functions
 	  where the compiler can determine and validate the buffer sizes.
@@ -254,7 +245,6 @@ source security/tomoyo/Kconfig
 source security/apparmor/Kconfig
 source security/loadpin/Kconfig
 source security/yama/Kconfig
-<<<<<<< HEAD
 source security/mstdrv/Kconfig
 source security/hdm/Kconfig
 
@@ -263,10 +253,6 @@ source security/samsung/defex_lsm/Kconfig
 source security/samsung/dsms/Kconfig
 source security/samsung/five/Kconfig
 source security/proca/Kconfig
-=======
-
-source security/integrity/Kconfig
->>>>>>> rebase
 
 choice
 	prompt "Default security module"
@@ -305,7 +291,6 @@ config DEFAULT_SECURITY
 	default "apparmor" if DEFAULT_SECURITY_APPARMOR
 	default "" if DEFAULT_SECURITY_DAC
 
-<<<<<<< HEAD
 config SDP
 	bool "Enables SDP"
 	default n
@@ -324,7 +309,5 @@ config SDP_KEY_DUMP
 
 source "security/Kconfig.hardening"
 
-=======
->>>>>>> rebase
 endmenu
 

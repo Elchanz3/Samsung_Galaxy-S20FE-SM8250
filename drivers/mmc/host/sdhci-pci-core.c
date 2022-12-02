@@ -465,10 +465,6 @@ struct intel_host {
 	int	drv_strength;
 	bool	d3_retune;
 	bool	rpm_retune_ok;
-<<<<<<< HEAD
-=======
-	bool	needs_pwr_off;
->>>>>>> rebase
 	u32	glk_rx_ctrl1;
 	u32	glk_tun_val;
 };
@@ -560,12 +556,6 @@ static int intel_select_drive_strength(struct mmc_card *card,
 	struct sdhci_pci_slot *slot = sdhci_priv(host);
 	struct intel_host *intel_host = sdhci_pci_priv(slot);
 
-<<<<<<< HEAD
-=======
-	if (!(mmc_driver_type_mask(intel_host->drv_strength) & card_drv))
-		return 0;
-
->>>>>>> rebase
 	return intel_host->drv_strength;
 }
 
@@ -597,31 +587,9 @@ out:
 static void sdhci_intel_set_power(struct sdhci_host *host, unsigned char mode,
 				  unsigned short vdd)
 {
-<<<<<<< HEAD
 	int cntr;
 	u8 reg;
 
-=======
-	struct sdhci_pci_slot *slot = sdhci_priv(host);
-	struct intel_host *intel_host = sdhci_pci_priv(slot);
-	int cntr;
-	u8 reg;
-
-	/*
-	 * Bus power may control card power, but a full reset still may not
-	 * reset the power, whereas a direct write to SDHCI_POWER_CONTROL can.
-	 * That might be needed to initialize correctly, if the card was left
-	 * powered on previously.
-	 */
-	if (intel_host->needs_pwr_off) {
-		intel_host->needs_pwr_off = false;
-		if (mode != MMC_POWER_OFF) {
-			sdhci_writeb(host, 0, SDHCI_POWER_CONTROL);
-			usleep_range(10000, 12500);
-		}
-	}
-
->>>>>>> rebase
 	sdhci_set_power(host, mode, vdd);
 
 	if (mode == MMC_POWER_OFF)
@@ -768,12 +736,7 @@ static int byt_emmc_probe_slot(struct sdhci_pci_slot *slot)
 static bool glk_broken_cqhci(struct sdhci_pci_slot *slot)
 {
 	return slot->chip->pdev->device == PCI_DEVICE_ID_INTEL_GLK_EMMC &&
-<<<<<<< HEAD
 	       dmi_match(DMI_BIOS_VENDOR, "LENOVO");
-=======
-	       (dmi_match(DMI_BIOS_VENDOR, "LENOVO") ||
-		dmi_match(DMI_SYS_VENDOR, "IRBIS"));
->>>>>>> rebase
 }
 
 static int glk_emmc_probe_slot(struct sdhci_pci_slot *slot)
@@ -959,17 +922,6 @@ static int byt_sdio_probe_slot(struct sdhci_pci_slot *slot)
 	return 0;
 }
 
-<<<<<<< HEAD
-=======
-static void byt_needs_pwr_off(struct sdhci_pci_slot *slot)
-{
-	struct intel_host *intel_host = sdhci_pci_priv(slot);
-	u8 reg = sdhci_readb(slot->host, SDHCI_POWER_CONTROL);
-
-	intel_host->needs_pwr_off = reg  & SDHCI_POWER_ON;
-}
-
->>>>>>> rebase
 static int byt_sd_probe_slot(struct sdhci_pci_slot *slot)
 {
 	byt_probe_slot(slot);
@@ -987,11 +939,6 @@ static int byt_sd_probe_slot(struct sdhci_pci_slot *slot)
 	    slot->chip->pdev->subsystem_device == PCI_SUBDEVICE_ID_NI_78E3)
 		slot->host->mmc->caps2 |= MMC_CAP2_AVOID_3_3V;
 
-<<<<<<< HEAD
-=======
-	byt_needs_pwr_off(slot);
-
->>>>>>> rebase
 	return 0;
 }
 

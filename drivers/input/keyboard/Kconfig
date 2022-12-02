@@ -202,7 +202,6 @@ config KEYBOARD_EP93XX
 	  To compile this driver as a module, choose M here: the
 	  module will be called ep93xx_keypad.
 
-<<<<<<< HEAD
 config SENSORS_HALL
 	bool "HALL"
 	default n
@@ -241,8 +240,6 @@ config WACOM_HALL
 	help
 	  Enable WACOM Hall Feature
 
-=======
->>>>>>> rebase
 config KEYBOARD_GPIO
 	tristate "GPIO Buttons"
 	depends on GPIOLIB || COMPILE_TEST
@@ -797,10 +794,7 @@ config KEYBOARD_MTK_PMIC
 	  To compile this driver as a module, choose M here: the
 	  module will be called pmic-keys.
 
-<<<<<<< HEAD
 source "drivers/input/keyboard/stm/fsr1ad04/Kconfig"
 source "drivers/input/keyboard/stm/stm32l0/Kconfig"
 
-=======
->>>>>>> rebase
 endif

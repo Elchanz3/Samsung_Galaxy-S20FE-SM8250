@@ -28,13 +28,10 @@
 #include <linux/interrupt.h>
 #include <linux/debug_locks.h>
 #include <linux/osq_lock.h>
-<<<<<<< HEAD
 #include <linux/delay.h>
 #ifdef CONFIG_KPERFMON
 #include <linux/ologk.h>
 #endif
-=======
->>>>>>> rebase
 
 #ifdef CONFIG_DEBUG_MUTEXES
 # include "mutex-debug.h"
@@ -51,7 +48,6 @@ __mutex_init(struct mutex *lock, const char *name, struct lock_class_key *key)
 #ifdef CONFIG_MUTEX_SPIN_ON_OWNER
 	osq_lock_init(&lock->osq);
 #endif
-<<<<<<< HEAD
 #ifdef CONFIG_FAST_TRACK
 	lock->ftt_dep_task = NULL;
 #endif
@@ -63,10 +59,6 @@ __mutex_init(struct mutex *lock, const char *name, struct lock_class_key *key)
 		lock->time = 0;
 	}
 #endif
-=======
-
-	debug_mutex_init(lock, name, key);
->>>>>>> rebase
 }
 EXPORT_SYMBOL(__mutex_init);
 
@@ -198,11 +190,7 @@ static inline bool __mutex_waiter_is_first(struct mutex *lock, struct mutex_wait
  * Add @waiter to a given location in the lock wait_list and set the
  * FLAG_WAITERS flag if it's the first waiter.
  */
-<<<<<<< HEAD
 static void __sched
-=======
-static void
->>>>>>> rebase
 __mutex_add_waiter(struct mutex *lock, struct mutex_waiter *waiter,
 		   struct list_head *list)
 {
@@ -213,19 +201,6 @@ __mutex_add_waiter(struct mutex *lock, struct mutex_waiter *waiter,
 		__mutex_set_flag(lock, MUTEX_FLAG_WAITERS);
 }
 
-<<<<<<< HEAD
-=======
-static void
-__mutex_remove_waiter(struct mutex *lock, struct mutex_waiter *waiter)
-{
-	list_del(&waiter->list);
-	if (likely(list_empty(&lock->wait_list)))
-		__mutex_clear_flag(lock, MUTEX_FLAGS);
-
-	debug_mutex_remove_waiter(lock, waiter, current);
-}
-
->>>>>>> rebase
 /*
  * Give up ownership to a specific task, when @task = NULL, this is equivalent
  * to a regular unlock. Sets PICKUP on a handoff, clears HANDOF, preserves
@@ -647,11 +622,7 @@ static inline int mutex_can_spin_on_owner(struct mutex *lock)
  */
 static __always_inline bool
 mutex_optimistic_spin(struct mutex *lock, struct ww_acquire_ctx *ww_ctx,
-<<<<<<< HEAD
 		      const bool use_ww_ctx, struct mutex_waiter *waiter)
-=======
-		      struct mutex_waiter *waiter)
->>>>>>> rebase
 {
 	if (!waiter) {
 		/*
@@ -695,7 +666,6 @@ mutex_optimistic_spin(struct mutex *lock, struct ww_acquire_ctx *ww_ctx,
 		 * values at the cost of a few extra spins.
 		 */
 		cpu_relax();
-<<<<<<< HEAD
 
 		/*
 		 * On arm systems, we must slow down the waiter's repeated
@@ -707,8 +677,6 @@ mutex_optimistic_spin(struct mutex *lock, struct ww_acquire_ctx *ww_ctx,
 		 * take care to rate limit the waiters.
 		 */
 		udelay(1);
-=======
->>>>>>> rebase
 	}
 
 	if (!waiter)
@@ -741,11 +709,7 @@ fail:
 #else
 static __always_inline bool
 mutex_optimistic_spin(struct mutex *lock, struct ww_acquire_ctx *ww_ctx,
-<<<<<<< HEAD
 		      const bool use_ww_ctx, struct mutex_waiter *waiter)
-=======
-		      struct mutex_waiter *waiter)
->>>>>>> rebase
 {
 	return false;
 }
@@ -766,7 +730,6 @@ static noinline void __sched __mutex_unlock_slowpath(struct mutex *lock, unsigne
  */
 void __sched mutex_unlock(struct mutex *lock)
 {
-<<<<<<< HEAD
 #ifdef CONFIG_KPERFMON
 	unsigned long lock_jiffies = 0;
 
@@ -774,14 +737,11 @@ void __sched mutex_unlock(struct mutex *lock)
 		lock_jiffies = lock->time;
 	}
 #endif
-=======
->>>>>>> rebase
 #ifndef CONFIG_DEBUG_LOCK_ALLOC
 	if (__mutex_unlock_fast(lock))
 		return;
 #endif
 	__mutex_unlock_slowpath(lock, _RET_IP_);
-<<<<<<< HEAD
 #ifdef CONFIG_KPERFMON
 	if (lock != 0 && lock_jiffies > 0 && jiffies > lock_jiffies) {
 		unsigned long diff_jiffies = jiffies - lock_jiffies;
@@ -791,8 +751,6 @@ void __sched mutex_unlock(struct mutex *lock)
 		}
 	}
 #endif
-=======
->>>>>>> rebase
 }
 EXPORT_SYMBOL(mutex_unlock);
 
@@ -983,7 +941,6 @@ __mutex_lock_common(struct mutex *lock, long state, unsigned int subclass,
 		    struct ww_acquire_ctx *ww_ctx, const bool use_ww_ctx)
 {
 	struct mutex_waiter waiter;
-<<<<<<< HEAD
 	bool first = false;
 	struct ww_mutex *ww;
 	int ret;
@@ -998,18 +955,6 @@ __mutex_lock_common(struct mutex *lock, long state, unsigned int subclass,
 
 	ww = container_of(lock, struct ww_mutex, base);
 	if (use_ww_ctx && ww_ctx) {
-=======
-	struct ww_mutex *ww;
-	int ret;
-
-	if (!use_ww_ctx)
-		ww_ctx = NULL;
-
-	might_sleep();
-
-	ww = container_of(lock, struct ww_mutex, base);
-	if (ww_ctx) {
->>>>>>> rebase
 		if (unlikely(ww_ctx == READ_ONCE(ww->ctx)))
 			return -EALREADY;
 
@@ -1026,17 +971,10 @@ __mutex_lock_common(struct mutex *lock, long state, unsigned int subclass,
 	mutex_acquire_nest(&lock->dep_map, subclass, 0, nest_lock, ip);
 
 	if (__mutex_trylock(lock) ||
-<<<<<<< HEAD
 	    mutex_optimistic_spin(lock, ww_ctx, use_ww_ctx, NULL)) {
 		/* got the lock, yay! */
 		lock_acquired(&lock->dep_map, ip);
 		if (use_ww_ctx && ww_ctx)
-=======
-	    mutex_optimistic_spin(lock, ww_ctx, NULL)) {
-		/* got the lock, yay! */
-		lock_acquired(&lock->dep_map, ip);
-		if (ww_ctx)
->>>>>>> rebase
 			ww_mutex_set_context_fastpath(ww, ww_ctx);
 		preempt_enable();
 		return 0;
@@ -1047,11 +985,7 @@ __mutex_lock_common(struct mutex *lock, long state, unsigned int subclass,
 	 * After waiting to acquire the wait_lock, try again.
 	 */
 	if (__mutex_trylock(lock)) {
-<<<<<<< HEAD
 		if (use_ww_ctx && ww_ctx)
-=======
-		if (ww_ctx)
->>>>>>> rebase
 			__ww_mutex_check_waiters(lock, ww_ctx);
 
 		goto skip_wait;
@@ -1062,7 +996,6 @@ __mutex_lock_common(struct mutex *lock, long state, unsigned int subclass,
 	lock_contended(&lock->dep_map, ip);
 
 	if (!use_ww_ctx) {
-<<<<<<< HEAD
 #ifdef CONFIG_FAST_TRACK
 		debug_mutex_add_waiter(lock, &waiter, current);
 		mutex_list_add(current, &waiter.list, &lock->wait_list, lock);
@@ -1073,11 +1006,6 @@ __mutex_lock_common(struct mutex *lock, long state, unsigned int subclass,
 		/* add waiting tasks to the end of the waitqueue (FIFO): */
 		__mutex_add_waiter(lock, &waiter, &lock->wait_list);
 #endif
-=======
-		/* add waiting tasks to the end of the waitqueue (FIFO): */
-		__mutex_add_waiter(lock, &waiter, &lock->wait_list);
-
->>>>>>> rebase
 
 #ifdef CONFIG_DEBUG_MUTEXES
 		waiter.ww_ctx = MUTEX_POISON_WW_CTX;
@@ -1098,11 +1026,6 @@ __mutex_lock_common(struct mutex *lock, long state, unsigned int subclass,
 
 	set_current_state(state);
 	for (;;) {
-<<<<<<< HEAD
-=======
-		bool first;
-
->>>>>>> rebase
 		/*
 		 * Once we hold wait_lock, we're serialized against
 		 * mutex_unlock() handing the lock off to us, do a trylock
@@ -1122,17 +1045,12 @@ __mutex_lock_common(struct mutex *lock, long state, unsigned int subclass,
 			goto err;
 		}
 
-<<<<<<< HEAD
 		if (use_ww_ctx && ww_ctx) {
-=======
-		if (ww_ctx) {
->>>>>>> rebase
 			ret = __ww_mutex_check_kill(lock, &waiter, ww_ctx);
 			if (ret)
 				goto err;
 		}
 
-<<<<<<< HEAD
 #ifdef CONFIG_FAST_TRACK
 		mutex_dynamic_ftt_enqueue(lock, current);
 #endif
@@ -1148,14 +1066,6 @@ __mutex_lock_common(struct mutex *lock, long state, unsigned int subclass,
 			if (first)
 				__mutex_set_flag(lock, MUTEX_FLAG_HANDOFF);
 		}
-=======
-		spin_unlock(&lock->wait_lock);
-		schedule_preempt_disabled();
-
-		first = __mutex_waiter_is_first(lock, &waiter);
-		if (first)
-			__mutex_set_flag(lock, MUTEX_FLAG_HANDOFF);
->>>>>>> rebase
 
 		set_current_state(state);
 		/*
@@ -1164,11 +1074,7 @@ __mutex_lock_common(struct mutex *lock, long state, unsigned int subclass,
 		 * or we must see its unlock and acquire.
 		 */
 		if (__mutex_trylock(lock) ||
-<<<<<<< HEAD
 		    (first && mutex_optimistic_spin(lock, ww_ctx, use_ww_ctx, &waiter)))
-=======
-		    (first && mutex_optimistic_spin(lock, ww_ctx, &waiter)))
->>>>>>> rebase
 			break;
 
 		spin_lock(&lock->wait_lock);
@@ -1177,11 +1083,7 @@ __mutex_lock_common(struct mutex *lock, long state, unsigned int subclass,
 acquired:
 	__set_current_state(TASK_RUNNING);
 
-<<<<<<< HEAD
 	if (use_ww_ctx && ww_ctx) {
-=======
-	if (ww_ctx) {
->>>>>>> rebase
 		/*
 		 * Wound-Wait; we stole the lock (!first_waiter), check the
 		 * waiters as anyone might want to wound us.
@@ -1191,13 +1093,9 @@ acquired:
 			__ww_mutex_check_waiters(lock, ww_ctx);
 	}
 
-<<<<<<< HEAD
 	mutex_remove_waiter(lock, &waiter, current);
 	if (likely(list_empty(&lock->wait_list)))
 		__mutex_clear_flag(lock, MUTEX_FLAGS);
-=======
-	__mutex_remove_waiter(lock, &waiter);
->>>>>>> rebase
 
 	debug_mutex_free_waiter(&waiter);
 
@@ -1205,11 +1103,7 @@ skip_wait:
 	/* got the lock - cleanup and rejoice! */
 	lock_acquired(&lock->dep_map, ip);
 
-<<<<<<< HEAD
 	if (use_ww_ctx && ww_ctx)
-=======
-	if (ww_ctx)
->>>>>>> rebase
 		ww_mutex_lock_acquired(ww, ww_ctx);
 
 	spin_unlock(&lock->wait_lock);
@@ -1218,11 +1112,7 @@ skip_wait:
 
 err:
 	__set_current_state(TASK_RUNNING);
-<<<<<<< HEAD
 	mutex_remove_waiter(lock, &waiter, current);
-=======
-	__mutex_remove_waiter(lock, &waiter);
->>>>>>> rebase
 err_early_kill:
 	spin_unlock(&lock->wait_lock);
 	debug_mutex_free_waiter(&waiter);
@@ -1395,14 +1285,11 @@ static noinline void __sched __mutex_unlock_slowpath(struct mutex *lock, unsigne
 
 	spin_lock(&lock->wait_lock);
 	debug_mutex_unlock(lock);
-<<<<<<< HEAD
 
 #ifdef CONFIG_FAST_TRACK
 	mutex_dynamic_ftt_dequeue(lock, current);
 #endif
 
-=======
->>>>>>> rebase
 	if (!list_empty(&lock->wait_list)) {
 		/* get the first entry from the wait-list: */
 		struct mutex_waiter *waiter =

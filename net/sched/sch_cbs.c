@@ -185,14 +185,6 @@ static struct sk_buff *cbs_dequeue_soft(struct Qdisc *sch)
 	s64 credits;
 	int len;
 
-<<<<<<< HEAD
-=======
-	/* The previous packet is still being sent */
-	if (now < q->last) {
-		qdisc_watchdog_schedule_ns(&q->watchdog, q->last);
-		return NULL;
-	}
->>>>>>> rebase
 	if (q->credits < 0) {
 		credits = timediff_to_credits(now - q->last, q->idleslope);
 
@@ -224,16 +216,7 @@ static struct sk_buff *cbs_dequeue_soft(struct Qdisc *sch)
 	credits += q->credits;
 
 	q->credits = max_t(s64, credits, q->locredit);
-<<<<<<< HEAD
 	q->last = now;
-=======
-	/* Estimate of the transmission of the last byte of the packet in ns */
-	if (unlikely(atomic64_read(&q->port_rate) == 0))
-		q->last = now;
-	else
-		q->last = now + div64_s64(len * NSEC_PER_SEC,
-					  atomic64_read(&q->port_rate));
->>>>>>> rebase
 
 	return skb;
 }
@@ -459,11 +442,7 @@ static void cbs_destroy(struct Qdisc *sch)
 	cbs_disable_offload(dev, q);
 
 	if (q->qdisc)
-<<<<<<< HEAD
 		qdisc_destroy(q->qdisc);
-=======
-		qdisc_put(q->qdisc);
->>>>>>> rebase
 }
 
 static int cbs_dump(struct Qdisc *sch, struct sk_buff *skb)

@@ -226,11 +226,7 @@
 		reg = <0x28>;
 		#gpio-cells = <2>;
 		gpio-controller;
-<<<<<<< HEAD
 		ngpio = <32>;
-=======
-		ngpios = <62>;
->>>>>>> rebase
 	};
 
 	sgtl5000: codec@a {

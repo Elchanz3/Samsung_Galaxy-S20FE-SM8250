@@ -159,7 +159,6 @@ obj-$(CONFIG_GPIO_ZEVIO)	+= gpio-zevio.o
 obj-$(CONFIG_GPIO_ZYNQ)		+= gpio-zynq.o
 obj-$(CONFIG_GPIO_ZX)		+= gpio-zx.o
 obj-$(CONFIG_GPIO_LOONGSON1)	+= gpio-loongson1.o
-<<<<<<< HEAD
 obj-$(CONFIG_GPIO_PCAL6524)	+= gpio-pcal6524.o
 
 # Debug and verify gpio configurations.
@@ -168,5 +167,3 @@ obj-$(CONFIG_SEC_PM_DEBUG)	+= sec-pinmux.o
 ifeq ($(CONFIG_SEC_FACTORY),y)
     obj-$(CONFIG_SEC_CONNECTOR_DETECTOR)      += sec-detect-conn.o
 endif
-=======
->>>>>>> rebase

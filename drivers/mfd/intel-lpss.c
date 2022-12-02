@@ -397,11 +397,7 @@ int intel_lpss_probe(struct device *dev,
 	if (!lpss)
 		return -ENOMEM;
 
-<<<<<<< HEAD
 	lpss->priv = devm_ioremap(dev, info->mem->start + LPSS_PRIV_OFFSET,
-=======
-	lpss->priv = devm_ioremap_uc(dev, info->mem->start + LPSS_PRIV_OFFSET,
->>>>>>> rebase
 				  LPSS_PRIV_SIZE);
 	if (!lpss->priv)
 		return -ENOMEM;

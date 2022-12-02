@@ -67,7 +67,6 @@ struct nvmem_config {
 	struct device		*base_dev;
 };
 
-<<<<<<< HEAD
 /**
  * struct nvmem_cell_table - NVMEM cell definitions for given provider
  *
@@ -87,8 +86,6 @@ struct nvmem_cell_table {
 	struct list_head	node;
 };
 
-=======
->>>>>>> rebase
 #if IS_ENABLED(CONFIG_NVMEM)
 
 struct nvmem_device *nvmem_register(const struct nvmem_config *cfg);
@@ -99,15 +96,9 @@ struct nvmem_device *devm_nvmem_register(struct device *dev,
 
 int devm_nvmem_unregister(struct device *dev, struct nvmem_device *nvmem);
 
-<<<<<<< HEAD
 void nvmem_add_cell_table(struct nvmem_cell_table *table);
 void nvmem_del_cell_table(struct nvmem_cell_table *table);
 
-=======
-int nvmem_add_cells(struct nvmem_device *nvmem,
-		    const struct nvmem_cell_info *info,
-		    int ncells);
->>>>>>> rebase
 #else
 
 static inline struct nvmem_device *nvmem_register(const struct nvmem_config *c)
@@ -133,17 +124,8 @@ devm_nvmem_unregister(struct device *dev, struct nvmem_device *nvmem)
 
 }
 
-<<<<<<< HEAD
 static inline void nvmem_add_cell_table(struct nvmem_cell_table *table) {}
 static inline void nvmem_del_cell_table(struct nvmem_cell_table *table) {}
-=======
-static inline int nvmem_add_cells(struct nvmem_device *nvmem,
-				  const struct nvmem_cell_info *info,
-				  int ncells)
-{
-	return -ENOSYS;
-}
->>>>>>> rebase
 
 #endif /* CONFIG_NVMEM */
 #endif  /* ifndef _LINUX_NVMEM_PROVIDER_H */

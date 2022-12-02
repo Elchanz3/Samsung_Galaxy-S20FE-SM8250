@@ -391,11 +391,7 @@ static int raw_send_hdrinc(struct sock *sk, struct flowi4 *fl4,
 
 	skb->ip_summed = CHECKSUM_NONE;
 
-<<<<<<< HEAD
 	sock_tx_timestamp(sk, sockc->tsflags, &skb_shinfo(skb)->tx_flags);
-=======
-	skb_setup_tx_timestamp(skb, sockc->tsflags);
->>>>>>> rebase
 
 	if (flags & MSG_CONFIRM)
 		skb_set_dst_pending_confirm(skb, 1);
@@ -729,10 +725,6 @@ static int raw_bind(struct sock *sk, struct sockaddr *uaddr, int addr_len)
 	int ret = -EINVAL;
 	int chk_addr_ret;
 
-<<<<<<< HEAD
-=======
-	lock_sock(sk);
->>>>>>> rebase
 	if (sk->sk_state != TCP_CLOSE || addr_len < sizeof(struct sockaddr_in))
 		goto out;
 
@@ -752,13 +744,7 @@ static int raw_bind(struct sock *sk, struct sockaddr *uaddr, int addr_len)
 		inet->inet_saddr = 0;  /* Use device */
 	sk_dst_reset(sk);
 	ret = 0;
-<<<<<<< HEAD
 out:	return ret;
-=======
-out:
-	release_sock(sk);
-	return ret;
->>>>>>> rebase
 }
 
 /*

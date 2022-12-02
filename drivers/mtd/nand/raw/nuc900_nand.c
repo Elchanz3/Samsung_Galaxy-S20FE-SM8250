@@ -270,11 +270,7 @@ static int nuc900_nand_probe(struct platform_device *pdev)
 
 	nuc900_nand_enable(nuc900_nand);
 
-<<<<<<< HEAD
 	if (nand_scan(mtd, 1))
-=======
-	if (nand_scan(chip, 1))
->>>>>>> rebase
 		return -ENXIO;
 
 	mtd_device_register(mtd, partitions, ARRAY_SIZE(partitions));
@@ -288,11 +284,7 @@ static int nuc900_nand_remove(struct platform_device *pdev)
 {
 	struct nuc900_nand *nuc900_nand = platform_get_drvdata(pdev);
 
-<<<<<<< HEAD
 	nand_release(nand_to_mtd(&nuc900_nand->chip));
-=======
-	nand_release(&nuc900_nand->chip);
->>>>>>> rebase
 	clk_disable(nuc900_nand->clk);
 
 	return 0;

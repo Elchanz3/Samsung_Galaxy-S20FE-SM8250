@@ -21,10 +21,7 @@
 #include <linux/platform_device.h>
 #include <linux/errno.h>
 #include <linux/io.h>
-<<<<<<< HEAD
 #include <linux/io-pgtable.h>
-=======
->>>>>>> rebase
 #include <linux/interrupt.h>
 #include <linux/list.h>
 #include <linux/spinlock.h>
@@ -39,10 +36,6 @@
 
 #include "msm_iommu_hw-8xxx.h"
 #include "msm_iommu.h"
-<<<<<<< HEAD
-=======
-#include "io-pgtable.h"
->>>>>>> rebase
 
 #define MRC(reg, processor, op1, crn, crm, op2)				\
 __asm__ __volatile__ (							\
@@ -645,31 +638,16 @@ static void insert_iommu_master(struct device *dev,
 static int qcom_iommu_of_xlate(struct device *dev,
 			       struct of_phandle_args *spec)
 {
-<<<<<<< HEAD
 	struct msm_iommu_dev *iommu;
-=======
-	struct msm_iommu_dev *iommu = NULL, *iter;
->>>>>>> rebase
 	unsigned long flags;
 	int ret = 0;
 
 	spin_lock_irqsave(&msm_iommu_lock, flags);
-<<<<<<< HEAD
 	list_for_each_entry(iommu, &qcom_iommu_devices, dev_node)
 		if (iommu->dev->of_node == spec->np)
 			break;
 
 	if (!iommu || iommu->dev->of_node != spec->np) {
-=======
-	list_for_each_entry(iter, &qcom_iommu_devices, dev_node) {
-		if (iter->dev->of_node == spec->np) {
-			iommu = iter;
-			break;
-		}
-	}
-
-	if (!iommu) {
->>>>>>> rebase
 		ret = -ENODEV;
 		goto fail;
 	}

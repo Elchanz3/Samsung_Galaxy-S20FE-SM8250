@@ -1043,19 +1043,6 @@ static int mp_map_pin_to_irq(u32 gsi, int idx, int ioapic, int pin,
 	if (idx >= 0 && test_bit(mp_irqs[idx].srcbus, mp_bus_not_pci)) {
 		irq = mp_irqs[idx].srcbusirq;
 		legacy = mp_is_legacy_irq(irq);
-<<<<<<< HEAD
-=======
-		/*
-		 * IRQ2 is unusable for historical reasons on systems which
-		 * have a legacy PIC. See the comment vs. IRQ2 further down.
-		 *
-		 * If this gets removed at some point then the related code
-		 * in lapic_assign_system_vectors() needs to be adjusted as
-		 * well.
-		 */
-		if (legacy && irq == PIC_CASCADE_IR)
-			return -EINVAL;
->>>>>>> rebase
 	}
 
 	mutex_lock(&ioapic_mutex);
@@ -1961,12 +1948,7 @@ static struct irq_chip ioapic_chip __read_mostly = {
 	.irq_set_affinity	= ioapic_set_affinity,
 	.irq_retrigger		= irq_chip_retrigger_hierarchy,
 	.irq_get_irqchip_state	= ioapic_irq_get_chip_state,
-<<<<<<< HEAD
 	.flags			= IRQCHIP_SKIP_SET_WAKE,
-=======
-	.flags			= IRQCHIP_SKIP_SET_WAKE |
-				  IRQCHIP_AFFINITY_PRE_STARTUP,
->>>>>>> rebase
 };
 
 static struct irq_chip ioapic_ir_chip __read_mostly = {
@@ -1979,12 +1961,7 @@ static struct irq_chip ioapic_ir_chip __read_mostly = {
 	.irq_set_affinity	= ioapic_set_affinity,
 	.irq_retrigger		= irq_chip_retrigger_hierarchy,
 	.irq_get_irqchip_state	= ioapic_irq_get_chip_state,
-<<<<<<< HEAD
 	.flags			= IRQCHIP_SKIP_SET_WAKE,
-=======
-	.flags			= IRQCHIP_SKIP_SET_WAKE |
-				  IRQCHIP_AFFINITY_PRE_STARTUP,
->>>>>>> rebase
 };
 
 static inline void init_IO_APIC_traps(void)
@@ -2273,10 +2250,6 @@ static inline void __init check_timer(void)
 	legacy_pic->init(0);
 	legacy_pic->make_irq(0);
 	apic_write(APIC_LVT0, APIC_DM_EXTINT);
-<<<<<<< HEAD
-=======
-	legacy_pic->unmask(0);
->>>>>>> rebase
 
 	unlock_ExtINT_logic();
 
@@ -2350,21 +2323,12 @@ static int mp_irqdomain_create(int ioapic)
 	ip->irqdomain = irq_domain_create_linear(fn, hwirqs, cfg->ops,
 						 (void *)(long)ioapic);
 
-<<<<<<< HEAD
 	/* Release fw handle if it was allocated above */
 	if (!cfg->dev)
 		irq_domain_free_fwnode(fn);
 
 	if (!ip->irqdomain)
 		return -ENOMEM;
-=======
-	if (!ip->irqdomain) {
-		/* Release fw handle if it was allocated above */
-		if (!cfg->dev)
-			irq_domain_free_fwnode(fn);
-		return -ENOMEM;
-	}
->>>>>>> rebase
 
 	ip->irqdomain->parent = parent;
 
@@ -2378,18 +2342,8 @@ static int mp_irqdomain_create(int ioapic)
 
 static void ioapic_destroy_irqdomain(int idx)
 {
-<<<<<<< HEAD
 	if (ioapics[idx].irqdomain) {
 		irq_domain_remove(ioapics[idx].irqdomain);
-=======
-	struct ioapic_domain_cfg *cfg = &ioapics[idx].irqdomain_cfg;
-	struct fwnode_handle *fn = ioapics[idx].irqdomain->fwnode;
-
-	if (ioapics[idx].irqdomain) {
-		irq_domain_remove(ioapics[idx].irqdomain);
-		if (!cfg->dev)
-			irq_domain_free_fwnode(fn);
->>>>>>> rebase
 		ioapics[idx].irqdomain = NULL;
 	}
 }

@@ -959,11 +959,7 @@ static inline struct sk_buff *ip6_finish_skb(struct sock *sk)
 
 int ip6_dst_lookup(struct net *net, struct sock *sk, struct dst_entry **dst,
 		   struct flowi6 *fl6);
-<<<<<<< HEAD
 struct dst_entry *ip6_dst_lookup_flow(const struct sock *sk, struct flowi6 *fl6,
-=======
-struct dst_entry *ip6_dst_lookup_flow(struct net *net, const struct sock *sk, struct flowi6 *fl6,
->>>>>>> rebase
 				      const struct in6_addr *final_dst);
 struct dst_entry *ip6_sk_dst_lookup_flow(struct sock *sk, struct flowi6 *fl6,
 					 const struct in6_addr *final_dst,
@@ -979,11 +975,8 @@ int ip6_output(struct net *net, struct sock *sk, struct sk_buff *skb);
 int ip6_forward(struct sk_buff *skb);
 int ip6_input(struct sk_buff *skb);
 int ip6_mc_input(struct sk_buff *skb);
-<<<<<<< HEAD
 void ip6_protocol_deliver_rcu(struct net *net, struct sk_buff *skb, int nexthdr,
 			      bool have_final);
-=======
->>>>>>> rebase
 
 int __ip6_local_out(struct net *net, struct sock *sk, struct sk_buff *skb);
 int ip6_local_out(struct net *net, struct sock *sk, struct sk_buff *skb);

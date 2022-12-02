@@ -232,14 +232,6 @@ static int spidev_message(struct spidev_data *spidev,
 	for (n = n_xfers, k_tmp = k_xfers, u_tmp = u_xfers;
 			n;
 			n--, k_tmp++, u_tmp++) {
-<<<<<<< HEAD
-=======
-		/* Ensure that also following allocations from rx_buf/tx_buf will meet
-		 * DMA alignment requirements.
-		 */
-		unsigned int len_aligned = ALIGN(u_tmp->len, ARCH_KMALLOC_MINALIGN);
-
->>>>>>> rebase
 		k_tmp->len = u_tmp->len;
 
 		total += k_tmp->len;
@@ -255,29 +247,17 @@ static int spidev_message(struct spidev_data *spidev,
 
 		if (u_tmp->rx_buf) {
 			/* this transfer needs space in RX bounce buffer */
-<<<<<<< HEAD
 			rx_total += k_tmp->len;
-=======
-			rx_total += len_aligned;
->>>>>>> rebase
 			if (rx_total > bufsiz) {
 				status = -EMSGSIZE;
 				goto done;
 			}
 			k_tmp->rx_buf = rx_buf;
-<<<<<<< HEAD
 			rx_buf += k_tmp->len;
 		}
 		if (u_tmp->tx_buf) {
 			/* this transfer needs space in TX bounce buffer */
 			tx_total += k_tmp->len;
-=======
-			rx_buf += len_aligned;
-		}
-		if (u_tmp->tx_buf) {
-			/* this transfer needs space in TX bounce buffer */
-			tx_total += len_aligned;
->>>>>>> rebase
 			if (tx_total > bufsiz) {
 				status = -EMSGSIZE;
 				goto done;
@@ -287,11 +267,7 @@ static int spidev_message(struct spidev_data *spidev,
 						(uintptr_t) u_tmp->tx_buf,
 					u_tmp->len))
 				goto done;
-<<<<<<< HEAD
 			tx_buf += k_tmp->len;
-=======
-			tx_buf += len_aligned;
->>>>>>> rebase
 		}
 
 		k_tmp->cs_change = !!u_tmp->cs_change;
@@ -321,28 +297,16 @@ static int spidev_message(struct spidev_data *spidev,
 		goto done;
 
 	/* copy any rx data out of bounce buffer */
-<<<<<<< HEAD
 	rx_buf = spidev->rx_buffer;
 	for (n = n_xfers, u_tmp = u_xfers; n; n--, u_tmp++) {
 		if (u_tmp->rx_buf) {
 			if (copy_to_user((u8 __user *)
 					(uintptr_t) u_tmp->rx_buf, rx_buf,
-=======
-	for (n = n_xfers, k_tmp = k_xfers, u_tmp = u_xfers;
-			n;
-			n--, k_tmp++, u_tmp++) {
-		if (u_tmp->rx_buf) {
-			if (copy_to_user((u8 __user *)
-					(uintptr_t) u_tmp->rx_buf, k_tmp->rx_buf,
->>>>>>> rebase
 					u_tmp->len)) {
 				status = -EFAULT;
 				goto done;
 			}
-<<<<<<< HEAD
 			rx_buf += u_tmp->len;
-=======
->>>>>>> rebase
 		}
 	}
 	status = total;
@@ -643,30 +607,15 @@ err_find_dev:
 static int spidev_release(struct inode *inode, struct file *filp)
 {
 	struct spidev_data	*spidev;
-<<<<<<< HEAD
-=======
-	int			dofree;
->>>>>>> rebase
 
 	mutex_lock(&device_list_lock);
 	spidev = filp->private_data;
 	filp->private_data = NULL;
 
-<<<<<<< HEAD
 	/* last close? */
 	spidev->users--;
 	if (!spidev->users) {
 		int		dofree;
-=======
-	spin_lock_irq(&spidev->spi_lock);
-	/* ... after we unbound from the underlying device? */
-	dofree = (spidev->spi == NULL);
-	spin_unlock_irq(&spidev->spi_lock);
-
-	/* last close? */
-	spidev->users--;
-	if (!spidev->users) {
->>>>>>> rebase
 
 		kfree(spidev->tx_buffer);
 		spidev->tx_buffer = NULL;
@@ -674,7 +623,6 @@ static int spidev_release(struct inode *inode, struct file *filp)
 		kfree(spidev->rx_buffer);
 		spidev->rx_buffer = NULL;
 
-<<<<<<< HEAD
 		spin_lock_irq(&spidev->spi_lock);
 		if (spidev->spi)
 			spidev->speed_hz = spidev->spi->max_speed_hz;
@@ -688,16 +636,6 @@ static int spidev_release(struct inode *inode, struct file *filp)
 	}
 #ifdef CONFIG_SPI_SLAVE
 	spi_slave_abort(spidev->spi);
-=======
-		if (dofree)
-			kfree(spidev);
-		else
-			spidev->speed_hz = spidev->spi->max_speed_hz;
-	}
-#ifdef CONFIG_SPI_SLAVE
-	if (!dofree)
-		spi_slave_abort(spidev->spi);
->>>>>>> rebase
 #endif
 	mutex_unlock(&device_list_lock);
 
@@ -844,21 +782,13 @@ static int spidev_remove(struct spi_device *spi)
 {
 	struct spidev_data	*spidev = spi_get_drvdata(spi);
 
-<<<<<<< HEAD
-=======
-	/* prevent new opens */
-	mutex_lock(&device_list_lock);
->>>>>>> rebase
 	/* make sure ops on existing fds can abort cleanly */
 	spin_lock_irq(&spidev->spi_lock);
 	spidev->spi = NULL;
 	spin_unlock_irq(&spidev->spi_lock);
 
-<<<<<<< HEAD
 	/* prevent new opens */
 	mutex_lock(&device_list_lock);
-=======
->>>>>>> rebase
 	list_del(&spidev->device_entry);
 	device_destroy(spidev_class, spidev->devt);
 	clear_bit(MINOR(spidev->devt), minors);

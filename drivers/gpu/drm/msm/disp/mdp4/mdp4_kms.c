@@ -96,11 +96,8 @@ static int mdp4_hw_init(struct msm_kms *kms)
 	if (mdp4_kms->rev > 1)
 		mdp4_write(mdp4_kms, REG_MDP4_RESET_STATUS, 1);
 
-<<<<<<< HEAD
 	dev->mode_config.allow_fb_modifiers = true;
 
-=======
->>>>>>> rebase
 out:
 	pm_runtime_put_sync(dev->dev);
 

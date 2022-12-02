@@ -1613,11 +1613,6 @@ static void xudc_getstatus(struct xusb_udc *udc)
 		break;
 	case USB_RECIP_ENDPOINT:
 		epnum = udc->setup.wIndex & USB_ENDPOINT_NUMBER_MASK;
-<<<<<<< HEAD
-=======
-		if (epnum >= XUSB_MAX_ENDPOINTS)
-			goto stall;
->>>>>>> rebase
 		target_ep = &udc->ep[epnum];
 		epcfgreg = udc->read_fn(udc->addr + target_ep->offset);
 		halt = epcfgreg & XUSB_EP_CFG_STALL_MASK;
@@ -1685,13 +1680,6 @@ static void xudc_set_clear_feature(struct xusb_udc *udc)
 	case USB_RECIP_ENDPOINT:
 		if (!udc->setup.wValue) {
 			endpoint = udc->setup.wIndex & USB_ENDPOINT_NUMBER_MASK;
-<<<<<<< HEAD
-=======
-			if (endpoint >= XUSB_MAX_ENDPOINTS) {
-				xudc_ep0_stall(udc);
-				return;
-			}
->>>>>>> rebase
 			target_ep = &udc->ep[endpoint];
 			outinbit = udc->setup.wIndex & USB_ENDPOINT_DIR_MASK;
 			outinbit = outinbit >> 7;

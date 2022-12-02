@@ -170,14 +170,6 @@ struct slave {
 	struct rtnl_link_stats64 slave_stats;
 };
 
-<<<<<<< HEAD
-=======
-static inline struct slave *to_slave(struct kobject *kobj)
-{
-	return container_of(kobj, struct slave, kobj);
-}
-
->>>>>>> rebase
 struct bond_up_slave {
 	unsigned int	count;
 	struct rcu_head rcu;
@@ -741,12 +733,6 @@ extern struct bond_parm_tbl ad_select_tbl[];
 /* exported from bond_netlink.c */
 extern struct rtnl_link_ops bond_link_ops;
 
-<<<<<<< HEAD
-=======
-/* exported from bond_sysfs_slave.c */
-extern const struct sysfs_ops slave_sysfs_ops;
-
->>>>>>> rebase
 static inline void bond_tx_drop(struct net_device *dev, struct sk_buff *skb)
 {
 	atomic_long_inc(&dev->tx_dropped);

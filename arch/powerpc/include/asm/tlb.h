@@ -76,7 +76,6 @@ static inline int mm_is_thread_local(struct mm_struct *mm)
 		return false;
 	return cpumask_test_cpu(smp_processor_id(), mm_cpumask(mm));
 }
-<<<<<<< HEAD
 static inline void mm_reset_thread_local(struct mm_struct *mm)
 {
 	WARN_ON(atomic_read(&mm->context.copros) > 0);
@@ -90,8 +89,6 @@ static inline void mm_reset_thread_local(struct mm_struct *mm)
 	cpumask_clear(mm_cpumask(mm));
 	cpumask_set_cpu(smp_processor_id(), mm_cpumask(mm));
 }
-=======
->>>>>>> rebase
 #else /* CONFIG_PPC_BOOK3S_64 */
 static inline int mm_is_thread_local(struct mm_struct *mm)
 {

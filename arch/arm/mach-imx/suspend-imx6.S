@@ -73,10 +73,6 @@
 #define MX6Q_CCM_CCR	0x0
 
 	.align 3
-<<<<<<< HEAD
-=======
-	.arm
->>>>>>> rebase
 
 	.macro  sync_l2_cache
 

@@ -17,10 +17,6 @@
 #include <linux/dm-ioctl.h>
 #include <linux/hdreg.h>
 #include <linux/compat.h>
-<<<<<<< HEAD
-=======
-#include <linux/nospec.h>
->>>>>>> rebase
 
 #include <linux/uaccess.h>
 
@@ -533,11 +529,7 @@ static int list_devices(struct file *filp, struct dm_ioctl *param, size_t param_
 	 * Grab our output buffer.
 	 */
 	nl = orig_nl = get_result_buffer(param, param_size, &len);
-<<<<<<< HEAD
 	if (len < needed) {
-=======
-	if (len < needed || len < sizeof(nl->dev)) {
->>>>>>> rebase
 		param->flags |= DM_BUFFER_FULL_FLAG;
 		goto out;
 	}
@@ -1583,10 +1575,6 @@ static int target_message(struct file *filp, struct dm_ioctl *param, size_t para
 
 	if (!argc) {
 		DMWARN("Empty message received.");
-<<<<<<< HEAD
-=======
-		r = -EINVAL;
->>>>>>> rebase
 		goto out_argv;
 	}
 
@@ -1681,10 +1669,6 @@ static ioctl_fn lookup_ioctl(unsigned int cmd, int *ioctl_flags)
 	if (unlikely(cmd >= ARRAY_SIZE(_ioctls)))
 		return NULL;
 
-<<<<<<< HEAD
-=======
-	cmd = array_index_nospec(cmd, ARRAY_SIZE(_ioctls));
->>>>>>> rebase
 	*ioctl_flags = _ioctls[cmd].flags;
 	return _ioctls[cmd].fn;
 }
@@ -2003,7 +1987,6 @@ void dm_interface_exit(void)
 	dm_hash_exit();
 }
 
-<<<<<<< HEAD
 
 /**
  * dm_ioctl_export - Permanently export a mapped device via the ioctl interface
@@ -2043,8 +2026,6 @@ int dm_ioctl_export(struct mapped_device *md, const char *name,
 out:
 	return r;
 }
-=======
->>>>>>> rebase
 /**
  * dm_copy_name_and_uuid - Copy mapped device name & uuid into supplied buffers
  * @md: Pointer to mapped_device

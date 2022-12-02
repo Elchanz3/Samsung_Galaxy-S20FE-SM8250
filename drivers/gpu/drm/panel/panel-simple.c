@@ -1244,11 +1244,7 @@ static const struct display_timing innolux_g070y2_l01_timing = {
 static const struct panel_desc innolux_g070y2_l01 = {
 	.timings = &innolux_g070y2_l01_timing,
 	.num_timings = 1,
-<<<<<<< HEAD
 	.bpc = 6,
-=======
-	.bpc = 8,
->>>>>>> rebase
 	.size = {
 		.width = 152,
 		.height = 91,
@@ -1507,11 +1503,7 @@ static const struct drm_display_mode lg_lb070wv8_mode = {
 static const struct panel_desc lg_lb070wv8 = {
 	.modes = &lg_lb070wv8_mode,
 	.num_modes = 1,
-<<<<<<< HEAD
 	.bpc = 16,
-=======
-	.bpc = 8,
->>>>>>> rebase
 	.size = {
 		.width = 151,
 		.height = 91,

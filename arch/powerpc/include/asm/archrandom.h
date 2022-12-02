@@ -6,7 +6,6 @@
 
 #include <asm/machdep.h>
 
-<<<<<<< HEAD
 static inline int arch_get_random_long(unsigned long *v)
 {
 	return 0;
@@ -18,39 +17,16 @@ static inline int arch_get_random_int(unsigned int *v)
 }
 
 static inline int arch_get_random_seed_long(unsigned long *v)
-=======
-static inline bool arch_get_random_long(unsigned long *v)
-{
-	return false;
-}
-
-static inline bool arch_get_random_int(unsigned int *v)
-{
-	return false;
-}
-
-static inline bool arch_get_random_seed_long(unsigned long *v)
->>>>>>> rebase
 {
 	if (ppc_md.get_random_seed)
 		return ppc_md.get_random_seed(v);
 
-<<<<<<< HEAD
 	return 0;
 }
 static inline int arch_get_random_seed_int(unsigned int *v)
 {
 	unsigned long val;
 	int rc;
-=======
-	return false;
-}
-
-static inline bool arch_get_random_seed_int(unsigned int *v)
-{
-	unsigned long val;
-	bool rc;
->>>>>>> rebase
 
 	rc = arch_get_random_seed_long(&val);
 	if (rc)
@@ -58,7 +34,6 @@ static inline bool arch_get_random_seed_int(unsigned int *v)
 
 	return rc;
 }
-<<<<<<< HEAD
 
 static inline int arch_has_random(void)
 {
@@ -69,8 +44,6 @@ static inline int arch_has_random_seed(void)
 {
 	return !!ppc_md.get_random_seed;
 }
-=======
->>>>>>> rebase
 #endif /* CONFIG_ARCH_RANDOM */
 
 #ifdef CONFIG_PPC_POWERNV

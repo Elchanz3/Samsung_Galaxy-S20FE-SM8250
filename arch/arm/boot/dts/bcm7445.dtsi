@@ -150,11 +150,7 @@
 			reg-names = "aon-ctrl", "aon-sram";
 		};
 
-<<<<<<< HEAD
 		nand: nand@3e2800 {
-=======
-		nand_controller: nand-controller@3e2800 {
->>>>>>> rebase
 			status = "disabled";
 			#address-cells = <1>;
 			#size-cells = <0>;

@@ -474,11 +474,7 @@ const char *blkg_dev_name(struct blkcg_gq *blkg)
 {
 	/* some drivers (floppy) instantiate a queue w/o disk registered */
 	if (blkg->q->backing_dev_info->dev)
-<<<<<<< HEAD
 		return dev_name(blkg->q->backing_dev_info->dev);
-=======
-		return bdi_dev_name(blkg->q->backing_dev_info);
->>>>>>> rebase
 	return NULL;
 }
 EXPORT_SYMBOL_GPL(blkg_dev_name);
@@ -880,27 +876,13 @@ int blkg_conf_prep(struct blkcg *blkcg, const struct blkcg_policy *pol,
 			goto fail;
 		}
 
-<<<<<<< HEAD
-=======
-		if (radix_tree_preload(GFP_KERNEL)) {
-			blkg_free(new_blkg);
-			ret = -ENOMEM;
-			goto fail;
-		}
-
->>>>>>> rebase
 		rcu_read_lock();
 		spin_lock_irq(q->queue_lock);
 
 		blkg = blkg_lookup_check(pos, pol, q);
 		if (IS_ERR(blkg)) {
 			ret = PTR_ERR(blkg);
-<<<<<<< HEAD
 			goto fail_unlock;
-=======
-			blkg_free(new_blkg);
-			goto fail_preloaded;
->>>>>>> rebase
 		}
 
 		if (blkg) {
@@ -909,19 +891,10 @@ int blkg_conf_prep(struct blkcg *blkcg, const struct blkcg_policy *pol,
 			blkg = blkg_create(pos, q, new_blkg);
 			if (unlikely(IS_ERR(blkg))) {
 				ret = PTR_ERR(blkg);
-<<<<<<< HEAD
 				goto fail_unlock;
 			}
 		}
 
-=======
-				goto fail_preloaded;
-			}
-		}
-
-		radix_tree_preload_end();
-
->>>>>>> rebase
 		if (pos == blkcg)
 			goto success;
 	}
@@ -931,11 +904,6 @@ success:
 	ctx->body = body;
 	return 0;
 
-<<<<<<< HEAD
-=======
-fail_preloaded:
-	radix_tree_preload_end();
->>>>>>> rebase
 fail_unlock:
 	spin_unlock_irq(q->queue_lock);
 	rcu_read_unlock();

@@ -14,11 +14,7 @@ EXPORT_TRACEPOINT_SYMBOL(s390_diagnose);
 
 static DEFINE_PER_CPU(unsigned int, diagnose_trace_depth);
 
-<<<<<<< HEAD
 void trace_s390_diagnose_norecursion(int diag_nr)
-=======
-void notrace trace_s390_diagnose_norecursion(int diag_nr)
->>>>>>> rebase
 {
 	unsigned long flags;
 	unsigned int *depth;

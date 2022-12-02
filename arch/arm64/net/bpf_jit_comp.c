@@ -685,22 +685,6 @@ emit_cond_jmp:
 		}
 		break;
 
-<<<<<<< HEAD
-=======
-	/* speculation barrier */
-	case BPF_ST | BPF_NOSPEC:
-		/*
-		 * Nothing required here.
-		 *
-		 * In case of arm64, we rely on the firmware mitigation of
-		 * Speculative Store Bypass as controlled via the ssbd kernel
-		 * parameter. Whenever the mitigation is enabled, it works
-		 * for all of the kernel code with no need to provide any
-		 * additional instructions.
-		 */
-		break;
-
->>>>>>> rebase
 	/* ST: *(size *)(dst + off) = imm */
 	case BPF_ST | BPF_MEM | BPF_W:
 	case BPF_ST | BPF_MEM | BPF_H:
@@ -941,10 +925,6 @@ skip_init_ctx:
 			bpf_jit_binary_free(header);
 			prog->bpf_func = NULL;
 			prog->jited = 0;
-<<<<<<< HEAD
-=======
-			prog->jited_len = 0;
->>>>>>> rebase
 			goto out_off;
 		}
 		bpf_jit_binary_lock_ro(header);
@@ -969,7 +949,6 @@ out:
 					   tmp : orig_prog);
 	return prog;
 }
-<<<<<<< HEAD
 
 #ifdef CONFIG_CFI_CLANG
 bool arch_bpf_jit_check_func(const struct bpf_prog *prog)
@@ -992,5 +971,3 @@ bool arch_bpf_jit_check_func(const struct bpf_prog *prog)
 	return (func >= MODULES_VADDR && func < MODULES_END);
 }
 #endif
-=======
->>>>>>> rebase

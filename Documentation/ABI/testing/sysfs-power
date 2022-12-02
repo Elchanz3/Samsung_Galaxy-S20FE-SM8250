@@ -300,7 +300,6 @@ Description:
 		attempt.
 
 		Using this sysfs file will override any values that were
-<<<<<<< HEAD
 		set using the kernel command line for disk offset.
 
 What:		/sys/power/suspend_stats
@@ -408,6 +407,3 @@ Contact:	Kalesh Singh <kaleshsingh96@gmail.com>
 Description:
 		The /sys/power/suspend_stats/last_failed_step file contains
 		the last failed step in the suspend/resume path.
-=======
-		set using the kernel command line for disk offset.
->>>>>>> rebase

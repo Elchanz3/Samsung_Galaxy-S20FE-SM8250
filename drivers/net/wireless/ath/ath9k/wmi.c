@@ -112,25 +112,14 @@ struct wmi *ath9k_init_wmi(struct ath9k_htc_priv *priv)
 	return wmi;
 }
 
-<<<<<<< HEAD
 void ath9k_deinit_wmi(struct ath9k_htc_priv *priv)
-=======
-void ath9k_stop_wmi(struct ath9k_htc_priv *priv)
->>>>>>> rebase
 {
 	struct wmi *wmi = priv->wmi;
 
 	mutex_lock(&wmi->op_mutex);
 	wmi->stopped = true;
 	mutex_unlock(&wmi->op_mutex);
-<<<<<<< HEAD
 
-=======
-}
-
-void ath9k_destoy_wmi(struct ath9k_htc_priv *priv)
-{
->>>>>>> rebase
 	kfree(priv->wmi);
 }
 
@@ -347,10 +336,6 @@ int ath9k_wmi_cmd(struct wmi *wmi, enum wmi_cmd_id cmd_id,
 		ath_dbg(common, WMI, "Timeout waiting for WMI command: %s\n",
 			wmi_cmd_to_name(cmd_id));
 		mutex_unlock(&wmi->op_mutex);
-<<<<<<< HEAD
-=======
-		kfree_skb(skb);
->>>>>>> rebase
 		return -ETIMEDOUT;
 	}
 

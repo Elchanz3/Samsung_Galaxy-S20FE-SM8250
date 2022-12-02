@@ -1456,15 +1456,8 @@ static int tegra_dsi_ganged_probe(struct tegra_dsi *dsi)
 		dsi->slave = platform_get_drvdata(gangster);
 		of_node_put(np);
 
-<<<<<<< HEAD
 		if (!dsi->slave)
 			return -EPROBE_DEFER;
-=======
-		if (!dsi->slave) {
-			put_device(&gangster->dev);
-			return -EPROBE_DEFER;
-		}
->>>>>>> rebase
 
 		dsi->slave->master = dsi;
 	}

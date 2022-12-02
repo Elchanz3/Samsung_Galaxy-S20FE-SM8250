@@ -423,15 +423,9 @@ static int rebalance_children(struct shadow_spine *s,
 
 		memcpy(n, dm_block_data(child),
 		       dm_bm_block_size(dm_tm_get_bm(info->tm)));
-<<<<<<< HEAD
 		dm_tm_unlock(info->tm, child);
 
 		dm_tm_dec(info->tm, dm_block_location(child));
-=======
-
-		dm_tm_dec(info->tm, dm_block_location(child));
-		dm_tm_unlock(info->tm, child);
->>>>>>> rebase
 		return 0;
 	}
 
@@ -555,12 +549,7 @@ int dm_btree_remove(struct dm_btree_info *info, dm_block_t root,
 		delete_at(n, index);
 	}
 
-<<<<<<< HEAD
 	*new_root = shadow_root(&spine);
-=======
-	if (!r)
-		*new_root = shadow_root(&spine);
->>>>>>> rebase
 	exit_shadow_spine(&spine);
 
 	return r;

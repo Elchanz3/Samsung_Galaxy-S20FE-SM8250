@@ -723,12 +723,9 @@ static int adapter_up(struct adapter *adapter)
 		if (adapter->flags & USING_MSIX)
 			name_msix_vecs(adapter);
 
-<<<<<<< HEAD
 		/* Initialize hash mac addr list*/
 		INIT_LIST_HEAD(&adapter->mac_hlist);
 
-=======
->>>>>>> rebase
 		adapter->flags |= FULL_INIT_DONE;
 	}
 
@@ -3041,12 +3038,6 @@ static int cxgb4vf_pci_probe(struct pci_dev *pdev,
 	if (err)
 		goto err_unmap_bar;
 
-<<<<<<< HEAD
-=======
-	/* Initialize hash mac addr list */
-	INIT_LIST_HEAD(&adapter->mac_hlist);
-
->>>>>>> rebase
 	/*
 	 * Allocate our "adapter ports" and stitch everything together.
 	 */

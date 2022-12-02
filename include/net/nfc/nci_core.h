@@ -42,10 +42,6 @@ enum nci_flag {
 	NCI_UP,
 	NCI_DATA_EXCHANGE,
 	NCI_DATA_EXCHANGE_TO,
-<<<<<<< HEAD
-=======
-	NCI_UNREG,
->>>>>>> rebase
 };
 
 /* NCI device states */
@@ -314,10 +310,6 @@ int nci_nfcc_loopback(struct nci_dev *ndev, void *data, size_t data_len,
 		      struct sk_buff **resp);
 
 struct nci_hci_dev *nci_hci_allocate(struct nci_dev *ndev);
-<<<<<<< HEAD
-=======
-void nci_hci_deallocate(struct nci_dev *ndev);
->>>>>>> rebase
 int nci_hci_send_event(struct nci_dev *ndev, u8 gate, u8 event,
 		       const u8 *param, size_t param_len);
 int nci_hci_send_cmd(struct nci_dev *ndev, u8 gate,

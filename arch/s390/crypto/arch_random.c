@@ -2,7 +2,6 @@
 /*
  * s390 arch random implementation.
  *
-<<<<<<< HEAD
  * Copyright IBM Corp. 2017, 2018
  * Author(s): Harald Freudenberger
  *
@@ -26,29 +25,20 @@
  * buffer but at least with 500 ms delay to avoid too much CPU consumption.
  * So the max. amount of rng data delivered via arch_get_random_seed is
  * limited to 4k bytes per second.
-=======
- * Copyright IBM Corp. 2017, 2020
- * Author(s): Harald Freudenberger
->>>>>>> rebase
  */
 
 #include <linux/kernel.h>
 #include <linux/atomic.h>
 #include <linux/random.h>
-<<<<<<< HEAD
 #include <linux/slab.h>
 #include <linux/static_key.h>
 #include <linux/workqueue.h>
-=======
-#include <linux/static_key.h>
->>>>>>> rebase
 #include <asm/cpacf.h>
 
 DEFINE_STATIC_KEY_FALSE(s390_arch_random_available);
 
 atomic64_t s390_arch_random_counter = ATOMIC64_INIT(0);
 EXPORT_SYMBOL(s390_arch_random_counter);
-<<<<<<< HEAD
 
 #define ARCH_REFILL_TICKS (HZ/2)
 #define ARCH_PRNG_SEED_SIZE 32
@@ -131,5 +121,3 @@ static int __init s390_arch_random_init(void)
 	return 0;
 }
 arch_initcall(s390_arch_random_init);
-=======
->>>>>>> rebase

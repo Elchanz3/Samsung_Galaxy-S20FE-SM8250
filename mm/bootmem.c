@@ -192,11 +192,7 @@ unsigned long __init init_bootmem(unsigned long start, unsigned long pages)
 	return init_bootmem_core(NODE_DATA(0)->bdata, start, 0, pages);
 }
 
-<<<<<<< HEAD
 void free_bootmem_late(unsigned long physaddr, unsigned long size)
-=======
-void __init free_bootmem_late(unsigned long physaddr, unsigned long size)
->>>>>>> rebase
 {
 	unsigned long cursor, end;
 

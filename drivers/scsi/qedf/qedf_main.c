@@ -2961,11 +2961,7 @@ static int __qedf_probe(struct pci_dev *pdev, int mode)
 {
 	int rc = -EINVAL;
 	struct fc_lport *lport;
-<<<<<<< HEAD
 	struct qedf_ctx *qedf;
-=======
-	struct qedf_ctx *qedf = NULL;
->>>>>>> rebase
 	struct Scsi_Host *host;
 	bool is_vf = false;
 	struct qed_ll2_params params;
@@ -2993,10 +2989,6 @@ static int __qedf_probe(struct pci_dev *pdev, int mode)
 
 		/* Initialize qedf_ctx */
 		qedf = lport_priv(lport);
-<<<<<<< HEAD
-=======
-		set_bit(QEDF_PROBING, &qedf->flags);
->>>>>>> rebase
 		qedf->lport = lport;
 		qedf->ctlr.lp = lport;
 		qedf->pdev = pdev;
@@ -3019,18 +3011,9 @@ static int __qedf_probe(struct pci_dev *pdev, int mode)
 	} else {
 		/* Init pointers during recovery */
 		qedf = pci_get_drvdata(pdev);
-<<<<<<< HEAD
 		lport = qedf->lport;
 	}
 
-=======
-		set_bit(QEDF_PROBING, &qedf->flags);
-		lport = qedf->lport;
-	}
-
-	QEDF_INFO(&qedf->dbg_ctx, QEDF_LOG_DISC, "Probe started.\n");
-
->>>>>>> rebase
 	host = lport->host;
 
 	/* Allocate mempool for qedf_io_work structs */
@@ -3329,13 +3312,6 @@ static int __qedf_probe(struct pci_dev *pdev, int mode)
 	else
 		fc_fabric_login(lport);
 
-<<<<<<< HEAD
-=======
-	QEDF_INFO(&qedf->dbg_ctx, QEDF_LOG_DISC, "Probe done.\n");
-
-	clear_bit(QEDF_PROBING, &qedf->flags);
-
->>>>>>> rebase
 	/* All good */
 	return 0;
 
@@ -3508,33 +3484,11 @@ void qedf_get_protocol_tlv_data(void *dev, void *data)
 {
 	struct qedf_ctx *qedf = dev;
 	struct qed_mfw_tlv_fcoe *fcoe = data;
-<<<<<<< HEAD
 	struct fc_lport *lport = qedf->lport;
 	struct Scsi_Host *host = lport->host;
 	struct fc_host_attrs *fc_host = shost_to_fc_host(host);
 	struct fc_host_statistics *hst;
 
-=======
-	struct fc_lport *lport;
-	struct Scsi_Host *host;
-	struct fc_host_attrs *fc_host;
-	struct fc_host_statistics *hst;
-
-	if (!qedf) {
-		QEDF_ERR(NULL, "qedf is null.\n");
-		return;
-	}
-
-	if (test_bit(QEDF_PROBING, &qedf->flags)) {
-		QEDF_ERR(&qedf->dbg_ctx, "Function is still probing.\n");
-		return;
-	}
-
-	lport = qedf->lport;
-	host = lport->host;
-	fc_host = shost_to_fc_host(host);
-
->>>>>>> rebase
 	/* Force a refresh of the fc_host stats including offload stats */
 	hst = qedf_fc_get_host_stats(host);
 

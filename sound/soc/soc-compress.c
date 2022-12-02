@@ -155,20 +155,8 @@ static int soc_compr_open_fe(struct snd_compr_stream *cstream)
 	fe->dpcm[stream].runtime_update = SND_SOC_DPCM_UPDATE_FE;
 
 	ret = dpcm_be_dai_startup(fe, stream);
-<<<<<<< HEAD
 	if (ret < 0)
 		goto out;
-=======
-	if (ret < 0) {
-		/* clean up all links */
-		list_for_each_entry(dpcm, &fe->dpcm[stream].be_clients, list_be)
-			dpcm->state = SND_SOC_DPCM_LINK_STATE_FREE;
-
-		dpcm_be_disconnect(fe, stream);
-		fe->dpcm[stream].runtime = NULL;
-		goto out;
-	}
->>>>>>> rebase
 
 	if (cpu_dai->driver->cops && cpu_dai->driver->cops->startup) {
 		ret = cpu_dai->driver->cops->startup(cstream, cpu_dai);
@@ -176,11 +164,7 @@ static int soc_compr_open_fe(struct snd_compr_stream *cstream)
 			dev_err(cpu_dai->dev,
 				"Compress ASoC: can't open interface %s: %d\n",
 				cpu_dai->name, ret);
-<<<<<<< HEAD
 			goto be_unwind;
-=======
-			goto out;
->>>>>>> rebase
 		}
 	}
 
@@ -214,7 +198,6 @@ machine_err:
 open_err:
 	if (cpu_dai->driver->cops && cpu_dai->driver->cops->shutdown)
 		cpu_dai->driver->cops->shutdown(cstream, cpu_dai);
-<<<<<<< HEAD
 be_unwind:
 	dpcm_be_dai_shutdown(fe, stream);
 out:
@@ -224,9 +207,6 @@ out:
 
 	dpcm_be_disconnect(fe, stream);
 	fe->dpcm[stream].runtime = NULL;
-=======
-out:
->>>>>>> rebase
 	dpcm_path_put(&list);
 be_err:
 	fe->dpcm[stream].runtime_update = SND_SOC_DPCM_UPDATE_NO;
@@ -486,7 +466,6 @@ out:
 	return ret;
 }
 
-<<<<<<< HEAD
 static void dpcm_be_hw_params_prepare(void *data)
 {
 	struct snd_compr_stream *cstream = data;
@@ -518,8 +497,6 @@ static void dpcm_be_hw_params_prepare_async(void *data, async_cookie_t cookie)
 	dpcm_be_hw_params_prepare(data);
 }
 
-=======
->>>>>>> rebase
 static int soc_compr_set_params(struct snd_compr_stream *cstream,
 					struct snd_compr_params *params)
 {
@@ -593,15 +570,11 @@ static int soc_compr_set_params_fe(struct snd_compr_stream *cstream,
 	struct snd_soc_component *component;
 	struct snd_soc_rtdcom_list *rtdcom;
 	struct snd_soc_dai *cpu_dai = fe->cpu_dai;
-<<<<<<< HEAD
 	struct snd_soc_pcm_runtime *be_list[DPCM_MAX_BE_USERS];
 	struct snd_soc_dpcm *dpcm;
 	int ret = 0, __ret, stream, i, j = 0;
 
 	ASYNC_DOMAIN_EXCLUSIVE(async_domain);
-=======
-	int ret = 0, __ret, stream;
->>>>>>> rebase
 
 	if (cstream->direction == SND_COMPRESS_PLAYBACK)
 		stream = SNDRV_PCM_STREAM_PLAYBACK;
@@ -634,7 +607,6 @@ static int soc_compr_set_params_fe(struct snd_compr_stream *cstream,
 			goto out;
 	}
 
-<<<<<<< HEAD
 	if (!(fe->dai_link->async_ops & ASYNC_DPCM_SND_SOC_HW_PARAMS)) {
 		/* first we call set_params for the platform driver
 		 * this should configure the soc side
@@ -763,26 +735,6 @@ exit:
 		async_synchronize_full_domain(&async_domain);
 		if (fe->err_ops < 0 || ret < 0)
 			goto out;
-=======
-	for_each_rtdcom(fe, rtdcom) {
-		component = rtdcom->component;
-
-		if (!component->driver->compr_ops ||
-		    !component->driver->compr_ops->set_params)
-			continue;
-
-		__ret = component->driver->compr_ops->set_params(cstream, params);
-		if (__ret < 0)
-			ret = __ret;
-	}
-	if (ret < 0)
-		goto out;
-
-	if (fe->dai_link->compr_ops && fe->dai_link->compr_ops->set_params) {
-		ret = fe->dai_link->compr_ops->set_params(cstream);
-		if (ret < 0)
-			goto out;
->>>>>>> rebase
 	}
 
 	dpcm_dapm_stream_event(fe, stream, SND_SOC_DAPM_STREAM_START);
@@ -968,7 +920,6 @@ static int soc_compr_copy(struct snd_compr_stream *cstream,
 	return ret;
 }
 
-<<<<<<< HEAD
 static int sst_compr_set_next_track_param(struct snd_compr_stream *cstream,
 				union snd_codec_options *codec_options)
 {
@@ -991,8 +942,6 @@ static int sst_compr_set_next_track_param(struct snd_compr_stream *cstream,
 }
 
 
-=======
->>>>>>> rebase
 static int soc_compr_set_metadata(struct snd_compr_stream *cstream,
 				  struct snd_compr_metadata *metadata)
 {
@@ -1059,10 +1008,7 @@ static struct snd_compr_ops soc_compr_ops = {
 	.free		= soc_compr_free,
 	.set_params	= soc_compr_set_params,
 	.set_metadata   = soc_compr_set_metadata,
-<<<<<<< HEAD
 	.set_next_track_param	= sst_compr_set_next_track_param,
-=======
->>>>>>> rebase
 	.get_metadata	= soc_compr_get_metadata,
 	.get_params	= soc_compr_get_params,
 	.trigger	= soc_compr_trigger,
@@ -1079,10 +1025,7 @@ static struct snd_compr_ops soc_compr_dyn_ops = {
 	.set_params	= soc_compr_set_params_fe,
 	.get_params	= soc_compr_get_params,
 	.set_metadata   = soc_compr_set_metadata,
-<<<<<<< HEAD
 	.set_next_track_param	= sst_compr_set_next_track_param,
-=======
->>>>>>> rebase
 	.get_metadata	= soc_compr_get_metadata,
 	.trigger	= soc_compr_trigger_fe,
 	.pointer	= soc_compr_pointer,
@@ -1209,7 +1152,6 @@ int snd_soc_new_compress(struct snd_soc_pcm_runtime *rtd, int num)
 	rtd->compr = compr;
 	compr->private_data = rtd;
 
-<<<<<<< HEAD
 	for_each_rtdcom(rtd, rtdcom) {
 		component = rtdcom->component;
 
@@ -1225,10 +1167,6 @@ int snd_soc_new_compress(struct snd_soc_pcm_runtime *rtd, int num)
 	dev_dbg(rtd->card->dev, "Compress ASoC: %s <-> %s mapping ok\n",
 		 codec_dai->name, cpu_dai->name);
 
-=======
-	dev_info(rtd->card->dev, "Compress ASoC: %s <-> %s mapping ok\n",
-		 codec_dai->name, cpu_dai->name);
->>>>>>> rebase
 	return ret;
 
 compr_err:

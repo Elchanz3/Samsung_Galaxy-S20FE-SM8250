@@ -170,14 +170,10 @@ ieee80211_vht_cap_ie_to_sta_vht_cap(struct ieee80211_sub_if_data *sdata,
 	/* take some capabilities as-is */
 	cap_info = le32_to_cpu(vht_cap_ie->vht_cap_info);
 	vht_cap->cap = cap_info;
-<<<<<<< HEAD
 	vht_cap->cap &= IEEE80211_VHT_CAP_MAX_MPDU_LENGTH_3895 |
 			IEEE80211_VHT_CAP_MAX_MPDU_LENGTH_7991 |
 			IEEE80211_VHT_CAP_MAX_MPDU_LENGTH_11454 |
 			IEEE80211_VHT_CAP_RXLDPC |
-=======
-	vht_cap->cap &= IEEE80211_VHT_CAP_RXLDPC |
->>>>>>> rebase
 			IEEE80211_VHT_CAP_VHT_TXOP_PS |
 			IEEE80211_VHT_CAP_HTC_VHT |
 			IEEE80211_VHT_CAP_MAX_A_MPDU_LENGTH_EXPONENT_MASK |
@@ -186,12 +182,6 @@ ieee80211_vht_cap_ie_to_sta_vht_cap(struct ieee80211_sub_if_data *sdata,
 			IEEE80211_VHT_CAP_RX_ANTENNA_PATTERN |
 			IEEE80211_VHT_CAP_TX_ANTENNA_PATTERN;
 
-<<<<<<< HEAD
-=======
-	vht_cap->cap |= min_t(u32, cap_info & IEEE80211_VHT_CAP_MAX_MPDU_MASK,
-			      own_cap.cap & IEEE80211_VHT_CAP_MAX_MPDU_MASK);
-
->>>>>>> rebase
 	/* and some based on our own capabilities */
 	switch (own_cap.cap & IEEE80211_VHT_CAP_SUPP_CHAN_WIDTH_MASK) {
 	case IEEE80211_VHT_CAP_SUPP_CHAN_WIDTH_160MHZ:
@@ -431,27 +421,12 @@ enum ieee80211_sta_rx_bandwidth ieee80211_sta_cur_vht_bw(struct sta_info *sta)
 	 * IEEE80211-2016 specification makes higher bandwidth operation
 	 * possible on the TDLS link if the peers have wider bandwidth
 	 * capability.
-<<<<<<< HEAD
 	 */
 	if (test_sta_flag(sta, WLAN_STA_TDLS_PEER) &&
 	    test_sta_flag(sta, WLAN_STA_TDLS_WIDER_BW))
 		return bw;
 
 	bw = min(bw, ieee80211_chan_width_to_rx_bw(bss_width));
-=======
-	 *
-	 * However, in this case, and only if the TDLS peer is authorized,
-	 * limit to the tdls_chandef so that the configuration here isn't
-	 * wider than what's actually requested on the channel context.
-	 */
-	if (test_sta_flag(sta, WLAN_STA_TDLS_PEER) &&
-	    test_sta_flag(sta, WLAN_STA_TDLS_WIDER_BW) &&
-	    test_sta_flag(sta, WLAN_STA_AUTHORIZED) &&
-	    sta->tdls_chandef.chan)
-		bw = min(bw, ieee80211_chan_width_to_rx_bw(sta->tdls_chandef.width));
-	else
-		bw = min(bw, ieee80211_chan_width_to_rx_bw(bss_width));
->>>>>>> rebase
 
 	return bw;
 }

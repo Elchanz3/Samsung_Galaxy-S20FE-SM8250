@@ -1,19 +1,9 @@
-<<<<<<< HEAD
 // SPDX-License-Identifier: GPL-2.0
-=======
->>>>>>> rebase
 /**
  * include/linux/f2fs_fs.h
  *
  * Copyright (c) 2012 Samsung Electronics Co., Ltd.
  *             http://www.samsung.com/
-<<<<<<< HEAD
-=======
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License version 2 as
- * published by the Free Software Foundation.
->>>>>>> rebase
  */
 #ifndef _LINUX_F2FS_FS_H
 #define _LINUX_F2FS_FS_H
@@ -33,10 +23,7 @@
 
 #define NULL_ADDR		((block_t)0)	/* used as block_t addresses */
 #define NEW_ADDR		((block_t)-1)	/* used as block_t addresses */
-<<<<<<< HEAD
 #define COMPRESS_ADDR		((block_t)-2)	/* used as compressed data flag */
-=======
->>>>>>> rebase
 
 #define F2FS_BYTES_TO_BLK(bytes)	((bytes) >> F2FS_BLKSIZE_BITS)
 #define F2FS_BLK_TO_BYTES(blk)		((blk) << F2FS_BLKSIZE_BITS)
@@ -50,20 +37,14 @@
 
 #define F2FS_MAX_QUOTAS		3
 
-<<<<<<< HEAD
 #define F2FS_ENC_UTF8_12_1	1
 
-=======
->>>>>>> rebase
 #define F2FS_IO_SIZE(sbi)	(1 << F2FS_OPTION(sbi).write_io_size_bits) /* Blocks */
 #define F2FS_IO_SIZE_KB(sbi)	(1 << (F2FS_OPTION(sbi).write_io_size_bits + 2)) /* KB */
 #define F2FS_IO_SIZE_BYTES(sbi)	(1 << (F2FS_OPTION(sbi).write_io_size_bits + 12)) /* B */
 #define F2FS_IO_SIZE_BITS(sbi)	(F2FS_OPTION(sbi).write_io_size_bits) /* power of 2 */
 #define F2FS_IO_SIZE_MASK(sbi)	(F2FS_IO_SIZE(sbi) - 1)
-<<<<<<< HEAD
 #define F2FS_IO_ALIGNED(sbi)	(F2FS_IO_SIZE(sbi) > 1)
-=======
->>>>>>> rebase
 
 /* This flag is used by node and meta inodes, and by recovery */
 #define GFP_F2FS_ZERO		(GFP_NOFS | __GFP_ZERO)
@@ -132,26 +113,19 @@ struct f2fs_super_block {
 	struct f2fs_device devs[MAX_DEVICES];	/* device list */
 	__le32 qf_ino[F2FS_MAX_QUOTAS];	/* quota inode numbers */
 	__u8 hot_ext_count;		/* # of hot file extension */
-<<<<<<< HEAD
 	__le16  s_encoding;		/* Filename charset encoding */
 	__le16  s_encoding_flags;	/* Filename charset encoding flags */
 	__u8 reserved[242];		/* valid reserved region */
 	__u8 mount_opts[64];            /* default mount option for SEC */
 	__le32 crc;			/* checksum of superblock */
-=======
-	__u8 reserved[314];		/* valid reserved region */
->>>>>>> rebase
 } __packed;
 
 /*
  * For checkpoint
  */
-<<<<<<< HEAD
 #define CP_DISABLED_QUICK_FLAG		0x00002000
 #define CP_DISABLED_FLAG		0x00001000
 #define CP_QUOTA_NEED_FSCK_FLAG		0x00000800
-=======
->>>>>>> rebase
 #define CP_LARGE_NAT_BITMAP_FLAG	0x00000400
 #define CP_NOCRC_RECOVERY_FLAG	0x00000200
 #define CP_TRIMMED_FLAG		0x00000100
@@ -197,13 +171,10 @@ struct f2fs_checkpoint {
 	unsigned char sit_nat_version_bitmap[1];
 } __packed;
 
-<<<<<<< HEAD
 #define CP_CHKSUM_OFFSET	4092	/* default chksum offset in checkpoint */
 #define CP_MIN_CHKSUM_OFFSET						\
 	(offsetof(struct f2fs_checkpoint, sit_nat_version_bitmap))
 
-=======
->>>>>>> rebase
 /*
  * For orphan inode management
  */
@@ -227,11 +198,7 @@ struct f2fs_orphan_block {
 struct f2fs_extent {
 	__le32 fofs;		/* start file offset of the extent */
 	__le32 blk;		/* start block address of the extent */
-<<<<<<< HEAD
 	__le32 len;		/* length of the extent */
-=======
-	__le32 len;		/* lengh of the extent */
->>>>>>> rebase
 } __packed;
 
 #define F2FS_NAME_LEN		255
@@ -242,20 +209,12 @@ struct f2fs_extent {
 					get_extra_isize(inode))
 #define DEF_NIDS_PER_INODE	5	/* Node IDs in an Inode */
 #define ADDRS_PER_INODE(inode)	addrs_per_inode(inode)
-<<<<<<< HEAD
 #define DEF_ADDRS_PER_BLOCK	1018	/* Address Pointers in a Direct Block */
 #define ADDRS_PER_BLOCK(inode)	addrs_per_block(inode)
 #define NIDS_PER_BLOCK		1018	/* Node IDs in an Indirect Block */
 
 #define ADDRS_PER_PAGE(page, inode)	\
 	(IS_INODE(page) ? ADDRS_PER_INODE(inode) : ADDRS_PER_BLOCK(inode))
-=======
-#define ADDRS_PER_BLOCK		1018	/* Address Pointers in a Direct Block */
-#define NIDS_PER_BLOCK		1018	/* Node IDs in an Indirect Block */
-
-#define ADDRS_PER_PAGE(page, inode)	\
-	(IS_INODE(page) ? ADDRS_PER_INODE(inode) : ADDRS_PER_BLOCK)
->>>>>>> rebase
 
 #define	NODE_DIR1_BLOCK		(DEF_ADDRS_PER_INODE + 1)
 #define	NODE_DIR2_BLOCK		(DEF_ADDRS_PER_INODE + 2)
@@ -311,13 +270,10 @@ struct f2fs_inode {
 			__le32 i_inode_checksum;/* inode meta checksum */
 			__le64 i_crtime;	/* creation time */
 			__le32 i_crtime_nsec;	/* creation time in nano scale */
-<<<<<<< HEAD
 			__le64 i_compr_blocks;	/* # of compressed blocks */
 			__u8 i_compress_algorithm;	/* compress algorithm */
 			__u8 i_log_cluster_size;	/* log of cluster size */
 			__le16 i_padding;		/* padding */
-=======
->>>>>>> rebase
 			__le32 i_extra_end[0];	/* for attribute size calculation */
 		} __packed;
 		__le32 i_addr[DEF_ADDRS_PER_INODE];	/* Pointers to data blocks */
@@ -327,11 +283,7 @@ struct f2fs_inode {
 } __packed;
 
 struct direct_node {
-<<<<<<< HEAD
 	__le32 addr[DEF_ADDRS_PER_BLOCK];	/* array of data block address */
-=======
-	__le32 addr[ADDRS_PER_BLOCK];	/* array of data block address */
->>>>>>> rebase
 } __packed;
 
 struct indirect_node {
@@ -349,11 +301,7 @@ enum {
 
 struct node_footer {
 	__le32 nid;		/* node id */
-<<<<<<< HEAD
 	__le32 ino;		/* inode number */
-=======
-	__le32 ino;		/* inode nunmber */
->>>>>>> rebase
 	__le32 flag;		/* include cold/fsync/dentry marks and offset */
 	__le64 cp_ver;		/* checkpoint version */
 	__le32 next_blkaddr;	/* next node page block address */
@@ -581,11 +529,7 @@ typedef __le32	f2fs_hash_t;
 struct f2fs_dir_entry {
 	__le32 hash_code;	/* hash code of file name */
 	__le32 ino;		/* inode number */
-<<<<<<< HEAD
 	__le16 name_len;	/* length of file name */
-=======
-	__le16 name_len;	/* lengh of file name */
->>>>>>> rebase
 	__u8 file_type;		/* file type */
 } __packed;
 
@@ -615,7 +559,6 @@ enum {
 
 #define	F2FS_DEF_PROJID		0	/* default project ID */
 
-<<<<<<< HEAD
 #define	F2FS_SEC_EXTRA_FSCK_MAGIC	0xF5CE45EC
 struct f2fs_sb_extra_flag_blk {
 	__le32 need_fsck;
@@ -629,6 +572,4 @@ struct f2fs_sb_extra_flag_blk {
 	__u8   rsvd[4052];
 } __packed;
 
-=======
->>>>>>> rebase
 #endif  /* _LINUX_F2FS_FS_H */

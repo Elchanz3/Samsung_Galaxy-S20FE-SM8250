@@ -37,10 +37,7 @@ config ARM_GIC_V3
 	select GENERIC_IRQ_MULTI_HANDLER
 	select IRQ_DOMAIN_HIERARCHY
 	select PARTITION_PERCPU
-<<<<<<< HEAD
 	select QCOM_SHOW_RESUME_IRQ
-=======
->>>>>>> rebase
 	select GENERIC_IRQ_EFFECTIVE_AFF_MASK
 
 config ARM_GIC_V3_ITS
@@ -61,7 +58,6 @@ config ARM_GIC_V3_ITS_FSL_MC
 	depends on FSL_MC_BUS
 	default ARM_GIC_V3_ITS
 
-<<<<<<< HEAD
 config ARM_GIC_V3_ACL
 	bool "GICv3 Access control"
 	depends on ARM_GIC_V3
@@ -71,8 +67,6 @@ config ARM_GIC_V3_ACL
 	  If you wish to enforce the Acces control then set this
 	  option to Y, if you are unsure please say N.
 
-=======
->>>>>>> rebase
 config ARM_NVIC
 	bool
 	select IRQ_DOMAIN
@@ -145,7 +139,6 @@ config BRCMSTB_L2_IRQ
 	select GENERIC_IRQ_CHIP
 	select IRQ_DOMAIN
 
-<<<<<<< HEAD
 config QCOM_SHOW_RESUME_IRQ
 	bool "Enable logging of interrupts that could have caused resume"
 	depends on ARM_GIC
@@ -156,8 +149,6 @@ config QCOM_SHOW_RESUME_IRQ
 	  wake up interrupts that causes system to come out of low power modes.
 	  Say Y if you want to debug why the system resumed.
 
-=======
->>>>>>> rebase
 config DW_APB_ICTL
 	bool
 	select GENERIC_IRQ_CHIP
@@ -386,10 +377,6 @@ config MESON_IRQ_GPIO
 config GOLDFISH_PIC
        bool "Goldfish programmable interrupt controller"
        depends on MIPS && (GOLDFISH || COMPILE_TEST)
-<<<<<<< HEAD
-=======
-       select GENERIC_IRQ_CHIP
->>>>>>> rebase
        select IRQ_DOMAIN
        help
          Say yes here to enable Goldfish interrupt controller driver used
@@ -404,7 +391,6 @@ config QCOM_PDC
 	  Power Domain Controller driver to manage and configure wakeup
 	  IRQs for Qualcomm Technologies Inc (QTI) mobile chips.
 
-<<<<<<< HEAD
 config QCOM_MPM
 	bool "QCOM MPM"
 	depends on ARCH_QCOM
@@ -416,8 +402,6 @@ config QCOM_MPM
 	  Say yes here to enable the MSM Power Manager interrupt
 	  controller to use as a wakeup interrupt controller.
 
-=======
->>>>>>> rebase
 config SIFIVE_PLIC
 	bool "SiFive Platform-Level Interrupt Controller"
 	depends on RISCV

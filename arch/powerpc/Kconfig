@@ -139,11 +139,7 @@ config PPC
 	select ARCH_HAS_MEMBARRIER_CALLBACKS
 	select ARCH_HAS_SCALED_CPUTIME		if VIRT_CPU_ACCOUNTING_NATIVE
 	select ARCH_HAS_SG_CHAIN
-<<<<<<< HEAD
 	select ARCH_HAS_STRICT_KERNEL_RWX	if ((PPC_BOOK3S_64 || PPC32) && !RELOCATABLE && !HIBERNATION)
-=======
-	select ARCH_HAS_STRICT_KERNEL_RWX	if (PPC32 && !HIBERNATION)
->>>>>>> rebase
 	select ARCH_HAS_TICK_BROADCAST		if GENERIC_CLOCKEVENTS_BROADCAST
 	select ARCH_HAS_UACCESS_FLUSHCACHE	if PPC64
 	select ARCH_HAS_UBSAN_SANITIZE_ALL
@@ -156,10 +152,6 @@ config PPC
 	select ARCH_USE_BUILTIN_BSWAP
 	select ARCH_USE_CMPXCHG_LOCKREF		if PPC64
 	select ARCH_WANT_IPC_PARSE_VERSION
-<<<<<<< HEAD
-=======
-	select ARCH_WANT_IRQS_OFF_ACTIVATE_MM
->>>>>>> rebase
 	select ARCH_WEAK_RELEASE_ACQUIRE
 	select BINFMT_ELF
 	select BUILDTIME_EXTABLE_SORT
@@ -215,11 +207,7 @@ config PPC
 	select HAVE_MEMBLOCK_NODE_MAP
 	select HAVE_MOD_ARCH_SPECIFIC
 	select HAVE_NMI				if PERF_EVENTS || (PPC64 && PPC_BOOK3S)
-<<<<<<< HEAD
 	select HAVE_HARDLOCKUP_DETECTOR_ARCH	if (PPC64 && PPC_BOOK3S)
-=======
-	select HAVE_HARDLOCKUP_DETECTOR_ARCH	if PPC64 && PPC_BOOK3S && SMP
->>>>>>> rebase
 	select HAVE_OPROFILE
 	select HAVE_OPTPROBES			if PPC64
 	select HAVE_PERF_EVENTS
@@ -720,11 +708,7 @@ config PPC_64K_PAGES
 
 config PPC_256K_PAGES
 	bool "256k page size"
-<<<<<<< HEAD
 	depends on 44x && !STDBINUTILS
-=======
-	depends on 44x && !STDBINUTILS && !PPC_47x
->>>>>>> rebase
 	help
 	  Make the page size 256k.
 
@@ -1025,22 +1009,6 @@ config FSL_RIO
 
 source "drivers/rapidio/Kconfig"
 
-<<<<<<< HEAD
-=======
-config PPC_RTAS_FILTER
-	bool "Enable filtering of RTAS syscalls"
-	default y
-	depends on PPC_RTAS
-	help
-	  The RTAS syscall API has security issues that could be used to
-	  compromise system integrity. This option enforces restrictions on the
-	  RTAS calls and arguments passed by userspace programs to mitigate
-	  these issues.
-
-	  Say Y unless you know what you are doing and the filter is causing
-	  problems for you.
-
->>>>>>> rebase
 endmenu
 
 config NONSTATIC_KERNEL

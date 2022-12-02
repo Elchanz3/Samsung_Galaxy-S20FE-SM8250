@@ -34,7 +34,6 @@
 #include <asm/pgtable.h>
 #include <asm/sysreg.h>
 #include <asm/tlbflush.h>
-<<<<<<< HEAD
 #include <linux/msm_rtb.h>
 
 static inline void contextidr_thread_switch(struct task_struct *next)
@@ -49,16 +48,6 @@ static inline void contextidr_thread_switch(struct task_struct *next)
 
 	uncached_logk(LOGK_CTXID, (void *)(u64)pid);
 
-=======
-
-static inline void contextidr_thread_switch(struct task_struct *next)
-{
-	if (!IS_ENABLED(CONFIG_PID_IN_CONTEXTIDR))
-		return;
-
-	write_sysreg(task_pid_nr(next), contextidr_el1);
-	isb();
->>>>>>> rebase
 }
 
 /*
@@ -158,11 +147,7 @@ static inline void cpu_install_idmap(void)
  * Atomically replaces the active TTBR1_EL1 PGD with a new VA-compatible PGD,
  * avoiding the possibility of conflicting TLB entries being allocated.
  */
-<<<<<<< HEAD
 static inline void __nocfi cpu_replace_ttbr1(pgd_t *pgdp)
-=======
-static inline void cpu_replace_ttbr1(pgd_t *pgdp)
->>>>>>> rebase
 {
 	typedef void (ttbr_replace_func)(phys_addr_t);
 	extern ttbr_replace_func idmap_cpu_replace_ttbr1;
@@ -170,11 +155,7 @@ static inline void cpu_replace_ttbr1(pgd_t *pgdp)
 
 	phys_addr_t pgd_phys = virt_to_phys(pgdp);
 
-<<<<<<< HEAD
 	replace_phys = (void *)__pa_function(idmap_cpu_replace_ttbr1);
-=======
-	replace_phys = (void *)__pa_symbol(idmap_cpu_replace_ttbr1);
->>>>>>> rebase
 
 	cpu_install_idmap();
 	replace_phys(pgd_phys);
@@ -265,10 +246,7 @@ switch_mm(struct mm_struct *prev, struct mm_struct *next,
 
 void verify_cpu_asid_bits(void);
 void post_ttbr_update_workaround(void);
-<<<<<<< HEAD
 void arm64_workaround_1542418_asid_rollover(void);
-=======
->>>>>>> rebase
 
 #endif /* !__ASSEMBLY__ */
 

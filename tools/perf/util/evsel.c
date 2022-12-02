@@ -1290,12 +1290,6 @@ void perf_evsel__exit(struct perf_evsel *evsel)
 	thread_map__put(evsel->threads);
 	zfree(&evsel->group_name);
 	zfree(&evsel->name);
-<<<<<<< HEAD
-=======
-	zfree(&evsel->pmu_name);
-	zfree(&evsel->per_pkg_mask);
-	zfree(&evsel->metric_events);
->>>>>>> rebase
 	perf_evsel__object.fini(evsel);
 }
 

@@ -16,10 +16,7 @@ config BITREVERSE
 config HAVE_ARCH_BITREVERSE
 	bool
 	default n
-<<<<<<< HEAD
 	depends on BITREVERSE
-=======
->>>>>>> rebase
 	help
 	  This option enables the use of hardware bit-reversal instructions on
 	  architectures which support such operations.
@@ -593,7 +590,6 @@ config STACKDEPOT
 	bool
 	select STACKTRACE
 
-<<<<<<< HEAD
 config STACK_HASH_ORDER_SHIFT
 	int "stack depot hash size (12 => 4KB, 20 => 1024KB)"
 	range 12 20
@@ -603,8 +599,6 @@ config STACK_HASH_ORDER_SHIFT
 	 Select the hash size as a power of 2 for the stackdepot hash table.
 	 Choose a lower value to reduce the memory impact.
 
-=======
->>>>>>> rebase
 config SBITMAP
 	bool
 
@@ -617,7 +611,6 @@ config PRIME_NUMBERS
 config STRING_SELFTEST
 	tristate "Test string functions"
 
-<<<<<<< HEAD
 config FFSI
 	bool
 	default y
@@ -633,8 +626,6 @@ config SCHED_FFSI_GLUE
 	  Glue interface sticking edge of CFS scheduler and smoother governor
 	  working based on FFSI concept strategy.
 
-=======
->>>>>>> rebase
 endmenu
 
 config GENERIC_LIB_ASHLDI3

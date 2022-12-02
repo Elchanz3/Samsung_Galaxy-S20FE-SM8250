@@ -33,10 +33,7 @@
 #include <linux/cpufreq.h>
 #include <linux/cpuidle.h>
 #include <linux/timer.h>
-<<<<<<< HEAD
 #include <linux/wakeup_reason.h>
-=======
->>>>>>> rebase
 
 #include "../base.h"
 #include "power.h"
@@ -127,13 +124,10 @@ void device_pm_unlock(void)
  */
 void device_pm_add(struct device *dev)
 {
-<<<<<<< HEAD
 	/* Skip PM setup/initialization. */
 	if (device_pm_not_required(dev))
 		return;
 
-=======
->>>>>>> rebase
 	pr_debug("PM: Adding info for %s:%s\n",
 		 dev->bus ? dev->bus->name : "No Bus", dev_name(dev));
 	device_pm_check_callbacks(dev);
@@ -152,12 +146,9 @@ void device_pm_add(struct device *dev)
  */
 void device_pm_remove(struct device *dev)
 {
-<<<<<<< HEAD
 	if (device_pm_not_required(dev))
 		return;
 
-=======
->>>>>>> rebase
 	pr_debug("PM: Removing info for %s:%s\n",
 		 dev->bus ? dev->bus->name : "No Bus", dev_name(dev));
 	complete_all(&dev->power.completion);
@@ -473,11 +464,7 @@ static void dpm_show_time(ktime_t starttime, pm_message_t state, int error,
 	if (usecs == 0)
 		usecs = 1;
 
-<<<<<<< HEAD
 	pr_info("PM: %s%s%s of devices %s after %ld.%03ld msecs\n",
-=======
-	pm_pr_dbg("%s%s%s of devices %s after %ld.%03ld msecs\n",
->>>>>>> rebase
 		  info ?: "", info ? " " : "", pm_verb(state.event),
 		  error ? "aborted" : "complete",
 		  usecs / USEC_PER_MSEC, usecs % USEC_PER_MSEC);
@@ -1759,10 +1746,7 @@ static int __device_suspend(struct device *dev, pm_message_t state, bool async)
 	pm_callback_t callback = NULL;
 	const char *info = NULL;
 	int error = 0;
-<<<<<<< HEAD
 	char suspend_abort[MAX_SUSPEND_ABORT_LEN];
-=======
->>>>>>> rebase
 	DECLARE_DPM_WATCHDOG_ON_STACK(wd);
 
 	TRACE_DEVICE(dev);
@@ -1776,7 +1760,6 @@ static int __device_suspend(struct device *dev, pm_message_t state, bool async)
 	}
 
 	/*
-<<<<<<< HEAD
 	 * If a device configured to wake up the system from sleep states
 	 * has been suspended at run time and there's a resume request pending
 	 * for it, this is equivalent to the device signaling wakeup, so the
@@ -1793,22 +1776,6 @@ static int __device_suspend(struct device *dev, pm_message_t state, bool async)
 		pm_get_active_wakeup_sources(suspend_abort,
 			MAX_SUSPEND_ABORT_LEN);
 		log_suspend_abort_reason(suspend_abort);
-=======
-	 * Wait for possible runtime PM transitions of the device in progress
-	 * to complete and if there's a runtime resume request pending for it,
-	 * resume it before proceeding with invoking the system-wide suspend
-	 * callbacks for it.
-	 *
-	 * If the system-wide suspend callbacks below change the configuration
-	 * of the device, they must disable runtime PM for it or otherwise
-	 * ensure that its runtime-resume callbacks will not be confused by that
-	 * change in case they are invoked going forward.
-	 */
-	pm_runtime_barrier(dev);
-
-	if (pm_wakeup_pending()) {
-		dev->power.direct_complete = false;
->>>>>>> rebase
 		async_error = -EBUSY;
 		goto Complete;
 	}
@@ -2097,10 +2064,7 @@ int dpm_prepare(pm_message_t state)
 			printk(KERN_INFO "PM: Device %s not prepared "
 				"for power transition: code %d\n",
 				dev_name(dev), error);
-<<<<<<< HEAD
 			dpm_save_failed_dev(dev_name(dev));
-=======
->>>>>>> rebase
 			put_device(dev);
 			break;
 		}
@@ -2193,13 +2157,7 @@ static bool pm_ops_is_empty(const struct dev_pm_ops *ops)
 
 void device_pm_check_callbacks(struct device *dev)
 {
-<<<<<<< HEAD
 	spin_lock_irq(&dev->power.lock);
-=======
-	unsigned long flags;
-
-	spin_lock_irqsave(&dev->power.lock, flags);
->>>>>>> rebase
 	dev->power.no_pm_callbacks =
 		(!dev->bus || (pm_ops_is_empty(dev->bus->pm) &&
 		 !dev->bus->suspend && !dev->bus->resume)) &&
@@ -2208,11 +2166,7 @@ void device_pm_check_callbacks(struct device *dev)
 		(!dev->pm_domain || pm_ops_is_empty(&dev->pm_domain->ops)) &&
 		(!dev->driver || (pm_ops_is_empty(dev->driver->pm) &&
 		 !dev->driver->suspend && !dev->driver->resume));
-<<<<<<< HEAD
 	spin_unlock_irq(&dev->power.lock);
-=======
-	spin_unlock_irqrestore(&dev->power.lock, flags);
->>>>>>> rebase
 }
 
 bool dev_pm_smart_suspend_and_suspended(struct device *dev)

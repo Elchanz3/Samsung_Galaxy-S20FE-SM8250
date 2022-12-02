@@ -202,11 +202,7 @@ unsigned int arpt_do_table(struct sk_buff *skb,
 
 	local_bh_disable();
 	addend = xt_write_recseq_begin();
-<<<<<<< HEAD
 	private = rcu_access_pointer(table->private);
-=======
-	private = READ_ONCE(table->private); /* Address dependency. */
->>>>>>> rebase
 	cpu     = smp_processor_id();
 	table_base = private->entries;
 	jumpstack  = (struct arpt_entry **)private->jumpstack[cpu];
@@ -652,11 +648,7 @@ static struct xt_counters *alloc_counters(const struct xt_table *table)
 {
 	unsigned int countersize;
 	struct xt_counters *counters;
-<<<<<<< HEAD
 	const struct xt_table_info *private = xt_table_get_private_protected(table);
-=======
-	const struct xt_table_info *private = table->private;
->>>>>>> rebase
 
 	/* We need atomic snapshot of counters: rest doesn't change
 	 * (other than comefrom, which userspace doesn't care
@@ -680,11 +672,7 @@ static int copy_entries_to_user(unsigned int total_size,
 	unsigned int off, num;
 	const struct arpt_entry *e;
 	struct xt_counters *counters;
-<<<<<<< HEAD
 	struct xt_table_info *private = xt_table_get_private_protected(table);
-=======
-	struct xt_table_info *private = table->private;
->>>>>>> rebase
 	int ret = 0;
 	void *loc_cpu_entry;
 
@@ -819,11 +807,7 @@ static int get_info(struct net *net, void __user *user,
 	t = xt_request_find_table_lock(net, NFPROTO_ARP, name);
 	if (!IS_ERR(t)) {
 		struct arpt_getinfo info;
-<<<<<<< HEAD
 		const struct xt_table_info *private = xt_table_get_private_protected(t);
-=======
-		const struct xt_table_info *private = t->private;
->>>>>>> rebase
 #ifdef CONFIG_COMPAT
 		struct xt_table_info tmp;
 
@@ -876,11 +860,7 @@ static int get_entries(struct net *net, struct arpt_get_entries __user *uptr,
 
 	t = xt_find_table_lock(net, NFPROTO_ARP, get.name);
 	if (!IS_ERR(t)) {
-<<<<<<< HEAD
 		const struct xt_table_info *private = xt_table_get_private_protected(t);
-=======
-		const struct xt_table_info *private = t->private;
->>>>>>> rebase
 
 		if (get.size == private->size)
 			ret = copy_entries_to_user(private->size,
@@ -940,11 +920,6 @@ static int __do_replace(struct net *net, const char *name,
 	    (newinfo->number <= oldinfo->initial_entries))
 		module_put(t->me);
 
-<<<<<<< HEAD
-=======
-	xt_table_unlock(t);
-
->>>>>>> rebase
 	get_old_counters(oldinfo, counters);
 
 	/* Decrease module usage counts and free resource */
@@ -959,10 +934,7 @@ static int __do_replace(struct net *net, const char *name,
 		net_warn_ratelimited("arptables: counters copy to user failed while replacing table\n");
 	}
 	vfree(counters);
-<<<<<<< HEAD
 	xt_table_unlock(t);
-=======
->>>>>>> rebase
 	return ret;
 
  put_module:
@@ -1046,11 +1018,7 @@ static int do_add_counters(struct net *net, const void __user *user,
 	}
 
 	local_bh_disable();
-<<<<<<< HEAD
 	private = xt_table_get_private_protected(t);
-=======
-	private = t->private;
->>>>>>> rebase
 	if (private->number != tmp.num_counters) {
 		ret = -EINVAL;
 		goto unlock_up_free;
@@ -1226,11 +1194,6 @@ static int translate_compat_table(struct net *net,
 	if (!newinfo)
 		goto out_unlock;
 
-<<<<<<< HEAD
-=======
-	memset(newinfo->entries, 0, size);
-
->>>>>>> rebase
 	newinfo->number = compatr->num_entries;
 	for (i = 0; i < NF_ARP_NUMHOOKS; i++) {
 		newinfo->hook_entry[i] = compatr->hook_entry[i];
@@ -1392,11 +1355,7 @@ static int compat_copy_entries_to_user(unsigned int total_size,
 				       void __user *userptr)
 {
 	struct xt_counters *counters;
-<<<<<<< HEAD
 	const struct xt_table_info *private = xt_table_get_private_protected(table);
-=======
-	const struct xt_table_info *private = table->private;
->>>>>>> rebase
 	void __user *pos;
 	unsigned int size;
 	int ret = 0;

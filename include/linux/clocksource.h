@@ -194,10 +194,7 @@ extern void clocksource_suspend(void);
 extern void clocksource_resume(void);
 extern struct clocksource * __init clocksource_default_clock(void);
 extern void clocksource_mark_unstable(struct clocksource *cs);
-<<<<<<< HEAD
 extern void clocksource_select_force(void);
-=======
->>>>>>> rebase
 extern void
 clocksource_start_suspend_timing(struct clocksource *cs, u64 start_cycles);
 extern u64 clocksource_stop_suspend_timing(struct clocksource *cs, u64 now);

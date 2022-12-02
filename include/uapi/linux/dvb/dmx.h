@@ -33,14 +33,11 @@
 
 #define DMX_FILTER_SIZE 16
 
-<<<<<<< HEAD
 /* Min recording chunk upon which event is generated */
 #define DMX_REC_BUFF_CHUNK_MIN_SIZE		(100*188)
 
 #define DMX_MAX_DECODER_BUFFER_NUM		(32)
 
-=======
->>>>>>> rebase
 /**
  * enum dmx_output - Output for the demux.
  *
@@ -186,7 +183,6 @@ struct dmx_sct_filter_params {
 #define DMX_CHECK_CRC       1
 #define DMX_ONESHOT         2
 #define DMX_IMMEDIATE_START 4
-<<<<<<< HEAD
 #define DMX_KERNEL_CLIENT   0x8000
 };
 
@@ -226,10 +222,6 @@ enum dmx_video_codec {
 #define DMX_IDX_H264_ACCESS_UNIT_DEL        0x04000000
 #define DMX_IDX_H264_SEI                    0x08000000
 
-=======
-};
-
->>>>>>> rebase
 /**
  * struct dmx_pes_filter_params - Specifies Packetized Elementary Stream (PES)
  *	filter parameters.
@@ -246,7 +238,6 @@ struct dmx_pes_filter_params {
 	enum dmx_output output;
 	enum dmx_ts_pes pes_type;
 	__u32           flags;
-<<<<<<< HEAD
 
 	/*
 	 * The following configures when the event
@@ -738,10 +729,6 @@ enum dmx_playback_mode_t {
 	 */
 	DMX_PB_MODE_PULL,
 };
-=======
-};
-
->>>>>>> rebase
 /**
  * struct dmx_stc - Stores System Time Counter (STC) information.
  *
@@ -755,7 +742,6 @@ struct dmx_stc {
 	__u64 stc;
 };
 
-<<<<<<< HEAD
 enum dmx_buffer_mode {
 	/*
 	 * demux buffers are allocated internally
@@ -931,8 +917,6 @@ struct dmx_scrambling_bits {
 	__u8 value;
 };
 
-=======
->>>>>>> rebase
 /**
  * enum dmx_buffer_flags - DMX memory-mapped buffer flags
  *
@@ -952,19 +936,11 @@ struct dmx_scrambling_bits {
  */
 
 enum dmx_buffer_flags {
-<<<<<<< HEAD
 	DMX_BUF_FLAG_HAD_CRC32_DISCARD		= 1 << 0,
 	DMX_BUF_FLAG_TEI			= 1 << 1,
 	DMX_BUF_PKT_COUNTER_MISMATCH		= 1 << 2,
 	DMX_BUF_FLAG_DISCONTINUITY_DETECTED	= 1 << 3,
 	DMX_BUF_FLAG_DISCONTINUITY_INDICATOR	= 1 << 4,
-=======
-	DMX_BUFFER_FLAG_HAD_CRC32_DISCARD		= 1 << 0,
-	DMX_BUFFER_FLAG_TEI				= 1 << 1,
-	DMX_BUFFER_PKT_COUNTER_MISMATCH			= 1 << 2,
-	DMX_BUFFER_FLAG_DISCONTINUITY_DETECTED		= 1 << 3,
-	DMX_BUFFER_FLAG_DISCONTINUITY_INDICATOR		= 1 << 4,
->>>>>>> rebase
 };
 
 /**
@@ -994,7 +970,6 @@ struct dmx_buffer {
 	__u32			length;
 	__u32			flags;
 	__u32			count;
-<<<<<<< HEAD
 	unsigned int size;
 	int handle;
 
@@ -1007,8 +982,6 @@ struct dmx_buffer {
 	 */
 	int is_protected;
 
-=======
->>>>>>> rebase
 };
 
 /**
@@ -1052,7 +1025,6 @@ struct dmx_exportbuffer {
 #define DMX_SET_PES_FILTER       _IOW('o', 44, struct dmx_pes_filter_params)
 #define DMX_SET_BUFFER_SIZE      _IO('o', 45)
 #define DMX_GET_PES_PIDS         _IOR('o', 47, __u16[5])
-<<<<<<< HEAD
 #define DMX_GET_CAPS             _IOR('o', 48, struct dmx_caps)
 #define DMX_SET_SOURCE           _IOW('o', 49, enum dmx_source_t)
 #define DMX_GET_STC              _IOWR('o', 50, struct dmx_stc)
@@ -1080,12 +1052,6 @@ struct dmx_exportbuffer {
 #define DMX_SET_BUFFER		     _IOW('o', 77, struct dmx_buffer)
 #define DMX_SET_DECODER_BUFFER	 _IOW('o', 78, struct dmx_decoder_buffers)
 #define DMX_REUSE_DECODER_BUFFER _IO('o', 79)
-=======
-#define DMX_GET_STC              _IOWR('o', 50, struct dmx_stc)
-#define DMX_ADD_PID              _IOW('o', 51, __u16)
-#define DMX_REMOVE_PID           _IOW('o', 52, __u16)
-
->>>>>>> rebase
 #if !defined(__KERNEL__)
 
 /* This is needed for legacy userspace support */

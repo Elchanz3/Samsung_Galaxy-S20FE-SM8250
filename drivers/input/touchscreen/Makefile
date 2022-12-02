@@ -7,11 +7,8 @@
 
 wm97xx-ts-y := wm97xx-core.o
 
-<<<<<<< HEAD
 obj-$(CONFIG_TOUCHSCREEN_DUAL_FOLDABLE)	+= sec_virtual_tsp.o
 
-=======
->>>>>>> rebase
 obj-$(CONFIG_TOUCHSCREEN_PROPERTIES)	+= of_touchscreen.o
 obj-$(CONFIG_TOUCHSCREEN_88PM860X)	+= 88pm860x-ts.o
 obj-$(CONFIG_TOUCHSCREEN_AD7877)	+= ad7877.o
@@ -114,7 +111,6 @@ obj-$(CONFIG_TOUCHSCREEN_ZET6223)	+= zet6223.o
 obj-$(CONFIG_TOUCHSCREEN_ZFORCE)	+= zforce_ts.o
 obj-$(CONFIG_TOUCHSCREEN_COLIBRI_VF50)	+= colibri-vf50-ts.o
 obj-$(CONFIG_TOUCHSCREEN_ROHM_BU21023)	+= rohm_bu21023.o
-<<<<<<< HEAD
 obj-$(CONFIG_TOUCHSCREEN_SEC_TS_Y79A)	+= sec_ts/y79a/
 obj-$(CONFIG_TOUCHSCREEN_SEC_TS_Y79A_C)	+= sec_ts/y79a_c/
 obj-$(CONFIG_TOUCHSCREEN_SEC_TS_Y771_SUB)	+= sec_ts/y79a_c/
@@ -131,5 +127,3 @@ obj-$(CONFIG_TOUCHSCREEN_NOVATEK_NT36523)	+= novatek/nt36523/
 obj-$(CONFIG_TOUCHSCREEN_MELFAS_MSS100)	+= melfas/mss100/
 obj-$(CONFIG_TOUCHSCREEN_ZINITIX_ZT7650)	+= zinitix/zt7650/
 obj-$(CONFIG_TOUCHSCREEN_STM_FTS5CU56A)	+= stm/fts5cu56a/
-=======
->>>>>>> rebase

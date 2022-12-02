@@ -162,13 +162,6 @@ void xenvif_napi_schedule_or_enable_events(struct xenvif_queue *queue)
 
 	if (more_to_do)
 		napi_schedule(&queue->napi);
-<<<<<<< HEAD
-=======
-	else if (atomic_fetch_andnot(NETBK_TX_EOI | NETBK_COMMON_EOI,
-				     &queue->eoi_pending) &
-		 (NETBK_TX_EOI | NETBK_COMMON_EOI))
-		xen_irq_lateeoi(queue->tx_irq, 0);
->>>>>>> rebase
 }
 
 static void tx_add_credit(struct xenvif_queue *queue)
@@ -495,11 +488,7 @@ check_frags:
 				 * the header's copy failed, and they are
 				 * sharing a slot, send an error
 				 */
-<<<<<<< HEAD
 				if (i == 0 && sharedslot)
-=======
-				if (i == 0 && !first_shinfo && sharedslot)
->>>>>>> rebase
 					xenvif_idx_release(queue, pending_idx,
 							   XEN_NETIF_RSP_ERROR);
 				else
@@ -1338,19 +1327,7 @@ int xenvif_tx_action(struct xenvif_queue *queue, int budget)
 				      NULL,
 				      queue->pages_to_map,
 				      nr_mops);
-<<<<<<< HEAD
 		BUG_ON(ret);
-=======
-		if (ret) {
-			unsigned int i;
-
-			netdev_err(queue->vif->dev, "Map fail: nr %u ret %d\n",
-				   nr_mops, ret);
-			for (i = 0; i < nr_mops; ++i)
-				WARN_ON_ONCE(queue->tx_map_ops[i].status ==
-				             GNTST_okay);
-		}
->>>>>>> rebase
 	}
 
 	work_done = xenvif_tx_submit(queue);
@@ -1636,20 +1613,9 @@ static bool xenvif_ctrl_work_todo(struct xenvif *vif)
 irqreturn_t xenvif_ctrl_irq_fn(int irq, void *data)
 {
 	struct xenvif *vif = data;
-<<<<<<< HEAD
 
 	while (xenvif_ctrl_work_todo(vif))
 		xenvif_ctrl_action(vif);
-=======
-	unsigned int eoi_flag = XEN_EOI_FLAG_SPURIOUS;
-
-	while (xenvif_ctrl_work_todo(vif)) {
-		xenvif_ctrl_action(vif);
-		eoi_flag = 0;
-	}
-
-	xen_irq_lateeoi(irq, eoi_flag);
->>>>>>> rebase
 
 	return IRQ_HANDLED;
 }

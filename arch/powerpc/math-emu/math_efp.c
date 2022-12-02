@@ -21,10 +21,6 @@
 
 #include <linux/types.h>
 #include <linux/prctl.h>
-<<<<<<< HEAD
-=======
-#include <linux/module.h>
->>>>>>> rebase
 
 #include <linux/uaccess.h>
 #include <asm/reg.h>

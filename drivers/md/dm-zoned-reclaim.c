@@ -348,13 +348,8 @@ static int dmz_do_reclaim(struct dmz_reclaim *zrc)
 
 	/* Get a data zone */
 	dzone = dmz_get_zone_for_reclaim(zmd);
-<<<<<<< HEAD
 	if (IS_ERR(dzone))
 		return PTR_ERR(dzone);
-=======
-	if (!dzone)
-		return -EBUSY;
->>>>>>> rebase
 
 	start = jiffies;
 

@@ -618,11 +618,7 @@ store_link_ksettings_for_user(void __user *to,
 {
 	struct ethtool_link_usettings link_usettings;
 
-<<<<<<< HEAD
 	memcpy(&link_usettings.base, &from->base, sizeof(link_usettings));
-=======
-	memcpy(&link_usettings, from, sizeof(link_usettings));
->>>>>>> rebase
 	bitmap_to_arr32(link_usettings.link_modes.supported,
 			from->link_modes.supported,
 			__ETHTOOL_LINK_MODE_MASK_NBITS);
@@ -1598,11 +1594,7 @@ static int ethtool_get_any_eeprom(struct net_device *dev, void __user *useraddr,
 	if (eeprom.offset + eeprom.len > total_len)
 		return -EINVAL;
 
-<<<<<<< HEAD
 	data = kmalloc(PAGE_SIZE, GFP_USER);
-=======
-	data = kzalloc(PAGE_SIZE, GFP_USER);
->>>>>>> rebase
 	if (!data)
 		return -ENOMEM;
 
@@ -1667,11 +1659,7 @@ static int ethtool_set_eeprom(struct net_device *dev, void __user *useraddr)
 	if (eeprom.offset + eeprom.len > ops->get_eeprom_len(dev))
 		return -EINVAL;
 
-<<<<<<< HEAD
 	data = kmalloc(PAGE_SIZE, GFP_USER);
-=======
-	data = kzalloc(PAGE_SIZE, GFP_USER);
->>>>>>> rebase
 	if (!data)
 		return -ENOMEM;
 
@@ -1852,11 +1840,7 @@ static int ethtool_self_test(struct net_device *dev, char __user *useraddr)
 		return -EFAULT;
 
 	test.len = test_len;
-<<<<<<< HEAD
 	data = kmalloc_array(test_len, sizeof(u64), GFP_USER);
-=======
-	data = kcalloc(test_len, sizeof(u64), GFP_USER);
->>>>>>> rebase
 	if (!data)
 		return -ENOMEM;
 
@@ -2388,11 +2372,7 @@ static int ethtool_get_tunable(struct net_device *dev, void __user *useraddr)
 	ret = ethtool_tunable_valid(&tuna);
 	if (ret)
 		return ret;
-<<<<<<< HEAD
 	data = kmalloc(tuna.len, GFP_USER);
-=======
-	data = kzalloc(tuna.len, GFP_USER);
->>>>>>> rebase
 	if (!data)
 		return -ENOMEM;
 	ret = ops->get_tunable(dev, &tuna, data);
@@ -2572,11 +2552,7 @@ static int get_phy_tunable(struct net_device *dev, void __user *useraddr)
 	ret = ethtool_phy_tunable_valid(&tuna);
 	if (ret)
 		return ret;
-<<<<<<< HEAD
 	data = kmalloc(tuna.len, GFP_USER);
-=======
-	data = kzalloc(tuna.len, GFP_USER);
->>>>>>> rebase
 	if (!data)
 		return -ENOMEM;
 	mutex_lock(&phydev->lock);

@@ -40,10 +40,6 @@
 #include <linux/xattr.h>
 #include <linux/random.h>
 
-<<<<<<< HEAD
-=======
-#define __FS_HAS_ENCRYPTION IS_ENABLED(CONFIG_UBIFS_FS_ENCRYPTION)
->>>>>>> rebase
 #include <linux/fscrypt.h>
 
 #include "ubifs-media.h"
@@ -142,11 +138,7 @@
  */
 #define WORST_COMPR_FACTOR 2
 
-<<<<<<< HEAD
 #ifdef CONFIG_FS_ENCRYPTION
-=======
-#ifdef CONFIG_UBIFS_FS_ENCRYPTION
->>>>>>> rebase
 #define UBIFS_CIPHER_BLOCK_SIZE FS_CRYPTO_BLOCK_SIZE
 #else
 #define UBIFS_CIPHER_BLOCK_SIZE 0
@@ -1836,11 +1828,7 @@ int ubifs_decompress(const struct ubifs_info *c, const void *buf, int len,
 #include "misc.h"
 #include "key.h"
 
-<<<<<<< HEAD
 #ifndef CONFIG_FS_ENCRYPTION
-=======
-#ifndef CONFIG_UBIFS_FS_ENCRYPTION
->>>>>>> rebase
 static inline int ubifs_encrypt(const struct inode *inode,
 				struct ubifs_data_node *dn,
 				unsigned int in_len, unsigned int *out_len,

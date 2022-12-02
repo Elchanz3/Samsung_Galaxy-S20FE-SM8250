@@ -8,10 +8,7 @@
 #include <linux/sched/numa_balancing.h>
 #include <linux/tracepoint.h>
 #include <linux/binfmts.h>
-<<<<<<< HEAD
 #include <linux/sched/idle.h>
-=======
->>>>>>> rebase
 
 /*
  * Tracepoint for calling kthread_stop, performed to end a kthread:
@@ -56,7 +53,6 @@ TRACE_EVENT(sched_kthread_stop_ret,
 );
 
 /*
-<<<<<<< HEAD
  * Tracepoint for task enqueue/dequeue:
  */
 TRACE_EVENT(sched_enq_deq_task,
@@ -105,8 +101,6 @@ TRACE_EVENT(sched_enq_deq_task,
 );
 
 /*
-=======
->>>>>>> rebase
  * Tracepoint for waking up a task:
  */
 DECLARE_EVENT_CLASS(sched_wakeup_template,
@@ -211,19 +205,11 @@ TRACE_EVENT(sched_switch,
 	TP_fast_assign(
 		memcpy(__entry->next_comm, next->comm, TASK_COMM_LEN);
 		__entry->prev_pid	= prev->pid;
-<<<<<<< HEAD
 		__entry->prev_prio	= prev->prio == -1 ? 150 : prev->prio;
 		__entry->prev_state	= __trace_sched_switch_state(preempt, prev);
 		memcpy(__entry->prev_comm, prev->comm, TASK_COMM_LEN);
 		__entry->next_pid	= next->pid;
 		__entry->next_prio	= next->prio == -1 ? 150 : next->prio;
-=======
-		__entry->prev_prio	= prev->prio;
-		__entry->prev_state	= __trace_sched_switch_state(preempt, prev);
-		memcpy(__entry->prev_comm, prev->comm, TASK_COMM_LEN);
-		__entry->next_pid	= next->pid;
-		__entry->next_prio	= next->prio;
->>>>>>> rebase
 		/* XXX SCHED_DEADLINE */
 	),
 
@@ -276,7 +262,6 @@ TRACE_EVENT(sched_migrate_task,
 		  __entry->orig_cpu, __entry->dest_cpu)
 );
 
-<<<<<<< HEAD
 /*
  * Tracepoint for load balancing:
  */
@@ -468,8 +453,6 @@ TRACE_EVENT(sched_load_balance_stats,
 #endif /* NR_CPUS > BITS_PER_LONG */
 #endif /* CONFIG_SMP */
 
-=======
->>>>>>> rebase
 DECLARE_EVENT_CLASS(sched_process_template,
 
 	TP_PROTO(struct task_struct *p),
@@ -498,11 +481,7 @@ DECLARE_EVENT_CLASS(sched_process_template,
 DEFINE_EVENT(sched_process_template, sched_process_free,
 	     TP_PROTO(struct task_struct *p),
 	     TP_ARGS(p));
-<<<<<<< HEAD
 
-=======
-	     
->>>>>>> rebase
 
 /*
  * Tracepoint for a task exiting:
@@ -657,7 +636,6 @@ DEFINE_EVENT(sched_stat_template, sched_stat_blocked,
 	     TP_ARGS(tsk, delay));
 
 /*
-<<<<<<< HEAD
  * Tracepoint for recording the cause of uninterruptible sleep.
  */
 TRACE_EVENT(sched_blocked_reason,
@@ -682,8 +660,6 @@ TRACE_EVENT(sched_blocked_reason,
 );
 
 /*
-=======
->>>>>>> rebase
  * Tracepoint for accounting runtime (time the task is executing
  * on a CPU).
  */
@@ -875,7 +851,6 @@ TRACE_EVENT(sched_wake_idle_without_ipi,
 
 	TP_printk("cpu=%d", __entry->cpu)
 );
-<<<<<<< HEAD
 
 #ifdef CONFIG_SMP
 #ifdef CREATE_TRACE_POINTS
@@ -1691,8 +1666,6 @@ TRACE_EVENT(sched_isolate,
 
 #include "walt.h"
 #endif /* CONFIG_SMP */
-=======
->>>>>>> rebase
 #endif /* _TRACE_SCHED_H */
 
 /* This part must be outside protection */

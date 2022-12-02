@@ -84,12 +84,9 @@
 extern phys_addr_t arm64_dma_phys_limit;
 #define ARCH_LOW_ADDRESS_LIMIT	(arm64_dma_phys_limit - 1)
 
-<<<<<<< HEAD
 extern unsigned int boot_reason;
 extern unsigned int cold_boot;
 
-=======
->>>>>>> rebase
 struct debug_info {
 #ifdef CONFIG_HAVE_HW_BREAKPOINT
 	/* Have we suspended stepping by a debugger? */
@@ -178,14 +175,8 @@ void tls_preserve_current_state(void);
 
 static inline void start_thread_common(struct pt_regs *regs, unsigned long pc)
 {
-<<<<<<< HEAD
 	memset(regs, 0, sizeof(*regs));
 	forget_syscall(regs);
-=======
-	s32 previous_syscall = regs->syscallno;
-	memset(regs, 0, sizeof(*regs));
-	regs->syscallno = previous_syscall;
->>>>>>> rebase
 	regs->pc = pc;
 }
 
@@ -303,7 +294,6 @@ extern void __init minsigstksz_setup(void);
 #define SVE_SET_VL(arg)	sve_set_current_vl(arg)
 #define SVE_GET_VL()	sve_get_current_vl()
 
-<<<<<<< HEAD
 #ifdef CONFIG_ARM64_TAGGED_ADDR_ABI
 /* PR_{SET,GET}_TAGGED_ADDR_CTRL prctl */
 long set_tagged_addr_ctrl(unsigned long arg);
@@ -312,8 +302,6 @@ long get_tagged_addr_ctrl(void);
 #define GET_TAGGED_ADDR_CTRL()		get_tagged_addr_ctrl()
 #endif
 
-=======
->>>>>>> rebase
 /*
  * For CONFIG_GCC_PLUGIN_STACKLEAK
  *

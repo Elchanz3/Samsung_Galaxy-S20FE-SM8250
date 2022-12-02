@@ -77,13 +77,9 @@ int xfrm4_output_finish(struct sock *sk, struct sk_buff *skb)
 {
 	memset(IPCB(skb), 0, sizeof(*IPCB(skb)));
 
-<<<<<<< HEAD
 #ifdef CONFIG_NETFILTER
 	IPCB(skb)->flags |= IPSKB_XFRM_TRANSFORMED;
 #endif
-=======
-	IPCB(skb)->flags |= IPSKB_XFRM_TRANSFORMED;
->>>>>>> rebase
 
 	return xfrm_output(sk, skb);
 }

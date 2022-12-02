@@ -154,11 +154,7 @@ static void soc_init_component_debugfs(struct snd_soc_component *component)
 	}
 
 	if (!component->debugfs_root) {
-<<<<<<< HEAD
 		dev_dbg(component->dev,
-=======
-		dev_warn(component->dev,
->>>>>>> rebase
 			"ASoC: Failed to create component debugfs directory\n");
 		return;
 	}
@@ -722,7 +718,6 @@ EXPORT_SYMBOL_GPL(snd_soc_resume);
 static const struct snd_soc_dai_ops null_dai_ops = {
 };
 
-<<<<<<< HEAD
 /**
  * soc_find_component: find a component from component_list in ASoC core
  *
@@ -734,22 +729,16 @@ static const struct snd_soc_dai_ops null_dai_ops = {
  * Returns component handle for success, else NULL error.
  */
 struct snd_soc_component *soc_find_component(
-=======
-static struct snd_soc_component *soc_find_component(
->>>>>>> rebase
 	const struct device_node *of_node, const char *name)
 {
 	struct snd_soc_component *component;
 
-<<<<<<< HEAD
 	if (!of_node && !name) {
 		pr_err("%s: Either of_node or name must be valid\n",
 			__func__);
 		return NULL;
 	}
 
-=======
->>>>>>> rebase
 	lockdep_assert_held(&client_mutex);
 
 	list_for_each_entry(component, &component_list, list) {
@@ -763,7 +752,6 @@ static struct snd_soc_component *soc_find_component(
 
 	return NULL;
 }
-<<<<<<< HEAD
 EXPORT_SYMBOL(soc_find_component);
 
 /**
@@ -787,8 +775,6 @@ struct snd_soc_component *soc_find_component_locked(
 	return component;
 }
 EXPORT_SYMBOL(soc_find_component_locked);
-=======
->>>>>>> rebase
 
 /**
  * snd_soc_find_dai - Find a registered DAI
@@ -1973,31 +1959,9 @@ static void soc_check_tplg_fes(struct snd_soc_card *card)
 			dai_link->platform_name = component->name;
 
 			/* convert non BE into BE */
-<<<<<<< HEAD
 			dai_link->no_pcm = 1;
 			dai_link->dpcm_playback = 1;
 			dai_link->dpcm_capture = 1;
-=======
-			if (!dai_link->no_pcm) {
-				dai_link->no_pcm = 1;
-
-				if (dai_link->dpcm_playback)
-					dev_warn(card->dev,
-						 "invalid configuration, dailink %s has flags no_pcm=0 and dpcm_playback=1\n",
-						 dai_link->name);
-				if (dai_link->dpcm_capture)
-					dev_warn(card->dev,
-						 "invalid configuration, dailink %s has flags no_pcm=0 and dpcm_capture=1\n",
-						 dai_link->name);
-
-				/* convert normal link into DPCM one */
-				if (!(dai_link->dpcm_playback ||
-				      dai_link->dpcm_capture)) {
-					dai_link->dpcm_playback = !dai_link->capture_only;
-					dai_link->dpcm_capture = !dai_link->playback_only;
-				}
-			}
->>>>>>> rebase
 
 			/* override any BE fixups */
 			dai_link->be_hw_params_fixup =
@@ -2811,11 +2775,7 @@ int snd_soc_register_card(struct snd_soc_card *card)
 	card->instantiated = 0;
 	mutex_init(&card->mutex);
 	mutex_init(&card->dapm_mutex);
-<<<<<<< HEAD
 	mutex_init(&card->dapm_power_mutex);
-=======
-	spin_lock_init(&card->dpcm_lock);
->>>>>>> rebase
 
 	ret = snd_soc_instantiate_card(card);
 	if (ret != 0)
@@ -3354,7 +3314,6 @@ struct snd_soc_component *snd_soc_lookup_component(struct device *dev,
 }
 EXPORT_SYMBOL_GPL(snd_soc_lookup_component);
 
-<<<<<<< HEAD
 /**
  * snd_soc_card_change_online_state - Mark if soc card is online/offline
  *
@@ -3367,8 +3326,6 @@ void snd_soc_card_change_online_state(struct snd_soc_card *soc_card, int online)
 }
 EXPORT_SYMBOL(snd_soc_card_change_online_state);
 
-=======
->>>>>>> rebase
 /* Retrieve a card's name from device tree */
 int snd_soc_of_parse_card_name(struct snd_soc_card *card,
 			       const char *propname)
@@ -3589,11 +3546,7 @@ int snd_soc_of_parse_audio_routing(struct snd_soc_card *card,
 	if (!routes) {
 		dev_err(card->dev,
 			"ASoC: Could not allocate DAPM route table\n");
-<<<<<<< HEAD
 		return -EINVAL;
-=======
-		return -ENOMEM;
->>>>>>> rebase
 	}
 
 	for (i = 0; i < num_routes; i++) {
@@ -3777,7 +3730,6 @@ int snd_soc_get_dai_id(struct device_node *ep)
 }
 EXPORT_SYMBOL_GPL(snd_soc_get_dai_id);
 
-<<<<<<< HEAD
 /**
  * snd_soc_info_multi_ext - external single mixer info callback
  * @kcontrol: mixer control
@@ -3811,8 +3763,6 @@ int snd_soc_info_multi_ext(struct snd_kcontrol *kcontrol,
 }
 EXPORT_SYMBOL(snd_soc_info_multi_ext);
 
-=======
->>>>>>> rebase
 int snd_soc_get_dai_name(struct of_phandle_args *args,
 				const char **dai_name)
 {
@@ -3826,11 +3776,7 @@ int snd_soc_get_dai_name(struct of_phandle_args *args,
 		if (!component_of_node && pos->dev->parent)
 			component_of_node = pos->dev->parent->of_node;
 
-<<<<<<< HEAD
 		if (component_of_node != args->np)
-=======
-		if (component_of_node != args->np || !pos->num_dai)
->>>>>>> rebase
 			continue;
 
 		if (pos->driver->of_xlate_dai_name) {

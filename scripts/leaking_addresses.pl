@@ -456,14 +456,8 @@ sub parse_file
 
 	open my $fh, "<", $file or return;
 	while ( <$fh> ) {
-<<<<<<< HEAD
 		if (may_leak_address($_)) {
 			print $file . ': ' . $_;
-=======
-		chomp;
-		if (may_leak_address($_)) {
-			printf("$file: $_\n");
->>>>>>> rebase
 		}
 	}
 	close $fh;

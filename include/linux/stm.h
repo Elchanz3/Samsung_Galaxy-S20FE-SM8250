@@ -80,20 +80,14 @@ struct stm_data {
 	unsigned int		sw_nchannels;
 	unsigned int		sw_mmiosz;
 	unsigned int		hw_override;
-<<<<<<< HEAD
 	bool                    (*ost_configured)(void);
-=======
->>>>>>> rebase
 	ssize_t			(*packet)(struct stm_data *, unsigned int,
 					  unsigned int, unsigned int,
 					  unsigned int, unsigned int,
 					  const unsigned char *);
-<<<<<<< HEAD
 	ssize_t			(*ost_packet)(struct stm_data *stm_data,
 					  unsigned int size,
 					  const unsigned char *buf);
-=======
->>>>>>> rebase
 	phys_addr_t		(*mmio_addr)(struct stm_data *, unsigned int,
 					     unsigned int, unsigned int);
 	int			(*link)(struct stm_data *, unsigned int,

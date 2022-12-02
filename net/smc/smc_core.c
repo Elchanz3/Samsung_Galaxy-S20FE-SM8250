@@ -321,13 +321,8 @@ void smc_conn_free(struct smc_connection *conn)
 	} else {
 		smc_cdc_tx_dismiss_slots(conn);
 	}
-<<<<<<< HEAD
 	smc_lgr_unregister_conn(conn);		/* unsets conn->lgr */
 	smc_buf_unuse(conn, lgr);		/* allow buffer reuse */
-=======
-	smc_buf_unuse(conn, lgr);		/* allow buffer reuse */
-	smc_lgr_unregister_conn(conn);		/* unsets conn->lgr */
->>>>>>> rebase
 
 	if (!lgr->conns_num)
 		smc_lgr_schedule_free_work(lgr);
@@ -614,12 +609,7 @@ int smc_conn_create(struct smc_sock *smc, bool is_smcd, int srv_first_contact,
 		    !lgr->sync_err &&
 		    lgr->vlan_id == vlan_id &&
 		    (role == SMC_CLNT ||
-<<<<<<< HEAD
 		     lgr->conns_num < SMC_RMBS_PER_LGR_MAX)) {
-=======
-		    (lgr->conns_num < SMC_RMBS_PER_LGR_MAX &&
-		      !bitmap_full(lgr->rtokens_used_mask, SMC_RMBS_PER_LGR_MAX)))) {
->>>>>>> rebase
 			/* link group found */
 			local_contact = SMC_REUSE_CONTACT;
 			conn->lgr = lgr;
@@ -718,11 +708,7 @@ static struct smc_buf_desc *smc_buf_get_slot(int compressed_bufsize,
  */
 static inline int smc_rmb_wnd_update_limit(int rmbe_size)
 {
-<<<<<<< HEAD
 	return min_t(int, rmbe_size / 10, SOCK_MIN_SNDBUF / 2);
-=======
-	return max_t(int, rmbe_size / 10, SOCK_MIN_SNDBUF / 2);
->>>>>>> rebase
 }
 
 static struct smc_buf_desc *smcr_new_buf_create(struct smc_link_group *lgr,
@@ -784,11 +770,7 @@ static struct smc_buf_desc *smcr_new_buf_create(struct smc_link_group *lgr,
 	return buf_desc;
 }
 
-<<<<<<< HEAD
 #define SMCD_DMBE_SIZES		7 /* 0 -> 16KB, 1 -> 32KB, .. 6 -> 1MB */
-=======
-#define SMCD_DMBE_SIZES		6 /* 0 -> 16KB, 1 -> 32KB, .. 6 -> 1MB */
->>>>>>> rebase
 
 static struct smc_buf_desc *smcd_new_buf_create(struct smc_link_group *lgr,
 						bool is_dmb, int bufsize)

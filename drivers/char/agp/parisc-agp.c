@@ -285,11 +285,7 @@ agp_ioc_init(void __iomem *ioc_regs)
         return 0;
 }
 
-<<<<<<< HEAD
 static int
-=======
-static int __init
->>>>>>> rebase
 lba_find_capability(int cap)
 {
 	struct _parisc_agp_info *info = &parisc_agp_info;
@@ -374,11 +370,7 @@ fail:
 	return error;
 }
 
-<<<<<<< HEAD
 static int
-=======
-static int __init
->>>>>>> rebase
 find_quicksilver(struct device *dev, void *data)
 {
 	struct parisc_device **lba = data;
@@ -390,11 +382,7 @@ find_quicksilver(struct device *dev, void *data)
 	return 0;
 }
 
-<<<<<<< HEAD
 static int
-=======
-static int __init
->>>>>>> rebase
 parisc_agp_init(void)
 {
 	extern struct sba_device *sba_list;

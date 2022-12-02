@@ -38,10 +38,7 @@
 
 #include <linux/mutex.h>
 #include <linux/types.h>
-<<<<<<< HEAD
 #include <scsi/ufs/ufs.h>
-=======
->>>>>>> rebase
 
 #define MAX_CDB_SIZE	16
 #define GENERAL_UPIU_REQUEST_SIZE 32
@@ -68,11 +65,8 @@
 #define UFS_MAX_LUNS		(SCSI_W_LUN_BASE + UFS_UPIU_MAX_UNIT_NUM_ID)
 #define UFS_UPIU_WLUN_ID	(1 << 7)
 #define UFS_UPIU_MAX_GENERAL_LUN	8
-<<<<<<< HEAD
 #define UFS_MAX_WLUS			4
 #define UFS_MAX_LUS	(UFS_UPIU_MAX_GENERAL_LUN + UFS_MAX_WLUS)
-=======
->>>>>>> rebase
 
 /* Well known logical unit id in LUN field of UPIU */
 enum {
@@ -123,15 +117,12 @@ enum {
 	UPIU_CMD_FLAGS_READ	= 0x40,
 };
 
-<<<<<<< HEAD
 /* UPIU Command Priority flags */
 enum {
 	UPIU_CMD_PRIO_NONE	= 0x00,
 	UPIU_CMD_PRIO_HIGH	= 0x04,
 };
 
-=======
->>>>>>> rebase
 /* UPIU Task Attributes */
 enum {
 	UPIU_TASK_ATTR_SIMPLE	= 0x00,
@@ -146,66 +137,8 @@ enum {
 	UPIU_QUERY_FUNC_STANDARD_WRITE_REQUEST          = 0x81,
 };
 
-<<<<<<< HEAD
 enum {
 	UPIU_QUERY_FUNC_VENDOR_TOSHIBA_FATALMODE        = 0xC2,
-=======
-/* Flag idn for Query Requests*/
-enum flag_idn {
-	QUERY_FLAG_IDN_FDEVICEINIT			= 0x01,
-	QUERY_FLAG_IDN_PERMANENT_WPE			= 0x02,
-	QUERY_FLAG_IDN_PWR_ON_WPE			= 0x03,
-	QUERY_FLAG_IDN_BKOPS_EN				= 0x04,
-	QUERY_FLAG_IDN_LIFE_SPAN_MODE_ENABLE		= 0x05,
-	QUERY_FLAG_IDN_PURGE_ENABLE			= 0x06,
-	QUERY_FLAG_IDN_RESERVED2			= 0x07,
-	QUERY_FLAG_IDN_FPHYRESOURCEREMOVAL		= 0x08,
-	QUERY_FLAG_IDN_BUSY_RTC				= 0x09,
-	QUERY_FLAG_IDN_RESERVED3			= 0x0A,
-	QUERY_FLAG_IDN_PERMANENTLY_DISABLE_FW_UPDATE	= 0x0B,
-};
-
-/* Attribute idn for Query requests */
-enum attr_idn {
-	QUERY_ATTR_IDN_BOOT_LU_EN		= 0x00,
-	QUERY_ATTR_IDN_RESERVED			= 0x01,
-	QUERY_ATTR_IDN_POWER_MODE		= 0x02,
-	QUERY_ATTR_IDN_ACTIVE_ICC_LVL		= 0x03,
-	QUERY_ATTR_IDN_OOO_DATA_EN		= 0x04,
-	QUERY_ATTR_IDN_BKOPS_STATUS		= 0x05,
-	QUERY_ATTR_IDN_PURGE_STATUS		= 0x06,
-	QUERY_ATTR_IDN_MAX_DATA_IN		= 0x07,
-	QUERY_ATTR_IDN_MAX_DATA_OUT		= 0x08,
-	QUERY_ATTR_IDN_DYN_CAP_NEEDED		= 0x09,
-	QUERY_ATTR_IDN_REF_CLK_FREQ		= 0x0A,
-	QUERY_ATTR_IDN_CONF_DESC_LOCK		= 0x0B,
-	QUERY_ATTR_IDN_MAX_NUM_OF_RTT		= 0x0C,
-	QUERY_ATTR_IDN_EE_CONTROL		= 0x0D,
-	QUERY_ATTR_IDN_EE_STATUS		= 0x0E,
-	QUERY_ATTR_IDN_SECONDS_PASSED		= 0x0F,
-	QUERY_ATTR_IDN_CNTX_CONF		= 0x10,
-	QUERY_ATTR_IDN_CORR_PRG_BLK_NUM		= 0x11,
-	QUERY_ATTR_IDN_RESERVED2		= 0x12,
-	QUERY_ATTR_IDN_RESERVED3		= 0x13,
-	QUERY_ATTR_IDN_FFU_STATUS		= 0x14,
-	QUERY_ATTR_IDN_PSA_STATE		= 0x15,
-	QUERY_ATTR_IDN_PSA_DATA_SIZE		= 0x16,
-};
-
-/* Descriptor idn for Query requests */
-enum desc_idn {
-	QUERY_DESC_IDN_DEVICE		= 0x0,
-	QUERY_DESC_IDN_CONFIGURATION	= 0x1,
-	QUERY_DESC_IDN_UNIT		= 0x2,
-	QUERY_DESC_IDN_RFU_0		= 0x3,
-	QUERY_DESC_IDN_INTERCONNECT	= 0x4,
-	QUERY_DESC_IDN_STRING		= 0x5,
-	QUERY_DESC_IDN_RFU_1		= 0x6,
-	QUERY_DESC_IDN_GEOMETRY		= 0x7,
-	QUERY_DESC_IDN_POWER		= 0x8,
-	QUERY_DESC_IDN_HEALTH           = 0x9,
-	QUERY_DESC_IDN_MAX,
->>>>>>> rebase
 };
 
 enum desc_header_offset {
@@ -214,24 +147,17 @@ enum desc_header_offset {
 };
 
 enum ufs_desc_def_size {
-<<<<<<< HEAD
 	QUERY_DESC_DEVICE_DEF_SIZE		= 0x59,
-=======
-	QUERY_DESC_DEVICE_DEF_SIZE		= 0x40,
->>>>>>> rebase
 	QUERY_DESC_CONFIGURATION_DEF_SIZE	= 0x90,
 	QUERY_DESC_UNIT_DEF_SIZE		= 0x23,
 	QUERY_DESC_INTERCONNECT_DEF_SIZE	= 0x06,
 	QUERY_DESC_GEOMETRY_DEF_SIZE		= 0x48,
 	QUERY_DESC_POWER_DEF_SIZE		= 0x62,
-<<<<<<< HEAD
 	/*
 	 * Max. 126 UNICODE characters (2 bytes per character) plus 2 bytes
 	 * of descriptor header.
 	 */
 	QUERY_DESC_STRING_DEF_SIZE		= 0xFE,
-=======
->>>>>>> rebase
 	QUERY_DESC_HEALTH_DEF_SIZE		= 0x25,
 };
 
@@ -254,15 +180,12 @@ enum unit_desc_param {
 	UNIT_DESC_PARAM_PHY_MEM_RSRC_CNT	= 0x18,
 	UNIT_DESC_PARAM_CTX_CAPABILITIES	= 0x20,
 	UNIT_DESC_PARAM_LARGE_UNIT_SIZE_M1	= 0x22,
-<<<<<<< HEAD
 	UNIT_DESC_PARAM_WB_BUF_ALLOC_UNITS	= 0x29,
 #if defined(CONFIG_UFSHPB)
 	UNIT_DESC_HPB_LU_MAX_ACTIVE_REGIONS		= 0x23,
 	UNIT_DESC_HPB_LU_PIN_REGION_START_OFFSET	= 0x25,
 	UNIT_DESC_HPB_LU_NUM_PIN_REGIONS		= 0x27,
 #endif
-=======
->>>>>>> rebase
 };
 
 /* Device descriptor parameters offsets in bytes*/
@@ -302,7 +225,6 @@ enum device_desc_param {
 	DEVICE_DESC_PARAM_PSA_MAX_DATA		= 0x25,
 	DEVICE_DESC_PARAM_PSA_TMT		= 0x29,
 	DEVICE_DESC_PARAM_PRDCT_REV		= 0x2A,
-<<<<<<< HEAD
 #if defined(CONFIG_UFSHPB)
 	DEVICE_DESC_PARAM_HPB_VER		= 0x40,
 #endif
@@ -313,8 +235,6 @@ enum device_desc_param {
 	DEVICE_DESC_PARAM_WB_US_RED_EN		= 0x53,
 	DEVICE_DESC_PARAM_WB_TYPE		= 0x54,
 	DEVICE_DESC_PARAM_WB_SHARED_ALLOC_UNITS = 0x55,
-=======
->>>>>>> rebase
 };
 
 /* Interconnect descriptor parameters offsets in bytes*/
@@ -359,7 +279,6 @@ enum geometry_desc_param {
 	GEOMETRY_DESC_PARAM_ENM4_MAX_NUM_UNITS	= 0x3E,
 	GEOMETRY_DESC_PARAM_ENM4_CAP_ADJ_FCTR	= 0x42,
 	GEOMETRY_DESC_PARAM_OPT_LOG_BLK_SIZE	= 0x44,
-<<<<<<< HEAD
 	GEOMETRY_DESC_PARAM_WB_MAX_ALLOC_UNITS	= 0x4F,
 	GEOMETRY_DESC_PARAM_WB_MAX_WB_LUNS	= 0x53,
 	GEOMETRY_DESC_PARAM_WB_BUFF_CAP_ADJ	= 0x54,
@@ -371,8 +290,6 @@ enum geometry_desc_param {
 	GEOMETRY_DESC_HPB_SUBREGION_SIZE 		= 0x4A,
 	GEOMETRY_DESC_HPB_DEVICE_MAX_ACTIVE_REGIONS	= 0x4B,
 #endif
-=======
->>>>>>> rebase
 };
 
 /* Health descriptor parameters offsets in bytes*/
@@ -423,16 +340,12 @@ enum power_desc_param_offset {
 
 /* Exception event mask values */
 enum {
-<<<<<<< HEAD
 #ifdef CONFIG_BLK_TURBO_WRITE
 	/* disable tw event [bit 5] as default */
 	MASK_EE_STATUS		= 0xFFDF,
 #else
 	MASK_EE_STATUS		= 0xFFFF,
 #endif
-=======
-	MASK_EE_STATUS		= 0xFFFF,
->>>>>>> rebase
 	MASK_EE_URGENT_BKOPS	= (1 << 2),
 };
 
@@ -445,7 +358,6 @@ enum bkops_status {
 	BKOPS_STATUS_MAX		 = BKOPS_STATUS_CRITICAL,
 };
 
-<<<<<<< HEAD
 /* bRefClkFreq attribute values */
 enum ref_clk_freq {
 	REF_CLK_FREQ_19_2_MHZ	= 0x0,
@@ -453,19 +365,6 @@ enum ref_clk_freq {
 	REF_CLK_FREQ_38_4_MHZ	= 0x2,
 	REF_CLK_FREQ_52_MHZ	= 0x3,
 	REF_CLK_FREQ_MAX	= REF_CLK_FREQ_52_MHZ,
-=======
-/* UTP QUERY Transaction Specific Fields OpCode */
-enum query_opcode {
-	UPIU_QUERY_OPCODE_NOP		= 0x0,
-	UPIU_QUERY_OPCODE_READ_DESC	= 0x1,
-	UPIU_QUERY_OPCODE_WRITE_DESC	= 0x2,
-	UPIU_QUERY_OPCODE_READ_ATTR	= 0x3,
-	UPIU_QUERY_OPCODE_WRITE_ATTR	= 0x4,
-	UPIU_QUERY_OPCODE_READ_FLAG	= 0x5,
-	UPIU_QUERY_OPCODE_SET_FLAG	= 0x6,
-	UPIU_QUERY_OPCODE_CLEAR_FLAG	= 0x7,
-	UPIU_QUERY_OPCODE_TOGGLE_FLAG	= 0x8,
->>>>>>> rebase
 };
 
 /* Query response result code */
@@ -522,7 +421,6 @@ enum ufs_dev_pwr_mode {
 	UFS_POWERDOWN_PWR_MODE	= 3,
 };
 
-<<<<<<< HEAD
 #ifdef CONFIG_QCOM_WB
 enum ufs_dev_wb_buf_avail_size {
 	UFS_WB_0_PERCENT_BUF_REMAIN = 0x0,
@@ -557,8 +455,6 @@ enum ufs_dev_wb_buf_user_cap_config {
 	UFS_WB_BUFF_USER_SPACE_RED_EN = 2,
 };
 #endif
-=======
->>>>>>> rebase
 /**
  * struct utp_upiu_header - UPIU header structure
  * @dword_0: UPIU header DW-0
@@ -700,15 +596,9 @@ struct ufs_query_res {
 #define UFS_VREG_VCC_MAX_UV	   3600000 /* uV */
 #define UFS_VREG_VCC_1P8_MIN_UV    1700000 /* uV */
 #define UFS_VREG_VCC_1P8_MAX_UV    1950000 /* uV */
-<<<<<<< HEAD
 #define UFS_VREG_VCCQ_MIN_UV	   1140000 /* uV */
 #define UFS_VREG_VCCQ_MAX_UV	   1300000 /* uV */
 #define UFS_VREG_VCCQ2_MIN_UV	   1700000 /* uV */
-=======
-#define UFS_VREG_VCCQ_MIN_UV	   1100000 /* uV */
-#define UFS_VREG_VCCQ_MAX_UV	   1300000 /* uV */
-#define UFS_VREG_VCCQ2_MIN_UV	   1650000 /* uV */
->>>>>>> rebase
 #define UFS_VREG_VCCQ2_MAX_UV	   1950000 /* uV */
 
 /*
@@ -724,12 +614,9 @@ struct ufs_vreg {
 	bool unused;
 	int min_uV;
 	int max_uV;
-<<<<<<< HEAD
 	bool low_voltage_sup;
 	bool low_voltage_active;
 	bool sys_suspend_pwr_off;
-=======
->>>>>>> rebase
 	int min_uA;
 	int max_uA;
 };
@@ -741,7 +628,6 @@ struct ufs_vreg_info {
 	struct ufs_vreg *vdd_hba;
 };
 
-<<<<<<< HEAD
 /* Possible values for bDeviceSubClass of device descriptor */
 enum {
 	UFS_DEV_EMBEDDED_BOOTABLE	= 0x00,
@@ -787,12 +673,6 @@ struct ufs_dev_info {
 
 	bool wb_config_lun;
 #endif
-=======
-struct ufs_dev_info {
-	bool f_power_on_wp_en;
-	/* Keeps information if any of the LU is power on write protected */
-	bool is_lu_power_on_wp;
->>>>>>> rebase
 };
 
 #define MAX_MODEL_LEN 16
@@ -805,13 +685,10 @@ struct ufs_dev_info {
 struct ufs_dev_desc {
 	u16 wmanufacturerid;
 	char model[MAX_MODEL_LEN + 1];
-<<<<<<< HEAD
 	u16 wspecversion;
 #ifdef CONFIG_BLK_TURBO_WRITE
 	u32 dextfeatsupport;
 #endif
-=======
->>>>>>> rebase
 };
 
 /**

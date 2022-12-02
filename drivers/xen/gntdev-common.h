@@ -15,11 +15,6 @@
 #include <linux/mman.h>
 #include <linux/mmu_notifier.h>
 #include <linux/types.h>
-<<<<<<< HEAD
-=======
-#include <xen/interface/event_channel.h>
-#include <xen/grant_table.h>
->>>>>>> rebase
 
 struct gntdev_dmabuf_priv;
 
@@ -66,10 +61,6 @@ struct gntdev_grant_map {
 	struct gnttab_unmap_grant_ref *unmap_ops;
 	struct gnttab_map_grant_ref   *kmap_ops;
 	struct gnttab_unmap_grant_ref *kunmap_ops;
-<<<<<<< HEAD
-=======
-	bool *being_removed;
->>>>>>> rebase
 	struct page **pages;
 	unsigned long pages_vm_start;
 
@@ -87,14 +78,6 @@ struct gntdev_grant_map {
 	/* Needed to avoid allocation in gnttab_dma_free_pages(). */
 	xen_pfn_t *frames;
 #endif
-<<<<<<< HEAD
-=======
-
-	/* Number of live grants */
-	atomic_t live_grants;
-	/* Needed to avoid allocation in __unmap_grant_pages */
-	struct gntab_unmap_queue_data unmap_data;
->>>>>>> rebase
 };
 
 struct gntdev_grant_map *gntdev_alloc_map(struct gntdev_priv *priv, int count,

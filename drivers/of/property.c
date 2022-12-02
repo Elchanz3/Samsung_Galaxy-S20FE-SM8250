@@ -25,10 +25,7 @@
 #include <linux/of_device.h>
 #include <linux/of_graph.h>
 #include <linux/string.h>
-<<<<<<< HEAD
 #include <linux/moduleparam.h>
-=======
->>>>>>> rebase
 
 #include "of_private.h"
 
@@ -989,7 +986,6 @@ of_fwnode_device_get_match_data(const struct fwnode_handle *fwnode,
 	return of_device_get_match_data(dev);
 }
 
-<<<<<<< HEAD
 static bool of_is_ancestor_of(struct device_node *test_ancestor,
 			      struct device_node *child)
 {
@@ -1347,8 +1343,6 @@ static int of_fwnode_add_links(const struct fwnode_handle *fwnode,
 	return of_link_to_suppliers(dev, to_of_node(fwnode));
 }
 
-=======
->>>>>>> rebase
 const struct fwnode_operations of_fwnode_ops = {
 	.get = of_fwnode_get,
 	.put = of_fwnode_put,
@@ -1365,9 +1359,6 @@ const struct fwnode_operations of_fwnode_ops = {
 	.graph_get_remote_endpoint = of_fwnode_graph_get_remote_endpoint,
 	.graph_get_port_parent = of_fwnode_graph_get_port_parent,
 	.graph_parse_endpoint = of_fwnode_graph_parse_endpoint,
-<<<<<<< HEAD
 	.add_links = of_fwnode_add_links,
-=======
->>>>>>> rebase
 };
 EXPORT_SYMBOL_GPL(of_fwnode_ops);

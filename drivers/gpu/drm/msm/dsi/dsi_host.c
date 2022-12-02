@@ -468,11 +468,7 @@ static int dsi_bus_clk_enable(struct msm_dsi_host *msm_host)
 
 	return 0;
 err:
-<<<<<<< HEAD
 	for (; i > 0; i--)
-=======
-	while (--i >= 0)
->>>>>>> rebase
 		clk_disable_unprepare(msm_host->bus_clks[i]);
 
 	return ret;
@@ -1358,17 +1354,10 @@ static int dsi_cmds2buf_tx(struct msm_dsi_host *msm_host,
 			dsi_get_bpp(msm_host->format) / 8;
 
 	len = dsi_cmd_dma_add(msm_host, msg);
-<<<<<<< HEAD
 	if (!len) {
 		pr_err("%s: failed to add cmd type = 0x%x\n",
 			__func__,  msg->type);
 		return -EINVAL;
-=======
-	if (len < 0) {
-		pr_err("%s: failed to add cmd type = 0x%x\n",
-			__func__,  msg->type);
-		return len;
->>>>>>> rebase
 	}
 
 	/* for video mode, do not send cmds more than
@@ -1387,21 +1376,10 @@ static int dsi_cmds2buf_tx(struct msm_dsi_host *msm_host,
 	}
 
 	ret = dsi_cmd_dma_tx(msm_host, len);
-<<<<<<< HEAD
 	if (ret < len) {
 		pr_err("%s: cmd dma tx failed, type=0x%x, data0=0x%x, len=%d\n",
 			__func__, msg->type, (*(u8 *)(msg->tx_buf)), len);
 		return -ECOMM;
-=======
-	if (ret < 0) {
-		pr_err("%s: cmd dma tx failed, type=0x%x, data0=0x%x, len=%d, ret=%d\n",
-			__func__, msg->type, (*(u8 *)(msg->tx_buf)), len, ret);
-		return ret;
-	} else if (ret < len) {
-		pr_err("%s: cmd dma tx failed, type=0x%x, data0=0x%x, ret=%d len=%d\n",
-			__func__, msg->type, (*(u8 *)(msg->tx_buf)), ret, len);
-		return -EIO;
->>>>>>> rebase
 	}
 
 	return len;
@@ -1699,11 +1677,6 @@ static int dsi_host_parse_lane_data(struct msm_dsi_host *msm_host,
 	if (!prop) {
 		dev_dbg(dev,
 			"failed to find data lane mapping, using default\n");
-<<<<<<< HEAD
-=======
-		/* Set the number of date lanes to 4 by default. */
-		msm_host->num_data_lanes = 4;
->>>>>>> rebase
 		return 0;
 	}
 
@@ -2130,18 +2103,9 @@ int msm_dsi_host_cmd_rx(struct mipi_dsi_host *host,
 		}
 
 		ret = dsi_cmds2buf_tx(msm_host, msg);
-<<<<<<< HEAD
 		if (ret < msg->tx_len) {
 			pr_err("%s: Read cmd Tx failed, %d\n", __func__, ret);
 			return ret;
-=======
-		if (ret < 0) {
-			pr_err("%s: Read cmd Tx failed, %d\n", __func__, ret);
-			return ret;
-		} else if (ret < msg->tx_len) {
-			pr_err("%s: Read cmd Tx failed, too short: %d\n", __func__, ret);
-			return -ECOMM;
->>>>>>> rebase
 		}
 
 		/*

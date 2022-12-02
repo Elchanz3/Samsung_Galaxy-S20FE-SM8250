@@ -558,11 +558,7 @@ void show_code(struct pt_regs *regs)
 
 void print_fn_code(unsigned char *code, unsigned long len)
 {
-<<<<<<< HEAD
 	char buffer[64], *ptr;
-=======
-	char buffer[128], *ptr;
->>>>>>> rebase
 	int opsize, i;
 
 	while (len) {

@@ -6,11 +6,7 @@
  * Copyright 2006-2010	Johannes Berg <johannes@sipsolutions.net>
  * Copyright 2013-2014 Intel Mobile Communications GmbH
  * Copyright 2015-2017	Intel Deutschland GmbH
-<<<<<<< HEAD
  * Copyright (C) 2018-2019 Intel Corporation
-=======
- * Copyright (C) 2018 Intel Corporation
->>>>>>> rebase
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
@@ -29,7 +25,6 @@
 #include <linux/net.h>
 #include <net/regulatory.h>
 
-<<<<<<< HEAD
 /* Backport support for DFS offload */
 #define CFG80211_DFS_OFFLOAD_BACKPORT 1
 
@@ -59,8 +54,6 @@
 /* Indicate backport support for key configuration for Beacon protection*/
 #define CFG80211_BIGTK_CONFIGURATION_SUPPORT 1
 
-=======
->>>>>>> rebase
 /**
  * DOC: Introduction
  *
@@ -357,7 +350,6 @@ struct ieee80211_sband_iftype_data {
 };
 
 /**
-<<<<<<< HEAD
  * enum ieee80211_edmg_bw_config - allowed channel bandwidth configurations
  *
  * @IEEE80211_EDMG_BW_CONFIG_4: 2.16GHz
@@ -412,8 +404,6 @@ struct ieee80211_edmg {
 };
 
 /**
-=======
->>>>>>> rebase
  * struct ieee80211_supported_band - frequency band definition
  *
  * This structure describes a frequency band a wiphy
@@ -429,10 +419,7 @@ struct ieee80211_edmg {
  * @n_bitrates: Number of bitrates in @bitrates
  * @ht_cap: HT capabilities in this band
  * @vht_cap: VHT capabilities in this band
-<<<<<<< HEAD
  * @edmg_cap: EDMG capabilities in this band
-=======
->>>>>>> rebase
  * @n_iftype_data: number of iftype data entries
  * @iftype_data: interface type data entries.  Note that the bits in
  *	@types_mask inside this structure cannot overlap (i.e. only
@@ -447,10 +434,7 @@ struct ieee80211_supported_band {
 	int n_bitrates;
 	struct ieee80211_sta_ht_cap ht_cap;
 	struct ieee80211_sta_vht_cap vht_cap;
-<<<<<<< HEAD
 	struct ieee80211_edmg edmg_cap;
-=======
->>>>>>> rebase
 	u16 n_iftype_data;
 	const struct ieee80211_sband_iftype_data *iftype_data;
 };
@@ -483,7 +467,6 @@ ieee80211_get_sband_iftype_data(const struct ieee80211_supported_band *sband,
 }
 
 /**
-<<<<<<< HEAD
  * ieee80211_get_he_iftype_cap - return HE capabilities for an sband's iftype
  * @sband: the sband to search for the iftype on
  * @iftype: enum nl80211_iftype
@@ -504,8 +487,6 @@ ieee80211_get_he_iftype_cap(const struct ieee80211_supported_band *sband,
 }
 
 /**
-=======
->>>>>>> rebase
  * ieee80211_get_he_sta_cap - return HE capabilities for an sband's STA
  * @sband: the sband to search for the STA on
  *
@@ -514,17 +495,7 @@ ieee80211_get_he_iftype_cap(const struct ieee80211_supported_band *sband,
 static inline const struct ieee80211_sta_he_cap *
 ieee80211_get_he_sta_cap(const struct ieee80211_supported_band *sband)
 {
-<<<<<<< HEAD
 	return ieee80211_get_he_iftype_cap(sband, NL80211_IFTYPE_STATION);
-=======
-	const struct ieee80211_sband_iftype_data *data =
-		ieee80211_get_sband_iftype_data(sband, NL80211_IFTYPE_STATION);
-
-	if (data && data->he_cap.has_he)
-		return &data->he_cap;
-
-	return NULL;
->>>>>>> rebase
 }
 
 /**
@@ -629,23 +600,17 @@ struct key_params {
  * @center_freq1: center frequency of first segment
  * @center_freq2: center frequency of second segment
  *	(only with 80+80 MHz)
-<<<<<<< HEAD
  * @edmg: define the EDMG channels configuration.
  *	If edmg is requested (i.e. the .channels member is non-zero),
  *	chan will define the primary channel and all other
  *	parameters are ignored.
-=======
->>>>>>> rebase
  */
 struct cfg80211_chan_def {
 	struct ieee80211_channel *chan;
 	enum nl80211_chan_width width;
 	u32 center_freq1;
 	u32 center_freq2;
-<<<<<<< HEAD
 	struct ieee80211_edmg edmg;
-=======
->>>>>>> rebase
 };
 
 /**
@@ -704,7 +669,6 @@ cfg80211_chandef_identical(const struct cfg80211_chan_def *chandef1,
 }
 
 /**
-<<<<<<< HEAD
  * cfg80211_chandef_is_edmg - check if chandef represents an EDMG channel
  *
  * @chandef: the channel definition
@@ -718,8 +682,6 @@ cfg80211_chandef_is_edmg(const struct cfg80211_chan_def *chandef)
 }
 
 /**
-=======
->>>>>>> rebase
  * cfg80211_chandef_compatible - check if two channel definitions are compatible
  * @chandef1: first channel definition
  * @chandef2: second channel definition
@@ -978,7 +940,6 @@ struct cfg80211_bitrate_mask {
 };
 
 /**
-<<<<<<< HEAD
  * enum cfg80211_ap_settings_flags - AP settings flags
  *
  * Used by cfg80211_ap_settings
@@ -990,8 +951,6 @@ enum cfg80211_ap_settings_flags {
 };
 
 /**
-=======
->>>>>>> rebase
  * struct cfg80211_ap_settings - AP configuration
  *
  * Used to configure an AP interface.
@@ -1020,10 +979,7 @@ enum cfg80211_ap_settings_flags {
  * @vht_cap: VHT capabilities (or %NULL if VHT isn't enabled)
  * @ht_required: stations must support HT
  * @vht_required: stations must support VHT
-<<<<<<< HEAD
  * @flags: flags, as defined in enum cfg80211_ap_settings_flags
-=======
->>>>>>> rebase
  */
 struct cfg80211_ap_settings {
 	struct cfg80211_chan_def chandef;
@@ -1048,10 +1004,7 @@ struct cfg80211_ap_settings {
 	const struct ieee80211_ht_cap *ht_cap;
 	const struct ieee80211_vht_cap *vht_cap;
 	bool ht_required, vht_required;
-<<<<<<< HEAD
 	u32 flags;
-=======
->>>>>>> rebase
 };
 
 /**
@@ -1267,27 +1220,17 @@ int cfg80211_check_station_change(struct wiphy *wiphy,
  * @RATE_INFO_FLAGS_MCS: mcs field filled with HT MCS
  * @RATE_INFO_FLAGS_VHT_MCS: mcs field filled with VHT MCS
  * @RATE_INFO_FLAGS_SHORT_GI: 400ns guard interval
-<<<<<<< HEAD
  * @RATE_INFO_FLAGS_DMG: 60GHz MCS
  * @RATE_INFO_FLAGS_HE_MCS: HE MCS information
  * @RATE_INFO_FLAGS_EDMG: 60GHz MCS in EDMG mode
-=======
- * @RATE_INFO_FLAGS_60G: 60GHz MCS
- * @RATE_INFO_FLAGS_HE_MCS: HE MCS information
->>>>>>> rebase
  */
 enum rate_info_flags {
 	RATE_INFO_FLAGS_MCS			= BIT(0),
 	RATE_INFO_FLAGS_VHT_MCS			= BIT(1),
 	RATE_INFO_FLAGS_SHORT_GI		= BIT(2),
-<<<<<<< HEAD
 	RATE_INFO_FLAGS_DMG			= BIT(3),
 	RATE_INFO_FLAGS_HE_MCS			= BIT(4),
 	RATE_INFO_FLAGS_EDMG			= BIT(5),
-=======
-	RATE_INFO_FLAGS_60G			= BIT(3),
-	RATE_INFO_FLAGS_HE_MCS			= BIT(4),
->>>>>>> rebase
 };
 
 /**
@@ -1327,10 +1270,7 @@ enum rate_info_bw {
  * @he_dcm: HE DCM value
  * @he_ru_alloc: HE RU allocation (from &enum nl80211_he_ru_alloc,
  *	only valid if bw is %RATE_INFO_BW_HE_RU)
-<<<<<<< HEAD
  * @n_bonded_ch: In case of EDMG the number of bonded channels (1-4)
-=======
->>>>>>> rebase
  */
 struct rate_info {
 	u8 flags;
@@ -1341,10 +1281,7 @@ struct rate_info {
 	u8 he_gi;
 	u8 he_dcm;
 	u8 he_ru_alloc;
-<<<<<<< HEAD
 	u8 n_bonded_ch;
-=======
->>>>>>> rebase
 };
 
 /**
@@ -1487,13 +1424,10 @@ struct cfg80211_tid_stats {
  * @ack_signal: signal strength (in dBm) of the last ACK frame.
  * @avg_ack_signal: average rssi value of ack packet for the no of msdu's has
  *	been sent.
-<<<<<<< HEAD
  * @rx_mpdu_count: number of MPDUs received from this station
  * @fcs_err_count: number of packets (MPDUs) received from this station with
  *	an FCS error. This counter should be incremented only when TA of the
  *	received packet with an FCS error matches the peer MAC address.
-=======
->>>>>>> rebase
  */
 struct station_info {
 	u64 filled;
@@ -1540,12 +1474,9 @@ struct station_info {
 	struct cfg80211_tid_stats *pertid;
 	s8 ack_signal;
 	s8 avg_ack_signal;
-<<<<<<< HEAD
 
 	u32 rx_mpdu_count;
 	u32 fcs_err_count;
-=======
->>>>>>> rebase
 };
 
 #if IS_ENABLED(CONFIG_CFG80211)
@@ -2190,11 +2121,8 @@ struct cfg80211_bss_ies {
  * @signal: signal strength value (type depends on the wiphy's signal_type)
  * @chains: bitmask for filled values in @chain_signal.
  * @chain_signal: per-chain signal strength of last received BSS in dBm.
-<<<<<<< HEAD
  * @bssid_index: index in the multiple BSS set
  * @max_bssid_indicator: max number of members in the BSS set
-=======
->>>>>>> rebase
  * @priv: private area for driver use, has at least wiphy->bss_priv_size bytes
  */
 struct cfg80211_bss {
@@ -2206,11 +2134,8 @@ struct cfg80211_bss {
 	const struct cfg80211_bss_ies __rcu *proberesp_ies;
 
 	struct cfg80211_bss *hidden_beacon_bss;
-<<<<<<< HEAD
 	struct cfg80211_bss *transmitted_bss;
 	struct list_head nontrans_list;
-=======
->>>>>>> rebase
 
 	s32 signal;
 
@@ -2221,17 +2146,13 @@ struct cfg80211_bss {
 	u8 chains;
 	s8 chain_signal[IEEE80211_MAX_CHAINS];
 
-<<<<<<< HEAD
 	u8 bssid_index;
 	u8 max_bssid_indicator;
 
-=======
->>>>>>> rebase
 	u8 priv[0] __aligned(sizeof(void *));
 };
 
 /**
-<<<<<<< HEAD
  * ieee80211_bss_get_elem - find element with given ID
  * @bss: the bss to search
  * @id: the element ID
@@ -2246,24 +2167,15 @@ const struct element *ieee80211_bss_get_elem(struct cfg80211_bss *bss, u8 id);
  * ieee80211_bss_get_ie - find IE with given ID
  * @bss: the bss to search
  * @id: the element ID
-=======
- * ieee80211_bss_get_ie - find IE with given ID
- * @bss: the bss to search
- * @ie: the IE ID
->>>>>>> rebase
  *
  * Note that the return value is an RCU-protected pointer, so
  * rcu_read_lock() must be held when calling this function.
  * Return: %NULL if not found.
  */
-<<<<<<< HEAD
 static inline const u8 *ieee80211_bss_get_ie(struct cfg80211_bss *bss, u8 id)
 {
 	return (void *)ieee80211_bss_get_elem(bss, id);
 }
-=======
-const u8 *ieee80211_bss_get_ie(struct cfg80211_bss *bss, u8 ie);
->>>>>>> rebase
 
 
 /**
@@ -2535,12 +2447,9 @@ struct cfg80211_bss_selection {
  * @fils_erp_rrk_len: Length of @fils_erp_rrk in octets.
  * @want_1x: indicates user-space supports and wants to use 802.1X driver
  *	offload of 4-way handshake.
-<<<<<<< HEAD
  * @edmg: define the EDMG channels.
  *	This may specify multiple channels and bonding options for the driver
  *	to choose from, based on BSS configuration.
-=======
->>>>>>> rebase
  */
 struct cfg80211_connect_params {
 	struct ieee80211_channel *channel;
@@ -2574,10 +2483,7 @@ struct cfg80211_connect_params {
 	const u8 *fils_erp_rrk;
 	size_t fils_erp_rrk_len;
 	bool want_1x;
-<<<<<<< HEAD
 	struct ieee80211_edmg edmg;
-=======
->>>>>>> rebase
 };
 
 /**
@@ -2822,7 +2728,6 @@ struct cfg80211_wowlan_wakeup {
 
 /**
  * struct cfg80211_gtk_rekey_data - rekey data
-<<<<<<< HEAD
  * @kek: key encryption key
  * @kck: key confirmation key (NL80211_KCK_LEN bytes)
  * @replay_ctr: replay counter (NL80211_REPLAY_CTR_LEN bytes)
@@ -2831,14 +2736,6 @@ struct cfg80211_wowlan_wakeup {
 struct cfg80211_gtk_rekey_data {
 	const u8 *kek, *kck, *replay_ctr;
 	size_t kek_len;
-=======
- * @kek: key encryption key (NL80211_KEK_LEN bytes)
- * @kck: key confirmation key (NL80211_KCK_LEN bytes)
- * @replay_ctr: replay counter (NL80211_REPLAY_CTR_LEN bytes)
- */
-struct cfg80211_gtk_rekey_data {
-	const u8 *kek, *kck, *replay_ctr;
->>>>>>> rebase
 };
 
 /**
@@ -3056,10 +2953,7 @@ struct cfg80211_pmk_conf {
  *	use %WLAN_STATUS_UNSPECIFIED_FAILURE if user space cannot give you
  *	the real status code for failures. Used only for the authentication
  *	response command interface (user space to driver).
-<<<<<<< HEAD
  * @pmkid: The identifier to refer a PMKSA.
-=======
->>>>>>> rebase
  */
 struct cfg80211_external_auth_params {
 	enum nl80211_external_auth_action action;
@@ -3067,7 +2961,6 @@ struct cfg80211_external_auth_params {
 	struct cfg80211_ssid ssid;
 	unsigned int key_mgmt_suite;
 	u16 status;
-<<<<<<< HEAD
 	const u8 *pmkid;
 };
 
@@ -3095,8 +2988,6 @@ struct cfg80211_update_owe_info {
 	u16 status;
 	const u8 *ie;
 	size_t ie_len;
-=======
->>>>>>> rebase
 };
 
 /**
@@ -3146,11 +3037,8 @@ struct cfg80211_update_owe_info {
  * @set_default_key: set the default key on an interface
  *
  * @set_default_mgmt_key: set the default management frame key on an interface
-<<<<<<< HEAD
 
  * @set_default_beacon_key: set the default Beacon frame key on an interface
-=======
->>>>>>> rebase
  *
  * @set_rekey_data: give the data necessary for GTK rekeying to the driver
  *
@@ -3439,13 +3327,10 @@ struct cfg80211_update_owe_info {
  *
  * @tx_control_port: TX a control port frame (EAPoL).  The noencrypt parameter
  *	tells the driver that the frame should not be encrypted.
-<<<<<<< HEAD
  *
  * @update_owe_info: Provide updated OWE info to driver. Driver implementing SME
  *	but offloading OWE processing to the user space will get the updated
  *	DH IE through this interface.
-=======
->>>>>>> rebase
  */
 struct cfg80211_ops {
 	int	(*suspend)(struct wiphy *wiphy, struct cfg80211_wowlan *wow);
@@ -3479,12 +3364,9 @@ struct cfg80211_ops {
 	int	(*set_default_mgmt_key)(struct wiphy *wiphy,
 					struct net_device *netdev,
 					u8 key_index);
-<<<<<<< HEAD
 	int	(*set_default_beacon_key)(struct wiphy *wiphy,
 					  struct net_device *netdev,
 					  u8 key_index);
-=======
->>>>>>> rebase
 
 	int	(*start_ap)(struct wiphy *wiphy, struct net_device *dev,
 			    struct cfg80211_ap_settings *settings);
@@ -3759,11 +3641,8 @@ struct cfg80211_ops {
 				   const u8 *buf, size_t len,
 				   const u8 *dest, const __be16 proto,
 				   const bool noencrypt);
-<<<<<<< HEAD
 	int	(*update_owe_info)(struct wiphy *wiphy, struct net_device *dev,
 				   struct cfg80211_update_owe_info *owe_info);
-=======
->>>>>>> rebase
 };
 
 /*
@@ -4137,7 +4016,6 @@ struct wiphy_iftype_ext_capab {
 };
 
 /**
-<<<<<<< HEAD
  * struct wiphy_iftype_akm_suites - This structure encapsulates supported akm
  * suites for interface types defined in @iftypes_mask. Each type in the
  * @iftypes_mask must be unique across all instances of iftype_akm_suites.
@@ -4153,8 +4031,6 @@ struct wiphy_iftype_akm_suites {
 };
 
 /**
-=======
->>>>>>> rebase
  * struct wiphy - wireless hardware description
  * @reg_notifier: the driver's regulatory notification callback,
  *	note that if your driver uses wiphy_apply_custom_regulatory()
@@ -4166,15 +4042,12 @@ struct wiphy_iftype_akm_suites {
  * @signal_type: signal type reported in &struct cfg80211_bss.
  * @cipher_suites: supported cipher suites
  * @n_cipher_suites: number of supported cipher suites
-<<<<<<< HEAD
  * @iftype_akm_suites: array of supported akm suites info per interface type.
  *	Note that the bits in @iftypes_mask inside this structure cannot
  *	overlap (i.e. only one occurrence of each type is allowed across all
  *	instances of iftype_akm_suites).
  * @num_iftype_akm_suites: number of interface types for which supported akm
  *	suites are specified separately.
-=======
->>>>>>> rebase
  * @retry_short: Retry limit for short frames (dot11ShortRetryLimit)
  * @retry_long: Retry limit for long frames (dot11LongRetryLimit)
  * @frag_threshold: Fragmentation threshold (dot11FragmentationThreshold);
@@ -4328,15 +4201,12 @@ struct wiphy_iftype_akm_suites {
  * @txq_limit: configuration of internal TX queue frame limit
  * @txq_memory_limit: configuration internal TX queue memory limit
  * @txq_quantum: configuration of internal TX queue scheduler quantum
-<<<<<<< HEAD
  *
  * @support_mbssid: can HW support association with nontransmitted AP
  * @support_only_he_mbssid: don't parse MBSSID elements if it is not
  *	HE AP, in order to avoid compatibility issues.
  *	@support_mbssid must be set for this to have any effect.
  *
-=======
->>>>>>> rebase
  */
 struct wiphy {
 	/* assign these fields before you register the wiphy */
@@ -4381,12 +4251,9 @@ struct wiphy {
 	int n_cipher_suites;
 	const u32 *cipher_suites;
 
-<<<<<<< HEAD
 	const struct wiphy_iftype_akm_suites *iftype_akm_suites;
 	unsigned int num_iftype_akm_suites;
 
-=======
->>>>>>> rebase
 	u8 retry_short;
 	u8 retry_long;
 	u32 frag_threshold;
@@ -4481,12 +4348,9 @@ struct wiphy {
 	u32 txq_memory_limit;
 	u32 txq_quantum;
 
-<<<<<<< HEAD
 	u8 support_mbssid:1,
 	   support_only_he_mbssid:1;
 
-=======
->>>>>>> rebase
 	char priv[0] __aligned(NETDEV_ALIGN);
 };
 
@@ -4981,11 +4845,7 @@ unsigned int ieee80211_get_mesh_hdrlen(struct ieee80211s_hdr *meshhdr);
  */
 int ieee80211_data_to_8023_exthdr(struct sk_buff *skb, struct ethhdr *ehdr,
 				  const u8 *addr, enum nl80211_iftype iftype,
-<<<<<<< HEAD
 				  u8 data_offset);
-=======
-				  u8 data_offset, bool is_amsdu);
->>>>>>> rebase
 
 /**
  * ieee80211_data_to_8023 - convert an 802.11 data frame to 802.3
@@ -4997,11 +4857,7 @@ int ieee80211_data_to_8023_exthdr(struct sk_buff *skb, struct ethhdr *ehdr,
 static inline int ieee80211_data_to_8023(struct sk_buff *skb, const u8 *addr,
 					 enum nl80211_iftype iftype)
 {
-<<<<<<< HEAD
 	return ieee80211_data_to_8023_exthdr(skb, NULL, addr, iftype, 0);
-=======
-	return ieee80211_data_to_8023_exthdr(skb, NULL, addr, iftype, 0, false);
->>>>>>> rebase
 }
 
 /**
@@ -5035,7 +4891,6 @@ unsigned int cfg80211_classify8021d(struct sk_buff *skb,
 				    struct cfg80211_qos_map *qos_map);
 
 /**
-<<<<<<< HEAD
  * cfg80211_find_elem_match - match information element and byte array in data
  *
  * @eid: element ID
@@ -5063,8 +4918,6 @@ cfg80211_find_elem_match(u8 eid, const u8 *ies, unsigned int len,
 			 unsigned int match_offset);
 
 /**
-=======
->>>>>>> rebase
  * cfg80211_find_ie_match - match information element and byte array in data
  *
  * @eid: element ID
@@ -5088,7 +4941,6 @@ cfg80211_find_elem_match(u8 eid, const u8 *ies, unsigned int len,
  * having to fit into the given data and being large enough for the
  * byte array to match.
  */
-<<<<<<< HEAD
 static inline const u8 *
 cfg80211_find_ie_match(u8 eid, const u8 *ies, unsigned int len,
 		       const u8 *match, unsigned int match_len,
@@ -5127,11 +4979,6 @@ cfg80211_find_elem(u8 eid, const u8 *ies, int len)
 {
 	return cfg80211_find_elem_match(eid, ies, len, NULL, 0, 0);
 }
-=======
-const u8 *cfg80211_find_ie_match(u8 eid, const u8 *ies, int len,
-				 const u8 *match, int match_len,
-				 int match_offset);
->>>>>>> rebase
 
 /**
  * cfg80211_find_ie - find information element in data
@@ -5154,7 +5001,6 @@ static inline const u8 *cfg80211_find_ie(u8 eid, const u8 *ies, int len)
 }
 
 /**
-<<<<<<< HEAD
  * cfg80211_find_ext_elem - find information element with EID Extension in data
  *
  * @ext_eid: element ID Extension
@@ -5177,8 +5023,6 @@ cfg80211_find_ext_elem(u8 ext_eid, const u8 *ies, int len)
 }
 
 /**
-=======
->>>>>>> rebase
  * cfg80211_find_ext_ie - find information element with EID Extension in data
  *
  * @ext_eid: element ID Extension
@@ -5200,7 +5044,6 @@ static inline const u8 *cfg80211_find_ext_ie(u8 ext_eid, const u8 *ies, int len)
 }
 
 /**
-<<<<<<< HEAD
  * cfg80211_find_vendor_elem - find vendor specific information element in data
  *
  * @oui: vendor OUI
@@ -5220,8 +5063,6 @@ const struct element *cfg80211_find_vendor_elem(unsigned int oui, int oui_type,
 						unsigned int len);
 
 /**
-=======
->>>>>>> rebase
  * cfg80211_find_vendor_ie - find vendor specific information element in data
  *
  * @oui: vendor OUI
@@ -5237,17 +5078,12 @@ const struct element *cfg80211_find_vendor_elem(unsigned int oui, int oui_type,
  * Note: There are no checks on the element length other than having to fit into
  * the given data.
  */
-<<<<<<< HEAD
 static inline const u8 *
 cfg80211_find_vendor_ie(unsigned int oui, int oui_type,
 			const u8 *ies, unsigned int len)
 {
 	return (void *)cfg80211_find_vendor_elem(oui, oui_type, ies, len);
 }
-=======
-const u8 *cfg80211_find_vendor_ie(unsigned int oui, int oui_type,
-				  const u8 *ies, int len);
->>>>>>> rebase
 
 /**
  * cfg80211_send_layer2_update - send layer 2 update frame
@@ -5493,7 +5329,6 @@ cfg80211_inform_bss_frame(struct wiphy *wiphy,
 }
 
 /**
-<<<<<<< HEAD
  * cfg80211_gen_new_bssid - generate a nontransmitted BSSID for multi-BSSID
  * @bssid: transmitter BSSID
  * @max_bssid: max BSSID indicator, taken from Multiple BSSID element
@@ -5515,8 +5350,6 @@ static inline void cfg80211_gen_new_bssid(const u8 *bssid, u8 max_bssid,
 }
 
 /**
-=======
->>>>>>> rebase
  * enum cfg80211_bss_frame_type - frame type that the BSS data came from
  * @CFG80211_BSS_FTYPE_UNKNOWN: driver doesn't know whether the data is
  *	from a beacon or probe response
@@ -6934,7 +6767,6 @@ void cfg80211_report_wowlan_wakeup(struct wireless_dev *wdev,
 void cfg80211_crit_proto_stopped(struct wireless_dev *wdev, gfp_t gfp);
 
 /**
-<<<<<<< HEAD
  * cfg80211_ap_stopped - notify userspace that AP mode stopped
  * @netdev: network device
  * @gfp: context flags
@@ -6942,8 +6774,6 @@ void cfg80211_crit_proto_stopped(struct wireless_dev *wdev, gfp_t gfp);
 void cfg80211_ap_stopped(struct net_device *netdev, gfp_t gfp);
 
 /**
-=======
->>>>>>> rebase
  * ieee80211_get_num_supported_channels - get number of channels device has
  * @wiphy: the wiphy
  *
@@ -7184,7 +7014,6 @@ bool cfg80211_iftype_allowed(struct wiphy *wiphy, enum nl80211_iftype iftype,
 #define wiphy_WARN(wiphy, format, args...)			\
 	WARN(1, "wiphy: %s\n" format, wiphy_name(wiphy), ##args);
 
-<<<<<<< HEAD
 /**
  * cfg80211_update_owe_info_event - Notify the peer's OWE info to user space
  * @netdev: network device
@@ -7195,6 +7024,4 @@ void cfg80211_update_owe_info_event(struct net_device *netdev,
 				    struct cfg80211_update_owe_info *owe_info,
 				    gfp_t gfp);
 
-=======
->>>>>>> rebase
 #endif /* __NET_CFG80211_H */

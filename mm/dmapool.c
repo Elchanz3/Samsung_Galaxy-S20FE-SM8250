@@ -379,11 +379,7 @@ void *dma_pool_alloc(struct dma_pool *pool, gfp_t mem_flags,
 #endif
 	spin_unlock_irqrestore(&pool->lock, flags);
 
-<<<<<<< HEAD
 	if (want_init_on_alloc(mem_flags))
-=======
-	if (mem_flags & __GFP_ZERO)
->>>>>>> rebase
 		memset(retval, 0, pool->size);
 
 	return retval;
@@ -433,11 +429,8 @@ void dma_pool_free(struct dma_pool *pool, void *vaddr, dma_addr_t dma)
 	}
 
 	offset = vaddr - page->vaddr;
-<<<<<<< HEAD
 	if (want_init_on_free())
 		memset(vaddr, 0, pool->size);
-=======
->>>>>>> rebase
 #ifdef	DMAPOOL_DEBUG
 	if ((dma - page->dma) != offset) {
 		spin_unlock_irqrestore(&pool->lock, flags);

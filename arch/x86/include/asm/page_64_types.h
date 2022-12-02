@@ -7,15 +7,7 @@
 #endif
 
 #ifdef CONFIG_KASAN
-<<<<<<< HEAD
 #define KASAN_STACK_ORDER 1
-=======
-#ifdef CONFIG_KASAN_EXTRA
-#define KASAN_STACK_ORDER 2
-#else
-#define KASAN_STACK_ORDER 1
-#endif
->>>>>>> rebase
 #else
 #define KASAN_STACK_ORDER 0
 #endif
@@ -24,11 +16,7 @@
 #define THREAD_SIZE  (PAGE_SIZE << THREAD_SIZE_ORDER)
 #define CURRENT_MASK (~(THREAD_SIZE - 1))
 
-<<<<<<< HEAD
 #define EXCEPTION_STACK_ORDER (0 + KASAN_STACK_ORDER)
-=======
-#define EXCEPTION_STACK_ORDER (1 + KASAN_STACK_ORDER)
->>>>>>> rebase
 #define EXCEPTION_STKSZ (PAGE_SIZE << EXCEPTION_STACK_ORDER)
 
 #define DEBUG_STACK_ORDER (EXCEPTION_STACK_ORDER + 1)

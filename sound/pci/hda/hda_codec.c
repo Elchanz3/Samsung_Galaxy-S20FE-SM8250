@@ -1705,16 +1705,8 @@ void snd_hda_ctls_clear(struct hda_codec *codec)
 {
 	int i;
 	struct hda_nid_item *items = codec->mixers.list;
-<<<<<<< HEAD
 	for (i = 0; i < codec->mixers.used; i++)
 		snd_ctl_remove(codec->card, items[i].kctl);
-=======
-
-	down_write(&codec->card->controls_rwsem);
-	for (i = 0; i < codec->mixers.used; i++)
-		snd_ctl_remove(codec->card, items[i].kctl);
-	up_write(&codec->card->controls_rwsem);
->>>>>>> rebase
 	snd_array_free(&codec->mixers);
 	snd_array_free(&codec->nids);
 }
@@ -1790,11 +1782,7 @@ int snd_hda_codec_reset(struct hda_codec *codec)
 		return -EBUSY;
 
 	/* OK, let it free */
-<<<<<<< HEAD
 	snd_hdac_device_unregister(&codec->core);
-=======
-	device_release_driver(hda_codec_dev(codec));
->>>>>>> rebase
 
 	/* allow device access again */
 	snd_hda_unlock_devices(bus);
@@ -3422,11 +3410,7 @@ EXPORT_SYMBOL_GPL(snd_hda_set_power_save);
  * @nid: NID to check / update
  *
  * Check whether the given NID is in the amp list.  If it's in the list,
-<<<<<<< HEAD
  * check the current AMP status, and update the the power-status according
-=======
- * check the current AMP status, and update the power-status according
->>>>>>> rebase
  * to the mute status.
  *
  * This function is supposed to be set or called from the check_power_status

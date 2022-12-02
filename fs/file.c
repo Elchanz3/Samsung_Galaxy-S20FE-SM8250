@@ -70,11 +70,7 @@ static void copy_fd_bitmaps(struct fdtable *nfdt, struct fdtable *ofdt,
  */
 static void copy_fdtable(struct fdtable *nfdt, struct fdtable *ofdt)
 {
-<<<<<<< HEAD
 	unsigned int cpy, set;
-=======
-	size_t cpy, set;
->>>>>>> rebase
 
 	BUG_ON(nfdt->max_fds < ofdt->max_fds);
 
@@ -681,73 +677,12 @@ void do_close_on_exec(struct files_struct *files)
 	spin_unlock(&files->file_lock);
 }
 
-<<<<<<< HEAD
 static struct file *__fget(unsigned int fd, fmode_t mask)
-=======
-static inline struct file *__fget_files_rcu(struct files_struct *files,
-		unsigned int fd, fmode_t mask, unsigned int refs)
-{
-	for (;;) {
-		struct file *file;
-		struct fdtable *fdt = rcu_dereference_raw(files->fdt);
-		struct file __rcu **fdentry;
-
-		if (unlikely(fd >= fdt->max_fds))
-			return NULL;
-
-		fdentry = fdt->fd + array_index_nospec(fd, fdt->max_fds);
-		file = rcu_dereference_raw(*fdentry);
-		if (unlikely(!file))
-			return NULL;
-
-		if (unlikely(file->f_mode & mask))
-			return NULL;
-
-		/*
-		 * Ok, we have a file pointer. However, because we do
-		 * this all locklessly under RCU, we may be racing with
-		 * that file being closed.
-		 *
-		 * Such a race can take two forms:
-		 *
-		 *  (a) the file ref already went down to zero,
-		 *      and get_file_rcu_many() fails. Just try
-		 *      again:
-		 */
-		if (unlikely(!get_file_rcu_many(file, refs)))
-			continue;
-
-		/*
-		 *  (b) the file table entry has changed under us.
-		 *       Note that we don't need to re-check the 'fdt->fd'
-		 *       pointer having changed, because it always goes
-		 *       hand-in-hand with 'fdt'.
-		 *
-		 * If so, we need to put our refs and try again.
-		 */
-		if (unlikely(rcu_dereference_raw(files->fdt) != fdt) ||
-		    unlikely(rcu_dereference_raw(*fdentry) != file)) {
-			fput_many(file, refs);
-			continue;
-		}
-
-		/*
-		 * Ok, we have a ref to the file, and checked that it
-		 * still exists.
-		 */
-		return file;
-	}
-}
-
-
-static struct file *__fget(unsigned int fd, fmode_t mask, unsigned int refs)
->>>>>>> rebase
 {
 	struct files_struct *files = current->files;
 	struct file *file;
 
 	rcu_read_lock();
-<<<<<<< HEAD
 loop:
 	file = fcheck_files(files, fd);
 	if (file) {
@@ -760,38 +695,20 @@ loop:
 		else if (!get_file_rcu(file))
 			goto loop;
 	}
-=======
-	file = __fget_files_rcu(files, fd, mask, refs);
->>>>>>> rebase
 	rcu_read_unlock();
 
 	return file;
 }
 
-<<<<<<< HEAD
 struct file *fget(unsigned int fd)
 {
 	return __fget(fd, FMODE_PATH);
-=======
-struct file *fget_many(unsigned int fd, unsigned int refs)
-{
-	return __fget(fd, FMODE_PATH, refs);
-}
-
-struct file *fget(unsigned int fd)
-{
-	return __fget(fd, FMODE_PATH, 1);
->>>>>>> rebase
 }
 EXPORT_SYMBOL(fget);
 
 struct file *fget_raw(unsigned int fd)
 {
-<<<<<<< HEAD
 	return __fget(fd, 0);
-=======
-	return __fget(fd, 0, 1);
->>>>>>> rebase
 }
 EXPORT_SYMBOL(fget_raw);
 
@@ -822,11 +739,7 @@ static unsigned long __fget_light(unsigned int fd, fmode_t mask)
 			return 0;
 		return (unsigned long)file;
 	} else {
-<<<<<<< HEAD
 		file = __fget(fd, mask);
-=======
-		file = __fget(fd, mask, 1);
->>>>>>> rebase
 		if (!file)
 			return 0;
 		return FDPUT_FPUT | (unsigned long)file;

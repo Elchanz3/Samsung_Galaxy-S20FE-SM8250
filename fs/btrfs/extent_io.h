@@ -197,11 +197,7 @@ struct extent_buffer {
  */
 struct extent_changeset {
 	/* How many bytes are set/cleared in this operation */
-<<<<<<< HEAD
 	unsigned int bytes_changed;
-=======
-	u64 bytes_changed;
->>>>>>> rebase
 
 	/* Changed ranges */
 	struct ulist range_changed;
@@ -452,15 +448,9 @@ int memcmp_extent_buffer(const struct extent_buffer *eb, const void *ptrv,
 void read_extent_buffer(const struct extent_buffer *eb, void *dst,
 			unsigned long start,
 			unsigned long len);
-<<<<<<< HEAD
 int read_extent_buffer_to_user(const struct extent_buffer *eb,
 			       void __user *dst, unsigned long start,
 			       unsigned long len);
-=======
-int read_extent_buffer_to_user_nofault(const struct extent_buffer *eb,
-				       void __user *dst, unsigned long start,
-				       unsigned long len);
->>>>>>> rebase
 void write_extent_buffer_fsid(struct extent_buffer *eb, const void *src);
 void write_extent_buffer_chunk_tree_uuid(struct extent_buffer *eb,
 		const void *src);

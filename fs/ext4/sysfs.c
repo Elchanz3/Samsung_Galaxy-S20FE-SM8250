@@ -19,11 +19,8 @@
 
 typedef enum {
 	attr_noop,
-<<<<<<< HEAD
 	attr_sec_fs_stat,
 	attr_sec_fs_freefrag,
-=======
->>>>>>> rebase
 	attr_delayed_allocation_blocks,
 	attr_session_write_kbytes,
 	attr_lifetime_write_kbytes,
@@ -56,7 +53,6 @@ struct ext4_attr {
 	} u;
 };
 
-<<<<<<< HEAD
 static ssize_t sec_fs_stat_show(struct ext4_attr *a,
 				struct ext4_sb_info *sbi, char *buf)
 {
@@ -84,8 +80,6 @@ static ssize_t sec_fs_freefrag_show(struct ext4_attr *a,
 }
 
 
-=======
->>>>>>> rebase
 static ssize_t session_write_kbytes_show(struct ext4_sb_info *sbi, char *buf)
 {
 	struct super_block *sb = sbi->s_buddy_cache->i_sb;
@@ -198,12 +192,9 @@ static struct ext4_attr ext4_attr_##_name = {			\
 
 #define ATTR_LIST(name) &ext4_attr_##name.attr
 
-<<<<<<< HEAD
 EXT4_ATTR_FUNC(sec_fs_stat, 0444);
 EXT4_ATTR_FUNC(sec_fs_freefrag, 0444);
 
-=======
->>>>>>> rebase
 EXT4_ATTR_FUNC(delayed_allocation_blocks, 0444);
 EXT4_ATTR_FUNC(session_write_kbytes, 0444);
 EXT4_ATTR_FUNC(lifetime_write_kbytes, 0444);
@@ -234,11 +225,8 @@ static unsigned int old_bump_val = 128;
 EXT4_ATTR_PTR(max_writeback_mb_bump, 0444, pointer_ui, &old_bump_val);
 
 static struct attribute *ext4_attrs[] = {
-<<<<<<< HEAD
 	ATTR_LIST(sec_fs_stat),
 	ATTR_LIST(sec_fs_freefrag),
-=======
->>>>>>> rebase
 	ATTR_LIST(delayed_allocation_blocks),
 	ATTR_LIST(session_write_kbytes),
 	ATTR_LIST(lifetime_write_kbytes),
@@ -270,7 +258,6 @@ static struct attribute *ext4_attrs[] = {
 EXT4_ATTR_FEATURE(lazy_itable_init);
 EXT4_ATTR_FEATURE(batched_discard);
 EXT4_ATTR_FEATURE(meta_bg_resize);
-<<<<<<< HEAD
 #ifdef CONFIG_FS_ENCRYPTION
 EXT4_ATTR_FEATURE(encryption);
 #endif
@@ -280,18 +267,12 @@ EXT4_ATTR_FEATURE(casefold);
 #ifdef CONFIG_FS_VERITY
 EXT4_ATTR_FEATURE(verity);
 #endif
-=======
-#ifdef CONFIG_EXT4_FS_ENCRYPTION
-EXT4_ATTR_FEATURE(encryption);
-#endif
->>>>>>> rebase
 EXT4_ATTR_FEATURE(metadata_csum_seed);
 
 static struct attribute *ext4_feat_attrs[] = {
 	ATTR_LIST(lazy_itable_init),
 	ATTR_LIST(batched_discard),
 	ATTR_LIST(meta_bg_resize),
-<<<<<<< HEAD
 #ifdef CONFIG_FS_ENCRYPTION
 	ATTR_LIST(encryption),
 #endif
@@ -301,11 +282,6 @@ static struct attribute *ext4_feat_attrs[] = {
 #ifdef CONFIG_FS_VERITY
 	ATTR_LIST(verity),
 #endif
-=======
-#ifdef CONFIG_EXT4_FS_ENCRYPTION
-	ATTR_LIST(encryption),
-#endif
->>>>>>> rebase
 	ATTR_LIST(metadata_csum_seed),
 	NULL,
 };
@@ -341,13 +317,10 @@ static ssize_t ext4_attr_show(struct kobject *kobj,
 	void *ptr = calc_ptr(a, sbi);
 
 	switch (a->attr_id) {
-<<<<<<< HEAD
 	case attr_sec_fs_stat:
 		return sec_fs_stat_show(a, sbi, buf);
 	case attr_sec_fs_freefrag:
 		return sec_fs_freefrag_show(a, sbi, buf);
-=======
->>>>>>> rebase
 	case attr_delayed_allocation_blocks:
 		return snprintf(buf, PAGE_SIZE, "%llu\n",
 				(s64) EXT4_C2B(sbi,
@@ -461,7 +434,6 @@ int ext4_register_sysfs(struct super_block *sb)
 		return err;
 	}
 
-<<<<<<< HEAD
 	if (strnlen(sbi->s_es->s_volume_name, 16) == strlen("data") &&
 	    strncmp(sbi->s_es->s_volume_name, "data", strlen("data")) == 0) {
 		err = sysfs_create_link(ext4_root, &sbi->s_kobj,
@@ -471,8 +443,6 @@ int ext4_register_sysfs(struct super_block *sb)
 					"for userdata(%d)", err);
 	}
 
-=======
->>>>>>> rebase
 	if (ext4_proc_root)
 		sbi->s_proc = proc_mkdir(sb->s_id, ext4_proc_root);
 	if (sbi->s_proc) {
@@ -493,14 +463,11 @@ void ext4_unregister_sysfs(struct super_block *sb)
 
 	if (sbi->s_proc)
 		remove_proc_subtree(sb->s_id, ext4_proc_root);
-<<<<<<< HEAD
 
 	if (strnlen(sbi->s_es->s_volume_name, 16) == strlen("data") &&
 	    strncmp(sbi->s_es->s_volume_name, "data", strlen("data")) == 0)
 		sysfs_delete_link(ext4_root, &sbi->s_kobj, "userdata");
 
-=======
->>>>>>> rebase
 	kobject_del(&sbi->s_kobj);
 }
 

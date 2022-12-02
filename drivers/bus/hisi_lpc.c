@@ -359,29 +359,6 @@ static int hisi_lpc_acpi_xlat_io_res(struct acpi_device *adev,
 }
 
 /*
-<<<<<<< HEAD
-=======
- * Released firmware describes the IO port max address as 0x3fff, which is
- * the max host bus address. Fixup to a proper range. This will probably
- * never be fixed in firmware.
- */
-static void hisi_lpc_acpi_fixup_child_resource(struct device *hostdev,
-					       struct resource *r)
-{
-	if (r->end != 0x3fff)
-		return;
-
-	if (r->start == 0xe4)
-		r->end = 0xe4 + 0x04 - 1;
-	else if (r->start == 0x2f8)
-		r->end = 0x2f8 + 0x08 - 1;
-	else
-		dev_warn(hostdev, "unrecognised resource %pR to fixup, ignoring\n",
-			 r);
-}
-
-/*
->>>>>>> rebase
  * hisi_lpc_acpi_set_io_res - set the resources for a child
  * @child: the device node to be updated the I/O resource
  * @hostdev: the device node associated with host controller
@@ -442,16 +419,8 @@ static int hisi_lpc_acpi_set_io_res(struct device *child,
 		return -ENOMEM;
 	}
 	count = 0;
-<<<<<<< HEAD
 	list_for_each_entry(rentry, &resource_list, node)
 		resources[count++] = *rentry->res;
-=======
-	list_for_each_entry(rentry, &resource_list, node) {
-		resources[count] = *rentry->res;
-		hisi_lpc_acpi_fixup_child_resource(hostdev, &resources[count]);
-		count++;
-	}
->>>>>>> rebase
 
 	acpi_dev_free_resource_list(&resource_list);
 
@@ -512,20 +481,13 @@ static int hisi_lpc_acpi_probe(struct device *hostdev)
 {
 	struct acpi_device *adev = ACPI_COMPANION(hostdev);
 	struct acpi_device *child;
-<<<<<<< HEAD
-=======
-	struct platform_device *pdev;
->>>>>>> rebase
 	int ret;
 
 	/* Only consider the children of the host */
 	list_for_each_entry(child, &adev->children, node) {
 		const char *hid = acpi_device_hid(child);
 		const struct hisi_lpc_acpi_cell *cell;
-<<<<<<< HEAD
 		struct platform_device *pdev;
-=======
->>>>>>> rebase
 		const struct resource *res;
 		bool found = false;
 		int num_res;
@@ -588,39 +550,22 @@ static int hisi_lpc_acpi_probe(struct device *hostdev)
 
 		ret = platform_device_add_resources(pdev, res, num_res);
 		if (ret)
-<<<<<<< HEAD
 			goto fail;
-=======
-			goto fail_put_device;
->>>>>>> rebase
 
 		ret = platform_device_add_data(pdev, cell->pdata,
 					       cell->pdata_size);
 		if (ret)
-<<<<<<< HEAD
 			goto fail;
 
 		ret = platform_device_add(pdev);
 		if (ret)
 			goto fail;
-=======
-			goto fail_put_device;
-
-		ret = platform_device_add(pdev);
-		if (ret)
-			goto fail_put_device;
->>>>>>> rebase
 
 		acpi_device_set_enumerated(child);
 	}
 
 	return 0;
 
-<<<<<<< HEAD
-=======
-fail_put_device:
-	platform_device_put(pdev);
->>>>>>> rebase
 fail:
 	hisi_lpc_acpi_remove(hostdev);
 	return ret;

@@ -597,20 +597,6 @@ static inline void mtk_rx_get_desc(struct mtk_rx_dma *rxd,
 	rxd->rxd4 = READ_ONCE(dma_rxd->rxd4);
 }
 
-<<<<<<< HEAD
-=======
-static void *mtk_max_lro_buf_alloc(gfp_t gfp_mask)
-{
-	unsigned int size = mtk_max_frag_size(MTK_MAX_LRO_RX_LENGTH);
-	unsigned long data;
-
-	data = __get_free_pages(gfp_mask | __GFP_COMP | __GFP_NOWARN,
-				get_order(size));
-
-	return (void *)data;
-}
-
->>>>>>> rebase
 /* the qdma core needs scratch memory to be setup */
 static int mtk_init_fq_dma(struct mtk_eth *eth)
 {
@@ -1019,14 +1005,7 @@ static int mtk_poll_rx(struct napi_struct *napi, int budget,
 			goto release_desc;
 
 		/* alloc new buffer */
-<<<<<<< HEAD
 		new_data = napi_alloc_frag(ring->frag_size);
-=======
-		if (ring->frag_size <= PAGE_SIZE)
-			new_data = napi_alloc_frag(ring->frag_size);
-		else
-			new_data = mtk_max_lro_buf_alloc(GFP_ATOMIC);
->>>>>>> rebase
 		if (unlikely(!new_data)) {
 			netdev->stats.rx_dropped++;
 			goto release_desc;
@@ -1062,11 +1041,7 @@ static int mtk_poll_rx(struct napi_struct *napi, int budget,
 		skb->protocol = eth_type_trans(skb, netdev);
 
 		if (netdev->features & NETIF_F_HW_VLAN_CTAG_RX &&
-<<<<<<< HEAD
 		    RX_DMA_VID(trxd.rxd3))
-=======
-		    (trxd.rxd2 & RX_DMA_VTAG))
->>>>>>> rebase
 			__vlan_hwaccel_put_tag(skb, htons(ETH_P_8021Q),
 					       RX_DMA_VID(trxd.rxd3));
 		skb_record_rx_queue(skb, 0);
@@ -1337,14 +1312,7 @@ static int mtk_rx_alloc(struct mtk_eth *eth, int ring_no, int rx_flag)
 		return -ENOMEM;
 
 	for (i = 0; i < rx_dma_size; i++) {
-<<<<<<< HEAD
 		ring->data[i] = netdev_alloc_frag(ring->frag_size);
-=======
-		if (ring->frag_size <= PAGE_SIZE)
-			ring->data[i] = netdev_alloc_frag(ring->frag_size);
-		else
-			ring->data[i] = mtk_max_lro_buf_alloc(GFP_KERNEL);
->>>>>>> rebase
 		if (!ring->data[i])
 			return -ENOMEM;
 	}
@@ -1607,12 +1575,6 @@ static int mtk_hwlro_get_fdir_entry(struct net_device *dev,
 	struct ethtool_rx_flow_spec *fsp =
 		(struct ethtool_rx_flow_spec *)&cmd->fs;
 
-<<<<<<< HEAD
-=======
-	if (fsp->location >= ARRAY_SIZE(mac->hwlro_ip))
-		return -EINVAL;
-
->>>>>>> rebase
 	/* only tcp dst ipv4 is meaningful, others are meaningless */
 	fsp->flow_type = TCP_V4_FLOW;
 	fsp->h_u.tcp_ip4_spec.ip4dst = ntohl(mac->hwlro_ip[fsp->location]);
@@ -2490,11 +2452,6 @@ static int mtk_add_mac(struct mtk_eth *eth, struct device_node *np)
 	eth->netdev[id]->irq = eth->irq[0];
 	eth->netdev[id]->dev.of_node = np;
 
-<<<<<<< HEAD
-=======
-	eth->netdev[id]->max_mtu = MTK_MAX_RX_LENGTH - MTK_RX_ETH_HLEN;
-
->>>>>>> rebase
 	return 0;
 
 free_netdev:

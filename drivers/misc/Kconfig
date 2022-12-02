@@ -476,7 +476,6 @@ config SRAM
 config SRAM_EXEC
 	bool
 
-<<<<<<< HEAD
 config HDCP_QSEECOM
 	tristate "QTI High-Bandwidth Digital Content Protection Module"
 	help
@@ -500,8 +499,6 @@ config QSEECOM_DEBUG
         help
           QTI Secure Execution Communicator driver debug
 
-=======
->>>>>>> rebase
 config VEXPRESS_SYSCFG
 	bool "Versatile Express System Configuration driver"
 	depends on VEXPRESS_CONFIG
@@ -539,7 +536,6 @@ config MISC_RTSX
 	tristate
 	default MISC_RTSX_PCI || MISC_RTSX_USB
 
-<<<<<<< HEAD
 config UID_SYS_STATS
 	bool "Per-UID statistics"
 	depends on PROFILING && TASK_XACCT && TASK_IO_ACCOUNTING
@@ -636,8 +632,6 @@ config DEV_RIL_BRIDGE
 	bool "Support a bridge between device and RIL"
 	default n
 
-=======
->>>>>>> rebase
 source "drivers/misc/c2port/Kconfig"
 source "drivers/misc/eeprom/Kconfig"
 source "drivers/misc/cb710/Kconfig"
@@ -652,7 +646,6 @@ source "drivers/misc/echo/Kconfig"
 source "drivers/misc/cxl/Kconfig"
 source "drivers/misc/ocxl/Kconfig"
 source "drivers/misc/cardreader/Kconfig"
-<<<<<<< HEAD
 source "drivers/misc/fpr_FingerprintCard/Kconfig"
 endmenu
 
@@ -674,6 +667,3 @@ config OKL4_LINK_SHBUF
 	      transport. This driver presents the link to Linux as a character device
 	      which can be written to or read from to access the shared memory. An ioctl
 	      on the device is used to send a virtual interrupt to the partner cell.
-=======
-endmenu
->>>>>>> rebase

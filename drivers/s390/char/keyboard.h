@@ -56,11 +56,7 @@ static inline void
 kbd_put_queue(struct tty_port *port, int ch)
 {
 	tty_insert_flip_char(port, ch, 0);
-<<<<<<< HEAD
 	tty_schedule_flip(port);
-=======
-	tty_flip_buffer_push(port);
->>>>>>> rebase
 }
 
 static inline void
@@ -68,9 +64,5 @@ kbd_puts_queue(struct tty_port *port, char *cp)
 {
 	while (*cp)
 		tty_insert_flip_char(port, *cp++, 0);
-<<<<<<< HEAD
 	tty_schedule_flip(port);
-=======
-	tty_flip_buffer_push(port);
->>>>>>> rebase
 }

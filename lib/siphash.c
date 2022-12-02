@@ -18,7 +18,6 @@
 #include <asm/word-at-a-time.h>
 #endif
 
-<<<<<<< HEAD
 #define SIPROUND \
 	do { \
 	v0 += v1; v1 = rol64(v1, 13); v1 ^= v0; v0 = rol64(v0, 32); \
@@ -32,15 +31,6 @@
 	u64 v1 = 0x646f72616e646f6dULL; \
 	u64 v2 = 0x6c7967656e657261ULL; \
 	u64 v3 = 0x7465646279746573ULL; \
-=======
-#define SIPROUND SIPHASH_PERMUTATION(v0, v1, v2, v3)
-
-#define PREAMBLE(len) \
-	u64 v0 = SIPHASH_CONST_0; \
-	u64 v1 = SIPHASH_CONST_1; \
-	u64 v2 = SIPHASH_CONST_2; \
-	u64 v3 = SIPHASH_CONST_3; \
->>>>>>> rebase
 	u64 b = ((u64)(len)) << 56; \
 	v3 ^= key->key[1]; \
 	v2 ^= key->key[0]; \
@@ -59,10 +49,6 @@
 	SIPROUND; \
 	return (v0 ^ v1) ^ (v2 ^ v3);
 
-<<<<<<< HEAD
-=======
-#ifndef CONFIG_HAVE_EFFICIENT_UNALIGNED_ACCESS
->>>>>>> rebase
 u64 __siphash_aligned(const void *data, size_t len, const siphash_key_t *key)
 {
 	const u8 *end = data + len - (len % sizeof(u64));
@@ -94,13 +80,8 @@ u64 __siphash_aligned(const void *data, size_t len, const siphash_key_t *key)
 	POSTAMBLE
 }
 EXPORT_SYMBOL(__siphash_aligned);
-<<<<<<< HEAD
 
 #ifndef CONFIG_HAVE_EFFICIENT_UNALIGNED_ACCESS
-=======
-#endif
-
->>>>>>> rebase
 u64 __siphash_unaligned(const void *data, size_t len, const siphash_key_t *key)
 {
 	const u8 *end = data + len - (len % sizeof(u64));
@@ -132,10 +113,7 @@ u64 __siphash_unaligned(const void *data, size_t len, const siphash_key_t *key)
 	POSTAMBLE
 }
 EXPORT_SYMBOL(__siphash_unaligned);
-<<<<<<< HEAD
 #endif
-=======
->>>>>>> rebase
 
 /**
  * siphash_1u64 - compute 64-bit siphash PRF value of a u64
@@ -272,10 +250,6 @@ EXPORT_SYMBOL(siphash_3u32);
 	HSIPROUND; \
 	return (v0 ^ v1) ^ (v2 ^ v3);
 
-<<<<<<< HEAD
-=======
-#ifndef CONFIG_HAVE_EFFICIENT_UNALIGNED_ACCESS
->>>>>>> rebase
 u32 __hsiphash_aligned(const void *data, size_t len, const hsiphash_key_t *key)
 {
 	const u8 *end = data + len - (len % sizeof(u64));
@@ -306,13 +280,8 @@ u32 __hsiphash_aligned(const void *data, size_t len, const hsiphash_key_t *key)
 	HPOSTAMBLE
 }
 EXPORT_SYMBOL(__hsiphash_aligned);
-<<<<<<< HEAD
 
 #ifndef CONFIG_HAVE_EFFICIENT_UNALIGNED_ACCESS
-=======
-#endif
-
->>>>>>> rebase
 u32 __hsiphash_unaligned(const void *data, size_t len,
 			 const hsiphash_key_t *key)
 {
@@ -344,10 +313,7 @@ u32 __hsiphash_unaligned(const void *data, size_t len,
 	HPOSTAMBLE
 }
 EXPORT_SYMBOL(__hsiphash_unaligned);
-<<<<<<< HEAD
 #endif
-=======
->>>>>>> rebase
 
 /**
  * hsiphash_1u32 - compute 64-bit hsiphash PRF value of a u32
@@ -423,7 +389,6 @@ u32 hsiphash_4u32(const u32 first, const u32 second, const u32 third,
 }
 EXPORT_SYMBOL(hsiphash_4u32);
 #else
-<<<<<<< HEAD
 #define HSIPROUND \
 	do { \
 	v0 += v1; v1 = rol32(v1, 5); v1 ^= v0; v0 = rol32(v0, 16); \
@@ -437,15 +402,6 @@ EXPORT_SYMBOL(hsiphash_4u32);
 	u32 v1 = 0; \
 	u32 v2 = 0x6c796765U; \
 	u32 v3 = 0x74656462U; \
-=======
-#define HSIPROUND HSIPHASH_PERMUTATION(v0, v1, v2, v3)
-
-#define HPREAMBLE(len) \
-	u32 v0 = HSIPHASH_CONST_0; \
-	u32 v1 = HSIPHASH_CONST_1; \
-	u32 v2 = HSIPHASH_CONST_2; \
-	u32 v3 = HSIPHASH_CONST_3; \
->>>>>>> rebase
 	u32 b = ((u32)(len)) << 24; \
 	v3 ^= key->key[1]; \
 	v2 ^= key->key[0]; \
@@ -462,10 +418,6 @@ EXPORT_SYMBOL(hsiphash_4u32);
 	HSIPROUND; \
 	return v1 ^ v3;
 
-<<<<<<< HEAD
-=======
-#ifndef CONFIG_HAVE_EFFICIENT_UNALIGNED_ACCESS
->>>>>>> rebase
 u32 __hsiphash_aligned(const void *data, size_t len, const hsiphash_key_t *key)
 {
 	const u8 *end = data + len - (len % sizeof(u32));
@@ -486,13 +438,8 @@ u32 __hsiphash_aligned(const void *data, size_t len, const hsiphash_key_t *key)
 	HPOSTAMBLE
 }
 EXPORT_SYMBOL(__hsiphash_aligned);
-<<<<<<< HEAD
 
 #ifndef CONFIG_HAVE_EFFICIENT_UNALIGNED_ACCESS
-=======
-#endif
-
->>>>>>> rebase
 u32 __hsiphash_unaligned(const void *data, size_t len,
 			 const hsiphash_key_t *key)
 {
@@ -514,10 +461,7 @@ u32 __hsiphash_unaligned(const void *data, size_t len,
 	HPOSTAMBLE
 }
 EXPORT_SYMBOL(__hsiphash_unaligned);
-<<<<<<< HEAD
 #endif
-=======
->>>>>>> rebase
 
 /**
  * hsiphash_1u32 - compute 32-bit hsiphash PRF value of a u32

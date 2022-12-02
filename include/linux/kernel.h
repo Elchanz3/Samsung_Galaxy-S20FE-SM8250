@@ -631,11 +631,7 @@ static inline char *hex_byte_pack_upper(char *buf, u8 byte)
 	return buf;
 }
 
-<<<<<<< HEAD
 extern int hex_to_bin(char ch);
-=======
-extern int hex_to_bin(unsigned char ch);
->>>>>>> rebase
 extern int __must_check hex2bin(u8 *dst, const char *src, size_t count);
 extern char *bin2hex(char *dst, const void *src, size_t count);
 
@@ -668,7 +664,6 @@ enum ftrace_dump_mode {
 };
 
 #ifdef CONFIG_TRACING
-<<<<<<< HEAD
 void tracing_mark_write_helper(int type, const char *str);
 #define TRACING_MARK_TYPE_BEGIN 0
 #define TRACING_MARK_TYPE_END 1
@@ -685,8 +680,6 @@ do {								\
 	__tracing_mark(TRACING_MARK_TYPE_END, "")
 #define tracing_mark_end_debug(fmt, args...)			\
 	__tracing_mark(TRACING_MARK_TYPE_END, fmt, ##args)
-=======
->>>>>>> rebase
 void tracing_on(void);
 void tracing_off(void);
 int tracing_is_on(void);
@@ -830,12 +823,9 @@ __ftrace_vprintk(unsigned long ip, const char *fmt, va_list ap);
 
 extern void ftrace_dump(enum ftrace_dump_mode oops_dump_mode);
 #else
-<<<<<<< HEAD
 #define tracing_mark_begin(fmt, args...) { }
 #define tracing_mark_end() { }
 #define tracing_mark_end_debug(fmt, args...) { }
-=======
->>>>>>> rebase
 static inline void tracing_start(void) { }
 static inline void tracing_stop(void) { }
 static inline void trace_dump_stack(int skip) { }

@@ -113,11 +113,7 @@ static u64 suspend_start;
 
 #ifdef CONFIG_CLOCKSOURCE_WATCHDOG
 static void clocksource_watchdog_work(struct work_struct *work);
-<<<<<<< HEAD
 static void clocksource_select(bool force);
-=======
-static void clocksource_select(void);
->>>>>>> rebase
 
 static LIST_HEAD(watchdog_list);
 static struct clocksource *watchdog;
@@ -146,16 +142,6 @@ static void __clocksource_change_rating(struct clocksource *cs, int rating);
 #define WATCHDOG_INTERVAL (HZ >> 1)
 #define WATCHDOG_THRESHOLD (NSEC_PER_SEC >> 4)
 
-<<<<<<< HEAD
-=======
-/*
- * Maximum permissible delay between two readouts of the watchdog
- * clocksource surrounding a read of the clocksource being validated.
- * This delay could be due to SMIs, NMIs, or to VCPU preemptions.
- */
-#define WATCHDOG_MAX_SKEW (100 * NSEC_PER_USEC)
-
->>>>>>> rebase
 static void clocksource_watchdog_work(struct work_struct *work)
 {
 	/*
@@ -216,54 +202,12 @@ void clocksource_mark_unstable(struct clocksource *cs)
 	spin_unlock_irqrestore(&watchdog_lock, flags);
 }
 
-<<<<<<< HEAD
 static void clocksource_watchdog(struct timer_list *unused)
 {
 	struct clocksource *cs;
 	u64 csnow, wdnow, cslast, wdlast, delta;
 	int64_t wd_nsec, cs_nsec;
 	int next_cpu, reset_pending;
-=======
-static ulong max_cswd_read_retries = 3;
-module_param(max_cswd_read_retries, ulong, 0644);
-
-static bool cs_watchdog_read(struct clocksource *cs, u64 *csnow, u64 *wdnow)
-{
-	unsigned int nretries;
-	u64 wd_end, wd_delta;
-	int64_t wd_delay;
-
-	for (nretries = 0; nretries <= max_cswd_read_retries; nretries++) {
-		local_irq_disable();
-		*wdnow = watchdog->read(watchdog);
-		*csnow = cs->read(cs);
-		wd_end = watchdog->read(watchdog);
-		local_irq_enable();
-
-		wd_delta = clocksource_delta(wd_end, *wdnow, watchdog->mask);
-		wd_delay = clocksource_cyc2ns(wd_delta, watchdog->mult,
-					      watchdog->shift);
-		if (wd_delay <= WATCHDOG_MAX_SKEW) {
-			if (nretries > 1 || nretries >= max_cswd_read_retries) {
-				pr_warn("timekeeping watchdog on CPU%d: %s retried %d times before success\n",
-					smp_processor_id(), watchdog->name, nretries);
-			}
-			return true;
-		}
-	}
-
-	pr_warn("timekeeping watchdog on CPU%d: %s read-back delay of %lldns, attempt %d, marking unstable\n",
-		smp_processor_id(), watchdog->name, wd_delay, nretries);
-	return false;
-}
-
-static void clocksource_watchdog(struct timer_list *unused)
-{
-	u64 csnow, wdnow, cslast, wdlast, delta;
-	int next_cpu, reset_pending;
-	int64_t wd_nsec, cs_nsec;
-	struct clocksource *cs;
->>>>>>> rebase
 
 	spin_lock(&watchdog_lock);
 	if (!watchdog_running)
@@ -280,18 +224,10 @@ static void clocksource_watchdog(struct timer_list *unused)
 			continue;
 		}
 
-<<<<<<< HEAD
 		local_irq_disable();
 		csnow = cs->read(cs);
 		wdnow = watchdog->read(watchdog);
 		local_irq_enable();
-=======
-		if (!cs_watchdog_read(cs, &csnow, &wdnow)) {
-			/* Clock readout unreliable, so give it up. */
-			__clocksource_unstable(cs);
-			continue;
-		}
->>>>>>> rebase
 
 		/* Clocksource initialized ? */
 		if (!(cs->flags & CLOCK_SOURCE_WATCHDOG) ||
@@ -789,20 +725,12 @@ static inline void clocksource_update_max_deferment(struct clocksource *cs)
 
 #ifndef CONFIG_ARCH_USES_GETTIMEOFFSET
 
-<<<<<<< HEAD
 static struct clocksource *clocksource_find_best(bool oneshot, bool skipcur,
 						bool force)
 {
 	struct clocksource *cs;
 
 	if ((!finished_booting && !force) || list_empty(&clocksource_list))
-=======
-static struct clocksource *clocksource_find_best(bool oneshot, bool skipcur)
-{
-	struct clocksource *cs;
-
-	if (!finished_booting || list_empty(&clocksource_list))
->>>>>>> rebase
 		return NULL;
 
 	/*
@@ -820,21 +748,13 @@ static struct clocksource *clocksource_find_best(bool oneshot, bool skipcur)
 	return NULL;
 }
 
-<<<<<<< HEAD
 static void __clocksource_select(bool skipcur, bool force)
-=======
-static void __clocksource_select(bool skipcur)
->>>>>>> rebase
 {
 	bool oneshot = tick_oneshot_mode_active();
 	struct clocksource *best, *cs;
 
 	/* Find the best suitable clocksource */
-<<<<<<< HEAD
 	best = clocksource_find_best(oneshot, skipcur, force);
-=======
-	best = clocksource_find_best(oneshot, skipcur);
->>>>>>> rebase
 	if (!best)
 		return;
 
@@ -887,38 +807,23 @@ found:
  * Select the clocksource with the best rating, or the clocksource,
  * which is selected by userspace override.
  */
-<<<<<<< HEAD
 static void clocksource_select(bool force)
 {
 	return __clocksource_select(false, force);
-=======
-static void clocksource_select(void)
-{
-	__clocksource_select(false);
->>>>>>> rebase
 }
 
 static void clocksource_select_fallback(void)
 {
-<<<<<<< HEAD
 	__clocksource_select(true, false);
 }
 
 #else /* !CONFIG_ARCH_USES_GETTIMEOFFSET */
 
 static inline void clocksource_select(bool force) { }
-=======
-	__clocksource_select(true);
-}
-
-#else /* !CONFIG_ARCH_USES_GETTIMEOFFSET */
-static inline void clocksource_select(void) { }
->>>>>>> rebase
 static inline void clocksource_select_fallback(void) { }
 
 #endif
 
-<<<<<<< HEAD
 /**
  * clocksource_select_force - Force re-selection of the best clocksource
  *				among registered clocksources
@@ -936,8 +841,6 @@ void clocksource_select_force(void)
 	mutex_unlock(&clocksource_mutex);
 }
 
-=======
->>>>>>> rebase
 /*
  * clocksource_done_booting - Called near the end of core bootup
  *
@@ -954,11 +857,7 @@ static int __init clocksource_done_booting(void)
 	 * Run the watchdog first to eliminate unstable clock sources
 	 */
 	__clocksource_watchdog_kthread();
-<<<<<<< HEAD
 	clocksource_select(false);
-=======
-	clocksource_select();
->>>>>>> rebase
 	mutex_unlock(&clocksource_mutex);
 	return 0;
 }
@@ -1049,10 +948,7 @@ void __clocksource_update_freq_scale(struct clocksource *cs, u32 scale, u32 freq
 }
 EXPORT_SYMBOL_GPL(__clocksource_update_freq_scale);
 
-<<<<<<< HEAD
 
-=======
->>>>>>> rebase
 /**
  * __clocksource_register_scale - Used to install new clocksources
  * @cs:		clocksource to be registered
@@ -1079,11 +975,7 @@ int __clocksource_register_scale(struct clocksource *cs, u32 scale, u32 freq)
 	clocksource_enqueue_watchdog(cs);
 	clocksource_watchdog_unlock(&flags);
 
-<<<<<<< HEAD
 	clocksource_select(false);
-=======
-	clocksource_select();
->>>>>>> rebase
 	clocksource_select_watchdog(false);
 	__clocksource_suspend_select(cs);
 	mutex_unlock(&clocksource_mutex);
@@ -1112,11 +1004,7 @@ void clocksource_change_rating(struct clocksource *cs, int rating)
 	__clocksource_change_rating(cs, rating);
 	clocksource_watchdog_unlock(&flags);
 
-<<<<<<< HEAD
 	clocksource_select(false);
-=======
-	clocksource_select();
->>>>>>> rebase
 	clocksource_select_watchdog(false);
 	clocksource_suspend_select(false);
 	mutex_unlock(&clocksource_mutex);
@@ -1236,11 +1124,7 @@ static ssize_t current_clocksource_store(struct device *dev,
 
 	ret = sysfs_get_uname(buf, override_name, count);
 	if (ret >= 0)
-<<<<<<< HEAD
 		clocksource_select(false);
-=======
-		clocksource_select();
->>>>>>> rebase
 
 	mutex_unlock(&clocksource_mutex);
 

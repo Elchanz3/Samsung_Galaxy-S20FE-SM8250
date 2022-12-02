@@ -219,10 +219,6 @@ static acpi_status i2c_acpi_add_device(acpi_handle handle, u32 level,
 void i2c_acpi_register_devices(struct i2c_adapter *adap)
 {
 	acpi_status status;
-<<<<<<< HEAD
-=======
-	acpi_handle handle;
->>>>>>> rebase
 
 	if (!has_acpi_companion(&adap->dev))
 		return;
@@ -233,18 +229,6 @@ void i2c_acpi_register_devices(struct i2c_adapter *adap)
 				     adap, NULL);
 	if (ACPI_FAILURE(status))
 		dev_warn(&adap->dev, "failed to enumerate I2C slaves\n");
-<<<<<<< HEAD
-=======
-
-	if (!adap->dev.parent)
-		return;
-
-	handle = ACPI_HANDLE(adap->dev.parent);
-	if (!handle)
-		return;
-
-	acpi_walk_dep_device_list(handle);
->>>>>>> rebase
 }
 
 const struct acpi_device_id *
@@ -401,10 +385,6 @@ static int i2c_acpi_notify(struct notifier_block *nb, unsigned long value,
 			break;
 
 		i2c_acpi_register_device(adapter, adev, &info);
-<<<<<<< HEAD
-=======
-		put_device(&adapter->dev);
->>>>>>> rebase
 		break;
 	case ACPI_RECONFIG_DEVICE_REMOVE:
 		if (!acpi_device_enumerated(adev))
@@ -713,10 +693,7 @@ int i2c_acpi_install_space_handler(struct i2c_adapter *adapter)
 		return -ENOMEM;
 	}
 
-<<<<<<< HEAD
 	acpi_walk_dep_device_list(handle);
-=======
->>>>>>> rebase
 	return 0;
 }
 

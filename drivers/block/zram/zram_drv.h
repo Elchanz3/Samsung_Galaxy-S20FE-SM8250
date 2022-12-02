@@ -18,16 +18,11 @@
 #include <linux/rwsem.h>
 #include <linux/zsmalloc.h>
 #include <linux/crypto.h>
-<<<<<<< HEAD
 #include <linux/mm.h>
 #include <linux/spinlock.h>
 
 #include "zcomp.h"
 #include "zram_dedup.h"
-=======
-
-#include "zcomp.h"
->>>>>>> rebase
 
 #define SECTORS_PER_PAGE_SHIFT	(PAGE_SHIFT - SECTOR_SHIFT)
 #define SECTORS_PER_PAGE	(1 << SECTORS_PER_PAGE_SHIFT)
@@ -38,11 +33,7 @@
 
 
 /*
-<<<<<<< HEAD
  * The lower ZRAM_FLAG_SHIFT bits of table.flags is for
-=======
- * The lower ZRAM_FLAG_SHIFT bits of table.value is for
->>>>>>> rebase
  * object size (excluding header), the higher bits is for
  * zram_pageflags.
  *
@@ -53,17 +44,12 @@
  */
 #define ZRAM_FLAG_SHIFT 24
 
-<<<<<<< HEAD
 /* Flags for zram pages (table[page_no].flags) */
-=======
-/* Flags for zram pages (table[page_no].value) */
->>>>>>> rebase
 enum zram_pageflags {
 	/* zram slot is locked */
 	ZRAM_LOCK = ZRAM_FLAG_SHIFT,
 	ZRAM_SAME,	/* Page consists the same element */
 	ZRAM_WB,	/* page is stored on backing_device */
-<<<<<<< HEAD
 	ZRAM_UNDER_WB,	/* page is under writeback */
 	ZRAM_HUGE,	/* Incompressible page */
 	ZRAM_IDLE,	/* not accessed page since last idle marking */
@@ -72,16 +58,12 @@ enum zram_pageflags {
 	ZRAM_PPR,
 	ZRAM_UNDER_PPR,
 	ZRAM_LRU,
-=======
-	ZRAM_HUGE,	/* Incompressible page */
->>>>>>> rebase
 
 	__NR_ZRAM_PAGEFLAGS,
 };
 
 /*-- Data structures */
 
-<<<<<<< HEAD
 struct zram_entry {
 	struct rb_node rb_node;
 	u32 len;
@@ -103,18 +85,6 @@ struct zram_table_entry {
 #ifdef CONFIG_ZRAM_LRU_WRITEBACK
 	struct list_head lru_list;
 #endif
-=======
-/* Allocated for each disk page */
-struct zram_table_entry {
-	union {
-		unsigned long handle;
-		unsigned long element;
-	};
-	unsigned long value;
-#ifdef CONFIG_ZRAM_MEMORY_TRACKING
-	ktime_t ac_time;
-#endif
->>>>>>> rebase
 };
 
 struct zram_stats {
@@ -131,7 +101,6 @@ struct zram_stats {
 	atomic_long_t max_used_pages;	/* no. of maximum pages stored */
 	atomic64_t writestall;		/* no. of write slow paths */
 	atomic64_t miss_free;		/* no. of missed free */
-<<<<<<< HEAD
 #ifdef	CONFIG_ZRAM_WRITEBACK
 	atomic64_t bd_count;		/* no. of pages in backing device */
 	atomic64_t bd_reads;		/* no. of reads from backing device */
@@ -204,8 +173,6 @@ void swap_writeback_list(struct zwbs **, struct list_head *);
 struct zram_hash {
 	spinlock_t lock;
 	struct rb_root rb_root;
-=======
->>>>>>> rebase
 };
 
 struct zram {
@@ -213,11 +180,8 @@ struct zram {
 	struct zs_pool *mem_pool;
 	struct zcomp *comp;
 	struct gendisk *disk;
-<<<<<<< HEAD
 	struct zram_hash *hash;
 	size_t hash_size;
-=======
->>>>>>> rebase
 	/* Prevent concurrent execution of device init */
 	struct rw_semaphore init_lock;
 	/*
@@ -236,17 +200,12 @@ struct zram {
 	 * zram is claimed so open request will be failed
 	 */
 	bool claim; /* Protected by bdev->bd_mutex */
-<<<<<<< HEAD
 	bool use_dedup;
 	struct file *backing_dev;
 #ifdef CONFIG_ZRAM_WRITEBACK
 	spinlock_t wb_limit_lock;
 	bool wb_limit_enable;
 	u64 bd_wb_limit;
-=======
-#ifdef CONFIG_ZRAM_WRITEBACK
-	struct file *backing_dev;
->>>>>>> rebase
 	struct block_device *bdev;
 	unsigned int old_block_size;
 	unsigned long *bitmap;
@@ -255,7 +214,6 @@ struct zram {
 #ifdef CONFIG_ZRAM_MEMORY_TRACKING
 	struct dentry *debugfs_dir;
 #endif
-<<<<<<< HEAD
 #ifdef CONFIG_ZRAM_LRU_WRITEBACK
 	struct task_struct *wbd;
 	wait_queue_head_t wbd_wait;
@@ -282,7 +240,4 @@ static inline bool zram_dedup_enabled(struct zram *zram)
 }
 
 void zram_entry_free(struct zram *zram, struct zram_entry *entry);
-=======
-};
->>>>>>> rebase
 #endif

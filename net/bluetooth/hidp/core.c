@@ -1282,11 +1282,7 @@ static int hidp_session_thread(void *arg)
 
 	/* cleanup runtime environment */
 	remove_wait_queue(sk_sleep(session->intr_sock->sk), &intr_wait);
-<<<<<<< HEAD
 	remove_wait_queue(sk_sleep(session->intr_sock->sk), &ctrl_wait);
-=======
-	remove_wait_queue(sk_sleep(session->ctrl_sock->sk), &ctrl_wait);
->>>>>>> rebase
 	wake_up_interruptible(&session->report_queue);
 	hidp_del_timer(session);
 

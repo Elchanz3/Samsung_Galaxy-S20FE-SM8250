@@ -74,11 +74,7 @@ int pat_debug_enable;
 static int __init pat_debug_setup(char *str)
 {
 	pat_debug_enable = 1;
-<<<<<<< HEAD
 	return 0;
-=======
-	return 1;
->>>>>>> rebase
 }
 __setup("debugpat", pat_debug_setup);
 
@@ -1135,20 +1131,12 @@ static void *memtype_seq_start(struct seq_file *seq, loff_t *pos)
 
 static void *memtype_seq_next(struct seq_file *seq, void *v, loff_t *pos)
 {
-<<<<<<< HEAD
-=======
-	kfree(v);
->>>>>>> rebase
 	++*pos;
 	return memtype_get_idx(*pos);
 }
 
 static void memtype_seq_stop(struct seq_file *seq, void *v)
 {
-<<<<<<< HEAD
-=======
-	kfree(v);
->>>>>>> rebase
 }
 
 static int memtype_seq_show(struct seq_file *seq, void *v)
@@ -1157,10 +1145,7 @@ static int memtype_seq_show(struct seq_file *seq, void *v)
 
 	seq_printf(seq, "%s @ 0x%Lx-0x%Lx\n", cattr_name(print_entry->type),
 			print_entry->start, print_entry->end);
-<<<<<<< HEAD
 	kfree(print_entry);
-=======
->>>>>>> rebase
 
 	return 0;
 }

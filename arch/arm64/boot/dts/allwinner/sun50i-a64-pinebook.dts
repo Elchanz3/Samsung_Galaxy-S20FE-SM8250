@@ -67,11 +67,8 @@
 };
 
 &ehci0 {
-<<<<<<< HEAD
 	phys = <&usbphy 0>;
 	phy-names = "usb";
-=======
->>>>>>> rebase
 	status = "okay";
 };
 
@@ -110,10 +107,6 @@
 	pinctrl-0 = <&mmc2_pins>;
 	vmmc-supply = <&reg_dcdc1>;
 	vqmmc-supply = <&reg_eldo1>;
-<<<<<<< HEAD
-=======
-	max-frequency = <200000000>;
->>>>>>> rebase
 	bus-width = <8>;
 	non-removable;
 	cap-mmc-hw-reset;
@@ -122,11 +115,8 @@
 };
 
 &ohci0 {
-<<<<<<< HEAD
 	phys = <&usbphy 0>;
 	phy-names = "usb";
-=======
->>>>>>> rebase
 	status = "okay";
 };
 

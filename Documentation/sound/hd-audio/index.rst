@@ -8,7 +8,3 @@ HD-Audio
    models
    controls
    dp-mst
-<<<<<<< HEAD
-=======
-   realtek-pc-beep
->>>>>>> rebase

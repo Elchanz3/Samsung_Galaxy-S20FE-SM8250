@@ -1245,13 +1245,6 @@ static ssize_t store_protocols(struct device *device,
 	}
 
 	mutex_lock(&dev->lock);
-<<<<<<< HEAD
-=======
-	if (!dev->registered) {
-		mutex_unlock(&dev->lock);
-		return -ENODEV;
-	}
->>>>>>> rebase
 
 	old_protocols = *current_protocols;
 	new_protocols = old_protocols;
@@ -1390,13 +1383,6 @@ static ssize_t store_filter(struct device *device,
 		return -EINVAL;
 
 	mutex_lock(&dev->lock);
-<<<<<<< HEAD
-=======
-	if (!dev->registered) {
-		mutex_unlock(&dev->lock);
-		return -ENODEV;
-	}
->>>>>>> rebase
 
 	new_filter = *filter;
 	if (fattr->mask)
@@ -1511,13 +1497,6 @@ static ssize_t store_wakeup_protocols(struct device *device,
 	int i;
 
 	mutex_lock(&dev->lock);
-<<<<<<< HEAD
-=======
-	if (!dev->registered) {
-		mutex_unlock(&dev->lock);
-		return -ENODEV;
-	}
->>>>>>> rebase
 
 	allowed = dev->allowed_wakeup_protocols;
 
@@ -1577,7 +1556,6 @@ static void rc_dev_release(struct device *device)
 	kfree(dev);
 }
 
-<<<<<<< HEAD
 #define ADD_HOTPLUG_VAR(fmt, val...)					\
 	do {								\
 		int err = add_uevent_var(env, fmt, val);		\
@@ -1597,27 +1575,6 @@ static int rc_dev_uevent(struct device *device, struct kobj_uevent_env *env)
 		ADD_HOTPLUG_VAR("DEV_NAME=%s", dev->device_name);
 
 	return 0;
-=======
-static int rc_dev_uevent(struct device *device, struct kobj_uevent_env *env)
-{
-	struct rc_dev *dev = to_rc_dev(device);
-	int ret = 0;
-
-	mutex_lock(&dev->lock);
-
-	if (!dev->registered)
-		ret = -ENODEV;
-	if (ret == 0 && dev->rc_map.name)
-		ret = add_uevent_var(env, "NAME=%s", dev->rc_map.name);
-	if (ret == 0 && dev->driver_name)
-		ret = add_uevent_var(env, "DRV_NAME=%s", dev->driver_name);
-	if (ret == 0 && dev->device_name)
-		ret = add_uevent_var(env, "DEV_NAME=%s", dev->device_name);
-
-	mutex_unlock(&dev->lock);
-
-	return ret;
->>>>>>> rebase
 }
 
 /*
@@ -1906,11 +1863,6 @@ int rc_register_device(struct rc_dev *dev)
 			goto out_raw;
 	}
 
-<<<<<<< HEAD
-=======
-	dev->registered = true;
-
->>>>>>> rebase
 	rc = device_add(&dev->dev);
 	if (rc)
 		goto out_rx_free;
@@ -1920,11 +1872,8 @@ int rc_register_device(struct rc_dev *dev)
 		 dev->device_name ?: "Unspecified device", path ?: "N/A");
 	kfree(path);
 
-<<<<<<< HEAD
 	dev->registered = true;
 
-=======
->>>>>>> rebase
 	/*
 	 * once the the input device is registered in rc_setup_rx_device,
 	 * userspace can open the input device and rc_open() will be called
@@ -2009,22 +1958,14 @@ void rc_unregister_device(struct rc_dev *dev)
 	del_timer_sync(&dev->timer_keyup);
 	del_timer_sync(&dev->timer_repeat);
 
-<<<<<<< HEAD
 	rc_free_rx_device(dev);
 
-=======
->>>>>>> rebase
 	mutex_lock(&dev->lock);
 	if (dev->users && dev->close)
 		dev->close(dev);
 	dev->registered = false;
 	mutex_unlock(&dev->lock);
 
-<<<<<<< HEAD
-=======
-	rc_free_rx_device(dev);
-
->>>>>>> rebase
 	/*
 	 * lirc device should be freed with dev->registered = false, so
 	 * that userspace polling will get notified.

@@ -41,10 +41,6 @@
 
 #include <asm/asm.h>
 #include <asm/cpu.h>
-<<<<<<< HEAD
-=======
-#include <asm/cpu_device_id.h>
->>>>>>> rebase
 #include <asm/io.h>
 #include <asm/desc.h>
 #include <asm/vmx.h>
@@ -216,12 +212,6 @@ static const struct {
 #define L1D_CACHE_ORDER 4
 static void *vmx_l1d_flush_pages;
 
-<<<<<<< HEAD
-=======
-/* Control for disabling CPU Fill buffer clear */
-static bool __read_mostly vmx_fb_clear_ctrl_available;
-
->>>>>>> rebase
 static int vmx_setup_l1d_flush(enum vmx_l1d_flush_state l1tf)
 {
 	struct page *page;
@@ -1055,11 +1045,6 @@ struct vcpu_vmx {
 	u64 msr_ia32_feature_control;
 	u64 msr_ia32_feature_control_valid_bits;
 	u64 ept_pointer;
-<<<<<<< HEAD
-=======
-	u64 msr_ia32_mcu_opt_ctrl;
-	bool disable_fb_clear;
->>>>>>> rebase
 };
 
 enum segment_cache_field {
@@ -2122,63 +2107,6 @@ static inline void __invept(unsigned long ext, u64 eptp, gpa_t gpa)
 	BUG_ON(error);
 }
 
-<<<<<<< HEAD
-=======
-static void vmx_setup_fb_clear_ctrl(void)
-{
-	u64 msr;
-
-	if (boot_cpu_has(X86_FEATURE_ARCH_CAPABILITIES) &&
-	    !boot_cpu_has_bug(X86_BUG_MDS) &&
-	    !boot_cpu_has_bug(X86_BUG_TAA)) {
-		rdmsrl(MSR_IA32_ARCH_CAPABILITIES, msr);
-		if (msr & ARCH_CAP_FB_CLEAR_CTRL)
-			vmx_fb_clear_ctrl_available = true;
-	}
-}
-
-static __always_inline void vmx_disable_fb_clear(struct vcpu_vmx *vmx)
-{
-	u64 msr;
-
-	if (!vmx->disable_fb_clear)
-		return;
-
-	msr = __rdmsr(MSR_IA32_MCU_OPT_CTRL);
-	msr |= FB_CLEAR_DIS;
-	native_wrmsrl(MSR_IA32_MCU_OPT_CTRL, msr);
-	/* Cache the MSR value to avoid reading it later */
-	vmx->msr_ia32_mcu_opt_ctrl = msr;
-}
-
-static __always_inline void vmx_enable_fb_clear(struct vcpu_vmx *vmx)
-{
-	if (!vmx->disable_fb_clear)
-		return;
-
-	vmx->msr_ia32_mcu_opt_ctrl &= ~FB_CLEAR_DIS;
-	native_wrmsrl(MSR_IA32_MCU_OPT_CTRL, vmx->msr_ia32_mcu_opt_ctrl);
-}
-
-static void vmx_update_fb_clear_dis(struct kvm_vcpu *vcpu, struct vcpu_vmx *vmx)
-{
-	vmx->disable_fb_clear = vmx_fb_clear_ctrl_available;
-
-	/*
-	 * If guest will not execute VERW, there is no need to set FB_CLEAR_DIS
-	 * at VMEntry. Skip the MSR read/write when a guest has no use case to
-	 * execute VERW.
-	 */
-	if ((vcpu->arch.arch_capabilities & ARCH_CAP_FB_CLEAR) ||
-	   ((vcpu->arch.arch_capabilities & ARCH_CAP_MDS_NO) &&
-	    (vcpu->arch.arch_capabilities & ARCH_CAP_TAA_NO) &&
-	    (vcpu->arch.arch_capabilities & ARCH_CAP_PSDP_NO) &&
-	    (vcpu->arch.arch_capabilities & ARCH_CAP_FBSDP_NO) &&
-	    (vcpu->arch.arch_capabilities & ARCH_CAP_SBDR_SSDP_NO)))
-		vmx->disable_fb_clear = false;
-}
-
->>>>>>> rebase
 static struct shared_msr_entry *find_msr_entry(struct vcpu_vmx *vmx, u32 msr)
 {
 	int i;
@@ -2228,7 +2156,6 @@ static void vmcs_load(struct vmcs *vmcs)
 }
 
 #ifdef CONFIG_KEXEC_CORE
-<<<<<<< HEAD
 /*
  * This bitmap is used to indicate whether the vmclear
  * operation is enabled on all cpus. All disabled by
@@ -2251,29 +2178,21 @@ static inline int crash_local_vmclear_enabled(int cpu)
 	return cpumask_test_cpu(cpu, &crash_vmclear_enabled_bitmap);
 }
 
-=======
->>>>>>> rebase
 static void crash_vmclear_local_loaded_vmcss(void)
 {
 	int cpu = raw_smp_processor_id();
 	struct loaded_vmcs *v;
 
-<<<<<<< HEAD
 	if (!crash_local_vmclear_enabled(cpu))
 		return;
 
-=======
->>>>>>> rebase
 	list_for_each_entry(v, &per_cpu(loaded_vmcss_on_cpu, cpu),
 			    loaded_vmcss_on_cpu_link)
 		vmcs_clear(v->vmcs);
 }
-<<<<<<< HEAD
 #else
 static inline void crash_enable_local_vmclear(int cpu) { }
 static inline void crash_disable_local_vmclear(int cpu) { }
-=======
->>>>>>> rebase
 #endif /* CONFIG_KEXEC_CORE */
 
 static void __loaded_vmcs_clear(void *arg)
@@ -2285,7 +2204,6 @@ static void __loaded_vmcs_clear(void *arg)
 		return; /* vcpu migration can race with cpu offline */
 	if (per_cpu(current_vmcs, cpu) == loaded_vmcs->vmcs)
 		per_cpu(current_vmcs, cpu) = NULL;
-<<<<<<< HEAD
 	crash_disable_local_vmclear(cpu);
 	list_del(&loaded_vmcs->loaded_vmcss_on_cpu_link);
 
@@ -2299,26 +2217,6 @@ static void __loaded_vmcs_clear(void *arg)
 
 	loaded_vmcs_init(loaded_vmcs);
 	crash_enable_local_vmclear(cpu);
-=======
-
-	vmcs_clear(loaded_vmcs->vmcs);
-	if (loaded_vmcs->shadow_vmcs && loaded_vmcs->launched)
-		vmcs_clear(loaded_vmcs->shadow_vmcs);
-
-	list_del(&loaded_vmcs->loaded_vmcss_on_cpu_link);
-
-	/*
-	 * Ensure all writes to loaded_vmcs, including deleting it from its
-	 * current percpu list, complete before setting loaded_vmcs->vcpu to
-	 * -1, otherwise a different cpu can see vcpu == -1 first and add
-	 * loaded_vmcs to its percpu list before it's deleted from this cpu's
-	 * list. Pairs with the smp_rmb() in vmx_vcpu_load_vmcs().
-	 */
-	smp_wmb();
-
-	loaded_vmcs->cpu = -1;
-	loaded_vmcs->launched = 0;
->>>>>>> rebase
 }
 
 static void loaded_vmcs_clear(struct loaded_vmcs *loaded_vmcs)
@@ -3169,30 +3067,18 @@ static void vmx_vcpu_load(struct kvm_vcpu *vcpu, int cpu)
 	if (!already_loaded) {
 		loaded_vmcs_clear(vmx->loaded_vmcs);
 		local_irq_disable();
-<<<<<<< HEAD
 		crash_disable_local_vmclear(cpu);
 
 		/*
 		 * Read loaded_vmcs->cpu should be before fetching
 		 * loaded_vmcs->loaded_vmcss_on_cpu_link.
 		 * See the comments in __loaded_vmcs_clear().
-=======
-
-		/*
-		 * Ensure loaded_vmcs->cpu is read before adding loaded_vmcs to
-		 * this cpu's percpu list, otherwise it may not yet be deleted
-		 * from its previous cpu's percpu list.  Pairs with the
-		 * smb_wmb() in __loaded_vmcs_clear().
->>>>>>> rebase
 		 */
 		smp_rmb();
 
 		list_add(&vmx->loaded_vmcs->loaded_vmcss_on_cpu_link,
 			 &per_cpu(loaded_vmcss_on_cpu, cpu));
-<<<<<<< HEAD
 		crash_enable_local_vmclear(cpu);
-=======
->>>>>>> rebase
 		local_irq_enable();
 	}
 
@@ -4204,11 +4090,7 @@ static int vmx_get_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
 		return kvm_get_msr_common(vcpu, msr_info);
 	case MSR_IA32_SPEC_CTRL:
 		if (!msr_info->host_initiated &&
-<<<<<<< HEAD
 		    !guest_cpuid_has(vcpu, X86_FEATURE_SPEC_CTRL))
-=======
-		    !guest_has_spec_ctrl_msr(vcpu))
->>>>>>> rebase
 			return 1;
 
 		msr_info->data = to_vmx(vcpu)->spec_ctrl;
@@ -4322,11 +4204,7 @@ static int vmx_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
 		break;
 	case MSR_IA32_SPEC_CTRL:
 		if (!msr_info->host_initiated &&
-<<<<<<< HEAD
 		    !guest_cpuid_has(vcpu, X86_FEATURE_SPEC_CTRL))
-=======
-		    !guest_has_spec_ctrl_msr(vcpu))
->>>>>>> rebase
 			return 1;
 
 		/* The STIBP bit doesn't fault even if it's not advertised */
@@ -4356,11 +4234,7 @@ static int vmx_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
 		break;
 	case MSR_IA32_PRED_CMD:
 		if (!msr_info->host_initiated &&
-<<<<<<< HEAD
 		    !guest_cpuid_has(vcpu, X86_FEATURE_SPEC_CTRL))
-=======
-		    !guest_has_pred_cmd_msr(vcpu))
->>>>>>> rebase
 			return 1;
 
 		if (data & ~PRED_CMD_IBPB)
@@ -4464,19 +4338,9 @@ static int vmx_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
 			}
 			break;
 		}
-<<<<<<< HEAD
 		ret = kvm_set_msr_common(vcpu, msr_info);
 	}
 
-=======
-			ret = kvm_set_msr_common(vcpu, msr_info);
-	}
-
-	/* FB_CLEAR may have changed, also update the FB_CLEAR_DIS behavior */
-	if (msr_index == MSR_IA32_ARCH_CAPABILITIES)
-		vmx_update_fb_clear_dis(vcpu, vmx);
-
->>>>>>> rebase
 	return ret;
 }
 
@@ -4558,7 +4422,6 @@ static int hardware_enable(void)
 	    !hv_get_vp_assist_page(cpu))
 		return -EFAULT;
 
-<<<<<<< HEAD
 	INIT_LIST_HEAD(&per_cpu(loaded_vmcss_on_cpu, cpu));
 	INIT_LIST_HEAD(&per_cpu(blocked_vcpu_on_cpu, cpu));
 	spin_lock_init(&per_cpu(blocked_vcpu_on_cpu_lock, cpu));
@@ -4574,8 +4437,6 @@ static int hardware_enable(void)
 	 */
 	crash_enable_local_vmclear(cpu);
 
-=======
->>>>>>> rebase
 	rdmsrl(MSR_IA32_FEATURE_CONTROL, old);
 
 	test_bits = FEATURE_CONTROL_LOCKED;
@@ -6513,11 +6374,6 @@ static void vmx_set_constant_host_state(struct vcpu_vmx *vmx)
 
 static void set_cr4_guest_host_mask(struct vcpu_vmx *vmx)
 {
-<<<<<<< HEAD
-=======
-	BUILD_BUG_ON(KVM_CR4_GUEST_OWNED_BITS & ~KVM_POSSIBLE_CR4_GUEST_BITS);
-
->>>>>>> rebase
 	vmx->vcpu.arch.cr4_guest_owned_bits = KVM_CR4_GUEST_OWNED_BITS;
 	if (enable_ept)
 		vmx->vcpu.arch.cr4_guest_owned_bits |= X86_CR4_PGE;
@@ -6942,11 +6798,6 @@ static void vmx_vcpu_reset(struct kvm_vcpu *vcpu, bool init_event)
 	vpid_sync_context(vmx->vpid);
 	if (init_event)
 		vmx_clear_hlt(vcpu);
-<<<<<<< HEAD
-=======
-
-	vmx_update_fb_clear_dis(vcpu, vmx);
->>>>>>> rebase
 }
 
 /*
@@ -7103,18 +6954,8 @@ static int vmx_nmi_allowed(struct kvm_vcpu *vcpu)
 
 static int vmx_interrupt_allowed(struct kvm_vcpu *vcpu)
 {
-<<<<<<< HEAD
 	return (!to_vmx(vcpu)->nested.nested_run_pending &&
 		vmcs_readl(GUEST_RFLAGS) & X86_EFLAGS_IF) &&
-=======
-	if (to_vmx(vcpu)->nested.nested_run_pending)
-		return false;
-
-	if (is_guest_mode(vcpu) && nested_exit_on_intr(vcpu))
-		return true;
-
-	return (vmcs_readl(GUEST_RFLAGS) & X86_EFLAGS_IF) &&
->>>>>>> rebase
 		!(vmcs_read32(GUEST_INTERRUPTIBILITY_INFO) &
 			(GUEST_INTR_STATE_STI | GUEST_INTR_STATE_MOV_SS));
 }
@@ -7208,11 +7049,7 @@ static int handle_rmode_exception(struct kvm_vcpu *vcpu,
  */
 static void kvm_machine_check(void)
 {
-<<<<<<< HEAD
 #if defined(CONFIG_X86_MCE) && defined(CONFIG_X86_64)
-=======
-#if defined(CONFIG_X86_MCE)
->>>>>>> rebase
 	struct pt_regs regs = {
 		.cs = 3, /* Fake ring 3 no matter what the guest ran on */
 		.flags = X86_EFLAGS_IF,
@@ -9880,11 +9717,7 @@ static bool nested_vmx_exit_reflected(struct kvm_vcpu *vcpu, u32 exit_reason)
 				vmcs_read32(VM_EXIT_INTR_ERROR_CODE),
 				KVM_ISA_VMX);
 
-<<<<<<< HEAD
 	switch (exit_reason) {
-=======
-	switch ((u16)exit_reason) {
->>>>>>> rebase
 	case EXIT_REASON_EXCEPTION_NMI:
 		if (is_nmi(intr_info))
 			return false;
@@ -10327,10 +10160,6 @@ static int vmx_handle_exit(struct kvm_vcpu *vcpu)
 			(exit_reason != EXIT_REASON_EXCEPTION_NMI &&
 			exit_reason != EXIT_REASON_EPT_VIOLATION &&
 			exit_reason != EXIT_REASON_PML_FULL &&
-<<<<<<< HEAD
-=======
-			exit_reason != EXIT_REASON_APIC_ACCESS &&
->>>>>>> rebase
 			exit_reason != EXIT_REASON_TASK_SWITCH)) {
 		vcpu->run->exit_reason = KVM_EXIT_INTERNAL_ERROR;
 		vcpu->run->internal.suberror = KVM_INTERNAL_ERROR_DELIVERY_EV;
@@ -10896,41 +10725,10 @@ static void vmx_update_hv_timer(struct kvm_vcpu *vcpu)
 	vmx->loaded_vmcs->hv_timer_armed = false;
 }
 
-<<<<<<< HEAD
-=======
-u64 __always_inline vmx_spec_ctrl_restore_host(struct vcpu_vmx *vmx)
-{
-	u64 guestval, hostval = this_cpu_read(x86_spec_ctrl_current);
-
-	if (!cpu_feature_enabled(X86_FEATURE_MSR_SPEC_CTRL))
-		return 0;
-
-	guestval = __rdmsr(MSR_IA32_SPEC_CTRL);
-
-	/*
-	 *
-	 * For legacy IBRS, the IBRS bit always needs to be written after
-	 * transitioning from a less privileged predictor mode, regardless of
-	 * whether the guest/host values differ.
-	 */
-	if (cpu_feature_enabled(X86_FEATURE_KERNEL_IBRS) ||
-	    guestval != hostval)
-		native_wrmsrl(MSR_IA32_SPEC_CTRL, hostval);
-
-	barrier_nospec();
-
-	return guestval;
-}
-
->>>>>>> rebase
 static void __noclone vmx_vcpu_run(struct kvm_vcpu *vcpu)
 {
 	struct vcpu_vmx *vmx = to_vmx(vcpu);
 	unsigned long cr3, cr4, evmcs_rsp;
-<<<<<<< HEAD
-=======
-	u64 spec_ctrl;
->>>>>>> rebase
 
 	/* Record the guest's net vcpu time for enforced NMI injections. */
 	if (unlikely(!enable_vnmi &&
@@ -11006,31 +10804,15 @@ static void __noclone vmx_vcpu_run(struct kvm_vcpu *vcpu)
 		vmx_l1d_flush(vcpu);
 	else if (static_branch_unlikely(&mds_user_clear))
 		mds_clear_cpu_buffers();
-<<<<<<< HEAD
 
 	asm(
-=======
-	else if (static_branch_unlikely(&mmio_stale_data_clear) &&
-		 kvm_arch_has_assigned_device(vcpu->kvm))
-		mds_clear_cpu_buffers();
-
-	vmx_disable_fb_clear(vmx);
-
-	asm volatile (
->>>>>>> rebase
 		/* Store host registers */
 		"push %%" _ASM_DX "; push %%" _ASM_BP ";"
 		"push %%" _ASM_CX " \n\t" /* placeholder for guest rcx */
 		"push %%" _ASM_CX " \n\t"
-<<<<<<< HEAD
 		"cmp %%" _ASM_SP ", %c[host_rsp](%0) \n\t"
 		"je 1f \n\t"
 		"mov %%" _ASM_SP ", %c[host_rsp](%0) \n\t"
-=======
-		"cmp %%" _ASM_SP ", %c[host_rsp](%%" _ASM_CX ") \n\t"
-		"je 1f \n\t"
-		"mov %%" _ASM_SP ", %c[host_rsp](%%" _ASM_CX ") \n\t"
->>>>>>> rebase
 		/* Avoid VMWRITE when Enlightened VMCS is in use */
 		"test %%" _ASM_SI ", %%" _ASM_SI " \n\t"
 		"jz 2f \n\t"
@@ -11040,18 +10822,13 @@ static void __noclone vmx_vcpu_run(struct kvm_vcpu *vcpu)
 		__ex(ASM_VMX_VMWRITE_RSP_RDX) "\n\t"
 		"1: \n\t"
 		/* Reload cr2 if changed */
-<<<<<<< HEAD
 		"mov %c[cr2](%0), %%" _ASM_AX " \n\t"
-=======
-		"mov %c[cr2](%%" _ASM_CX "), %%" _ASM_AX " \n\t"
->>>>>>> rebase
 		"mov %%cr2, %%" _ASM_DX " \n\t"
 		"cmp %%" _ASM_AX ", %%" _ASM_DX " \n\t"
 		"je 3f \n\t"
 		"mov %%" _ASM_AX", %%cr2 \n\t"
 		"3: \n\t"
 		/* Check if vmlaunch of vmresume is needed */
-<<<<<<< HEAD
 		"cmpb $0, %c[launched](%0) \n\t"
 		/* Load guest registers.  Don't clobber flags. */
 		"mov %c[rax](%0), %%" _ASM_AX " \n\t"
@@ -11071,28 +10848,6 @@ static void __noclone vmx_vcpu_run(struct kvm_vcpu *vcpu)
 		"mov %c[r15](%0), %%r15 \n\t"
 #endif
 		"mov %c[rcx](%0), %%" _ASM_CX " \n\t" /* kills %0 (ecx) */
-=======
-		"cmpb $0, %c[launched](%%" _ASM_CX ") \n\t"
-		/* Load guest registers.  Don't clobber flags. */
-		"mov %c[rax](%%" _ASM_CX "), %%" _ASM_AX " \n\t"
-		"mov %c[rbx](%%" _ASM_CX "), %%" _ASM_BX " \n\t"
-		"mov %c[rdx](%%" _ASM_CX "), %%" _ASM_DX " \n\t"
-		"mov %c[rsi](%%" _ASM_CX "), %%" _ASM_SI " \n\t"
-		"mov %c[rdi](%%" _ASM_CX "), %%" _ASM_DI " \n\t"
-		"mov %c[rbp](%%" _ASM_CX "), %%" _ASM_BP " \n\t"
-#ifdef CONFIG_X86_64
-		"mov %c[r8](%%" _ASM_CX "),  %%r8  \n\t"
-		"mov %c[r9](%%" _ASM_CX "),  %%r9  \n\t"
-		"mov %c[r10](%%" _ASM_CX "), %%r10 \n\t"
-		"mov %c[r11](%%" _ASM_CX "), %%r11 \n\t"
-		"mov %c[r12](%%" _ASM_CX "), %%r12 \n\t"
-		"mov %c[r13](%%" _ASM_CX "), %%r13 \n\t"
-		"mov %c[r14](%%" _ASM_CX "), %%r14 \n\t"
-		"mov %c[r15](%%" _ASM_CX "), %%r15 \n\t"
-#endif
-		/* Load guest RCX.  This kills the vmx_vcpu pointer! */
-		"mov %c[rcx](%%" _ASM_CX "), %%" _ASM_CX " \n\t"
->>>>>>> rebase
 
 		/* Enter guest mode */
 		"jne 1f \n\t"
@@ -11100,7 +10855,6 @@ static void __noclone vmx_vcpu_run(struct kvm_vcpu *vcpu)
 		"jmp 2f \n\t"
 		"1: " __ex(ASM_VMX_VMRESUME) "\n\t"
 		"2: "
-<<<<<<< HEAD
 		/* Save guest registers, load host registers, keep flags */
 		"mov %0, %c[wordsize](%%" _ASM_SP ") \n\t"
 		"pop %0 \n\t"
@@ -11121,44 +10875,6 @@ static void __noclone vmx_vcpu_run(struct kvm_vcpu *vcpu)
 		"mov %%r13, %c[r13](%0) \n\t"
 		"mov %%r14, %c[r14](%0) \n\t"
 		"mov %%r15, %c[r15](%0) \n\t"
-=======
-
-		/* Save guest's RCX to the stack placeholder (see above) */
-		"mov %%" _ASM_CX ", %c[wordsize](%%" _ASM_SP ") \n\t"
-
-		/* Load host's RCX, i.e. the vmx_vcpu pointer */
-		"pop %%" _ASM_CX " \n\t"
-
-		/* Set vmx->fail based on EFLAGS.{CF,ZF} */
-		"setbe %c[fail](%%" _ASM_CX ")\n\t"
-
-		/* Save all guest registers, including RCX from the stack */
-		"mov %%" _ASM_AX ", %c[rax](%%" _ASM_CX ") \n\t"
-		"mov %%" _ASM_BX ", %c[rbx](%%" _ASM_CX ") \n\t"
-		__ASM_SIZE(pop) " %c[rcx](%%" _ASM_CX ") \n\t"
-		"mov %%" _ASM_DX ", %c[rdx](%%" _ASM_CX ") \n\t"
-		"mov %%" _ASM_SI ", %c[rsi](%%" _ASM_CX ") \n\t"
-		"mov %%" _ASM_DI ", %c[rdi](%%" _ASM_CX ") \n\t"
-		"mov %%" _ASM_BP ", %c[rbp](%%" _ASM_CX ") \n\t"
-#ifdef CONFIG_X86_64
-		"mov %%r8,  %c[r8](%%" _ASM_CX ") \n\t"
-		"mov %%r9,  %c[r9](%%" _ASM_CX ") \n\t"
-		"mov %%r10, %c[r10](%%" _ASM_CX ") \n\t"
-		"mov %%r11, %c[r11](%%" _ASM_CX ") \n\t"
-		"mov %%r12, %c[r12](%%" _ASM_CX ") \n\t"
-		"mov %%r13, %c[r13](%%" _ASM_CX ") \n\t"
-		"mov %%r14, %c[r14](%%" _ASM_CX ") \n\t"
-		"mov %%r15, %c[r15](%%" _ASM_CX ") \n\t"
-
-		/*
-		 * Clear all general purpose registers (except RSP, which is loaded by
-		 * the CPU during VM-Exit) to prevent speculative use of the guest's
-		 * values, even those that are saved/loaded via the stack.  In theory,
-		 * an L1 cache miss when restoring registers could lead to speculative
-		 * execution with the guest's values.  Zeroing XORs are dirt cheap,
-		 * i.e. the extra paranoia is essentially free.
-		 */
->>>>>>> rebase
 		"xor %%r8d,  %%r8d \n\t"
 		"xor %%r9d,  %%r9d \n\t"
 		"xor %%r10d, %%r10d \n\t"
@@ -11169,35 +10885,18 @@ static void __noclone vmx_vcpu_run(struct kvm_vcpu *vcpu)
 		"xor %%r15d, %%r15d \n\t"
 #endif
 		"mov %%cr2, %%" _ASM_AX "   \n\t"
-<<<<<<< HEAD
 		"mov %%" _ASM_AX ", %c[cr2](%0) \n\t"
 
 		"xor %%eax, %%eax \n\t"
 		"xor %%ebx, %%ebx \n\t"
 		"xor %%esi, %%esi \n\t"
 		"xor %%edi, %%edi \n\t"
-=======
-		"mov %%" _ASM_AX ", %c[cr2](%%" _ASM_CX ") \n\t"
-
-		"xor %%eax, %%eax \n\t"
-		"xor %%ebx, %%ebx \n\t"
-		"xor %%ecx, %%ecx \n\t"
-		"xor %%edx, %%edx \n\t"
-		"xor %%esi, %%esi \n\t"
-		"xor %%edi, %%edi \n\t"
-		"xor %%ebp, %%ebp \n\t"
->>>>>>> rebase
 		"pop  %%" _ASM_BP "; pop  %%" _ASM_DX " \n\t"
 		".pushsection .rodata \n\t"
 		".global vmx_return \n\t"
 		"vmx_return: " _ASM_PTR " 2b \n\t"
 		".popsection"
-<<<<<<< HEAD
 	      : : "c"(vmx), "d"((unsigned long)HOST_RSP), "S"(evmcs_rsp),
-=======
-	      : "=c"((int){0}), "=d"((int){0}), "=S"((int){0})
-	      : "c"(vmx), "d"((unsigned long)HOST_RSP), "S"(evmcs_rsp),
->>>>>>> rebase
 		[launched]"i"(offsetof(struct vcpu_vmx, __launched)),
 		[fail]"i"(offsetof(struct vcpu_vmx, fail)),
 		[host_rsp]"i"(offsetof(struct vcpu_vmx, host_rsp)),
@@ -11230,29 +10929,6 @@ static void __noclone vmx_vcpu_run(struct kvm_vcpu *vcpu)
 	      );
 
 	/*
-<<<<<<< HEAD
-=======
-	 * IMPORTANT: RSB filling and SPEC_CTRL handling must be done before
-	 * the first unbalanced RET after vmexit!
-	 *
-	 * For retpoline or IBRS, RSB filling is needed to prevent poisoned RSB
-	 * entries and (in some cases) RSB underflow.
-	 *
-	 * eIBRS has its own protection against poisoned RSB, so it doesn't
-	 * need the RSB filling sequence.  But it does need to be enabled, and a
-	 * single call to retire, before the first unbalanced RET.
-	 *
-	 * So no RETs before vmx_spec_ctrl_restore_host() below.
-	 */
-	vmexit_fill_RSB();
-
-	/* Save this for below */
-	spec_ctrl = vmx_spec_ctrl_restore_host(vmx);
-
-	vmx_enable_fb_clear(vmx);
-
-	/*
->>>>>>> rebase
 	 * We do not use IBRS in the kernel. If this vCPU has used the
 	 * SPEC_CTRL MSR it may have left it on; save the value and
 	 * turn it off. This is much more efficient than blindly adding
@@ -11268,16 +10944,12 @@ static void __noclone vmx_vcpu_run(struct kvm_vcpu *vcpu)
 	 * save it.
 	 */
 	if (unlikely(!msr_write_intercepted(vcpu, MSR_IA32_SPEC_CTRL)))
-<<<<<<< HEAD
 		vmx->spec_ctrl = native_read_msr(MSR_IA32_SPEC_CTRL);
 
 	x86_spec_ctrl_restore_host(vmx->spec_ctrl, 0);
 
 	/* Eliminate branch target predictions from guest mode */
 	vmexit_fill_RSB();
-=======
-		vmx->spec_ctrl = spec_ctrl;
->>>>>>> rebase
 
 	/* All fields are clean at this point */
 	if (static_branch_unlikely(&enable_evmcs))
@@ -11344,13 +11016,6 @@ STACK_FRAME_NON_STANDARD(vmx_vcpu_run);
 static struct kvm *vmx_vm_alloc(void)
 {
 	struct kvm_vmx *kvm_vmx = vzalloc(sizeof(struct kvm_vmx));
-<<<<<<< HEAD
-=======
-
-	if (!kvm_vmx)
-		return NULL;
-
->>>>>>> rebase
 	return &kvm_vmx->kvm;
 }
 
@@ -12490,7 +12155,6 @@ static void prepare_vmcs02_full(struct kvm_vcpu *vcpu, struct vmcs12 *vmcs12)
 
 	set_cr4_guest_host_mask(vmx);
 
-<<<<<<< HEAD
 	if (kvm_mpx_supported()) {
 		if (vmx->nested.nested_run_pending &&
 			(vmcs12->vm_entry_controls & VM_ENTRY_LOAD_BNDCFGS))
@@ -12498,11 +12162,6 @@ static void prepare_vmcs02_full(struct kvm_vcpu *vcpu, struct vmcs12 *vmcs12)
 		else
 			vmcs_write64(GUEST_BNDCFGS, vmx->nested.vmcs01_guest_bndcfgs);
 	}
-=======
-	if (kvm_mpx_supported() && vmx->nested.nested_run_pending &&
-	    (vmcs12->vm_entry_controls & VM_ENTRY_LOAD_BNDCFGS))
-		vmcs_write64(GUEST_BNDCFGS, vmcs12->guest_bndcfgs);
->>>>>>> rebase
 
 	if (enable_vpid) {
 		if (nested_cpu_has_vpid(vmcs12) && vmx->nested.vpid02)
@@ -12566,12 +12225,6 @@ static int prepare_vmcs02(struct kvm_vcpu *vcpu, struct vmcs12 *vmcs12,
 		kvm_set_dr(vcpu, 7, vcpu->arch.dr7);
 		vmcs_write64(GUEST_IA32_DEBUGCTL, vmx->nested.vmcs01_debugctl);
 	}
-<<<<<<< HEAD
-=======
-	if (kvm_mpx_supported() && (!vmx->nested.nested_run_pending ||
-	    !(vmcs12->vm_entry_controls & VM_ENTRY_LOAD_BNDCFGS)))
-		vmcs_write64(GUEST_BNDCFGS, vmx->nested.vmcs01_guest_bndcfgs);
->>>>>>> rebase
 	if (vmx->nested.nested_run_pending) {
 		vmcs_write32(VM_ENTRY_INTR_INFO_FIELD,
 			     vmcs12->vm_entry_intr_info_field);
@@ -13337,11 +12990,7 @@ static void vmcs12_save_pending_event(struct kvm_vcpu *vcpu,
 	}
 }
 
-<<<<<<< HEAD
 static int vmx_check_nested_events(struct kvm_vcpu *vcpu, bool external_intr)
-=======
-static int vmx_check_nested_events(struct kvm_vcpu *vcpu)
->>>>>>> rebase
 {
 	struct vcpu_vmx *vmx = to_vmx(vcpu);
 	unsigned long exit_qual;
@@ -13379,12 +13028,8 @@ static int vmx_check_nested_events(struct kvm_vcpu *vcpu)
 		return 0;
 	}
 
-<<<<<<< HEAD
 	if ((kvm_cpu_has_interrupt(vcpu) || external_intr) &&
 	    nested_exit_on_intr(vcpu)) {
-=======
-	if (kvm_cpu_has_interrupt(vcpu) && nested_exit_on_intr(vcpu)) {
->>>>>>> rebase
 		if (block_nested_events)
 			return -EBUSY;
 		nested_vmx_vmexit(vcpu, EXIT_REASON_EXTERNAL_INTERRUPT, 0, 0);
@@ -13567,7 +13212,6 @@ static void prepare_vmcs12(struct kvm_vcpu *vcpu, struct vmcs12 *vmcs12,
 		 */
 		vmcs12_save_pending_event(vcpu, vmcs12);
 	}
-<<<<<<< HEAD
 
 	/*
 	 * Drop what we picked up for L2 via vmx_complete_interrupts. It is
@@ -13576,8 +13220,6 @@ static void prepare_vmcs12(struct kvm_vcpu *vcpu, struct vmcs12 *vmcs12,
 	vcpu->arch.nmi_injected = false;
 	kvm_clear_exception_queue(vcpu);
 	kvm_clear_interrupt_queue(vcpu);
-=======
->>>>>>> rebase
 }
 
 /*
@@ -13911,20 +13553,6 @@ static void nested_vmx_vmexit(struct kvm_vcpu *vcpu, u32 exit_reason,
 			nested_vmx_abort(vcpu, VMX_ABORT_SAVE_GUEST_MSR_FAIL);
 	}
 
-<<<<<<< HEAD
-=======
-	/*
-	 * Drop events/exceptions that were queued for re-injection to L2
-	 * (picked up via vmx_complete_interrupts()), as well as exceptions
-	 * that were pending for L2.  Note, this must NOT be hoisted above
-	 * prepare_vmcs12(), events/exceptions queued for re-injection need to
-	 * be captured in vmcs12 (see vmcs12_save_pending_event()).
-	 */
-	vcpu->arch.nmi_injected = false;
-	kvm_clear_exception_queue(vcpu);
-	kvm_clear_interrupt_queue(vcpu);
-
->>>>>>> rebase
 	vmx_switch_vmcs(vcpu, &vmx->vmcs01);
 	vm_entry_controls_reset_shadow(vmx);
 	vm_exit_controls_reset_shadow(vmx);
@@ -13979,7 +13607,6 @@ static void nested_vmx_vmexit(struct kvm_vcpu *vcpu, u32 exit_reason,
 	vcpu->arch.mp_state = KVM_MP_STATE_RUNNABLE;
 
 	if (likely(!vmx->fail)) {
-<<<<<<< HEAD
 		/*
 		 * TODO: SDM says that with acknowledge interrupt on
 		 * exit, bit 31 of the VM-exit interrupt information
@@ -13991,10 +13618,6 @@ static void nested_vmx_vmexit(struct kvm_vcpu *vcpu, u32 exit_reason,
 		if (nested_exit_intr_ack_set(vcpu) &&
 		    exit_reason == EXIT_REASON_EXTERNAL_INTERRUPT &&
 		    kvm_cpu_has_interrupt(vcpu)) {
-=======
-		if (exit_reason == EXIT_REASON_EXTERNAL_INTERRUPT &&
-		    nested_exit_intr_ack_set(vcpu)) {
->>>>>>> rebase
 			int irq = kvm_cpu_get_interrupt(vcpu);
 			WARN_ON(irq < 0);
 			vmcs12->vm_exit_intr_info = irq |
@@ -14242,18 +13865,11 @@ static void vmx_flush_log_dirty(struct kvm *kvm)
 	kvm_flush_pml_buffers(kvm);
 }
 
-<<<<<<< HEAD
 static int vmx_write_pml_buffer(struct kvm_vcpu *vcpu)
 {
 	struct vmcs12 *vmcs12;
 	struct vcpu_vmx *vmx = to_vmx(vcpu);
 	gpa_t gpa;
-=======
-static int vmx_write_pml_buffer(struct kvm_vcpu *vcpu, gpa_t gpa)
-{
-	struct vmcs12 *vmcs12;
-	struct vcpu_vmx *vmx = to_vmx(vcpu);
->>>>>>> rebase
 	struct page *page = NULL;
 	u64 *pml_address;
 
@@ -14274,11 +13890,7 @@ static int vmx_write_pml_buffer(struct kvm_vcpu *vcpu, gpa_t gpa)
 			return 1;
 		}
 
-<<<<<<< HEAD
 		gpa = vmcs_read64(GUEST_PHYSICAL_ADDRESS) & ~0xFFFull;
-=======
-		gpa &= ~0xFFFull;
->>>>>>> rebase
 
 		page = kvm_vcpu_gpa_to_page(vcpu, vmcs12->pml_address);
 		if (is_error_page(page))
@@ -14978,11 +14590,7 @@ module_exit(vmx_exit);
 
 static int __init vmx_init(void)
 {
-<<<<<<< HEAD
 	int r;
-=======
-	int r, cpu;
->>>>>>> rebase
 
 #if IS_ENABLED(CONFIG_HYPERV)
 	/*
@@ -15033,18 +14641,6 @@ static int __init vmx_init(void)
 		}
 	}
 
-<<<<<<< HEAD
-=======
-	vmx_setup_fb_clear_ctrl();
-
-	for_each_possible_cpu(cpu) {
-		INIT_LIST_HEAD(&per_cpu(loaded_vmcss_on_cpu, cpu));
-
-		INIT_LIST_HEAD(&per_cpu(blocked_vcpu_on_cpu, cpu));
-		spin_lock_init(&per_cpu(blocked_vcpu_on_cpu_lock, cpu));
-	}
-
->>>>>>> rebase
 #ifdef CONFIG_KEXEC_CORE
 	rcu_assign_pointer(crash_vmclear_loaded_vmcss,
 			   crash_vmclear_local_loaded_vmcss);

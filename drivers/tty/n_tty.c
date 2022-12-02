@@ -126,13 +126,10 @@ struct n_tty_data {
 
 #define MASK(x) ((x) & (N_TTY_BUF_SIZE - 1))
 
-<<<<<<< HEAD
 #if defined(CONFIG_TTY_FLUSH_LOCAL_ECHO)
 static void continue_process_echoes(struct work_struct *work);
 #endif
 
-=======
->>>>>>> rebase
 static inline size_t read_cnt(struct n_tty_data *ldata)
 {
 	return ldata->read_head - ldata->read_tail;
@@ -769,7 +766,6 @@ static size_t __process_echoes(struct tty_struct *tty)
 			tail++;
 	}
 
-<<<<<<< HEAD
 #if defined(CONFIG_TTY_FLUSH_LOCAL_ECHO)
 	if (ldata->echo_commit != tail) {
 		if (!tty->delayed_work) {
@@ -781,9 +777,6 @@ static size_t __process_echoes(struct tty_struct *tty)
 #endif
 
 not_yet_stored:
-=======
- not_yet_stored:
->>>>>>> rebase
 	ldata->echo_tail = tail;
 	return old_space - space;
 }
@@ -849,7 +842,6 @@ static void flush_echoes(struct tty_struct *tty)
 	mutex_unlock(&ldata->output_lock);
 }
 
-<<<<<<< HEAD
 #if defined(CONFIG_TTY_FLUSH_LOCAL_ECHO)
 static void continue_process_echoes(struct work_struct *work)
 {
@@ -869,8 +861,6 @@ static void continue_process_echoes(struct work_struct *work)
 }
 #endif
 
-=======
->>>>>>> rebase
 /**
  *	add_echo_byte	-	add a byte to the echo buffer
  *	@c: unicode byte to echo
@@ -1418,11 +1408,7 @@ handle_newline:
 			put_tty_queue(c, ldata);
 			smp_store_release(&ldata->canon_head, ldata->read_head);
 			kill_fasync(&tty->fasync, SIGIO, POLL_IN);
-<<<<<<< HEAD
 			wake_up_interruptible_poll(&tty->read_wait, EPOLLIN);
-=======
-			wake_up_interruptible_poll(&tty->read_wait, EPOLLIN | EPOLLRDNORM);
->>>>>>> rebase
 			return 0;
 		}
 	}
@@ -1703,11 +1689,7 @@ static void __receive_buf(struct tty_struct *tty, const unsigned char *cp,
 
 	if (read_cnt(ldata)) {
 		kill_fasync(&tty->fasync, SIGIO, POLL_IN);
-<<<<<<< HEAD
 		wake_up_interruptible_poll(&tty->read_wait, EPOLLIN);
-=======
-		wake_up_interruptible_poll(&tty->read_wait, EPOLLIN | EPOLLRDNORM);
->>>>>>> rebase
 	}
 }
 
@@ -1941,14 +1923,11 @@ static void n_tty_close(struct tty_struct *tty)
 	if (tty->link)
 		n_tty_packet_mode_flush(tty);
 
-<<<<<<< HEAD
 #if defined(CONFIG_TTY_FLUSH_LOCAL_ECHO)
 	if (tty->echo_delayed_work.work.func)
 		cancel_delayed_work_sync(&tty->echo_delayed_work);
 #endif
 
-=======
->>>>>>> rebase
 	vfree(ldata);
 	tty->disc_data = NULL;
 }

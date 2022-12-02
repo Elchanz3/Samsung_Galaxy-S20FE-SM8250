@@ -312,10 +312,7 @@ static int hdpvr_start_streaming(struct hdpvr_device *dev)
 
 	dev->status = STATUS_STREAMING;
 
-<<<<<<< HEAD
 	INIT_WORK(&dev->worker, hdpvr_transmit_buffers);
-=======
->>>>>>> rebase
 	schedule_work(&dev->worker);
 
 	v4l2_dbg(MSG_BUFFER, hdpvr_debug, &dev->v4l2_dev,
@@ -417,11 +414,7 @@ static ssize_t hdpvr_read(struct file *file, char __user *buffer, size_t count,
 	struct hdpvr_device *dev = video_drvdata(file);
 	struct hdpvr_buffer *buf = NULL;
 	struct urb *urb;
-<<<<<<< HEAD
 	unsigned int ret = 0;
-=======
-	int ret = 0;
->>>>>>> rebase
 	int rem, cnt;
 
 	if (*pos)
@@ -1182,12 +1175,6 @@ int hdpvr_register_videodev(struct hdpvr_device *dev, struct device *parent,
 	bool ac3 = dev->flags & HDPVR_FLAG_AC3_CAP;
 	int res;
 
-<<<<<<< HEAD
-=======
-	// initialize dev->worker
-	INIT_WORK(&dev->worker, hdpvr_transmit_buffers);
-
->>>>>>> rebase
 	dev->cur_std = V4L2_STD_525_60;
 	dev->width = 720;
 	dev->height = 480;

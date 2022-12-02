@@ -232,7 +232,6 @@ static int rcar_pwm_probe(struct platform_device *pdev)
 	rcar_pwm->chip.base = -1;
 	rcar_pwm->chip.npwm = 1;
 
-<<<<<<< HEAD
 	ret = pwmchip_add(&rcar_pwm->chip);
 	if (ret < 0) {
 		dev_err(&pdev->dev, "failed to register PWM chip: %d\n", ret);
@@ -241,37 +240,16 @@ static int rcar_pwm_probe(struct platform_device *pdev)
 
 	pm_runtime_enable(&pdev->dev);
 
-=======
-	pm_runtime_enable(&pdev->dev);
-
-	ret = pwmchip_add(&rcar_pwm->chip);
-	if (ret < 0) {
-		dev_err(&pdev->dev, "failed to register PWM chip: %d\n", ret);
-		pm_runtime_disable(&pdev->dev);
-		return ret;
-	}
-
->>>>>>> rebase
 	return 0;
 }
 
 static int rcar_pwm_remove(struct platform_device *pdev)
 {
 	struct rcar_pwm_chip *rcar_pwm = platform_get_drvdata(pdev);
-<<<<<<< HEAD
 
 	pm_runtime_disable(&pdev->dev);
 
 	return pwmchip_remove(&rcar_pwm->chip);
-=======
-	int ret;
-
-	ret = pwmchip_remove(&rcar_pwm->chip);
-
-	pm_runtime_disable(&pdev->dev);
-
-	return ret;
->>>>>>> rebase
 }
 
 static const struct of_device_id rcar_pwm_of_table[] = {

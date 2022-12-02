@@ -509,19 +509,11 @@ static int xive_spapr_get_ipi(unsigned int cpu, struct xive_cpu *xc)
 
 static void xive_spapr_put_ipi(unsigned int cpu, struct xive_cpu *xc)
 {
-<<<<<<< HEAD
 	if (!xc->hw_ipi)
 		return;
 
 	xive_irq_bitmap_free(xc->hw_ipi);
 	xc->hw_ipi = 0;
-=======
-	if (xc->hw_ipi == XIVE_BAD_IRQ)
-		return;
-
-	xive_irq_bitmap_free(xc->hw_ipi);
-	xc->hw_ipi = XIVE_BAD_IRQ;
->>>>>>> rebase
 }
 #endif /* CONFIG_SMP */
 
@@ -639,10 +631,6 @@ static bool xive_get_max_prio(u8 *max_prio)
 	}
 
 	reg = of_get_property(rootdn, "ibm,plat-res-int-priorities", &len);
-<<<<<<< HEAD
-=======
-	of_node_put(rootdn);
->>>>>>> rebase
 	if (!reg) {
 		pr_err("Failed to read 'ibm,plat-res-int-priorities' property\n");
 		return false;

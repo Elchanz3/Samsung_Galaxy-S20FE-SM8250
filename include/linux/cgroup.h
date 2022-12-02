@@ -130,11 +130,8 @@ void cgroup_free(struct task_struct *p);
 int cgroup_init_early(void);
 int cgroup_init(void);
 
-<<<<<<< HEAD
 int cgroup_parse_float(const char *input, unsigned dec_shift, s64 *v);
 
-=======
->>>>>>> rebase
 /*
  * Iteration helpers and macros.
  */
@@ -674,14 +671,11 @@ static inline void pr_cont_cgroup_path(struct cgroup *cgrp)
 	pr_cont_kernfs_path(cgrp->kn);
 }
 
-<<<<<<< HEAD
 static inline struct psi_group *cgroup_psi(struct cgroup *cgrp)
 {
 	return &cgrp->psi;
 }
 
-=======
->>>>>>> rebase
 static inline void cgroup_init_kthreadd(void)
 {
 	/*
@@ -736,7 +730,6 @@ static inline union kernfs_node_id *cgroup_get_kernfs_id(struct cgroup *cgrp)
 	return NULL;
 }
 
-<<<<<<< HEAD
 static inline struct cgroup *cgroup_parent(struct cgroup *cgrp)
 {
 	return NULL;
@@ -747,8 +740,6 @@ static inline struct psi_group *cgroup_psi(struct cgroup *cgrp)
 	return NULL;
 }
 
-=======
->>>>>>> rebase
 static inline bool task_under_cgroup_hierarchy(struct task_struct *task,
 					       struct cgroup *ancestor)
 {
@@ -836,10 +827,6 @@ extern spinlock_t cgroup_sk_update_lock;
 
 void cgroup_sk_alloc_disable(void);
 void cgroup_sk_alloc(struct sock_cgroup_data *skcd);
-<<<<<<< HEAD
-=======
-void cgroup_sk_clone(struct sock_cgroup_data *skcd);
->>>>>>> rebase
 void cgroup_sk_free(struct sock_cgroup_data *skcd);
 
 static inline struct cgroup *sock_cgroup_ptr(struct sock_cgroup_data *skcd)
@@ -853,11 +840,7 @@ static inline struct cgroup *sock_cgroup_ptr(struct sock_cgroup_data *skcd)
 	 */
 	v = READ_ONCE(skcd->val);
 
-<<<<<<< HEAD
 	if (v & 1)
-=======
-	if (v & 3)
->>>>>>> rebase
 		return &cgrp_dfl_root.cgrp;
 
 	return (struct cgroup *)(unsigned long)v ?: &cgrp_dfl_root.cgrp;
@@ -869,10 +852,6 @@ static inline struct cgroup *sock_cgroup_ptr(struct sock_cgroup_data *skcd)
 #else	/* CONFIG_CGROUP_DATA */
 
 static inline void cgroup_sk_alloc(struct sock_cgroup_data *skcd) {}
-<<<<<<< HEAD
-=======
-static inline void cgroup_sk_clone(struct sock_cgroup_data *skcd) {}
->>>>>>> rebase
 static inline void cgroup_sk_free(struct sock_cgroup_data *skcd) {}
 
 #endif	/* CONFIG_CGROUP_DATA */

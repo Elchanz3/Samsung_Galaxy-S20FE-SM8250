@@ -121,11 +121,7 @@
  * the only thing eating into inactive list space is active pages.
  *
  *
-<<<<<<< HEAD
  *		Refaulting inactive pages
-=======
- *		Activating refaulting pages
->>>>>>> rebase
  *
  * All that is known about the active list is that the pages have been
  * accessed more than once in the past.  This means that at any given
@@ -138,13 +134,10 @@
  * used less frequently than the refaulting page - or even not used at
  * all anymore.
  *
-<<<<<<< HEAD
  * That means if inactive cache is refaulting with a suitable refault
  * distance, we assume the cache workingset is transitioning and put
  * pressure on the current active list.
  *
-=======
->>>>>>> rebase
  * If this is wrong and demotion kicks in, the pages which are truly
  * used more frequently will be reactivated while the less frequently
  * used once will be evicted from memory.
@@ -152,7 +145,6 @@
  * But if this is right, the stale pages will be pushed out of memory
  * and the used pages get to stay in cache.
  *
-<<<<<<< HEAD
  *		Refaulting active pages
  *
  * If on the other hand the refaulting pages have recently been
@@ -161,8 +153,6 @@
  * a different workingset; the existing workingset is thrashing in the
  * space allocated to the page cache.
  *
-=======
->>>>>>> rebase
  *
  *		Implementation
  *
@@ -178,12 +168,7 @@
  */
 
 #define EVICTION_SHIFT	(RADIX_TREE_EXCEPTIONAL_ENTRY + \
-<<<<<<< HEAD
 			 1 + NODES_SHIFT + MEM_CGROUP_ID_SHIFT)
-=======
-			 NODES_SHIFT +	\
-			 MEM_CGROUP_ID_SHIFT)
->>>>>>> rebase
 #define EVICTION_MASK	(~0UL >> EVICTION_SHIFT)
 
 /*
@@ -196,27 +181,19 @@
  */
 static unsigned int bucket_order __read_mostly;
 
-<<<<<<< HEAD
 static void *pack_shadow(int memcgid, pg_data_t *pgdat, unsigned long eviction,
 			 bool workingset)
-=======
-static void *pack_shadow(int memcgid, pg_data_t *pgdat, unsigned long eviction)
->>>>>>> rebase
 {
 	eviction >>= bucket_order;
 	eviction = (eviction << MEM_CGROUP_ID_SHIFT) | memcgid;
 	eviction = (eviction << NODES_SHIFT) | pgdat->node_id;
-<<<<<<< HEAD
 	eviction = (eviction << 1) | workingset;
-=======
->>>>>>> rebase
 	eviction = (eviction << RADIX_TREE_EXCEPTIONAL_SHIFT);
 
 	return (void *)(eviction | RADIX_TREE_EXCEPTIONAL_ENTRY);
 }
 
 static void unpack_shadow(void *shadow, int *memcgidp, pg_data_t **pgdat,
-<<<<<<< HEAD
 			  unsigned long *evictionp, bool *workingsetp)
 {
 	unsigned long entry = (unsigned long)shadow;
@@ -226,14 +203,6 @@ static void unpack_shadow(void *shadow, int *memcgidp, pg_data_t **pgdat,
 	entry >>= RADIX_TREE_EXCEPTIONAL_SHIFT;
 	workingset = entry & 1;
 	entry >>= 1;
-=======
-			  unsigned long *evictionp)
-{
-	unsigned long entry = (unsigned long)shadow;
-	int memcgid, nid;
-
-	entry >>= RADIX_TREE_EXCEPTIONAL_SHIFT;
->>>>>>> rebase
 	nid = entry & ((1UL << NODES_SHIFT) - 1);
 	entry >>= NODES_SHIFT;
 	memcgid = entry & ((1UL << MEM_CGROUP_ID_SHIFT) - 1);
@@ -242,10 +211,7 @@ static void unpack_shadow(void *shadow, int *memcgidp, pg_data_t **pgdat,
 	*memcgidp = memcgid;
 	*pgdat = NODE_DATA(nid);
 	*evictionp = entry << bucket_order;
-<<<<<<< HEAD
 	*workingsetp = workingset;
-=======
->>>>>>> rebase
 }
 
 /**
@@ -258,13 +224,8 @@ static void unpack_shadow(void *shadow, int *memcgidp, pg_data_t **pgdat,
  */
 void *workingset_eviction(struct address_space *mapping, struct page *page)
 {
-<<<<<<< HEAD
 	struct pglist_data *pgdat = page_pgdat(page);
 	struct mem_cgroup *memcg = page_memcg(page);
-=======
-	struct mem_cgroup *memcg = page_memcg(page);
-	struct pglist_data *pgdat = page_pgdat(page);
->>>>>>> rebase
 	int memcgid = mem_cgroup_id(memcg);
 	unsigned long eviction;
 	struct lruvec *lruvec;
@@ -276,53 +237,30 @@ void *workingset_eviction(struct address_space *mapping, struct page *page)
 
 	lruvec = mem_cgroup_lruvec(pgdat, memcg);
 	eviction = atomic_long_inc_return(&lruvec->inactive_age);
-<<<<<<< HEAD
 	return pack_shadow(memcgid, pgdat, eviction, PageWorkingset(page));
-=======
-	return pack_shadow(memcgid, pgdat, eviction);
->>>>>>> rebase
 }
 
 /**
  * workingset_refault - evaluate the refault of a previously evicted page
-<<<<<<< HEAD
  * @page: the freshly allocated replacement page
-=======
->>>>>>> rebase
  * @shadow: shadow entry of the evicted page
  *
  * Calculates and evaluates the refault distance of the previously
  * evicted page in the context of the node it was allocated in.
-<<<<<<< HEAD
  */
 void workingset_refault(struct page *page, void *shadow)
 {
 	unsigned long refault_distance;
 	struct pglist_data *pgdat;
-=======
- *
- * Returns %true if the page should be activated, %false otherwise.
- */
-bool workingset_refault(void *shadow)
-{
-	unsigned long refault_distance;
->>>>>>> rebase
 	unsigned long active_file;
 	struct mem_cgroup *memcg;
 	unsigned long eviction;
 	struct lruvec *lruvec;
 	unsigned long refault;
-<<<<<<< HEAD
 	bool workingset;
 	int memcgid;
 
 	unpack_shadow(shadow, &memcgid, &pgdat, &eviction, &workingset);
-=======
-	struct pglist_data *pgdat;
-	int memcgid;
-
-	unpack_shadow(shadow, &memcgid, &pgdat, &eviction);
->>>>>>> rebase
 
 	rcu_read_lock();
 	/*
@@ -342,21 +280,13 @@ bool workingset_refault(void *shadow)
 	 * configurations instead.
 	 */
 	memcg = mem_cgroup_from_id(memcgid);
-<<<<<<< HEAD
 	if (!mem_cgroup_disabled() && !memcg)
 		goto out;
-=======
-	if (!mem_cgroup_disabled() && !memcg) {
-		rcu_read_unlock();
-		return false;
-	}
->>>>>>> rebase
 	lruvec = mem_cgroup_lruvec(pgdat, memcg);
 	refault = atomic_long_read(&lruvec->inactive_age);
 	active_file = lruvec_lru_size(lruvec, LRU_ACTIVE_FILE, MAX_NR_ZONES);
 
 	/*
-<<<<<<< HEAD
 	 * Calculate the refault distance
 	 *
 	 * The unsigned subtraction here gives an accurate distance
@@ -371,28 +301,11 @@ bool workingset_refault(void *shadow)
 	 * unconditionally with *every* reclaim invocation for the
 	 * longest time, so the occasional inappropriate activation
 	 * leading to pressure on the active list is not a problem.
-=======
-	 * The unsigned subtraction here gives an accurate distance
-	 * across inactive_age overflows in most cases.
-	 *
-	 * There is a special case: usually, shadow entries have a
-	 * short lifetime and are either refaulted or reclaimed along
-	 * with the inode before they get too old.  But it is not
-	 * impossible for the inactive_age to lap a shadow entry in
-	 * the field, which can then can result in a false small
-	 * refault distance, leading to a false activation should this
-	 * old entry actually refault again.  However, earlier kernels
-	 * used to deactivate unconditionally with *every* reclaim
-	 * invocation for the longest time, so the occasional
-	 * inappropriate activation leading to pressure on the active
-	 * list is not a problem.
->>>>>>> rebase
 	 */
 	refault_distance = (refault - eviction) & EVICTION_MASK;
 
 	inc_lruvec_state(lruvec, WORKINGSET_REFAULT);
 
-<<<<<<< HEAD
 	/*
 	 * Compare the distance to the existing workingset size. We
 	 * don't act on pages that couldn't stay resident even if all
@@ -412,15 +325,6 @@ bool workingset_refault(void *shadow)
 	}
 out:
 	rcu_read_unlock();
-=======
-	if (refault_distance <= active_file) {
-		inc_lruvec_state(lruvec, WORKINGSET_ACTIVATE);
-		rcu_read_unlock();
-		return true;
-	}
-	rcu_read_unlock();
-	return false;
->>>>>>> rebase
 }
 
 /**
@@ -487,11 +391,7 @@ static unsigned long count_shadow_nodes(struct shrinker *shrinker,
 {
 	unsigned long max_nodes;
 	unsigned long nodes;
-<<<<<<< HEAD
 	unsigned long pages;
-=======
-	unsigned long cache;
->>>>>>> rebase
 
 	nodes = list_lru_shrink_count(&shadow_nodes, sc);
 
@@ -517,7 +417,6 @@ static unsigned long count_shadow_nodes(struct shrinker *shrinker,
 	 *
 	 * PAGE_SIZE / radix_tree_nodes / node_entries * 8 / PAGE_SIZE
 	 */
-<<<<<<< HEAD
 #ifdef CONFIG_MEMCG
 	if (sc->memcg) {
 		struct lruvec *lruvec;
@@ -532,16 +431,6 @@ static unsigned long count_shadow_nodes(struct shrinker *shrinker,
 		pages = node_present_pages(sc->nid);
 
 	max_nodes = pages >> (RADIX_TREE_MAP_SHIFT - 3);
-=======
-	if (sc->memcg) {
-		cache = mem_cgroup_node_nr_lru_pages(sc->memcg, sc->nid,
-						     LRU_ALL_FILE);
-	} else {
-		cache = node_page_state(NODE_DATA(sc->nid), NR_ACTIVE_FILE) +
-			node_page_state(NODE_DATA(sc->nid), NR_INACTIVE_FILE);
-	}
-	max_nodes = cache >> (RADIX_TREE_MAP_SHIFT - 3);
->>>>>>> rebase
 
 	if (!nodes)
 		return SHRINK_EMPTY;

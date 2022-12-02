@@ -61,11 +61,7 @@ struct clk_hw *clk_hw_register_fixed_rate_with_accuracy(struct device *dev,
 {
 	struct clk_fixed_rate *fixed;
 	struct clk_hw *hw;
-<<<<<<< HEAD
 	struct clk_init_data init = {};
-=======
-	struct clk_init_data init;
->>>>>>> rebase
 	int ret;
 
 	/* allocate fixed-rate clock */
@@ -87,10 +83,7 @@ struct clk_hw *clk_hw_register_fixed_rate_with_accuracy(struct device *dev,
 	/* register the clock */
 	hw = &fixed->hw;
 	ret = clk_hw_register(dev, hw);
-<<<<<<< HEAD
 	hw->init = NULL;
-=======
->>>>>>> rebase
 	if (ret) {
 		kfree(fixed);
 		hw = ERR_PTR(ret);

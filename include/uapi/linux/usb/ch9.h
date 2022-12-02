@@ -364,12 +364,6 @@ struct usb_config_descriptor {
 
 /*-------------------------------------------------------------------------*/
 
-<<<<<<< HEAD
-=======
-/* USB String descriptors can contain at most 126 characters. */
-#define USB_MAX_STRING_LEN	126
-
->>>>>>> rebase
 /* USB_DT_STRING: String descriptor */
 struct usb_string_descriptor {
 	__u8  bLength;
@@ -1087,7 +1081,6 @@ struct usb_ptm_cap_descriptor {
  */
 #define USB_DT_USB_SSP_CAP_SIZE(ssac)	(12 + (ssac + 1) * 4)
 
-<<<<<<< HEAD
 /*
  * Configuration Summary descriptors: Defines a list of device preferred
  * configurations. This descriptor may be used by Host software to decide
@@ -1108,8 +1101,6 @@ struct usb_config_summary_descriptor {
 	__u8 bConfigurationIndex[];
 } __attribute__((packed));
 
-=======
->>>>>>> rebase
 /*-------------------------------------------------------------------------*/
 
 /* USB_DT_WIRELESS_ENDPOINT_COMP:  companion descriptor associated with

@@ -1092,11 +1092,7 @@ hfsc_destroy_class(struct Qdisc *sch, struct hfsc_class *cl)
 	struct hfsc_sched *q = qdisc_priv(sch);
 
 	tcf_block_put(cl->block);
-<<<<<<< HEAD
 	qdisc_destroy(cl->qdisc);
-=======
-	qdisc_put(cl->qdisc);
->>>>>>> rebase
 	gen_kill_estimator(&cl->rate_est);
 	if (cl != &q->root)
 		kfree(cl);

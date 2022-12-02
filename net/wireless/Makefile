@@ -15,7 +15,6 @@ cfg80211-y += mlme.o ibss.o sme.o chan.o ethtool.o mesh.o ap.o trace.o ocb.o
 cfg80211-$(CONFIG_OF) += of.o
 cfg80211-$(CONFIG_CFG80211_DEBUGFS) += debugfs.o
 cfg80211-$(CONFIG_CFG80211_WEXT) += wext-compat.o wext-sme.o
-<<<<<<< HEAD
 cfg80211-$(CONFIG_CFG80211_INTERNAL_REGDB) += regdb.o
 
 CFLAGS_trace.o := -I$(src)
@@ -26,11 +25,6 @@ $(obj)/regdb.c: $(src)/db.txt $(src)/genregdb.awk
 
 clean-files := regdb.c
 
-=======
-
-CFLAGS_trace.o := -I$(src)
-
->>>>>>> rebase
 cfg80211-$(CONFIG_CFG80211_USE_KERNEL_REGDB_KEYS) += shipped-certs.o
 ifneq ($(CONFIG_CFG80211_EXTRA_REGDB_KEYDIR),)
 cfg80211-y += extra-certs.o
@@ -40,11 +34,7 @@ $(obj)/shipped-certs.c: $(wildcard $(srctree)/$(src)/certs/*.hex)
 	@$(kecho) "  GEN     $@"
 	@(echo '#include "reg.h"'; \
 	  echo 'const u8 shipped_regdb_certs[] = {'; \
-<<<<<<< HEAD
 	  cat $^ ; \
-=======
-	  echo | cat - $^ ; \
->>>>>>> rebase
 	  echo '};'; \
 	  echo 'unsigned int shipped_regdb_certs_len = sizeof(shipped_regdb_certs);'; \
 	 ) > $@
@@ -73,7 +63,3 @@ $(obj)/extra-certs.c: $(CONFIG_CFG80211_EXTRA_REGDB_KEYDIR:"%"=%) \
 	      echo 'unsigned int extra_regdb_certs_len = sizeof(extra_regdb_certs);'; \
 	  ) > $@)
 
-<<<<<<< HEAD
-=======
-clean-files += shipped-certs.c extra-certs.c
->>>>>>> rebase

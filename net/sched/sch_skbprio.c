@@ -173,12 +173,6 @@ static int skbprio_change(struct Qdisc *sch, struct nlattr *opt,
 {
 	struct tc_skbprio_qopt *ctl = nla_data(opt);
 
-<<<<<<< HEAD
-=======
-	if (opt->nla_len != nla_attr_size(sizeof(*ctl)))
-		return -EINVAL;
-
->>>>>>> rebase
 	sch->limit = ctl->limit;
 	return 0;
 }

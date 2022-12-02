@@ -57,16 +57,12 @@ struct task_delay_info {
 
 	u64 freepages_start;
 	u64 freepages_delay;	/* wait for memory reclaim */
-<<<<<<< HEAD
 
 	u64 thrashing_start;
 	u64 thrashing_delay;	/* wait for thrashing page */
 
 	u32 freepages_count;	/* total count of memory reclaim */
 	u32 thrashing_count;	/* total count of thrash waits */
-=======
-	u32 freepages_count;	/* total count of memory reclaim */
->>>>>>> rebase
 };
 #endif
 
@@ -83,7 +79,6 @@ extern void __delayacct_blkio_start(void);
 extern void __delayacct_blkio_end(struct task_struct *);
 extern int __delayacct_add_tsk(struct taskstats *, struct task_struct *);
 extern __u64 __delayacct_blkio_ticks(struct task_struct *);
-<<<<<<< HEAD
 #ifdef CONFIG_PAGE_BOOST
 extern __u64 __delayacct_blkio_nsecs(struct task_struct *);
 #endif
@@ -91,10 +86,6 @@ extern void __delayacct_freepages_start(void);
 extern void __delayacct_freepages_end(void);
 extern void __delayacct_thrashing_start(void);
 extern void __delayacct_thrashing_end(void);
-=======
-extern void __delayacct_freepages_start(void);
-extern void __delayacct_freepages_end(void);
->>>>>>> rebase
 
 static inline int delayacct_is_task_waiting_on_io(struct task_struct *p)
 {
@@ -163,7 +154,6 @@ static inline __u64 delayacct_blkio_ticks(struct task_struct *tsk)
 	return 0;
 }
 
-<<<<<<< HEAD
 #ifdef CONFIG_PAGE_BOOST
 static inline __u64 delayacct_blkio_nsecs(struct task_struct *tsk)
 {
@@ -173,8 +163,6 @@ static inline __u64 delayacct_blkio_nsecs(struct task_struct *tsk)
 }
 #endif
 
-=======
->>>>>>> rebase
 static inline void delayacct_freepages_start(void)
 {
 	if (current->delays)
@@ -187,7 +175,6 @@ static inline void delayacct_freepages_end(void)
 		__delayacct_freepages_end();
 }
 
-<<<<<<< HEAD
 static inline void delayacct_thrashing_start(void)
 {
 	if (current->delays)
@@ -200,8 +187,6 @@ static inline void delayacct_thrashing_end(void)
 		__delayacct_thrashing_end();
 }
 
-=======
->>>>>>> rebase
 #else
 static inline void delayacct_set_flag(int flag)
 {}
@@ -222,26 +207,20 @@ static inline int delayacct_add_tsk(struct taskstats *d,
 { return 0; }
 static inline __u64 delayacct_blkio_ticks(struct task_struct *tsk)
 { return 0; }
-<<<<<<< HEAD
 #ifdef CONFIG_PAGE_BOOST
 static inline __u64 delayacct_blkio_nsecs(struct task_struct *tsk)
 { return 0; }
 #endif
-=======
->>>>>>> rebase
 static inline int delayacct_is_task_waiting_on_io(struct task_struct *p)
 { return 0; }
 static inline void delayacct_freepages_start(void)
 {}
 static inline void delayacct_freepages_end(void)
 {}
-<<<<<<< HEAD
 static inline void delayacct_thrashing_start(void)
 {}
 static inline void delayacct_thrashing_end(void)
 {}
-=======
->>>>>>> rebase
 
 #endif /* CONFIG_TASK_DELAY_ACCT */
 

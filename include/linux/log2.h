@@ -177,11 +177,7 @@ unsigned long __rounddown_pow_of_two(unsigned long n)
 #define roundup_pow_of_two(n)			\
 (						\
 	__builtin_constant_p(n) ? (		\
-<<<<<<< HEAD
 		(n == 1) ? 1 :			\
-=======
-		((n) == 1) ? 1 :		\
->>>>>>> rebase
 		(1UL << (ilog2((n) - 1) + 1))	\
 				   ) :		\
 	__roundup_pow_of_two(n)			\
@@ -228,7 +224,6 @@ int __order_base_2(unsigned long n)
 		ilog2((n) - 1) + 1) :		\
 	__order_base_2(n)			\
 )
-<<<<<<< HEAD
 
 static inline __attribute__((const))
 int __bits_per(unsigned long n)
@@ -263,6 +258,4 @@ int __bits_per(unsigned long n)
 	) :					\
 	__bits_per(n)				\
 )
-=======
->>>>>>> rebase
 #endif /* _LINUX_LOG2_H */

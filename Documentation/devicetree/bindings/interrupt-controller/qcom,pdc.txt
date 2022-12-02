@@ -19,20 +19,13 @@ Properties:
 	Value type: <string>
 	Definition: Should contain "qcom,<soc>-pdc"
 		    - "qcom,sdm845-pdc": For SDM845
-<<<<<<< HEAD
 		    - "qcom,lagoon-pdc": For Lagoon
-=======
->>>>>>> rebase
 
 - reg:
 	Usage: required
 	Value type: <prop-encoded-array>
-<<<<<<< HEAD
 	Definition: Specifies the base physical address for PDC hardware and
 	            the interrupt type configuration register.
-=======
-	Definition: Specifies the base physical address for PDC hardware.
->>>>>>> rebase
 
 - interrupt-cells:
 	Usage: required
@@ -63,23 +56,14 @@ Example:
 
 	pdc: interrupt-controller@b220000 {
 		compatible = "qcom,sdm845-pdc";
-<<<<<<< HEAD
 		reg = <0xb220000 0x30000>, <0x179900f0 0x60>;
 		qcom,pdc-ranges = <0 480 94>, <94 609 15>, <115 630 7>;
-=======
-		reg = <0xb220000 0x30000>;
-		qcom,pdc-ranges = <0 512 94>, <94 641 15>, <115 662 7>;
->>>>>>> rebase
 		#interrupt-cells = <2>;
 		interrupt-parent = <&intc>;
 		interrupt-controller;
 	};
 
-<<<<<<< HEAD
 DT binding of a device that wants to use the GIC SPI 482 as a wakeup
-=======
-DT binding of a device that wants to use the GIC SPI 514 as a wakeup
->>>>>>> rebase
 interrupt, must do -
 
 	wake-device {

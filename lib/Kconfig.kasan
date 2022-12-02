@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # This config refers to the generic KASAN mode.
 config HAVE_ARCH_KASAN
 	bool
@@ -78,41 +77,6 @@ config KASAN_SW_TAGS
 	  (the resulting kernel does not boot).
 
 endchoice
-=======
-config HAVE_ARCH_KASAN
-	bool
-
-if HAVE_ARCH_KASAN
-
-config KASAN
-	bool "KASan: runtime memory debugger"
-	depends on (SLUB && SYSFS) || (SLAB && !DEBUG_SLAB)
-	select SLUB_DEBUG if SLUB
-	select CONSTRUCTORS
-	select STACKDEPOT
-	help
-	  Enables kernel address sanitizer - runtime memory debugger,
-	  designed to find out-of-bounds accesses and use-after-free bugs.
-	  This is strictly a debugging feature and it requires a gcc version
-	  of 4.9.2 or later. Detection of out of bounds accesses to stack or
-	  global variables requires gcc 5.0 or later.
-	  This feature consumes about 1/8 of available memory and brings about
-	  ~x3 performance slowdown.
-	  For better error detection enable CONFIG_STACKTRACE.
-	  Currently CONFIG_KASAN doesn't work with CONFIG_DEBUG_SLAB
-	  (the resulting kernel does not boot).
-
-config KASAN_EXTRA
-	bool "KAsan: extra checks"
-	depends on KASAN && DEBUG_KERNEL && !COMPILE_TEST
-	help
-	  This enables further checks in the kernel address sanitizer, for now
-	  it only includes the address-use-after-scope check that can lead
-	  to excessive kernel stack usage, frame size warnings and longer
-	  compile time.
-	  https://gcc.gnu.org/bugzilla/show_bug.cgi?id=81715 has more
-
->>>>>>> rebase
 
 choice
 	prompt "Instrumentation type"
@@ -135,7 +99,6 @@ config KASAN_INLINE
 	  memory accesses. This is faster than outline (in some workloads
 	  it gives about x2 boost over outline instrumentation), but
 	  make kernel's .text size much bigger.
-<<<<<<< HEAD
 	  For CONFIG_KASAN_GENERIC this requires GCC 5.0 or later.
 
 endchoice
@@ -164,22 +127,8 @@ config KASAN_STACK
 
 config TEST_KASAN
 	tristate "Module for testing KASAN for bug detection"
-=======
-	  This requires a gcc version of 5.0 or later.
-
-endchoice
-
-config TEST_KASAN
-	tristate "Module for testing kasan for bug detection"
->>>>>>> rebase
 	depends on m && KASAN
 	help
 	  This is a test module doing various nasty things like
 	  out of bounds accesses, use after free. It is useful for testing
-<<<<<<< HEAD
 	  kernel debugging features like KASAN.
-=======
-	  kernel debugging features like kernel address sanitizer.
-
-endif
->>>>>>> rebase

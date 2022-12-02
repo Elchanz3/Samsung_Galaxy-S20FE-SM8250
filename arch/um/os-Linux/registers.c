@@ -21,11 +21,7 @@ int save_registers(int pid, struct uml_pt_regs *regs)
 	return 0;
 }
 
-<<<<<<< HEAD
 int restore_registers(int pid, struct uml_pt_regs *regs)
-=======
-int restore_pid_registers(int pid, struct uml_pt_regs *regs)
->>>>>>> rebase
 {
 	int err;
 
@@ -40,11 +36,7 @@ int restore_pid_registers(int pid, struct uml_pt_regs *regs)
 static unsigned long exec_regs[MAX_REG_NR];
 static unsigned long exec_fp_regs[FP_SIZE];
 
-<<<<<<< HEAD
 int init_registers(int pid)
-=======
-int init_pid_registers(int pid)
->>>>>>> rebase
 {
 	int err;
 

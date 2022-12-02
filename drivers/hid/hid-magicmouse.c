@@ -343,11 +343,7 @@ static int magicmouse_raw_event(struct hid_device *hdev,
 		magicmouse_raw_event(hdev, report, data + 2, data[1]);
 		magicmouse_raw_event(hdev, report, data + 2 + data[1],
 			size - 2 - data[1]);
-<<<<<<< HEAD
 		break;
-=======
-		return 0;
->>>>>>> rebase
 	default:
 		return 0;
 	}
@@ -456,15 +452,6 @@ static int magicmouse_setup_input(struct input_dev *input, struct hid_device *hd
 		__set_bit(MSC_RAW, input->mscbit);
 	}
 
-<<<<<<< HEAD
-=======
-	/*
-	 * hid-input may mark device as using autorepeat, but neither
-	 * the trackpad, nor the mouse actually want it.
-	 */
-	__clear_bit(EV_REP, input->evbit);
-
->>>>>>> rebase
 	return 0;
 }
 

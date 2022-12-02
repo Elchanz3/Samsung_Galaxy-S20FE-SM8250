@@ -44,10 +44,6 @@
  */
 
 #include <linux/blkdev.h>
-<<<<<<< HEAD
-=======
-#include <linux/delay.h>
->>>>>>> rebase
 #include <linux/kthread.h>
 #include <linux/raid/pq.h>
 #include <linux/async_tx.h>
@@ -2421,11 +2417,8 @@ static int resize_stripes(struct r5conf *conf, int newsize)
 	} else
 		err = -ENOMEM;
 
-<<<<<<< HEAD
 	mutex_unlock(&conf->cache_size_mutex);
 
-=======
->>>>>>> rebase
 	conf->slab_cache = sc;
 	conf->active_name = 1-conf->active_name;
 
@@ -2448,11 +2441,6 @@ static int resize_stripes(struct r5conf *conf, int newsize)
 
 	if (!err)
 		conf->pool_size = newsize;
-<<<<<<< HEAD
-=======
-	mutex_unlock(&conf->cache_size_mutex);
-
->>>>>>> rebase
 	return err;
 }
 
@@ -2682,17 +2670,10 @@ static void raid5_end_write_request(struct bio *bi)
 	if (!test_and_clear_bit(R5_DOUBLE_LOCKED, &sh->dev[i].flags))
 		clear_bit(R5_LOCKED, &sh->dev[i].flags);
 	set_bit(STRIPE_HANDLE, &sh->state);
-<<<<<<< HEAD
 	raid5_release_stripe(sh);
 
 	if (sh->batch_head && sh != sh->batch_head)
 		raid5_release_stripe(sh->batch_head);
-=======
-
-	if (sh->batch_head && sh != sh->batch_head)
-		raid5_release_stripe(sh->batch_head);
-	raid5_release_stripe(sh);
->>>>>>> rebase
 }
 
 static void raid5_error(struct mddev *mddev, struct md_rdev *rdev)
@@ -3615,10 +3596,6 @@ static int need_this_block(struct stripe_head *sh, struct stripe_head_state *s,
 	 * is missing/faulty, then we need to read everything we can.
 	 */
 	if (sh->raid_conf->level != 6 &&
-<<<<<<< HEAD
-=======
-	    sh->raid_conf->rmw_level != PARITY_DISABLE_RMW &&
->>>>>>> rebase
 	    sh->sector < sh->raid_conf->mddev->recovery_cp)
 		/* reconstruct-write isn't being forced */
 		return 0;
@@ -3745,11 +3722,7 @@ static void handle_stripe_fill(struct stripe_head *sh,
 		 * back cache (prexor with orig_page, and then xor with
 		 * page) in the read path
 		 */
-<<<<<<< HEAD
 		if (s->injournal && s->failed) {
-=======
-		if (s->to_read && s->injournal && s->failed) {
->>>>>>> rebase
 			if (test_bit(STRIPE_R5C_CACHING, &sh->state))
 				r5c_make_stripe_write_out(sh);
 			goto out;
@@ -4859,11 +4832,7 @@ static void handle_stripe(struct stripe_head *sh)
 	 * or to load a block that is being partially written.
 	 */
 	if (s.to_read || s.non_overwrite
-<<<<<<< HEAD
 	    || (conf->level == 6 && s.to_write && s.failed)
-=======
-	    || (s.to_write && s.failed)
->>>>>>> rebase
 	    || (s.syncing && (s.uptodate + s.compute < disks))
 	    || s.replacing
 	    || s.expanding)
@@ -6359,22 +6328,7 @@ static void raid5d(struct md_thread *thread)
 			spin_unlock_irq(&conf->device_lock);
 			md_check_recovery(mddev);
 			spin_lock_irq(&conf->device_lock);
-<<<<<<< HEAD
 		}
-=======
-
-			/*
-			 * Waiting on MD_SB_CHANGE_PENDING below may deadlock
-			 * seeing md_check_recovery() is needed to clear
-			 * the flag when using mdmon.
-			 */
-			continue;
-		}
-
-		wait_event_lock_irq(mddev->sb_wait,
-			!test_bit(MD_SB_CHANGE_PENDING, &mddev->sb_flags),
-			conf->device_lock);
->>>>>>> rebase
 	}
 	pr_debug("%d stripes handled\n", handled);
 
@@ -7761,10 +7715,6 @@ static int raid5_add_disk(struct mddev *mddev, struct md_rdev *rdev)
 	 */
 	if (rdev->saved_raid_disk >= 0 &&
 	    rdev->saved_raid_disk >= first &&
-<<<<<<< HEAD
-=======
-	    rdev->saved_raid_disk <= last &&
->>>>>>> rebase
 	    conf->disks[rdev->saved_raid_disk].rdev == NULL)
 		first = rdev->saved_raid_disk;
 

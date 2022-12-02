@@ -218,11 +218,7 @@ void mconsole_go(struct mc_request *req)
 
 void mconsole_stop(struct mc_request *req)
 {
-<<<<<<< HEAD
 	deactivate_fd(req->originating_fd, MCONSOLE_IRQ);
-=======
-	block_signals();
->>>>>>> rebase
 	os_set_fd_block(req->originating_fd, 1);
 	mconsole_reply(req, "stopped", 0, 0);
 	for (;;) {
@@ -246,10 +242,6 @@ void mconsole_stop(struct mc_request *req)
 	os_set_fd_block(req->originating_fd, 0);
 	reactivate_fd(req->originating_fd, MCONSOLE_IRQ);
 	mconsole_reply(req, "", 0, 0);
-<<<<<<< HEAD
-=======
-	unblock_signals();
->>>>>>> rebase
 }
 
 static DEFINE_SPINLOCK(mc_devices_lock);

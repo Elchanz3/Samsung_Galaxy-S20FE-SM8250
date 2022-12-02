@@ -140,7 +140,6 @@ int tipc_buf_append(struct sk_buff **headbuf, struct sk_buff **buf)
 	if (fragid == FIRST_FRAGMENT) {
 		if (unlikely(head))
 			goto err;
-<<<<<<< HEAD
 		if (unlikely(skb_unclone(frag, GFP_ATOMIC)))
 			goto err;
 		head = *headbuf = frag;
@@ -153,16 +152,6 @@ int tipc_buf_append(struct sk_buff **headbuf, struct sk_buff **buf)
 		} else {
 			skb_frag_list_init(head);
 		}
-=======
-		*buf = NULL;
-		if (skb_has_frag_list(frag) && __skb_linearize(frag))
-			goto err;
-		frag = skb_unshare(frag, GFP_ATOMIC);
-		if (unlikely(!frag))
-			goto err;
-		head = *headbuf = frag;
-		TIPC_SKB_CB(head)->tail = NULL;
->>>>>>> rebase
 		return 0;
 	}
 

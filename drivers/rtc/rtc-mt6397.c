@@ -339,11 +339,6 @@ static int mtk_rtc_probe(struct platform_device *pdev)
 		return -ENOMEM;
 
 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-<<<<<<< HEAD
-=======
-	if (!res)
-		return -EINVAL;
->>>>>>> rebase
 	rtc->addr_base = res->start;
 
 	rtc->irq = platform_get_irq(pdev, 0);

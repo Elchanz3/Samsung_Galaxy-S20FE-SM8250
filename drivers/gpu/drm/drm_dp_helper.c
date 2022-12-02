@@ -118,10 +118,7 @@ u8 drm_dp_get_adjust_request_pre_emphasis(const u8 link_status[DP_LINK_STATUS_SI
 }
 EXPORT_SYMBOL(drm_dp_get_adjust_request_pre_emphasis);
 
-<<<<<<< HEAD
 #ifndef CONFIG_SEC_DISPLAYPORT
-=======
->>>>>>> rebase
 void drm_dp_link_train_clock_recovery_delay(const u8 dpcd[DP_RECEIVER_CAP_SIZE]) {
 	int rd_interval = dpcd[DP_TRAINING_AUX_RD_INTERVAL] &
 			  DP_TRAINING_AUX_RD_MASK;
@@ -151,7 +148,6 @@ void drm_dp_link_train_channel_eq_delay(const u8 dpcd[DP_RECEIVER_CAP_SIZE]) {
 		mdelay(rd_interval * 4);
 }
 EXPORT_SYMBOL(drm_dp_link_train_channel_eq_delay);
-<<<<<<< HEAD
 #else
 void drm_dp_link_train_clock_recovery_delay(const u8 dpcd[DP_RECEIVER_CAP_SIZE])
 {
@@ -189,8 +185,6 @@ void drm_dp_link_train_channel_eq_delay(const u8 dpcd[DP_RECEIVER_CAP_SIZE])
 }
 EXPORT_SYMBOL(drm_dp_link_train_channel_eq_delay);
 #endif
-=======
->>>>>>> rebase
 
 u8 drm_dp_link_rate_to_bw_code(int link_rate)
 {
@@ -243,14 +237,11 @@ drm_dp_dump_access(const struct drm_dp_aux *aux,
 			aux->name, offset, arrow, ret);
 }
 
-<<<<<<< HEAD
 #ifdef CONFIG_SEC_DISPLAYPORT
 extern int secdp_get_hpd_status(void);
 extern bool secdp_get_cable_status(void);
 #endif
 
-=======
->>>>>>> rebase
 /**
  * DOC: dp helpers
  *
@@ -278,7 +269,6 @@ static int drm_dp_dpcd_access(struct drm_dp_aux *aux, u8 request,
 
 	mutex_lock(&aux->hw_mutex);
 
-<<<<<<< HEAD
 #ifdef CONFIG_SEC_DISPLAYPORT
 	if (/*!secdp_get_hpd_status() ||*/ !secdp_get_cable_status()) {
 		pr_info("[drm-dp] %s: cable is out-1\n", __func__);
@@ -287,8 +277,6 @@ static int drm_dp_dpcd_access(struct drm_dp_aux *aux, u8 request,
 	}
 #endif
 
-=======
->>>>>>> rebase
 	/*
 	 * The specification doesn't give any recommendation on how often to
 	 * retry native transactions. We used to retry 7 times like for
@@ -313,7 +301,6 @@ static int drm_dp_dpcd_access(struct drm_dp_aux *aux, u8 request,
 			} else
 				ret = -EIO;
 		}
-<<<<<<< HEAD
 #ifdef CONFIG_SEC_DISPLAYPORT
 		if (/*!secdp_get_hpd_status() ||*/ !secdp_get_cable_status()) {
 			pr_info("[drm-dp] %s: cable is out-2\n", __func__);
@@ -321,8 +308,6 @@ static int drm_dp_dpcd_access(struct drm_dp_aux *aux, u8 request,
 			goto unlock;
 		}
 #endif
-=======
->>>>>>> rebase
 
 		/*
 		 * We want the error we return to be the error we received on
@@ -412,7 +397,6 @@ ssize_t drm_dp_dpcd_write(struct drm_dp_aux *aux, unsigned int offset,
 }
 EXPORT_SYMBOL(drm_dp_dpcd_write);
 
-<<<<<<< HEAD
 #ifdef CONFIG_SEC_DISPLAYPORT
 static int drm_dp_i2c_access(struct drm_dp_aux *aux, int mode,
 				void *buffer, size_t size)
@@ -455,8 +439,6 @@ ssize_t drm_dp_i2c_write(struct drm_dp_aux *aux, void *buffer, size_t size)
 }
 EXPORT_SYMBOL(drm_dp_i2c_write);
 #endif
-=======
->>>>>>> rebase
 /**
  * drm_dp_dpcd_read_link_status() - read DPCD link status (bytes 0x202-0x207)
  * @aux: DisplayPort AUX channel
@@ -518,11 +500,8 @@ int drm_dp_link_power_up(struct drm_dp_aux *aux, struct drm_dp_link *link)
 	u8 value;
 	int err;
 
-<<<<<<< HEAD
 	pr_debug("%s: +++\n", __func__);
 
-=======
->>>>>>> rebase
 	/* DP_SET_POWER register is only available on DPCD v1.1 and later */
 	if (link->revision < 0x11)
 		return 0;
@@ -561,11 +540,8 @@ int drm_dp_link_power_down(struct drm_dp_aux *aux, struct drm_dp_link *link)
 	u8 value;
 	int err;
 
-<<<<<<< HEAD
 	pr_debug("%s: +++\n", __func__);
 
-=======
->>>>>>> rebase
 	/* DP_SET_POWER register is only available on DPCD v1.1 and later */
 	if (link->revision < 0x11)
 		return 0;

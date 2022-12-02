@@ -14,10 +14,7 @@
 #include <linux/io.h>
 #include <linux/of.h>
 #include <linux/of_clk.h>
-<<<<<<< HEAD
 #include <linux/mutex.h>
-=======
->>>>>>> rebase
 
 #ifdef CONFIG_COMMON_CLK
 
@@ -44,7 +41,6 @@
 #define CLK_OPS_PARENT_ENABLE	BIT(12)
 /* duty cycle call may be forwarded to the parent clock */
 #define CLK_DUTY_CYCLE_PARENT	BIT(13)
-<<<<<<< HEAD
 #define CLK_DONT_HOLD_STATE	BIT(14) /* Don't hold state */
 #define CLK_ENABLE_HAND_OFF	BIT(15) /* enable clock when registered. */
 					/*
@@ -52,8 +48,6 @@
 					 * to first consumer that enables clk
 					 */
 #define CLK_IS_MEASURE          BIT(16) /* measure clock */
-=======
->>>>>>> rebase
 
 struct clk;
 struct clk_hw;
@@ -216,7 +210,6 @@ struct clk_duty {
  *		directory is provided as an argument.  Called with
  *		prepare_lock held.  Returns 0 on success, -EERROR otherwise.
  *
-<<<<<<< HEAD
  * @set_flags: Set custom flags which deal with hardware specifics. Returns 0
  *	       on success, -EERROR otherwise.
  *
@@ -229,8 +222,6 @@ struct clk_duty {
  *
  * @bus_vote:	Votes for bandwidth on certain config slaves to connect
  *		ports in order to gain access to clock controllers.
-=======
->>>>>>> rebase
  *
  * The clk_enable/clk_disable and clk_prepare/clk_unprepare pairs allow
  * implementations to split any work between atomic (enable) and sleepable
@@ -275,15 +266,12 @@ struct clk_ops {
 					  struct clk_duty *duty);
 	void		(*init)(struct clk_hw *hw);
 	void		(*debug_init)(struct clk_hw *hw, struct dentry *dentry);
-<<<<<<< HEAD
 	int		(*set_flags)(struct clk_hw *hw, unsigned int flags);
 	void		(*list_registers)(struct seq_file *f,
 							struct clk_hw *hw);
 	long		(*list_rate)(struct clk_hw *hw, unsigned int n,
 							unsigned long rate_max);
 	void		(*bus_vote)(struct clk_hw *hw, bool enable);
-=======
->>>>>>> rebase
 };
 
 /**
@@ -295,19 +283,15 @@ struct clk_ops {
  * @parent_names: array of string names for all possible parents
  * @num_parents: number of possible parents
  * @flags: framework-level hints and quirks
-<<<<<<< HEAD
  * @vdd_class: voltage scaling requirement class
  * @rate_max: maximum clock rate in Hz supported at each voltage level
  * @num_rate_max: number of maximum voltage level supported
  * @bus_cl_id: client id registered with the bus driver used for bw votes
-=======
->>>>>>> rebase
  */
 struct clk_init_data {
 	const char		*name;
 	const struct clk_ops	*ops;
 	const char		* const *parent_names;
-<<<<<<< HEAD
 	unsigned int		num_parents;
 	unsigned long		flags;
 	struct clk_vdd_class	*vdd_class;
@@ -376,12 +360,6 @@ struct clk_vdd_class {
 		.lock = __MUTEX_INITIALIZER(_name.lock) \
 	}
 
-=======
-	u8			num_parents;
-	unsigned long		flags;
-};
-
->>>>>>> rebase
 /**
  * struct clk_hw - handle for traversing from a struct clk to its corresponding
  * hardware-specific structure.  struct clk_hw should be declared within struct
@@ -885,10 +863,7 @@ void devm_clk_unregister(struct device *dev, struct clk *clk);
 
 void clk_hw_unregister(struct clk_hw *hw);
 void devm_clk_hw_unregister(struct device *dev, struct clk_hw *hw);
-<<<<<<< HEAD
 void clk_sync_state(struct device *dev);
-=======
->>>>>>> rebase
 
 /* helper functions */
 const char *__clk_get_name(const struct clk *clk);
@@ -922,14 +897,11 @@ void clk_hw_reparent(struct clk_hw *hw, struct clk_hw *new_parent);
 void clk_hw_set_rate_range(struct clk_hw *hw, unsigned long min_rate,
 			   unsigned long max_rate);
 
-<<<<<<< HEAD
 unsigned long clk_aggregate_rate(struct clk_hw *hw,
 					const struct clk_core *parent);
 int clk_vote_rate_vdd(struct clk_core *core, unsigned long rate);
 void clk_unvote_rate_vdd(struct clk_core *core, unsigned long rate);
 
-=======
->>>>>>> rebase
 static inline void __clk_hw_set_clk(struct clk_hw *dst, struct clk_hw *src)
 {
 	dst->clk = src->clk;

@@ -173,10 +173,6 @@ static const char * const smbus_pnp_ids[] = {
 	"LEN005b", /* P50 */
 	"LEN005e", /* T560 */
 	"LEN006c", /* T470s */
-<<<<<<< HEAD
-=======
-	"LEN007a", /* T470s */
->>>>>>> rebase
 	"LEN0071", /* T480 */
 	"LEN0072", /* X1 Carbon Gen 5 (2017) - Elan/ALPS trackpoint */
 	"LEN0073", /* X1 Carbon G5 (Elantech) */
@@ -185,10 +181,6 @@ static const char * const smbus_pnp_ids[] = {
 	"LEN0093", /* T480 */
 	"LEN0096", /* X280 */
 	"LEN0097", /* X280 -> ALPS trackpoint */
-<<<<<<< HEAD
-=======
-	"LEN0099", /* X1 Extreme 1st */
->>>>>>> rebase
 	"LEN009b", /* T580 */
 	"LEN200f", /* T450s */
 	"LEN2044", /* L470  */
@@ -197,10 +189,6 @@ static const char * const smbus_pnp_ids[] = {
 	"SYN3052", /* HP EliteBook 840 G4 */
 	"SYN3221", /* HP 15-ay000 */
 	"SYN323d", /* HP Spectre X360 13-w013dx */
-<<<<<<< HEAD
-=======
-	"SYN3257", /* HP Envy 13-ad105ng */
->>>>>>> rebase
 	NULL
 };
 

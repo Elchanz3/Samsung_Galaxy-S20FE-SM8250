@@ -221,11 +221,7 @@ int adreno_hw_init(struct msm_gpu *gpu)
 		ring->next = ring->start;
 
 		/* reset completed fence seqno: */
-<<<<<<< HEAD
 		ring->memptrs->fence = ring->seqno;
-=======
-		ring->memptrs->fence = ring->fctx->completed_fence;
->>>>>>> rebase
 		ring->memptrs->rptr = 0;
 	}
 

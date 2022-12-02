@@ -61,10 +61,7 @@
 #include "core.h"
 #include "reg.h"
 #include "rdev-ops.h"
-<<<<<<< HEAD
 #include "regdb.h"
-=======
->>>>>>> rebase
 #include "nl80211.h"
 
 /*
@@ -425,14 +422,11 @@ static bool is_user_regdom_saved(void)
 	return true;
 }
 
-<<<<<<< HEAD
 static bool is_cfg80211_regdom_intersected(void)
 {
 	return is_intersected_alpha2(get_cfg80211_regdom()->alpha2);
 }
 
-=======
->>>>>>> rebase
 static const struct ieee80211_regdomain *
 reg_copy_regd(const struct ieee80211_regdomain *src_regd)
 {
@@ -508,7 +502,6 @@ static int reg_schedule_apply(const struct ieee80211_regdomain *regdom)
 	return 0;
 }
 
-<<<<<<< HEAD
 #ifdef CONFIG_CFG80211_INTERNAL_REGDB
 static int reg_query_builtin(const char *alpha2)
 {
@@ -541,8 +534,6 @@ static inline int reg_query_builtin(const char *alpha2)
 }
 #endif /* CONFIG_CFG80211_INTERNAL_REGDB */
 
-=======
->>>>>>> rebase
 #ifdef CONFIG_CFG80211_CRDA_SUPPORT
 /* Max number of consecutive attempts to communicate with CRDA  */
 #define REG_MAX_CRDA_TIMEOUTS 10
@@ -1145,13 +1136,10 @@ int reg_reload_regdb(void)
 
 static bool reg_query_database(struct regulatory_request *request)
 {
-<<<<<<< HEAD
 	/* query internal regulatory database (if it exists) */
 	if (reg_query_builtin(request->alpha2) == 0)
 		return true;
 
-=======
->>>>>>> rebase
 	if (query_regdb_file(request->alpha2) == 0)
 		return true;
 
@@ -2412,7 +2400,6 @@ static void reg_set_request_processed(void)
 {
 	bool need_more_processing = false;
 	struct regulatory_request *lr = get_last_request();
-<<<<<<< HEAD
 	
 #ifdef CONFIG_CFG80211_REG_NOT_UPDATED
 	/*
@@ -2425,8 +2412,6 @@ static void reg_set_request_processed(void)
 	printk("regulatory is not upadted via %s.\n", __func__);
 	return;
 #endif
-=======
->>>>>>> rebase
 
 	lr->processed = true;
 
@@ -2487,7 +2472,6 @@ __reg_process_hint_user(struct regulatory_request *user_request)
 	 */
 	if ((lr->initiator == NL80211_REGDOM_SET_BY_CORE ||
 	     lr->initiator == NL80211_REGDOM_SET_BY_DRIVER ||
-<<<<<<< HEAD
 	     lr->initiator == NL80211_REGDOM_SET_BY_USER)) {
 		if (lr->intersect) {
 			if (!is_cfg80211_regdom_intersected())
@@ -2496,11 +2480,6 @@ __reg_process_hint_user(struct regulatory_request *user_request)
 			return REG_REQ_IGNORE;
 		}
 	}
-=======
-	     lr->initiator == NL80211_REGDOM_SET_BY_USER) &&
-	    regdom_changes(lr->alpha2))
-		return REG_REQ_IGNORE;
->>>>>>> rebase
 
 	if (!regdom_changes(user_request->alpha2))
 		return REG_REQ_ALREADY_SET;
@@ -2975,7 +2954,6 @@ static void reg_todo(struct work_struct *work)
 
 static void queue_regulatory_request(struct regulatory_request *request)
 {
-<<<<<<< HEAD
 #ifdef CONFIG_CFG80211_REG_NOT_UPDATED
 	/*
 	* SAMSUNG FIX : Regulatory Configuration was update
@@ -2990,8 +2968,6 @@ static void queue_regulatory_request(struct regulatory_request *request)
 	return;
 #endif
 
-=======
->>>>>>> rebase
 	request->alpha2[0] = toupper(request->alpha2[0]);
 	request->alpha2[1] = toupper(request->alpha2[1]);
 
@@ -3033,12 +3009,6 @@ int regulatory_hint_user(const char *alpha2,
 	if (WARN_ON(!alpha2))
 		return -EINVAL;
 
-<<<<<<< HEAD
-=======
-	if (!is_world_regdom(alpha2) && !is_an_alpha2(alpha2))
-		return -EINVAL;
-
->>>>>>> rebase
 	request = kzalloc(sizeof(struct regulatory_request), GFP_KERNEL);
 	if (!request)
 		return -ENOMEM;
@@ -3271,7 +3241,6 @@ static void restore_regulatory_settings(bool reset_user)
 	LIST_HEAD(tmp_reg_req_list);
 	struct cfg80211_registered_device *rdev;
 
-<<<<<<< HEAD
 #ifdef CONFIG_CFG80211_REG_NOT_UPDATED
 	/*
 	* SAMSUNG FIX : Regulatory Configuration was update
@@ -3284,8 +3253,6 @@ static void restore_regulatory_settings(bool reset_user)
 	return;
 #endif
 
-=======
->>>>>>> rebase
 	ASSERT_RTNL();
 
 	/*
@@ -3435,7 +3402,6 @@ int regulatory_hint_found_beacon(struct wiphy *wiphy,
 	struct reg_beacon *reg_beacon;
 	bool processing;
 
-<<<<<<< HEAD
 #ifdef CONFIG_CFG80211_REG_NOT_UPDATED
 	/*
 	* SAMSUNG FIX : Regulatory Configuration was update
@@ -3447,8 +3413,6 @@ int regulatory_hint_found_beacon(struct wiphy *wiphy,
 	return 0;
 #endif
 
-=======
->>>>>>> rebase
 	if (beacon_chan->beacon_found ||
 	    beacon_chan->flags & IEEE80211_CHAN_RADAR ||
 	    (beacon_chan->band == NL80211_BAND_2GHZ &&
@@ -3503,11 +3467,7 @@ static void print_rd_rules(const struct ieee80211_regdomain *rd)
 		power_rule = &reg_rule->power_rule;
 
 		if (reg_rule->flags & NL80211_RRF_AUTO_BW)
-<<<<<<< HEAD
 			snprintf(bw, sizeof(bw), "%d KHz, %d KHz AUTO",
-=======
-			snprintf(bw, sizeof(bw), "%d KHz, %u KHz AUTO",
->>>>>>> rebase
 				 freq_range->max_bandwidth_khz,
 				 reg_get_max_bandwidth(rd, reg_rule));
 		else
@@ -3889,10 +3849,6 @@ void wiphy_regulatory_register(struct wiphy *wiphy)
 
 	wiphy_update_regulatory(wiphy, lr->initiator);
 	wiphy_all_share_dfs_chan_state(wiphy);
-<<<<<<< HEAD
-=======
-	reg_process_self_managed_hints();
->>>>>>> rebase
 }
 
 void wiphy_regulatory_deregister(struct wiphy *wiphy)
@@ -3919,14 +3875,9 @@ void wiphy_regulatory_deregister(struct wiphy *wiphy)
 }
 
 /*
-<<<<<<< HEAD
  * See FCC notices for UNII band definitions
  *  5GHz: https://www.fcc.gov/document/5-ghz-unlicensed-spectrum-unii
  *  6GHz: https://www.fcc.gov/document/fcc-proposes-more-spectrum-unlicensed-use-0
-=======
- * See http://www.fcc.gov/document/5-ghz-unlicensed-spectrum-unii, for
- * UNII band definitions
->>>>>>> rebase
  */
 int cfg80211_get_unii(int freq)
 {
@@ -3950,7 +3901,6 @@ int cfg80211_get_unii(int freq)
 	if (freq > 5725 && freq <= 5825)
 		return 4;
 
-<<<<<<< HEAD
 	/* UNII-5 */
 	if (freq > 5925 && freq <= 6425)
 		return 5;
@@ -3967,8 +3917,6 @@ int cfg80211_get_unii(int freq)
 	if (freq > 6875 && freq <= 7125)
 		return 8;
 
-=======
->>>>>>> rebase
 	return -EINVAL;
 }
 
@@ -4117,11 +4065,8 @@ int __init regulatory_init(void)
 	spin_lock_init(&reg_pending_beacons_lock);
 	spin_lock_init(&reg_indoor_lock);
 
-<<<<<<< HEAD
 	reg_regdb_size_check();
 
-=======
->>>>>>> rebase
 	rcu_assign_pointer(cfg80211_regdomain, cfg80211_world_regdom);
 
 	user_alpha2[0] = '9';

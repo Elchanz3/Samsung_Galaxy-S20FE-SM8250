@@ -66,7 +66,6 @@
 #include <linux/uaccess.h>
 #include <linux/mroute6.h>
 
-<<<<<<< HEAD
 #ifdef CONFIG_ANDROID_PARANOID_NETWORK
 #include <linux/android_aid.h>
 
@@ -81,8 +80,6 @@ static inline int current_has_network(void)
 }
 #endif
 
-=======
->>>>>>> rebase
 #include "ip6_offload.h"
 
 MODULE_AUTHOR("Cast of dozens");
@@ -124,16 +121,11 @@ static __inline__ struct ipv6_pinfo *inet6_sk_generic(struct sock *sk)
 	return (struct ipv6_pinfo *)(((u8 *)sk) + offset);
 }
 
-<<<<<<< HEAD
 #ifndef CONFIG_MPTCP
 static
 #endif
 int inet6_create(struct net *net, struct socket *sock, int protocol,
 		 int kern)
-=======
-static int inet6_create(struct net *net, struct socket *sock, int protocol,
-			int kern)
->>>>>>> rebase
 {
 	struct inet_sock *inet;
 	struct ipv6_pinfo *np;
@@ -147,12 +139,9 @@ static int inet6_create(struct net *net, struct socket *sock, int protocol,
 	if (protocol < 0 || protocol >= IPPROTO_MAX)
 		return -EINVAL;
 
-<<<<<<< HEAD
 	if (!current_has_network())
 		return -EACCES;
 
-=======
->>>>>>> rebase
 	/* Look for the requested type/protocol pair. */
 lookup_protocol:
 	err = -ESOCKTNOSUPPORT;
@@ -199,12 +188,7 @@ lookup_protocol:
 	}
 
 	err = -EPERM;
-<<<<<<< HEAD
 	if (sock->type == SOCK_RAW && !kern && !capable(CAP_NET_RAW))
-=======
-	if (sock->type == SOCK_RAW && !kern &&
-	    !ns_capable(net->user_ns, CAP_NET_RAW))
->>>>>>> rebase
 		goto out_rcu_unlock;
 
 	sock->ops = answer->ops;
@@ -775,11 +759,7 @@ int inet6_sk_rebuild_header(struct sock *sk)
 					 &final);
 		rcu_read_unlock();
 
-<<<<<<< HEAD
 		dst = ip6_dst_lookup_flow(sk, &fl6, final_p);
-=======
-		dst = ip6_dst_lookup_flow(sock_net(sk), sk, &fl6, final_p);
->>>>>>> rebase
 		if (IS_ERR(dst)) {
 			sk->sk_route_caps = 0;
 			sk->sk_err_soft = -PTR_ERR(dst);
@@ -943,11 +923,7 @@ static struct pernet_operations inet6_net_ops = {
 static const struct ipv6_stub ipv6_stub_impl = {
 	.ipv6_sock_mc_join = ipv6_sock_mc_join,
 	.ipv6_sock_mc_drop = ipv6_sock_mc_drop,
-<<<<<<< HEAD
 	.ipv6_dst_lookup   = ip6_dst_lookup,
-=======
-	.ipv6_dst_lookup_flow = ip6_dst_lookup_flow,
->>>>>>> rebase
 	.fib6_get_table	   = fib6_get_table,
 	.fib6_table_lookup = fib6_table_lookup,
 	.fib6_lookup       = fib6_lookup,

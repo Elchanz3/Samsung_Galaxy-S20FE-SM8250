@@ -168,11 +168,8 @@ static inline void check_page_span(const void *ptr, unsigned long n,
 	const void *end = ptr + n - 1;
 	struct page *endpage;
 	bool is_reserved, is_cma;
-<<<<<<< HEAD
 	const void * const stack = task_stack_page(current);
 	const void * const stackend = stack + THREAD_SIZE;
-=======
->>>>>>> rebase
 
 	/*
 	 * Sometimes the kernel data regions are not marked Reserved (see
@@ -197,13 +194,10 @@ static inline void check_page_span(const void *ptr, unsigned long n,
 	    end <= (const void *)__bss_stop)
 		return;
 
-<<<<<<< HEAD
 	/* Allow stack region to span multiple pages */
 	if (ptr >= stack && end <= stackend)
 		return;
 
-=======
->>>>>>> rebase
 	/* Is the object wholly within one base page? */
 	if (likely(((unsigned long)ptr & (unsigned long)PAGE_MASK) ==
 		   ((unsigned long)end & (unsigned long)PAGE_MASK)))
@@ -310,14 +304,7 @@ static bool enable_checks __initdata = true;
 
 static int __init parse_hardened_usercopy(char *str)
 {
-<<<<<<< HEAD
 	return strtobool(str, &enable_checks);
-=======
-	if (strtobool(str, &enable_checks))
-		pr_warn("Invalid option string for hardened_usercopy: '%s'\n",
-			str);
-	return 1;
->>>>>>> rebase
 }
 
 __setup("hardened_usercopy=", parse_hardened_usercopy);

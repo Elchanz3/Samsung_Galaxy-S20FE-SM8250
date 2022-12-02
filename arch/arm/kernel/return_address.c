@@ -10,11 +10,8 @@
  */
 #include <linux/export.h>
 #include <linux/ftrace.h>
-<<<<<<< HEAD
 
 #if defined(CONFIG_FRAME_POINTER) && !defined(CONFIG_ARM_UNWIND)
-=======
->>>>>>> rebase
 #include <linux/sched.h>
 
 #include <asm/stacktrace.h>
@@ -59,9 +56,6 @@ void *return_address(unsigned int level)
 		return NULL;
 }
 
-<<<<<<< HEAD
 #endif /* if defined(CONFIG_FRAME_POINTER) && !defined(CONFIG_ARM_UNWIND) */
 
-=======
->>>>>>> rebase
 EXPORT_SYMBOL_GPL(return_address);

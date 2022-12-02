@@ -12,10 +12,6 @@
 
 #include <linux/atomic.h>
 #include <linux/compat.h>
-<<<<<<< HEAD
-=======
-#include <linux/cred.h>
->>>>>>> rebase
 #include <linux/device.h>
 #include <linux/fs.h>
 #include <linux/hid.h>
@@ -28,38 +24,18 @@
 #include <linux/spinlock.h>
 #include <linux/uhid.h>
 #include <linux/wait.h>
-<<<<<<< HEAD
 #include "../../../techpack/display/msm/samsung/ss_panel_notify.h"
-=======
->>>>>>> rebase
 
 #define UHID_NAME	"uhid"
 #define UHID_BUFSIZE	32
 
 struct uhid_device {
 	struct mutex devlock;
-<<<<<<< HEAD
-=======
-
-	/* This flag tracks whether the HID device is usable for commands from
-	 * userspace. The flag is already set before hid_add_device(), which
-	 * runs in workqueue context, to allow hid_add_device() to communicate
-	 * with userspace.
-	 * However, if hid_add_device() fails, the flag is cleared without
-	 * holding devlock.
-	 * We guarantee that if @running changes from true to false while you're
-	 * holding @devlock, it's still fine to access @hid.
-	 */
->>>>>>> rebase
 	bool running;
 
 	__u8 *rd_data;
 	uint rd_size;
 
-<<<<<<< HEAD
-=======
-	/* When this is NULL, userspace may use UHID_CREATE/UHID_CREATE2. */
->>>>>>> rebase
 	struct hid_device *hid;
 	struct uhid_event input_buf;
 
@@ -81,11 +57,8 @@ struct uhid_device {
 
 static struct miscdevice uhid_misc;
 
-<<<<<<< HEAD
 bool lcd_is_on = true;
 
-=======
->>>>>>> rebase
 static void uhid_device_add_worker(struct work_struct *work)
 {
 	struct uhid_device *uhid = container_of(work, struct uhid_device, worker);
@@ -95,24 +68,9 @@ static void uhid_device_add_worker(struct work_struct *work)
 	if (ret) {
 		hid_err(uhid->hid, "Cannot register HID device: error %d\n", ret);
 
-<<<<<<< HEAD
 		hid_destroy_device(uhid->hid);
 		uhid->hid = NULL;
 		uhid->running = false;
-=======
-		/* We used to call hid_destroy_device() here, but that's really
-		 * messy to get right because we have to coordinate with
-		 * concurrent writes from userspace that might be in the middle
-		 * of using uhid->hid.
-		 * Just leave uhid->hid as-is for now, and clean it up when
-		 * userspace tries to close or reinitialize the uhid instance.
-		 *
-		 * However, we do have to clear the ->running flag and do a
-		 * wakeup to make sure userspace knows that the device is gone.
-		 */
-		uhid->running = false;
-		wake_up_interruptible(&uhid->report_wait);
->>>>>>> rebase
 	}
 }
 
@@ -521,11 +479,7 @@ static int uhid_dev_create2(struct uhid_device *uhid,
 	void *rd_data;
 	int ret;
 
-<<<<<<< HEAD
 	if (uhid->running)
-=======
-	if (uhid->hid)
->>>>>>> rebase
 		return -EALREADY;
 
 	rd_size = ev->u.create2.rd_size;
@@ -607,11 +561,7 @@ static int uhid_dev_create(struct uhid_device *uhid,
 
 static int uhid_dev_destroy(struct uhid_device *uhid)
 {
-<<<<<<< HEAD
 	if (!uhid->running)
-=======
-	if (!uhid->hid)
->>>>>>> rebase
 		return -EINVAL;
 
 	uhid->running = false;
@@ -620,10 +570,6 @@ static int uhid_dev_destroy(struct uhid_device *uhid)
 	cancel_work_sync(&uhid->worker);
 
 	hid_destroy_device(uhid->hid);
-<<<<<<< HEAD
-=======
-	uhid->hid = NULL;
->>>>>>> rebase
 	kfree(uhid->rd_data);
 
 	return 0;
@@ -780,20 +726,6 @@ static ssize_t uhid_char_write(struct file *file, const char __user *buffer,
 
 	switch (uhid->input_buf.type) {
 	case UHID_CREATE:
-<<<<<<< HEAD
-=======
-		/*
-		 * 'struct uhid_create_req' contains a __user pointer which is
-		 * copied from, so it's unsafe to allow this with elevated
-		 * privileges (e.g. from a setuid binary) or via kernel_write().
-		 */
-		if (file->f_cred != current_cred() || uaccess_kernel()) {
-			pr_err_once("UHID_CREATE from different security context by process %d (%s), this is not allowed.\n",
-				    task_tgid_vnr(current), current->comm);
-			ret = -EACCES;
-			goto unlock;
-		}
->>>>>>> rebase
 		ret = uhid_dev_create(uhid, &uhid->input_buf);
 		break;
 	case UHID_CREATE2:
@@ -853,7 +785,6 @@ static struct miscdevice uhid_misc = {
 	.minor		= UHID_MINOR,
 	.name		= UHID_NAME,
 };
-<<<<<<< HEAD
 
 static int light_panel_state_change(struct notifier_block *nb,
 	unsigned long val, void *data)
@@ -904,9 +835,6 @@ static void __exit uhid_exit(void)
 
 module_init(uhid_init);
 module_exit(uhid_exit);
-=======
-module_misc_device(uhid_misc);
->>>>>>> rebase
 
 MODULE_LICENSE("GPL");
 MODULE_AUTHOR("David Herrmann <dh.herrmann@gmail.com>");

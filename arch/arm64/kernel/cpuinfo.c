@@ -20,10 +20,7 @@
 #include <asm/cputype.h>
 #include <asm/cpufeature.h>
 #include <asm/fpsimd.h>
-<<<<<<< HEAD
 #include <asm/elf.h>
-=======
->>>>>>> rebase
 
 #include <linux/bitops.h>
 #include <linux/bug.h>
@@ -38,15 +35,12 @@
 #include <linux/sched.h>
 #include <linux/smp.h>
 #include <linux/delay.h>
-<<<<<<< HEAD
 #include <linux/of_fdt.h>
 
 char* (*arch_read_hardware_id)(void);
 EXPORT_SYMBOL(arch_read_hardware_id);
 
 static const char *machine_name;
-=======
->>>>>>> rebase
 
 /*
  * In case the boot CPU is hotpluggable, we record its initial state and
@@ -140,13 +134,9 @@ static int c_show(struct seq_file *m, void *v)
 	int i, j;
 	bool compat = personality(current->personality) == PER_LINUX32;
 
-<<<<<<< HEAD
 	seq_printf(m, "Processor\t: AArch64 Processor rev %d (%s)\n",
 		read_cpuid_id() & 15, ELF_PLATFORM);
 	for_each_present_cpu(i) {
-=======
-	for_each_online_cpu(i) {
->>>>>>> rebase
 		struct cpuinfo_arm64 *cpuinfo = &per_cpu(cpu_data, i);
 		u32 midr = cpuinfo->reg_midr;
 
@@ -196,14 +186,11 @@ static int c_show(struct seq_file *m, void *v)
 		seq_printf(m, "CPU revision\t: %d\n\n", MIDR_REVISION(midr));
 	}
 
-<<<<<<< HEAD
 	if (!arch_read_hardware_id)
 		seq_printf(m, "Hardware\t: %s\n", machine_name);
 	else
 		seq_printf(m, "Hardware\t: %s\n", arch_read_hardware_id());
 
-=======
->>>>>>> rebase
 	return 0;
 }
 
@@ -361,10 +348,6 @@ static void __cpuinfo_store_cpu(struct cpuinfo_arm64 *info)
 	info->reg_id_aa64dfr1 = read_cpuid(ID_AA64DFR1_EL1);
 	info->reg_id_aa64isar0 = read_cpuid(ID_AA64ISAR0_EL1);
 	info->reg_id_aa64isar1 = read_cpuid(ID_AA64ISAR1_EL1);
-<<<<<<< HEAD
-=======
-	info->reg_id_aa64isar2 = read_cpuid(ID_AA64ISAR2_EL1);
->>>>>>> rebase
 	info->reg_id_aa64mmfr0 = read_cpuid(ID_AA64MMFR0_EL1);
 	info->reg_id_aa64mmfr1 = read_cpuid(ID_AA64MMFR1_EL1);
 	info->reg_id_aa64mmfr2 = read_cpuid(ID_AA64MMFR2_EL1);
@@ -414,10 +397,7 @@ void __init cpuinfo_store_boot_cpu(void)
 
 	boot_cpu_data = *info;
 	init_cpu_features(&boot_cpu_data);
-<<<<<<< HEAD
 	machine_name = of_flat_dt_get_machine_name();
-=======
->>>>>>> rebase
 }
 
 device_initcall(cpuinfo_regs_init);

@@ -148,17 +148,6 @@ int seg6_do_srh_encap(struct sk_buff *skb, struct ipv6_sr_hdr *osrh, int proto)
 		hdr->hop_limit = ip6_dst_hoplimit(skb_dst(skb));
 
 		memset(IP6CB(skb), 0, sizeof(*IP6CB(skb)));
-<<<<<<< HEAD
-=======
-
-		/* the control block has been erased, so we have to set the
-		 * iif once again.
-		 * We read the receiving interface index directly from the
-		 * skb->skb_iif as it is done in the IPv4 receiving path (i.e.:
-		 * ip_rcv_core(...)).
-		 */
-		IP6CB(skb)->iif = skb->skb_iif;
->>>>>>> rebase
 	}
 
 	hdr->nexthdr = NEXTHDR_ROUTING;
@@ -179,11 +168,6 @@ int seg6_do_srh_encap(struct sk_buff *skb, struct ipv6_sr_hdr *osrh, int proto)
 	}
 #endif
 
-<<<<<<< HEAD
-=======
-	hdr->payload_len = htons(skb->len - sizeof(struct ipv6hdr));
-
->>>>>>> rebase
 	skb_postpush_rcsum(skb, hdr, tot_len);
 
 	return 0;
@@ -236,11 +220,6 @@ int seg6_do_srh_inline(struct sk_buff *skb, struct ipv6_sr_hdr *osrh)
 	}
 #endif
 
-<<<<<<< HEAD
-=======
-	hdr->payload_len = htons(skb->len - sizeof(struct ipv6hdr));
-
->>>>>>> rebase
 	skb_postpush_rcsum(skb, hdr, sizeof(struct ipv6hdr) + hdrlen);
 
 	return 0;
@@ -302,10 +281,7 @@ static int seg6_do_srh(struct sk_buff *skb)
 		break;
 	}
 
-<<<<<<< HEAD
 	ipv6_hdr(skb)->payload_len = htons(skb->len - sizeof(struct ipv6hdr));
-=======
->>>>>>> rebase
 	skb_set_transport_header(skb, sizeof(struct ipv6hdr));
 
 	return 0;

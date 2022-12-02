@@ -73,7 +73,6 @@ SECTIONS
 
 	_end = .;
 
-<<<<<<< HEAD
 	/DISCARD/ : {
 		EXIT_TEXT
 		EXIT_DATA
@@ -83,10 +82,4 @@ SECTIONS
 	STABS_DEBUG
 	DWARF_DEBUG
 
-=======
-	STABS_DEBUG
-	DWARF_DEBUG
-
-	DISCARDS
->>>>>>> rebase
 }

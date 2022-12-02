@@ -2051,13 +2051,8 @@ cifs_writev_requeue(struct cifs_writedata *wdata)
 			}
 		}
 
-<<<<<<< HEAD
 		if (rc) {
 			kref_put(&wdata2->refcount, cifs_writedata_release);
-=======
-		kref_put(&wdata2->refcount, cifs_writedata_release);
-		if (rc) {
->>>>>>> rebase
 			if (is_retryable_error(rc))
 				continue;
 			i += nr_pages;

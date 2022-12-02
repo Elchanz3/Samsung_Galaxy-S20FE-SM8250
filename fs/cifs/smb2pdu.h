@@ -222,11 +222,7 @@ struct smb2_negotiate_req {
 	__le32 NegotiateContextOffset; /* SMB3.1.1 only. MBZ earlier */
 	__le16 NegotiateContextCount;  /* SMB3.1.1 only. MBZ earlier */
 	__le16 Reserved2;
-<<<<<<< HEAD
 	__le16 Dialects[1]; /* One dialect (vers=) at a time for now */
-=======
-	__le16 Dialects[4]; /* BB expand this if autonegotiate > 4 dialects */
->>>>>>> rebase
 } __packed;
 
 /* Dialects */
@@ -261,28 +257,12 @@ struct smb2_neg_context {
 	/* Followed by array of data */
 } __packed;
 
-<<<<<<< HEAD
 #define SMB311_SALT_SIZE			32
-=======
-#define SMB311_LINUX_CLIENT_SALT_SIZE			32
->>>>>>> rebase
 /* Hash Algorithm Types */
 #define SMB2_PREAUTH_INTEGRITY_SHA512	cpu_to_le16(0x0001)
 #define SMB2_PREAUTH_HASH_SIZE 64
 
-<<<<<<< HEAD
 #define MIN_PREAUTH_CTXT_DATA_LEN	(SMB311_SALT_SIZE + 6)
-=======
-/*
- * SaltLength that the server send can be zero, so the only three required
- * fields (all __le16) end up six bytes total, so the minimum context data len
- * in the response is six bytes which accounts for
- *
- *      HashAlgorithmCount, SaltLength, and 1 HashAlgorithm.
- */
-#define MIN_PREAUTH_CTXT_DATA_LEN 6
-
->>>>>>> rebase
 struct smb2_preauth_neg_context {
 	__le16	ContextType; /* 1 */
 	__le16	DataLength;
@@ -290,11 +270,7 @@ struct smb2_preauth_neg_context {
 	__le16	HashAlgorithmCount; /* 1 */
 	__le16	SaltLength;
 	__le16	HashAlgorithms; /* HashAlgorithms[0] since only one defined */
-<<<<<<< HEAD
 	__u8	Salt[SMB311_SALT_SIZE];
-=======
-	__u8	Salt[SMB311_LINUX_CLIENT_SALT_SIZE];
->>>>>>> rebase
 } __packed;
 
 /* Encryption Algorithms Ciphers */
@@ -1233,11 +1209,7 @@ struct smb2_oplock_break {
 struct smb2_lease_break {
 	struct smb2_sync_hdr sync_hdr;
 	__le16 StructureSize; /* Must be 44 */
-<<<<<<< HEAD
 	__le16 Reserved;
-=======
-	__le16 Epoch;
->>>>>>> rebase
 	__le32 Flags;
 	__u8   LeaseKey[16];
 	__le32 CurrentLeaseState;

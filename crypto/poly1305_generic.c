@@ -38,11 +38,7 @@ int crypto_poly1305_init(struct shash_desc *desc)
 {
 	struct poly1305_desc_ctx *dctx = shash_desc_ctx(desc);
 
-<<<<<<< HEAD
 	poly1305_core_init(&dctx->h);
-=======
-	memset(dctx->h, 0, sizeof(dctx->h));
->>>>>>> rebase
 	dctx->buflen = 0;
 	dctx->rset = false;
 	dctx->sset = false;
@@ -51,7 +47,6 @@ int crypto_poly1305_init(struct shash_desc *desc)
 }
 EXPORT_SYMBOL_GPL(crypto_poly1305_init);
 
-<<<<<<< HEAD
 void poly1305_core_setkey(struct poly1305_key *key, const u8 *raw_key)
 {
 	/* r &= 0xffffffc0ffffffc0ffffffc0fffffff */
@@ -62,25 +57,6 @@ void poly1305_core_setkey(struct poly1305_key *key, const u8 *raw_key)
 	key->r[4] = (get_unaligned_le32(raw_key + 12) >> 8) & 0x00fffff;
 }
 EXPORT_SYMBOL_GPL(poly1305_core_setkey);
-=======
-static void poly1305_setrkey(struct poly1305_desc_ctx *dctx, const u8 *key)
-{
-	/* r &= 0xffffffc0ffffffc0ffffffc0fffffff */
-	dctx->r[0] = (get_unaligned_le32(key +  0) >> 0) & 0x3ffffff;
-	dctx->r[1] = (get_unaligned_le32(key +  3) >> 2) & 0x3ffff03;
-	dctx->r[2] = (get_unaligned_le32(key +  6) >> 4) & 0x3ffc0ff;
-	dctx->r[3] = (get_unaligned_le32(key +  9) >> 6) & 0x3f03fff;
-	dctx->r[4] = (get_unaligned_le32(key + 12) >> 8) & 0x00fffff;
-}
-
-static void poly1305_setskey(struct poly1305_desc_ctx *dctx, const u8 *key)
-{
-	dctx->s[0] = get_unaligned_le32(key +  0);
-	dctx->s[1] = get_unaligned_le32(key +  4);
-	dctx->s[2] = get_unaligned_le32(key +  8);
-	dctx->s[3] = get_unaligned_le32(key + 12);
-}
->>>>>>> rebase
 
 /*
  * Poly1305 requires a unique key for each tag, which implies that we can't set
@@ -92,24 +68,16 @@ unsigned int crypto_poly1305_setdesckey(struct poly1305_desc_ctx *dctx,
 {
 	if (!dctx->sset) {
 		if (!dctx->rset && srclen >= POLY1305_BLOCK_SIZE) {
-<<<<<<< HEAD
 			poly1305_core_setkey(&dctx->r, src);
-=======
-			poly1305_setrkey(dctx, src);
->>>>>>> rebase
 			src += POLY1305_BLOCK_SIZE;
 			srclen -= POLY1305_BLOCK_SIZE;
 			dctx->rset = true;
 		}
 		if (srclen >= POLY1305_BLOCK_SIZE) {
-<<<<<<< HEAD
 			dctx->s[0] = get_unaligned_le32(src +  0);
 			dctx->s[1] = get_unaligned_le32(src +  4);
 			dctx->s[2] = get_unaligned_le32(src +  8);
 			dctx->s[3] = get_unaligned_le32(src + 12);
-=======
-			poly1305_setskey(dctx, src);
->>>>>>> rebase
 			src += POLY1305_BLOCK_SIZE;
 			srclen -= POLY1305_BLOCK_SIZE;
 			dctx->sset = true;
@@ -119,22 +87,15 @@ unsigned int crypto_poly1305_setdesckey(struct poly1305_desc_ctx *dctx,
 }
 EXPORT_SYMBOL_GPL(crypto_poly1305_setdesckey);
 
-<<<<<<< HEAD
 static void poly1305_blocks_internal(struct poly1305_state *state,
 				     const struct poly1305_key *key,
 				     const void *src, unsigned int nblocks,
 				     u32 hibit)
-=======
-static unsigned int poly1305_blocks(struct poly1305_desc_ctx *dctx,
-				    const u8 *src, unsigned int srclen,
-				    u32 hibit)
->>>>>>> rebase
 {
 	u32 r0, r1, r2, r3, r4;
 	u32 s1, s2, s3, s4;
 	u32 h0, h1, h2, h3, h4;
 	u64 d0, d1, d2, d3, d4;
-<<<<<<< HEAD
 
 	if (!nblocks)
 		return;
@@ -144,28 +105,12 @@ static unsigned int poly1305_blocks(struct poly1305_desc_ctx *dctx,
 	r2 = key->r[2];
 	r3 = key->r[3];
 	r4 = key->r[4];
-=======
-	unsigned int datalen;
-
-	if (unlikely(!dctx->sset)) {
-		datalen = crypto_poly1305_setdesckey(dctx, src, srclen);
-		src += srclen - datalen;
-		srclen = datalen;
-	}
-
-	r0 = dctx->r[0];
-	r1 = dctx->r[1];
-	r2 = dctx->r[2];
-	r3 = dctx->r[3];
-	r4 = dctx->r[4];
->>>>>>> rebase
 
 	s1 = r1 * 5;
 	s2 = r2 * 5;
 	s3 = r3 * 5;
 	s4 = r4 * 5;
 
-<<<<<<< HEAD
 	h0 = state->h[0];
 	h1 = state->h[1];
 	h2 = state->h[2];
@@ -173,16 +118,6 @@ static unsigned int poly1305_blocks(struct poly1305_desc_ctx *dctx,
 	h4 = state->h[4];
 
 	do {
-=======
-	h0 = dctx->h[0];
-	h1 = dctx->h[1];
-	h2 = dctx->h[2];
-	h3 = dctx->h[3];
-	h4 = dctx->h[4];
-
-	while (likely(srclen >= POLY1305_BLOCK_SIZE)) {
-
->>>>>>> rebase
 		/* h += m[i] */
 		h0 += (get_unaligned_le32(src +  0) >> 0) & 0x3ffffff;
 		h1 += (get_unaligned_le32(src +  3) >> 2) & 0x3ffffff;
@@ -211,7 +146,6 @@ static unsigned int poly1305_blocks(struct poly1305_desc_ctx *dctx,
 		h1 += h0 >> 26;       h0 = h0 & 0x3ffffff;
 
 		src += POLY1305_BLOCK_SIZE;
-<<<<<<< HEAD
 	} while (--nblocks);
 
 	state->h[0] = h0;
@@ -242,18 +176,6 @@ static void poly1305_blocks(struct poly1305_desc_ctx *dctx,
 
 	poly1305_blocks_internal(&dctx->h, &dctx->r,
 				 src, srclen / POLY1305_BLOCK_SIZE, hibit);
-=======
-		srclen -= POLY1305_BLOCK_SIZE;
-	}
-
-	dctx->h[0] = h0;
-	dctx->h[1] = h1;
-	dctx->h[2] = h2;
-	dctx->h[3] = h3;
-	dctx->h[4] = h4;
-
-	return srclen;
->>>>>>> rebase
 }
 
 int crypto_poly1305_update(struct shash_desc *desc,
@@ -277,15 +199,9 @@ int crypto_poly1305_update(struct shash_desc *desc,
 	}
 
 	if (likely(srclen >= POLY1305_BLOCK_SIZE)) {
-<<<<<<< HEAD
 		poly1305_blocks(dctx, src, srclen, 1 << 24);
 		src += srclen - (srclen % POLY1305_BLOCK_SIZE);
 		srclen %= POLY1305_BLOCK_SIZE;
-=======
-		bytes = poly1305_blocks(dctx, src, srclen, 1 << 24);
-		src += srclen - bytes;
-		srclen = bytes;
->>>>>>> rebase
 	}
 
 	if (unlikely(srclen)) {
@@ -297,7 +213,6 @@ int crypto_poly1305_update(struct shash_desc *desc,
 }
 EXPORT_SYMBOL_GPL(crypto_poly1305_update);
 
-<<<<<<< HEAD
 void poly1305_core_emit(const struct poly1305_state *state, void *dst)
 {
 	u32 h0, h1, h2, h3, h4;
@@ -310,32 +225,6 @@ void poly1305_core_emit(const struct poly1305_state *state, void *dst)
 	h2 = state->h[2];
 	h3 = state->h[3];
 	h4 = state->h[4];
-=======
-int crypto_poly1305_final(struct shash_desc *desc, u8 *dst)
-{
-	struct poly1305_desc_ctx *dctx = shash_desc_ctx(desc);
-	u32 h0, h1, h2, h3, h4;
-	u32 g0, g1, g2, g3, g4;
-	u32 mask;
-	u64 f = 0;
-
-	if (unlikely(!dctx->sset))
-		return -ENOKEY;
-
-	if (unlikely(dctx->buflen)) {
-		dctx->buf[dctx->buflen++] = 1;
-		memset(dctx->buf + dctx->buflen, 0,
-		       POLY1305_BLOCK_SIZE - dctx->buflen);
-		poly1305_blocks(dctx, dctx->buf, POLY1305_BLOCK_SIZE, 0);
-	}
-
-	/* fully carry h */
-	h0 = dctx->h[0];
-	h1 = dctx->h[1];
-	h2 = dctx->h[2];
-	h3 = dctx->h[3];
-	h4 = dctx->h[4];
->>>>>>> rebase
 
 	h2 += (h1 >> 26);     h1 = h1 & 0x3ffffff;
 	h3 += (h2 >> 26);     h2 = h2 & 0x3ffffff;
@@ -365,7 +254,6 @@ int crypto_poly1305_final(struct shash_desc *desc, u8 *dst)
 	h4 = (h4 & mask) | g4;
 
 	/* h = h % (2^128) */
-<<<<<<< HEAD
 	put_unaligned_le32((h0 >>  0) | (h1 << 26), dst +  0);
 	put_unaligned_le32((h1 >>  6) | (h2 << 20), dst +  4);
 	put_unaligned_le32((h2 >> 12) | (h3 << 14), dst +  8);
@@ -400,18 +288,6 @@ int crypto_poly1305_final(struct shash_desc *desc, u8 *dst)
 	put_unaligned_le32(f, dst + 8);
 	f = (f >> 32) + le32_to_cpu(digest[3]) + dctx->s[3];
 	put_unaligned_le32(f, dst + 12);
-=======
-	h0 = (h0 >>  0) | (h1 << 26);
-	h1 = (h1 >>  6) | (h2 << 20);
-	h2 = (h2 >> 12) | (h3 << 14);
-	h3 = (h3 >> 18) | (h4 <<  8);
-
-	/* mac = (h + s) % (2^128) */
-	f = (f >> 32) + h0 + dctx->s[0]; put_unaligned_le32(f, dst +  0);
-	f = (f >> 32) + h1 + dctx->s[1]; put_unaligned_le32(f, dst +  4);
-	f = (f >> 32) + h2 + dctx->s[2]; put_unaligned_le32(f, dst +  8);
-	f = (f >> 32) + h3 + dctx->s[3]; put_unaligned_le32(f, dst + 12);
->>>>>>> rebase
 
 	return 0;
 }

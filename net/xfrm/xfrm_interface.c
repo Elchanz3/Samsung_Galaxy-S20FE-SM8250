@@ -293,43 +293,23 @@ xfrmi_xmit2(struct sk_buff *skb, struct net_device *dev, struct flowi *fl)
 	}
 
 	mtu = dst_mtu(dst);
-<<<<<<< HEAD
 	if (!skb->ignore_df && skb->len > mtu) {
-=======
-	if (skb->len > mtu) {
->>>>>>> rebase
 		skb_dst_update_pmtu_no_confirm(skb, mtu);
 
 		if (skb->protocol == htons(ETH_P_IPV6)) {
 			if (mtu < IPV6_MIN_MTU)
 				mtu = IPV6_MIN_MTU;
 
-<<<<<<< HEAD
 			icmpv6_send(skb, ICMPV6_PKT_TOOBIG, 0, mtu);
 		} else {
 			icmp_send(skb, ICMP_DEST_UNREACH, ICMP_FRAG_NEEDED,
 				  htonl(mtu));
-=======
-			if (skb->len > 1280)
-				icmpv6_ndo_send(skb, ICMPV6_PKT_TOOBIG, 0, mtu);
-			else
-				goto xmit;
-		} else {
-			if (!(ip_hdr(skb)->frag_off & htons(IP_DF)))
-				goto xmit;
-			icmp_ndo_send(skb, ICMP_DEST_UNREACH, ICMP_FRAG_NEEDED,
-				      htonl(mtu));
->>>>>>> rebase
 		}
 
 		dst_release(dst);
 		return -EMSGSIZE;
 	}
 
-<<<<<<< HEAD
-=======
-xmit:
->>>>>>> rebase
 	xfrmi_scrub_packet(skb, !net_eq(xi->net, dev_net(dev)));
 	skb_dst_set(skb, dst);
 	skb->dev = tdev;
@@ -679,23 +659,11 @@ static int xfrmi_newlink(struct net *src_net, struct net_device *dev,
 			struct netlink_ext_ack *extack)
 {
 	struct net *net = dev_net(dev);
-<<<<<<< HEAD
 	struct xfrm_if_parms p;
-=======
-	struct xfrm_if_parms p = {};
->>>>>>> rebase
 	struct xfrm_if *xi;
 	int err;
 
 	xfrmi_netlink_parms(data, &p);
-<<<<<<< HEAD
-=======
-	if (!p.if_id) {
-		NL_SET_ERR_MSG(extack, "if_id must be non zero");
-		return -EINVAL;
-	}
-
->>>>>>> rebase
 	xi = xfrmi_locate(net, &p);
 	if (xi)
 		return -EEXIST;
@@ -720,20 +688,9 @@ static int xfrmi_changelink(struct net_device *dev, struct nlattr *tb[],
 {
 	struct xfrm_if *xi = netdev_priv(dev);
 	struct net *net = xi->net;
-<<<<<<< HEAD
 	struct xfrm_if_parms p;
 
 	xfrmi_netlink_parms(data, &p);
-=======
-	struct xfrm_if_parms p = {};
-
-	xfrmi_netlink_parms(data, &p);
-	if (!p.if_id) {
-		NL_SET_ERR_MSG(extack, "if_id must be non zero");
-		return -EINVAL;
-	}
-
->>>>>>> rebase
 	xi = xfrmi_locate(net, &p);
 	if (!xi) {
 		xi = netdev_priv(dev);
@@ -823,32 +780,7 @@ static void __net_exit xfrmi_exit_net(struct net *net)
 	rtnl_unlock();
 }
 
-<<<<<<< HEAD
 static struct pernet_operations xfrmi_net_ops = {
-=======
-static void __net_exit xfrmi_exit_batch_net(struct list_head *net_exit_list)
-{
-	struct net *net;
-	LIST_HEAD(list);
-
-	rtnl_lock();
-	list_for_each_entry(net, net_exit_list, exit_list) {
-		struct xfrmi_net *xfrmn = net_generic(net, xfrmi_net_id);
-		struct xfrm_if __rcu **xip;
-		struct xfrm_if *xi;
-
-		for (xip = &xfrmn->xfrmi[0];
-		     (xi = rtnl_dereference(*xip)) != NULL;
-		     xip = &xi->next)
-			unregister_netdevice_queue(xi->dev, &list);
-	}
-	unregister_netdevice_many(&list);
-	rtnl_unlock();
-}
-
-static struct pernet_operations xfrmi_net_ops = {
-	.exit_batch = xfrmi_exit_batch_net,
->>>>>>> rebase
 	.init = xfrmi_init_net,
 	.exit = xfrmi_exit_net,
 	.id   = &xfrmi_net_id,

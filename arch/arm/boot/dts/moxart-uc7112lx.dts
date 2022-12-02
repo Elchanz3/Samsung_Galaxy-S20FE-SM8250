@@ -80,11 +80,7 @@
 	clocks = <&ref12>;
 };
 
-<<<<<<< HEAD
 &sdhci {
-=======
-&mmc {
->>>>>>> rebase
 	status = "okay";
 };
 

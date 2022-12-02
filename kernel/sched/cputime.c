@@ -1,13 +1,9 @@
 /*
  * Simple CPU accounting cgroup controller
  */
-<<<<<<< HEAD
 #include <linux/cpufreq_times.h>
 #include "sched.h"
 #include "walt.h"
-=======
-#include "sched.h"
->>>>>>> rebase
 
 #ifdef CONFIG_IRQ_TIME_ACCOUNTING
 
@@ -57,24 +53,18 @@ void irqtime_account_irq(struct task_struct *curr)
 	struct irqtime *irqtime = this_cpu_ptr(&cpu_irqtime);
 	s64 delta;
 	int cpu;
-<<<<<<< HEAD
 #ifdef CONFIG_SCHED_WALT
 	u64 wallclock;
 	bool account = true;
 #endif
-=======
->>>>>>> rebase
 
 	if (!sched_clock_irqtime)
 		return;
 
 	cpu = smp_processor_id();
-<<<<<<< HEAD
 #ifdef CONFIG_SCHED_WALT
 	wallclock = sched_clock_cpu(cpu);
 #endif
-=======
->>>>>>> rebase
 	delta = sched_clock_cpu(cpu) - irqtime->irq_start_time;
 	irqtime->irq_start_time += delta;
 
@@ -88,7 +78,6 @@ void irqtime_account_irq(struct task_struct *curr)
 		irqtime_account_delta(irqtime, delta, CPUTIME_IRQ);
 	else if (in_serving_softirq() && curr != this_cpu_ksoftirqd())
 		irqtime_account_delta(irqtime, delta, CPUTIME_SOFTIRQ);
-<<<<<<< HEAD
 #ifdef CONFIG_SCHED_WALT
 	else
 		account = false;
@@ -98,8 +87,6 @@ void irqtime_account_irq(struct task_struct *curr)
 	else if (curr != this_cpu_ksoftirqd())
 		sched_account_irqstart(cpu, curr, wallclock);
 #endif
-=======
->>>>>>> rebase
 }
 EXPORT_SYMBOL_GPL(irqtime_account_irq);
 
@@ -159,12 +146,9 @@ void account_user_time(struct task_struct *p, u64 cputime)
 
 	/* Account for user time used */
 	acct_account_cputime(p);
-<<<<<<< HEAD
 
 	/* Account power usage for user time */
 	cpufreq_acct_update_power(p, cputime);
-=======
->>>>>>> rebase
 }
 
 /*
@@ -183,17 +167,10 @@ void account_guest_time(struct task_struct *p, u64 cputime)
 
 	/* Add guest time to cpustat. */
 	if (task_nice(p) > 0) {
-<<<<<<< HEAD
 		cpustat[CPUTIME_NICE] += cputime;
 		cpustat[CPUTIME_GUEST_NICE] += cputime;
 	} else {
 		cpustat[CPUTIME_USER] += cputime;
-=======
-		task_group_account_field(p, CPUTIME_NICE, cputime);
-		cpustat[CPUTIME_GUEST_NICE] += cputime;
-	} else {
-		task_group_account_field(p, CPUTIME_USER, cputime);
->>>>>>> rebase
 		cpustat[CPUTIME_GUEST] += cputime;
 	}
 }
@@ -216,12 +193,9 @@ void account_system_index_time(struct task_struct *p,
 
 	/* Account for system time used */
 	acct_account_cputime(p);
-<<<<<<< HEAD
 
 	/* Account power usage for system time */
 	cpufreq_acct_update_power(p, cputime);
-=======
->>>>>>> rebase
 }
 
 /*

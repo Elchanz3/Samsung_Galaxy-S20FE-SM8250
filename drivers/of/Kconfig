@@ -49,7 +49,6 @@ config OF_PROMTREE
 	bool
 
 config OF_KOBJ
-<<<<<<< HEAD
 	bool "Display devicetree in sysfs"
 	def_bool SYSFS
 	help
@@ -57,9 +56,6 @@ config OF_KOBJ
 	  nodes and properties in sysfs. Disabling this option will save
 	  a small amount of memory, as well as decrease boot time. By
 	  default this option will be enabled if SYSFS is enabled.
-=======
-	def_bool SYSFS
->>>>>>> rebase
 
 # Hardly any platforms need this.  It is safe to select, but only do so if you
 # need it.
@@ -99,15 +95,12 @@ config OF_RESERVED_MEM
 config OF_RESOLVE
 	bool
 
-<<<<<<< HEAD
 config OF_SLIMBUS
 	def_tristate SLIMBUS
 	depends on SLIMBUS
 	help
 	  OpenFirmware SLIMBUS accessors
 
-=======
->>>>>>> rebase
 config OF_OVERLAY
 	bool "Device Tree overlays"
 	select OF_DYNAMIC
@@ -122,14 +115,11 @@ config OF_OVERLAY
 config OF_NUMA
 	bool
 
-<<<<<<< HEAD
 config OF_BATTERYDATA
 	def_bool y
 	help
 	  OpenFirmware BatteryData accessors
 
-=======
->>>>>>> rebase
 config OF_DMA_DEFAULT_COHERENT
 	# arches should select this if DMA is coherent by default for OF devices
 	bool

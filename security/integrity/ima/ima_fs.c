@@ -343,12 +343,8 @@ static ssize_t ima_write_policy(struct file *file, const char __user *buf,
 		integrity_audit_msg(AUDIT_INTEGRITY_STATUS, NULL, NULL,
 				    "policy_update", "signed policy required",
 				    1, 0);
-<<<<<<< HEAD
 		if (ima_appraise & IMA_APPRAISE_ENFORCE)
 			result = -EACCES;
-=======
-		result = -EACCES;
->>>>>>> rebase
 	} else {
 		result = ima_parse_add_rule(data);
 	}
@@ -502,19 +498,12 @@ int __init ima_fs_init(void)
 
 	return 0;
 out:
-<<<<<<< HEAD
-=======
-	securityfs_remove(ima_policy);
->>>>>>> rebase
 	securityfs_remove(violations);
 	securityfs_remove(runtime_measurements_count);
 	securityfs_remove(ascii_runtime_measurements);
 	securityfs_remove(binary_runtime_measurements);
 	securityfs_remove(ima_symlink);
 	securityfs_remove(ima_dir);
-<<<<<<< HEAD
 	securityfs_remove(ima_policy);
-=======
->>>>>>> rebase
 	return -1;
 }

@@ -55,13 +55,10 @@
 
   SECURITY_INIT
 
-<<<<<<< HEAD
   .test_modules : {
 	KUNIT_TEST_MODULES
   }
 
-=======
->>>>>>> rebase
   .exitcall : {
 	__exitcall_begin = .;
 	*(.exitcall.exit)

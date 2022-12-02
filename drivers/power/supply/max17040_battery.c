@@ -109,11 +109,7 @@ static void max17040_get_vcell(struct i2c_client *client)
 
 	vcell = max17040_read_reg(client, MAX17040_VCELL);
 
-<<<<<<< HEAD
 	chip->vcell = vcell;
-=======
-	chip->vcell = (vcell >> 4) * 1250;
->>>>>>> rebase
 }
 
 static void max17040_get_soc(struct i2c_client *client)

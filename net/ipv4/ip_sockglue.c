@@ -43,12 +43,9 @@
 #include <net/transp_v6.h>
 #endif
 #include <net/ip_fib.h>
-<<<<<<< HEAD
 #ifdef CONFIG_MPTCP
 #include <net/mptcp.h>
 #endif
-=======
->>>>>>> rebase
 
 #include <linux/errqueue.h>
 #include <linux/uaccess.h>
@@ -349,13 +346,9 @@ int ip_ra_control(struct sock *sk, unsigned char on,
 		return -EINVAL;
 
 	new_ra = on ? kmalloc(sizeof(*new_ra), GFP_KERNEL) : NULL;
-<<<<<<< HEAD
 	if (on && !new_ra)
 		return -ENOMEM;
 	
-=======
-
->>>>>>> rebase
 	mutex_lock(&net->ipv4.ra_mutex);
 	for (rap = &net->ipv4.ra_chain;
 	     (ra = rcu_dereference_protected(*rap,
@@ -667,15 +660,11 @@ static int do_ip_setsockopt(struct sock *sk, int level,
 			break;
 		old = rcu_dereference_protected(inet->inet_opt,
 						lockdep_sock_is_held(sk));
-<<<<<<< HEAD
 #ifdef CONFIG_MPTCP
 		if (inet->is_icsk && !is_meta_sk(sk)) {
 #else
 		if (inet->is_icsk) {
 #endif
-=======
-		if (inet->is_icsk) {
->>>>>>> rebase
 			struct inet_connection_sock *icsk = inet_csk(sk);
 #if IS_ENABLED(CONFIG_IPV6)
 			if (sk->sk_family == PF_INET ||
@@ -769,7 +758,6 @@ static int do_ip_setsockopt(struct sock *sk, int level,
 			inet->tos = val;
 			sk->sk_priority = rt_tos2priority(val);
 			sk_dst_reset(sk);
-<<<<<<< HEAD
 #ifdef CONFIG_MPTCP
 
 			/* Update TOS on mptcp subflow */
@@ -787,8 +775,6 @@ static int do_ip_setsockopt(struct sock *sk, int level,
 				}
 			}
 #endif
-=======
->>>>>>> rebase
 		}
 		break;
 	case IP_TTL:

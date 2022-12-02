@@ -13,7 +13,6 @@ menuconfig NVMEM
 
 if NVMEM
 
-<<<<<<< HEAD
 config NVMEM_SYSFS
 	bool "/sys/bus/nvmem/devices/*/nvmem (sysfs interface)"
 	depends on SYSFS
@@ -24,8 +23,6 @@ config NVMEM_SYSFS
 	 This interface is mostly used by userspace applications to
 	 read/write directly into nvmem.
 
-=======
->>>>>>> rebase
 config NVMEM_IMX_IIM
 	tristate "i.MX IC Identification Module support"
 	depends on ARCH_MXC || COMPILE_TEST
@@ -103,7 +100,6 @@ config QCOM_QFPROM
 	  This driver can also be built as a module. If so, the module
 	  will be called nvmem_qfprom.
 
-<<<<<<< HEAD
 config NVMEM_SPMI_SDAM
 	tristate "SPMI SDAM Support"
 	depends on SPMI
@@ -112,8 +108,6 @@ config NVMEM_SPMI_SDAM
 	  Qualcomm Technologies, Inc. PMICs. It provides the clients
 	  an interface to read/write to the SDAM module's shared memory.
 
-=======
->>>>>>> rebase
 config ROCKCHIP_EFUSE
 	tristate "Rockchip eFuse Support"
 	depends on ARCH_ROCKCHIP || COMPILE_TEST

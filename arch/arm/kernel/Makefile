@@ -17,21 +17,10 @@ CFLAGS_REMOVE_return_address.o = -pg
 # Object file lists.
 
 obj-y		:= elf.o entry-common.o irq.o opcodes.o \
-<<<<<<< HEAD
 		   process.o ptrace.o reboot.o return_address.o \
 		   setup.o signal.o sigreturn_codes.o \
 		   stacktrace.o sys_arm.o time.o traps.o
 
-=======
-		   process.o ptrace.o reboot.o \
-		   setup.o signal.o sigreturn_codes.o \
-		   stacktrace.o sys_arm.o time.o traps.o
-
-ifneq ($(CONFIG_ARM_UNWIND),y)
-obj-$(CONFIG_FRAME_POINTER)	+= return_address.o
-endif
-
->>>>>>> rebase
 obj-$(CONFIG_ATAGS)		+= atags_parse.o
 obj-$(CONFIG_ATAGS_PROC)	+= atags_proc.o
 obj-$(CONFIG_DEPRECATED_PARAM_STRUCT) += atags_compat.o
@@ -113,9 +102,4 @@ endif
 
 obj-$(CONFIG_HAVE_ARM_SMCCC)	+= smccc-call.o
 
-<<<<<<< HEAD
-=======
-obj-$(CONFIG_GENERIC_CPU_VULNERABILITIES) += spectre.o
-
->>>>>>> rebase
 extra-y := $(head-y) vmlinux.lds

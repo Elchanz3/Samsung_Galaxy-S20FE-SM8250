@@ -273,18 +273,6 @@ int isa207_get_constraint(u64 event, unsigned long *maskp, unsigned long *valp)
 
 		mask  |= CNST_PMC_MASK(pmc);
 		value |= CNST_PMC_VAL(pmc);
-<<<<<<< HEAD
-=======
-
-		/*
-		 * PMC5 and PMC6 are used to count cycles and instructions and
-		 * they do not support most of the constraint bits. Add a check
-		 * to exclude PMC5/6 from most of the constraints except for
-		 * EBB/BHRB.
-		 */
-		if (pmc >= 5)
-			goto ebb_bhrb;
->>>>>>> rebase
 	}
 
 	if (pmc <= 4) {
@@ -325,12 +313,7 @@ int isa207_get_constraint(u64 event, unsigned long *maskp, unsigned long *valp)
 		if (event_is_threshold(event) && is_thresh_cmp_valid(event)) {
 			mask  |= CNST_THRESH_MASK;
 			value |= CNST_THRESH_VAL(event >> EVENT_THRESH_SHIFT);
-<<<<<<< HEAD
 		}
-=======
-		} else if (event_is_threshold(event))
-			return -1;
->>>>>>> rebase
 	} else {
 		/*
 		 * Special case for PM_MRK_FAB_RSP_MATCH and PM_MRK_FAB_RSP_MATCH_CYC,
@@ -348,10 +331,6 @@ int isa207_get_constraint(u64 event, unsigned long *maskp, unsigned long *valp)
 		}
 	}
 
-<<<<<<< HEAD
-=======
-ebb_bhrb:
->>>>>>> rebase
 	if (!pmc && ebb)
 		/* EBB events must specify the PMC */
 		return -1;
@@ -370,13 +349,8 @@ ebb_bhrb:
 	 * EBB events are pinned & exclusive, so this should never actually
 	 * hit, but we leave it as a fallback in case.
 	 */
-<<<<<<< HEAD
 	mask  |= CNST_EBB_VAL(ebb);
 	value |= CNST_EBB_MASK;
-=======
-	mask  |= CNST_EBB_MASK;
-	value |= CNST_EBB_VAL(ebb);
->>>>>>> rebase
 
 	*maskp = mask;
 	*valp = value;

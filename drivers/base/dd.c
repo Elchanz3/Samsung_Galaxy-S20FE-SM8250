@@ -202,7 +202,6 @@ void device_unblock_probing(void)
 	driver_deferred_probe_trigger();
 }
 
-<<<<<<< HEAD
 static void enable_trigger_defer_cycle(void)
 {
 	driver_deferred_probe_enable = true;
@@ -214,8 +213,6 @@ static void enable_trigger_defer_cycle(void)
 	flush_work(&deferred_probe_work);
 }
 
-=======
->>>>>>> rebase
 /*
  * deferred_devs_show() - Show the devices in the deferred probe pending list.
  */
@@ -268,25 +265,14 @@ int driver_deferred_probe_check_state(struct device *dev)
 
 static void deferred_probe_timeout_work_func(struct work_struct *work)
 {
-<<<<<<< HEAD
 	struct device_private *private, *p;
-=======
-	struct device_private *p;
->>>>>>> rebase
 
 	deferred_probe_timeout = 0;
 	driver_deferred_probe_trigger();
 	flush_work(&deferred_probe_work);
 
-<<<<<<< HEAD
 	list_for_each_entry_safe(private, p, &deferred_probe_pending_list, deferred_probe)
 		dev_info(private->device, "deferred probe pending");
-=======
-	mutex_lock(&deferred_probe_mutex);
-	list_for_each_entry(p, &deferred_probe_pending_list, deferred_probe)
-		dev_info(p->device, "deferred probe pending\n");
-	mutex_unlock(&deferred_probe_mutex);
->>>>>>> rebase
 }
 static DECLARE_DELAYED_WORK(deferred_probe_timeout_work, deferred_probe_timeout_work_func);
 
@@ -295,7 +281,6 @@ static DECLARE_DELAYED_WORK(deferred_probe_timeout_work, deferred_probe_timeout_
  *
  * We don't want to get in the way when the bulk of drivers are getting probed.
  * Instead, this initcall makes sure that deferred probing is delayed until
-<<<<<<< HEAD
  * all the registered initcall functions at a particular level are completed.
  * This function is invoked at every *_initcall_sync level.
  */
@@ -317,19 +302,6 @@ static int deferred_probe_enable_fn(void)
 
 	/* Enable deferred probing for all time */
 	enable_trigger_defer_cycle();
-=======
- * late_initcall time.
- */
-static int deferred_probe_initcall(void)
-{
-	deferred_devices = debugfs_create_file("devices_deferred", 0444, NULL,
-					       NULL, &deferred_devs_fops);
-
-	driver_deferred_probe_enable = true;
-	driver_deferred_probe_trigger();
-	/* Sort as many dependencies as possible before exiting initcalls */
-	flush_work(&deferred_probe_work);
->>>>>>> rebase
 	initcalls_done = true;
 
 	/*
@@ -345,11 +317,7 @@ static int deferred_probe_initcall(void)
 	}
 	return 0;
 }
-<<<<<<< HEAD
 late_initcall(deferred_probe_enable_fn);
-=======
-late_initcall(deferred_probe_initcall);
->>>>>>> rebase
 
 static void __exit deferred_probe_exit(void)
 {
@@ -525,12 +493,7 @@ static int really_probe(struct device *dev, struct device_driver *drv)
 		 drv->bus->name, __func__, drv->name, dev_name(dev));
 	if (!list_empty(&dev->devres_head)) {
 		dev_crit(dev, "Resources present before probing\n");
-<<<<<<< HEAD
 		return -EBUSY;
-=======
-		ret = -EBUSY;
-		goto done;
->>>>>>> rebase
 	}
 
 re_probe:
@@ -637,11 +600,7 @@ pinctrl_bind_failed:
 	ret = 0;
 done:
 	atomic_dec(&probe_count);
-<<<<<<< HEAD
 	wake_up(&probe_waitqueue);
-=======
-	wake_up_all(&probe_waitqueue);
->>>>>>> rebase
 	return ret;
 }
 
@@ -797,14 +756,6 @@ static int __device_attach_driver(struct device_driver *drv, void *_data)
 	} else if (ret == -EPROBE_DEFER) {
 		dev_dbg(dev, "Device match requests probe deferral\n");
 		driver_deferred_probe_add(dev);
-<<<<<<< HEAD
-=======
-		/*
-		 * Device can't match with a driver right now, so don't attempt
-		 * to match or bind with other drivers on the bus.
-		 */
-		return ret;
->>>>>>> rebase
 	} else if (ret < 0) {
 		dev_dbg(dev, "Bus failed to match device: %d", ret);
 		return ret;
@@ -862,13 +813,7 @@ static int __device_attach(struct device *dev, bool allow_async)
 	int ret = 0;
 
 	device_lock(dev);
-<<<<<<< HEAD
 	if (dev->driver) {
-=======
-	if (dev->p->dead) {
-		goto out_unlock;
-	} else if (dev->driver) {
->>>>>>> rebase
 		if (device_is_bound(dev)) {
 			ret = 1;
 			goto out_unlock;
@@ -962,14 +907,6 @@ static int __driver_attach(struct device *dev, void *data)
 	} else if (ret == -EPROBE_DEFER) {
 		dev_dbg(dev, "Device match requests probe deferral\n");
 		driver_deferred_probe_add(dev);
-<<<<<<< HEAD
-=======
-		/*
-		 * Driver could not match with device, but may match with
-		 * another device on the bus.
-		 */
-		return 0;
->>>>>>> rebase
 	} else if (ret < 0) {
 		dev_dbg(dev, "Bus failed to match device: %d", ret);
 		return ret;
@@ -1012,11 +949,6 @@ static void __device_release_driver(struct device *dev, struct device *parent)
 
 	drv = dev->driver;
 	if (drv) {
-<<<<<<< HEAD
-=======
-		pm_runtime_get_sync(dev);
-
->>>>>>> rebase
 		while (device_links_busy(dev)) {
 			device_unlock(dev);
 			if (parent && dev->bus->need_parent_lock)
@@ -1032,20 +964,11 @@ static void __device_release_driver(struct device *dev, struct device *parent)
 			 * have released the driver successfully while this one
 			 * was waiting, so check for that.
 			 */
-<<<<<<< HEAD
 			if (dev->driver != drv)
 				return;
 		}
 
 		pm_runtime_get_sync(dev);
-=======
-			if (dev->driver != drv) {
-				pm_runtime_put(dev);
-				return;
-			}
-		}
-
->>>>>>> rebase
 		pm_runtime_clean_up_links(dev);
 
 		driver_sysfs_remove(dev);

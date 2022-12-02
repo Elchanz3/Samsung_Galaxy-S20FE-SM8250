@@ -59,11 +59,7 @@ srmcons_do_receive_chars(struct tty_port *port)
 	} while((result.bits.status & 1) && (++loops < 10));
 
 	if (count)
-<<<<<<< HEAD
 		tty_schedule_flip(port);
-=======
-		tty_flip_buffer_push(port);
->>>>>>> rebase
 
 	return count;
 }

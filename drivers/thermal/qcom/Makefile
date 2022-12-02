@@ -1,6 +1,5 @@
 obj-$(CONFIG_QCOM_TSENS)	+= qcom_tsens.o
 qcom_tsens-y			+= tsens.o tsens-common.o tsens-8916.o tsens-8974.o tsens-8960.o tsens-v2.o
-<<<<<<< HEAD
 obj-$(CONFIG_QTI_ADC_TM) += adc-tm.o adc-tm-common.o adc-tm5.o adc-tm7.o
 obj-$(CONFIG_QTI_VIRTUAL_SENSOR) += qti_virtual_sensor.o
 obj-$(CONFIG_QTI_QMI_SENSOR) += thermal_sensor_service_v01.o qmi_sensors.o
@@ -17,5 +16,3 @@ obj-$(CONFIG_QTI_LIMITS_ISENSE_CDSP) += msm_isense_cdsp.o
 obj-$(CONFIG_QTI_CX_IPEAK_COOLING_DEVICE) += cx_ipeak_cdev.o
 
 subdir-ccflags-y += -Wformat
-=======
->>>>>>> rebase

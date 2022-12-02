@@ -1387,11 +1387,7 @@ xfs_rmap_convert_shared(
 	 * record for our insertion point. This will also give us the record for
 	 * start block contiguity tests.
 	 */
-<<<<<<< HEAD
 	error = xfs_rmap_lookup_le_range(cur, bno, owner, offset, flags,
-=======
-	error = xfs_rmap_lookup_le_range(cur, bno, owner, offset, oldext,
->>>>>>> rebase
 			&PREV, &i);
 	if (error)
 		goto done;

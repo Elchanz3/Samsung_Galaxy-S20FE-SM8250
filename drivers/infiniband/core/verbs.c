@@ -1617,11 +1617,7 @@ static int _ib_modify_qp(struct ib_qp *qp, struct ib_qp_attr *attr,
 		if (!(rdma_protocol_ib(qp->device,
 				       attr->alt_ah_attr.port_num) &&
 		      rdma_protocol_ib(qp->device, port))) {
-<<<<<<< HEAD
 			ret = EINVAL;
-=======
-			ret = -EINVAL;
->>>>>>> rebase
 			goto out;
 		}
 	}
@@ -1715,11 +1711,7 @@ int ib_get_eth_speed(struct ib_device *dev, u8 port_num, u8 *speed, u8 *width)
 
 	dev_put(netdev);
 
-<<<<<<< HEAD
 	if (!rc) {
-=======
-	if (!rc && lksettings.base.speed != (u32)SPEED_UNKNOWN) {
->>>>>>> rebase
 		netdev_speed = lksettings.base.speed;
 	} else {
 		netdev_speed = SPEED_1000;

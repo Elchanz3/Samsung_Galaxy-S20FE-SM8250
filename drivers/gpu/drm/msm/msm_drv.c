@@ -1,9 +1,5 @@
 /*
-<<<<<<< HEAD
  * Copyright (c) 2016-2019, The Linux Foundation. All rights reserved.
-=======
- * Copyright (c) 2016-2018, The Linux Foundation. All rights reserved.
->>>>>>> rebase
  * Copyright (C) 2013 Red Hat
  * Author: Rob Clark <robdclark@gmail.com>
  *
@@ -44,7 +40,6 @@
 #define MSM_VERSION_MINOR	3
 #define MSM_VERSION_PATCHLEVEL	0
 
-<<<<<<< HEAD
 #if defined(CONFIG_DISPLAY_SAMSUNG)
 static BLOCKING_NOTIFIER_HEAD(msm_drm_notifier_list);
 
@@ -67,8 +62,6 @@ int __msm_drm_notifier_call_chain(unsigned long event, void *data)
 }
 #endif
 
-=======
->>>>>>> rebase
 static const struct drm_mode_config_funcs mode_config_funcs = {
 	.fb_create = msm_framebuffer_create,
 	.output_poll_changed = drm_fb_helper_output_poll_changed,
@@ -199,12 +192,8 @@ void __iomem *msm_ioremap(struct platform_device *pdev, const char *name,
 		res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
 
 	if (!res) {
-<<<<<<< HEAD
 		dev_err(&pdev->dev, "failed to get memory resource: %s\n",
 			       name);
-=======
-		dev_err(&pdev->dev, "failed to get memory resource: %s\n", name);
->>>>>>> rebase
 		return ERR_PTR(-EINVAL);
 	}
 
@@ -217,12 +206,8 @@ void __iomem *msm_ioremap(struct platform_device *pdev, const char *name,
 	}
 
 	if (reglog)
-<<<<<<< HEAD
 		printk(KERN_DEBUG "IO:region %s %pk %08lx\n", dbgname,
 				ptr, size);
-=======
-		printk(KERN_DEBUG "IO:region %s %p %08lx\n", dbgname, ptr, size);
->>>>>>> rebase
 
 	return ptr;
 }
@@ -427,11 +412,7 @@ static int msm_init_vram(struct drm_device *dev)
 		of_node_put(node);
 		if (ret)
 			return ret;
-<<<<<<< HEAD
 		size = r.end - r.start;
-=======
-		size = r.end - r.start + 1;
->>>>>>> rebase
 		DRM_INFO("using VRAM carveout: %lx@%pa\n", size, &r.start);
 
 		/* if we have no IOMMU, then we need to use carveout allocator.
@@ -526,19 +507,11 @@ static int msm_drm_init(struct device *dev, struct drm_driver *drv)
 
 	drm_mode_config_init(ddev);
 
-<<<<<<< HEAD
-=======
-	ret = msm_init_vram(ddev);
-	if (ret)
-		goto err_destroy_mdss;
-
->>>>>>> rebase
 	/* Bind all our sub-components: */
 	ret = component_bind_all(dev, ddev);
 	if (ret)
 		goto err_destroy_mdss;
 
-<<<<<<< HEAD
 	ret = msm_init_vram(ddev);
 	if (ret)
 		goto err_msm_uninit;
@@ -548,15 +521,6 @@ static int msm_drm_init(struct device *dev, struct drm_driver *drv)
 					      GFP_KERNEL);
 		if (!dev->dma_parms)
 			return -ENOMEM;
-=======
-	if (!dev->dma_parms) {
-		dev->dma_parms = devm_kzalloc(dev, sizeof(*dev->dma_parms),
-					      GFP_KERNEL);
-		if (!dev->dma_parms) {
-			ret = -ENOMEM;
-			goto err_msm_uninit;
-		}
->>>>>>> rebase
 	}
 	dma_set_max_seg_size(dev, DMA_BIT_MASK(32));
 
@@ -729,15 +693,11 @@ err_unref_drm_dev:
 /*
  * DRM operations:
  */
-<<<<<<< HEAD
 #ifdef CONFIG_QCOM_KGSL
 static void load_gpu(struct drm_device *dev)
 {
 }
 #else
-=======
-
->>>>>>> rebase
 static void load_gpu(struct drm_device *dev)
 {
 	static DEFINE_MUTEX(init_lock);
@@ -750,10 +710,7 @@ static void load_gpu(struct drm_device *dev)
 
 	mutex_unlock(&init_lock);
 }
-<<<<<<< HEAD
 #endif
-=======
->>>>>>> rebase
 
 static int context_init(struct drm_device *dev, struct drm_file *file)
 {
@@ -1296,11 +1253,7 @@ static int add_components_mdp(struct device *mdp_dev,
 
 static int compare_name_mdp(struct device *dev, void *data)
 {
-<<<<<<< HEAD
 	return (strnstr(dev_name(dev), "mdp") != NULL);
-=======
-	return (strstr(dev_name(dev), "mdp") != NULL);
->>>>>>> rebase
 }
 
 static int add_display_components(struct device *dev,
@@ -1359,7 +1312,6 @@ static const struct of_device_id msm_gpu_match[] = {
 	{ },
 };
 
-<<<<<<< HEAD
 #ifdef CONFIG_QCOM_KGSL
 static int add_gpu_components(struct device *dev,
 					      struct component_match **matchptr)
@@ -1367,8 +1319,6 @@ static int add_gpu_components(struct device *dev,
 		return 0;
 }
 #else
-=======
->>>>>>> rebase
 static int add_gpu_components(struct device *dev,
 			      struct component_match **matchptr)
 {
@@ -1385,10 +1335,7 @@ static int add_gpu_components(struct device *dev,
 
 	return 0;
 }
-<<<<<<< HEAD
 #endif
-=======
->>>>>>> rebase
 
 static int msm_drm_bind(struct device *dev)
 {
@@ -1448,20 +1395,6 @@ static int msm_pdev_remove(struct platform_device *pdev)
 	return 0;
 }
 
-<<<<<<< HEAD
-=======
-static void msm_pdev_shutdown(struct platform_device *pdev)
-{
-	struct drm_device *drm = platform_get_drvdata(pdev);
-	struct msm_drm_private *priv = drm ? drm->dev_private : NULL;
-
-	if (!priv || !priv->kms)
-		return;
-
-	drm_atomic_helper_shutdown(drm);
-}
-
->>>>>>> rebase
 static const struct of_device_id dt_match[] = {
 	{ .compatible = "qcom,mdp4", .data = (void *)KMS_MDP4 },
 	{ .compatible = "qcom,mdss", .data = (void *)KMS_MDP5 },
@@ -1473,10 +1406,6 @@ MODULE_DEVICE_TABLE(of, dt_match);
 static struct platform_driver msm_platform_driver = {
 	.probe      = msm_pdev_probe,
 	.remove     = msm_pdev_remove,
-<<<<<<< HEAD
-=======
-	.shutdown   = msm_pdev_shutdown,
->>>>>>> rebase
 	.driver     = {
 		.name   = "msm",
 		.of_match_table = dt_match,
@@ -1484,7 +1413,6 @@ static struct platform_driver msm_platform_driver = {
 	},
 };
 
-<<<<<<< HEAD
 #ifdef CONFIG_QCOM_KGSL
 void __init adreno_register(void)
 {
@@ -1495,8 +1423,6 @@ void __exit adreno_unregister(void)
 }
 #endif
 
-=======
->>>>>>> rebase
 static int __init msm_drm_register(void)
 {
 	if (!modeset)

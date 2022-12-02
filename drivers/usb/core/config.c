@@ -409,11 +409,7 @@ static int usb_parse_endpoint(struct device *ddev, int cfgno,
 	 * the USB-2 spec requires such endpoints to have wMaxPacketSize = 0
 	 * (see the end of section 5.6.3), so don't warn about them.
 	 */
-<<<<<<< HEAD
 	maxp = usb_endpoint_maxp(&endpoint->desc);
-=======
-	maxp = le16_to_cpu(endpoint->desc.wMaxPacketSize);
->>>>>>> rebase
 	if (maxp == 0 && !(usb_endpoint_xfer_isoc(d) && asnum == 0)) {
 		dev_warn(ddev, "config %d interface %d altsetting %d endpoint 0x%X has invalid wMaxPacketSize 0\n",
 		    cfgno, inum, asnum, d->bEndpointAddress);
@@ -429,15 +425,9 @@ static int usb_parse_endpoint(struct device *ddev, int cfgno,
 		maxpacket_maxes = full_speed_maxpacket_maxes;
 		break;
 	case USB_SPEED_HIGH:
-<<<<<<< HEAD
 		/* Bits 12..11 are allowed only for HS periodic endpoints */
 		if (usb_endpoint_xfer_int(d) || usb_endpoint_xfer_isoc(d)) {
 			i = maxp & (BIT(12) | BIT(11));
-=======
-		/* Multiple-transactions bits are allowed only for HS periodic endpoints */
-		if (usb_endpoint_xfer_int(d) || usb_endpoint_xfer_isoc(d)) {
-			i = maxp & USB_EP_MAXP_MULT_MASK;
->>>>>>> rebase
 			maxp &= ~i;
 		}
 		/* fallthrough */
@@ -844,19 +834,14 @@ void usb_destroy_configuration(struct usb_device *dev)
 		return;
 
 	if (dev->rawdescriptors) {
-<<<<<<< HEAD
 		for (i = 0; i < dev->descriptor.bNumConfigurations &&
 				i < USB_MAXCONFIG; i++)
-=======
-		for (i = 0; i < dev->descriptor.bNumConfigurations; i++)
->>>>>>> rebase
 			kfree(dev->rawdescriptors[i]);
 
 		kfree(dev->rawdescriptors);
 		dev->rawdescriptors = NULL;
 	}
 
-<<<<<<< HEAD
 	for (c = 0; c < dev->descriptor.bNumConfigurations &&
 			c < USB_MAXCONFIG; c++) {
 		struct usb_host_config *cf = &dev->config[c];
@@ -864,13 +849,6 @@ void usb_destroy_configuration(struct usb_device *dev)
 		kfree(cf->string);
 		for (i = 0; i < cf->desc.bNumInterfaces &&
 				i < USB_MAXINTERFACES; i++) {
-=======
-	for (c = 0; c < dev->descriptor.bNumConfigurations; c++) {
-		struct usb_host_config *cf = &dev->config[c];
-
-		kfree(cf->string);
-		for (i = 0; i < cf->desc.bNumInterfaces; i++) {
->>>>>>> rebase
 			if (cf->intf_cache[i])
 				kref_put(&cf->intf_cache[i]->ref,
 					  usb_release_interface_cache);
@@ -1111,7 +1089,6 @@ int usb_get_bos_descriptor(struct usb_device *dev)
 		case USB_PTM_CAP_TYPE:
 			dev->bos->ptm_cap =
 				(struct usb_ptm_cap_descriptor *)buffer;
-<<<<<<< HEAD
 			break;
 		case USB_CAP_TYPE_CONFIG_SUMMARY:
 			/* one such desc per function */
@@ -1121,8 +1098,6 @@ int usb_get_bos_descriptor(struct usb_device *dev)
 
 			dev->bos->num_config_summary_desc++;
 			break;
-=======
->>>>>>> rebase
 		default:
 			break;
 		}

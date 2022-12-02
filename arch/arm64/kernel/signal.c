@@ -798,10 +798,7 @@ static void setup_restart_syscall(struct pt_regs *regs)
  */
 static void handle_signal(struct ksignal *ksig, struct pt_regs *regs)
 {
-<<<<<<< HEAD
 	struct task_struct *tsk = current;
-=======
->>>>>>> rebase
 	sigset_t *oldset = sigmask_to_save();
 	int usig = ksig->sig;
 	int ret;
@@ -825,7 +822,6 @@ static void handle_signal(struct ksignal *ksig, struct pt_regs *regs)
 	 */
 	ret |= !valid_user_regs(&regs->user_regs, current);
 
-<<<<<<< HEAD
 	/*
 	 * Fast forward the stepping logic so we step into the signal
 	 * handler.
@@ -834,10 +830,6 @@ static void handle_signal(struct ksignal *ksig, struct pt_regs *regs)
 		user_fastforward_single_step(tsk);
 
 	signal_setup_done(ret, ksig, 0);
-=======
-	/* Step into the signal handler if we are stepping */
-	signal_setup_done(ret, ksig, test_thread_flag(TIF_SINGLESTEP));
->>>>>>> rebase
 }
 
 /*

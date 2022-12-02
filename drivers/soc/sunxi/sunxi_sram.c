@@ -78,13 +78,8 @@ static struct sunxi_sram_desc sun4i_a10_sram_d = {
 
 static struct sunxi_sram_desc sun50i_a64_sram_c = {
 	.data	= SUNXI_SRAM_DATA("C", 0x4, 24, 1,
-<<<<<<< HEAD
 				  SUNXI_SRAM_MAP(0, 1, "cpu"),
 				  SUNXI_SRAM_MAP(1, 0, "de2")),
-=======
-				  SUNXI_SRAM_MAP(1, 0, "cpu"),
-				  SUNXI_SRAM_MAP(0, 1, "de2")),
->>>>>>> rebase
 };
 
 static const struct of_device_id sunxi_sram_dt_ids[] = {
@@ -269,10 +264,6 @@ int sunxi_sram_claim(struct device *dev)
 	writel(val | ((device << sram_data->offset) & mask),
 	       base + sram_data->reg);
 
-<<<<<<< HEAD
-=======
-	sram_desc->claimed = true;
->>>>>>> rebase
 	spin_unlock(&sram_lock);
 
 	return 0;
@@ -333,21 +324,12 @@ static struct regmap_config sunxi_sram_emac_clock_regmap = {
 	.writeable_reg	= sunxi_sram_regmap_accessible_reg,
 };
 
-<<<<<<< HEAD
 static int sunxi_sram_probe(struct platform_device *pdev)
 {
 	struct resource *res;
 	struct dentry *d;
 	struct regmap *emac_clock;
 	const struct sunxi_sramc_variant *variant;
-=======
-static int __init sunxi_sram_probe(struct platform_device *pdev)
-{
-	struct resource *res;
-	struct regmap *emac_clock;
-	const struct sunxi_sramc_variant *variant;
-	struct device *dev = &pdev->dev;
->>>>>>> rebase
 
 	sram_dev = &pdev->dev;
 
@@ -360,7 +342,6 @@ static int __init sunxi_sram_probe(struct platform_device *pdev)
 	if (IS_ERR(base))
 		return PTR_ERR(base);
 
-<<<<<<< HEAD
 	of_platform_populate(pdev->dev.of_node, NULL, NULL, &pdev->dev);
 
 	d = debugfs_create_file("sram", S_IRUGO, NULL, NULL,
@@ -368,8 +349,6 @@ static int __init sunxi_sram_probe(struct platform_device *pdev)
 	if (!d)
 		return -ENOMEM;
 
-=======
->>>>>>> rebase
 	if (variant->has_emac_clock) {
 		emac_clock = devm_regmap_init_mmio(&pdev->dev, base,
 						   &sunxi_sram_emac_clock_regmap);
@@ -378,13 +357,6 @@ static int __init sunxi_sram_probe(struct platform_device *pdev)
 			return PTR_ERR(emac_clock);
 	}
 
-<<<<<<< HEAD
-=======
-	of_platform_populate(dev->of_node, NULL, NULL, dev);
-
-	debugfs_create_file("sram", 0444, NULL, NULL, &sunxi_sram_fops);
-
->>>>>>> rebase
 	return 0;
 }
 
@@ -426,14 +398,9 @@ static struct platform_driver sunxi_sram_driver = {
 		.name		= "sunxi-sram",
 		.of_match_table	= sunxi_sram_dt_match,
 	},
-<<<<<<< HEAD
 	.probe	= sunxi_sram_probe,
 };
 module_platform_driver(sunxi_sram_driver);
-=======
-};
-builtin_platform_driver_probe(sunxi_sram_driver, sunxi_sram_probe);
->>>>>>> rebase
 
 MODULE_AUTHOR("Maxime Ripard <maxime.ripard@free-electrons.com>");
 MODULE_DESCRIPTION("Allwinner sunXi SRAM Controller Driver");

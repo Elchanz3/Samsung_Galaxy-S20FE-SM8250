@@ -230,11 +230,8 @@ static int giu_get_irq(unsigned int irq)
 	printk(KERN_ERR "spurious GIU interrupt: %04x(%04x),%04x(%04x)\n",
 	       maskl, pendl, maskh, pendh);
 
-<<<<<<< HEAD
 	atomic_inc(&irq_err_count);
 
-=======
->>>>>>> rebase
 	return -EINVAL;
 }
 

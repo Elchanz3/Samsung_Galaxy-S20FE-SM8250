@@ -33,15 +33,11 @@ enum {
 /*
  * dns_key.c
  */
-<<<<<<< HEAD
 #ifdef CONFIG_KDP_CRED
 extern struct cred *dns_resolver_cache;
 #else
 extern const struct cred *dns_resolver_cache;
 #endif
-=======
-extern const struct cred *dns_resolver_cache;
->>>>>>> rebase
 
 /*
  * debug tracing

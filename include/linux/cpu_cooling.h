@@ -30,15 +30,12 @@
 
 struct cpufreq_policy;
 
-<<<<<<< HEAD
 typedef int (*plat_mitig_t)(int cpu, u32 clip_freq);
 
 struct cpu_cooling_ops {
 	plat_mitig_t ceil_limit, floor_limit;
 };
 
-=======
->>>>>>> rebase
 #ifdef CONFIG_CPU_THERMAL
 /**
  * cpufreq_cooling_register - function to create cpufreq cooling device.
@@ -48,7 +45,6 @@ struct thermal_cooling_device *
 cpufreq_cooling_register(struct cpufreq_policy *policy);
 
 /**
-<<<<<<< HEAD
  * cpufreq_platform_cooling_register - create cpufreq cooling device with
  * additional platform specific mitigation function.
  *
@@ -61,8 +57,6 @@ cpufreq_platform_cooling_register(struct cpufreq_policy *policy,
 					struct cpu_cooling_ops *ops);
 
 /**
-=======
->>>>>>> rebase
  * cpufreq_cooling_unregister - function to remove cpufreq cooling device.
  * @cdev: thermal cooling device pointer.
  */
@@ -95,7 +89,6 @@ of_cpufreq_cooling_register(struct cpufreq_policy *policy)
 {
 	return NULL;
 }
-<<<<<<< HEAD
 
 static inline struct thermal_cooling_device *
 cpufreq_platform_cooling_register(struct cpufreq_policy *policy,
@@ -125,8 +118,4 @@ static inline const struct cpumask *cpu_cooling_get_max_level_cpumask(void)
 	return cpu_none_mask;
 }
 #endif /* CONFIG_QTI_CPU_ISOLATE_COOLING_DEVICE */
-=======
-#endif /* defined(CONFIG_THERMAL_OF) && defined(CONFIG_CPU_THERMAL) */
-
->>>>>>> rebase
 #endif /* __CPU_COOLING_H__ */

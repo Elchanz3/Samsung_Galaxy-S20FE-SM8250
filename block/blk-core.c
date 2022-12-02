@@ -35,11 +35,8 @@
 #include <linux/blk-cgroup.h>
 #include <linux/debugfs.h>
 #include <linux/bpf.h>
-<<<<<<< HEAD
 #include <linux/psi.h>
 #include <linux/blk-crypto.h>
-=======
->>>>>>> rebase
 
 #define CREATE_TRACE_POINTS
 #include <trace/events/block.h>
@@ -297,7 +294,6 @@ void blk_dump_rq_flags(struct request *rq, char *msg)
 }
 EXPORT_SYMBOL(blk_dump_rq_flags);
 
-<<<<<<< HEAD
 #ifdef CONFIG_BLK_IO_VOLUME
 void blk_queue_reset_io_vol(struct request_queue *q)
 {
@@ -630,8 +626,6 @@ void blk_account_tw_io(struct request_queue *q, int opf, int bytes)
 }
 #endif
 
-=======
->>>>>>> rebase
 static void blk_delay_work(struct work_struct *work)
 {
 	struct request_queue *q;
@@ -890,11 +884,7 @@ EXPORT_SYMBOL(blk_put_queue);
  * If not, only ELVPRIV requests are drained.  The caller is responsible
  * for ensuring that no new requests which need to be drained are queued.
  */
-<<<<<<< HEAD
 void __blk_drain_queue(struct request_queue *q, bool drain_all)
-=======
-static void __blk_drain_queue(struct request_queue *q, bool drain_all)
->>>>>>> rebase
 	__releases(q->queue_lock)
 	__acquires(q->queue_lock)
 {
@@ -1135,12 +1125,9 @@ void blk_cleanup_queue(struct request_queue *q)
 	queue_flag_set(QUEUE_FLAG_DEAD, q);
 	spin_unlock_irq(lock);
 
-<<<<<<< HEAD
 	blk_queue_reset_io_vol(q);
 	blk_free_turbo_write(q);
 
-=======
->>>>>>> rebase
 	/*
 	 * make sure all in-progress dispatch are completed because
 	 * blk_freeze_queue() can only complete all requests, and
@@ -1386,11 +1373,6 @@ struct request_queue *blk_alloc_queue_node(gfp_t gfp_mask, int node_id,
 
 	q->backing_dev_info->ra_pages =
 			(VM_MAX_READAHEAD * 1024) / PAGE_SIZE;
-<<<<<<< HEAD
-=======
-	q->backing_dev_info->io_pages =
-			(VM_MAX_READAHEAD * 1024) / PAGE_SIZE;
->>>>>>> rebase
 	q->backing_dev_info->capabilities = BDI_CAP_CGROUP_WRITEBACK;
 	q->backing_dev_info->name = "block";
 	q->node = node_id;
@@ -1412,10 +1394,6 @@ struct request_queue *blk_alloc_queue_node(gfp_t gfp_mask, int node_id,
 	mutex_init(&q->blk_trace_mutex);
 #endif
 	mutex_init(&q->sysfs_lock);
-<<<<<<< HEAD
-=======
-	mutex_init(&q->sysfs_dir_lock);
->>>>>>> rebase
 	spin_lock_init(&q->__queue_lock);
 
 	if (!q->mq_ops)
@@ -1444,15 +1422,12 @@ struct request_queue *blk_alloc_queue_node(gfp_t gfp_mask, int node_id,
 	if (blkcg_init_queue(q))
 		goto fail_ref;
 
-<<<<<<< HEAD
 	blk_queue_reset_io_vol(q);
 
 #ifdef CONFIG_BLK_TURBO_WRITE
 	q->tw = NULL;
 #endif
 
-=======
->>>>>>> rebase
 	return q;
 
 fail_ref:
@@ -2034,11 +2009,8 @@ void blk_requeue_request(struct request_queue *q, struct request *rq)
 
 	BUG_ON(blk_queued_rq(rq));
 
-<<<<<<< HEAD
 	blk_account_tw_io(q, rq->cmd_flags, (-1 * blk_rq_bytes(rq)));
 
-=======
->>>>>>> rebase
 	elv_requeue_request(q, rq);
 }
 EXPORT_SYMBOL(blk_requeue_request);
@@ -2110,12 +2082,8 @@ EXPORT_SYMBOL_GPL(part_round_stats);
 #ifdef CONFIG_PM
 static void blk_pm_put_request(struct request *rq)
 {
-<<<<<<< HEAD
 	if (rq->q->dev && !(rq->rq_flags & RQF_PM) &&
 			(!--rq->q->nr_pending || rq->q->nr_pending == 1))
-=======
-	if (rq->q->dev && !(rq->rq_flags & RQF_PM) && !--rq->q->nr_pending)
->>>>>>> rebase
 		pm_runtime_mark_last_busy(rq->q->dev);
 }
 #else
@@ -2409,22 +2377,16 @@ static blk_qc_t blk_queue_bio(struct request_queue *q, struct bio *bio)
 
 	spin_lock_irq(q->queue_lock);
 
-<<<<<<< HEAD
 	blk_update_tw_state(q,
 			blk_io_vol_rqs(q, REQ_OP_WRITE),
 			blk_io_vol_bytes(q, REQ_OP_WRITE));
 
-=======
->>>>>>> rebase
 	switch (elv_merge(q, &req, bio)) {
 	case ELEVATOR_BACK_MERGE:
 		if (!bio_attempt_back_merge(q, req, bio))
 			break;
 		elv_bio_merged(q, req, bio);
-<<<<<<< HEAD
 		blk_queue_io_vol_merge(q, bio->bi_opf, 0, bio->bi_iter.bi_size);
-=======
->>>>>>> rebase
 		free = attempt_back_merge(q, req);
 		if (free)
 			__blk_put_request(q, free);
@@ -2435,10 +2397,7 @@ static blk_qc_t blk_queue_bio(struct request_queue *q, struct bio *bio)
 		if (!bio_attempt_front_merge(q, req, bio))
 			break;
 		elv_bio_merged(q, req, bio);
-<<<<<<< HEAD
 		blk_queue_io_vol_merge(q, bio->bi_opf, 0, bio->bi_iter.bi_size);
-=======
->>>>>>> rebase
 		free = attempt_front_merge(q, req);
 		if (free)
 			__blk_put_request(q, free);
@@ -2854,13 +2813,9 @@ blk_qc_t generic_make_request(struct bio *bio)
 			/* Create a fresh bio_list for all subordinate requests */
 			bio_list_on_stack[1] = bio_list_on_stack[0];
 			bio_list_init(&bio_list_on_stack[0]);
-<<<<<<< HEAD
 
 			if (!blk_crypto_submit_bio(&bio))
 				ret = q->make_request_fn(q, bio);
-=======
-			ret = q->make_request_fn(q, bio);
->>>>>>> rebase
 
 			/* sort new bios into those for a lower level
 			 * and those for the same level
@@ -2909,11 +2864,7 @@ blk_qc_t direct_make_request(struct bio *bio)
 {
 	struct request_queue *q = bio->bi_disk->queue;
 	bool nowait = bio->bi_opf & REQ_NOWAIT;
-<<<<<<< HEAD
 	blk_qc_t ret = BLK_QC_T_NONE;
-=======
-	blk_qc_t ret;
->>>>>>> rebase
 
 	if (!generic_make_request_checks(bio))
 		return BLK_QC_T_NONE;
@@ -2927,12 +2878,8 @@ blk_qc_t direct_make_request(struct bio *bio)
 		return BLK_QC_T_NONE;
 	}
 
-<<<<<<< HEAD
 	if (!blk_crypto_submit_bio(&bio))
 		ret = q->make_request_fn(q, bio);
-=======
-	ret = q->make_request_fn(q, bio);
->>>>>>> rebase
 	blk_queue_exit(q);
 	return ret;
 }
@@ -2949,13 +2896,10 @@ EXPORT_SYMBOL_GPL(direct_make_request);
  */
 blk_qc_t submit_bio(struct bio *bio)
 {
-<<<<<<< HEAD
 	bool workingset_read = false;
 	unsigned long pflags;
 	blk_qc_t ret;
 
-=======
->>>>>>> rebase
 	/*
 	 * If it's a regular read/write or a barrier with data attached,
 	 * go through the normal accounting stuff before submission.
@@ -2971,11 +2915,8 @@ blk_qc_t submit_bio(struct bio *bio)
 		if (op_is_write(bio_op(bio))) {
 			count_vm_events(PGPGOUT, count);
 		} else {
-<<<<<<< HEAD
 			if (bio_flagged(bio, BIO_WORKINGSET))
 				workingset_read = true;
-=======
->>>>>>> rebase
 			task_io_account_read(bio->bi_iter.bi_size);
 			count_vm_events(PGPGIN, count);
 		}
@@ -2990,7 +2931,6 @@ blk_qc_t submit_bio(struct bio *bio)
 		}
 	}
 
-<<<<<<< HEAD
 	/*
 	 * If we're reading data that is part of the userspace
 	 * workingset, count submission time as memory stall. When the
@@ -3006,9 +2946,6 @@ blk_qc_t submit_bio(struct bio *bio)
 		psi_memstall_leave(&pflags);
 
 	return ret;
-=======
-	return generic_make_request(bio);
->>>>>>> rebase
 }
 EXPORT_SYMBOL(submit_bio);
 
@@ -3156,7 +3093,6 @@ unsigned int blk_rq_err_bytes(const struct request *rq)
 }
 EXPORT_SYMBOL_GPL(blk_rq_err_bytes);
 
-<<<<<<< HEAD
 static int rw_size_group(unsigned int bytes)
 {
 	int sg;
@@ -3205,23 +3141,17 @@ static int discard_size_group(unsigned int bytes)
 	return sg;
 }
 
-=======
->>>>>>> rebase
 void blk_account_io_completion(struct request *req, unsigned int bytes)
 {
 	if (blk_do_io_stat(req)) {
 		const int sgrp = op_stat_group(req_op(req));
 		struct hd_struct *part;
 		int cpu;
-<<<<<<< HEAD
 		int sg;
-=======
->>>>>>> rebase
 
 		cpu = part_stat_lock();
 		part = req->part;
 		part_stat_add(cpu, part, sectors[sgrp], bytes >> 9);
-<<<<<<< HEAD
 
 		if (sgrp == STAT_DISCARD)
 			sg = discard_size_group(bytes);
@@ -3229,8 +3159,6 @@ void blk_account_io_completion(struct request *req, unsigned int bytes)
 			sg = rw_size_group(bytes);
 		part_stat_inc(cpu, part, size_cnt[sgrp][sg]);
 
-=======
->>>>>>> rebase
 		part_stat_unlock();
 	}
 }
@@ -3254,21 +3182,15 @@ void blk_account_io_done(struct request *req, u64 now)
 		part_stat_add(cpu, part, nsecs[sgrp], now - req->start_time_ns);
 		part_round_stats(req->q, cpu, part);
 		part_dec_in_flight(req->q, part, rq_data_dir(req));
-<<<<<<< HEAD
 		if (!(req->rq_flags & RQF_STARTED))
 			part_stat_inc(cpu, part, flush_ios);
-=======
->>>>>>> rebase
 
 		hd_struct_put(part);
 		part_stat_unlock();
 	}
-<<<<<<< HEAD
 
 	if (req->rq_flags & RQF_FLUSH_SEQ)
 		req->q->flush_ios++;
-=======
->>>>>>> rebase
 }
 
 #ifdef CONFIG_PM
@@ -3343,7 +3265,6 @@ static struct request *elv_next_request(struct request_queue *q)
 			if (blk_pm_allow_request(rq))
 				return rq;
 
-<<<<<<< HEAD
 			if (rq->rq_flags & RQF_SOFTBARRIER) {
 #ifdef CONFIG_PM
 	                        if(rq->q && (rq->q->rpm_status == RPM_SUSPENDING) && !(rq->rq_flags & RQF_PM))
@@ -3351,10 +3272,6 @@ static struct request *elv_next_request(struct request_queue *q)
 #endif
                                 break;
                         }
-=======
-			if (rq->rq_flags & RQF_SOFTBARRIER)
-				break;
->>>>>>> rebase
 		}
 
 		/*
@@ -3420,10 +3337,7 @@ struct request *blk_peek_request(struct request_queue *q)
 			 * not be passed by new incoming requests
 			 */
 			rq->rq_flags |= RQF_STARTED;
-<<<<<<< HEAD
 			blk_account_tw_io(q, rq->cmd_flags, blk_rq_bytes(rq));
-=======
->>>>>>> rebase
 			trace_block_rq_issue(q, rq);
 		}
 
@@ -3502,7 +3416,6 @@ static void blk_dequeue_request(struct request *rq)
 	 * and to it is freed is accounted as io that is in progress at
 	 * the driver side.
 	 */
-<<<<<<< HEAD
 	if (blk_account_rq(rq)) {
 		if (!queue_in_flight(q))
 			q->in_flight_stamp = ktime_get();
@@ -3510,10 +3423,6 @@ static void blk_dequeue_request(struct request *rq)
 	}
 
 	blk_queue_io_vol_del(q, rq->cmd_flags, blk_rq_bytes(rq));
-=======
-	if (blk_account_rq(rq))
-		q->in_flight[rq_is_sync(rq)]++;
->>>>>>> rebase
 }
 
 /**
@@ -4485,7 +4394,6 @@ void blk_set_runtime_active(struct request_queue *q)
 EXPORT_SYMBOL(blk_set_runtime_active);
 #endif
 
-<<<<<<< HEAD
 #if !defined(CONFIG_SAMSUNG_PRODUCT_SHIP)
 /*********************************
  * debugfs functions
@@ -4552,8 +4460,6 @@ static void __exit sio_debugfs_exit(void) { }
 #endif
 #endif
 
-=======
->>>>>>> rebase
 int __init blk_dev_init(void)
 {
 	BUILD_BUG_ON(REQ_OP_LAST >= (1 << REQ_OP_BITS));
@@ -4578,7 +4484,6 @@ int __init blk_dev_init(void)
 	blk_debugfs_root = debugfs_create_dir("block", NULL);
 #endif
 
-<<<<<<< HEAD
 	if (bio_crypt_ctx_init() < 0)
 		panic("Failed to allocate mem for bio crypt ctxs\n");
 
@@ -4588,7 +4493,5 @@ int __init blk_dev_init(void)
 	sio_debugfs_init();
 #endif
 
-=======
->>>>>>> rebase
 	return 0;
 }

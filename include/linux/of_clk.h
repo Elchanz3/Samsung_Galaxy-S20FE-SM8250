@@ -6,12 +6,6 @@
 #ifndef __LINUX_OF_CLK_H
 #define __LINUX_OF_CLK_H
 
-<<<<<<< HEAD
-=======
-struct device_node;
-struct of_device_id;
-
->>>>>>> rebase
 #if defined(CONFIG_COMMON_CLK) && defined(CONFIG_OF)
 
 unsigned int of_clk_get_parent_count(struct device_node *np);

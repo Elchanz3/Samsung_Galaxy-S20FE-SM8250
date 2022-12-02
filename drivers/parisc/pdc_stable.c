@@ -992,15 +992,8 @@ pdcs_register_pathentries(void)
 		entry->kobj.kset = paths_kset;
 		err = kobject_init_and_add(&entry->kobj, &ktype_pdcspath, NULL,
 					   "%s", entry->name);
-<<<<<<< HEAD
 		if (err)
 			return err;
-=======
-		if (err) {
-			kobject_put(&entry->kobj);
-			return err;
-		}
->>>>>>> rebase
 
 		/* kobject is now registered */
 		write_lock(&entry->rw_lock);

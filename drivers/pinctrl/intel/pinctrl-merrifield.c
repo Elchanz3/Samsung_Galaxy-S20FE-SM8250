@@ -729,13 +729,6 @@ static int mrfld_config_set_pin(struct mrfld_pinctrl *mp, unsigned int pin,
 		mask |= BUFCFG_Px_EN_MASK | BUFCFG_PUPD_VAL_MASK;
 		bits |= BUFCFG_PU_EN;
 
-<<<<<<< HEAD
-=======
-		/* Set default strength value in case none is given */
-		if (arg == 1)
-			arg = 20000;
-
->>>>>>> rebase
 		switch (arg) {
 		case 50000:
 			bits |= BUFCFG_PUPD_VAL_50K << BUFCFG_PUPD_VAL_SHIFT;
@@ -756,13 +749,6 @@ static int mrfld_config_set_pin(struct mrfld_pinctrl *mp, unsigned int pin,
 		mask |= BUFCFG_Px_EN_MASK | BUFCFG_PUPD_VAL_MASK;
 		bits |= BUFCFG_PD_EN;
 
-<<<<<<< HEAD
-=======
-		/* Set default strength value in case none is given */
-		if (arg == 1)
-			arg = 20000;
-
->>>>>>> rebase
 		switch (arg) {
 		case 50000:
 			bits |= BUFCFG_PUPD_VAL_50K << BUFCFG_PUPD_VAL_SHIFT;

@@ -26,13 +26,10 @@
 #include "fsmap.h"
 #include <trace/events/ext4.h>
 
-<<<<<<< HEAD
 #ifdef CONFIG_FSCRYPT_SDP
 #include <linux/fscrypto_sdp_ioctl.h>
 #endif
 
-=======
->>>>>>> rebase
 /**
  * Swap memory between @a and @b for @len bytes.
  *
@@ -264,11 +261,7 @@ journal_err_out:
 	return err;
 }
 
-<<<<<<< HEAD
 #ifdef CONFIG_FS_ENCRYPTION
-=======
-#ifdef CONFIG_EXT4_FS_ENCRYPTION
->>>>>>> rebase
 static int uuid_is_zero(__u8 u[16])
 {
 	int	i;
@@ -312,10 +305,7 @@ static int ext4_ioctl_setflags(struct inode *inode,
 	struct ext4_iloc iloc;
 	unsigned int oldflags, mask, i;
 	unsigned int jflag;
-<<<<<<< HEAD
 	struct super_block *sb = inode->i_sb;
-=======
->>>>>>> rebase
 
 	/* Is it quota file? Do not allow user to mess with it */
 	if (ext4_is_quota_file(inode))
@@ -360,7 +350,6 @@ static int ext4_ioctl_setflags(struct inode *inode,
 			goto flags_out;
 	}
 
-<<<<<<< HEAD
 	if ((flags ^ oldflags) & EXT4_CASEFOLD_FL) {
 		if (!ext4_has_feature_casefold(sb)) {
 			err = -EOPNOTSUPP;
@@ -378,8 +367,6 @@ static int ext4_ioctl_setflags(struct inode *inode,
 		}
 	}
 
-=======
->>>>>>> rebase
 	/*
 	 * Wait for all pending directio and then flush all the dirty pages
 	 * for this file.  The flush marks all the pages readonly, so any
@@ -1087,11 +1074,8 @@ resizefs_out:
 		    sizeof(range)))
 			return -EFAULT;
 
-<<<<<<< HEAD
 		range.minlen = max((unsigned int)range.minlen,
 				   q->limits.discard_granularity);
-=======
->>>>>>> rebase
 		ret = ext4_trim_fs(sb, &range);
 		if (ret < 0)
 			return ret;
@@ -1111,11 +1095,7 @@ resizefs_out:
 		return fscrypt_ioctl_set_policy(filp, (const void __user *)arg);
 
 	case EXT4_IOC_GET_ENCRYPTION_PWSALT: {
-<<<<<<< HEAD
 #ifdef CONFIG_FS_ENCRYPTION
-=======
-#ifdef CONFIG_EXT4_FS_ENCRYPTION
->>>>>>> rebase
 		int err, err2;
 		struct ext4_sb_info *sbi = EXT4_SB(sb);
 		handle_t *handle;
@@ -1134,14 +1114,7 @@ resizefs_out:
 			err = ext4_journal_get_write_access(handle, sbi->s_sbh);
 			if (err)
 				goto pwsalt_err_journal;
-<<<<<<< HEAD
 			generate_random_uuid(sbi->s_es->s_encrypt_pw_salt);
-=======
-			lock_buffer(sbi->s_sbh);
-			generate_random_uuid(sbi->s_es->s_encrypt_pw_salt);
-			ext4_superblock_csum_set(sb);
-			unlock_buffer(sbi->s_sbh);
->>>>>>> rebase
 			err = ext4_handle_dirty_metadata(handle, NULL,
 							 sbi->s_sbh);
 		pwsalt_err_journal:
@@ -1162,7 +1135,6 @@ resizefs_out:
 #endif
 	}
 	case EXT4_IOC_GET_ENCRYPTION_POLICY:
-<<<<<<< HEAD
 		if (!ext4_has_feature_encrypt(sb))
 			return -EOPNOTSUPP;
 		return fscrypt_ioctl_get_policy(filp, (void __user *)arg);
@@ -1197,10 +1169,6 @@ resizefs_out:
 			return -EOPNOTSUPP;
 		return fscrypt_ioctl_get_nonce(filp, (void __user *)arg);
 
-=======
-		return fscrypt_ioctl_get_policy(filp, (void __user *)arg);
-
->>>>>>> rebase
 	case EXT4_IOC_FSGETXATTR:
 	{
 		struct fsxattr fa;
@@ -1262,7 +1230,6 @@ out:
 	}
 	case EXT4_IOC_SHUTDOWN:
 		return ext4_shutdown(sb, arg);
-<<<<<<< HEAD
 
 	case FS_IOC_ENABLE_VERITY:
 		if (!ext4_has_feature_verity(sb))
@@ -1290,8 +1257,6 @@ out:
 		return fscrypt_sdp_ioctl(filp, cmd, arg);
 #endif
 
-=======
->>>>>>> rebase
 	default:
 		return -ENOTTY;
 	}
@@ -1352,7 +1317,6 @@ long ext4_compat_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
 	case EXT4_IOC_SET_ENCRYPTION_POLICY:
 	case EXT4_IOC_GET_ENCRYPTION_PWSALT:
 	case EXT4_IOC_GET_ENCRYPTION_POLICY:
-<<<<<<< HEAD
 	case FS_IOC_GET_ENCRYPTION_POLICY_EX:
 	case FS_IOC_ADD_ENCRYPTION_KEY:
 	case FS_IOC_REMOVE_ENCRYPTION_KEY:
@@ -1374,10 +1338,6 @@ long ext4_compat_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
 	case FS_IOC_REMOVE_CHAMBER:
 	case FS_IOC_DUMP_FILE_KEY:
 #endif
-=======
-	case EXT4_IOC_SHUTDOWN:
-	case FS_IOC_GETFSMAP:
->>>>>>> rebase
 		break;
 	default:
 		return -ENOIOCTLCMD;

@@ -464,11 +464,7 @@ static int xvip_graph_dma_init(struct xvip_composite_device *xdev)
 {
 	struct device_node *ports;
 	struct device_node *port;
-<<<<<<< HEAD
 	int ret;
-=======
-	int ret = 0;
->>>>>>> rebase
 
 	ports = of_get_child_by_name(xdev->dev->of_node, "ports");
 	if (ports == NULL) {
@@ -478,7 +474,6 @@ static int xvip_graph_dma_init(struct xvip_composite_device *xdev)
 
 	for_each_child_of_node(ports, port) {
 		ret = xvip_graph_dma_init_one(xdev, port);
-<<<<<<< HEAD
 		if (ret < 0) {
 			of_node_put(port);
 			return ret;
@@ -486,16 +481,6 @@ static int xvip_graph_dma_init(struct xvip_composite_device *xdev)
 	}
 
 	return 0;
-=======
-		if (ret) {
-			of_node_put(port);
-			break;
-		}
-	}
-
-	of_node_put(ports);
-	return ret;
->>>>>>> rebase
 }
 
 static void xvip_graph_cleanup(struct xvip_composite_device *xdev)

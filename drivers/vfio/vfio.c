@@ -1808,10 +1808,6 @@ struct vfio_info_cap_header *vfio_info_cap_add(struct vfio_info_cap *caps,
 	buf = krealloc(caps->buf, caps->size + size, GFP_KERNEL);
 	if (!buf) {
 		kfree(caps->buf);
-<<<<<<< HEAD
-=======
-		caps->buf = NULL;
->>>>>>> rebase
 		caps->size = 0;
 		return ERR_PTR(-ENOMEM);
 	}

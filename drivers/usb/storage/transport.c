@@ -47,10 +47,7 @@
 
 #include <linux/blkdev.h>
 #include "../../scsi/sd.h"
-<<<<<<< HEAD
 #include "../core/usb.h"
-=======
->>>>>>> rebase
 
 
 /***********************************************************************
@@ -282,12 +279,9 @@ static int interpret_urb_result(struct us_data *us, unsigned int pipe,
 		 */
 		if (usb_pipecontrol(pipe)) {
 			usb_stor_dbg(us, "-- stall on control pipe\n");
-<<<<<<< HEAD
 #ifdef CONFIG_USB_DEBUG_DETAILED_LOG
 			printk(KERN_ERR "usb storage -- stall on control pipe\n");
 #endif
-=======
->>>>>>> rebase
 			return USB_STOR_XFER_STALLED;
 		}
 
@@ -301,56 +295,41 @@ static int interpret_urb_result(struct us_data *us, unsigned int pipe,
 	/* babble - the device tried to send more than we wanted to read */
 	case -EOVERFLOW:
 		usb_stor_dbg(us, "-- babble\n");
-<<<<<<< HEAD
 #ifdef CONFIG_USB_DEBUG_DETAILED_LOG
 		printk(KERN_ERR "usb storage -- babble\n");
 #endif
-=======
->>>>>>> rebase
 		return USB_STOR_XFER_LONG;
 
 	/* the transfer was cancelled by abort, disconnect, or timeout */
 	case -ECONNRESET:
 		usb_stor_dbg(us, "-- transfer cancelled\n");
-<<<<<<< HEAD
 #ifdef CONFIG_USB_DEBUG_DETAILED_LOG
 		printk(KERN_ERR "usb storage -- transfer cancelled\n");
 #endif
-=======
->>>>>>> rebase
 		return USB_STOR_XFER_ERROR;
 
 	/* short scatter-gather read transfer */
 	case -EREMOTEIO:
 		usb_stor_dbg(us, "-- short read transfer\n");
-<<<<<<< HEAD
 #ifdef CONFIG_USB_DEBUG_DETAILED_LOG
 		printk(KERN_ERR "usb storage -- short read transfer\n");
 #endif
-=======
->>>>>>> rebase
 		return USB_STOR_XFER_SHORT;
 
 	/* abort or disconnect in progress */
 	case -EIO:
 		usb_stor_dbg(us, "-- abort or disconnect in progress\n");
-<<<<<<< HEAD
 #ifdef CONFIG_USB_DEBUG_DETAILED_LOG
 		printk(KERN_ERR "usb storage -- abort or disconnect in progress\n");
 #endif
-=======
->>>>>>> rebase
 		return USB_STOR_XFER_ERROR;
 
 	/* the catch-all error case */
 	default:
 		usb_stor_dbg(us, "-- unknown error\n");
-<<<<<<< HEAD
 #ifdef CONFIG_USB_DEBUG_DETAILED_LOG
 		printk(KERN_ERR "usb storage -- unknown error %d\n", result);
 #endif
-=======
->>>>>>> rebase
 		return USB_STOR_XFER_ERROR;
 	}
 }
@@ -651,12 +630,9 @@ void usb_stor_invoke_transport(struct scsi_cmnd *srb, struct us_data *us)
 	 */
 	if (test_bit(US_FLIDX_TIMED_OUT, &us->dflags)) {
 		usb_stor_dbg(us, "-- command was aborted\n");
-<<<<<<< HEAD
 #ifdef CONFIG_USB_DEBUG_DETAILED_LOG
 		printk(KERN_ERR "usb storage -- command was aborted\n");
 #endif
-=======
->>>>>>> rebase
 		srb->result = DID_ABORT << 16;
 		goto Handle_Errors;
 	}
@@ -664,12 +640,9 @@ void usb_stor_invoke_transport(struct scsi_cmnd *srb, struct us_data *us)
 	/* if there is a transport error, reset and don't auto-sense */
 	if (result == USB_STOR_TRANSPORT_ERROR) {
 		usb_stor_dbg(us, "-- transport indicates error, resetting\n");
-<<<<<<< HEAD
 #ifdef CONFIG_USB_DEBUG_DETAILED_LOG
 		printk(KERN_ERR "usb storage -- transport indicates error, resetting\n");
 #endif
-=======
->>>>>>> rebase
 		srb->result = DID_ERROR << 16;
 		goto Handle_Errors;
 	}
@@ -703,16 +676,6 @@ void usb_stor_invoke_transport(struct scsi_cmnd *srb, struct us_data *us)
 		need_auto_sense = 1;
 	}
 
-<<<<<<< HEAD
-=======
-	/* Some devices (Kindle) require another command after SYNC CACHE */
-	if ((us->fflags & US_FL_SENSE_AFTER_SYNC) &&
-			srb->cmnd[0] == SYNCHRONIZE_CACHE) {
-		usb_stor_dbg(us, "-- sense after SYNC CACHE\n");
-		need_auto_sense = 1;
-	}
-
->>>>>>> rebase
 	/*
 	 * If we have a failure, we're going to do a REQUEST_SENSE 
 	 * automatically.  Note that we differentiate between a command
@@ -784,12 +747,9 @@ Retry_Sense:
 
 		if (test_bit(US_FLIDX_TIMED_OUT, &us->dflags)) {
 			usb_stor_dbg(us, "-- auto-sense aborted\n");
-<<<<<<< HEAD
 #ifdef CONFIG_USB_DEBUG_DETAILED_LOG
 			printk(KERN_ERR "usb storage -- auto-sense aborted\n");
 #endif
-=======
->>>>>>> rebase
 			srb->result = DID_ABORT << 16;
 
 			/* If SANE_SENSE caused this problem, disable it */
@@ -818,12 +778,9 @@ Retry_Sense:
 		/* Other failures */
 		if (temp_result != USB_STOR_TRANSPORT_GOOD) {
 			usb_stor_dbg(us, "-- auto-sense failure\n");
-<<<<<<< HEAD
 #ifdef CONFIG_USB_DEBUG_DETAILED_LOG
 			printk(KERN_ERR "usb storage -- auto-sense failure\n");
 #endif
-=======
->>>>>>> rebase
 
 			/*
 			 * we skip the reset if this happens to be a
@@ -968,39 +925,29 @@ Retry_Sense:
 	 * Set the RESETTING bit, and clear the ABORTING bit so that
 	 * the reset may proceed.
 	 */
-<<<<<<< HEAD
 #ifdef CONFIG_USB_DEBUG_DETAILED_LOG
 	printk(KERN_ERR USB_STORAGE "%s scsi_lock 1\n", __func__);
 #endif
-=======
->>>>>>> rebase
 	scsi_lock(us_to_host(us));
 	set_bit(US_FLIDX_RESETTING, &us->dflags);
 	clear_bit(US_FLIDX_ABORTING, &us->dflags);
 	scsi_unlock(us_to_host(us));
-<<<<<<< HEAD
 #ifdef CONFIG_USB_DEBUG_DETAILED_LOG
 	printk(KERN_ERR USB_STORAGE "%s scsi_unlock 1\n", __func__);
 #endif
-=======
->>>>>>> rebase
 
 	/*
 	 * We must release the device lock because the pre_reset routine
 	 * will want to acquire it.
 	 */
 	mutex_unlock(&us->dev_mutex);
-<<<<<<< HEAD
 #ifdef CONFIG_USB_STORAGE_DETECT
 	msleep(200);
 #endif
-=======
->>>>>>> rebase
 	result = usb_stor_port_reset(us);
 	mutex_lock(&us->dev_mutex);
 
 	if (result < 0) {
-<<<<<<< HEAD
 #ifdef CONFIG_USB_DEBUG_DETAILED_LOG
 		printk(KERN_ERR USB_STORAGE "%s scsi_lock 2\n", __func__);
 #endif
@@ -1010,11 +957,6 @@ Retry_Sense:
 #ifdef CONFIG_USB_DEBUG_DETAILED_LOG
 		printk(KERN_ERR USB_STORAGE "%s scsi_unlock 2\n", __func__);
 #endif
-=======
-		scsi_lock(us_to_host(us));
-		usb_stor_report_device_reset(us);
-		scsi_unlock(us_to_host(us));
->>>>>>> rebase
 		us->transport_reset(us);
 	}
 	clear_bit(US_FLIDX_RESETTING, &us->dflags);
@@ -1533,7 +1475,6 @@ int usb_stor_port_reset(struct us_data *us)
 			result = -EIO;
 			usb_stor_dbg(us, "No reset during disconnect\n");
 		} else {
-<<<<<<< HEAD
 			if (test_bit(US_FLIDX_TIMED_OUT, &us->dflags)) {
 #ifdef CONFIG_USB_DEBUG_DETAILED_LOG
 				printk(KERN_ERR USB_STORAGE "%s remove device\n",
@@ -1545,11 +1486,6 @@ int usb_stor_port_reset(struct us_data *us)
 				usb_stor_dbg(us, "usb_reset_device returns %d\n",
 					     result);
 			}
-=======
-			result = usb_reset_device(us->pusb_dev);
-			usb_stor_dbg(us, "usb_reset_device returns %d\n",
-				     result);
->>>>>>> rebase
 		}
 		usb_unlock_device(us->pusb_dev);
 	}

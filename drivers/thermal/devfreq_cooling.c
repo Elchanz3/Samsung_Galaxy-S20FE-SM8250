@@ -59,10 +59,7 @@ struct devfreq_cooling_device {
 	struct thermal_cooling_device *cdev;
 	struct devfreq *devfreq;
 	unsigned long cooling_state;
-<<<<<<< HEAD
 	unsigned long cooling_min_state;
-=======
->>>>>>> rebase
 	u32 *power_table;
 	u32 *freq_table;
 	size_t freq_table_size;
@@ -74,23 +71,15 @@ struct devfreq_cooling_device {
 /**
  * partition_enable_opps() - disable all opps above a given state
  * @dfc:	Pointer to devfreq we are operating on
-<<<<<<< HEAD
  * @cdev_max_state: Max cooling device state we're setting
  * @cdev_min_state: Min cooling device state we're setting
-=======
- * @cdev_state:	cooling device state we're setting
->>>>>>> rebase
  *
  * Go through the OPPs of the device, enabling all OPPs until
  * @cdev_state and disabling those frequencies above it.
  */
 static int partition_enable_opps(struct devfreq_cooling_device *dfc,
-<<<<<<< HEAD
 				 unsigned long cdev_max_state,
 				 unsigned long cdev_min_state)
-=======
-				 unsigned long cdev_state)
->>>>>>> rebase
 {
 	int i;
 	struct device *dev = dfc->devfreq->dev.parent;
@@ -99,12 +88,8 @@ static int partition_enable_opps(struct devfreq_cooling_device *dfc,
 		struct dev_pm_opp *opp;
 		int ret = 0;
 		unsigned int freq = dfc->freq_table[i];
-<<<<<<< HEAD
 		bool want_enable = (i >= cdev_max_state) &&
 				      (i <= cdev_min_state);
-=======
-		bool want_enable = i >= cdev_state ? true : false;
->>>>>>> rebase
 
 		opp = dev_pm_opp_find_freq_exact(dev, freq, !want_enable);
 
@@ -137,7 +122,6 @@ static int devfreq_cooling_get_max_state(struct thermal_cooling_device *cdev,
 	return 0;
 }
 
-<<<<<<< HEAD
 static int devfreq_cooling_get_min_state(struct thermal_cooling_device *cdev,
 					 unsigned long *state)
 {
@@ -173,8 +157,6 @@ static int devfreq_cooling_set_min_state(struct thermal_cooling_device *cdev,
 	return 0;
 }
 
-=======
->>>>>>> rebase
 static int devfreq_cooling_get_cur_state(struct thermal_cooling_device *cdev,
 					 unsigned long *state)
 {
@@ -201,11 +183,7 @@ static int devfreq_cooling_set_cur_state(struct thermal_cooling_device *cdev,
 	if (state >= dfc->freq_table_size)
 		return -EINVAL;
 
-<<<<<<< HEAD
 	ret = partition_enable_opps(dfc, state, dfc->cooling_min_state);
-=======
-	ret = partition_enable_opps(dfc, state);
->>>>>>> rebase
 	if (ret)
 		return ret;
 
@@ -457,11 +435,8 @@ static struct thermal_cooling_device_ops devfreq_cooling_ops = {
 	.get_max_state = devfreq_cooling_get_max_state,
 	.get_cur_state = devfreq_cooling_get_cur_state,
 	.set_cur_state = devfreq_cooling_set_cur_state,
-<<<<<<< HEAD
 	.get_min_state = devfreq_cooling_get_min_state,
 	.set_min_state = devfreq_cooling_set_min_state,
-=======
->>>>>>> rebase
 };
 
 /**
@@ -600,10 +575,7 @@ of_devfreq_cooling_register_power(struct device_node *np, struct devfreq *df,
 		goto free_tables;
 	dfc->id = err;
 
-<<<<<<< HEAD
 	dfc->cooling_min_state = dfc->freq_table_size - 1;
-=======
->>>>>>> rebase
 	snprintf(dev_name, sizeof(dev_name), "thermal-devfreq-%d", dfc->id);
 
 	cdev = thermal_of_cooling_device_register(np, dev_name, dfc,

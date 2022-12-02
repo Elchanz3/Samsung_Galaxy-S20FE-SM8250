@@ -101,19 +101,9 @@ platform_init(struct nvkm_bios *bios, const char *name)
 	else
 		return ERR_PTR(-ENODEV);
 
-<<<<<<< HEAD
 	if ((priv = kmalloc(sizeof(*priv), GFP_KERNEL))) {
 		if (ret = -ENODEV,
 		    (priv->rom = pci_platform_rom(pdev, &priv->size)))
-=======
-	if (!pdev->rom || pdev->romlen == 0)
-		return ERR_PTR(-ENODEV);
-
-	if ((priv = kmalloc(sizeof(*priv), GFP_KERNEL))) {
-		priv->size = pdev->romlen;
-		if (ret = -ENODEV,
-		    (priv->rom = ioremap(pdev->rom, pdev->romlen)))
->>>>>>> rebase
 			return priv;
 		kfree(priv);
 	}
@@ -121,27 +111,11 @@ platform_init(struct nvkm_bios *bios, const char *name)
 	return ERR_PTR(ret);
 }
 
-<<<<<<< HEAD
-=======
-static void
-platform_fini(void *data)
-{
-	struct priv *priv = data;
-
-	iounmap(priv->rom);
-	kfree(priv);
-}
-
->>>>>>> rebase
 const struct nvbios_source
 nvbios_platform = {
 	.name = "PLATFORM",
 	.init = platform_init,
-<<<<<<< HEAD
 	.fini = (void(*)(void *))kfree,
-=======
-	.fini = platform_fini,
->>>>>>> rebase
 	.read = pcirom_read,
 	.rw = true,
 };

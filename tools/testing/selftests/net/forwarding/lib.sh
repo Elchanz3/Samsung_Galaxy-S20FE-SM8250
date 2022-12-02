@@ -819,10 +819,6 @@ learning_test()
 	# FDB entry was installed.
 	bridge link set dev $br_port1 flood off
 
-<<<<<<< HEAD
-=======
-	ip link set $host1_if promisc on
->>>>>>> rebase
 	tc qdisc add dev $host1_if ingress
 	tc filter add dev $host1_if ingress protocol ip pref 1 handle 101 \
 		flower dst_mac $mac action drop
@@ -833,11 +829,7 @@ learning_test()
 	tc -j -s filter show dev $host1_if ingress \
 		| jq -e ".[] | select(.options.handle == 101) \
 		| select(.options.actions[0].stats.packets == 1)" &> /dev/null
-<<<<<<< HEAD
 	check_fail $? "Packet reached second host when should not"
-=======
-	check_fail $? "Packet reached first host when should not"
->>>>>>> rebase
 
 	$MZ $host1_if -c 1 -p 64 -a $mac -t ip -q
 	sleep 1
@@ -876,10 +868,6 @@ learning_test()
 
 	tc filter del dev $host1_if ingress protocol ip pref 1 handle 101 flower
 	tc qdisc del dev $host1_if ingress
-<<<<<<< HEAD
-=======
-	ip link set $host1_if promisc off
->>>>>>> rebase
 
 	bridge link set dev $br_port1 flood on
 
@@ -897,10 +885,6 @@ flood_test_do()
 
 	# Add an ACL on `host2_if` which will tell us whether the packet
 	# was flooded to it or not.
-<<<<<<< HEAD
-=======
-	ip link set $host2_if promisc on
->>>>>>> rebase
 	tc qdisc add dev $host2_if ingress
 	tc filter add dev $host2_if ingress protocol ip pref 1 handle 101 \
 		flower dst_mac $mac action drop
@@ -918,10 +902,6 @@ flood_test_do()
 
 	tc filter del dev $host2_if ingress protocol ip pref 1 handle 101 flower
 	tc qdisc del dev $host2_if ingress
-<<<<<<< HEAD
-=======
-	ip link set $host2_if promisc off
->>>>>>> rebase
 
 	return $err
 }

@@ -76,10 +76,6 @@ config UCC_GETH
 	depends on QUICC_ENGINE
 	select FSL_PQ_MDIO
 	select PHYLIB
-<<<<<<< HEAD
-=======
-	select FIXED_PHY
->>>>>>> rebase
 	---help---
 	  This driver supports the Gigabit Ethernet mode of the QUICC Engine,
 	  which is available on some Freescale SOCs.
@@ -93,10 +89,6 @@ config GIANFAR
 	depends on HAS_DMA
 	select FSL_PQ_MDIO
 	select PHYLIB
-<<<<<<< HEAD
-=======
-	select FIXED_PHY
->>>>>>> rebase
 	select CRC32
 	---help---
 	  This driver supports the Gigabit TSEC on the MPC83xx, MPC85xx,

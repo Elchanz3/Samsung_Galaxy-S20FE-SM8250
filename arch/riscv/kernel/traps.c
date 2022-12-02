@@ -22,10 +22,6 @@
 #include <linux/mm.h>
 #include <linux/module.h>
 #include <linux/irq.h>
-<<<<<<< HEAD
-=======
-#include <linux/kexec.h>
->>>>>>> rebase
 
 #include <asm/processor.h>
 #include <asm/ptrace.h>
@@ -54,12 +50,6 @@ void die(struct pt_regs *regs, const char *str)
 
 	ret = notify_die(DIE_OOPS, str, regs, 0, regs->scause, SIGSEGV);
 
-<<<<<<< HEAD
-=======
-	if (regs && kexec_should_crash(current))
-		crash_kexec(regs);
-
->>>>>>> rebase
 	bust_spinlocks(0);
 	add_taint(TAINT_DIE, LOCKDEP_NOW_UNRELIABLE);
 	spin_unlock_irq(&die_lock);

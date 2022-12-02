@@ -285,34 +285,19 @@ static void __init berlin2q_clock_setup(struct device_node *np)
 	int n, ret;
 
 	clk_data = kzalloc(struct_size(clk_data, hws, MAX_CLKS), GFP_KERNEL);
-<<<<<<< HEAD
 	if (!clk_data)
 		return;
-=======
-	if (!clk_data) {
-		of_node_put(parent_np);
-		return;
-	}
->>>>>>> rebase
 	clk_data->num = MAX_CLKS;
 	hws = clk_data->hws;
 
 	gbase = of_iomap(parent_np, 0);
 	if (!gbase) {
-<<<<<<< HEAD
-=======
-		of_node_put(parent_np);
->>>>>>> rebase
 		pr_err("%pOF: Unable to map global base\n", np);
 		return;
 	}
 
 	/* BG2Q CPU PLL is not part of global registers */
 	cpupll_base = of_iomap(parent_np, 1);
-<<<<<<< HEAD
-=======
-	of_node_put(parent_np);
->>>>>>> rebase
 	if (!cpupll_base) {
 		pr_err("%pOF: Unable to map cpupll base\n", np);
 		iounmap(gbase);

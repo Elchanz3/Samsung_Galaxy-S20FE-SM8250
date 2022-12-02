@@ -500,11 +500,7 @@ static int dwc2_update_urb_state(struct dwc2_hsotg *hsotg,
 						      &short_read);
 
 	if (urb->actual_length + xfer_length > urb->length) {
-<<<<<<< HEAD
 		dev_warn(hsotg->dev, "%s(): trimming xfer length\n", __func__);
-=======
-		dev_dbg(hsotg->dev, "%s(): trimming xfer length\n", __func__);
->>>>>>> rebase
 		xfer_length = urb->length - urb->actual_length;
 	}
 
@@ -1981,21 +1977,6 @@ error:
 		qtd->error_count++;
 		dwc2_update_urb_state_abn(hsotg, chan, chnum, qtd->urb,
 					  qtd, DWC2_HC_XFER_XACT_ERR);
-<<<<<<< HEAD
-=======
-		/*
-		 * We can get here after a completed transaction
-		 * (urb->actual_length >= urb->length) which was not reported
-		 * as completed. If that is the case, and we do not abort
-		 * the transfer, a transfer of size 0 will be enqueued
-		 * subsequently. If urb->actual_length is not DMA-aligned,
-		 * the buffer will then point to an unaligned address, and
-		 * the resulting behavior is undefined. Bail out in that
-		 * situation.
-		 */
-		if (qtd->urb->actual_length >= qtd->urb->length)
-			qtd->error_count = 3;
->>>>>>> rebase
 		dwc2_hcd_save_data_toggle(hsotg, chan, chnum, qtd);
 		dwc2_halt_channel(hsotg, chan, qtd, DWC2_HC_XFER_XACT_ERR);
 	}

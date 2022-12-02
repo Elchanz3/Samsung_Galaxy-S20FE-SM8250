@@ -379,7 +379,6 @@ struct wl3501_get_confirm {
 	u8	mib_value[100];
 };
 
-<<<<<<< HEAD
 struct wl3501_join_req {
 	u16			    next_blk;
 	u8			    sig_id;
@@ -390,9 +389,6 @@ struct wl3501_join_req {
 	u16			    probe_delay;
 	u8			    timestamp[8];
 	u8			    local_time[8];
-=======
-struct wl3501_req {
->>>>>>> rebase
 	u16			    beacon_period;
 	u16			    dtim_period;
 	u16			    cap_info;
@@ -405,22 +401,6 @@ struct wl3501_req {
 	struct iw_mgmt_data_rset    bss_basic_rset;
 };
 
-<<<<<<< HEAD
-=======
-struct wl3501_join_req {
-	u16			    next_blk;
-	u8			    sig_id;
-	u8			    reserved;
-	struct iw_mgmt_data_rset    operational_rset;
-	u16			    reserved2;
-	u16			    timeout;
-	u16			    probe_delay;
-	u8			    timestamp[8];
-	u8			    local_time[8];
-	struct wl3501_req	    req;
-};
-
->>>>>>> rebase
 struct wl3501_join_confirm {
 	u16	next_blk;
 	u8	sig_id;
@@ -463,7 +443,6 @@ struct wl3501_scan_confirm {
 	u16			    status;
 	char			    timestamp[8];
 	char			    localtime[8];
-<<<<<<< HEAD
 	u16			    beacon_period;
 	u16			    dtim_period;
 	u16			    cap_info;
@@ -474,9 +453,6 @@ struct wl3501_scan_confirm {
 	struct iw_mgmt_cf_pset	    cf_pset;
 	struct iw_mgmt_ibss_pset    ibss_pset;
 	struct iw_mgmt_data_rset    bss_basic_rset;
-=======
-	struct wl3501_req	    req;
->>>>>>> rebase
 	u8			    rssi;
 };
 
@@ -495,15 +471,8 @@ struct wl3501_md_req {
 	u16	size;
 	u8	pri;
 	u8	service_class;
-<<<<<<< HEAD
 	u8	daddr[ETH_ALEN];
 	u8	saddr[ETH_ALEN];
-=======
-	struct {
-		u8	daddr[ETH_ALEN];
-		u8	saddr[ETH_ALEN];
-	} addr;
->>>>>>> rebase
 };
 
 struct wl3501_md_ind {
@@ -515,15 +484,8 @@ struct wl3501_md_ind {
 	u8	reception;
 	u8	pri;
 	u8	service_class;
-<<<<<<< HEAD
 	u8	daddr[ETH_ALEN];
 	u8	saddr[ETH_ALEN];
-=======
-	struct {
-		u8	daddr[ETH_ALEN];
-		u8	saddr[ETH_ALEN];
-	} addr;
->>>>>>> rebase
 };
 
 struct wl3501_md_confirm {

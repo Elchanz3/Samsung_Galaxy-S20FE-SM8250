@@ -114,11 +114,8 @@ source "drivers/staging/mt7621-spi/Kconfig"
 
 source "drivers/staging/mt7621-dma/Kconfig"
 
-<<<<<<< HEAD
 source "drivers/staging/mt7621-mmc/Kconfig"
 
-=======
->>>>>>> rebase
 source "drivers/staging/mt7621-eth/Kconfig"
 
 source "drivers/staging/mt7621-dts/Kconfig"
@@ -129,11 +126,8 @@ source "drivers/staging/axis-fifo/Kconfig"
 
 source "drivers/staging/erofs/Kconfig"
 
-<<<<<<< HEAD
 source "drivers/staging/samsung/sec_notifier/Kconfig"
 
 source "drivers/staging/sti/Kconfig"
 
-=======
->>>>>>> rebase
 endif # STAGING

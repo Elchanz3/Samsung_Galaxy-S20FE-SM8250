@@ -152,12 +152,6 @@ int fifo_set_limit(struct Qdisc *q, unsigned int limit)
 	if (strncmp(q->ops->id + 1, "fifo", 4) != 0)
 		return 0;
 
-<<<<<<< HEAD
-=======
-	if (!q->ops->change)
-		return 0;
-
->>>>>>> rebase
 	nla = kmalloc(nla_attr_size(sizeof(struct tc_fifo_qopt)), GFP_KERNEL);
 	if (nla) {
 		nla->nla_type = RTM_NEWQDISC;
@@ -183,11 +177,7 @@ struct Qdisc *fifo_create_dflt(struct Qdisc *sch, struct Qdisc_ops *ops,
 	if (q) {
 		err = fifo_set_limit(q, limit);
 		if (err < 0) {
-<<<<<<< HEAD
 			qdisc_destroy(q);
-=======
-			qdisc_put(q);
->>>>>>> rebase
 			q = NULL;
 		}
 	}

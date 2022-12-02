@@ -33,7 +33,6 @@
 #include <xen/xen.h>
 #include <xen/events.h>
 
-<<<<<<< HEAD
 static bool xenvif_rx_ring_slots_available(struct xenvif_queue *queue)
 {
 	RING_IDX prod, cons;
@@ -50,39 +49,6 @@ static bool xenvif_rx_ring_slots_available(struct xenvif_queue *queue)
 	if (skb->sw_hash)
 		needed++;
 
-=======
-/*
- * Update the needed ring page slots for the first SKB queued.
- * Note that any call sequence outside the RX thread calling this function
- * needs to wake up the RX thread via a call of xenvif_kick_thread()
- * afterwards in order to avoid a race with putting the thread to sleep.
- */
-static void xenvif_update_needed_slots(struct xenvif_queue *queue,
-				       const struct sk_buff *skb)
-{
-	unsigned int needed = 0;
-
-	if (skb) {
-		needed = DIV_ROUND_UP(skb->len, XEN_PAGE_SIZE);
-		if (skb_is_gso(skb))
-			needed++;
-		if (skb->sw_hash)
-			needed++;
-	}
-
-	WRITE_ONCE(queue->rx_slots_needed, needed);
-}
-
-static bool xenvif_rx_ring_slots_available(struct xenvif_queue *queue)
-{
-	RING_IDX prod, cons;
-	unsigned int needed;
-
-	needed = READ_ONCE(queue->rx_slots_needed);
-	if (!needed)
-		return false;
-
->>>>>>> rebase
 	do {
 		prod = queue->rx.sring->req_prod;
 		cons = queue->rx.req_cons;
@@ -107,7 +73,6 @@ void xenvif_rx_queue_tail(struct xenvif_queue *queue, struct sk_buff *skb)
 
 	spin_lock_irqsave(&queue->rx_queue.lock, flags);
 
-<<<<<<< HEAD
 	__skb_queue_tail(&queue->rx_queue, skb);
 
 	queue->rx_queue_len += skb->len;
@@ -115,21 +80,6 @@ void xenvif_rx_queue_tail(struct xenvif_queue *queue, struct sk_buff *skb)
 		struct net_device *dev = queue->vif->dev;
 
 		netif_tx_stop_queue(netdev_get_tx_queue(dev, queue->id));
-=======
-	if (queue->rx_queue_len >= queue->rx_queue_max) {
-		struct net_device *dev = queue->vif->dev;
-
-		netif_tx_stop_queue(netdev_get_tx_queue(dev, queue->id));
-		kfree_skb(skb);
-		queue->vif->dev->stats.rx_dropped++;
-	} else {
-		if (skb_queue_empty(&queue->rx_queue))
-			xenvif_update_needed_slots(queue, skb);
-
-		__skb_queue_tail(&queue->rx_queue, skb);
-
-		queue->rx_queue_len += skb->len;
->>>>>>> rebase
 	}
 
 	spin_unlock_irqrestore(&queue->rx_queue.lock, flags);
@@ -143,11 +93,6 @@ static struct sk_buff *xenvif_rx_dequeue(struct xenvif_queue *queue)
 
 	skb = __skb_dequeue(&queue->rx_queue);
 	if (skb) {
-<<<<<<< HEAD
-=======
-		xenvif_update_needed_slots(queue, skb_peek(&queue->rx_queue));
-
->>>>>>> rebase
 		queue->rx_queue_len -= skb->len;
 		if (queue->rx_queue_len < queue->rx_queue_max) {
 			struct netdev_queue *txq;
@@ -182,10 +127,6 @@ static void xenvif_rx_queue_drop_expired(struct xenvif_queue *queue)
 			break;
 		xenvif_rx_dequeue(queue);
 		kfree_skb(skb);
-<<<<<<< HEAD
-=======
-		queue->vif->dev->stats.rx_dropped++;
->>>>>>> rebase
 	}
 }
 
@@ -517,10 +458,6 @@ void xenvif_rx_action(struct xenvif_queue *queue)
 	queue->rx_copy.completed = &completed_skbs;
 
 	while (xenvif_rx_ring_slots_available(queue) &&
-<<<<<<< HEAD
-=======
-	       !skb_queue_empty(&queue->rx_queue) &&
->>>>>>> rebase
 	       work_done < RX_BATCH_SIZE) {
 		xenvif_rx_skb(queue);
 		work_done++;
@@ -530,38 +467,21 @@ void xenvif_rx_action(struct xenvif_queue *queue)
 	xenvif_rx_copy_flush(queue);
 }
 
-<<<<<<< HEAD
 static bool xenvif_rx_queue_stalled(struct xenvif_queue *queue)
-=======
-static RING_IDX xenvif_rx_queue_slots(const struct xenvif_queue *queue)
->>>>>>> rebase
 {
 	RING_IDX prod, cons;
 
 	prod = queue->rx.sring->req_prod;
 	cons = queue->rx.req_cons;
 
-<<<<<<< HEAD
 	return !queue->stalled &&
 		prod - cons < 1 &&
-=======
-	return prod - cons;
-}
-
-static bool xenvif_rx_queue_stalled(const struct xenvif_queue *queue)
-{
-	unsigned int needed = READ_ONCE(queue->rx_slots_needed);
-
-	return !queue->stalled &&
-		xenvif_rx_queue_slots(queue) < needed &&
->>>>>>> rebase
 		time_after(jiffies,
 			   queue->last_rx_time + queue->vif->stall_timeout);
 }
 
 static bool xenvif_rx_queue_ready(struct xenvif_queue *queue)
 {
-<<<<<<< HEAD
 	RING_IDX prod, cons;
 
 	prod = queue->rx.sring->req_prod;
@@ -571,24 +491,12 @@ static bool xenvif_rx_queue_ready(struct xenvif_queue *queue)
 }
 
 static bool xenvif_have_rx_work(struct xenvif_queue *queue)
-=======
-	unsigned int needed = READ_ONCE(queue->rx_slots_needed);
-
-	return queue->stalled && xenvif_rx_queue_slots(queue) >= needed;
-}
-
-bool xenvif_have_rx_work(struct xenvif_queue *queue, bool test_kthread)
->>>>>>> rebase
 {
 	return xenvif_rx_ring_slots_available(queue) ||
 		(queue->vif->stall_timeout &&
 		 (xenvif_rx_queue_stalled(queue) ||
 		  xenvif_rx_queue_ready(queue))) ||
-<<<<<<< HEAD
 		kthread_should_stop() ||
-=======
-		(test_kthread && kthread_should_stop()) ||
->>>>>>> rebase
 		queue->vif->disabled;
 }
 
@@ -619,29 +527,15 @@ static void xenvif_wait_for_rx_work(struct xenvif_queue *queue)
 {
 	DEFINE_WAIT(wait);
 
-<<<<<<< HEAD
 	if (xenvif_have_rx_work(queue))
-=======
-	if (xenvif_have_rx_work(queue, true))
->>>>>>> rebase
 		return;
 
 	for (;;) {
 		long ret;
 
 		prepare_to_wait(&queue->wq, &wait, TASK_INTERRUPTIBLE);
-<<<<<<< HEAD
 		if (xenvif_have_rx_work(queue))
 			break;
-=======
-		if (xenvif_have_rx_work(queue, true))
-			break;
-		if (atomic_fetch_andnot(NETBK_RX_EOI | NETBK_COMMON_EOI,
-					&queue->eoi_pending) &
-		    (NETBK_RX_EOI | NETBK_COMMON_EOI))
-			xen_irq_lateeoi(queue->rx_irq, 0);
-
->>>>>>> rebase
 		ret = schedule_timeout(xenvif_rx_queue_timeout(queue));
 		if (!ret)
 			break;

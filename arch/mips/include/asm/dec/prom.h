@@ -47,7 +47,6 @@
  */
 #define REX_PROM_MAGIC		0x30464354
 
-<<<<<<< HEAD
 #ifdef CONFIG_64BIT
 
 #define prom_is_rex(magic)	1	/* KN04 and KN05 are REX PROMs.  */
@@ -58,13 +57,6 @@
 
 #endif /* !CONFIG_64BIT */
 
-=======
-/* KN04 and KN05 are REX PROMs, so only do the check for R3k systems.  */
-static inline bool prom_is_rex(u32 magic)
-{
-	return !IS_ENABLED(CONFIG_CPU_R3000) || magic == REX_PROM_MAGIC;
-}
->>>>>>> rebase
 
 /*
  * 3MIN/MAXINE PROM entry points for DS5000/1xx's, DS5000/xx's and

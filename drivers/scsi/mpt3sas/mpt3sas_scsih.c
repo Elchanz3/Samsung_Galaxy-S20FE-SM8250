@@ -3215,10 +3215,6 @@ static struct fw_event_work *dequeue_next_fw_event(struct MPT3SAS_ADAPTER *ioc)
 		fw_event = list_first_entry(&ioc->fw_event_list,
 				struct fw_event_work, list);
 		list_del_init(&fw_event->list);
-<<<<<<< HEAD
-=======
-		fw_event_work_put(fw_event);
->>>>>>> rebase
 	}
 	spin_unlock_irqrestore(&ioc->fw_event_lock, flags);
 
@@ -3253,10 +3249,7 @@ _scsih_fw_event_cleanup_queue(struct MPT3SAS_ADAPTER *ioc)
 		if (cancel_work_sync(&fw_event->work))
 			fw_event_work_put(fw_event);
 
-<<<<<<< HEAD
 		fw_event_work_put(fw_event);
-=======
->>>>>>> rebase
 	}
 }
 
@@ -3371,11 +3364,7 @@ _scsih_ublock_io_device(struct MPT3SAS_ADAPTER *ioc, u64 sas_address)
 
 	shost_for_each_device(sdev, ioc->shost) {
 		sas_device_priv_data = sdev->hostdata;
-<<<<<<< HEAD
 		if (!sas_device_priv_data)
-=======
-		if (!sas_device_priv_data || !sas_device_priv_data->sas_target)
->>>>>>> rebase
 			continue;
 		if (sas_device_priv_data->sas_target->sas_address
 		    != sas_address)
@@ -5756,15 +5745,8 @@ _scsih_expander_add(struct MPT3SAS_ADAPTER *ioc, u16 handle)
 	    handle, parent_handle, (unsigned long long)
 	    sas_expander->sas_address, sas_expander->num_phys);
 
-<<<<<<< HEAD
 	if (!sas_expander->num_phys)
 		goto out_fail;
-=======
-	if (!sas_expander->num_phys) {
-		rc = -1;
-		goto out_fail;
-	}
->>>>>>> rebase
 	sas_expander->phy = kcalloc(sas_expander->num_phys,
 	    sizeof(struct _sas_phy), GFP_KERNEL);
 	if (!sas_expander->phy) {
@@ -9859,13 +9841,8 @@ static void scsih_remove(struct pci_dev *pdev)
 
 	ioc->remove_host = 1;
 
-<<<<<<< HEAD
 	mpt3sas_wait_for_commands_to_complete(ioc);
 	_scsih_flush_running_cmds(ioc);
-=======
-	if (!pci_device_is_present(pdev))
-		_scsih_flush_running_cmds(ioc);
->>>>>>> rebase
 
 	_scsih_fw_event_cleanup_queue(ioc);
 
@@ -9942,13 +9919,8 @@ scsih_shutdown(struct pci_dev *pdev)
 
 	ioc->remove_host = 1;
 
-<<<<<<< HEAD
 	mpt3sas_wait_for_commands_to_complete(ioc);
 	_scsih_flush_running_cmds(ioc);
-=======
-	if (!pci_device_is_present(pdev))
-		_scsih_flush_running_cmds(ioc);
->>>>>>> rebase
 
 	_scsih_fw_event_cleanup_queue(ioc);
 

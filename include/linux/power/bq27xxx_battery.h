@@ -49,10 +49,7 @@ struct bq27xxx_reg_cache {
 	int capacity;
 	int energy;
 	int flags;
-<<<<<<< HEAD
 	int power_avg;
-=======
->>>>>>> rebase
 	int health;
 };
 

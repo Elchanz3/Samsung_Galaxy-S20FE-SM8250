@@ -1,10 +1,6 @@
 // SPDX-License-Identifier: GPL-2.0
 /*
-<<<<<<< HEAD
  * Copyright (c) 2013, 2017-2019, The Linux Foundation. All rights reserved.
-=======
- * Copyright (c) 2013, The Linux Foundation. All rights reserved.
->>>>>>> rebase
  */
 
 #include <linux/kernel.h>
@@ -12,7 +8,6 @@
 #include <linux/err.h>
 #include <linux/delay.h>
 #include <linux/export.h>
-<<<<<<< HEAD
 #include <linux/clk.h>
 #include <linux/clk-provider.h>
 #include <linux/regmap.h>
@@ -22,12 +17,6 @@
 #include "clk-regmap.h"
 #include "clk-debug.h"
 #include "common.h"
-=======
-#include <linux/clk-provider.h>
-#include <linux/regmap.h>
-
-#include "clk-branch.h"
->>>>>>> rebase
 
 static bool clk_branch_in_hwcg_mode(const struct clk_branch *br)
 {
@@ -83,12 +72,8 @@ static int clk_branch_wait(const struct clk_branch *br, bool enabling,
 		bool (check_halt)(const struct clk_branch *, bool))
 {
 	bool voted = br->halt_check & BRANCH_VOTED;
-<<<<<<< HEAD
 	const struct clk_hw *hw = &br->clkr.hw;
 	const char *name = clk_hw_get_name(hw);
-=======
-	const char *name = clk_hw_get_name(&br->clkr.hw);
->>>>>>> rebase
 
 	/*
 	 * Skip checking halt bit if we're explicitly ignoring the bit or the
@@ -109,13 +94,8 @@ static int clk_branch_wait(const struct clk_branch *br, bool enabling,
 				return 0;
 			udelay(1);
 		}
-<<<<<<< HEAD
 		WARN_CLK(hw->core, name, 1, "status stuck at 'o%s'",
 			  enabling ? "ff" : "n");
-=======
-		WARN(1, "%s status stuck at 'o%s'", name,
-				enabling ? "ff" : "n");
->>>>>>> rebase
 		return -EBUSY;
 	}
 	return 0;
@@ -135,15 +115,12 @@ static int clk_branch_toggle(struct clk_hw *hw, bool en,
 		clk_disable_regmap(hw);
 	}
 
-<<<<<<< HEAD
 	/*
 	 * Make sure enable/disable request goes through before waiting
 	 * for CLK_OFF status to get updated.
 	 */
 	mb();
 
-=======
->>>>>>> rebase
 	return clk_branch_wait(br, en, check_halt);
 }
 
@@ -152,7 +129,6 @@ static int clk_branch_enable(struct clk_hw *hw)
 	return clk_branch_toggle(hw, true, clk_branch_check_halt);
 }
 
-<<<<<<< HEAD
 static int clk_cbcr_set_flags(struct regmap *regmap, unsigned int reg,
 				unsigned long flags)
 {
@@ -194,14 +170,11 @@ static int clk_cbcr_set_flags(struct regmap *regmap, unsigned int reg,
 	return 0;
 }
 
-=======
->>>>>>> rebase
 static void clk_branch_disable(struct clk_hw *hw)
 {
 	clk_branch_toggle(hw, false, clk_branch_check_halt);
 }
 
-<<<<<<< HEAD
 static int clk_branch_set_flags(struct clk_hw *hw, unsigned int flags)
 {
 	struct clk_branch *br = to_clk_branch(hw);
@@ -209,13 +182,10 @@ static int clk_branch_set_flags(struct clk_hw *hw, unsigned int flags)
 	return clk_cbcr_set_flags(br->clkr.regmap, br->halt_reg, flags);
 }
 
-=======
->>>>>>> rebase
 const struct clk_ops clk_branch_ops = {
 	.enable = clk_branch_enable,
 	.disable = clk_branch_disable,
 	.is_enabled = clk_is_enabled_regmap,
-<<<<<<< HEAD
 	.set_flags = clk_branch_set_flags,
 	.bus_vote = clk_debug_bus_vote,
 };
@@ -288,17 +258,11 @@ static unsigned long clk_branch2_recalc_rate(struct clk_hw *hw,
 	return to_clk_branch(hw)->rate;
 }
 
-=======
-};
-EXPORT_SYMBOL_GPL(clk_branch_ops);
-
->>>>>>> rebase
 static int clk_branch2_enable(struct clk_hw *hw)
 {
 	return clk_branch_toggle(hw, true, clk_branch2_check_halt);
 }
 
-<<<<<<< HEAD
 static int clk_branch2_prepare(struct clk_hw *hw)
 {
 	struct clk_branch *branch;
@@ -337,14 +301,11 @@ exit:
 	return ret;
 }
 
-=======
->>>>>>> rebase
 static void clk_branch2_disable(struct clk_hw *hw)
 {
 	clk_branch_toggle(hw, false, clk_branch2_check_halt);
 }
 
-<<<<<<< HEAD
 static void clk_branch2_unprepare(struct clk_hw *hw)
 {
 	struct clk_branch *branch;
@@ -491,22 +452,10 @@ const struct clk_ops clk_branch2_hw_ctl_ops = {
 };
 EXPORT_SYMBOL_GPL(clk_branch2_hw_ctl_ops);
 
-=======
-const struct clk_ops clk_branch2_ops = {
-	.enable = clk_branch2_enable,
-	.disable = clk_branch2_disable,
-	.is_enabled = clk_is_enabled_regmap,
-};
-EXPORT_SYMBOL_GPL(clk_branch2_ops);
-
->>>>>>> rebase
 const struct clk_ops clk_branch_simple_ops = {
 	.enable = clk_enable_regmap,
 	.disable = clk_disable_regmap,
 	.is_enabled = clk_is_enabled_regmap,
-<<<<<<< HEAD
 	.bus_vote = clk_debug_bus_vote,
-=======
->>>>>>> rebase
 };
 EXPORT_SYMBOL_GPL(clk_branch_simple_ops);

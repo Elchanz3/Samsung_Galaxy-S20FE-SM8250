@@ -430,10 +430,6 @@
 	bus-width = <8>;
 	mmc-hs200-1_8v;
 	non-removable;
-<<<<<<< HEAD
-=======
-	full-pwr-cycle-in-suspend;
->>>>>>> rebase
 	status = "okay";
 };
 

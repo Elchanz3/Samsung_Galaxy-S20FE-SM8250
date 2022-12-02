@@ -30,10 +30,6 @@
 #include <linux/workqueue.h>
 #include <linux/uuid.h>
 #include <linux/nospec.h>
-<<<<<<< HEAD
-=======
-#include <linux/vmalloc.h>
->>>>>>> rebase
 
 #define PFX "IPMI message handler: "
 
@@ -222,11 +218,6 @@ struct ipmi_user {
 	struct work_struct remove_work;
 };
 
-<<<<<<< HEAD
-=======
-static struct workqueue_struct *remove_work_wq;
-
->>>>>>> rebase
 static struct ipmi_user *acquire_ipmi_user(struct ipmi_user *user, int *index)
 	__acquires(user->release_barrier)
 {
@@ -1098,11 +1089,7 @@ static void free_user_work(struct work_struct *work)
 					      remove_work);
 
 	cleanup_srcu_struct(&user->release_barrier);
-<<<<<<< HEAD
 	kfree(user);
-=======
-	vfree(user);
->>>>>>> rebase
 }
 
 int ipmi_create_user(unsigned int          if_num,
@@ -1134,11 +1121,7 @@ int ipmi_create_user(unsigned int          if_num,
 	if (rv)
 		return rv;
 
-<<<<<<< HEAD
 	new_user = kmalloc(sizeof(*new_user), GFP_KERNEL);
-=======
-	new_user = vzalloc(sizeof(*new_user));
->>>>>>> rebase
 	if (!new_user)
 		return -ENOMEM;
 
@@ -1187,11 +1170,7 @@ int ipmi_create_user(unsigned int          if_num,
 
 out_kfree:
 	srcu_read_unlock(&ipmi_interfaces_srcu, index);
-<<<<<<< HEAD
 	kfree(new_user);
-=======
-	vfree(new_user);
->>>>>>> rebase
 	return rv;
 }
 EXPORT_SYMBOL(ipmi_create_user);
@@ -1227,11 +1206,7 @@ static void free_user(struct kref *ref)
 	struct ipmi_user *user = container_of(ref, struct ipmi_user, refcount);
 
 	/* SRCU cleanup must happen in task context. */
-<<<<<<< HEAD
 	schedule_work(&user->remove_work);
-=======
-	queue_work(remove_work_wq, &user->remove_work);
->>>>>>> rebase
 }
 
 static void _ipmi_destroy_user(struct ipmi_user *user)
@@ -2885,11 +2860,7 @@ cleanup_bmc_device(struct kref *ref)
 	 * with removing the device attributes while reading a device
 	 * attribute.
 	 */
-<<<<<<< HEAD
 	schedule_work(&bmc->remove_work);
-=======
-	queue_work(remove_work_wq, &bmc->remove_work);
->>>>>>> rebase
 }
 
 /*
@@ -3163,13 +3134,8 @@ static void __get_guid(struct ipmi_smi *intf)
 	if (rv)
 		/* Send failed, no GUID available. */
 		bmc->dyn_guid_set = 0;
-<<<<<<< HEAD
 
 	wait_event(intf->waitq, bmc->dyn_guid_set != 2);
-=======
-	else
-		wait_event(intf->waitq, bmc->dyn_guid_set != 2);
->>>>>>> rebase
 
 	/* dyn_guid_set makes the guid data available. */
 	smp_rmb();
@@ -5116,20 +5082,7 @@ static int ipmi_init_msghandler(void)
 	if (initialized)
 		goto out;
 
-<<<<<<< HEAD
 	init_srcu_struct(&ipmi_interfaces_srcu);
-=======
-	rv = init_srcu_struct(&ipmi_interfaces_srcu);
-	if (rv)
-		goto out;
-
-	remove_work_wq = create_singlethread_workqueue("ipmi-msghandler-remove-wq");
-	if (!remove_work_wq) {
-		pr_err("unable to create ipmi-msghandler-remove-wq workqueue");
-		rv = -ENOMEM;
-		goto out_wq;
-	}
->>>>>>> rebase
 
 	timer_setup(&ipmi_timer, ipmi_timeout, 0);
 	mod_timer(&ipmi_timer, jiffies + IPMI_TIMEOUT_JIFFIES);
@@ -5138,12 +5091,6 @@ static int ipmi_init_msghandler(void)
 
 	initialized = true;
 
-<<<<<<< HEAD
-=======
-out_wq:
-	if (rv)
-		cleanup_srcu_struct(&ipmi_interfaces_srcu);
->>>>>>> rebase
 out:
 	mutex_unlock(&ipmi_interfaces_mutex);
 	return rv;
@@ -5167,11 +5114,6 @@ static void __exit cleanup_ipmi(void)
 	int count;
 
 	if (initialized) {
-<<<<<<< HEAD
-=======
-		destroy_workqueue(remove_work_wq);
-
->>>>>>> rebase
 		atomic_notifier_chain_unregister(&panic_notifier_list,
 						 &panic_block);
 

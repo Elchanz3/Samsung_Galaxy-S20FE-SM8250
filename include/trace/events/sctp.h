@@ -75,7 +75,6 @@ TRACE_EVENT(sctp_probe,
 		__entry->pathmtu = asoc->pathmtu;
 		__entry->rwnd = asoc->peer.rwnd;
 		__entry->unack_data = asoc->unack_data;
-<<<<<<< HEAD
 
 		if (trace_sctp_probe_path_enabled()) {
 			struct sctp_transport *sp;
@@ -85,8 +84,6 @@ TRACE_EVENT(sctp_probe,
 				trace_sctp_probe_path(sp, asoc);
 			}
 		}
-=======
->>>>>>> rebase
 	),
 
 	TP_printk("asoc=%#llx mark=%#x bind_port=%d peer_port=%d pathmtu=%d "

@@ -739,15 +739,9 @@ void gfs2_clear_rgrpd(struct gfs2_sbd *sdp)
 		}
 
 		gfs2_free_clones(rgd);
-<<<<<<< HEAD
 		kfree(rgd->rd_bits);
 		rgd->rd_bits = NULL;
 		return_all_reservations(rgd);
-=======
-		return_all_reservations(rgd);
-		kfree(rgd->rd_bits);
-		rgd->rd_bits = NULL;
->>>>>>> rebase
 		kmem_cache_free(gfs2_rgrpd_cachep, rgd);
 	}
 }
@@ -932,25 +926,15 @@ static int read_rindex_entry(struct gfs2_inode *ip)
 	rgd->rd_bitbytes = be32_to_cpu(buf.ri_bitbytes);
 	spin_lock_init(&rgd->rd_rsspin);
 
-<<<<<<< HEAD
 	error = compute_bitstructs(rgd);
 	if (error)
 		goto fail;
 
-=======
->>>>>>> rebase
 	error = gfs2_glock_get(sdp, rgd->rd_addr,
 			       &gfs2_rgrp_glops, CREATE, &rgd->rd_gl);
 	if (error)
 		goto fail;
 
-<<<<<<< HEAD
-=======
-	error = compute_bitstructs(rgd);
-	if (error)
-		goto fail_glock;
-
->>>>>>> rebase
 	rgd->rd_rgl = (struct gfs2_rgrp_lvb *)rgd->rd_gl->gl_lksb.sb_lvbptr;
 	rgd->rd_flags &= ~(GFS2_RDF_UPTODATE | GFS2_RDF_PREFERRED);
 	if (rgd->rd_data > sdp->sd_max_rg_data)
@@ -967,10 +951,6 @@ static int read_rindex_entry(struct gfs2_inode *ip)
 	}
 
 	error = 0; /* someone else read in the rgrp; free it and ignore it */
-<<<<<<< HEAD
-=======
-fail_glock:
->>>>>>> rebase
 	gfs2_glock_put(rgd->rd_gl);
 
 fail:
@@ -1029,13 +1009,6 @@ static int gfs2_ri_update(struct gfs2_inode *ip)
 	if (error < 0)
 		return error;
 
-<<<<<<< HEAD
-=======
-	if (RB_EMPTY_ROOT(&sdp->sd_rindex_tree)) {
-		fs_err(sdp, "no resource groups found in the file system.\n");
-		return -ENOENT;
-	}
->>>>>>> rebase
 	set_rgrp_preferences(sdp);
 
 	sdp->sd_rindex_uptodate = 1;
@@ -1414,12 +1387,6 @@ int gfs2_fitrim(struct file *filp, void __user *argp)
 	if (!capable(CAP_SYS_ADMIN))
 		return -EPERM;
 
-<<<<<<< HEAD
-=======
-	if (!test_bit(SDF_JOURNAL_LIVE, &sdp->sd_flags))
-		return -EROFS;
-
->>>>>>> rebase
 	if (!blk_queue_discard(q))
 		return -EOPNOTSUPP;
 
@@ -1432,12 +1399,7 @@ int gfs2_fitrim(struct file *filp, void __user *argp)
 
 	start = r.start >> bs_shift;
 	end = start + (r.len >> bs_shift);
-<<<<<<< HEAD
 	minlen = max_t(u64, r.minlen,
-=======
-	minlen = max_t(u64, r.minlen, sdp->sd_sb.sb_bsize);
-	minlen = max_t(u64, minlen,
->>>>>>> rebase
 		       q->limits.discard_granularity) >> bs_shift;
 
 	if (end <= start || minlen > sdp->sd_max_rg_data)

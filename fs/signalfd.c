@@ -303,16 +303,9 @@ SYSCALL_DEFINE4(signalfd4, int, ufd, sigset_t __user *, user_mask,
 {
 	sigset_t mask;
 
-<<<<<<< HEAD
 	if (sizemask != sizeof(sigset_t) ||
 	    copy_from_user(&mask, user_mask, sizeof(mask)))
 		return -EINVAL;
-=======
-	if (sizemask != sizeof(sigset_t))
-		return -EINVAL;
-	if (copy_from_user(&mask, user_mask, sizeof(mask)))
-		return -EFAULT;
->>>>>>> rebase
 	return do_signalfd4(ufd, &mask, flags);
 }
 
@@ -321,16 +314,9 @@ SYSCALL_DEFINE3(signalfd, int, ufd, sigset_t __user *, user_mask,
 {
 	sigset_t mask;
 
-<<<<<<< HEAD
 	if (sizemask != sizeof(sigset_t) ||
 	    copy_from_user(&mask, user_mask, sizeof(mask)))
 		return -EINVAL;
-=======
-	if (sizemask != sizeof(sigset_t))
-		return -EINVAL;
-	if (copy_from_user(&mask, user_mask, sizeof(mask)))
-		return -EFAULT;
->>>>>>> rebase
 	return do_signalfd4(ufd, &mask, 0);
 }
 

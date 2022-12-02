@@ -30,28 +30,16 @@ static inline __sum16 ip_fast_csum(const void *iph, unsigned int ihl)
 {
 	__uint128_t tmp;
 	u64 sum;
-<<<<<<< HEAD
 
 	tmp = *(const __uint128_t *)iph;
 	iph += 16;
 	ihl -= 4;
-=======
-	int n = ihl; /* we want it signed */
-
-	tmp = *(const __uint128_t *)iph;
-	iph += 16;
-	n -= 4;
->>>>>>> rebase
 	tmp += ((tmp >> 64) | (tmp << 64));
 	sum = tmp >> 64;
 	do {
 		sum += *(const u32 *)iph;
 		iph += 4;
-<<<<<<< HEAD
 	} while (--ihl);
-=======
-	} while (--n > 0);
->>>>>>> rebase
 
 	sum += ((sum >> 32) | (sum << 32));
 	return csum_fold((__force u32)(sum >> 32));

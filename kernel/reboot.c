@@ -31,10 +31,7 @@ EXPORT_SYMBOL(cad_pid);
 #define DEFAULT_REBOOT_MODE
 #endif
 enum reboot_mode reboot_mode DEFAULT_REBOOT_MODE;
-<<<<<<< HEAD
 enum reboot_mode panic_reboot_mode = REBOOT_UNDEFINED;
-=======
->>>>>>> rebase
 
 /*
  * This variable is used privately to keep track of whether or not
@@ -47,11 +44,8 @@ int reboot_default = 1;
 int reboot_cpu;
 enum reboot_type reboot_type = BOOT_ACPI;
 int reboot_force;
-<<<<<<< HEAD
 // To prevent kernel panic by EIO during shutdown
 int ignore_fs_panic;
-=======
->>>>>>> rebase
 
 /*
  * If set, this is used for preparing the system to power off.
@@ -78,13 +72,9 @@ void kernel_restart_prepare(char *cmd)
 {
 	blocking_notifier_call_chain(&reboot_notifier_list, SYS_RESTART, cmd);
 	system_state = SYSTEM_RESTART;
-<<<<<<< HEAD
 	freeze_processes();
 	usermodehelper_disable();
 	ignore_fs_panic = 1;
-=======
-	usermodehelper_disable();
->>>>>>> rebase
 	device_shutdown();
 }
 
@@ -272,13 +262,9 @@ static void kernel_shutdown_prepare(enum system_states state)
 	blocking_notifier_call_chain(&reboot_notifier_list,
 		(state == SYSTEM_HALT) ? SYS_HALT : SYS_POWER_OFF, NULL);
 	system_state = state;
-<<<<<<< HEAD
 	freeze_processes();
 	usermodehelper_disable();
 	ignore_fs_panic = 1;
-=======
-	usermodehelper_disable();
->>>>>>> rebase
 	device_shutdown();
 }
 /**
@@ -539,11 +525,8 @@ EXPORT_SYMBOL_GPL(orderly_reboot);
 static int __init reboot_setup(char *str)
 {
 	for (;;) {
-<<<<<<< HEAD
 		enum reboot_mode *mode;
 
-=======
->>>>>>> rebase
 		/*
 		 * Having anything passed on the command line via
 		 * reboot= will cause us to disable DMI checking
@@ -551,7 +534,6 @@ static int __init reboot_setup(char *str)
 		 */
 		reboot_default = 0;
 
-<<<<<<< HEAD
 		if (!strncmp(str, "panic_", 6)) {
 			mode = &panic_reboot_mode;
 			str += 6;
@@ -591,40 +573,6 @@ static int __init reboot_setup(char *str)
 		}
 		case 'g':
 			*mode = REBOOT_GPIO;
-=======
-		switch (*str) {
-		case 'w':
-			reboot_mode = REBOOT_WARM;
-			break;
-
-		case 'c':
-			reboot_mode = REBOOT_COLD;
-			break;
-
-		case 'h':
-			reboot_mode = REBOOT_HARD;
-			break;
-
-		case 's':
-			if (isdigit(*(str+1)))
-				reboot_cpu = simple_strtoul(str+1, NULL, 0);
-			else if (str[1] == 'm' && str[2] == 'p' &&
-							isdigit(*(str+3)))
-				reboot_cpu = simple_strtoul(str+3, NULL, 0);
-			else
-				reboot_mode = REBOOT_SOFT;
-			if (reboot_cpu >= num_possible_cpus()) {
-				pr_err("Ignoring the CPU number in reboot= option. "
-				       "CPU %d exceeds possible cpu number %d\n",
-				       reboot_cpu, num_possible_cpus());
-				reboot_cpu = 0;
-				break;
-			}
-			break;
-
-		case 'g':
-			reboot_mode = REBOOT_GPIO;
->>>>>>> rebase
 			break;
 
 		case 'b':

@@ -687,11 +687,7 @@
 			};
 		};
 
-<<<<<<< HEAD
 		sata: ahci@663f2000 {
-=======
-		sata: sata@663f2000 {
->>>>>>> rebase
 			compatible = "brcm,iproc-ahci", "generic-ahci";
 			reg = <0x663f2000 0x1000>;
 			dma-coherent;
@@ -749,11 +745,7 @@
 		};
 
 		qspi: spi@66470200 {
-<<<<<<< HEAD
 			compatible = "brcm,spi-bcm-qspi", "brcm,spi-ns2-qspi";
-=======
-			compatible = "brcm,spi-ns2-qspi", "brcm,spi-bcm-qspi";
->>>>>>> rebase
 			reg = <0x66470200 0x184>,
 				<0x66470000 0x124>,
 				<0x67017408 0x004>,

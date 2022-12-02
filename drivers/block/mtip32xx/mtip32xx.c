@@ -3861,11 +3861,7 @@ skip_create_disk:
 	set_capacity(dd->disk, capacity);
 
 	/* Enable the block device and add it to /dev */
-<<<<<<< HEAD
 	device_add_disk(&dd->pdev->dev, dd->disk);
-=======
-	device_add_disk(&dd->pdev->dev, dd->disk, NULL);
->>>>>>> rebase
 
 	dd->bdev = bdget_disk(dd->disk, 0);
 	/*

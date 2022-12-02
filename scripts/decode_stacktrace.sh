@@ -77,13 +77,8 @@ parse_symbol() {
 		return
 	fi
 
-<<<<<<< HEAD
 	# Strip out the base of the path
 	code=${code#$basepath/}
-=======
-	# Strip out the base of the path on each line
-	code=$(while read -r line; do echo "${line#$basepath/}"; done <<< "$code")
->>>>>>> rebase
 
 	# In the case of inlines, move everything to same line
 	code=${code//$'\n'/' '}

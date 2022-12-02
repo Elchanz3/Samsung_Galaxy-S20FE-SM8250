@@ -60,7 +60,6 @@ asmlinkage void pmull_ghash_update_p8(int blocks, u64 dg[], const char *src,
 				      struct ghash_key const *k,
 				      const char *head);
 
-<<<<<<< HEAD
 #ifdef CONFIG_CFI_CLANG
 static inline void __cfi_pmull_ghash_update_p64(int blocks, u64 dg[],
                 const char *src, struct ghash_key const *k, const char *head)
@@ -77,8 +76,6 @@ static inline void __cfi_pmull_ghash_update_p8(int blocks, u64 dg[],
 #define pmull_ghash_update_p8 __cfi_pmull_ghash_update_p8
 #endif
 
-=======
->>>>>>> rebase
 static void (*pmull_ghash_update)(int blocks, u64 dg[], const char *src,
 				  struct ghash_key const *k,
 				  const char *head);

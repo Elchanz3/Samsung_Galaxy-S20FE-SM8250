@@ -26,33 +26,6 @@
 #include <asm/kvm_mmu.h>
 #include <asm/mmu.h>
 
-<<<<<<< HEAD
-=======
-.macro save_caller_saved_regs_vect
-	/* x0 and x1 were saved in the vector entry */
-	stp	x2, x3,   [sp, #-16]!
-	stp	x4, x5,   [sp, #-16]!
-	stp	x6, x7,   [sp, #-16]!
-	stp	x8, x9,   [sp, #-16]!
-	stp	x10, x11, [sp, #-16]!
-	stp	x12, x13, [sp, #-16]!
-	stp	x14, x15, [sp, #-16]!
-	stp	x16, x17, [sp, #-16]!
-.endm
-
-.macro restore_caller_saved_regs_vect
-	ldp	x16, x17, [sp], #16
-	ldp	x14, x15, [sp], #16
-	ldp	x12, x13, [sp], #16
-	ldp	x10, x11, [sp], #16
-	ldp	x8, x9,   [sp], #16
-	ldp	x6, x7,   [sp], #16
-	ldp	x4, x5,   [sp], #16
-	ldp	x2, x3,   [sp], #16
-	ldp	x0, x1,   [sp], #16
-.endm
-
->>>>>>> rebase
 	.text
 	.pushsection	.hyp.text, "ax"
 
@@ -138,13 +111,6 @@ el1_hvc_guest:
 	/* ARM_SMCCC_ARCH_WORKAROUND_2 handling */
 	eor	w1, w1, #(ARM_SMCCC_ARCH_WORKAROUND_1 ^ \
 			  ARM_SMCCC_ARCH_WORKAROUND_2)
-<<<<<<< HEAD
-=======
-	cbz	w1, wa_epilogue
-
-	eor	w1, w1, #(ARM_SMCCC_ARCH_WORKAROUND_2 ^ \
-			  ARM_SMCCC_ARCH_WORKAROUND_3)
->>>>>>> rebase
 	cbnz	w1, el1_trap
 
 #ifdef CONFIG_ARM64_SSBD
@@ -196,7 +162,6 @@ el1_error:
 	mov	x0, #ARM_EXCEPTION_EL1_SERROR
 	b	__guest_exit
 
-<<<<<<< HEAD
 el2_error:
 	ldp	x0, x1, [sp], #16
 
@@ -219,26 +184,6 @@ el2_error:
 	ccmp	x0, x1, #4, ne
 	b.ne	__hyp_panic
 	mov	x0, #(1 << ARM_EXIT_WITH_SERROR_BIT)
-=======
-el2_sync:
-	save_caller_saved_regs_vect
-	stp     x29, x30, [sp, #-16]!
-	bl	kvm_unexpected_el2_exception
-	ldp     x29, x30, [sp], #16
-	restore_caller_saved_regs_vect
-
-	eret
-
-el2_error:
-	save_caller_saved_regs_vect
-	stp     x29, x30, [sp, #-16]!
-
-	bl	kvm_unexpected_el2_exception
-
-	ldp     x29, x30, [sp], #16
-	restore_caller_saved_regs_vect
-
->>>>>>> rebase
 	eret
 
 ENTRY(__hyp_do_panic)
@@ -267,10 +212,7 @@ ENDPROC(\label)
 	invalid_vector	el2t_irq_invalid
 	invalid_vector	el2t_fiq_invalid
 	invalid_vector	el2t_error_invalid
-<<<<<<< HEAD
 	invalid_vector	el2h_sync_invalid
-=======
->>>>>>> rebase
 	invalid_vector	el2h_irq_invalid
 	invalid_vector	el2h_fiq_invalid
 	invalid_vector	el1_fiq_invalid
@@ -298,11 +240,7 @@ ENTRY(__kvm_hyp_vector)
 	invalid_vect	el2t_fiq_invalid	// FIQ EL2t
 	invalid_vect	el2t_error_invalid	// Error EL2t
 
-<<<<<<< HEAD
 	invalid_vect	el2h_sync_invalid	// Synchronous EL2h
-=======
-	valid_vect	el2_sync		// Synchronous EL2h
->>>>>>> rebase
 	invalid_vect	el2h_irq_invalid	// IRQ EL2h
 	invalid_vect	el2h_fiq_invalid	// FIQ EL2h
 	valid_vect	el2_error		// Error EL2h
@@ -377,67 +315,4 @@ ENTRY(__smccc_workaround_1_smc_start)
 	ldp	x0, x1, [sp, #(8 * 2)]
 	add	sp, sp, #(8 * 4)
 ENTRY(__smccc_workaround_1_smc_end)
-<<<<<<< HEAD
-=======
-
-ENTRY(__smccc_workaround_3_smc_start)
-	esb
-	sub	sp, sp, #(8 * 4)
-	stp	x2, x3, [sp, #(8 * 0)]
-	stp	x0, x1, [sp, #(8 * 2)]
-	mov	w0, #ARM_SMCCC_ARCH_WORKAROUND_3
-	smc	#0
-	ldp	x2, x3, [sp, #(8 * 0)]
-	ldp	x0, x1, [sp, #(8 * 2)]
-	add	sp, sp, #(8 * 4)
-ENTRY(__smccc_workaround_3_smc_end)
-
-ENTRY(__spectre_bhb_loop_k8_start)
-	esb
-	sub	sp, sp, #(8 * 2)
-	stp	x0, x1, [sp, #(8 * 0)]
-	mov	x0, #8
-2:	b	. + 4
-	subs	x0, x0, #1
-	b.ne	2b
-	dsb	nsh
-	isb
-	ldp	x0, x1, [sp, #(8 * 0)]
-	add	sp, sp, #(8 * 2)
-ENTRY(__spectre_bhb_loop_k8_end)
-
-ENTRY(__spectre_bhb_loop_k24_start)
-	esb
-	sub	sp, sp, #(8 * 2)
-	stp	x0, x1, [sp, #(8 * 0)]
-	mov	x0, #24
-2:	b	. + 4
-	subs	x0, x0, #1
-	b.ne	2b
-	dsb	nsh
-	isb
-	ldp	x0, x1, [sp, #(8 * 0)]
-	add	sp, sp, #(8 * 2)
-ENTRY(__spectre_bhb_loop_k24_end)
-
-ENTRY(__spectre_bhb_loop_k32_start)
-	esb
-	sub	sp, sp, #(8 * 2)
-	stp	x0, x1, [sp, #(8 * 0)]
-	mov     x0, #32
-2:	b	. + 4
-	subs	x0, x0, #1
-	b.ne	2b
-	dsb	nsh
-	isb
-	ldp	x0, x1, [sp, #(8 * 0)]
-	add	sp, sp, #(8 * 2)
-ENTRY(__spectre_bhb_loop_k32_end)
-
-ENTRY(__spectre_bhb_clearbhb_start)
-	esb
-	clearbhb
-	isb
-ENTRY(__spectre_bhb_clearbhb_end)
->>>>>>> rebase
 #endif

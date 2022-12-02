@@ -10,10 +10,7 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  */
-<<<<<<< HEAD
 
-=======
->>>>>>> rebase
 #include <linux/clk.h>
 #include <linux/slab.h>
 #include <linux/bitops.h>
@@ -469,19 +466,11 @@ struct qcom_nand_host {
  * among different NAND controllers.
  * @ecc_modes - ecc mode for NAND
  * @is_bam - whether NAND controller is using BAM
-<<<<<<< HEAD
-=======
- * @is_qpic - whether NAND CTRL is part of qpic IP
->>>>>>> rebase
  * @dev_cmd_reg_start - NAND_DEV_CMD_* registers starting offset
  */
 struct qcom_nandc_props {
 	u32 ecc_modes;
 	bool is_bam;
-<<<<<<< HEAD
-=======
-	bool is_qpic;
->>>>>>> rebase
 	u32 dev_cmd_reg_start;
 };
 
@@ -1587,11 +1576,6 @@ static int check_flash_errors(struct qcom_nand_host *host, int cw_cnt)
 	struct qcom_nand_controller *nandc = get_qcom_nand_controller(chip);
 	int i;
 
-<<<<<<< HEAD
-=======
-	nandc_read_buffer_sync(nandc, true);
-
->>>>>>> rebase
 	for (i = 0; i < cw_cnt; i++) {
 		u32 flash = le32_to_cpu(nandc->reg_read_buf[i]);
 
@@ -2782,12 +2766,7 @@ static int qcom_nandc_setup(struct qcom_nand_controller *nandc)
 	u32 nand_ctrl;
 
 	/* kill onenand */
-<<<<<<< HEAD
 	nandc_write(nandc, SFLASHC_BURST_CFG, 0);
-=======
-	if (!nandc->props->is_qpic)
-		nandc_write(nandc, SFLASHC_BURST_CFG, 0);
->>>>>>> rebase
 	nandc_write(nandc, dev_cmd_reg_addr(nandc, NAND_DEV_CMD_VLD),
 		    NAND_DEV_CMD_VLD_VAL);
 
@@ -2855,11 +2834,7 @@ static int qcom_nand_host_init_and_register(struct qcom_nand_controller *nandc,
 	/* set up initial status value */
 	host->status = NAND_STATUS_READY | NAND_STATUS_WP;
 
-<<<<<<< HEAD
 	ret = nand_scan(mtd, 1);
-=======
-	ret = nand_scan(chip, 1);
->>>>>>> rebase
 	if (ret)
 		return ret;
 
@@ -2885,11 +2860,7 @@ static int qcom_probe_nand_devices(struct qcom_nand_controller *nandc)
 	struct device *dev = nandc->dev;
 	struct device_node *dn = dev->of_node, *child;
 	struct qcom_nand_host *host;
-<<<<<<< HEAD
 	int ret;
-=======
-	int ret = -ENODEV;
->>>>>>> rebase
 
 	for_each_available_child_of_node(dn, child) {
 		host = devm_kzalloc(dev, sizeof(*host), GFP_KERNEL);
@@ -2907,14 +2878,10 @@ static int qcom_probe_nand_devices(struct qcom_nand_controller *nandc)
 		list_add_tail(&host->node, &nandc->host_list);
 	}
 
-<<<<<<< HEAD
 	if (list_empty(&nandc->host_list))
 		return -ENODEV;
 
 	return 0;
-=======
-	return ret;
->>>>>>> rebase
 }
 
 /* parse custom DT properties here */
@@ -2990,13 +2957,10 @@ static int qcom_nandc_probe(struct platform_device *pdev)
 	if (!nandc->base_dma)
 		return -ENXIO;
 
-<<<<<<< HEAD
 	ret = qcom_nandc_alloc(nandc);
 	if (ret)
 		goto err_nandc_alloc;
 
-=======
->>>>>>> rebase
 	ret = clk_prepare_enable(nandc->core_clk);
 	if (ret)
 		goto err_core_clk;
@@ -3005,13 +2969,6 @@ static int qcom_nandc_probe(struct platform_device *pdev)
 	if (ret)
 		goto err_aon_clk;
 
-<<<<<<< HEAD
-=======
-	ret = qcom_nandc_alloc(nandc);
-	if (ret)
-		goto err_nandc_alloc;
-
->>>>>>> rebase
 	ret = qcom_nandc_setup(nandc);
 	if (ret)
 		goto err_setup;
@@ -3023,25 +2980,15 @@ static int qcom_nandc_probe(struct platform_device *pdev)
 	return 0;
 
 err_setup:
-<<<<<<< HEAD
-=======
-	qcom_nandc_unalloc(nandc);
-err_nandc_alloc:
->>>>>>> rebase
 	clk_disable_unprepare(nandc->aon_clk);
 err_aon_clk:
 	clk_disable_unprepare(nandc->core_clk);
 err_core_clk:
-<<<<<<< HEAD
 	qcom_nandc_unalloc(nandc);
 err_nandc_alloc:
 	dma_unmap_resource(dev, res->start, resource_size(res),
 			   DMA_BIDIRECTIONAL, 0);
 
-=======
-	dma_unmap_resource(dev, res->start, resource_size(res),
-			   DMA_BIDIRECTIONAL, 0);
->>>>>>> rebase
 	return ret;
 }
 
@@ -3052,11 +2999,7 @@ static int qcom_nandc_remove(struct platform_device *pdev)
 	struct qcom_nand_host *host;
 
 	list_for_each_entry(host, &nandc->host_list, node)
-<<<<<<< HEAD
 		nand_release(nand_to_mtd(&host->chip));
-=======
-		nand_release(&host->chip);
->>>>>>> rebase
 
 
 	qcom_nandc_unalloc(nandc);
@@ -3079,20 +3022,12 @@ static const struct qcom_nandc_props ipq806x_nandc_props = {
 static const struct qcom_nandc_props ipq4019_nandc_props = {
 	.ecc_modes = (ECC_BCH_4BIT | ECC_BCH_8BIT),
 	.is_bam = true,
-<<<<<<< HEAD
-=======
-	.is_qpic = true,
->>>>>>> rebase
 	.dev_cmd_reg_start = 0x0,
 };
 
 static const struct qcom_nandc_props ipq8074_nandc_props = {
 	.ecc_modes = (ECC_BCH_4BIT | ECC_BCH_8BIT),
 	.is_bam = true,
-<<<<<<< HEAD
-=======
-	.is_qpic = true,
->>>>>>> rebase
 	.dev_cmd_reg_start = 0x7000,
 };
 

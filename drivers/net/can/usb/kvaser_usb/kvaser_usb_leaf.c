@@ -28,13 +28,10 @@
 
 #include "kvaser_usb.h"
 
-<<<<<<< HEAD
 /* Forward declaration */
 static const struct kvaser_usb_dev_cfg kvaser_usb_leaf_dev_cfg;
 
 #define CAN_USB_CLOCK			8000000
-=======
->>>>>>> rebase
 #define MAX_USBCAN_NET_DEVICES		2
 
 /* Command header size */
@@ -83,15 +80,6 @@ static const struct kvaser_usb_dev_cfg kvaser_usb_leaf_dev_cfg;
 
 #define CMD_LEAF_LOG_MESSAGE		106
 
-<<<<<<< HEAD
-=======
-/* Leaf frequency options */
-#define KVASER_USB_LEAF_SWOPTION_FREQ_MASK 0x60
-#define KVASER_USB_LEAF_SWOPTION_FREQ_16_MHZ_CLK 0
-#define KVASER_USB_LEAF_SWOPTION_FREQ_32_MHZ_CLK BIT(5)
-#define KVASER_USB_LEAF_SWOPTION_FREQ_24_MHZ_CLK BIT(6)
-
->>>>>>> rebase
 /* error factors */
 #define M16C_EF_ACKE			BIT(0)
 #define M16C_EF_CRCE			BIT(1)
@@ -110,7 +98,6 @@ static const struct kvaser_usb_dev_cfg kvaser_usb_leaf_dev_cfg;
 #define USBCAN_ERROR_STATE_RX_ERROR	BIT(1)
 #define USBCAN_ERROR_STATE_BUSERROR	BIT(2)
 
-<<<<<<< HEAD
 /* bittiming parameters */
 #define KVASER_USB_TSEG1_MIN		1
 #define KVASER_USB_TSEG1_MAX		16
@@ -121,8 +108,6 @@ static const struct kvaser_usb_dev_cfg kvaser_usb_leaf_dev_cfg;
 #define KVASER_USB_BRP_MAX		64
 #define KVASER_USB_BRP_INC		1
 
-=======
->>>>>>> rebase
 /* ctrl modes */
 #define KVASER_CTRL_MODE_NORMAL		1
 #define KVASER_CTRL_MODE_SILENT		2
@@ -332,41 +317,6 @@ struct kvaser_cmd {
 	} u;
 } __packed;
 
-<<<<<<< HEAD
-=======
-#define CMD_SIZE_ANY 0xff
-#define kvaser_fsize(field) sizeof_field(struct kvaser_cmd, field)
-
-static const u8 kvaser_usb_leaf_cmd_sizes_leaf[] = {
-	[CMD_START_CHIP_REPLY]		= kvaser_fsize(u.simple),
-	[CMD_STOP_CHIP_REPLY]		= kvaser_fsize(u.simple),
-	[CMD_GET_CARD_INFO_REPLY]	= kvaser_fsize(u.cardinfo),
-	[CMD_TX_ACKNOWLEDGE]		= kvaser_fsize(u.tx_acknowledge_header),
-	[CMD_GET_SOFTWARE_INFO_REPLY]	= kvaser_fsize(u.leaf.softinfo),
-	[CMD_RX_STD_MESSAGE]		= kvaser_fsize(u.leaf.rx_can),
-	[CMD_RX_EXT_MESSAGE]		= kvaser_fsize(u.leaf.rx_can),
-	[CMD_LEAF_LOG_MESSAGE]		= kvaser_fsize(u.leaf.log_message),
-	[CMD_CHIP_STATE_EVENT]		= kvaser_fsize(u.leaf.chip_state_event),
-	[CMD_CAN_ERROR_EVENT]		= kvaser_fsize(u.leaf.error_event),
-	/* ignored events: */
-	[CMD_FLUSH_QUEUE_REPLY]		= CMD_SIZE_ANY,
-};
-
-static const u8 kvaser_usb_leaf_cmd_sizes_usbcan[] = {
-	[CMD_START_CHIP_REPLY]		= kvaser_fsize(u.simple),
-	[CMD_STOP_CHIP_REPLY]		= kvaser_fsize(u.simple),
-	[CMD_GET_CARD_INFO_REPLY]	= kvaser_fsize(u.cardinfo),
-	[CMD_TX_ACKNOWLEDGE]		= kvaser_fsize(u.tx_acknowledge_header),
-	[CMD_GET_SOFTWARE_INFO_REPLY]	= kvaser_fsize(u.usbcan.softinfo),
-	[CMD_RX_STD_MESSAGE]		= kvaser_fsize(u.usbcan.rx_can),
-	[CMD_RX_EXT_MESSAGE]		= kvaser_fsize(u.usbcan.rx_can),
-	[CMD_CHIP_STATE_EVENT]		= kvaser_fsize(u.usbcan.chip_state_event),
-	[CMD_CAN_ERROR_EVENT]		= kvaser_fsize(u.usbcan.error_event),
-	/* ignored events: */
-	[CMD_USBCAN_CLOCK_OVERFLOW_EVENT] = CMD_SIZE_ANY,
-};
-
->>>>>>> rebase
 /* Summary of a kvaser error event, for a unified Leaf/Usbcan error
  * handling. Some discrepancies between the two families exist:
  *
@@ -390,110 +340,6 @@ struct kvaser_usb_err_summary {
 	};
 };
 
-<<<<<<< HEAD
-=======
-static const struct can_bittiming_const kvaser_usb_leaf_m16c_bittiming_const = {
-	.name = "kvaser_usb_ucii",
-	.tseg1_min = 4,
-	.tseg1_max = 16,
-	.tseg2_min = 2,
-	.tseg2_max = 8,
-	.sjw_max = 4,
-	.brp_min = 1,
-	.brp_max = 16,
-	.brp_inc = 1,
-};
-
-static const struct can_bittiming_const kvaser_usb_leaf_m32c_bittiming_const = {
-	.name = "kvaser_usb_leaf",
-	.tseg1_min = 3,
-	.tseg1_max = 16,
-	.tseg2_min = 2,
-	.tseg2_max = 8,
-	.sjw_max = 4,
-	.brp_min = 2,
-	.brp_max = 128,
-	.brp_inc = 2,
-};
-
-static const struct kvaser_usb_dev_cfg kvaser_usb_leaf_usbcan_dev_cfg = {
-	.clock = {
-		.freq = 8000000,
-	},
-	.timestamp_freq = 1,
-	.bittiming_const = &kvaser_usb_leaf_m16c_bittiming_const,
-};
-
-static const struct kvaser_usb_dev_cfg kvaser_usb_leaf_m32c_dev_cfg = {
-	.clock = {
-		.freq = 16000000,
-	},
-	.timestamp_freq = 1,
-	.bittiming_const = &kvaser_usb_leaf_m32c_bittiming_const,
-};
-
-static const struct kvaser_usb_dev_cfg kvaser_usb_leaf_imx_dev_cfg_16mhz = {
-	.clock = {
-		.freq = 16000000,
-	},
-	.timestamp_freq = 1,
-	.bittiming_const = &kvaser_usb_flexc_bittiming_const,
-};
-
-static const struct kvaser_usb_dev_cfg kvaser_usb_leaf_imx_dev_cfg_24mhz = {
-	.clock = {
-		.freq = 24000000,
-	},
-	.timestamp_freq = 1,
-	.bittiming_const = &kvaser_usb_flexc_bittiming_const,
-};
-
-static const struct kvaser_usb_dev_cfg kvaser_usb_leaf_imx_dev_cfg_32mhz = {
-	.clock = {
-		.freq = 32000000,
-	},
-	.timestamp_freq = 1,
-	.bittiming_const = &kvaser_usb_flexc_bittiming_const,
-};
-
-static int kvaser_usb_leaf_verify_size(const struct kvaser_usb *dev,
-				       const struct kvaser_cmd *cmd)
-{
-	/* buffer size >= cmd->len ensured by caller */
-	u8 min_size = 0;
-
-	switch (dev->driver_info->family) {
-	case KVASER_LEAF:
-		if (cmd->id < ARRAY_SIZE(kvaser_usb_leaf_cmd_sizes_leaf))
-			min_size = kvaser_usb_leaf_cmd_sizes_leaf[cmd->id];
-		break;
-	case KVASER_USBCAN:
-		if (cmd->id < ARRAY_SIZE(kvaser_usb_leaf_cmd_sizes_usbcan))
-			min_size = kvaser_usb_leaf_cmd_sizes_usbcan[cmd->id];
-		break;
-	}
-
-	if (min_size == CMD_SIZE_ANY)
-		return 0;
-
-	if (min_size) {
-		min_size += CMD_HEADER_LEN;
-		if (cmd->len >= min_size)
-			return 0;
-
-		dev_err_ratelimited(&dev->intf->dev,
-				    "Received command %u too short (size %u, needed %u)",
-				    cmd->id, cmd->len, min_size);
-		return -EIO;
-	}
-
-	dev_warn_ratelimited(&dev->intf->dev,
-			     "Unhandled command (%d, size %d)\n",
-			     cmd->id, cmd->len);
-	return -EINVAL;
-}
-
->>>>>>> rebase
 static void *
 kvaser_usb_leaf_frame_to_cmd(const struct kvaser_usb_net_priv *priv,
 			     const struct sk_buff *skb, int *frame_len,
@@ -513,11 +359,7 @@ kvaser_usb_leaf_frame_to_cmd(const struct kvaser_usb_net_priv *priv,
 				      sizeof(struct kvaser_cmd_tx_can);
 		cmd->u.tx_can.channel = priv->channel;
 
-<<<<<<< HEAD
 		switch (dev->card_data.leaf.family) {
-=======
-		switch (dev->driver_info->family) {
->>>>>>> rebase
 		case KVASER_LEAF:
 			cmd_tx_can_flags = &cmd->u.tx_can.leaf.flags;
 			break;
@@ -605,12 +447,6 @@ static int kvaser_usb_leaf_wait_cmd(const struct kvaser_usb *dev, u8 id,
 end:
 	kfree(buf);
 
-<<<<<<< HEAD
-=======
-	if (err == 0)
-		err = kvaser_usb_leaf_verify_size(dev, cmd);
-
->>>>>>> rebase
 	return err;
 }
 
@@ -635,37 +471,6 @@ static int kvaser_usb_leaf_send_simple_cmd(const struct kvaser_usb *dev,
 	return rc;
 }
 
-<<<<<<< HEAD
-=======
-static void kvaser_usb_leaf_get_software_info_leaf(struct kvaser_usb *dev,
-						   const struct leaf_cmd_softinfo *softinfo)
-{
-	u32 sw_options = le32_to_cpu(softinfo->sw_options);
-
-	dev->fw_version = le32_to_cpu(softinfo->fw_version);
-	dev->max_tx_urbs = le16_to_cpu(softinfo->max_outstanding_tx);
-
-	if (dev->driver_info->quirks & KVASER_USB_QUIRK_IGNORE_CLK_FREQ) {
-		/* Firmware expects bittiming parameters calculated for 16MHz
-		 * clock, regardless of the actual clock
-		 */
-		dev->cfg = &kvaser_usb_leaf_m32c_dev_cfg;
-	} else {
-		switch (sw_options & KVASER_USB_LEAF_SWOPTION_FREQ_MASK) {
-		case KVASER_USB_LEAF_SWOPTION_FREQ_16_MHZ_CLK:
-			dev->cfg = &kvaser_usb_leaf_imx_dev_cfg_16mhz;
-			break;
-		case KVASER_USB_LEAF_SWOPTION_FREQ_24_MHZ_CLK:
-			dev->cfg = &kvaser_usb_leaf_imx_dev_cfg_24mhz;
-			break;
-		case KVASER_USB_LEAF_SWOPTION_FREQ_32_MHZ_CLK:
-			dev->cfg = &kvaser_usb_leaf_imx_dev_cfg_32mhz;
-			break;
-		}
-	}
-}
-
->>>>>>> rebase
 static int kvaser_usb_leaf_get_software_info_inner(struct kvaser_usb *dev)
 {
 	struct kvaser_cmd cmd;
@@ -679,26 +484,16 @@ static int kvaser_usb_leaf_get_software_info_inner(struct kvaser_usb *dev)
 	if (err)
 		return err;
 
-<<<<<<< HEAD
 	switch (dev->card_data.leaf.family) {
 	case KVASER_LEAF:
 		dev->fw_version = le32_to_cpu(cmd.u.leaf.softinfo.fw_version);
 		dev->max_tx_urbs =
 			le16_to_cpu(cmd.u.leaf.softinfo.max_outstanding_tx);
-=======
-	switch (dev->driver_info->family) {
-	case KVASER_LEAF:
-		kvaser_usb_leaf_get_software_info_leaf(dev, &cmd.u.leaf.softinfo);
->>>>>>> rebase
 		break;
 	case KVASER_USBCAN:
 		dev->fw_version = le32_to_cpu(cmd.u.usbcan.softinfo.fw_version);
 		dev->max_tx_urbs =
 			le16_to_cpu(cmd.u.usbcan.softinfo.max_outstanding_tx);
-<<<<<<< HEAD
-=======
-		dev->cfg = &kvaser_usb_leaf_usbcan_dev_cfg;
->>>>>>> rebase
 		break;
 	}
 
@@ -737,11 +532,7 @@ static int kvaser_usb_leaf_get_card_info(struct kvaser_usb *dev)
 
 	dev->nchannels = cmd.u.cardinfo.nchannels;
 	if (dev->nchannels > KVASER_USB_MAX_NET_DEVICES ||
-<<<<<<< HEAD
 	    (dev->card_data.leaf.family == KVASER_USBCAN &&
-=======
-	    (dev->driver_info->family == KVASER_USBCAN &&
->>>>>>> rebase
 	     dev->nchannels > MAX_USBCAN_NET_DEVICES))
 		return -EINVAL;
 
@@ -877,11 +668,7 @@ kvaser_usb_leaf_rx_error_update_can_state(struct kvaser_usb_net_priv *priv,
 	    new_state < CAN_STATE_BUS_OFF)
 		priv->can.can_stats.restarts++;
 
-<<<<<<< HEAD
 	switch (dev->card_data.leaf.family) {
-=======
-	switch (dev->driver_info->family) {
->>>>>>> rebase
 	case KVASER_LEAF:
 		if (es->leaf.error_factor) {
 			priv->can.can_stats.bus_error++;
@@ -960,11 +747,7 @@ static void kvaser_usb_leaf_rx_error(const struct kvaser_usb *dev,
 		}
 	}
 
-<<<<<<< HEAD
 	switch (dev->card_data.leaf.family) {
-=======
-	switch (dev->driver_info->family) {
->>>>>>> rebase
 	case KVASER_LEAF:
 		if (es->leaf.error_factor) {
 			cf->can_id |= CAN_ERR_BUSERROR | CAN_ERR_PROT;
@@ -991,15 +774,8 @@ static void kvaser_usb_leaf_rx_error(const struct kvaser_usb *dev,
 		break;
 	}
 
-<<<<<<< HEAD
 	cf->data[6] = es->txerr;
 	cf->data[7] = es->rxerr;
-=======
-	if (new_state != CAN_STATE_BUS_OFF) {
-		cf->data[6] = es->txerr;
-		cf->data[7] = es->rxerr;
-	}
->>>>>>> rebase
 
 	stats->rx_packets++;
 	stats->rx_bytes += cf->can_dlc;
@@ -1163,11 +939,7 @@ static void kvaser_usb_leaf_rx_can_msg(const struct kvaser_usb *dev,
 	stats = &priv->netdev->stats;
 
 	if ((cmd->u.rx_can_header.flag & MSG_FLAG_ERROR_FRAME) &&
-<<<<<<< HEAD
 	    (dev->card_data.leaf.family == KVASER_LEAF &&
-=======
-	    (dev->driver_info->family == KVASER_LEAF &&
->>>>>>> rebase
 	     cmd->id == CMD_LEAF_LOG_MESSAGE)) {
 		kvaser_usb_leaf_leaf_rx_error(dev, cmd);
 		return;
@@ -1183,11 +955,7 @@ static void kvaser_usb_leaf_rx_can_msg(const struct kvaser_usb *dev,
 		return;
 	}
 
-<<<<<<< HEAD
 	switch (dev->card_data.leaf.family) {
-=======
-	switch (dev->driver_info->family) {
->>>>>>> rebase
 	case KVASER_LEAF:
 		rx_data = cmd->u.leaf.rx_can.data;
 		break;
@@ -1202,11 +970,7 @@ static void kvaser_usb_leaf_rx_can_msg(const struct kvaser_usb *dev,
 		return;
 	}
 
-<<<<<<< HEAD
 	if (dev->card_data.leaf.family == KVASER_LEAF && cmd->id ==
-=======
-	if (dev->driver_info->family == KVASER_LEAF && cmd->id ==
->>>>>>> rebase
 	    CMD_LEAF_LOG_MESSAGE) {
 		cf->can_id = le32_to_cpu(cmd->u.leaf.log_message.id);
 		if (cf->can_id & KVASER_EXTENDED_FRAME)
@@ -1288,12 +1052,6 @@ static void kvaser_usb_leaf_stop_chip_reply(const struct kvaser_usb *dev,
 static void kvaser_usb_leaf_handle_command(const struct kvaser_usb *dev,
 					   const struct kvaser_cmd *cmd)
 {
-<<<<<<< HEAD
-=======
-	if (kvaser_usb_leaf_verify_size(dev, cmd) < 0)
-		return;
-
->>>>>>> rebase
 	switch (cmd->id) {
 	case CMD_START_CHIP_REPLY:
 		kvaser_usb_leaf_start_chip_reply(dev, cmd);
@@ -1309,22 +1067,14 @@ static void kvaser_usb_leaf_handle_command(const struct kvaser_usb *dev,
 		break;
 
 	case CMD_LEAF_LOG_MESSAGE:
-<<<<<<< HEAD
 		if (dev->card_data.leaf.family != KVASER_LEAF)
-=======
-		if (dev->driver_info->family != KVASER_LEAF)
->>>>>>> rebase
 			goto warn;
 		kvaser_usb_leaf_rx_can_msg(dev, cmd);
 		break;
 
 	case CMD_CHIP_STATE_EVENT:
 	case CMD_CAN_ERROR_EVENT:
-<<<<<<< HEAD
 		if (dev->card_data.leaf.family == KVASER_LEAF)
-=======
-		if (dev->driver_info->family == KVASER_LEAF)
->>>>>>> rebase
 			kvaser_usb_leaf_leaf_rx_error(dev, cmd);
 		else
 			kvaser_usb_leaf_usbcan_rx_error(dev, cmd);
@@ -1336,20 +1086,12 @@ static void kvaser_usb_leaf_handle_command(const struct kvaser_usb *dev,
 
 	/* Ignored commands */
 	case CMD_USBCAN_CLOCK_OVERFLOW_EVENT:
-<<<<<<< HEAD
 		if (dev->card_data.leaf.family != KVASER_USBCAN)
-=======
-		if (dev->driver_info->family != KVASER_USBCAN)
->>>>>>> rebase
 			goto warn;
 		break;
 
 	case CMD_FLUSH_QUEUE_REPLY:
-<<<<<<< HEAD
 		if (dev->card_data.leaf.family != KVASER_LEAF)
-=======
-		if (dev->driver_info->family != KVASER_LEAF)
->>>>>>> rebase
 			goto warn;
 		break;
 
@@ -1422,11 +1164,7 @@ static int kvaser_usb_leaf_start_chip(struct kvaser_usb_net_priv *priv)
 {
 	int err;
 
-<<<<<<< HEAD
 	init_completion(&priv->start_comp);
-=======
-	reinit_completion(&priv->start_comp);
->>>>>>> rebase
 
 	err = kvaser_usb_leaf_send_simple_cmd(priv->dev, CMD_START_CHIP,
 					      priv->channel);
@@ -1444,11 +1182,7 @@ static int kvaser_usb_leaf_stop_chip(struct kvaser_usb_net_priv *priv)
 {
 	int err;
 
-<<<<<<< HEAD
 	init_completion(&priv->stop_comp);
-=======
-	reinit_completion(&priv->stop_comp);
->>>>>>> rebase
 
 	err = kvaser_usb_leaf_send_simple_cmd(priv->dev, CMD_STOP_CHIP,
 					      priv->channel);
@@ -1491,16 +1225,12 @@ static int kvaser_usb_leaf_init_card(struct kvaser_usb *dev)
 {
 	struct kvaser_usb_dev_card_data *card_data = &dev->card_data;
 
-<<<<<<< HEAD
 	dev->cfg = &kvaser_usb_leaf_dev_cfg;
-=======
->>>>>>> rebase
 	card_data->ctrlmode_supported |= CAN_CTRLMODE_3_SAMPLES;
 
 	return 0;
 }
 
-<<<<<<< HEAD
 static const struct can_bittiming_const kvaser_usb_leaf_bittiming_const = {
 	.name = "kvaser_usb",
 	.tseg1_min = KVASER_USB_TSEG1_MIN,
@@ -1513,8 +1243,6 @@ static const struct can_bittiming_const kvaser_usb_leaf_bittiming_const = {
 	.brp_inc = KVASER_USB_BRP_INC,
 };
 
-=======
->>>>>>> rebase
 static int kvaser_usb_leaf_set_bittiming(struct net_device *netdev)
 {
 	struct kvaser_usb_net_priv *priv = netdev_priv(netdev);
@@ -1555,19 +1283,9 @@ static int kvaser_usb_leaf_set_mode(struct net_device *netdev,
 
 	switch (mode) {
 	case CAN_MODE_START:
-<<<<<<< HEAD
 		err = kvaser_usb_leaf_simple_cmd_async(priv, CMD_START_CHIP);
 		if (err)
 			return err;
-=======
-		kvaser_usb_unlink_tx_urbs(priv);
-
-		err = kvaser_usb_leaf_simple_cmd_async(priv, CMD_START_CHIP);
-		if (err)
-			return err;
-
-		priv->can.state = CAN_STATE_ERROR_ACTIVE;
->>>>>>> rebase
 		break;
 	default:
 		return -EOPNOTSUPP;
@@ -1630,7 +1348,6 @@ const struct kvaser_usb_dev_ops kvaser_usb_leaf_dev_ops = {
 	.dev_read_bulk_callback = kvaser_usb_leaf_read_bulk_callback,
 	.dev_frame_to_cmd = kvaser_usb_leaf_frame_to_cmd,
 };
-<<<<<<< HEAD
 
 static const struct kvaser_usb_dev_cfg kvaser_usb_leaf_dev_cfg = {
 	.clock = {
@@ -1639,5 +1356,3 @@ static const struct kvaser_usb_dev_cfg kvaser_usb_leaf_dev_cfg = {
 	.timestamp_freq = 1,
 	.bittiming_const = &kvaser_usb_leaf_bittiming_const,
 };
-=======
->>>>>>> rebase

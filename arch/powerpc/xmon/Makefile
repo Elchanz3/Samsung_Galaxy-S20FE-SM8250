@@ -1,12 +1,9 @@
 # SPDX-License-Identifier: GPL-2.0
 # Makefile for xmon
 
-<<<<<<< HEAD
 # Avoid clang warnings around longjmp/setjmp declarations
 subdir-ccflags-y := -ffreestanding
 
-=======
->>>>>>> rebase
 subdir-ccflags-$(CONFIG_PPC_WERROR) += -Werror
 
 GCOV_PROFILE := n

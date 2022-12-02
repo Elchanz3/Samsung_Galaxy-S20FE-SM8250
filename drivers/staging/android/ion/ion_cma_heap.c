@@ -1,16 +1,9 @@
 // SPDX-License-Identifier: GPL-2.0
 /*
-<<<<<<< HEAD
  * Copyright (C) Linaro 2012
  * Author: <benjamin.gaignard@linaro.org> for ST-Ericsson.
  *
  * Copyright (c) 2016-2020, The Linux Foundation. All rights reserved.
-=======
- * drivers/staging/android/ion/ion_cma_heap.c
- *
- * Copyright (C) Linaro 2012
- * Author: <benjamin.gaignard@linaro.org> for ST-Ericsson.
->>>>>>> rebase
  */
 
 #include <linux/device.h>
@@ -19,17 +12,11 @@
 #include <linux/err.h>
 #include <linux/cma.h>
 #include <linux/scatterlist.h>
-<<<<<<< HEAD
 #include <soc/qcom/secure_buffer.h>
 #include <linux/highmem.h>
 
 #include "ion.h"
 #include "ion_secure_util.h"
-=======
-#include <linux/highmem.h>
-
-#include "ion.h"
->>>>>>> rebase
 
 struct ion_cma_heap {
 	struct ion_heap heap;
@@ -38,14 +25,11 @@ struct ion_cma_heap {
 
 #define to_cma_heap(x) container_of(x, struct ion_cma_heap, heap)
 
-<<<<<<< HEAD
 static bool ion_heap_is_cma_heap_type(enum ion_heap_type type)
 {
 	return type == ION_HEAP_TYPE_DMA;
 }
 
-=======
->>>>>>> rebase
 /* ION CMA heap operations functions */
 static int ion_cma_allocate(struct ion_heap *heap, struct ion_buffer *buffer,
 			    unsigned long len,
@@ -58,7 +42,6 @@ static int ion_cma_allocate(struct ion_heap *heap, struct ion_buffer *buffer,
 	unsigned long nr_pages = size >> PAGE_SHIFT;
 	unsigned long align = get_order(size);
 	int ret;
-<<<<<<< HEAD
 	struct device *dev = heap->priv;
 
 	if (ion_heap_is_cma_heap_type(buffer->heap->type) &&
@@ -67,8 +50,6 @@ static int ion_cma_allocate(struct ion_heap *heap, struct ion_buffer *buffer,
 		       __func__);
 		return -EINVAL;
 	}
-=======
->>>>>>> rebase
 
 	if (align > CONFIG_CMA_ALIGNMENT)
 		align = CONFIG_CMA_ALIGNMENT;
@@ -77,7 +58,6 @@ static int ion_cma_allocate(struct ion_heap *heap, struct ion_buffer *buffer,
 	if (!pages)
 		return -ENOMEM;
 
-<<<<<<< HEAD
 	if (hlos_accessible_buffer(buffer)) {
 		if (PageHighMem(pages)) {
 			unsigned long nr_clear_pages = nr_pages;
@@ -102,24 +82,6 @@ static int ion_cma_allocate(struct ion_heap *heap, struct ion_buffer *buffer,
 		ion_pages_sync_for_device(dev, pages, size,
 					  DMA_BIDIRECTIONAL);
 
-=======
-	if (PageHighMem(pages)) {
-		unsigned long nr_clear_pages = nr_pages;
-		struct page *page = pages;
-
-		while (nr_clear_pages > 0) {
-			void *vaddr = kmap_atomic(page);
-
-			memset(vaddr, 0, PAGE_SIZE);
-			kunmap_atomic(vaddr);
-			page++;
-			nr_clear_pages--;
-		}
-	} else {
-		memset(page_address(pages), 0, size);
-	}
-
->>>>>>> rebase
 	table = kmalloc(sizeof(*table), GFP_KERNEL);
 	if (!table)
 		goto err;
@@ -162,7 +124,6 @@ static struct ion_heap_ops ion_cma_ops = {
 	.unmap_kernel = ion_heap_unmap_kernel,
 };
 
-<<<<<<< HEAD
 struct ion_heap *ion_cma_heap_create(struct ion_platform_heap *data)
 {
 	struct ion_cma_heap *cma_heap;
@@ -170,11 +131,6 @@ struct ion_heap *ion_cma_heap_create(struct ion_platform_heap *data)
 
 	if (!dev->cma_area)
 		return ERR_PTR(-EINVAL);
-=======
-static struct ion_heap *__ion_cma_heap_create(struct cma *cma)
-{
-	struct ion_cma_heap *cma_heap;
->>>>>>> rebase
 
 	cma_heap = kzalloc(sizeof(*cma_heap), GFP_KERNEL);
 
@@ -186,16 +142,11 @@ static struct ion_heap *__ion_cma_heap_create(struct cma *cma)
 	 * get device from private heaps data, later it will be
 	 * used to make the link with reserved CMA memory
 	 */
-<<<<<<< HEAD
 	cma_heap->cma = dev->cma_area;
-=======
-	cma_heap->cma = cma;
->>>>>>> rebase
 	cma_heap->heap.type = ION_HEAP_TYPE_DMA;
 	return &cma_heap->heap;
 }
 
-<<<<<<< HEAD
 static void ion_secure_cma_free(struct ion_buffer *buffer)
 {
 	if (ion_hyp_unassign_sg_from_flags(buffer->sg_table, buffer->flags,
@@ -291,25 +242,3 @@ struct ion_heap *ion_cma_secure_heap_create(struct ion_platform_heap *data)
 	cma_heap->heap.type = (enum ion_heap_type)ION_HEAP_TYPE_HYP_CMA;
 	return &cma_heap->heap;
 }
-=======
-static int __ion_add_cma_heaps(struct cma *cma, void *data)
-{
-	struct ion_heap *heap;
-
-	heap = __ion_cma_heap_create(cma);
-	if (IS_ERR(heap))
-		return PTR_ERR(heap);
-
-	heap->name = cma_get_name(cma);
-
-	ion_device_add_heap(heap);
-	return 0;
-}
-
-static int ion_add_cma_heaps(void)
-{
-	cma_for_each_area(__ion_add_cma_heaps, NULL);
-	return 0;
-}
-device_initcall(ion_add_cma_heaps);
->>>>>>> rebase

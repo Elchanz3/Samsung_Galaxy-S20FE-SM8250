@@ -1507,11 +1507,6 @@ static struct rdma_id_private *cma_find_listener(
 {
 	struct rdma_id_private *id_priv, *id_priv_dev;
 
-<<<<<<< HEAD
-=======
-	lockdep_assert_held(&lock);
-
->>>>>>> rebase
 	if (!bind_list)
 		return ERR_PTR(-EINVAL);
 
@@ -1557,10 +1552,6 @@ cma_ib_id_from_event(struct ib_cm_id *cm_id,
 		}
 	}
 
-<<<<<<< HEAD
-=======
-	mutex_lock(&lock);
->>>>>>> rebase
 	/*
 	 * Net namespace might be getting deleted while route lookup,
 	 * cm_id lookup is in progress. Therefore, perform netdevice
@@ -1602,10 +1593,6 @@ cma_ib_id_from_event(struct ib_cm_id *cm_id,
 	id_priv = cma_find_listener(bind_list, cm_id, ib_event, &req, *net_dev);
 err:
 	rcu_read_unlock();
-<<<<<<< HEAD
-=======
-	mutex_unlock(&lock);
->>>>>>> rebase
 	if (IS_ERR(id_priv) && *net_dev) {
 		dev_put(*net_dev);
 		*net_dev = NULL;
@@ -1687,7 +1674,6 @@ static void cma_release_port(struct rdma_id_private *id_priv)
 	mutex_unlock(&lock);
 }
 
-<<<<<<< HEAD
 static void cma_leave_roce_mc_group(struct rdma_id_private *id_priv,
 				    struct cma_multicast *mc)
 {
@@ -1701,32 +1687,6 @@ static void cma_leave_roce_mc_group(struct rdma_id_private *id_priv,
 		dev_put(ndev);
 	}
 	kref_put(&mc->mcref, release_mc);
-=======
-static void destroy_mc(struct rdma_id_private *id_priv,
-		       struct cma_multicast *mc)
-{
-	if (rdma_cap_ib_mcast(id_priv->id.device, id_priv->id.port_num)) {
-		ib_sa_free_multicast(mc->multicast.ib);
-		kfree(mc);
-		return;
-	}
-
-	if (rdma_protocol_roce(id_priv->id.device,
-				      id_priv->id.port_num)) {
-		struct rdma_dev_addr *dev_addr =
-			&id_priv->id.route.addr.dev_addr;
-		struct net_device *ndev = NULL;
-
-		if (dev_addr->bound_dev_if)
-			ndev = dev_get_by_index(dev_addr->net,
-						dev_addr->bound_dev_if);
-		if (ndev) {
-			cma_igmp_send(ndev, &mc->multicast.ib->rec.mgid, false);
-			dev_put(ndev);
-		}
-		kref_put(&mc->mcref, release_mc);
-	}
->>>>>>> rebase
 }
 
 static void cma_leave_mc_groups(struct rdma_id_private *id_priv)
@@ -1734,7 +1694,6 @@ static void cma_leave_mc_groups(struct rdma_id_private *id_priv)
 	struct cma_multicast *mc;
 
 	while (!list_empty(&id_priv->mc_list)) {
-<<<<<<< HEAD
 		mc = container_of(id_priv->mc_list.next,
 				  struct cma_multicast, list);
 		list_del(&mc->list);
@@ -1745,12 +1704,6 @@ static void cma_leave_mc_groups(struct rdma_id_private *id_priv)
 		} else {
 			cma_leave_roce_mc_group(id_priv, mc);
 		}
-=======
-		mc = list_first_entry(&id_priv->mc_list, struct cma_multicast,
-				      list);
-		list_del(&mc->list);
-		destroy_mc(id_priv, mc);
->>>>>>> rebase
 	}
 }
 
@@ -2393,11 +2346,6 @@ static void cma_listen_on_dev(struct rdma_id_private *id_priv,
 	struct net *net = id_priv->id.route.addr.dev_addr.net;
 	int ret;
 
-<<<<<<< HEAD
-=======
-	lockdep_assert_held(&lock);
-
->>>>>>> rebase
 	if (cma_family(id_priv) == AF_IB && !rdma_cap_ib_cm(cma_dev->device, 1))
 		return;
 
@@ -2599,12 +2547,7 @@ static int cma_resolve_ib_route(struct rdma_id_private *id_priv, int timeout_ms)
 
 	cma_init_resolve_route_work(work, id_priv);
 
-<<<<<<< HEAD
 	route->path_rec = kmalloc(sizeof *route->path_rec, GFP_KERNEL);
-=======
-	if (!route->path_rec)
-		route->path_rec = kmalloc(sizeof *route->path_rec, GFP_KERNEL);
->>>>>>> rebase
 	if (!route->path_rec) {
 		ret = -ENOMEM;
 		goto err1;
@@ -2810,10 +2753,6 @@ static int cma_resolve_iboe_route(struct rdma_id_private *id_priv)
 err2:
 	kfree(route->path_rec);
 	route->path_rec = NULL;
-<<<<<<< HEAD
-=======
-	route->num_paths = 0;
->>>>>>> rebase
 err1:
 	kfree(work);
 	return ret;
@@ -3141,11 +3080,6 @@ static void cma_bind_port(struct rdma_bind_list *bind_list,
 	u64 sid, mask;
 	__be16 port;
 
-<<<<<<< HEAD
-=======
-	lockdep_assert_held(&lock);
-
->>>>>>> rebase
 	addr = cma_src_addr(id_priv);
 	port = htons(bind_list->port);
 
@@ -3174,11 +3108,6 @@ static int cma_alloc_port(enum rdma_ucm_port_space ps,
 	struct rdma_bind_list *bind_list;
 	int ret;
 
-<<<<<<< HEAD
-=======
-	lockdep_assert_held(&lock);
-
->>>>>>> rebase
 	bind_list = kzalloc(sizeof *bind_list, GFP_KERNEL);
 	if (!bind_list)
 		return -ENOMEM;
@@ -3205,11 +3134,6 @@ static int cma_port_is_unique(struct rdma_bind_list *bind_list,
 	struct sockaddr  *saddr = cma_src_addr(id_priv);
 	__be16 dport = cma_port(daddr);
 
-<<<<<<< HEAD
-=======
-	lockdep_assert_held(&lock);
-
->>>>>>> rebase
 	hlist_for_each_entry(cur_id, &bind_list->owners, node) {
 		struct sockaddr  *cur_daddr = cma_dst_addr(cur_id);
 		struct sockaddr  *cur_saddr = cma_src_addr(cur_id);
@@ -3249,11 +3173,6 @@ static int cma_alloc_any_port(enum rdma_ucm_port_space ps,
 	unsigned int rover;
 	struct net *net = id_priv->id.route.addr.dev_addr.net;
 
-<<<<<<< HEAD
-=======
-	lockdep_assert_held(&lock);
-
->>>>>>> rebase
 	inet_get_local_port_range(net, &low, &high);
 	remaining = (high - low) + 1;
 	rover = prandom_u32() % remaining + low;
@@ -3301,11 +3220,6 @@ static int cma_check_port(struct rdma_bind_list *bind_list,
 	struct rdma_id_private *cur_id;
 	struct sockaddr *addr, *cur_addr;
 
-<<<<<<< HEAD
-=======
-	lockdep_assert_held(&lock);
-
->>>>>>> rebase
 	addr = cma_src_addr(id_priv);
 	hlist_for_each_entry(cur_id, &bind_list->owners, node) {
 		if (id_priv == cur_id)
@@ -3336,11 +3250,6 @@ static int cma_use_port(enum rdma_ucm_port_space ps,
 	unsigned short snum;
 	int ret;
 
-<<<<<<< HEAD
-=======
-	lockdep_assert_held(&lock);
-
->>>>>>> rebase
 	snum = ntohs(cma_port(cma_src_addr(id_priv)));
 	if (snum < PROT_SOCK && !capable(CAP_NET_BIND_SERVICE))
 		return -EACCES;
@@ -4092,7 +4001,6 @@ static int cma_ib_mc_handler(int status, struct ib_sa_multicast *multicast)
 	else
 		pr_debug_ratelimited("RDMA CM: MULTICAST_ERROR: failed to join multicast. status %d\n",
 				     status);
-<<<<<<< HEAD
 	mutex_lock(&id_priv->qp_mutex);
 	if (!status && id_priv->id.qp) {
 		status = ib_attach_mcast(id_priv->id.qp, &multicast->rec.mgid,
@@ -4103,8 +4011,6 @@ static int cma_ib_mc_handler(int status, struct ib_sa_multicast *multicast)
 	}
 	mutex_unlock(&id_priv->qp_mutex);
 
-=======
->>>>>>> rebase
 	event.status = status;
 	event.param.ud.private_data = mc->context;
 	if (!status) {
@@ -4358,13 +4264,6 @@ int rdma_join_multicast(struct rdma_cm_id *id, struct sockaddr *addr,
 	struct cma_multicast *mc;
 	int ret;
 
-<<<<<<< HEAD
-=======
-	/* Not supported for kernel QPs */
-	if (WARN_ON(id->qp))
-		return -EINVAL;
-
->>>>>>> rebase
 	if (!id->device)
 		return -EINVAL;
 
@@ -4415,7 +4314,6 @@ void rdma_leave_multicast(struct rdma_cm_id *id, struct sockaddr *addr)
 	id_priv = container_of(id, struct rdma_id_private, id);
 	spin_lock_irq(&id_priv->lock);
 	list_for_each_entry(mc, &id_priv->mc_list, list) {
-<<<<<<< HEAD
 		if (!memcmp(&mc->addr, addr, rdma_addr_size(addr))) {
 			list_del(&mc->list);
 			spin_unlock_irq(&id_priv->lock);
@@ -4435,16 +4333,6 @@ void rdma_leave_multicast(struct rdma_cm_id *id, struct sockaddr *addr)
 			}
 			return;
 		}
-=======
-		if (memcmp(&mc->addr, addr, rdma_addr_size(addr)) != 0)
-			continue;
-		list_del(&mc->list);
-		spin_unlock_irq(&id_priv->lock);
-
-		WARN_ON(id_priv->cma_dev->device != id->device);
-		destroy_mc(id_priv, mc);
-		return;
->>>>>>> rebase
 	}
 	spin_unlock_irq(&id_priv->lock);
 }
@@ -4747,22 +4635,6 @@ static int __init cma_init(void)
 {
 	int ret;
 
-<<<<<<< HEAD
-=======
-	/*
-	 * There is a rare lock ordering dependency in cma_netdev_callback()
-	 * that only happens when bonding is enabled. Teach lockdep that rtnl
-	 * must never be nested under lock so it can find these without having
-	 * to test with bonding.
-	 */
-	if (IS_ENABLED(CONFIG_LOCKDEP)) {
-		rtnl_lock();
-		mutex_lock(&lock);
-		mutex_unlock(&lock);
-		rtnl_unlock();
-	}
-
->>>>>>> rebase
 	cma_wq = alloc_ordered_workqueue("rdma_cm", WQ_MEM_RECLAIM);
 	if (!cma_wq)
 		return -ENOMEM;

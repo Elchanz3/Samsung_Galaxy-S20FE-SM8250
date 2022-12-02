@@ -1146,10 +1146,6 @@ void cec_received_msg_ts(struct cec_adapter *adap,
 			if (abort)
 				dst->rx_status |= CEC_RX_STATUS_FEATURE_ABORT;
 			msg->flags = dst->flags;
-<<<<<<< HEAD
-=======
-			msg->sequence = dst->sequence;
->>>>>>> rebase
 			/* Remove it from the wait_queue */
 			list_del_init(&data->list);
 
@@ -1221,11 +1217,7 @@ static int cec_config_log_addr(struct cec_adapter *adap,
 		 * While trying to poll the physical address was reset
 		 * and the adapter was unconfigured, so bail out.
 		 */
-<<<<<<< HEAD
 		if (!adap->is_configuring)
-=======
-		if (adap->phys_addr == CEC_PHYS_ADDR_INVALID)
->>>>>>> rebase
 			return -EINTR;
 
 		if (err)
@@ -1283,10 +1275,7 @@ static void cec_adap_unconfigure(struct cec_adapter *adap)
 	    adap->phys_addr != CEC_PHYS_ADDR_INVALID)
 		WARN_ON(adap->ops->adap_log_addr(adap, CEC_LOG_ADDR_INVALID));
 	adap->log_addrs.log_addr_mask = 0;
-<<<<<<< HEAD
 	adap->is_configuring = false;
-=======
->>>>>>> rebase
 	adap->is_configured = false;
 	memset(adap->phys_addrs, 0xff, sizeof(adap->phys_addrs));
 	cec_flush(adap);
@@ -1479,16 +1468,9 @@ unconfigure:
 	for (i = 0; i < las->num_log_addrs; i++)
 		las->log_addr[i] = CEC_LOG_ADDR_INVALID;
 	cec_adap_unconfigure(adap);
-<<<<<<< HEAD
 	adap->kthread_config = NULL;
 	mutex_unlock(&adap->lock);
 	complete(&adap->config_completion);
-=======
-	adap->is_configuring = false;
-	adap->kthread_config = NULL;
-	complete(&adap->config_completion);
-	mutex_unlock(&adap->lock);
->>>>>>> rebase
 	return 0;
 }
 
@@ -1686,13 +1668,6 @@ int __cec_s_log_addrs(struct cec_adapter *adap,
 		unsigned j;
 
 		log_addrs->log_addr[i] = CEC_LOG_ADDR_INVALID;
-<<<<<<< HEAD
-=======
-		if (log_addrs->log_addr_type[i] > CEC_LOG_ADDR_TYPE_UNREGISTERED) {
-			dprintk(1, "unknown logical address type\n");
-			return -EINVAL;
-		}
->>>>>>> rebase
 		if (type_mask & (1 << log_addrs->log_addr_type[i])) {
 			dprintk(1, "duplicate logical address type\n");
 			return -EINVAL;
@@ -1713,13 +1688,10 @@ int __cec_s_log_addrs(struct cec_adapter *adap,
 			dprintk(1, "invalid primary device type\n");
 			return -EINVAL;
 		}
-<<<<<<< HEAD
 		if (log_addrs->log_addr_type[i] > CEC_LOG_ADDR_TYPE_UNREGISTERED) {
 			dprintk(1, "unknown logical address type\n");
 			return -EINVAL;
 		}
-=======
->>>>>>> rebase
 		for (j = 0; j < feature_sz; j++) {
 			if ((features[j] & 0x80) == 0) {
 				if (op_is_dev_features)

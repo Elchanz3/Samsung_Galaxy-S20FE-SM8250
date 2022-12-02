@@ -6029,10 +6029,6 @@ drv_cleanup:
 unmap_bars:
 	be_unmap_pci_bars(adapter);
 free_netdev:
-<<<<<<< HEAD
-=======
-	pci_disable_pcie_error_reporting(pdev);
->>>>>>> rebase
 	free_netdev(netdev);
 rel_reg:
 	pci_release_regions(pdev);

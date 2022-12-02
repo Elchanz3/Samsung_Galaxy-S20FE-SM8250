@@ -202,11 +202,7 @@ static inline void shrink_free_pagepool(struct xen_blkif_ring *ring, int num)
 
 #define vaddr(page) ((unsigned long)pfn_to_kaddr(page_to_pfn(page)))
 
-<<<<<<< HEAD
 static int do_block_io_op(struct xen_blkif_ring *ring);
-=======
-static int do_block_io_op(struct xen_blkif_ring *ring, unsigned int *eoi_flags);
->>>>>>> rebase
 static int dispatch_rw_block_io(struct xen_blkif_ring *ring,
 				struct blkif_request *req,
 				struct pending_req *pending_req);
@@ -619,11 +615,6 @@ int xen_blkif_schedule(void *arg)
 	struct xen_vbd *vbd = &blkif->vbd;
 	unsigned long timeout;
 	int ret;
-<<<<<<< HEAD
-=======
-	bool do_eoi;
-	unsigned int eoi_flags = XEN_EOI_FLAG_SPURIOUS;
->>>>>>> rebase
 
 	set_freezable();
 	while (!kthread_should_stop()) {
@@ -648,33 +639,16 @@ int xen_blkif_schedule(void *arg)
 		if (timeout == 0)
 			goto purge_gnt_list;
 
-<<<<<<< HEAD
 		ring->waiting_reqs = 0;
 		smp_mb(); /* clear flag *before* checking for work */
 
 		ret = do_block_io_op(ring);
-=======
-		do_eoi = ring->waiting_reqs;
-
-		ring->waiting_reqs = 0;
-		smp_mb(); /* clear flag *before* checking for work */
-
-		ret = do_block_io_op(ring, &eoi_flags);
->>>>>>> rebase
 		if (ret > 0)
 			ring->waiting_reqs = 1;
 		if (ret == -EACCES)
 			wait_event_interruptible(ring->shutdown_wq,
 						 kthread_should_stop());
 
-<<<<<<< HEAD
-=======
-		if (do_eoi && !ring->waiting_reqs) {
-			xen_irq_lateeoi(ring->irq, eoi_flags);
-			eoi_flags |= XEN_EOI_FLAG_SPURIOUS;
-		}
-
->>>>>>> rebase
 purge_gnt_list:
 		if (blkif->vbd.feature_gnt_persistent &&
 		    time_after(jiffies, ring->next_lru)) {
@@ -867,16 +841,8 @@ again:
 			pages[i]->page = persistent_gnt->page;
 			pages[i]->persistent_gnt = persistent_gnt;
 		} else {
-<<<<<<< HEAD
 			if (get_free_page(ring, &pages[i]->page))
 				goto out_of_memory;
-=======
-			if (get_free_page(ring, &pages[i]->page)) {
-				put_free_pages(ring, pages_to_gnt, segs_to_map);
-				ret = -ENOMEM;
-				goto out;
-			}
->>>>>>> rebase
 			addr = vaddr(pages[i]->page);
 			pages_to_gnt[segs_to_map] = pages[i]->page;
 			pages[i]->persistent_gnt = NULL;
@@ -892,15 +858,10 @@ again:
 			break;
 	}
 
-<<<<<<< HEAD
 	if (segs_to_map) {
 		ret = gnttab_map_refs(map, NULL, pages_to_gnt, segs_to_map);
 		BUG_ON(ret);
 	}
-=======
-	if (segs_to_map)
-		ret = gnttab_map_refs(map, NULL, pages_to_gnt, segs_to_map);
->>>>>>> rebase
 
 	/*
 	 * Now swizzle the MFN in our domain with the MFN from the other domain
@@ -915,11 +876,7 @@ again:
 				pr_debug("invalid buffer -- could not remap it\n");
 				put_free_pages(ring, &pages[seg_idx]->page, 1);
 				pages[seg_idx]->handle = BLKBACK_INVALID_HANDLE;
-<<<<<<< HEAD
 				ret |= 1;
-=======
-				ret |= !ret;
->>>>>>> rebase
 				goto next;
 			}
 			pages[seg_idx]->handle = map[new_map_idx].handle;
@@ -971,7 +928,6 @@ next:
 	}
 	segs_to_map = 0;
 	last_map = map_until;
-<<<<<<< HEAD
 	if (map_until != num)
 		goto again;
 
@@ -983,20 +939,6 @@ out_of_memory:
 	for (i = last_map; i < num; i++)
 		pages[i]->handle = BLKBACK_INVALID_HANDLE;
 	return -ENOMEM;
-=======
-	if (!ret && map_until != num)
-		goto again;
-
-out:
-	for (i = last_map; i < num; i++) {
-		/* Don't zap current batch's valid persistent grants. */
-		if(i >= map_until)
-			pages[i]->persistent_gnt = NULL;
-		pages[i]->handle = BLKBACK_INVALID_HANDLE;
-	}
-
-	return ret;
->>>>>>> rebase
 }
 
 static int xen_blkbk_map_seg(struct pending_req *pending_req)
@@ -1179,11 +1121,7 @@ static void end_block_io_op(struct bio *bio)
  * and transmute  it to the block API to hand it over to the proper block disk.
  */
 static int
-<<<<<<< HEAD
 __do_block_io_op(struct xen_blkif_ring *ring)
-=======
-__do_block_io_op(struct xen_blkif_ring *ring, unsigned int *eoi_flags)
->>>>>>> rebase
 {
 	union blkif_back_rings *blk_rings = &ring->blk_rings;
 	struct blkif_request req;
@@ -1206,12 +1144,6 @@ __do_block_io_op(struct xen_blkif_ring *ring, unsigned int *eoi_flags)
 		if (RING_REQUEST_CONS_OVERFLOW(&blk_rings->common, rc))
 			break;
 
-<<<<<<< HEAD
-=======
-		/* We've seen a request, so clear spurious eoi flag. */
-		*eoi_flags &= ~XEN_EOI_FLAG_SPURIOUS;
-
->>>>>>> rebase
 		if (kthread_should_stop()) {
 			more_to_do = 1;
 			break;
@@ -1270,21 +1202,13 @@ done:
 }
 
 static int
-<<<<<<< HEAD
 do_block_io_op(struct xen_blkif_ring *ring)
-=======
-do_block_io_op(struct xen_blkif_ring *ring, unsigned int *eoi_flags)
->>>>>>> rebase
 {
 	union blkif_back_rings *blk_rings = &ring->blk_rings;
 	int more_to_do;
 
 	do {
-<<<<<<< HEAD
 		more_to_do = __do_block_io_op(ring);
-=======
-		more_to_do = __do_block_io_op(ring, eoi_flags);
->>>>>>> rebase
 		if (more_to_do)
 			break;
 

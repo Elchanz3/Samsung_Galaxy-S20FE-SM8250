@@ -61,11 +61,7 @@ extern inline void set_hae(unsigned long new_hae)
  * Change virtual addresses to physical addresses and vv.
  */
 #ifdef USE_48_BIT_KSEG
-<<<<<<< HEAD
 static inline unsigned long virt_to_phys(void *address)
-=======
-static inline unsigned long virt_to_phys(volatile void *address)
->>>>>>> rebase
 {
 	return (unsigned long)address - IDENT_ADDR;
 }
@@ -75,11 +71,7 @@ static inline void * phys_to_virt(unsigned long address)
 	return (void *) (address + IDENT_ADDR);
 }
 #else
-<<<<<<< HEAD
 static inline unsigned long virt_to_phys(void *address)
-=======
-static inline unsigned long virt_to_phys(volatile void *address)
->>>>>>> rebase
 {
         unsigned long phys = (unsigned long)address;
 
@@ -120,11 +112,7 @@ static inline dma_addr_t __deprecated isa_page_to_bus(struct page *page)
 extern unsigned long __direct_map_base;
 extern unsigned long __direct_map_size;
 
-<<<<<<< HEAD
 static inline unsigned long __deprecated virt_to_bus(void *address)
-=======
-static inline unsigned long __deprecated virt_to_bus(volatile void *address)
->>>>>>> rebase
 {
 	unsigned long phys = virt_to_phys(address);
 	unsigned long bus = phys + __direct_map_base;
@@ -339,26 +327,14 @@ static inline int __is_mmio(const volatile void __iomem *addr)
 #if IO_CONCAT(__IO_PREFIX,trivial_io_bw)
 extern inline unsigned int ioread8(void __iomem *addr)
 {
-<<<<<<< HEAD
 	unsigned int ret = IO_CONCAT(__IO_PREFIX,ioread8)(addr);
-=======
-	unsigned int ret;
-	mb();
-	ret = IO_CONCAT(__IO_PREFIX,ioread8)(addr);
->>>>>>> rebase
 	mb();
 	return ret;
 }
 
 extern inline unsigned int ioread16(void __iomem *addr)
 {
-<<<<<<< HEAD
 	unsigned int ret = IO_CONCAT(__IO_PREFIX,ioread16)(addr);
-=======
-	unsigned int ret;
-	mb();
-	ret = IO_CONCAT(__IO_PREFIX,ioread16)(addr);
->>>>>>> rebase
 	mb();
 	return ret;
 }
@@ -399,13 +375,7 @@ extern inline void outw(u16 b, unsigned long port)
 #if IO_CONCAT(__IO_PREFIX,trivial_io_lq)
 extern inline unsigned int ioread32(void __iomem *addr)
 {
-<<<<<<< HEAD
 	unsigned int ret = IO_CONCAT(__IO_PREFIX,ioread32)(addr);
-=======
-	unsigned int ret;
-	mb();
-	ret = IO_CONCAT(__IO_PREFIX,ioread32)(addr);
->>>>>>> rebase
 	mb();
 	return ret;
 }
@@ -450,26 +420,14 @@ extern inline void __raw_writew(u16 b, volatile void __iomem *addr)
 
 extern inline u8 readb(const volatile void __iomem *addr)
 {
-<<<<<<< HEAD
 	u8 ret = __raw_readb(addr);
-=======
-	u8 ret;
-	mb();
-	ret = __raw_readb(addr);
->>>>>>> rebase
 	mb();
 	return ret;
 }
 
 extern inline u16 readw(const volatile void __iomem *addr)
 {
-<<<<<<< HEAD
 	u16 ret = __raw_readw(addr);
-=======
-	u16 ret;
-	mb();
-	ret = __raw_readw(addr);
->>>>>>> rebase
 	mb();
 	return ret;
 }
@@ -510,26 +468,14 @@ extern inline void __raw_writeq(u64 b, volatile void __iomem *addr)
 
 extern inline u32 readl(const volatile void __iomem *addr)
 {
-<<<<<<< HEAD
 	u32 ret = __raw_readl(addr);
-=======
-	u32 ret;
-	mb();
-	ret = __raw_readl(addr);
->>>>>>> rebase
 	mb();
 	return ret;
 }
 
 extern inline u64 readq(const volatile void __iomem *addr)
 {
-<<<<<<< HEAD
 	u64 ret = __raw_readq(addr);
-=======
-	u64 ret;
-	mb();
-	ret = __raw_readq(addr);
->>>>>>> rebase
 	mb();
 	return ret;
 }
@@ -547,17 +493,10 @@ extern inline void writeq(u64 b, volatile void __iomem *addr)
 }
 #endif
 
-<<<<<<< HEAD
 #define ioread16be(p) be16_to_cpu(ioread16(p))
 #define ioread32be(p) be32_to_cpu(ioread32(p))
 #define iowrite16be(v,p) iowrite16(cpu_to_be16(v), (p))
 #define iowrite32be(v,p) iowrite32(cpu_to_be32(v), (p))
-=======
-#define ioread16be(p) swab16(ioread16(p))
-#define ioread32be(p) swab32(ioread32(p))
-#define iowrite16be(v,p) iowrite16(swab16(v), (p))
-#define iowrite32be(v,p) iowrite32(swab32(v), (p))
->>>>>>> rebase
 
 #define inb_p		inb
 #define inw_p		inw
@@ -565,7 +504,6 @@ extern inline void writeq(u64 b, volatile void __iomem *addr)
 #define outb_p		outb
 #define outw_p		outw
 #define outl_p		outl
-<<<<<<< HEAD
 #define readb_relaxed(addr)	__raw_readb(addr)
 #define readw_relaxed(addr)	__raw_readw(addr)
 #define readl_relaxed(addr)	__raw_readl(addr)
@@ -574,46 +512,6 @@ extern inline void writeq(u64 b, volatile void __iomem *addr)
 #define writew_relaxed(b, addr)	__raw_writew(b, addr)
 #define writel_relaxed(b, addr)	__raw_writel(b, addr)
 #define writeq_relaxed(b, addr)	__raw_writeq(b, addr)
-=======
-
-extern u8 readb_relaxed(const volatile void __iomem *addr);
-extern u16 readw_relaxed(const volatile void __iomem *addr);
-extern u32 readl_relaxed(const volatile void __iomem *addr);
-extern u64 readq_relaxed(const volatile void __iomem *addr);
-
-#if IO_CONCAT(__IO_PREFIX,trivial_io_bw)
-extern inline u8 readb_relaxed(const volatile void __iomem *addr)
-{
-	mb();
-	return __raw_readb(addr);
-}
-
-extern inline u16 readw_relaxed(const volatile void __iomem *addr)
-{
-	mb();
-	return __raw_readw(addr);
-}
-#endif
-
-#if IO_CONCAT(__IO_PREFIX,trivial_io_lq)
-extern inline u32 readl_relaxed(const volatile void __iomem *addr)
-{
-	mb();
-	return __raw_readl(addr);
-}
-
-extern inline u64 readq_relaxed(const volatile void __iomem *addr)
-{
-	mb();
-	return __raw_readq(addr);
-}
-#endif
-
-#define writeb_relaxed	writeb
-#define writew_relaxed	writew
-#define writel_relaxed	writel
-#define writeq_relaxed	writeq
->>>>>>> rebase
 
 #define mmiowb()
 

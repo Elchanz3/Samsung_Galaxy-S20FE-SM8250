@@ -127,15 +127,7 @@ static DEFINE_SPINLOCK(func_buf_lock); /* guard 'func_buf'  and friends */
 static unsigned long key_down[BITS_TO_LONGS(KEY_CNT)];	/* keyboard key bitmap */
 static unsigned char shift_down[NR_SHIFT];		/* shift state counters.. */
 static bool dead_key_next;
-<<<<<<< HEAD
 static int npadch = -1;					/* -1 or number assembled on pad */
-=======
-
-/* Handles a number being assembled on the number pad */
-static bool npadch_active;
-static unsigned int npadch_value;
-
->>>>>>> rebase
 static unsigned int diacr;
 static char rep;					/* flag telling character repeat */
 
@@ -314,11 +306,7 @@ int kbd_rate(struct kbd_repeat *rpt)
 static void put_queue(struct vc_data *vc, int ch)
 {
 	tty_insert_flip_char(&vc->port, ch, 0);
-<<<<<<< HEAD
 	tty_schedule_flip(&vc->port);
-=======
-	tty_flip_buffer_push(&vc->port);
->>>>>>> rebase
 }
 
 static void puts_queue(struct vc_data *vc, char *cp)
@@ -327,11 +315,7 @@ static void puts_queue(struct vc_data *vc, char *cp)
 		tty_insert_flip_char(&vc->port, *cp, 0);
 		cp++;
 	}
-<<<<<<< HEAD
 	tty_schedule_flip(&vc->port);
-=======
-	tty_flip_buffer_push(&vc->port);
->>>>>>> rebase
 }
 
 static void applkey(struct vc_data *vc, int key, char mode)
@@ -576,11 +560,7 @@ static void fn_inc_console(struct vc_data *vc)
 static void fn_send_intr(struct vc_data *vc)
 {
 	tty_insert_flip_char(&vc->port, 0, TTY_BREAK);
-<<<<<<< HEAD
 	tty_schedule_flip(&vc->port);
-=======
-	tty_flip_buffer_push(&vc->port);
->>>>>>> rebase
 }
 
 static void fn_scroll_forw(struct vc_data *vc)
@@ -758,18 +738,8 @@ static void k_fn(struct vc_data *vc, unsigned char value, char up_flag)
 		return;
 
 	if ((unsigned)value < ARRAY_SIZE(func_table)) {
-<<<<<<< HEAD
 		if (func_table[value])
 			puts_queue(vc, func_table[value]);
-=======
-		unsigned long flags;
-
-		spin_lock_irqsave(&func_buf_lock, flags);
-		if (func_table[value])
-			puts_queue(vc, func_table[value]);
-		spin_unlock_irqrestore(&func_buf_lock, flags);
-
->>>>>>> rebase
 	} else
 		pr_err("k_fn called with value=%d\n", value);
 }
@@ -875,21 +845,12 @@ static void k_shift(struct vc_data *vc, unsigned char value, char up_flag)
 		shift_state &= ~(1 << value);
 
 	/* kludge */
-<<<<<<< HEAD
 	if (up_flag && shift_state != old_state && npadch != -1) {
 		if (kbd->kbdmode == VC_UNICODE)
 			to_utf8(vc, npadch);
 		else
 			put_queue(vc, npadch & 0xff);
 		npadch = -1;
-=======
-	if (up_flag && shift_state != old_state && npadch_active) {
-		if (kbd->kbdmode == VC_UNICODE)
-			to_utf8(vc, npadch_value);
-		else
-			put_queue(vc, npadch_value & 0xff);
-		npadch_active = false;
->>>>>>> rebase
 	}
 }
 
@@ -907,11 +868,7 @@ static void k_meta(struct vc_data *vc, unsigned char value, char up_flag)
 
 static void k_ascii(struct vc_data *vc, unsigned char value, char up_flag)
 {
-<<<<<<< HEAD
 	int base;
-=======
-	unsigned int base;
->>>>>>> rebase
 
 	if (up_flag)
 		return;
@@ -925,19 +882,10 @@ static void k_ascii(struct vc_data *vc, unsigned char value, char up_flag)
 		base = 16;
 	}
 
-<<<<<<< HEAD
 	if (npadch == -1)
 		npadch = value;
 	else
 		npadch = npadch * base + value;
-=======
-	if (!npadch_active) {
-		npadch_value = 0;
-		npadch_active = true;
-	}
-
-	npadch_value = npadch_value * base + value;
->>>>>>> rebase
 }
 
 static void k_lock(struct vc_data *vc, unsigned char value, char up_flag)
@@ -2036,7 +1984,6 @@ out:
 #undef s
 #undef v
 
-<<<<<<< HEAD
 /* FIXME: This one needs untangling and locking */
 int vt_do_kdgkb_ioctl(int cmd, struct kbsentry __user *user_kdgkb, int perm)
 {
@@ -2044,13 +1991,6 @@ int vt_do_kdgkb_ioctl(int cmd, struct kbsentry __user *user_kdgkb, int perm)
 	char *p;
 	u_char *q;
 	u_char __user *up;
-=======
-/* FIXME: This one needs untangling */
-int vt_do_kdgkb_ioctl(int cmd, struct kbsentry __user *user_kdgkb, int perm)
-{
-	struct kbsentry *kbs;
-	u_char *q;
->>>>>>> rebase
 	int sz, fnw_sz;
 	int delta;
 	char *first_free, *fj, *fnw;
@@ -2076,7 +2016,6 @@ int vt_do_kdgkb_ioctl(int cmd, struct kbsentry __user *user_kdgkb, int perm)
 	i = kbs->kb_func;
 
 	switch (cmd) {
-<<<<<<< HEAD
 	case KDGKBSENT:
 		sz = sizeof(kbs->kb_string) - 1; /* sz should have been
 						  a struct member */
@@ -2094,21 +2033,6 @@ int vt_do_kdgkb_ioctl(int cmd, struct kbsentry __user *user_kdgkb, int perm)
 		}
 		kfree(kbs);
 		return ((p && *p) ? -EOVERFLOW : 0);
-=======
-	case KDGKBSENT: {
-		/* size should have been a struct member */
-		ssize_t len = sizeof(user_kdgkb->kb_string);
-
-		spin_lock_irqsave(&func_buf_lock, flags);
-		len = strlcpy(kbs->kb_string, func_table[i] ? : "", len);
-		spin_unlock_irqrestore(&func_buf_lock, flags);
-
-		ret = copy_to_user(user_kdgkb->kb_string, kbs->kb_string,
-				len + 1) ? -EFAULT : 0;
-
-		goto reterr;
-	}
->>>>>>> rebase
 	case KDSKBSENT:
 		if (!perm) {
 			ret = -EPERM;

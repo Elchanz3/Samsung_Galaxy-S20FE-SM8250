@@ -73,14 +73,11 @@ struct shrinker {
 	/* ID in shrinker_idr */
 	int id;
 #endif
-<<<<<<< HEAD
 	atomic_long_t nr_total_scan;
 	atomic_long_t nr_delay_scan;
 	atomic_long_t cpu_time;
 	atomic_long_t jiffies_time;
 
-=======
->>>>>>> rebase
 	/* objs pending delete, per node */
 	atomic_long_t *nr_deferred;
 };

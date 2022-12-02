@@ -22,10 +22,6 @@
  * Authors: Ben Skeggs
  */
 #include "priv.h"
-<<<<<<< HEAD
-=======
-#include <subdev/timer.h>
->>>>>>> rebase
 
 static void
 gk104_ibus_intr_hub(struct nvkm_subdev *ibus, int i)
@@ -35,10 +31,7 @@ gk104_ibus_intr_hub(struct nvkm_subdev *ibus, int i)
 	u32 data = nvkm_rd32(device, 0x122124 + (i * 0x0800));
 	u32 stat = nvkm_rd32(device, 0x122128 + (i * 0x0800));
 	nvkm_debug(ibus, "HUB%d: %06x %08x (%08x)\n", i, addr, data, stat);
-<<<<<<< HEAD
 	nvkm_mask(device, 0x122128 + (i * 0x0800), 0x00000200, 0x00000000);
-=======
->>>>>>> rebase
 }
 
 static void
@@ -49,10 +42,7 @@ gk104_ibus_intr_rop(struct nvkm_subdev *ibus, int i)
 	u32 data = nvkm_rd32(device, 0x124124 + (i * 0x0800));
 	u32 stat = nvkm_rd32(device, 0x124128 + (i * 0x0800));
 	nvkm_debug(ibus, "ROP%d: %06x %08x (%08x)\n", i, addr, data, stat);
-<<<<<<< HEAD
 	nvkm_mask(device, 0x124128 + (i * 0x0800), 0x00000200, 0x00000000);
-=======
->>>>>>> rebase
 }
 
 static void
@@ -63,10 +53,7 @@ gk104_ibus_intr_gpc(struct nvkm_subdev *ibus, int i)
 	u32 data = nvkm_rd32(device, 0x128124 + (i * 0x0800));
 	u32 stat = nvkm_rd32(device, 0x128128 + (i * 0x0800));
 	nvkm_debug(ibus, "GPC%d: %06x %08x (%08x)\n", i, addr, data, stat);
-<<<<<<< HEAD
 	nvkm_mask(device, 0x128128 + (i * 0x0800), 0x00000200, 0x00000000);
-=======
->>>>>>> rebase
 }
 
 void
@@ -103,15 +90,6 @@ gk104_ibus_intr(struct nvkm_subdev *ibus)
 			intr1 &= ~stat;
 		}
 	}
-<<<<<<< HEAD
-=======
-
-	nvkm_mask(device, 0x12004c, 0x0000003f, 0x00000002);
-	nvkm_msec(device, 2000,
-		if (!(nvkm_rd32(device, 0x12004c) & 0x0000003f))
-			break;
-	);
->>>>>>> rebase
 }
 
 static int

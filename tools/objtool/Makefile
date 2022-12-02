@@ -7,12 +7,9 @@ ARCH := x86
 endif
 
 # always use the host compiler
-<<<<<<< HEAD
 HOSTAR	?= ar
 HOSTCC	?= gcc
 HOSTLD	?= ld
-=======
->>>>>>> rebase
 AR	 = $(HOSTAR)
 CC	 = $(HOSTCC)
 LD	 = $(HOSTLD)

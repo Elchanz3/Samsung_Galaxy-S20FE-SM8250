@@ -232,7 +232,6 @@ static int armada_370_xp_msi_alloc(struct irq_domain *domain, unsigned int virq,
 	int hwirq, i;
 
 	mutex_lock(&msi_used_lock);
-<<<<<<< HEAD
 
 	hwirq = bitmap_find_next_zero_area(msi_used, PCI_MSI_DOORBELL_NR,
 					   0, nr_irqs, 0);
@@ -244,15 +243,6 @@ static int armada_370_xp_msi_alloc(struct irq_domain *domain, unsigned int virq,
 	bitmap_set(msi_used, hwirq, nr_irqs);
 	mutex_unlock(&msi_used_lock);
 
-=======
-	hwirq = bitmap_find_free_region(msi_used, PCI_MSI_DOORBELL_NR,
-					order_base_2(nr_irqs));
-	mutex_unlock(&msi_used_lock);
-
-	if (hwirq < 0)
-		return -ENOSPC;
-
->>>>>>> rebase
 	for (i = 0; i < nr_irqs; i++) {
 		irq_domain_set_info(domain, virq + i, hwirq + i,
 				    &armada_370_xp_msi_bottom_irq_chip,
@@ -260,11 +250,7 @@ static int armada_370_xp_msi_alloc(struct irq_domain *domain, unsigned int virq,
 				    NULL, NULL);
 	}
 
-<<<<<<< HEAD
 	return hwirq;
-=======
-	return 0;
->>>>>>> rebase
 }
 
 static void armada_370_xp_msi_free(struct irq_domain *domain,
@@ -273,11 +259,7 @@ static void armada_370_xp_msi_free(struct irq_domain *domain,
 	struct irq_data *d = irq_domain_get_irq_data(domain, virq);
 
 	mutex_lock(&msi_used_lock);
-<<<<<<< HEAD
 	bitmap_clear(msi_used, d->hwirq, nr_irqs);
-=======
-	bitmap_release_region(msi_used, d->hwirq, order_base_2(nr_irqs));
->>>>>>> rebase
 	mutex_unlock(&msi_used_lock);
 }
 
@@ -414,20 +396,7 @@ static void armada_xp_mpic_smp_cpu_init(void)
 
 static void armada_xp_mpic_perf_init(void)
 {
-<<<<<<< HEAD
 	unsigned long cpuid = cpu_logical_map(smp_processor_id());
-=======
-	unsigned long cpuid;
-
-	/*
-	 * This Performance Counter Overflow interrupt is specific for
-	 * Armada 370 and XP. It is not available on Armada 375, 38x and 39x.
-	 */
-	if (!of_machine_is_compatible("marvell,armada-370-xp"))
-		return;
-
-	cpuid = cpu_logical_map(smp_processor_id());
->>>>>>> rebase
 
 	/* Enable Performance Counter Overflow interrupts */
 	writel(ARMADA_370_XP_INT_CAUSE_PERF(cpuid),

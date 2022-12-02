@@ -264,11 +264,7 @@ struct bcache_device {
 #define BCACHE_DEV_UNLINK_DONE		2
 #define BCACHE_DEV_WB_RUNNING		3
 #define BCACHE_DEV_RATE_DW_RUNNING	4
-<<<<<<< HEAD
 	unsigned int		nr_stripes;
-=======
-	int			nr_stripes;
->>>>>>> rebase
 	unsigned int		stripe_size;
 	atomic_t		*stripe_sectors_dirty;
 	unsigned long		*full_dirty_stripes;
@@ -589,10 +585,6 @@ struct cache_set {
 	 */
 	wait_queue_head_t	btree_cache_wait;
 	struct task_struct	*btree_cache_alloc_lock;
-<<<<<<< HEAD
-=======
-	spinlock_t		btree_cannibalize_lock;
->>>>>>> rebase
 
 	/*
 	 * When we free a btree node, we increment the gen of the bucket the

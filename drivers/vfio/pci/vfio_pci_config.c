@@ -398,23 +398,6 @@ static inline void p_setd(struct perm_bits *p, int off, u32 virt, u32 write)
 	*(__le32 *)(&p->write[off]) = cpu_to_le32(write);
 }
 
-<<<<<<< HEAD
-=======
-/* Caller should hold memory_lock semaphore */
-bool __vfio_pci_memory_enabled(struct vfio_pci_device *vdev)
-{
-	struct pci_dev *pdev = vdev->pdev;
-	u16 cmd = le16_to_cpu(*(__le16 *)&vdev->vconfig[PCI_COMMAND]);
-
-	/*
-	 * SR-IOV VF memory enable is handled by the MSE bit in the
-	 * PF SR-IOV capability, there's therefore no need to trigger
-	 * faults based on the virtual value.
-	 */
-	return pdev->is_virtfn || (cmd & PCI_COMMAND_MEMORY);
-}
-
->>>>>>> rebase
 /*
  * Restore the *real* BARs after we detect a FLR or backdoor reset.
  * (backdoor = some device specific technique that we didn't catch)
@@ -575,27 +558,13 @@ static int vfio_basic_config_write(struct vfio_pci_device *vdev, int pos,
 
 		new_cmd = le32_to_cpu(val);
 
-<<<<<<< HEAD
-=======
-		phys_io = !!(phys_cmd & PCI_COMMAND_IO);
-		virt_io = !!(le16_to_cpu(*virt_cmd) & PCI_COMMAND_IO);
-		new_io = !!(new_cmd & PCI_COMMAND_IO);
-
->>>>>>> rebase
 		phys_mem = !!(phys_cmd & PCI_COMMAND_MEMORY);
 		virt_mem = !!(le16_to_cpu(*virt_cmd) & PCI_COMMAND_MEMORY);
 		new_mem = !!(new_cmd & PCI_COMMAND_MEMORY);
 
-<<<<<<< HEAD
 		phys_io = !!(phys_cmd & PCI_COMMAND_IO);
 		virt_io = !!(le16_to_cpu(*virt_cmd) & PCI_COMMAND_IO);
 		new_io = !!(new_cmd & PCI_COMMAND_IO);
-=======
-		if (!new_mem)
-			vfio_pci_zap_and_down_write_memory_lock(vdev);
-		else
-			down_write(&vdev->memory_lock);
->>>>>>> rebase
 
 		/*
 		 * If the user is writing mem/io enable (new_mem/io) and we
@@ -612,16 +581,8 @@ static int vfio_basic_config_write(struct vfio_pci_device *vdev, int pos,
 	}
 
 	count = vfio_default_config_write(vdev, pos, count, perm, offset, val);
-<<<<<<< HEAD
 	if (count < 0)
 		return count;
-=======
-	if (count < 0) {
-		if (offset == PCI_COMMAND)
-			up_write(&vdev->memory_lock);
-		return count;
-	}
->>>>>>> rebase
 
 	/*
 	 * Save current memory/io enable bits in vconfig to allow for
@@ -632,11 +593,6 @@ static int vfio_basic_config_write(struct vfio_pci_device *vdev, int pos,
 
 		*virt_cmd &= cpu_to_le16(~mask);
 		*virt_cmd |= cpu_to_le16(new_cmd & mask);
-<<<<<<< HEAD
-=======
-
-		up_write(&vdev->memory_lock);
->>>>>>> rebase
 	}
 
 	/* Emulate INTx disable */
@@ -874,16 +830,8 @@ static int vfio_exp_config_write(struct vfio_pci_device *vdev, int pos,
 						 pos - offset + PCI_EXP_DEVCAP,
 						 &cap);
 
-<<<<<<< HEAD
 		if (!ret && (cap & PCI_EXP_DEVCAP_FLR))
 			pci_try_reset_function(vdev->pdev);
-=======
-		if (!ret && (cap & PCI_EXP_DEVCAP_FLR)) {
-			vfio_pci_zap_and_down_write_memory_lock(vdev);
-			pci_try_reset_function(vdev->pdev);
-			up_write(&vdev->memory_lock);
-		}
->>>>>>> rebase
 	}
 
 	/*
@@ -961,16 +909,8 @@ static int vfio_af_config_write(struct vfio_pci_device *vdev, int pos,
 						pos - offset + PCI_AF_CAP,
 						&cap);
 
-<<<<<<< HEAD
 		if (!ret && (cap & PCI_AF_CAP_FLR) && (cap & PCI_AF_CAP_TP))
 			pci_try_reset_function(vdev->pdev);
-=======
-		if (!ret && (cap & PCI_AF_CAP_FLR) && (cap & PCI_AF_CAP_TP)) {
-			vfio_pci_zap_and_down_write_memory_lock(vdev);
-			pci_try_reset_function(vdev->pdev);
-			up_write(&vdev->memory_lock);
-		}
->>>>>>> rebase
 	}
 
 	return count;
@@ -1524,16 +1464,7 @@ static int vfio_cap_init(struct vfio_pci_device *vdev)
 		if (ret)
 			return ret;
 
-<<<<<<< HEAD
 		if (cap <= PCI_CAP_ID_MAX) {
-=======
-		/*
-		 * ID 0 is a NULL capability, conflicting with our fake
-		 * PCI_CAP_ID_BASIC.  As it has no content, consider it
-		 * hidden for now.
-		 */
-		if (cap && cap <= PCI_CAP_ID_MAX) {
->>>>>>> rebase
 			len = pci_cap_length[cap];
 			if (len == 0xFF) { /* Variable length */
 				len = vfio_cap_len(vdev, cap, pos);
@@ -1613,11 +1544,7 @@ static int vfio_ecap_init(struct vfio_pci_device *vdev)
 			if (len == 0xFF) {
 				len = vfio_ext_cap_len(vdev, ecap, epos);
 				if (len < 0)
-<<<<<<< HEAD
 					return ret;
-=======
-					return len;
->>>>>>> rebase
 			}
 		}
 
@@ -1776,18 +1703,6 @@ int vfio_config_init(struct vfio_pci_device *vdev)
 				 vconfig[PCI_INTERRUPT_PIN]);
 
 		vconfig[PCI_INTERRUPT_PIN] = 0; /* Gratuitous for good VFs */
-<<<<<<< HEAD
-=======
-
-		/*
-		 * VFs do no implement the memory enable bit of the COMMAND
-		 * register therefore we'll not have it set in our initial
-		 * copy of config space after pci_enable_device().  For
-		 * consistency with PFs, set the virtual enable bit here.
-		 */
-		*(__le16 *)&vconfig[PCI_COMMAND] |=
-					cpu_to_le16(PCI_COMMAND_MEMORY);
->>>>>>> rebase
 	}
 
 	if (!IS_ENABLED(CONFIG_VFIO_PCI_INTX) || vdev->nointx)
@@ -1817,16 +1732,8 @@ void vfio_config_free(struct vfio_pci_device *vdev)
 	vdev->vconfig = NULL;
 	kfree(vdev->pci_config_map);
 	vdev->pci_config_map = NULL;
-<<<<<<< HEAD
 	kfree(vdev->msi_perm);
 	vdev->msi_perm = NULL;
-=======
-	if (vdev->msi_perm) {
-		free_perm_bits(vdev->msi_perm);
-		kfree(vdev->msi_perm);
-		vdev->msi_perm = NULL;
-	}
->>>>>>> rebase
 }
 
 /*

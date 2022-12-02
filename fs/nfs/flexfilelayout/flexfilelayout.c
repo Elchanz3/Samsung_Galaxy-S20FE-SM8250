@@ -101,11 +101,7 @@ static int decode_nfs_fh(struct xdr_stream *xdr, struct nfs_fh *fh)
 	if (unlikely(!p))
 		return -ENOBUFS;
 	fh->size = be32_to_cpup(p++);
-<<<<<<< HEAD
 	if (fh->size > sizeof(struct nfs_fh)) {
-=======
-	if (fh->size > NFS_MAXFHSIZE) {
->>>>>>> rebase
 		printk(KERN_ERR "NFS flexfiles: Too big fh received %d\n",
 		       fh->size);
 		return -EOVERFLOW;
@@ -919,14 +915,9 @@ retry:
 		goto out_mds;
 
 	/* Use a direct mapping of ds_idx to pgio mirror_idx */
-<<<<<<< HEAD
 	if (WARN_ON_ONCE(pgio->pg_mirror_count !=
 	    FF_LAYOUT_MIRROR_COUNT(pgio->pg_lseg)))
 		goto out_mds;
-=======
-	if (pgio->pg_mirror_count != FF_LAYOUT_MIRROR_COUNT(pgio->pg_lseg))
-		goto out_eagain;
->>>>>>> rebase
 
 	for (i = 0; i < pgio->pg_mirror_count; i++) {
 		ds = nfs4_ff_layout_prepare_ds(pgio->pg_lseg, i, true);
@@ -945,22 +936,11 @@ retry:
 	}
 
 	return;
-<<<<<<< HEAD
 
-=======
-out_eagain:
-	pnfs_generic_pg_cleanup(pgio);
-	pgio->pg_error = -EAGAIN;
-	return;
->>>>>>> rebase
 out_mds:
 	pnfs_put_lseg(pgio->pg_lseg);
 	pgio->pg_lseg = NULL;
 	nfs_pageio_reset_write_mds(pgio);
-<<<<<<< HEAD
-=======
-	pgio->pg_error = -EAGAIN;
->>>>>>> rebase
 }
 
 static unsigned int

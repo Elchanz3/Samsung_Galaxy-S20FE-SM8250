@@ -80,11 +80,6 @@ static int pcie_poll_cmd(struct controller *ctrl, int timeout)
 		if (slot_status & PCI_EXP_SLTSTA_CC) {
 			pcie_capability_write_word(pdev, PCI_EXP_SLTSTA,
 						   PCI_EXP_SLTSTA_CC);
-<<<<<<< HEAD
-=======
-			ctrl->cmd_busy = 0;
-			smp_mb();
->>>>>>> rebase
 			return 1;
 		}
 		if (timeout < 0)
@@ -535,11 +530,7 @@ static irqreturn_t pciehp_isr(int irq, void *dev_id)
 	struct controller *ctrl = (struct controller *)dev_id;
 	struct pci_dev *pdev = ctrl_dev(ctrl);
 	struct device *parent = pdev->dev.parent;
-<<<<<<< HEAD
 	u16 status, events;
-=======
-	u16 status, events = 0;
->>>>>>> rebase
 
 	/*
 	 * Interrupts only occur in D3hot or shallower (PCIe r4.0, sec 6.7.3.4).
@@ -562,10 +553,6 @@ static irqreturn_t pciehp_isr(int irq, void *dev_id)
 		}
 	}
 
-<<<<<<< HEAD
-=======
-read_status:
->>>>>>> rebase
 	pcie_capability_read_word(pdev, PCI_EXP_SLTSTA, &status);
 	if (status == (u16) ~0) {
 		ctrl_info(ctrl, "%s: no response from device\n", __func__);
@@ -578,54 +565,24 @@ read_status:
 	 * Slot Status contains plain status bits as well as event
 	 * notification bits; right now we only want the event bits.
 	 */
-<<<<<<< HEAD
 	events = status & (PCI_EXP_SLTSTA_ABP | PCI_EXP_SLTSTA_PFD |
 			   PCI_EXP_SLTSTA_PDC | PCI_EXP_SLTSTA_CC |
 			   PCI_EXP_SLTSTA_DLLSC);
-=======
-	status &= PCI_EXP_SLTSTA_ABP | PCI_EXP_SLTSTA_PFD |
-		  PCI_EXP_SLTSTA_PDC | PCI_EXP_SLTSTA_CC |
-		  PCI_EXP_SLTSTA_DLLSC;
->>>>>>> rebase
 
 	/*
 	 * If we've already reported a power fault, don't report it again
 	 * until we've done something to handle it.
 	 */
 	if (ctrl->power_fault_detected)
-<<<<<<< HEAD
 		events &= ~PCI_EXP_SLTSTA_PFD;
 
-=======
-		status &= ~PCI_EXP_SLTSTA_PFD;
-	else if (status & PCI_EXP_SLTSTA_PFD)
-		ctrl->power_fault_detected = true;
-
-	events |= status;
->>>>>>> rebase
 	if (!events) {
 		if (parent)
 			pm_runtime_put(parent);
 		return IRQ_NONE;
 	}
 
-<<<<<<< HEAD
 	pcie_capability_write_word(pdev, PCI_EXP_SLTSTA, events);
-=======
-	if (status) {
-		pcie_capability_write_word(pdev, PCI_EXP_SLTSTA, status);
-
-		/*
-		 * In MSI mode, all event bits must be zero before the port
-		 * will send a new interrupt (PCIe Base Spec r5.0 sec 6.7.3.4).
-		 * So re-read the Slot Status register in case a bit was set
-		 * between read and write.
-		 */
-		if (pci_dev_msi_enabled(pdev) && !pciehp_poll_mode)
-			goto read_status;
-	}
-
->>>>>>> rebase
 	ctrl_dbg(ctrl, "pending interrupts %#06x from Slot Status\n", events);
 	if (parent)
 		pm_runtime_put(parent);
@@ -670,27 +627,17 @@ static irqreturn_t pciehp_ist(int irq, void *dev_id)
 	if (atomic_fetch_and(~RERUN_ISR, &ctrl->pending_events) & RERUN_ISR) {
 		ret = pciehp_isr(irq, dev_id);
 		enable_irq(irq);
-<<<<<<< HEAD
 		if (ret != IRQ_WAKE_THREAD) {
 			pci_config_pm_runtime_put(pdev);
 			return ret;
 		}
-=======
-		if (ret != IRQ_WAKE_THREAD)
-			goto out;
->>>>>>> rebase
 	}
 
 	synchronize_hardirq(irq);
 	events = atomic_xchg(&ctrl->pending_events, 0);
 	if (!events) {
-<<<<<<< HEAD
 		pci_config_pm_runtime_put(pdev);
 		return IRQ_NONE;
-=======
-		ret = IRQ_NONE;
-		goto out;
->>>>>>> rebase
 	}
 
 	/* Check Attention Button Pressed */
@@ -701,12 +648,8 @@ static irqreturn_t pciehp_ist(int irq, void *dev_id)
 	}
 
 	/* Check Power Fault Detected */
-<<<<<<< HEAD
 	if ((events & PCI_EXP_SLTSTA_PFD) && !ctrl->power_fault_detected) {
 		ctrl->power_fault_detected = 1;
-=======
-	if (events & PCI_EXP_SLTSTA_PFD) {
->>>>>>> rebase
 		ctrl_err(ctrl, "Slot(%s): Power fault\n", slot_name(slot));
 		pciehp_set_attention_status(slot, 1);
 		pciehp_green_led_off(slot);
@@ -723,19 +666,10 @@ static irqreturn_t pciehp_ist(int irq, void *dev_id)
 		pciehp_handle_presence_or_link_change(slot, events);
 	up_read(&ctrl->reset_lock);
 
-<<<<<<< HEAD
 	pci_config_pm_runtime_put(pdev);
 	ctrl->ist_running = false;
 	wake_up(&ctrl->requester);
 	return IRQ_HANDLED;
-=======
-	ret = IRQ_HANDLED;
-out:
-	pci_config_pm_runtime_put(pdev);
-	ctrl->ist_running = false;
-	wake_up(&ctrl->requester);
-	return ret;
->>>>>>> rebase
 }
 
 static int pciehp_poll(void *data)
@@ -1020,11 +954,6 @@ static void quirk_cmd_compl(struct pci_dev *pdev)
 }
 DECLARE_PCI_FIXUP_CLASS_EARLY(PCI_VENDOR_ID_INTEL, PCI_ANY_ID,
 			      PCI_CLASS_BRIDGE_PCI, 8, quirk_cmd_compl);
-<<<<<<< HEAD
-=======
-DECLARE_PCI_FIXUP_CLASS_EARLY(PCI_VENDOR_ID_QCOM, 0x0110,
-			      PCI_CLASS_BRIDGE_PCI, 8, quirk_cmd_compl);
->>>>>>> rebase
 DECLARE_PCI_FIXUP_CLASS_EARLY(PCI_VENDOR_ID_QCOM, 0x0400,
 			      PCI_CLASS_BRIDGE_PCI, 8, quirk_cmd_compl);
 DECLARE_PCI_FIXUP_CLASS_EARLY(PCI_VENDOR_ID_QCOM, 0x0401,

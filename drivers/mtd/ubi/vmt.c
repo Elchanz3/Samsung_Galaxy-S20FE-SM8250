@@ -69,23 +69,16 @@ static ssize_t vol_attribute_show(struct device *dev,
 {
 	int ret;
 	struct ubi_volume *vol = container_of(dev, struct ubi_volume, dev);
-<<<<<<< HEAD
 	struct ubi_device *ubi;
 
 	ubi = ubi_get_device(vol->ubi->ubi_num);
 	if (!ubi)
 		return -ENODEV;
-=======
-	struct ubi_device *ubi = vol->ubi;
->>>>>>> rebase
 
 	spin_lock(&ubi->volumes_lock);
 	if (!ubi->volumes[vol->vol_id]) {
 		spin_unlock(&ubi->volumes_lock);
-<<<<<<< HEAD
 		ubi_put_device(ubi);
-=======
->>>>>>> rebase
 		return -ENODEV;
 	}
 	/* Take a reference to prevent volume removal */
@@ -123,10 +116,7 @@ static ssize_t vol_attribute_show(struct device *dev,
 	vol->ref_count -= 1;
 	ubi_assert(vol->ref_count >= 0);
 	spin_unlock(&ubi->volumes_lock);
-<<<<<<< HEAD
 	ubi_put_device(ubi);
-=======
->>>>>>> rebase
 	return ret;
 }
 
@@ -338,10 +328,7 @@ out_mapping:
 	ubi->volumes[vol_id] = NULL;
 	ubi->vol_count -= 1;
 	spin_unlock(&ubi->volumes_lock);
-<<<<<<< HEAD
 	ubi_eba_destroy_table(eba_tbl);
-=======
->>>>>>> rebase
 out_acc:
 	spin_lock(&ubi->volumes_lock);
 	ubi->rsvd_pebs -= vol->reserved_pebs;

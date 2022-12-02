@@ -362,12 +362,6 @@ int vega10_thermal_get_temperature(struct pp_hwmgr *hwmgr)
 static int vega10_thermal_set_temperature_range(struct pp_hwmgr *hwmgr,
 		struct PP_TemperatureRange *range)
 {
-<<<<<<< HEAD
-=======
-	struct phm_ppt_v2_information *pp_table_info =
-		(struct phm_ppt_v2_information *)(hwmgr->pptable);
-	struct phm_tdp_table *tdp_table = pp_table_info->tdp_table;
->>>>>>> rebase
 	struct amdgpu_device *adev = hwmgr->adev;
 	int low = VEGA10_THERMAL_MINIMUM_ALERT_TEMP *
 			PP_TEMPERATURE_UNITS_PER_CENTIGRADES;
@@ -377,13 +371,8 @@ static int vega10_thermal_set_temperature_range(struct pp_hwmgr *hwmgr,
 
 	if (low < range->min)
 		low = range->min;
-<<<<<<< HEAD
 	if (high > range->max)
 		high = range->max;
-=======
-	if (high > tdp_table->usSoftwareShutdownTemp)
-		high = tdp_table->usSoftwareShutdownTemp;
->>>>>>> rebase
 
 	if (low > high)
 		return -EINVAL;

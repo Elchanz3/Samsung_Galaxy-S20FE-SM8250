@@ -192,10 +192,7 @@ static blk_status_t pmem_do_bvec(struct pmem_device *pmem, struct page *page,
 
 static blk_qc_t pmem_make_request(struct request_queue *q, struct bio *bio)
 {
-<<<<<<< HEAD
 	int ret = 0;
-=======
->>>>>>> rebase
 	blk_status_t rc = 0;
 	bool do_acct;
 	unsigned long start;
@@ -205,11 +202,7 @@ static blk_qc_t pmem_make_request(struct request_queue *q, struct bio *bio)
 	struct nd_region *nd_region = to_region(pmem);
 
 	if (bio->bi_opf & REQ_PREFLUSH)
-<<<<<<< HEAD
 		ret = nvdimm_flush(nd_region, bio);
-=======
-		nvdimm_flush(nd_region);
->>>>>>> rebase
 
 	do_acct = nd_iostat_start(bio, &start);
 	bio_for_each_segment(bvec, bio, iter) {
@@ -224,14 +217,10 @@ static blk_qc_t pmem_make_request(struct request_queue *q, struct bio *bio)
 		nd_iostat_end(bio, start);
 
 	if (bio->bi_opf & REQ_FUA)
-<<<<<<< HEAD
 		ret = nvdimm_flush(nd_region, bio);
 
 	if (ret)
 		bio->bi_status = errno_to_blk_status(ret);
-=======
-		nvdimm_flush(nd_region);
->>>>>>> rebase
 
 	bio_endio(bio);
 	return BLK_QC_T_NONE;
@@ -490,18 +479,10 @@ static int pmem_attach_disk(struct device *dev,
 	}
 	dax_write_cache(dax_dev, nvdimm_has_cache(nd_region));
 	pmem->dax_dev = dax_dev;
-<<<<<<< HEAD
 	gendev = disk_to_dev(disk);
 	gendev->groups = pmem_attribute_groups;
 
 	device_add_disk(dev, disk);
-=======
-
-	gendev = disk_to_dev(disk);
-	gendev->groups = pmem_attribute_groups;
-
-	device_add_disk(dev, disk, NULL);
->>>>>>> rebase
 	if (devm_add_action_or_reset(dev, pmem_release_disk, pmem))
 		return -ENOMEM;
 
@@ -555,22 +536,14 @@ static int nd_pmem_remove(struct device *dev)
 		sysfs_put(pmem->bb_state);
 		pmem->bb_state = NULL;
 	}
-<<<<<<< HEAD
 	nvdimm_flush(to_nd_region(dev->parent), NULL);
-=======
-	nvdimm_flush(to_nd_region(dev->parent));
->>>>>>> rebase
 
 	return 0;
 }
 
 static void nd_pmem_shutdown(struct device *dev)
 {
-<<<<<<< HEAD
 	nvdimm_flush(to_nd_region(dev->parent), NULL);
-=======
-	nvdimm_flush(to_nd_region(dev->parent));
->>>>>>> rebase
 }
 
 static void nd_pmem_notify(struct device *dev, enum nvdimm_event event)

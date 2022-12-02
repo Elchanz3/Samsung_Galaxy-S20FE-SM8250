@@ -1047,11 +1047,7 @@ static ssize_t smtcfb_read(struct fb_info *info, char __user *buf,
 	if (count + p > total_size)
 		count = total_size - p;
 
-<<<<<<< HEAD
 	buffer = kmalloc((count > PAGE_SIZE) ? PAGE_SIZE : count, GFP_KERNEL);
-=======
-	buffer = kmalloc(PAGE_SIZE, GFP_KERNEL);
->>>>>>> rebase
 	if (!buffer)
 		return -ENOMEM;
 
@@ -1063,7 +1059,6 @@ static ssize_t smtcfb_read(struct fb_info *info, char __user *buf,
 	while (count) {
 		c = (count > PAGE_SIZE) ? PAGE_SIZE : count;
 		dst = buffer;
-<<<<<<< HEAD
 		for (i = c >> 2; i--;) {
 			*dst = fb_readl(src++);
 			*dst = big_swap(*dst);
@@ -1082,15 +1077,6 @@ static ssize_t smtcfb_read(struct fb_info *info, char __user *buf,
 				}
 			}
 			src = (u32 __iomem *)src8;
-=======
-		for (i = (c + 3) >> 2; i--;) {
-			u32 val;
-
-			val = fb_readl(src);
-			*dst = big_swap(val);
-			src++;
-			dst++;
->>>>>>> rebase
 		}
 
 		if (copy_to_user(buf, buffer, c)) {
@@ -1144,11 +1130,7 @@ static ssize_t smtcfb_write(struct fb_info *info, const char __user *buf,
 		count = total_size - p;
 	}
 
-<<<<<<< HEAD
 	buffer = kmalloc((count > PAGE_SIZE) ? PAGE_SIZE : count, GFP_KERNEL);
-=======
-	buffer = kmalloc(PAGE_SIZE, GFP_KERNEL);
->>>>>>> rebase
 	if (!buffer)
 		return -ENOMEM;
 
@@ -1166,7 +1148,6 @@ static ssize_t smtcfb_write(struct fb_info *info, const char __user *buf,
 			break;
 		}
 
-<<<<<<< HEAD
 		for (i = c >> 2; i--;) {
 			fb_writel(big_swap(*src), dst++);
 			src++;
@@ -1185,13 +1166,6 @@ static ssize_t smtcfb_write(struct fb_info *info, const char __user *buf,
 			}
 			dst = (u32 __iomem *)dst8;
 		}
-=======
-		for (i = (c + 3) >> 2; i--;) {
-			fb_writel(big_swap(*src), dst);
-			dst++;
-			src++;
-		}
->>>>>>> rebase
 
 		*ppos += c;
 		buf += c;
@@ -1455,11 +1429,6 @@ static int smtc_map_smem(struct smtcfb_info *sfb,
 static void smtc_unmap_smem(struct smtcfb_info *sfb)
 {
 	if (sfb && sfb->fb->screen_base) {
-<<<<<<< HEAD
-=======
-		if (sfb->chip_id == 0x720)
-			sfb->fb->screen_base -= 0x00200000;
->>>>>>> rebase
 		iounmap(sfb->fb->screen_base);
 		sfb->fb->screen_base = NULL;
 	}

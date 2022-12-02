@@ -2,13 +2,9 @@
 # scripts/dtc makefile
 
 hostprogs-y	:= dtc
-<<<<<<< HEAD
 ifeq ($(DTC_EXT),)
 always		:= $(hostprogs-y)
 endif
-=======
-always		:= $(hostprogs-y)
->>>>>>> rebase
 
 dtc-objs	:= dtc.o flattree.o fstree.o data.o livetree.o treesource.o \
 		   srcpos.o checks.o util.o

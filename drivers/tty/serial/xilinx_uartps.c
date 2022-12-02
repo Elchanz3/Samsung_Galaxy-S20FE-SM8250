@@ -365,11 +365,6 @@ static irqreturn_t cdns_uart_isr(int irq, void *dev_id)
 		isrstatus &= ~CDNS_UART_IXR_TXEMPTY;
 	}
 
-<<<<<<< HEAD
-=======
-	isrstatus &= port->read_status_mask;
-	isrstatus &= ~port->ignore_status_mask;
->>>>>>> rebase
 	/*
 	 * Skip RX processing if RX is disabled as RXEMPTY will never be set
 	 * as read bytes will not be removed from the FIFO.
@@ -596,16 +591,9 @@ static void cdns_uart_start_tx(struct uart_port *port)
 	if (uart_circ_empty(&port->state->xmit))
 		return;
 
-<<<<<<< HEAD
 	cdns_uart_handle_tx(port);
 
 	writel(CDNS_UART_IXR_TXEMPTY, port->membase + CDNS_UART_ISR);
-=======
-	writel(CDNS_UART_IXR_TXEMPTY, port->membase + CDNS_UART_ISR);
-
-	cdns_uart_handle_tx(port);
-
->>>>>>> rebase
 	/* Enable the TX Empty interrupt */
 	writel(CDNS_UART_IXR_TXEMPTY, port->membase + CDNS_UART_IER);
 }
@@ -1248,10 +1236,6 @@ static int cdns_uart_console_setup(struct console *co, char *options)
 	int bits = 8;
 	int parity = 'n';
 	int flow = 'n';
-<<<<<<< HEAD
-=======
-	unsigned long time_out;
->>>>>>> rebase
 
 	if (!port->membase) {
 		pr_debug("console on " CDNS_UART_TTY_NAME "%i not present\n",
@@ -1262,16 +1246,6 @@ static int cdns_uart_console_setup(struct console *co, char *options)
 	if (options)
 		uart_parse_options(options, &baud, &parity, &bits, &flow);
 
-<<<<<<< HEAD
-=======
-	/* Wait for tx_empty before setting up the console */
-	time_out = jiffies + usecs_to_jiffies(TX_TIMEOUT);
-
-	while (time_before(jiffies, time_out) &&
-	       cdns_uart_tx_empty(port) != TIOCSER_TEMT)
-		cpu_relax();
-
->>>>>>> rebase
 	return uart_set_options(port, co, baud, parity, bits, flow);
 }
 

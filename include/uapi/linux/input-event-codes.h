@@ -278,12 +278,7 @@
 #define KEY_PAUSECD		201
 #define KEY_PROG3		202
 #define KEY_PROG4		203
-<<<<<<< HEAD
 #define KEY_DASHBOARD		204	/* AL Dashboard */
-=======
-#define KEY_ALL_APPLICATIONS	204	/* AC Desktop Show All Applications */
-#define KEY_DASHBOARD		KEY_ALL_APPLICATIONS
->>>>>>> rebase
 #define KEY_SUSPEND		205
 #define KEY_CLOSE		206	/* AC Close */
 #define KEY_PLAY		207
@@ -342,13 +337,10 @@
 
 #define KEY_MICMUTE		248	/* Mute / unmute the microphone */
 
-<<<<<<< HEAD
 #define KEY_WAKEUP_UNLOCK	253	/* Wake-up to recent view, ex: AOP */
 #define KEY_RECENT		254
 #define KEY_INT_CANCEL		0x2be	/* for touch event skip */
 
-=======
->>>>>>> rebase
 /* Code 255 is reserved for special needs of AT keyboard driver */
 
 #define BTN_MISC		0x100
@@ -373,12 +365,9 @@
 #define BTN_BACK		0x116
 #define BTN_TASK		0x117
 
-<<<<<<< HEAD
 #define BTN_PALM		0x118    /* palm flag */
 #define BTN_LARGE_PALM		0x119    /* large palm flag */
 
-=======
->>>>>>> rebase
 #define BTN_JOYSTICK		0x120
 #define BTN_TRIGGER		0x120
 #define BTN_THUMB		0x121
@@ -414,10 +403,7 @@
 #define BTN_MODE		0x13c
 #define BTN_THUMBL		0x13d
 #define BTN_THUMBR		0x13e
-<<<<<<< HEAD
 #define BTN_GAME		0x13f
-=======
->>>>>>> rebase
 
 #define BTN_DIGI		0x140
 #define BTN_TOOL_PEN		0x140
@@ -540,7 +526,6 @@
 #define KEY_DEL_EOS		0x1c1
 #define KEY_INS_LINE		0x1c2
 #define KEY_DEL_LINE		0x1c3
-<<<<<<< HEAD
 #define KEY_SIDE_GESTURE	0x1c6
 #define KEY_BLACK_UI_GESTURE	0x1c7
 
@@ -548,8 +533,6 @@
 #define KEY_SIDE_GESTURE_LEFT	0x1cb
 
 #define KEY_RESET		0x1cd
-=======
->>>>>>> rebase
 
 #define KEY_FN			0x1d0
 #define KEY_FN_ESC		0x1d1
@@ -677,13 +660,10 @@
  * e.g. teletext or data broadcast application (MHEG, MHP, HbbTV, etc.)
  */
 #define KEY_DATA			0x277
-<<<<<<< HEAD
 
 #define KEY_DEX_ON			0x2bd
 #define KEY_WINK			0x2bf	/* Intelligence Key */
 
-=======
->>>>>>> rebase
 #define KEY_ONSCREEN_KEYBOARD		0x278
 
 #define BTN_TRIGGER_HAPPY		0x2c0
@@ -728,13 +708,10 @@
 #define BTN_TRIGGER_HAPPY39		0x2e6
 #define BTN_TRIGGER_HAPPY40		0x2e7
 
-<<<<<<< HEAD
 #define BTN_HOTKEY_APP1 		0x2f5
 #define BTN_HOTKEY_APP2 		0x2f6
 #define BTN_HOTKEY_APP3 		0x2f7
 
-=======
->>>>>>> rebase
 /* We avoid low common keys in module aliases so they don't get huge. */
 #define KEY_MIN_INTERESTING	KEY_MUTE
 #define KEY_MAX			0x2ff
@@ -815,11 +792,8 @@
 #define ABS_MT_TOOL_X		0x3c	/* Center X tool position */
 #define ABS_MT_TOOL_Y		0x3d	/* Center Y tool position */
 
-<<<<<<< HEAD
 #define ABS_MT_CUSTOM		0x3e	/* custom event */
 #define ABS_MT_GRIP		0x3f	/* grip touch */
-=======
->>>>>>> rebase
 
 #define ABS_MAX			0x3f
 #define ABS_CNT			(ABS_MAX+1)
@@ -846,7 +820,6 @@
 #define SW_LINEIN_INSERT	0x0d  /* set = inserted */
 #define SW_MUTE_DEVICE		0x0e  /* set = device disabled */
 #define SW_PEN_INSERTED		0x0f  /* set = pen inserted */
-<<<<<<< HEAD
 #define SW_HPHL_OVERCURRENT	0x10  /* set = over current on left hph */
 #define SW_HPHR_OVERCURRENT	0x11  /* set = over current on right hph */
 #define SW_MICROPHONE2_INSERT	0x12  /* set = inserted */
@@ -854,10 +827,6 @@
 #define SW_UNSUPPORT_INSERT	0x13  /* set = unsupported device inserted */
 #define SW_GLOVE		0x20  /* set = glove mode */
 #define SW_MAX			0x20
-=======
-#define SW_MACHINE_COVER	0x10  /* set = cover closed */
-#define SW_MAX			0x10
->>>>>>> rebase
 #define SW_CNT			(SW_MAX+1)
 
 /*

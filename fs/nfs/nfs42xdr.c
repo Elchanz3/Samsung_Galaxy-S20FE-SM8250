@@ -707,12 +707,8 @@ static int nfs4_xdr_dec_clone(struct rpc_rqst *rqstp,
 	status = decode_clone(xdr);
 	if (status)
 		goto out;
-<<<<<<< HEAD
 	status = decode_getfattr(xdr, res->dst_fattr, res->server);
 
-=======
-	decode_getfattr(xdr, res->dst_fattr, res->server);
->>>>>>> rebase
 out:
 	res->rpc_status = status;
 	return status;

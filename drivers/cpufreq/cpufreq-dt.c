@@ -16,10 +16,7 @@
 #include <linux/cpu_cooling.h>
 #include <linux/cpufreq.h>
 #include <linux/cpumask.h>
-<<<<<<< HEAD
 #include <linux/energy_model.h>
-=======
->>>>>>> rebase
 #include <linux/err.h>
 #include <linux/module.h>
 #include <linux/of.h>
@@ -156,10 +153,7 @@ static int resources_available(void)
 
 static int cpufreq_init(struct cpufreq_policy *policy)
 {
-<<<<<<< HEAD
 	struct em_data_callback em_cb = EM_DATA_CB(of_dev_pm_opp_get_cpu_power);
-=======
->>>>>>> rebase
 	struct cpufreq_frequency_table *freq_table;
 	struct opp_table *opp_table = NULL;
 	struct private_data *priv;
@@ -168,11 +162,7 @@ static int cpufreq_init(struct cpufreq_policy *policy)
 	unsigned int transition_latency;
 	bool fallback = false;
 	const char *name;
-<<<<<<< HEAD
 	int ret, nr_opp;
-=======
-	int ret;
->>>>>>> rebase
 
 	cpu_dev = get_cpu_device(policy->cpu);
 	if (!cpu_dev) {
@@ -249,10 +239,7 @@ static int cpufreq_init(struct cpufreq_policy *policy)
 		ret = -EPROBE_DEFER;
 		goto out_free_opp;
 	}
-<<<<<<< HEAD
 	nr_opp = ret;
-=======
->>>>>>> rebase
 
 	if (fallback) {
 		cpumask_setall(policy->cpus);
@@ -296,11 +283,8 @@ static int cpufreq_init(struct cpufreq_policy *policy)
 	policy->cpuinfo.transition_latency = transition_latency;
 	policy->dvfs_possible_from_any_cpu = true;
 
-<<<<<<< HEAD
 	em_register_perf_domain(policy->cpus, nr_opp, &em_cb);
 
-=======
->>>>>>> rebase
 	return 0;
 
 out_free_cpufreq_table:

@@ -704,11 +704,7 @@ out:
 
 rtnl_link_failed:
 #if IS_ENABLED(CONFIG_MPLS)
-<<<<<<< HEAD
 	xfrm4_tunnel_deregister(&mplsip_handler, AF_INET);
-=======
-	xfrm4_tunnel_deregister(&mplsip_handler, AF_MPLS);
->>>>>>> rebase
 xfrm_tunnel_mplsip_failed:
 
 #endif

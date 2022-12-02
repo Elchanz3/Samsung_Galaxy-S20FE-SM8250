@@ -59,22 +59,14 @@ EXPORT_SYMBOL(trace_hardirqs_on_caller);
 
 __visible void trace_hardirqs_off_caller(unsigned long caller_addr)
 {
-<<<<<<< HEAD
-=======
-	lockdep_hardirqs_off(CALLER_ADDR0);
-
->>>>>>> rebase
 	if (!this_cpu_read(tracing_irq_cpu)) {
 		this_cpu_write(tracing_irq_cpu, 1);
 		tracer_hardirqs_off(CALLER_ADDR0, caller_addr);
 		if (!in_nmi())
 			trace_irq_disable_rcuidle(CALLER_ADDR0, caller_addr);
 	}
-<<<<<<< HEAD
 
 	lockdep_hardirqs_off(CALLER_ADDR0);
-=======
->>>>>>> rebase
 }
 EXPORT_SYMBOL(trace_hardirqs_off_caller);
 #endif /* CONFIG_TRACE_IRQFLAGS */

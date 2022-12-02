@@ -4,10 +4,7 @@
  *
  * Copyright (C) 2011 Texas Instruments, Inc.
  * Copyright (C) 2011 Google, Inc.
-<<<<<<< HEAD
  * Copyright (c) 2018, The Linux Foundation. All rights reserved.
-=======
->>>>>>> rebase
  * All rights reserved.
  */
 
@@ -64,20 +61,14 @@ struct rpmsg_device {
 };
 
 typedef int (*rpmsg_rx_cb_t)(struct rpmsg_device *, void *, int, void *, u32);
-<<<<<<< HEAD
 typedef int (*rpmsg_rx_sig_t)(struct rpmsg_device *, u32, u32);
-=======
->>>>>>> rebase
 
 /**
  * struct rpmsg_endpoint - binds a local rpmsg address to its user
  * @rpdev: rpmsg channel device
  * @refcount: when this drops to zero, the ept is deallocated
  * @cb: rx callback handler
-<<<<<<< HEAD
  * @sig_cb: rx serial signal handler
-=======
->>>>>>> rebase
  * @cb_lock: must be taken before accessing/changing @cb
  * @addr: local rpmsg address
  * @priv: private data for the driver's use
@@ -100,10 +91,7 @@ struct rpmsg_endpoint {
 	struct rpmsg_device *rpdev;
 	struct kref refcount;
 	rpmsg_rx_cb_t cb;
-<<<<<<< HEAD
 	rpmsg_rx_sig_t sig_cb;
-=======
->>>>>>> rebase
 	struct mutex cb_lock;
 	u32 addr;
 	void *priv;
@@ -118,10 +106,7 @@ struct rpmsg_endpoint {
  * @probe: invoked when a matching rpmsg channel (i.e. device) is found
  * @remove: invoked when the rpmsg channel is removed
  * @callback: invoked when an inbound message is received on the channel
-<<<<<<< HEAD
  * @signals: invoked when a serial signal change is received on the channel
-=======
->>>>>>> rebase
  */
 struct rpmsg_driver {
 	struct device_driver drv;
@@ -129,10 +114,7 @@ struct rpmsg_driver {
 	int (*probe)(struct rpmsg_device *dev);
 	void (*remove)(struct rpmsg_device *dev);
 	int (*callback)(struct rpmsg_device *, void *, int, void *, u32);
-<<<<<<< HEAD
 	int (*signals)(struct rpmsg_device *rpdev, u32 old, u32 new);
-=======
->>>>>>> rebase
 };
 
 #if IS_ENABLED(CONFIG_RPMSG)
@@ -159,12 +141,9 @@ int rpmsg_trysend_offchannel(struct rpmsg_endpoint *ept, u32 src, u32 dst,
 __poll_t rpmsg_poll(struct rpmsg_endpoint *ept, struct file *filp,
 			poll_table *wait);
 
-<<<<<<< HEAD
 int rpmsg_get_sigs(struct rpmsg_endpoint *ept, u32 *lsigs, u32 *rsigs);
 int rpmsg_set_sigs(struct rpmsg_endpoint *ept, u32 sigs);
 
-=======
->>>>>>> rebase
 #else
 
 static inline int register_rpmsg_device(struct rpmsg_device *dev)
@@ -207,11 +186,7 @@ static inline struct rpmsg_endpoint *rpmsg_create_ept(struct rpmsg_device *rpdev
 	/* This shouldn't be possible */
 	WARN_ON(1);
 
-<<<<<<< HEAD
 	return ERR_PTR(-ENXIO);
-=======
-	return NULL;
->>>>>>> rebase
 }
 
 static inline int rpmsg_send(struct rpmsg_endpoint *ept, void *data, int len)
@@ -276,7 +251,6 @@ static inline __poll_t rpmsg_poll(struct rpmsg_endpoint *ept,
 	return 0;
 }
 
-<<<<<<< HEAD
 static inline int rpmsg_get_sigs(struct rpmsg_endpoint *ept, u32 *lsigs,
 				 u32 *rsigs)
 {
@@ -294,8 +268,6 @@ static inline int rpmsg_set_sigs(struct rpmsg_endpoint *ept, u32 sigs)
 	return -ENXIO;
 }
 
-=======
->>>>>>> rebase
 #endif /* IS_ENABLED(CONFIG_RPMSG) */
 
 /* use a macro to avoid include chaining to get THIS_MODULE */

@@ -50,11 +50,7 @@ static ssize_t period_show(struct device *child,
 
 	pwm_get_state(pwm, &state);
 
-<<<<<<< HEAD
 	return sprintf(buf, "%llu\n", state.period);
-=======
-	return sprintf(buf, "%u\n", state.period);
->>>>>>> rebase
 }
 
 static ssize_t period_store(struct device *child,
@@ -89,11 +85,7 @@ static ssize_t duty_cycle_show(struct device *child,
 
 	pwm_get_state(pwm, &state);
 
-<<<<<<< HEAD
 	return sprintf(buf, "%llu\n", state.duty_cycle);
-=======
-	return sprintf(buf, "%u\n", state.duty_cycle);
->>>>>>> rebase
 }
 
 static ssize_t duty_cycle_store(struct device *child,
@@ -228,7 +220,6 @@ static ssize_t capture_show(struct device *child,
 	if (ret)
 		return ret;
 
-<<<<<<< HEAD
 	return sprintf(buf, "%llu %llu\n", result.period, result.duty_cycle);
 }
 
@@ -278,9 +269,6 @@ unlock:
 	mutex_unlock(&export->lock);
 
 	return ret ? : size;
-=======
-	return sprintf(buf, "%u %u\n", result.period, result.duty_cycle);
->>>>>>> rebase
 }
 
 static DEVICE_ATTR_RW(period);
@@ -288,10 +276,7 @@ static DEVICE_ATTR_RW(duty_cycle);
 static DEVICE_ATTR_RW(enable);
 static DEVICE_ATTR_RW(polarity);
 static DEVICE_ATTR_RO(capture);
-<<<<<<< HEAD
 static DEVICE_ATTR_RW(output_type);
-=======
->>>>>>> rebase
 
 static struct attribute *pwm_attrs[] = {
 	&dev_attr_period.attr,
@@ -299,10 +284,7 @@ static struct attribute *pwm_attrs[] = {
 	&dev_attr_enable.attr,
 	&dev_attr_polarity.attr,
 	&dev_attr_capture.attr,
-<<<<<<< HEAD
 	&dev_attr_output_type.attr,
-=======
->>>>>>> rebase
 	NULL
 };
 ATTRIBUTE_GROUPS(pwm);

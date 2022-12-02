@@ -160,18 +160,9 @@ int pci_generic_config_write32(struct pci_bus *bus, unsigned int devfn,
 	 * write happen to have any RW1C (write-one-to-clear) bits set, we
 	 * just inadvertently cleared something we shouldn't have.
 	 */
-<<<<<<< HEAD
 	dev_warn_ratelimited(&bus->dev, "%d-byte config write to %04x:%02x:%02x.%d offset %#x may corrupt adjacent RW1C bits\n",
 			     size, pci_domain_nr(bus), bus->number,
 			     PCI_SLOT(devfn), PCI_FUNC(devfn), where);
-=======
-	if (!bus->unsafe_warn) {
-		dev_warn(&bus->dev, "%d-byte config write to %04x:%02x:%02x.%d offset %#x may corrupt adjacent RW1C bits\n",
-			 size, pci_domain_nr(bus), bus->number,
-			 PCI_SLOT(devfn), PCI_FUNC(devfn), where);
-		bus->unsafe_warn = 1;
-	}
->>>>>>> rebase
 
 	mask = ~(((1 << (size * 8)) - 1) << ((where & 0x3) * 8));
 	tmp = readl(addr) & mask;
@@ -213,7 +204,6 @@ EXPORT_SYMBOL(pci_bus_set_ops);
 static DECLARE_WAIT_QUEUE_HEAD(pci_cfg_wait);
 
 static noinline void pci_wait_cfg(struct pci_dev *dev)
-<<<<<<< HEAD
 {
 	DECLARE_WAITQUEUE(wait, current);
 
@@ -225,15 +215,6 @@ static noinline void pci_wait_cfg(struct pci_dev *dev)
 		raw_spin_lock_irq(&pci_lock);
 	} while (dev->block_cfg_access);
 	__remove_wait_queue(&pci_cfg_wait, &wait);
-=======
-	__must_hold(&pci_lock)
-{
-	do {
-		raw_spin_unlock_irq(&pci_lock);
-		wait_event(pci_cfg_wait, !dev->block_cfg_access);
-		raw_spin_lock_irq(&pci_lock);
-	} while (dev->block_cfg_access);
->>>>>>> rebase
 }
 
 /* Returns 0 on success, negative values indicate error. */

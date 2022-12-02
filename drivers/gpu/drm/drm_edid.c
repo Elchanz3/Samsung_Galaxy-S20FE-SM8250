@@ -38,12 +38,9 @@
 #include <drm/drm_encoder.h>
 #include <drm/drm_displayid.h>
 #include <drm/drm_scdc_helper.h>
-<<<<<<< HEAD
 #ifdef CONFIG_SEC_DISPLAYPORT
 #include <linux/secdp_logger.h>
 #endif
-=======
->>>>>>> rebase
 
 #include "drm_crtc_internal.h"
 
@@ -104,7 +101,6 @@ struct detailed_mode_closure {
 #define LEVEL_GTF2	2
 #define LEVEL_CVT	3
 
-<<<<<<< HEAD
 /*Enum storing luminance types for HDR blocks in EDID*/
 enum luminance_value {
 	NO_LUMINANCE_DATA = 3,
@@ -113,8 +109,6 @@ enum luminance_value {
 	MINIMUM_LUMINANCE = 6
 };
 
-=======
->>>>>>> rebase
 static const struct edid_quirk {
 	char vendor[4];
 	int product_id;
@@ -215,18 +209,10 @@ static const struct edid_quirk {
 	{ "HVR", 0xaa01, EDID_QUIRK_NON_DESKTOP },
 	{ "HVR", 0xaa02, EDID_QUIRK_NON_DESKTOP },
 
-<<<<<<< HEAD
 	/* Oculus Rift DK1, DK2, and CV1 VR Headsets */
 	{ "OVR", 0x0001, EDID_QUIRK_NON_DESKTOP },
 	{ "OVR", 0x0003, EDID_QUIRK_NON_DESKTOP },
 	{ "OVR", 0x0004, EDID_QUIRK_NON_DESKTOP },
-=======
-	/* Oculus Rift DK1, DK2, CV1 and Rift S VR Headsets */
-	{ "OVR", 0x0001, EDID_QUIRK_NON_DESKTOP },
-	{ "OVR", 0x0003, EDID_QUIRK_NON_DESKTOP },
-	{ "OVR", 0x0004, EDID_QUIRK_NON_DESKTOP },
-	{ "OVR", 0x0012, EDID_QUIRK_NON_DESKTOP },
->>>>>>> rebase
 
 	/* Windows Mixed Reality Headsets */
 	{ "ACR", 0x7fce, EDID_QUIRK_NON_DESKTOP },
@@ -272,12 +258,8 @@ static const struct drm_display_mode drm_dmt_modes[] = {
 	/* 0x05 - 640x480@72Hz */
 	{ DRM_MODE("640x480", DRM_MODE_TYPE_DRIVER, 31500, 640, 664,
 		   704, 832, 0, 480, 489, 492, 520, 0,
-<<<<<<< HEAD
 		   DRM_MODE_FLAG_NHSYNC | DRM_MODE_FLAG_NVSYNC),
 		   .vrefresh = 72, },
-=======
-		   DRM_MODE_FLAG_NHSYNC | DRM_MODE_FLAG_NVSYNC) },
->>>>>>> rebase
 	/* 0x06 - 640x480@75Hz */
 	{ DRM_MODE("640x480", DRM_MODE_TYPE_DRIVER, 31500, 640, 656,
 		   720, 840, 0, 480, 481, 484, 500, 0,
@@ -634,12 +616,8 @@ static const struct drm_display_mode edid_est_modes[] = {
 		   DRM_MODE_FLAG_NHSYNC | DRM_MODE_FLAG_NVSYNC) }, /* 640x480@75Hz */
 	{ DRM_MODE("640x480", DRM_MODE_TYPE_DRIVER, 31500, 640, 664,
 		   704,  832, 0, 480, 489, 492, 520, 0,
-<<<<<<< HEAD
 		   DRM_MODE_FLAG_NHSYNC | DRM_MODE_FLAG_NVSYNC),
 		   .vrefresh = 72, }, /* 640x480@72Hz */
-=======
-		   DRM_MODE_FLAG_NHSYNC | DRM_MODE_FLAG_NVSYNC) }, /* 640x480@72Hz */
->>>>>>> rebase
 	{ DRM_MODE("640x480", DRM_MODE_TYPE_DRIVER, 30240, 640, 704,
 		   768,  864, 0, 480, 483, 486, 525, 0,
 		   DRM_MODE_FLAG_NHSYNC | DRM_MODE_FLAG_NVSYNC) }, /* 640x480@67Hz */
@@ -1588,7 +1566,6 @@ drm_do_probe_ddc_edid(void *data, u8 *buf, unsigned int block, size_t len)
 		}
 	} while (ret != xfers && --retries);
 
-<<<<<<< HEAD
 #ifdef CONFIG_SEC_DISPLAYPORT
 	if (len == EDID_LENGTH) {
 		print_hex_dump(KERN_DEBUG, "secdp_EDID: ", DUMP_PREFIX_NONE, 16, 1,
@@ -1597,8 +1574,6 @@ drm_do_probe_ddc_edid(void *data, u8 *buf, unsigned int block, size_t len)
 	}
 #endif
 
-=======
->>>>>>> rebase
 	return ret == xfers ? 0 : -1;
 }
 
@@ -1606,12 +1581,9 @@ static void connector_bad_edid(struct drm_connector *connector,
 			       u8 *edid, int num_blocks)
 {
 	int i;
-<<<<<<< HEAD
 	u32 csum = 0x100 | drm_edid_block_checksum(edid);
 
 	connector->checksum = 0x100 - (csum - edid[EDID_LENGTH - 1]);
-=======
->>>>>>> rebase
 
 	if (connector->bad_edid_counter++ && !(drm_debug & DRM_UT_KMS))
 		return;
@@ -1709,11 +1681,8 @@ struct edid *drm_do_get_edid(struct drm_connector *connector,
 	u8 *edid, *new;
 	struct edid *override;
 
-<<<<<<< HEAD
 	connector->checksum = 0;
 
-=======
->>>>>>> rebase
 	override = drm_get_override_edid(connector);
 	if (override)
 		return override;
@@ -1765,12 +1734,9 @@ struct edid *drm_do_get_edid(struct drm_connector *connector,
 
 		connector_bad_edid(connector, edid, edid[0x7e] + 1);
 
-<<<<<<< HEAD
 		edid[EDID_LENGTH-1] += edid[0x7e] - valid_extensions;
 		edid[0x7e] = valid_extensions;
 
-=======
->>>>>>> rebase
 		new = kmalloc_array(valid_extensions + 1, EDID_LENGTH,
 				    GFP_KERNEL);
 		if (!new)
@@ -1787,12 +1753,6 @@ struct edid *drm_do_get_edid(struct drm_connector *connector,
 			base += EDID_LENGTH;
 		}
 
-<<<<<<< HEAD
-=======
-		new[EDID_LENGTH - 1] += new[0x7e] - valid_extensions;
-		new[0x7e] = valid_extensions;
-
->>>>>>> rebase
 		kfree(edid);
 		edid = new;
 	}
@@ -2963,23 +2923,16 @@ add_detailed_modes(struct drm_connector *connector, struct edid *edid,
 
 	return closure.modes;
 }
-<<<<<<< HEAD
 #define VIDEO_CAPABILITY_EXTENDED_DATA_BLOCK 0x0
-=======
-
->>>>>>> rebase
 #define AUDIO_BLOCK	0x01
 #define VIDEO_BLOCK     0x02
 #define VENDOR_BLOCK    0x03
 #define SPEAKER_BLOCK	0x04
-<<<<<<< HEAD
 #define VENDOR_SPECIFIC_VIDEO_DATA_BLOCK 0x01
 #define VSVDB_HDR10_PLUS_IEEE_CODE 0x90848b
 #define VSVDB_HDR10_PLUS_APP_VER_MASK 0x3
 #define HDR_STATIC_METADATA_EXTENDED_DATA_BLOCK 0x06
 #define COLORIMETRY_EXTENDED_DATA_BLOCK 0x05
-=======
->>>>>>> rebase
 #define USE_EXTENDED_TAG 0x07
 #define EXT_VIDEO_CAPABILITY_BLOCK 0x00
 #define EXT_VIDEO_DATA_BLOCK_420	0x0E
@@ -4034,7 +3987,6 @@ drm_parse_hdmi_vsdb_audio(struct drm_connector *connector, const u8 *db)
 		      connector->audio_latency[1]);
 }
 
-<<<<<<< HEAD
 static void drm_parse_ycbcr420_deep_color_info(struct drm_connector *connector,
 					       const u8 *db)
 {
@@ -4290,8 +4242,6 @@ drm_hdmi_extract_extended_blk_info(struct drm_connector *connector,
 	}
 }
 
-=======
->>>>>>> rebase
 static void
 monitor_name(struct detailed_timing *t, void *data)
 {
@@ -4424,13 +4374,10 @@ static void drm_edid_to_eld(struct drm_connector *connector, struct edid *edid)
 				/* HDMI Vendor-Specific Data Block */
 				if (cea_db_is_hdmi_vsdb(db))
 					drm_parse_hdmi_vsdb_audio(connector, db);
-<<<<<<< HEAD
 				/* HDMI Forum Vendor-Specific Data Block */
 				else if (cea_db_is_hdmi_forum_vsdb(db))
 					drm_parse_hdmi_forum_vsdb(connector,
 								  db);
-=======
->>>>>>> rebase
 				break;
 			default:
 				break;
@@ -4665,12 +4612,7 @@ bool drm_detect_monitor_audio(struct edid *edid)
 	if (!edid_ext)
 		goto end;
 
-<<<<<<< HEAD
 	has_audio = ((edid_ext[3] & EDID_BASIC_AUDIO) != 0);
-=======
-	has_audio = (edid_ext[0] == CEA_EXT &&
-		    (edid_ext[3] & EDID_BASIC_AUDIO) != 0);
->>>>>>> rebase
 
 	if (has_audio) {
 		DRM_DEBUG_KMS("Monitor has basic audio support\n");
@@ -4749,65 +4691,6 @@ drm_default_rgb_quant_range(const struct drm_display_mode *mode)
 }
 EXPORT_SYMBOL(drm_default_rgb_quant_range);
 
-<<<<<<< HEAD
-=======
-static void drm_parse_ycbcr420_deep_color_info(struct drm_connector *connector,
-					       const u8 *db)
-{
-	u8 dc_mask;
-	struct drm_hdmi_info *hdmi = &connector->display_info.hdmi;
-
-	dc_mask = db[7] & DRM_EDID_YCBCR420_DC_MASK;
-	hdmi->y420_dc_modes = dc_mask;
-}
-
-static void drm_parse_hdmi_forum_vsdb(struct drm_connector *connector,
-				 const u8 *hf_vsdb)
-{
-	struct drm_display_info *display = &connector->display_info;
-	struct drm_hdmi_info *hdmi = &display->hdmi;
-
-	display->has_hdmi_infoframe = true;
-
-	if (hf_vsdb[6] & 0x80) {
-		hdmi->scdc.supported = true;
-		if (hf_vsdb[6] & 0x40)
-			hdmi->scdc.read_request = true;
-	}
-
-	/*
-	 * All HDMI 2.0 monitors must support scrambling at rates > 340 MHz.
-	 * And as per the spec, three factors confirm this:
-	 * * Availability of a HF-VSDB block in EDID (check)
-	 * * Non zero Max_TMDS_Char_Rate filed in HF-VSDB (let's check)
-	 * * SCDC support available (let's check)
-	 * Lets check it out.
-	 */
-
-	if (hf_vsdb[5]) {
-		/* max clock is 5000 KHz times block value */
-		u32 max_tmds_clock = hf_vsdb[5] * 5000;
-		struct drm_scdc *scdc = &hdmi->scdc;
-
-		if (max_tmds_clock > 340000) {
-			display->max_tmds_clock = max_tmds_clock;
-			DRM_DEBUG_KMS("HF-VSDB: max TMDS clock %d kHz\n",
-				display->max_tmds_clock);
-		}
-
-		if (scdc->supported) {
-			scdc->scrambling.supported = true;
-
-			/* Few sinks support scrambling for cloks < 340M */
-			if ((hf_vsdb[6] & 0x8))
-				scdc->scrambling.low_rates = true;
-		}
-	}
-
-	drm_parse_ycbcr420_deep_color_info(connector, hf_vsdb);
-}
-
->>>>>>> rebase
 static void drm_parse_hdmi_deep_color_info(struct drm_connector *connector,
 					   const u8 *hdmi)
 {
@@ -4851,7 +4734,6 @@ static void drm_parse_hdmi_deep_color_info(struct drm_connector *connector,
 		  connector->name, dc_bpc);
 	info->bpc = dc_bpc;
 
-<<<<<<< HEAD
 	/*
 	 * Deep color support mandates RGB444 support for all video
 	 * modes and forbids YCRCB422 support for all video modes per
@@ -4862,10 +4744,6 @@ static void drm_parse_hdmi_deep_color_info(struct drm_connector *connector,
 	/* YCRCB444 is optional according to spec. */
 	if (hdmi[6] & DRM_EDID_HDMI_DC_Y444) {
 		info->color_formats |= DRM_COLOR_FORMAT_YCRCB444;
-=======
-	/* YCRCB444 is optional according to spec. */
-	if (hdmi[6] & DRM_EDID_HDMI_DC_Y444) {
->>>>>>> rebase
 		DRM_DEBUG("%s: HDMI sink does YCRCB444 in deep color.\n",
 			  connector->name);
 	}
@@ -4956,7 +4834,6 @@ drm_reset_display_info(struct drm_connector *connector)
 	info->non_desktop = 0;
 }
 
-<<<<<<< HEAD
 static void
 drm_hdmi_extract_vsdbs_info(struct drm_connector *connector,
 		const struct edid *edid)
@@ -4990,8 +4867,6 @@ drm_hdmi_extract_vsdbs_info(struct drm_connector *connector,
 	}
 }
 
-=======
->>>>>>> rebase
 u32 drm_add_display_info(struct drm_connector *connector, const struct edid *edid)
 {
 	struct drm_display_info *info = &connector->display_info;
@@ -5013,10 +4888,6 @@ u32 drm_add_display_info(struct drm_connector *connector, const struct edid *edi
 	if (!(edid->input & DRM_EDID_INPUT_DIGITAL))
 		return quirks;
 
-<<<<<<< HEAD
-=======
-	info->color_formats |= DRM_COLOR_FORMAT_RGB444;
->>>>>>> rebase
 	drm_parse_cea_ext(connector, edid);
 
 	/*
@@ -5033,14 +4904,11 @@ u32 drm_add_display_info(struct drm_connector *connector, const struct edid *edi
 			  connector->name, info->bpc);
 	}
 
-<<<<<<< HEAD
 	/* Extract audio and video latency fields for the sink */
 	drm_hdmi_extract_vsdbs_info(connector, edid);
 	/* Extract info from extended tag blocks */
 	drm_hdmi_extract_extended_blk_info(connector, edid);
 
-=======
->>>>>>> rebase
 	/* Only defined for 1.4 with digital displays */
 	if (edid->revision < 4)
 		return quirks;
@@ -5073,10 +4941,7 @@ u32 drm_add_display_info(struct drm_connector *connector, const struct edid *edi
 	DRM_DEBUG("%s: Assigning EDID-1.4 digital sink color depth as %d bpc.\n",
 			  connector->name, info->bpc);
 
-<<<<<<< HEAD
 	info->color_formats |= DRM_COLOR_FORMAT_RGB444;
-=======
->>>>>>> rebase
 	if (edid->features & DRM_EDID_FEATURE_RGB_YCRCB444)
 		info->color_formats |= DRM_COLOR_FORMAT_YCRCB444;
 	if (edid->features & DRM_EDID_FEATURE_RGB_YCRCB422)
@@ -5113,11 +4978,7 @@ static struct drm_display_mode *drm_mode_displayid_detailed(struct drm_device *d
 	struct drm_display_mode *mode;
 	unsigned pixel_clock = (timings->pixel_clock[0] |
 				(timings->pixel_clock[1] << 8) |
-<<<<<<< HEAD
 				(timings->pixel_clock[2] << 16));
-=======
-				(timings->pixel_clock[2] << 16)) + 1;
->>>>>>> rebase
 	unsigned hactive = (timings->hactive[0] | timings->hactive[1] << 8) + 1;
 	unsigned hblank = (timings->hblank[0] | timings->hblank[1] << 8) + 1;
 	unsigned hsync = (timings->hsync[0] | (timings->hsync[1] & 0x7f) << 8) + 1;

@@ -889,15 +889,8 @@ static int l2tp_udp_recv_core(struct l2tp_tunnel *tunnel, struct sk_buff *skb)
 	}
 
 	if (tunnel->version == L2TP_HDR_VER_3 &&
-<<<<<<< HEAD
 	    l2tp_v3_ensure_opt_in_linear(session, skb, &ptr, &optr))
 		goto error;
-=======
-	    l2tp_v3_ensure_opt_in_linear(session, skb, &ptr, &optr)) {
-		l2tp_session_dec_refcount(session);
-		goto error;
-	}
->>>>>>> rebase
 
 	l2tp_recv_common(session, skb, ptr, optr, hdrflags, length);
 	l2tp_session_dec_refcount(session);
@@ -1040,10 +1033,6 @@ static void l2tp_xmit_core(struct l2tp_session *session, struct sk_buff *skb,
 
 	/* Queue the packet to IP for output */
 	skb->ignore_df = 1;
-<<<<<<< HEAD
-=======
-	skb_dst_drop(skb);
->>>>>>> rebase
 #if IS_ENABLED(CONFIG_IPV6)
 	if (l2tp_sk_is_v6(tunnel->sock))
 		error = inet6_csk_xmit(tunnel->sock, skb, NULL);
@@ -1115,13 +1104,10 @@ int l2tp_xmit_skb(struct l2tp_session *session, struct sk_buff *skb, int hdr_len
 		goto out_unlock;
 	}
 
-<<<<<<< HEAD
 	/* Get routing info from the tunnel socket */
 	skb_dst_drop(skb);
 	skb_dst_set(skb, sk_dst_check(sk, 0));
 
-=======
->>>>>>> rebase
 	inet = inet_sk(sk);
 	fl = &inet->cork.fl;
 	switch (tunnel->encap) {
@@ -1477,12 +1463,6 @@ static int l2tp_validate_socket(const struct sock *sk, const struct net *net,
 	if (sk->sk_type != SOCK_DGRAM)
 		return -EPROTONOSUPPORT;
 
-<<<<<<< HEAD
-=======
-	if (sk->sk_family != PF_INET && sk->sk_family != PF_INET6)
-		return -EPROTONOSUPPORT;
-
->>>>>>> rebase
 	if ((encap == L2TP_ENCAPTYPE_UDP && sk->sk_protocol != IPPROTO_UDP) ||
 	    (encap == L2TP_ENCAPTYPE_IP && sk->sk_protocol != IPPROTO_L2TP))
 		return -EPROTONOSUPPORT;

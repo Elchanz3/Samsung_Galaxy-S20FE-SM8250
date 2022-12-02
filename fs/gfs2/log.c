@@ -806,11 +806,8 @@ void gfs2_log_flush(struct gfs2_sbd *sdp, struct gfs2_glock *gl, u32 flags)
 	tr = sdp->sd_log_tr;
 	if (tr) {
 		sdp->sd_log_tr = NULL;
-<<<<<<< HEAD
 		INIT_LIST_HEAD(&tr->tr_ail1_list);
 		INIT_LIST_HEAD(&tr->tr_ail2_list);
-=======
->>>>>>> rebase
 		tr->tr_first = sdp->sd_log_flush_head;
 		if (unlikely (state == SFS_FROZEN))
 			gfs2_assert_withdraw(sdp, !tr->tr_num_buf_new && !tr->tr_num_databuf_new);
@@ -880,15 +877,8 @@ void gfs2_log_flush(struct gfs2_sbd *sdp, struct gfs2_glock *gl, u32 flags)
  * @new: New transaction to be merged
  */
 
-<<<<<<< HEAD
 static void gfs2_merge_trans(struct gfs2_trans *old, struct gfs2_trans *new)
 {
-=======
-static void gfs2_merge_trans(struct gfs2_sbd *sdp, struct gfs2_trans *new)
-{
-	struct gfs2_trans *old = sdp->sd_log_tr;
-
->>>>>>> rebase
 	WARN_ON_ONCE(!test_bit(TR_ATTACHED, &old->tr_flags));
 
 	old->tr_num_buf_new	+= new->tr_num_buf_new;
@@ -900,14 +890,6 @@ static void gfs2_merge_trans(struct gfs2_sbd *sdp, struct gfs2_trans *new)
 
 	list_splice_tail_init(&new->tr_databuf, &old->tr_databuf);
 	list_splice_tail_init(&new->tr_buf, &old->tr_buf);
-<<<<<<< HEAD
-=======
-
-	spin_lock(&sdp->sd_ail_lock);
-	list_splice_tail_init(&new->tr_ail1_list, &old->tr_ail1_list);
-	list_splice_tail_init(&new->tr_ail2_list, &old->tr_ail2_list);
-	spin_unlock(&sdp->sd_ail_lock);
->>>>>>> rebase
 }
 
 static void log_refund(struct gfs2_sbd *sdp, struct gfs2_trans *tr)
@@ -919,11 +901,7 @@ static void log_refund(struct gfs2_sbd *sdp, struct gfs2_trans *tr)
 	gfs2_log_lock(sdp);
 
 	if (sdp->sd_log_tr) {
-<<<<<<< HEAD
 		gfs2_merge_trans(sdp->sd_log_tr, tr);
-=======
-		gfs2_merge_trans(sdp, tr);
->>>>>>> rebase
 	} else if (tr->tr_num_buf_new || tr->tr_num_databuf_new) {
 		gfs2_assert_withdraw(sdp, test_bit(TR_ALLOCED, &tr->tr_flags));
 		sdp->sd_log_tr = tr;

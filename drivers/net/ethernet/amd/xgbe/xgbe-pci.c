@@ -418,12 +418,6 @@ static void xgbe_pci_remove(struct pci_dev *pdev)
 
 	pci_free_irq_vectors(pdata->pcidev);
 
-<<<<<<< HEAD
-=======
-	/* Disable all interrupts in the hardware */
-	XP_IOWRITE(pdata, XP_INT_EN, 0x0);
-
->>>>>>> rebase
 	xgbe_free_pdata(pdata);
 }
 

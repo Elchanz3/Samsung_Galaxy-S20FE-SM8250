@@ -19,13 +19,9 @@
 #include <linux/sched/task.h>
 #include <linux/sched/task_stack.h>
 #include <linux/sched/cputime.h>
-<<<<<<< HEAD
 #include <linux/file.h>
 #include <linux/fs.h>
 #include <linux/proc_fs.h>
-=======
-#include <linux/fs.h>
->>>>>>> rebase
 #include <linux/tty.h>
 #include <linux/binfmts.h>
 #include <linux/coredump.h>
@@ -47,11 +43,8 @@
 #include <linux/compiler.h>
 #include <linux/posix-timers.h>
 #include <linux/livepatch.h>
-<<<<<<< HEAD
 #include <linux/oom.h>
 #include <linux/capability.h>
-=======
->>>>>>> rebase
 
 #define CREATE_TRACE_POINTS
 #include <trace/events/signal.h>
@@ -63,13 +56,10 @@
 #include <asm/cacheflush.h>
 #include "audit.h"	/* audit_signal_info() */
 
-<<<<<<< HEAD
 #ifdef CONFIG_SAMSUNG_FREECESS
 #include <linux/freecess.h>
 #endif
 
-=======
->>>>>>> rebase
 /*
  * SLAB caches for signal bits.
  */
@@ -403,7 +393,6 @@ static bool task_participate_group_stop(struct task_struct *task)
 
 void task_join_group_stop(struct task_struct *task)
 {
-<<<<<<< HEAD
 	/* Have the new thread join an on-going signal group stop */
 	unsigned long jobctl = current->jobctl;
 	if (jobctl & JOBCTL_STOP_PENDING) {
@@ -414,19 +403,6 @@ void task_join_group_stop(struct task_struct *task)
 			sig->group_stop_count++;
 		}
 	}
-=======
-	unsigned long mask = current->jobctl & JOBCTL_STOP_SIGMASK;
-	struct signal_struct *sig = current->signal;
-
-	if (sig->group_stop_count) {
-		sig->group_stop_count++;
-		mask |= JOBCTL_STOP_CONSUME;
-	} else if (!(sig->flags & SIGNAL_STOP_STOPPED))
-		return;
-
-	/* Have the new thread join an on-going signal group stop */
-	task_set_jobctl_pending(task, mask | JOBCTL_STOP_PENDING);
->>>>>>> rebase
 }
 
 /*
@@ -1241,7 +1217,6 @@ static int send_signal(int sig, struct siginfo *info, struct task_struct *t,
 			   !task_pid_nr_ns(current, task_active_pid_ns(t));
 #endif
 
-<<<<<<< HEAD
 	/* [SystemF/W, si_code is 0 : from userspace, si_code is over 0 : from kernel */
 	if (!is_si_special(info)) {
 		if ((current->pid != 1) && ((sig == SIGKILL && !strncmp("main", t->group_leader->comm, 4))
@@ -1253,8 +1228,6 @@ static int send_signal(int sig, struct siginfo *info, struct task_struct *t,
 	}
 	/* SystemF/W]*/
 
-=======
->>>>>>> rebase
 	return __send_signal(sig, info, t, type, from_ancestor_ns);
 }
 
@@ -1309,7 +1282,6 @@ int do_send_sig_info(int sig, struct siginfo *info, struct task_struct *p,
 	unsigned long flags;
 	int ret = -ESRCH;
 
-<<<<<<< HEAD
 #ifdef CONFIG_SAMSUNG_FREECESS
 	/*
 	 * System will send SIGIO to the app that locked the file when other apps access the file.
@@ -1319,8 +1291,6 @@ int do_send_sig_info(int sig, struct siginfo *info, struct task_struct *p,
 		sig_report(p);
 #endif
 
-=======
->>>>>>> rebase
 	if (lock_task_sighand(p, &flags)) {
 		ret = send_signal(sig, info, p, type);
 		unlock_task_sighand(p, &flags);
@@ -1438,7 +1408,6 @@ int group_send_sig_info(int sig, struct siginfo *info, struct task_struct *p,
 	ret = check_kill_permission(sig, info, p);
 	rcu_read_unlock();
 
-<<<<<<< HEAD
 	if (!ret && sig) {
 		check_panic_on_foreground_kill(p);
 		ret = do_send_sig_info(sig, info, p, type);
@@ -1448,10 +1417,6 @@ int group_send_sig_info(int sig, struct siginfo *info, struct task_struct *p,
 			ulmk_update_last_kill();
 		}
 	}
-=======
-	if (!ret && sig)
-		ret = do_send_sig_info(sig, info, p, type);
->>>>>>> rebase
 
 	return ret;
 }
@@ -1879,7 +1844,6 @@ ret:
 	return ret;
 }
 
-<<<<<<< HEAD
 static void do_notify_pidfd(struct task_struct *task)
 {
 	struct pid *pid;
@@ -1888,8 +1852,6 @@ static void do_notify_pidfd(struct task_struct *task)
 	wake_up_all(&pid->wait_pidfd);
 }
 
-=======
->>>>>>> rebase
 /*
  * Let a parent know about the death of a child.
  * For a stopped/continued status change, use do_notify_parent_cldstop instead.
@@ -1905,7 +1867,6 @@ bool do_notify_parent(struct task_struct *tsk, int sig)
 	bool autoreap = false;
 	u64 utime, stime;
 
-<<<<<<< HEAD
 	BUG_ON(sig == -1);
 
  	/* do_notify_parent_cldstop should have been called instead.  */
@@ -1917,26 +1878,12 @@ bool do_notify_parent(struct task_struct *tsk, int sig)
 	/* Wake up all pidfd waiters */
 	do_notify_pidfd(tsk);
 
-=======
-	WARN_ON_ONCE(sig == -1);
-
-	/* do_notify_parent_cldstop should have been called instead.  */
-	WARN_ON_ONCE(task_is_stopped_or_traced(tsk));
-
-	WARN_ON_ONCE(!tsk->ptrace &&
-	       (tsk->group_leader != tsk || !thread_group_empty(tsk)));
-
->>>>>>> rebase
 	if (sig != SIGCHLD) {
 		/*
 		 * This is only possible if parent == real_parent.
 		 * Check if it has changed security domain.
 		 */
-<<<<<<< HEAD
 		if (tsk->parent_exec_id != tsk->parent->self_exec_id)
-=======
-		if (tsk->parent_exec_id != READ_ONCE(tsk->parent->self_exec_id))
->>>>>>> rebase
 			sig = SIGCHLD;
 	}
 
@@ -2101,7 +2048,6 @@ static inline bool may_ptrace_stop(void)
 	return true;
 }
 
-<<<<<<< HEAD
 /*
  * Return non-zero if there is a SIGKILL that should be waking us up.
  * Called with the siglock held.
@@ -2111,8 +2057,6 @@ static bool sigkill_pending(struct task_struct *tsk)
 	return sigismember(&tsk->pending.signal, SIGKILL) ||
 	       sigismember(&tsk->signal->shared_pending.signal, SIGKILL);
 }
-=======
->>>>>>> rebase
 
 /*
  * This must be called with current->sighand->siglock held.
@@ -2139,29 +2083,17 @@ static void ptrace_stop(int exit_code, int why, int clear_code, siginfo_t *info)
 		 * calling arch_ptrace_stop, so we must release it now.
 		 * To preserve proper semantics, we must do this before
 		 * any signal bookkeeping like checking group_stop_count.
-<<<<<<< HEAD
 		 * Meanwhile, a SIGKILL could come in before we retake the
 		 * siglock.  That must prevent us from sleeping in TASK_TRACED.
 		 * So after regaining the lock, we must check for SIGKILL.
-=======
->>>>>>> rebase
 		 */
 		spin_unlock_irq(&current->sighand->siglock);
 		arch_ptrace_stop(exit_code, info);
 		spin_lock_irq(&current->sighand->siglock);
-<<<<<<< HEAD
 		if (sigkill_pending(current))
 			return;
 	}
 
-=======
-	}
-
-	/*
-	 * schedule() will not sleep if there is a pending signal that
-	 * can awaken the task.
-	 */
->>>>>>> rebase
 	set_special_state(TASK_TRACED);
 
 	/*
@@ -3391,7 +3323,6 @@ COMPAT_SYSCALL_DEFINE4(rt_sigtimedwait, compat_sigset_t __user *, uthese,
 }
 #endif
 
-<<<<<<< HEAD
 static inline void prepare_kill_siginfo(int sig, struct siginfo *info)
 {
 	clear_siginfo(info);
@@ -3402,8 +3333,6 @@ static inline void prepare_kill_siginfo(int sig, struct siginfo *info)
 	info->si_uid = from_kuid_munged(current_user_ns(), current_uid());
 }
 
-=======
->>>>>>> rebase
 /**
  *  sys_kill - send a signal to a process
  *  @pid: the PID of the process
@@ -3413,21 +3342,11 @@ SYSCALL_DEFINE2(kill, pid_t, pid, int, sig)
 {
 	struct siginfo info;
 
-<<<<<<< HEAD
 	prepare_kill_siginfo(sig, &info);
-=======
-	clear_siginfo(&info);
-	info.si_signo = sig;
-	info.si_errno = 0;
-	info.si_code = SI_USER;
-	info.si_pid = task_tgid_vnr(current);
-	info.si_uid = from_kuid_munged(current_user_ns(), current_uid());
->>>>>>> rebase
 
 	return kill_something_info(sig, &info, pid);
 }
 
-<<<<<<< HEAD
 /*
  * Verify that the signaler and signalee either are in the same pid namespace
  * or that the signaler's pid namespace is an ancestor of the signalee's pid
@@ -3542,8 +3461,6 @@ err:
 	return ret;
 }
 
-=======
->>>>>>> rebase
 static int
 do_send_specific(pid_t tgid, pid_t pid, int sig, struct siginfo *info)
 {

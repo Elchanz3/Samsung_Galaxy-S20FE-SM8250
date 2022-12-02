@@ -183,7 +183,6 @@ static int tfp410_connector_get_modes(struct drm_connector *connector)
 	return ret;
 }
 
-<<<<<<< HEAD
 static int tfp410_connector_mode_valid(struct drm_connector *connector,
 		  struct drm_display_mode *mode)
 {
@@ -192,8 +191,6 @@ static int tfp410_connector_mode_valid(struct drm_connector *connector,
 	return tilcdc_crtc_mode_valid(priv->crtc, mode);
 }
 
-=======
->>>>>>> rebase
 static struct drm_encoder *tfp410_connector_best_encoder(
 		struct drm_connector *connector)
 {
@@ -212,10 +209,7 @@ static const struct drm_connector_funcs tfp410_connector_funcs = {
 
 static const struct drm_connector_helper_funcs tfp410_connector_helper_funcs = {
 	.get_modes          = tfp410_connector_get_modes,
-<<<<<<< HEAD
 	.mode_valid         = tfp410_connector_mode_valid,
-=======
->>>>>>> rebase
 	.best_encoder       = tfp410_connector_best_encoder,
 };
 

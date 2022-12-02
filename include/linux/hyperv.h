@@ -428,11 +428,6 @@ enum vmbus_channel_message_type {
 	CHANNELMSG_19				= 19,
 	CHANNELMSG_20				= 20,
 	CHANNELMSG_TL_CONNECT_REQUEST		= 21,
-<<<<<<< HEAD
-=======
-	CHANNELMSG_22				= 22,
-	CHANNELMSG_TL_CONNECT_RESULT		= 23,
->>>>>>> rebase
 	CHANNELMSG_COUNT
 };
 

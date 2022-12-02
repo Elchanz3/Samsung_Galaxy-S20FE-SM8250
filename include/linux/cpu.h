@@ -64,15 +64,6 @@ extern ssize_t cpu_show_tsx_async_abort(struct device *dev,
 					char *buf);
 extern ssize_t cpu_show_itlb_multihit(struct device *dev,
 				      struct device_attribute *attr, char *buf);
-<<<<<<< HEAD
-=======
-extern ssize_t cpu_show_srbds(struct device *dev, struct device_attribute *attr, char *buf);
-extern ssize_t cpu_show_mmio_stale_data(struct device *dev,
-					struct device_attribute *attr,
-					char *buf);
-extern ssize_t cpu_show_retbleed(struct device *dev,
-				 struct device_attribute *attr, char *buf);
->>>>>>> rebase
 
 extern __printf(4, 5)
 struct device *cpu_device_create(struct device *parent, void *drvdata,
@@ -207,7 +198,6 @@ static inline int cpuhp_smt_enable(void) { return 0; }
 static inline int cpuhp_smt_disable(enum cpuhp_smt_control ctrlval) { return 0; }
 #endif
 
-<<<<<<< HEAD
 #define IDLE_START 1
 #define IDLE_END 2
 
@@ -215,8 +205,6 @@ void idle_notifier_register(struct notifier_block *n);
 void idle_notifier_unregister(struct notifier_block *n);
 void idle_notifier_call_chain(unsigned long val);
 
-=======
->>>>>>> rebase
 extern bool cpu_mitigations_off(void);
 extern bool cpu_mitigations_auto_nosmt(void);
 

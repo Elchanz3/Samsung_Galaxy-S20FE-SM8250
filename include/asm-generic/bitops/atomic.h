@@ -35,12 +35,9 @@ static inline int test_and_set_bit(unsigned int nr, volatile unsigned long *p)
 	unsigned long mask = BIT_MASK(nr);
 
 	p += BIT_WORD(nr);
-<<<<<<< HEAD
 	if (READ_ONCE(*p) & mask)
 		return 1;
 
-=======
->>>>>>> rebase
 	old = atomic_long_fetch_or(mask, (atomic_long_t *)p);
 	return !!(old & mask);
 }
@@ -51,12 +48,9 @@ static inline int test_and_clear_bit(unsigned int nr, volatile unsigned long *p)
 	unsigned long mask = BIT_MASK(nr);
 
 	p += BIT_WORD(nr);
-<<<<<<< HEAD
 	if (!(READ_ONCE(*p) & mask))
 		return 0;
 
-=======
->>>>>>> rebase
 	old = atomic_long_fetch_andnot(mask, (atomic_long_t *)p);
 	return !!(old & mask);
 }

@@ -85,7 +85,6 @@ DEFINE_BINDER_FUNCTION_RETURN_EVENT(binder_ioctl_done);
 DEFINE_BINDER_FUNCTION_RETURN_EVENT(binder_write_done);
 DEFINE_BINDER_FUNCTION_RETURN_EVENT(binder_read_done);
 
-<<<<<<< HEAD
 TRACE_EVENT(binder_set_priority,
 	TP_PROTO(int proc, int thread, unsigned int old_prio,
 		 unsigned int desired_prio, unsigned int new_prio),
@@ -110,8 +109,6 @@ TRACE_EVENT(binder_set_priority,
 		  __entry->new_prio, __entry->desired_prio)
 );
 
-=======
->>>>>>> rebase
 TRACE_EVENT(binder_wait_for_work,
 	TP_PROTO(bool proc_work, bool transaction_stack, bool thread_todo),
 	TP_ARGS(proc_work, transaction_stack, thread_todo),
@@ -302,11 +299,7 @@ DEFINE_EVENT(binder_buffer_class, binder_transaction_failed_buffer_release,
 
 TRACE_EVENT(binder_update_page_range,
 	TP_PROTO(struct binder_alloc *alloc, bool allocate,
-<<<<<<< HEAD
 		 void __user *start, void __user *end),
-=======
-		 void *start, void *end),
->>>>>>> rebase
 	TP_ARGS(alloc, allocate, start, end),
 	TP_STRUCT__entry(
 		__field(int, proc)

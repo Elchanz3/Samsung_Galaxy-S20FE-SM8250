@@ -45,10 +45,6 @@
 #include <soc/fsl/qe/ucc.h>
 #include <soc/fsl/qe/ucc_fast.h>
 #include <asm/machdep.h>
-<<<<<<< HEAD
-=======
-#include <net/sch_generic.h>
->>>>>>> rebase
 
 #include "ucc_geth.h"
 
@@ -1555,16 +1551,11 @@ static int ugeth_disable(struct ucc_geth_private *ugeth, enum comm_dir mode)
 
 static void ugeth_quiesce(struct ucc_geth_private *ugeth)
 {
-<<<<<<< HEAD
 	/* Prevent any further xmits, plus detach the device. */
 	netif_device_detach(ugeth->ndev);
 
 	/* Wait for any current xmits to finish. */
 	netif_tx_disable(ugeth->ndev);
-=======
-	/* Prevent any further xmits */
-	netif_tx_stop_all_queues(ugeth->ndev);
->>>>>>> rebase
 
 	/* Disable the interrupt to avoid NAPI rescheduling. */
 	disable_irq(ugeth->ug_info->uf_info.irq);
@@ -1577,14 +1568,7 @@ static void ugeth_activate(struct ucc_geth_private *ugeth)
 {
 	napi_enable(&ugeth->napi);
 	enable_irq(ugeth->ug_info->uf_info.irq);
-<<<<<<< HEAD
 	netif_device_attach(ugeth->ndev);
-=======
-
-	/* allow to xmit again  */
-	netif_tx_wake_all_queues(ugeth->ndev);
-	__netdev_watchdog_up(ugeth->ndev);
->>>>>>> rebase
 }
 
 /* Called every time the controller might need to be made
@@ -3917,10 +3901,6 @@ static int ucc_geth_probe(struct platform_device* ofdev)
 	INIT_WORK(&ugeth->timeout_work, ucc_geth_timeout_work);
 	netif_napi_add(dev, &ugeth->napi, ucc_geth_poll, 64);
 	dev->mtu = 1500;
-<<<<<<< HEAD
-=======
-	dev->max_mtu = 1518;
->>>>>>> rebase
 
 	ugeth->msg_enable = netif_msg_init(debug.msg_enable, UGETH_MSG_DEFAULT);
 	ugeth->phy_interface = phy_interface;
@@ -3966,19 +3946,12 @@ static int ucc_geth_remove(struct platform_device* ofdev)
 	struct device_node *np = ofdev->dev.of_node;
 
 	unregister_netdev(dev);
-<<<<<<< HEAD
 	free_netdev(dev);
-=======
->>>>>>> rebase
 	ucc_geth_memclean(ugeth);
 	if (of_phy_is_fixed_link(np))
 		of_phy_deregister_fixed_link(np);
 	of_node_put(ugeth->ug_info->tbi_node);
 	of_node_put(ugeth->ug_info->phy_node);
-<<<<<<< HEAD
-=======
-	free_netdev(dev);
->>>>>>> rebase
 
 	return 0;
 }

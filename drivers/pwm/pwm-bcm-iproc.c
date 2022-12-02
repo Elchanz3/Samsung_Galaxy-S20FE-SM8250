@@ -85,11 +85,8 @@ static void iproc_pwmc_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
 	u64 tmp, multi, rate;
 	u32 value, prescale;
 
-<<<<<<< HEAD
 	rate = clk_get_rate(ip->clk);
 
-=======
->>>>>>> rebase
 	value = readl(ip->base + IPROC_PWM_CTRL_OFFSET);
 
 	if (value & BIT(IPROC_PWM_CTRL_EN_SHIFT(pwm->hwpwm)))
@@ -102,16 +99,6 @@ static void iproc_pwmc_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
 	else
 		state->polarity = PWM_POLARITY_INVERSED;
 
-<<<<<<< HEAD
-=======
-	rate = clk_get_rate(ip->clk);
-	if (rate == 0) {
-		state->period = 0;
-		state->duty_cycle = 0;
-		return;
-	}
-
->>>>>>> rebase
 	value = readl(ip->base + IPROC_PWM_PRESCALE_OFFSET);
 	prescale = value >> IPROC_PWM_PRESCALE_SHIFT(pwm->hwpwm);
 	prescale &= IPROC_PWM_PRESCALE_MAX;

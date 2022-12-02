@@ -2,14 +2,8 @@
 /*
  *  Native support for the I/O-Warrior USB devices
  *
-<<<<<<< HEAD
  *  Copyright (c) 2003-2005  Code Mercenaries GmbH
  *  written by Christian Lucht <lucht@codemercs.com>
-=======
- *  Copyright (c) 2003-2005, 2020  Code Mercenaries GmbH
- *  written by Christian Lucht <lucht@codemercs.com> and
- *  Christoph Jung <jung@codemercs.com>
->>>>>>> rebase
  *
  *  based on
 
@@ -108,13 +102,10 @@ struct iowarrior {
 /*    globals   */
 /*--------------*/
 
-<<<<<<< HEAD
 /*
  *  USB spec identifies 5 second timeouts.
  */
 #define GET_TIMEOUT 5
-=======
->>>>>>> rebase
 #define USB_REQ_GET_REPORT  0x01
 //#if 0
 static int usb_get_report(struct usb_device *dev,
@@ -126,11 +117,7 @@ static int usb_get_report(struct usb_device *dev,
 			       USB_DIR_IN | USB_TYPE_CLASS |
 			       USB_RECIP_INTERFACE, (type << 8) + id,
 			       inter->desc.bInterfaceNumber, buf, size,
-<<<<<<< HEAD
 			       GET_TIMEOUT*HZ);
-=======
-			       USB_CTRL_GET_TIMEOUT);
->>>>>>> rebase
 }
 //#endif
 
@@ -145,11 +132,7 @@ static int usb_set_report(struct usb_interface *intf, unsigned char type,
 			       USB_TYPE_CLASS | USB_RECIP_INTERFACE,
 			       (type << 8) + id,
 			       intf->cur_altsetting->desc.bInterfaceNumber, buf,
-<<<<<<< HEAD
 			       size, HZ);
-=======
-			       size, 1000);
->>>>>>> rebase
 }
 
 /*---------------------*/
@@ -834,7 +817,6 @@ static int iowarrior_probe(struct usb_interface *interface,
 
 	/* we have to check the report_size often, so remember it in the endianness suitable for our machine */
 	dev->report_size = usb_endpoint_maxp(dev->int_in_endpoint);
-<<<<<<< HEAD
 	if ((dev->interface->cur_altsetting->desc.bInterfaceNumber == 0) &&
 	    ((dev->product_id == USB_DEVICE_ID_CODEMERCS_IOW56) ||
 	     (dev->product_id == USB_DEVICE_ID_CODEMERCS_IOW56AM) ||
@@ -843,30 +825,6 @@ static int iowarrior_probe(struct usb_interface *interface,
 	     (dev->product_id == USB_DEVICE_ID_CODEMERCS_IOW100)))
 		/* IOWarrior56 has wMaxPacketSize different from report size */
 		dev->report_size = 7;
-=======
-
-	/*
-	 * Some devices need the report size to be different than the
-	 * endpoint size.
-	 */
-	if (dev->interface->cur_altsetting->desc.bInterfaceNumber == 0) {
-		switch (dev->product_id) {
-		case USB_DEVICE_ID_CODEMERCS_IOW56:
-		case USB_DEVICE_ID_CODEMERCS_IOW56AM:
-			dev->report_size = 7;
-			break;
-
-		case USB_DEVICE_ID_CODEMERCS_IOW28:
-		case USB_DEVICE_ID_CODEMERCS_IOW28L:
-			dev->report_size = 4;
-			break;
-
-		case USB_DEVICE_ID_CODEMERCS_IOW100:
-			dev->report_size = 13;
-			break;
-		}
-	}
->>>>>>> rebase
 
 	/* create the urb and buffer for reading */
 	dev->int_in_urb = usb_alloc_urb(0, GFP_KERNEL);

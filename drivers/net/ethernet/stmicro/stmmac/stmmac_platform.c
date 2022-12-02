@@ -398,12 +398,8 @@ stmmac_probe_config_dt(struct platform_device *pdev, const char **mac)
 	plat->interface = of_get_phy_mode(np);
 
 	/* Get max speed of operation from device tree */
-<<<<<<< HEAD
 	if (of_property_read_u32(np, "max-speed", &plat->max_speed))
 		plat->max_speed = -1;
-=======
-	of_property_read_u32(np, "max-speed", &plat->max_speed);
->>>>>>> rebase
 
 	plat->bus_id = of_alias_get_id(np, "ethernet");
 	if (plat->bus_id < 0)
@@ -473,17 +469,6 @@ stmmac_probe_config_dt(struct platform_device *pdev, const char **mac)
 		plat->pmt = 1;
 	}
 
-<<<<<<< HEAD
-=======
-	if (of_device_is_compatible(np, "snps,dwmac-3.40a")) {
-		plat->has_gmac = 1;
-		plat->enh_desc = 1;
-		plat->tx_coe = 1;
-		plat->bugged_jumbo = 1;
-		plat->pmt = 1;
-	}
-
->>>>>>> rebase
 	if (of_device_is_compatible(np, "snps,dwmac-4.00") ||
 	    of_device_is_compatible(np, "snps,dwmac-4.10a") ||
 	    of_device_is_compatible(np, "snps,dwmac-4.20a")) {

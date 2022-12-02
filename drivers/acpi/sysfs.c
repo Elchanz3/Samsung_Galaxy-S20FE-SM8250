@@ -439,7 +439,6 @@ static ssize_t acpi_data_show(struct file *filp, struct kobject *kobj,
 {
 	struct acpi_data_attr *data_attr;
 	void __iomem *base;
-<<<<<<< HEAD
 	ssize_t rc;
 
 	data_attr = container_of(bin_attr, struct acpi_data_attr, attr);
@@ -452,31 +451,6 @@ static ssize_t acpi_data_show(struct file *filp, struct kobject *kobj,
 	acpi_os_unmap_memory(base, data_attr->attr.size);
 
 	return rc;
-=======
-	ssize_t size;
-
-	data_attr = container_of(bin_attr, struct acpi_data_attr, attr);
-	size = data_attr->attr.size;
-
-	if (offset < 0)
-		return -EINVAL;
-
-	if (offset >= size)
-		return 0;
-
-	if (count > size - offset)
-		count = size - offset;
-
-	base = acpi_os_map_iomem(data_attr->addr, size);
-	if (!base)
-		return -ENOMEM;
-
-	memcpy_fromio(buf, base + offset, count);
-
-	acpi_os_unmap_iomem(base, size);
-
-	return count;
->>>>>>> rebase
 }
 
 static int acpi_bert_data_init(void *th, struct acpi_data_attr *data_attr)
@@ -961,21 +935,13 @@ static void __exit interrupt_stats_exit(void)
 }
 
 static ssize_t
-<<<<<<< HEAD
 acpi_show_profile(struct device *dev, struct device_attribute *attr,
-=======
-acpi_show_profile(struct kobject *kobj, struct kobj_attribute *attr,
->>>>>>> rebase
 		  char *buf)
 {
 	return sprintf(buf, "%d\n", acpi_gbl_FADT.preferred_profile);
 }
 
-<<<<<<< HEAD
 static const struct device_attribute pm_profile_attr =
-=======
-static const struct kobj_attribute pm_profile_attr =
->>>>>>> rebase
 	__ATTR(pm_profile, S_IRUGO, acpi_show_profile, NULL);
 
 static ssize_t hotplug_enabled_show(struct kobject *kobj,
@@ -1024,15 +990,8 @@ void acpi_sysfs_add_hotplug_profile(struct acpi_hotplug_profile *hotplug,
 
 	error = kobject_init_and_add(&hotplug->kobj,
 		&acpi_hotplug_profile_ktype, hotplug_kobj, "%s", name);
-<<<<<<< HEAD
 	if (error)
 		goto err_out;
-=======
-	if (error) {
-		kobject_put(&hotplug->kobj);
-		goto err_out;
-	}
->>>>>>> rebase
 
 	kobject_uevent(&hotplug->kobj, KOBJ_ADD);
 	return;

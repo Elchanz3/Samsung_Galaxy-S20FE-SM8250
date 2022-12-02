@@ -737,12 +737,7 @@ static int kvm_unmap_hva(struct kvm *kvm, unsigned long hva)
 	return 0;
 }
 
-<<<<<<< HEAD
 int kvm_unmap_hva_range(struct kvm *kvm, unsigned long start, unsigned long end)
-=======
-int kvm_unmap_hva_range(struct kvm *kvm, unsigned long start, unsigned long end,
-			bool blockable)
->>>>>>> rebase
 {
 	/* kvm_unmap_hva flushes everything anyways */
 	kvm_unmap_hva(kvm, start);

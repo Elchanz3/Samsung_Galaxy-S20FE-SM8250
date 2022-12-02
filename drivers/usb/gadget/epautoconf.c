@@ -205,7 +205,6 @@ void usb_ep_autoconfig_reset (struct usb_gadget *gadget)
 	gadget->out_epnum = 0;
 }
 EXPORT_SYMBOL_GPL(usb_ep_autoconfig_reset);
-<<<<<<< HEAD
 
 /**
  * usb_ep_autoconfig_by_name - Used to pick the endpoint by name. eg gsi-epin1
@@ -249,5 +248,3 @@ err:
 	return NULL;
 }
 EXPORT_SYMBOL(usb_ep_autoconfig_by_name);
-=======
->>>>>>> rebase

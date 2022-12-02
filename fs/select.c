@@ -431,17 +431,9 @@ get_max:
 	return max;
 }
 
-<<<<<<< HEAD
 #define POLLIN_SET (EPOLLRDNORM | EPOLLRDBAND | EPOLLIN | EPOLLHUP | EPOLLERR)
 #define POLLOUT_SET (EPOLLWRBAND | EPOLLWRNORM | EPOLLOUT | EPOLLERR)
 #define POLLEX_SET (EPOLLPRI)
-=======
-#define POLLIN_SET (EPOLLRDNORM | EPOLLRDBAND | EPOLLIN | EPOLLHUP | EPOLLERR |\
-			EPOLLNVAL)
-#define POLLOUT_SET (EPOLLWRBAND | EPOLLWRNORM | EPOLLOUT | EPOLLERR |\
-			 EPOLLNVAL)
-#define POLLEX_SET (EPOLLPRI | EPOLLNVAL)
->>>>>>> rebase
 
 static inline void wait_key_set(poll_table *wait, unsigned long in,
 				unsigned long out, unsigned long bit,
@@ -508,10 +500,6 @@ static int do_select(int n, fd_set_bits *fds, struct timespec64 *end_time)
 					break;
 				if (!(bit & all_bits))
 					continue;
-<<<<<<< HEAD
-=======
-				mask = EPOLLNVAL;
->>>>>>> rebase
 				f = fdget(i);
 				if (f.file) {
 					wait_key_set(wait, in, out, bit,
@@ -519,7 +507,6 @@ static int do_select(int n, fd_set_bits *fds, struct timespec64 *end_time)
 					mask = vfs_poll(f.file, wait);
 
 					fdput(f);
-<<<<<<< HEAD
 					if ((mask & POLLIN_SET) && (in & bit)) {
 						res_in |= bit;
 						retval++;
@@ -548,36 +535,6 @@ static int do_select(int n, fd_set_bits *fds, struct timespec64 *end_time)
 						can_busy_loop = true;
 
 				}
-=======
-				}
-				if ((mask & POLLIN_SET) && (in & bit)) {
-					res_in |= bit;
-					retval++;
-					wait->_qproc = NULL;
-				}
-				if ((mask & POLLOUT_SET) && (out & bit)) {
-					res_out |= bit;
-					retval++;
-					wait->_qproc = NULL;
-				}
-				if ((mask & POLLEX_SET) && (ex & bit)) {
-					res_ex |= bit;
-					retval++;
-					wait->_qproc = NULL;
-				}
-				/* got something, stop busy polling */
-				if (retval) {
-					can_busy_loop = false;
-					busy_flag = 0;
-
-				/*
-				 * only remember a returned
-				 * POLL_BUSY_LOOP if we asked for it
-				 */
-				} else if (busy_flag & mask)
-					can_busy_loop = true;
-
->>>>>>> rebase
 			}
 			if (res_in)
 				*rinp = res_in;
@@ -1046,16 +1003,10 @@ static long do_restart_poll(struct restart_block *restart_block)
 
 	ret = do_sys_poll(ufds, nfds, to);
 
-<<<<<<< HEAD
 	if (ret == -EINTR) {
 		restart_block->fn = do_restart_poll;
 		ret = -ERESTART_RESTARTBLOCK;
 	}
-=======
-	if (ret == -EINTR)
-		ret = set_restart_fn(restart_block, do_restart_poll);
-
->>>>>>> rebase
 	return ret;
 }
 
@@ -1077,10 +1028,7 @@ SYSCALL_DEFINE3(poll, struct pollfd __user *, ufds, unsigned int, nfds,
 		struct restart_block *restart_block;
 
 		restart_block = &current->restart_block;
-<<<<<<< HEAD
 		restart_block->fn = do_restart_poll;
-=======
->>>>>>> rebase
 		restart_block->poll.ufds = ufds;
 		restart_block->poll.nfds = nfds;
 
@@ -1091,11 +1039,7 @@ SYSCALL_DEFINE3(poll, struct pollfd __user *, ufds, unsigned int, nfds,
 		} else
 			restart_block->poll.has_timeout = 0;
 
-<<<<<<< HEAD
 		ret = -ERESTART_RESTARTBLOCK;
-=======
-		ret = set_restart_fn(restart_block, do_restart_poll);
->>>>>>> rebase
 	}
 	return ret;
 }

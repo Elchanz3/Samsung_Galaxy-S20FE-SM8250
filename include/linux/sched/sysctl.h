@@ -12,10 +12,7 @@ extern unsigned int  sysctl_hung_task_panic;
 extern unsigned long sysctl_hung_task_timeout_secs;
 extern unsigned long sysctl_hung_task_check_interval_secs;
 extern int sysctl_hung_task_warnings;
-<<<<<<< HEAD
 extern int sysctl_hung_task_selective_monitoring;
-=======
->>>>>>> rebase
 extern int proc_dohung_task_timeout_secs(struct ctl_table *table, int write,
 					 void __user *buffer,
 					 size_t *lenp, loff_t *ppos);
@@ -24,7 +21,6 @@ extern int proc_dohung_task_timeout_secs(struct ctl_table *table, int write,
 enum { sysctl_hung_task_timeout_secs = 0 };
 #endif
 
-<<<<<<< HEAD
 #define MAX_CLUSTERS 3
 /* MAX_MARGIN_LEVELS should be one less than MAX_CLUSTERS */
 #define MAX_MARGIN_LEVELS (MAX_CLUSTERS - 1)
@@ -89,12 +85,6 @@ extern unsigned int sysctl_preemptoff_tracing_threshold_ns;
 #if defined(CONFIG_PREEMPTIRQ_EVENTS) && defined(CONFIG_IRQSOFF_TRACER)
 extern unsigned int sysctl_irqsoff_tracing_threshold_ns;
 #endif
-=======
-extern unsigned int sysctl_sched_latency;
-extern unsigned int sysctl_sched_min_granularity;
-extern unsigned int sysctl_sched_wakeup_granularity;
-extern unsigned int sysctl_sched_child_runs_first;
->>>>>>> rebase
 
 enum sched_tunable_scaling {
 	SCHED_TUNABLESCALING_NONE,
@@ -118,11 +108,8 @@ int sched_proc_update_handler(struct ctl_table *table, int write,
 		loff_t *ppos);
 #endif
 
-<<<<<<< HEAD
 extern int sched_boost_handler(struct ctl_table *table, int write,
 			void __user *buffer, size_t *lenp, loff_t *ppos);
-=======
->>>>>>> rebase
 /*
  *  control realtime throttling:
  *
@@ -132,14 +119,11 @@ extern int sched_boost_handler(struct ctl_table *table, int write,
 extern unsigned int sysctl_sched_rt_period;
 extern int sysctl_sched_rt_runtime;
 
-<<<<<<< HEAD
 #ifdef CONFIG_UCLAMP_TASK
 extern unsigned int sysctl_sched_uclamp_util_min;
 extern unsigned int sysctl_sched_uclamp_util_max;
 #endif
 
-=======
->>>>>>> rebase
 #ifdef CONFIG_CFS_BANDWIDTH
 extern unsigned int sysctl_sched_cfs_bandwidth_slice;
 #endif
@@ -159,15 +143,12 @@ extern int sched_rt_handler(struct ctl_table *table, int write,
 		void __user *buffer, size_t *lenp,
 		loff_t *ppos);
 
-<<<<<<< HEAD
 #ifdef CONFIG_UCLAMP_TASK
 extern int sysctl_sched_uclamp_handler(struct ctl_table *table, int write,
 				       void __user *buffer, size_t *lenp,
 				       loff_t *ppos);
 #endif
 
-=======
->>>>>>> rebase
 extern int sysctl_numa_balancing(struct ctl_table *table, int write,
 				 void __user *buffer, size_t *lenp,
 				 loff_t *ppos);
@@ -175,7 +156,6 @@ extern int sysctl_numa_balancing(struct ctl_table *table, int write,
 extern int sysctl_schedstats(struct ctl_table *table, int write,
 				 void __user *buffer, size_t *lenp,
 				 loff_t *ppos);
-<<<<<<< HEAD
 #define LIB_PATH_LENGTH 512
 extern char sched_lib_name[LIB_PATH_LENGTH];
 extern unsigned int sched_lib_mask_force;
@@ -187,7 +167,5 @@ extern int sched_energy_aware_handler(struct ctl_table *table, int write,
 				 void __user *buffer, size_t *lenp,
 				 loff_t *ppos);
 #endif
-=======
->>>>>>> rebase
 
 #endif /* _LINUX_SCHED_SYSCTL_H */

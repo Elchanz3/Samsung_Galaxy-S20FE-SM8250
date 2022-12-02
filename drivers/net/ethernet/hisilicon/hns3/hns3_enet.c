@@ -29,11 +29,6 @@ static const char hns3_driver_string[] =
 static const char hns3_copyright[] = "Copyright (c) 2017 Huawei Corporation.";
 static struct hnae3_client client;
 
-<<<<<<< HEAD
-=======
-#define HNS3_MIN_TUN_PKT_LEN	65U
-
->>>>>>> rebase
 /* hns3_pci_tbl - PCI Device ID Table
  *
  * Last entry must be all 0s
@@ -707,11 +702,8 @@ static bool hns3_tunnel_csum_bug(struct sk_buff *skb)
 	if (!(!skb->encapsulation && l4.udp->dest == htons(IANA_VXLAN_PORT)))
 		return false;
 
-<<<<<<< HEAD
 	skb_checksum_help(skb);
 
-=======
->>>>>>> rebase
 	return true;
 }
 
@@ -772,12 +764,8 @@ static int hns3_set_l3l4_type_csum(struct sk_buff *skb, u8 ol4_proto,
 			/* the stack computes the IP header already,
 			 * driver calculate l4 checksum when not TSO.
 			 */
-<<<<<<< HEAD
 			skb_checksum_help(skb);
 			return 0;
-=======
-			return skb_checksum_help(skb);
->>>>>>> rebase
 		}
 
 		l3.hdr = skb_inner_network_header(skb);
@@ -807,16 +795,8 @@ static int hns3_set_l3l4_type_csum(struct sk_buff *skb, u8 ol4_proto,
 				HNS3_L4T_TCP);
 		break;
 	case IPPROTO_UDP:
-<<<<<<< HEAD
 		if (hns3_tunnel_csum_bug(skb))
 			break;
-=======
-		if (hns3_tunnel_csum_bug(skb)) {
-			int ret = skb_put_padto(skb, HNS3_MIN_TUN_PKT_LEN);
-
-			return ret ? ret : skb_checksum_help(skb);
-		}
->>>>>>> rebase
 
 		hnae3_set_bit(*type_cs_vlan_tso, HNS3_TXD_L4CS_B, 1);
 		hnae3_set_field(*type_cs_vlan_tso,
@@ -841,12 +821,8 @@ static int hns3_set_l3l4_type_csum(struct sk_buff *skb, u8 ol4_proto,
 		/* the stack computes the IP header already,
 		 * driver calculate l4 checksum when not TSO.
 		 */
-<<<<<<< HEAD
 		skb_checksum_help(skb);
 		return 0;
-=======
-		return skb_checksum_help(skb);
->>>>>>> rebase
 	}
 
 	return 0;
@@ -2663,10 +2639,7 @@ static void hns3_add_ring_to_group(struct hns3_enet_ring_group *group,
 
 static int hns3_nic_init_vector_data(struct hns3_nic_priv *priv)
 {
-<<<<<<< HEAD
 	struct hnae3_ring_chain_node vector_ring_chain;
-=======
->>>>>>> rebase
 	struct hnae3_handle *h = priv->ae_handle;
 	struct hns3_enet_tqp_vector *tqp_vector;
 	int ret = 0;
@@ -2696,11 +2669,6 @@ static int hns3_nic_init_vector_data(struct hns3_nic_priv *priv)
 	}
 
 	for (i = 0; i < priv->vector_num; i++) {
-<<<<<<< HEAD
-=======
-		struct hnae3_ring_chain_node vector_ring_chain;
-
->>>>>>> rebase
 		tqp_vector = &priv->tqp_vector[i];
 
 		tqp_vector->rx_group.total_bytes = 0;

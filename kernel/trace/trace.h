@@ -467,7 +467,6 @@ struct tracer {
  *  When function tracing occurs, the following steps are made:
  *   If arch does not support a ftrace feature:
  *    call internal function (uses INTERNAL bits) which calls...
-<<<<<<< HEAD
  *   If callback is registered to the "global" list, the list
  *    function is called and recursion checks the GLOBAL bits.
  *    then this function calls...
@@ -485,10 +484,6 @@ struct tracer {
  * bit is set that is higher than the MAX bit of the current
  * check, then we know that the check was made by the previous
  * caller, and we can skip the current check.
-=======
- *   The function callback, which can use the FTRACE bits to
- *    check for recursion.
->>>>>>> rebase
  */
 enum {
 	TRACE_BUFFER_BIT,
@@ -501,22 +496,12 @@ enum {
 	TRACE_FTRACE_NMI_BIT,
 	TRACE_FTRACE_IRQ_BIT,
 	TRACE_FTRACE_SIRQ_BIT,
-<<<<<<< HEAD
 
 	/* INTERNAL_BITs must be greater than FTRACE_BITs */
-=======
-	TRACE_FTRACE_TRANSITION_BIT,
-
-	/* Internal use recursion bits */
->>>>>>> rebase
 	TRACE_INTERNAL_BIT,
 	TRACE_INTERNAL_NMI_BIT,
 	TRACE_INTERNAL_IRQ_BIT,
 	TRACE_INTERNAL_SIRQ_BIT,
-<<<<<<< HEAD
-=======
-	TRACE_INTERNAL_TRANSITION_BIT,
->>>>>>> rebase
 
 	TRACE_BRANCH_BIT,
 /*
@@ -568,27 +553,12 @@ enum {
 #define TRACE_CONTEXT_BITS	4
 
 #define TRACE_FTRACE_START	TRACE_FTRACE_BIT
-<<<<<<< HEAD
 #define TRACE_FTRACE_MAX	((1 << (TRACE_FTRACE_START + TRACE_CONTEXT_BITS)) - 1)
 
 #define TRACE_LIST_START	TRACE_INTERNAL_BIT
 #define TRACE_LIST_MAX		((1 << (TRACE_LIST_START + TRACE_CONTEXT_BITS)) - 1)
 
 #define TRACE_CONTEXT_MASK	TRACE_LIST_MAX
-=======
-
-#define TRACE_LIST_START	TRACE_INTERNAL_BIT
-
-#define TRACE_CONTEXT_MASK	((1 << (TRACE_LIST_START + TRACE_CONTEXT_BITS)) - 1)
-
-enum {
-	TRACE_CTX_NMI,
-	TRACE_CTX_IRQ,
-	TRACE_CTX_SOFTIRQ,
-	TRACE_CTX_NORMAL,
-	TRACE_CTX_TRANSITION,
-};
->>>>>>> rebase
 
 static __always_inline int trace_get_context_bit(void)
 {
@@ -596,7 +566,6 @@ static __always_inline int trace_get_context_bit(void)
 
 	if (in_interrupt()) {
 		if (in_nmi())
-<<<<<<< HEAD
 			bit = 0;
 
 		else if (in_irq())
@@ -605,30 +574,15 @@ static __always_inline int trace_get_context_bit(void)
 			bit = 2;
 	} else
 		bit = 3;
-=======
-			bit = TRACE_CTX_NMI;
-
-		else if (in_irq())
-			bit = TRACE_CTX_IRQ;
-		else
-			bit = TRACE_CTX_SOFTIRQ;
-	} else
-		bit = TRACE_CTX_NORMAL;
->>>>>>> rebase
 
 	return bit;
 }
 
-<<<<<<< HEAD
 static __always_inline int trace_test_and_set_recursion(int start, int max)
-=======
-static __always_inline int trace_test_and_set_recursion(int start)
->>>>>>> rebase
 {
 	unsigned int val = current->trace_recursion;
 	int bit;
 
-<<<<<<< HEAD
 	/* A previous recursion check was made */
 	if ((val & TRACE_CONTEXT_MASK) > max)
 		return 0;
@@ -636,21 +590,6 @@ static __always_inline int trace_test_and_set_recursion(int start)
 	bit = trace_get_context_bit() + start;
 	if (unlikely(val & (1 << bit)))
 		return -1;
-=======
-	bit = trace_get_context_bit() + start;
-	if (unlikely(val & (1 << bit))) {
-		/*
-		 * It could be that preempt_count has not been updated during
-		 * a switch between contexts. Allow for a single recursion.
-		 */
-		bit = start + TRACE_CTX_TRANSITION;
-		if (trace_recursion_test(bit))
-			return -1;
-		trace_recursion_set(bit);
-		barrier();
-		return bit;
-	}
->>>>>>> rebase
 
 	val |= 1 << bit;
 	current->trace_recursion = val;
@@ -663,12 +602,9 @@ static __always_inline void trace_clear_recursion(int bit)
 {
 	unsigned int val = current->trace_recursion;
 
-<<<<<<< HEAD
 	if (!bit)
 		return;
 
-=======
->>>>>>> rebase
 	bit = 1 << bit;
 	val &= ~bit;
 
@@ -789,23 +725,13 @@ void update_max_tr_single(struct trace_array *tr,
 #endif /* CONFIG_TRACER_MAX_TRACE */
 
 #ifdef CONFIG_STACKTRACE
-<<<<<<< HEAD
 void ftrace_trace_userstack(struct ring_buffer *buffer, unsigned long flags,
-=======
-void ftrace_trace_userstack(struct trace_array *tr,
-			    struct ring_buffer *buffer, unsigned long flags,
->>>>>>> rebase
 			    int pc);
 
 void __trace_stack(struct trace_array *tr, unsigned long flags, int skip,
 		   int pc);
 #else
-<<<<<<< HEAD
 static inline void ftrace_trace_userstack(struct ring_buffer *buffer,
-=======
-static inline void ftrace_trace_userstack(struct trace_array *tr,
-					  struct ring_buffer *buffer,
->>>>>>> rebase
 					  unsigned long flags, int pc)
 {
 }
@@ -1441,7 +1367,6 @@ __event_trigger_test_discard(struct trace_event_file *file,
 	if (eflags & EVENT_FILE_FL_TRIGGER_COND)
 		*tt = event_triggers_call(file, entry, event);
 
-<<<<<<< HEAD
 	if (test_bit(EVENT_FILE_FL_SOFT_DISABLED_BIT, &file->flags) ||
 	    (unlikely(file->flags & EVENT_FILE_FL_FILTERED) &&
 	     !filter_match_preds(file->filter, entry))) {
@@ -1450,28 +1375,6 @@ __event_trigger_test_discard(struct trace_event_file *file,
 	}
 
 	return false;
-=======
-	if (likely(!(file->flags & (EVENT_FILE_FL_SOFT_DISABLED |
-				    EVENT_FILE_FL_FILTERED |
-				    EVENT_FILE_FL_PID_FILTER))))
-		return false;
-
-	if (file->flags & EVENT_FILE_FL_SOFT_DISABLED)
-		goto discard;
-
-	if (file->flags & EVENT_FILE_FL_FILTERED &&
-	    !filter_match_preds(file->filter, entry))
-		goto discard;
-
-	if ((file->flags & EVENT_FILE_FL_PID_FILTER) &&
-	    trace_event_ignore_this_pid(file))
-		goto discard;
-
-	return false;
- discard:
-	__trace_event_discard_commit(buffer, event);
-	return true;
->>>>>>> rebase
 }
 
 /**
@@ -1482,10 +1385,7 @@ __event_trigger_test_discard(struct trace_event_file *file,
  * @entry: The event itself
  * @irq_flags: The state of the interrupts at the start of the event
  * @pc: The state of the preempt count at the start of the event.
-<<<<<<< HEAD
  * @len: The length of the payload data required for stm logging.
-=======
->>>>>>> rebase
  *
  * This is a helper function to handle triggers that require data
  * from the event itself. It also tests the event against filters and
@@ -1495,7 +1395,6 @@ static inline void
 event_trigger_unlock_commit(struct trace_event_file *file,
 			    struct ring_buffer *buffer,
 			    struct ring_buffer_event *event,
-<<<<<<< HEAD
 			    void *entry, unsigned long irq_flags, int pc,
 			    unsigned long len)
 {
@@ -1507,14 +1406,6 @@ event_trigger_unlock_commit(struct trace_event_file *file,
 
 		trace_buffer_unlock_commit(file->tr, buffer, event, irq_flags, pc);
 	}
-=======
-			    void *entry, unsigned long irq_flags, int pc)
-{
-	enum event_trigger_type tt = ETT_NONE;
-
-	if (!__event_trigger_test_discard(file, buffer, event, entry, &tt))
-		trace_buffer_unlock_commit(file->tr, buffer, event, irq_flags, pc);
->>>>>>> rebase
 
 	if (tt)
 		event_triggers_post_call(file, tt);

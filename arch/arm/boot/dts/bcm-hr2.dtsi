@@ -75,11 +75,7 @@
 		timer@20200 {
 			compatible = "arm,cortex-a9-global-timer";
 			reg = <0x20200 0x100>;
-<<<<<<< HEAD
 			interrupts = <GIC_PPI 11 IRQ_TYPE_LEVEL_HIGH>;
-=======
-			interrupts = <GIC_PPI 11 IRQ_TYPE_EDGE_RISING>;
->>>>>>> rebase
 			clocks = <&periph_clk>;
 		};
 
@@ -87,11 +83,7 @@
 			compatible = "arm,cortex-a9-twd-timer";
 			reg = <0x20600 0x20>;
 			interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(1) |
-<<<<<<< HEAD
 						  IRQ_TYPE_LEVEL_HIGH)>;
-=======
-						  IRQ_TYPE_EDGE_RISING)>;
->>>>>>> rebase
 			clocks = <&periph_clk>;
 		};
 
@@ -99,11 +91,7 @@
 			compatible = "arm,cortex-a9-twd-wdt";
 			reg = <0x20620 0x20>;
 			interrupts = <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(1) |
-<<<<<<< HEAD
 						  IRQ_TYPE_LEVEL_HIGH)>;
-=======
-						  IRQ_TYPE_EDGE_RISING)>;
->>>>>>> rebase
 			clocks = <&periph_clk>;
 		};
 
@@ -191,11 +179,7 @@
 			status = "disabled";
 		};
 
-<<<<<<< HEAD
 		nand: nand@26000 {
-=======
-		nand_controller: nand-controller@26000 {
->>>>>>> rebase
 			compatible = "brcm,nand-iproc", "brcm,brcmnand-v6.1";
 			reg = <0x26000 0x600>,
 			      <0x11b408 0x600>,
@@ -233,11 +217,7 @@
 		};
 
 		qspi: spi@27200 {
-<<<<<<< HEAD
 			compatible = "brcm,spi-bcm-qspi", "brcm,spi-nsp-qspi";
-=======
-			compatible = "brcm,spi-nsp-qspi", "brcm,spi-bcm-qspi";
->>>>>>> rebase
 			reg = <0x027200 0x184>,
 			      <0x027000 0x124>,
 			      <0x11c408 0x004>,

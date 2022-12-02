@@ -108,19 +108,6 @@ static int mtk_plane_atomic_check(struct drm_plane *plane,
 						   true, true);
 }
 
-<<<<<<< HEAD
-=======
-static void mtk_plane_atomic_disable(struct drm_plane *plane,
-				     struct drm_plane_state *old_state)
-{
-	struct mtk_plane_state *state = to_mtk_plane_state(plane->state);
-
-	state->pending.enable = false;
-	wmb(); /* Make sure the above parameter is set before update */
-	state->pending.dirty = true;
-}
-
->>>>>>> rebase
 static void mtk_plane_atomic_update(struct drm_plane *plane,
 				    struct drm_plane_state *old_state)
 {
@@ -135,14 +122,6 @@ static void mtk_plane_atomic_update(struct drm_plane *plane,
 	if (!crtc || WARN_ON(!fb))
 		return;
 
-<<<<<<< HEAD
-=======
-	if (!plane->state->visible) {
-		mtk_plane_atomic_disable(plane, old_state);
-		return;
-	}
-
->>>>>>> rebase
 	gem = fb->obj[0];
 	mtk_gem = to_mtk_gem_obj(gem);
 	addr = mtk_gem->dma_addr;
@@ -164,7 +143,6 @@ static void mtk_plane_atomic_update(struct drm_plane *plane,
 	state->pending.dirty = true;
 }
 
-<<<<<<< HEAD
 static void mtk_plane_atomic_disable(struct drm_plane *plane,
 				     struct drm_plane_state *old_state)
 {
@@ -175,8 +153,6 @@ static void mtk_plane_atomic_disable(struct drm_plane *plane,
 	state->pending.dirty = true;
 }
 
-=======
->>>>>>> rebase
 static const struct drm_plane_helper_funcs mtk_plane_helper_funcs = {
 	.atomic_check = mtk_plane_atomic_check,
 	.atomic_update = mtk_plane_atomic_update,

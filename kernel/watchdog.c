@@ -14,10 +14,7 @@
 
 #include <linux/mm.h>
 #include <linux/cpu.h>
-<<<<<<< HEAD
 #include <linux/device.h>
-=======
->>>>>>> rebase
 #include <linux/nmi.h>
 #include <linux/init.h>
 #include <linux/module.h>
@@ -176,10 +173,7 @@ static u64 __read_mostly sample_period;
 
 static DEFINE_PER_CPU(unsigned long, watchdog_touch_ts);
 static DEFINE_PER_CPU(struct hrtimer, watchdog_hrtimer);
-<<<<<<< HEAD
 static DEFINE_PER_CPU(unsigned int, watchdog_en);
-=======
->>>>>>> rebase
 static DEFINE_PER_CPU(bool, softlockup_touch_sync);
 static DEFINE_PER_CPU(bool, soft_watchdog_warn);
 static DEFINE_PER_CPU(unsigned long, hrtimer_interrupts);
@@ -479,30 +473,20 @@ static enum hrtimer_restart watchdog_timer_fn(struct hrtimer *hrtimer)
 	return HRTIMER_RESTART;
 }
 
-<<<<<<< HEAD
 void watchdog_enable(unsigned int cpu)
 {
 	struct hrtimer *hrtimer = this_cpu_ptr(&watchdog_hrtimer);
 	struct completion *done = this_cpu_ptr(&softlockup_completion);
 	unsigned int *enabled = this_cpu_ptr(&watchdog_en);
-=======
-static void watchdog_enable(unsigned int cpu)
-{
-	struct hrtimer *hrtimer = this_cpu_ptr(&watchdog_hrtimer);
-	struct completion *done = this_cpu_ptr(&softlockup_completion);
->>>>>>> rebase
 
 	WARN_ON_ONCE(cpu != smp_processor_id());
 
 	init_completion(done);
 	complete(done);
 
-<<<<<<< HEAD
 	if (*enabled)
 		return;
 
-=======
->>>>>>> rebase
 	/*
 	 * Start the timer first to prevent the NMI watchdog triggering
 	 * before the timer has a chance to fire.
@@ -517,7 +501,6 @@ static void watchdog_enable(unsigned int cpu)
 	/* Enable the perf event */
 	if (watchdog_enabled & NMI_WATCHDOG_ENABLED)
 		watchdog_nmi_enable(cpu);
-<<<<<<< HEAD
 
 	/*
 	 * Need to ensure above operations are observed by other CPUs before
@@ -536,15 +519,6 @@ void watchdog_disable(unsigned int cpu)
 
 	if (!*enabled)
 		return;
-=======
-}
-
-static void watchdog_disable(unsigned int cpu)
-{
-	struct hrtimer *hrtimer = this_cpu_ptr(&watchdog_hrtimer);
-
-	WARN_ON_ONCE(cpu != smp_processor_id());
->>>>>>> rebase
 
 	/*
 	 * Disable the perf event first. That prevents that a large delay
@@ -553,7 +527,6 @@ static void watchdog_disable(unsigned int cpu)
 	 */
 	watchdog_nmi_disable(cpu);
 	hrtimer_cancel(hrtimer);
-<<<<<<< HEAD
 	wait_for_completion(per_cpu_ptr(&softlockup_completion, cpu));
 
 	/*
@@ -566,9 +539,6 @@ static void watchdog_disable(unsigned int cpu)
 bool watchdog_configured(unsigned int cpu)
 {
 	return *per_cpu_ptr(&watchdog_en, cpu);
-=======
-	wait_for_completion(this_cpu_ptr(&softlockup_completion));
->>>>>>> rebase
 }
 
 static int softlockup_stop_fn(void *data)
@@ -619,11 +589,7 @@ int lockup_detector_offline_cpu(unsigned int cpu)
 	return 0;
 }
 
-<<<<<<< HEAD
 static void lockup_detector_reconfigure(void)
-=======
-static void __lockup_detector_reconfigure(void)
->>>>>>> rebase
 {
 	cpus_read_lock();
 	watchdog_nmi_stop();
@@ -643,16 +609,6 @@ static void __lockup_detector_reconfigure(void)
 	__lockup_detector_cleanup();
 }
 
-<<<<<<< HEAD
-=======
-void lockup_detector_reconfigure(void)
-{
-	mutex_lock(&watchdog_mutex);
-	__lockup_detector_reconfigure();
-	mutex_unlock(&watchdog_mutex);
-}
-
->>>>>>> rebase
 /*
  * Create the watchdog thread infrastructure and configure the detector(s).
  *
@@ -673,21 +629,13 @@ static __init void lockup_detector_setup(void)
 		return;
 
 	mutex_lock(&watchdog_mutex);
-<<<<<<< HEAD
 	lockup_detector_reconfigure();
-=======
-	__lockup_detector_reconfigure();
->>>>>>> rebase
 	softlockup_initialized = true;
 	mutex_unlock(&watchdog_mutex);
 }
 
 #else /* CONFIG_SOFTLOCKUP_DETECTOR */
-<<<<<<< HEAD
 static void lockup_detector_reconfigure(void)
-=======
-static void __lockup_detector_reconfigure(void)
->>>>>>> rebase
 {
 	cpus_read_lock();
 	watchdog_nmi_stop();
@@ -695,19 +643,9 @@ static void __lockup_detector_reconfigure(void)
 	watchdog_nmi_start();
 	cpus_read_unlock();
 }
-<<<<<<< HEAD
 static inline void lockup_detector_setup(void)
 {
 	lockup_detector_reconfigure();
-=======
-void lockup_detector_reconfigure(void)
-{
-	__lockup_detector_reconfigure();
-}
-static inline void lockup_detector_setup(void)
-{
-	__lockup_detector_reconfigure();
->>>>>>> rebase
 }
 #endif /* !CONFIG_SOFTLOCKUP_DETECTOR */
 
@@ -747,11 +685,7 @@ static void proc_watchdog_update(void)
 {
 	/* Remove impossible cpus to keep sysctl output clean. */
 	cpumask_and(&watchdog_cpumask, &watchdog_cpumask, cpu_possible_mask);
-<<<<<<< HEAD
 	lockup_detector_reconfigure();
-=======
-	__lockup_detector_reconfigure();
->>>>>>> rebase
 }
 
 /*

@@ -398,10 +398,6 @@ static int atmel_nand_dma_transfer(struct atmel_nand_controller *nc,
 
 	dma_async_issue_pending(nc->dmac);
 	wait_for_completion(&finished);
-<<<<<<< HEAD
-=======
-	dma_unmap_single(nc->dev, buf_dma, len, dir);
->>>>>>> rebase
 
 	return 0;
 
@@ -830,19 +826,10 @@ static int atmel_nand_pmecc_correct_data(struct nand_chip *chip, void *buf,
 							  NULL, 0,
 							  chip->ecc.strength);
 
-<<<<<<< HEAD
 		if (ret >= 0)
 			max_bitflips = max(ret, max_bitflips);
 		else
 			mtd->ecc_stats.failed++;
-=======
-		if (ret >= 0) {
-			mtd->ecc_stats.corrected += ret;
-			max_bitflips = max(ret, max_bitflips);
-		} else {
-			mtd->ecc_stats.failed++;
-		}
->>>>>>> rebase
 
 		databuf += chip->ecc.size;
 		eccbuf += chip->ecc.bytes;
@@ -1707,11 +1694,7 @@ atmel_nand_controller_add_nand(struct atmel_nand_controller *nc,
 
 	nc->caps->ops->nand_init(nc, nand);
 
-<<<<<<< HEAD
 	ret = nand_scan(mtd, nand->numcs);
-=======
-	ret = nand_scan(chip, nand->numcs);
->>>>>>> rebase
 	if (ret) {
 		dev_err(nc->dev, "NAND scan failed: %d\n", ret);
 		return ret;
@@ -1999,23 +1982,13 @@ static int atmel_nand_controller_init(struct atmel_nand_controller *nc,
 	nc->mck = of_clk_get(dev->parent->of_node, 0);
 	if (IS_ERR(nc->mck)) {
 		dev_err(dev, "Failed to retrieve MCK clk\n");
-<<<<<<< HEAD
 		return PTR_ERR(nc->mck);
-=======
-		ret = PTR_ERR(nc->mck);
-		goto out_release_dma;
->>>>>>> rebase
 	}
 
 	np = of_parse_phandle(dev->parent->of_node, "atmel,smc", 0);
 	if (!np) {
 		dev_err(dev, "Missing or invalid atmel,smc property\n");
-<<<<<<< HEAD
 		return -EINVAL;
-=======
-		ret = -EINVAL;
-		goto out_release_dma;
->>>>>>> rebase
 	}
 
 	nc->smc = syscon_node_to_regmap(np);
@@ -2023,23 +1996,10 @@ static int atmel_nand_controller_init(struct atmel_nand_controller *nc,
 	if (IS_ERR(nc->smc)) {
 		ret = PTR_ERR(nc->smc);
 		dev_err(dev, "Could not get SMC regmap (err = %d)\n", ret);
-<<<<<<< HEAD
 		return ret;
 	}
 
 	return 0;
-=======
-		goto out_release_dma;
-	}
-
-	return 0;
-
-out_release_dma:
-	if (nc->dmac)
-		dma_release_channel(nc->dmac);
-
-	return ret;
->>>>>>> rebase
 }
 
 static int

@@ -493,19 +493,9 @@ struct sk_buff *__can_get_echo_skb(struct net_device *dev, unsigned int idx, u8 
 		 */
 		struct sk_buff *skb = priv->echo_skb[idx];
 		struct canfd_frame *cf = (struct canfd_frame *)skb->data;
-<<<<<<< HEAD
 		u8 len = cf->len;
 
 		*len_ptr = len;
-=======
-
-		/* get the real payload length for netdev statistics */
-		if (cf->can_id & CAN_RTR_FLAG)
-			*len_ptr = 0;
-		else
-			*len_ptr = cf->len;
-
->>>>>>> rebase
 		priv->echo_skb[idx] = NULL;
 
 		return skb;
@@ -530,15 +520,7 @@ unsigned int can_get_echo_skb(struct net_device *dev, unsigned int idx)
 	if (!skb)
 		return 0;
 
-<<<<<<< HEAD
 	netif_rx(skb);
-=======
-	skb_get(skb);
-	if (netif_rx(skb) == NET_RX_SUCCESS)
-		dev_consume_skb_any(skb);
-	else
-		dev_kfree_skb_any(skb);
->>>>>>> rebase
 
 	return len;
 }
@@ -589,19 +571,11 @@ static void can_restart(struct net_device *dev)
 	}
 	cf->can_id |= CAN_ERR_RESTARTED;
 
-<<<<<<< HEAD
 	netif_rx(skb);
 
 	stats->rx_packets++;
 	stats->rx_bytes += cf->can_dlc;
 
-=======
-	stats->rx_packets++;
-	stats->rx_bytes += cf->can_dlc;
-
-	netif_rx_ni(skb);
-
->>>>>>> rebase
 restart:
 	netdev_dbg(dev, "restarted\n");
 	priv->can_stats.restarts++;
@@ -1160,11 +1134,7 @@ static int can_fill_info(struct sk_buff *skb, const struct net_device *dev)
 {
 	struct can_priv *priv = netdev_priv(dev);
 	struct can_ctrlmode cm = {.flags = priv->ctrlmode};
-<<<<<<< HEAD
 	struct can_berr_counter bec;
-=======
-	struct can_berr_counter bec = { };
->>>>>>> rebase
 	enum can_state state = priv->state;
 
 	if (priv->do_get_state)
@@ -1257,10 +1227,6 @@ static void can_dellink(struct net_device *dev, struct list_head *head)
 
 static struct rtnl_link_ops can_link_ops __read_mostly = {
 	.kind		= "can",
-<<<<<<< HEAD
-=======
-	.netns_refund	= true,
->>>>>>> rebase
 	.maxtype	= IFLA_CAN_MAX,
 	.policy		= can_policy,
 	.setup		= can_setup,

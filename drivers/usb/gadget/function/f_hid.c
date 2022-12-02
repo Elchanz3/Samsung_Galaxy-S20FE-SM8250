@@ -41,10 +41,6 @@ struct f_hidg {
 	unsigned char			bInterfaceSubClass;
 	unsigned char			bInterfaceProtocol;
 	unsigned char			protocol;
-<<<<<<< HEAD
-=======
-	unsigned char			idle;
->>>>>>> rebase
 	unsigned short			report_desc_length;
 	char				*report_desc;
 	unsigned short			report_length;
@@ -92,11 +88,7 @@ static struct usb_interface_descriptor hidg_interface_desc = {
 static struct hid_descriptor hidg_desc = {
 	.bLength			= sizeof hidg_desc,
 	.bDescriptorType		= HID_DT_HID,
-<<<<<<< HEAD
 	.bcdHID				= 0x0101,
-=======
-	.bcdHID				= cpu_to_le16(0x0101),
->>>>>>> rebase
 	.bCountryCode			= 0x00,
 	.bNumDescriptors		= 0x1,
 	/*.desc[0].bDescriptorType	= DYNAMIC */
@@ -352,14 +344,6 @@ static ssize_t f_hidg_write(struct file *file, const char __user *buffer,
 
 	spin_lock_irqsave(&hidg->write_spinlock, flags);
 
-<<<<<<< HEAD
-=======
-	if (!hidg->req) {
-		spin_unlock_irqrestore(&hidg->write_spinlock, flags);
-		return -ESHUTDOWN;
-	}
-
->>>>>>> rebase
 #define WRITE_COND (!hidg->write_pending)
 try_again:
 	/* write queue */
@@ -380,19 +364,8 @@ try_again:
 	count  = min_t(unsigned, count, hidg->report_length);
 
 	spin_unlock_irqrestore(&hidg->write_spinlock, flags);
-<<<<<<< HEAD
 	status = copy_from_user(req->buf, buffer, count);
 
-=======
-
-	if (!req) {
-		ERROR(hidg->func.config->cdev, "hidg->req is NULL\n");
-		status = -ESHUTDOWN;
-		goto release_write_pending;
-	}
-
-	status = copy_from_user(req->buf, buffer, count);
->>>>>>> rebase
 	if (status != 0) {
 		ERROR(hidg->func.config->cdev,
 			"copy_from_user error\n");
@@ -420,7 +393,6 @@ try_again:
 
 	spin_unlock_irqrestore(&hidg->write_spinlock, flags);
 
-<<<<<<< HEAD
 	status = usb_ep_queue(hidg->in_ep, req, GFP_ATOMIC);
 	if (status < 0) {
 		ERROR(hidg->func.config->cdev,
@@ -430,20 +402,6 @@ try_again:
 		status = count;
 	}
 
-=======
-	if (!hidg->in_ep->enabled) {
-		ERROR(hidg->func.config->cdev, "in_ep is disabled\n");
-		status = -ESHUTDOWN;
-		goto release_write_pending;
-	}
-
-	status = usb_ep_queue(hidg->in_ep, req, GFP_ATOMIC);
-	if (status < 0)
-		goto release_write_pending;
-	else
-		status = count;
-
->>>>>>> rebase
 	return status;
 release_write_pending:
 	spin_lock_irqsave(&hidg->write_spinlock, flags);
@@ -571,17 +529,6 @@ static int hidg_setup(struct usb_function *f,
 		goto respond;
 		break;
 
-<<<<<<< HEAD
-=======
-	case ((USB_DIR_IN | USB_TYPE_CLASS | USB_RECIP_INTERFACE) << 8
-		  | HID_REQ_GET_IDLE):
-		VDBG(cdev, "get_idle\n");
-		length = min_t(unsigned int, length, 1);
-		((u8 *) req->buf)[0] = hidg->idle;
-		goto respond;
-		break;
-
->>>>>>> rebase
 	case ((USB_DIR_OUT | USB_TYPE_CLASS | USB_RECIP_INTERFACE) << 8
 		  | HID_REQ_SET_REPORT):
 		VDBG(cdev, "set_report | wLength=%d\n", ctrl->wLength);
@@ -605,17 +552,6 @@ static int hidg_setup(struct usb_function *f,
 		goto stall;
 		break;
 
-<<<<<<< HEAD
-=======
-	case ((USB_DIR_OUT | USB_TYPE_CLASS | USB_RECIP_INTERFACE) << 8
-		  | HID_REQ_SET_IDLE):
-		VDBG(cdev, "set_idle\n");
-		length = 0;
-		hidg->idle = value >> 8;
-		goto respond;
-		break;
-
->>>>>>> rebase
 	case ((USB_DIR_IN | USB_TYPE_STANDARD | USB_RECIP_INTERFACE) << 8
 		  | USB_REQ_GET_DESCRIPTOR):
 		switch (value >> 8) {
@@ -843,10 +779,6 @@ static int hidg_bind(struct usb_configuration *c, struct usb_function *f)
 	hidg_interface_desc.bInterfaceSubClass = hidg->bInterfaceSubClass;
 	hidg_interface_desc.bInterfaceProtocol = hidg->bInterfaceProtocol;
 	hidg->protocol = HID_REPORT_PROTOCOL;
-<<<<<<< HEAD
-=======
-	hidg->idle = 1;
->>>>>>> rebase
 	hidg_ss_in_ep_desc.wMaxPacketSize = cpu_to_le16(hidg->report_length);
 	hidg_ss_in_comp_desc.wBytesPerInterval =
 				cpu_to_le16(hidg->report_length);
@@ -876,12 +808,7 @@ static int hidg_bind(struct usb_configuration *c, struct usb_function *f)
 		hidg_fs_out_ep_desc.bEndpointAddress;
 
 	status = usb_assign_descriptors(f, hidg_fs_descriptors,
-<<<<<<< HEAD
 			hidg_hs_descriptors, hidg_ss_descriptors, NULL);
-=======
-			hidg_hs_descriptors, hidg_ss_descriptors,
-			hidg_ss_descriptors);
->>>>>>> rebase
 	if (status)
 		goto fail;
 

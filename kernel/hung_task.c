@@ -21,10 +21,7 @@
 #include <linux/sched/debug.h>
 
 #include <trace/events/sched.h>
-<<<<<<< HEAD
 #include <linux/sched/sysctl.h>
-=======
->>>>>>> rebase
 
 /*
  * The number of tasks checked:
@@ -32,7 +29,6 @@
 int __read_mostly sysctl_hung_task_check_count = PID_MAX_LIMIT;
 
 /*
-<<<<<<< HEAD
  * Selective monitoring of hung tasks.
  *
  * if set to 1, khungtaskd skips monitoring tasks, which has
@@ -41,8 +37,6 @@ int __read_mostly sysctl_hung_task_check_count = PID_MAX_LIMIT;
 int sysctl_hung_task_selective_monitoring = 1;
 
 /*
-=======
->>>>>>> rebase
  * Limit number of tasks checked in a batch.
  *
  * This value controls the preemptibility of khungtaskd since preemption
@@ -208,14 +202,10 @@ static void check_hung_uninterruptible_tasks(unsigned long timeout)
 		}
 		/* use "==" to skip the TASK_KILLABLE tasks waiting on NFS */
 		if (t->state == TASK_UNINTERRUPTIBLE)
-<<<<<<< HEAD
 			/* Check for selective monitoring */
 			if (!sysctl_hung_task_selective_monitoring ||
 			    t->hang_detection_enabled)
 				check_hung_task(t, timeout);
-=======
-			check_hung_task(t, timeout);
->>>>>>> rebase
 	}
  unlock:
 	rcu_read_unlock();

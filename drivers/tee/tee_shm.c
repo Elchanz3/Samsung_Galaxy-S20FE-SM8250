@@ -1,9 +1,5 @@
 /*
-<<<<<<< HEAD
  * Copyright (c) 2015-2016, Linaro Limited
-=======
- * Copyright (c) 2015-2017, 2019-2021 Linaro Limited
->>>>>>> rebase
  *
  * This software is licensed under the terms of the GNU General Public
  * License version 2, as published by the Free Software Foundation, and
@@ -15,23 +11,15 @@
  * GNU General Public License for more details.
  *
  */
-<<<<<<< HEAD
 #include <linux/device.h>
 #include <linux/dma-buf.h>
 #include <linux/fdtable.h>
 #include <linux/idr.h>
-=======
-#include <linux/anon_inodes.h>
-#include <linux/device.h>
-#include <linux/idr.h>
-#include <linux/mm.h>
->>>>>>> rebase
 #include <linux/sched.h>
 #include <linux/slab.h>
 #include <linux/tee_drv.h>
 #include "tee_private.h"
 
-<<<<<<< HEAD
 static void tee_shm_release(struct tee_shm *shm)
 {
 	struct tee_device *teedev = shm->teedev;
@@ -42,10 +30,6 @@ static void tee_shm_release(struct tee_shm *shm)
 		list_del(&shm->link);
 	mutex_unlock(&teedev->mutex);
 
-=======
-static void tee_shm_release(struct tee_device *teedev, struct tee_shm *shm)
-{
->>>>>>> rebase
 	if (shm->flags & TEE_SHM_POOL) {
 		struct tee_shm_pool_mgr *poolm;
 
@@ -77,7 +61,6 @@ static void tee_shm_release(struct tee_device *teedev, struct tee_shm *shm)
 	tee_device_put(teedev);
 }
 
-<<<<<<< HEAD
 static struct sg_table *tee_shm_op_map_dma_buf(struct dma_buf_attachment
 			*attach, enum dma_data_direction dir)
 {
@@ -123,8 +106,6 @@ static const struct dma_buf_ops tee_shm_dma_buf_ops = {
 	.mmap = tee_shm_op_mmap,
 };
 
-=======
->>>>>>> rebase
 static struct tee_shm *__tee_shm_alloc(struct tee_context *ctx,
 				       struct tee_device *teedev,
 				       size_t size, u32 flags)
@@ -165,10 +146,6 @@ static struct tee_shm *__tee_shm_alloc(struct tee_context *ctx,
 		goto err_dev_put;
 	}
 
-<<<<<<< HEAD
-=======
-	refcount_set(&shm->refcount, 1);
->>>>>>> rebase
 	shm->flags = flags | TEE_SHM_POOL;
 	shm->teedev = teedev;
 	shm->ctx = ctx;
@@ -191,7 +168,6 @@ static struct tee_shm *__tee_shm_alloc(struct tee_context *ctx,
 		goto err_pool_free;
 	}
 
-<<<<<<< HEAD
 	if (flags & TEE_SHM_DMA_BUF) {
 		DEFINE_DMA_BUF_EXPORT_INFO(exp_info);
 
@@ -207,8 +183,6 @@ static struct tee_shm *__tee_shm_alloc(struct tee_context *ctx,
 		}
 	}
 
-=======
->>>>>>> rebase
 	if (ctx) {
 		teedev_ctx_get(ctx);
 		mutex_lock(&teedev->mutex);
@@ -217,13 +191,10 @@ static struct tee_shm *__tee_shm_alloc(struct tee_context *ctx,
 	}
 
 	return shm;
-<<<<<<< HEAD
 err_rem:
 	mutex_lock(&teedev->mutex);
 	idr_remove(&teedev->idr, shm->id);
 	mutex_unlock(&teedev->mutex);
-=======
->>>>>>> rebase
 err_pool_free:
 	poolm->ops->free(poolm, shm);
 err_kfree:
@@ -288,18 +259,11 @@ struct tee_shm *tee_shm_register(struct tee_context *ctx, unsigned long addr,
 		goto err;
 	}
 
-<<<<<<< HEAD
-=======
-	refcount_set(&shm->refcount, 1);
->>>>>>> rebase
 	shm->flags = flags | TEE_SHM_REGISTER;
 	shm->teedev = teedev;
 	shm->ctx = ctx;
 	shm->id = -1;
-<<<<<<< HEAD
 	addr = untagged_addr(addr);
-=======
->>>>>>> rebase
 	start = rounddown(addr, PAGE_SIZE);
 	shm->offset = addr - start;
 	shm->size = length;
@@ -336,7 +300,6 @@ struct tee_shm *tee_shm_register(struct tee_context *ctx, unsigned long addr,
 		goto err;
 	}
 
-<<<<<<< HEAD
 	if (flags & TEE_SHM_DMA_BUF) {
 		DEFINE_DMA_BUF_EXPORT_INFO(exp_info);
 
@@ -353,8 +316,6 @@ struct tee_shm *tee_shm_register(struct tee_context *ctx, unsigned long addr,
 		}
 	}
 
-=======
->>>>>>> rebase
 	mutex_lock(&teedev->mutex);
 	list_add_tail(&shm->link, &ctx->list_shm);
 	mutex_unlock(&teedev->mutex);
@@ -382,38 +343,6 @@ err:
 }
 EXPORT_SYMBOL_GPL(tee_shm_register);
 
-<<<<<<< HEAD
-=======
-static int tee_shm_fop_release(struct inode *inode, struct file *filp)
-{
-	tee_shm_put(filp->private_data);
-	return 0;
-}
-
-static int tee_shm_fop_mmap(struct file *filp, struct vm_area_struct *vma)
-{
-	struct tee_shm *shm = filp->private_data;
-	size_t size = vma->vm_end - vma->vm_start;
-
-	/* Refuse sharing shared memory provided by application */
-	if (shm->flags & TEE_SHM_USER_MAPPED)
-		return -EINVAL;
-
-	/* check for overflowing the buffer's size */
-	if (vma->vm_pgoff + vma_pages(vma) > shm->size >> PAGE_SHIFT)
-		return -EINVAL;
-
-	return remap_pfn_range(vma, vma->vm_start, shm->paddr >> PAGE_SHIFT,
-			       size, vma->vm_page_prot);
-}
-
-static const struct file_operations tee_shm_fops = {
-	.owner = THIS_MODULE,
-	.release = tee_shm_fop_release,
-	.mmap = tee_shm_fop_mmap,
-};
-
->>>>>>> rebase
 /**
  * tee_shm_get_fd() - Increase reference count and return file descriptor
  * @shm:	Shared memory handle
@@ -426,18 +355,10 @@ int tee_shm_get_fd(struct tee_shm *shm)
 	if (!(shm->flags & TEE_SHM_DMA_BUF))
 		return -EINVAL;
 
-<<<<<<< HEAD
 	get_dma_buf(shm->dmabuf);
 	fd = dma_buf_fd(shm->dmabuf, O_CLOEXEC);
 	if (fd < 0)
 		dma_buf_put(shm->dmabuf);
-=======
-	/* matched by tee_shm_put() in tee_shm_op_release() */
-	refcount_inc(&shm->refcount);
-	fd = anon_inode_getfd("tee_shm", &tee_shm_fops, shm, O_RDWR);
-	if (fd < 0)
-		tee_shm_put(shm);
->>>>>>> rebase
 	return fd;
 }
 
@@ -447,7 +368,6 @@ int tee_shm_get_fd(struct tee_shm *shm)
  */
 void tee_shm_free(struct tee_shm *shm)
 {
-<<<<<<< HEAD
 	/*
 	 * dma_buf_put() decreases the dmabuf reference counter and will
 	 * call tee_shm_release() when the last reference is gone.
@@ -459,9 +379,6 @@ void tee_shm_free(struct tee_shm *shm)
 		dma_buf_put(shm->dmabuf);
 	else
 		tee_shm_release(shm);
-=======
-	tee_shm_put(shm);
->>>>>>> rebase
 }
 EXPORT_SYMBOL_GPL(tee_shm_free);
 
@@ -568,22 +485,10 @@ struct tee_shm *tee_shm_get_from_id(struct tee_context *ctx, int id)
 	teedev = ctx->teedev;
 	mutex_lock(&teedev->mutex);
 	shm = idr_find(&teedev->idr, id);
-<<<<<<< HEAD
 	if (!shm || shm->ctx != ctx)
 		shm = ERR_PTR(-EINVAL);
 	else if (shm->flags & TEE_SHM_DMA_BUF)
 		get_dma_buf(shm->dmabuf);
-=======
-	/*
-	 * If the tee_shm was found in the IDR it must have a refcount
-	 * larger than 0 due to the guarantee in tee_shm_put() below. So
-	 * it's safe to use refcount_inc().
-	 */
-	if (!shm || shm->ctx != ctx)
-		shm = ERR_PTR(-EINVAL);
-	else
-		refcount_inc(&shm->refcount);
->>>>>>> rebase
 	mutex_unlock(&teedev->mutex);
 	return shm;
 }
@@ -595,30 +500,7 @@ EXPORT_SYMBOL_GPL(tee_shm_get_from_id);
  */
 void tee_shm_put(struct tee_shm *shm)
 {
-<<<<<<< HEAD
 	if (shm->flags & TEE_SHM_DMA_BUF)
 		dma_buf_put(shm->dmabuf);
-=======
-	struct tee_device *teedev = shm->teedev;
-	bool do_release = false;
-
-	mutex_lock(&teedev->mutex);
-	if (refcount_dec_and_test(&shm->refcount)) {
-		/*
-		 * refcount has reached 0, we must now remove it from the
-		 * IDR before releasing the mutex. This will guarantee that
-		 * the refcount_inc() in tee_shm_get_from_id() never starts
-		 * from 0.
-		 */
-		idr_remove(&teedev->idr, shm->id);
-		if (shm->ctx)
-			list_del(&shm->link);
-		do_release = true;
-	}
-	mutex_unlock(&teedev->mutex);
-
-	if (do_release)
-		tee_shm_release(teedev, shm);
->>>>>>> rebase
 }
 EXPORT_SYMBOL_GPL(tee_shm_put);

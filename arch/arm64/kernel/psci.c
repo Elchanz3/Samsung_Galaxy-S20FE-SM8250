@@ -46,12 +46,8 @@ static int __init cpu_psci_cpu_prepare(unsigned int cpu)
 
 static int cpu_psci_cpu_boot(unsigned int cpu)
 {
-<<<<<<< HEAD
 	int err = psci_ops.cpu_on(cpu_logical_map(cpu),
 				  __pa_function(secondary_entry));
-=======
-	int err = psci_ops.cpu_on(cpu_logical_map(cpu), __pa_symbol(secondary_entry));
->>>>>>> rebase
 	if (err)
 		pr_err("failed to boot CPU%d (%d)\n", cpu, err);
 
@@ -74,10 +70,7 @@ static int cpu_psci_cpu_disable(unsigned int cpu)
 
 static void cpu_psci_cpu_die(unsigned int cpu)
 {
-<<<<<<< HEAD
 	int ret;
-=======
->>>>>>> rebase
 	/*
 	 * There are no known implementations of PSCI actually using the
 	 * power state field, pass a sensible default for now.
@@ -85,13 +78,9 @@ static void cpu_psci_cpu_die(unsigned int cpu)
 	u32 state = PSCI_POWER_STATE_TYPE_POWER_DOWN <<
 		    PSCI_0_2_POWER_STATE_TYPE_SHIFT;
 
-<<<<<<< HEAD
 	ret = psci_ops.cpu_off(state);
 
 	pr_crit("unable to power off CPU%u (%d)\n", cpu, ret);
-=======
-	psci_ops.cpu_off(state);
->>>>>>> rebase
 }
 
 static int cpu_psci_cpu_kill(unsigned int cpu)

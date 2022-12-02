@@ -679,7 +679,6 @@ out_unlock:
 EXPORT_SYMBOL(drm_gem_prime_handle_to_fd);
 
 /**
-<<<<<<< HEAD
  * drm_gem_prime_mmap - PRIME mmap function for GEM drivers
  * @obj: GEM object
  * @vma: Virtual address range
@@ -717,8 +716,6 @@ int drm_gem_prime_mmap(struct drm_gem_object *obj, struct vm_area_struct *vma)
 EXPORT_SYMBOL(drm_gem_prime_mmap);
 
 /**
-=======
->>>>>>> rebase
  * drm_gem_prime_import_dev - core implementation of the import callback
  * @dev: drm_device to import into
  * @dma_buf: dma-buf object to import

@@ -18,10 +18,6 @@
 
 #include <linux/clk.h>
 #include <linux/completion.h>
-<<<<<<< HEAD
-=======
-#include <linux/delay.h>
->>>>>>> rebase
 #include <linux/dmaengine.h>
 #include <linux/dma-direction.h>
 #include <linux/dma-mapping.h>
@@ -704,12 +700,6 @@ static int fsmc_exec_op(struct nand_chip *chip, const struct nand_operation *op,
 						instr->ctx.waitrdy.timeout_ms);
 			break;
 		}
-<<<<<<< HEAD
-=======
-
-		if (instr->delay_ns)
-			ndelay(instr->delay_ns);
->>>>>>> rebase
 	}
 
 	return ret;
@@ -1109,19 +1099,11 @@ static int __init fsmc_nand_probe(struct platform_device *pdev)
 		host->read_dma_chan = dma_request_channel(mask, filter, NULL);
 		if (!host->read_dma_chan) {
 			dev_err(&pdev->dev, "Unable to get read dma channel\n");
-<<<<<<< HEAD
-=======
-			ret = -ENODEV;
->>>>>>> rebase
 			goto disable_clk;
 		}
 		host->write_dma_chan = dma_request_channel(mask, filter, NULL);
 		if (!host->write_dma_chan) {
 			dev_err(&pdev->dev, "Unable to get write dma channel\n");
-<<<<<<< HEAD
-=======
-			ret = -ENODEV;
->>>>>>> rebase
 			goto release_dma_read_chan;
 		}
 	}
@@ -1143,11 +1125,7 @@ static int __init fsmc_nand_probe(struct platform_device *pdev)
 	 * Scan to find existence of the device
 	 */
 	nand->dummy_controller.ops = &fsmc_nand_controller_ops;
-<<<<<<< HEAD
 	ret = nand_scan(mtd, 1);
-=======
-	ret = nand_scan(nand, 1);
->>>>>>> rebase
 	if (ret)
 		goto release_dma_write_chan;
 
@@ -1183,11 +1161,7 @@ static int fsmc_nand_remove(struct platform_device *pdev)
 	struct fsmc_nand_data *host = platform_get_drvdata(pdev);
 
 	if (host) {
-<<<<<<< HEAD
 		nand_release(nand_to_mtd(&host->nand));
-=======
-		nand_release(&host->nand);
->>>>>>> rebase
 
 		if (host->mode == USE_DMA_ACCESS) {
 			dma_release_channel(host->write_dma_chan);

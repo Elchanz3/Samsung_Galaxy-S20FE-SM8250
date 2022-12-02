@@ -46,10 +46,6 @@
 #define MAX_PSTATE_SHIFT	32
 #define LPSTATE_SHIFT		48
 #define GPSTATE_SHIFT		56
-<<<<<<< HEAD
-=======
-#define MAX_NR_CHIPS		32
->>>>>>> rebase
 
 #define MAX_RAMP_DOWN_TIME				5120
 /*
@@ -889,24 +885,12 @@ static int powernv_cpufreq_reboot_notifier(struct notifier_block *nb,
 				unsigned long action, void *unused)
 {
 	int cpu;
-<<<<<<< HEAD
 	struct cpufreq_policy cpu_policy;
 
 	rebooting = true;
 	for_each_online_cpu(cpu) {
 		cpufreq_get_policy(&cpu_policy, cpu);
 		powernv_cpufreq_target_index(&cpu_policy, get_nominal_index());
-=======
-	struct cpufreq_policy *cpu_policy;
-
-	rebooting = true;
-	for_each_online_cpu(cpu) {
-		cpu_policy = cpufreq_cpu_get(cpu);
-		if (!cpu_policy)
-			continue;
-		powernv_cpufreq_target_index(cpu_policy, get_nominal_index());
-		cpufreq_cpu_put(cpu_policy);
->>>>>>> rebase
 	}
 
 	return NOTIFY_DONE;
@@ -919,10 +903,6 @@ static struct notifier_block powernv_cpufreq_reboot_nb = {
 void powernv_cpufreq_work_fn(struct work_struct *work)
 {
 	struct chip *chip = container_of(work, struct chip, throttle);
-<<<<<<< HEAD
-=======
-	struct cpufreq_policy *policy;
->>>>>>> rebase
 	unsigned int cpu;
 	cpumask_t mask;
 
@@ -937,23 +917,12 @@ void powernv_cpufreq_work_fn(struct work_struct *work)
 	chip->restore = false;
 	for_each_cpu(cpu, &mask) {
 		int index;
-<<<<<<< HEAD
 		struct cpufreq_policy policy;
 
 		cpufreq_get_policy(&policy, cpu);
 		index = cpufreq_table_find_index_c(&policy, policy.cur);
 		powernv_cpufreq_target_index(&policy, index);
 		cpumask_andnot(&mask, &mask, policy.cpus);
-=======
-
-		policy = cpufreq_cpu_get(cpu);
-		if (!policy)
-			continue;
-		index = cpufreq_table_find_index_c(policy, policy->cur);
-		powernv_cpufreq_target_index(policy, index);
-		cpumask_andnot(&mask, &mask, policy->cpus);
-		cpufreq_cpu_put(policy);
->>>>>>> rebase
 	}
 out:
 	put_online_cpus();
@@ -1076,26 +1045,12 @@ static int init_chip_info(void)
 	unsigned int *chip;
 	unsigned int cpu, i;
 	unsigned int prev_chip_id = UINT_MAX;
-<<<<<<< HEAD
-=======
-	cpumask_t *chip_cpu_mask;
->>>>>>> rebase
 	int ret = 0;
 
 	chip = kcalloc(num_possible_cpus(), sizeof(*chip), GFP_KERNEL);
 	if (!chip)
 		return -ENOMEM;
 
-<<<<<<< HEAD
-=======
-	/* Allocate a chip cpu mask large enough to fit mask for all chips */
-	chip_cpu_mask = kcalloc(MAX_NR_CHIPS, sizeof(cpumask_t), GFP_KERNEL);
-	if (!chip_cpu_mask) {
-		ret = -ENOMEM;
-		goto free_and_return;
-	}
-
->>>>>>> rebase
 	for_each_possible_cpu(cpu) {
 		unsigned int id = cpu_to_chip_id(cpu);
 
@@ -1103,39 +1058,22 @@ static int init_chip_info(void)
 			prev_chip_id = id;
 			chip[nr_chips++] = id;
 		}
-<<<<<<< HEAD
-=======
-		cpumask_set_cpu(cpu, &chip_cpu_mask[nr_chips-1]);
->>>>>>> rebase
 	}
 
 	chips = kcalloc(nr_chips, sizeof(struct chip), GFP_KERNEL);
 	if (!chips) {
 		ret = -ENOMEM;
-<<<<<<< HEAD
 		goto free_and_return;
-=======
-		goto out_free_chip_cpu_mask;
->>>>>>> rebase
 	}
 
 	for (i = 0; i < nr_chips; i++) {
 		chips[i].id = chip[i];
-<<<<<<< HEAD
 		cpumask_copy(&chips[i].mask, cpumask_of_node(chip[i]));
-=======
-		cpumask_copy(&chips[i].mask, &chip_cpu_mask[i]);
->>>>>>> rebase
 		INIT_WORK(&chips[i].throttle, powernv_cpufreq_work_fn);
 		for_each_cpu(cpu, &chips[i].mask)
 			per_cpu(chip_info, cpu) =  &chips[i];
 	}
 
-<<<<<<< HEAD
-=======
-out_free_chip_cpu_mask:
-	kfree(chip_cpu_mask);
->>>>>>> rebase
 free_and_return:
 	kfree(chip);
 	return ret;
@@ -1143,15 +1081,6 @@ free_and_return:
 
 static inline void clean_chip_info(void)
 {
-<<<<<<< HEAD
-=======
-	int i;
-
-	/* flush any pending work items */
-	if (chips)
-		for (i = 0; i < nr_chips; i++)
-			cancel_work_sync(&chips[i].throttle);
->>>>>>> rebase
 	kfree(chips);
 }
 

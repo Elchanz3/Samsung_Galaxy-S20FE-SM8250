@@ -3821,10 +3821,6 @@ done:
 	}
 
 	qp_init_attr->cap = qp_attr->cap;
-<<<<<<< HEAD
-=======
-	qp_init_attr->sq_sig_type = hr_qp->sq_signal_bits;
->>>>>>> rebase
 
 out:
 	mutex_unlock(&hr_qp->mutex);

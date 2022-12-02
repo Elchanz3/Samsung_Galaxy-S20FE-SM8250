@@ -10,12 +10,7 @@
 #define MAXIDLEN 256
 %}
 
-<<<<<<< HEAD
 %pure-parser
-=======
-%define api.pure full
-
->>>>>>> rebase
 %parse-param { double *final_val }
 %parse-param { struct parse_ctx *ctx }
 %parse-param { const char **pp }

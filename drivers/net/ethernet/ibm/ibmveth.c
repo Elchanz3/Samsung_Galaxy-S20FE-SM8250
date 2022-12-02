@@ -1330,10 +1330,6 @@ static int ibmveth_poll(struct napi_struct *napi, int budget)
 			int offset = ibmveth_rxq_frame_offset(adapter);
 			int csum_good = ibmveth_rxq_csum_good(adapter);
 			int lrg_pkt = ibmveth_rxq_large_packet(adapter);
-<<<<<<< HEAD
-=======
-			__sum16 iph_check = 0;
->>>>>>> rebase
 
 			skb = ibmveth_rxq_get_buffer(adapter);
 
@@ -1370,37 +1366,16 @@ static int ibmveth_poll(struct napi_struct *napi, int budget)
 			skb_put(skb, length);
 			skb->protocol = eth_type_trans(skb, netdev);
 
-<<<<<<< HEAD
-=======
-			/* PHYP without PLSO support places a -1 in the ip
-			 * checksum for large send frames.
-			 */
-			if (skb->protocol == cpu_to_be16(ETH_P_IP)) {
-				struct iphdr *iph = (struct iphdr *)skb->data;
-
-				iph_check = iph->check;
-			}
-
-			if ((length > netdev->mtu + ETH_HLEN) ||
-			    lrg_pkt || iph_check == 0xffff) {
-				ibmveth_rx_mss_helper(skb, mss, lrg_pkt);
-				adapter->rx_large_packets++;
-			}
-
->>>>>>> rebase
 			if (csum_good) {
 				skb->ip_summed = CHECKSUM_UNNECESSARY;
 				ibmveth_rx_csum_helper(skb, adapter);
 			}
 
-<<<<<<< HEAD
 			if (length > netdev->mtu + ETH_HLEN) {
 				ibmveth_rx_mss_helper(skb, mss, lrg_pkt);
 				adapter->rx_large_packets++;
 			}
 
-=======
->>>>>>> rebase
 			napi_gro_receive(napi, skb);	/* send it up */
 
 			netdev->stats.rx_packets++;
@@ -1720,11 +1695,7 @@ static int ibmveth_probe(struct vio_dev *dev, const struct vio_device_id *id)
 	}
 
 	netdev->min_mtu = IBMVETH_MIN_MTU;
-<<<<<<< HEAD
 	netdev->max_mtu = ETH_MAX_MTU;
-=======
-	netdev->max_mtu = ETH_MAX_MTU - IBMVETH_BUFF_OH;
->>>>>>> rebase
 
 	memcpy(netdev->dev_addr, mac_addr_p, ETH_ALEN);
 

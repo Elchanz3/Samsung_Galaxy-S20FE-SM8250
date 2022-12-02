@@ -16,13 +16,10 @@
 #include <linux/siphash.h>
 #include <linux/kernel.h>
 #include <linux/export.h>
-<<<<<<< HEAD
 #ifdef CONFIG_MPTCP
 #include <net/mptcp.h>
 #include <net/mptcp_v4.h>
 #endif
-=======
->>>>>>> rebase
 #include <net/secure_seq.h>
 #include <net/tcp.h>
 #include <net/route.h>
@@ -186,16 +183,12 @@ u32 __cookie_v4_init_sequence(const struct iphdr *iph, const struct tcphdr *th,
 }
 EXPORT_SYMBOL_GPL(__cookie_v4_init_sequence);
 
-<<<<<<< HEAD
 #ifdef CONFIG_MPTCP
 __u32 cookie_v4_init_sequence(struct request_sock *req, const struct sock *sk,
 			      const struct sk_buff *skb, __u16 *mssp)
 #else
 __u32 cookie_v4_init_sequence(const struct sk_buff *skb, __u16 *mssp)
 #endif
-=======
-__u32 cookie_v4_init_sequence(const struct sk_buff *skb, __u16 *mssp)
->>>>>>> rebase
 {
 	const struct iphdr *iph = ip_hdr(skb);
 	const struct tcphdr *th = tcp_hdr(skb);
@@ -225,7 +218,6 @@ struct sock *tcp_get_cookie_sock(struct sock *sk, struct sk_buff *skb,
 	struct inet_connection_sock *icsk = inet_csk(sk);
 	struct sock *child;
 	bool own_req;
-<<<<<<< HEAD
 #ifdef CONFIG_MPTCP
 	int ret;
 #endif
@@ -247,11 +239,6 @@ struct sock *tcp_get_cookie_sock(struct sock *sk, struct sk_buff *skb,
 listen_overflow:
 #endif
 
-=======
-
-	child = icsk->icsk_af_ops->syn_recv_sock(sk, skb, req, dst,
-						 NULL, &own_req);
->>>>>>> rebase
 	if (child) {
 		refcount_set(&req->rsk_refcnt, 1);
 		tcp_sk(child)->tsoffset = tsoff;
@@ -329,12 +316,9 @@ struct sock *cookie_v4_check(struct sock *sk, struct sk_buff *skb)
 {
 	struct ip_options *opt = &TCP_SKB_CB(skb)->header.h4.opt;
 	struct tcp_options_received tcp_opt;
-<<<<<<< HEAD
 #ifdef CONFIG_MPTCP
 	struct mptcp_options_received mopt;
 #endif
-=======
->>>>>>> rebase
 	struct inet_request_sock *ireq;
 	struct tcp_request_sock *treq;
 	struct tcp_sock *tp = tcp_sk(sk);
@@ -342,11 +326,7 @@ struct sock *cookie_v4_check(struct sock *sk, struct sk_buff *skb)
 	__u32 cookie = ntohl(th->ack_seq) - 1;
 	struct sock *ret = sk;
 	struct request_sock *req;
-<<<<<<< HEAD
 	int mss;
-=======
-	int full_space, mss;
->>>>>>> rebase
 	struct rtable *rt;
 	__u8 rcv_wscale;
 	struct flowi4 fl4;
@@ -368,16 +348,12 @@ struct sock *cookie_v4_check(struct sock *sk, struct sk_buff *skb)
 
 	/* check for timestamp cookie support */
 	memset(&tcp_opt, 0, sizeof(tcp_opt));
-<<<<<<< HEAD
 #ifdef CONFIG_MPTCP
 	mptcp_init_mp_opt(&mopt);
 	tcp_parse_options(sock_net(sk), skb, &tcp_opt, &mopt, 0, NULL, NULL);
 #else
 	tcp_parse_options(sock_net(sk), skb, &tcp_opt, 0, NULL);
 #endif
-=======
-	tcp_parse_options(sock_net(sk), skb, &tcp_opt, 0, NULL);
->>>>>>> rebase
 
 	if (tcp_opt.saw_tstamp && tcp_opt.rcv_tsecr) {
 		tsoff = secure_tcp_ts_off(sock_net(sk),
@@ -390,25 +366,17 @@ struct sock *cookie_v4_check(struct sock *sk, struct sk_buff *skb)
 		goto out;
 
 	ret = NULL;
-<<<<<<< HEAD
 #ifdef CONFIG_MPTCP
 	if (mopt.saw_mpc)
 		req = inet_reqsk_alloc(&mptcp_request_sock_ops, sk, false); /* for safety */
 	else
 #endif
 		req = inet_reqsk_alloc(&tcp_request_sock_ops, sk, false); /* for safety */
-=======
-	req = inet_reqsk_alloc(&tcp_request_sock_ops, sk, false); /* for safety */
->>>>>>> rebase
 	if (!req)
 		goto out;
 
 	ireq = inet_rsk(req);
 	treq = tcp_rsk(req);
-<<<<<<< HEAD
-=======
-	treq->af_specific	= &tcp_request_sock_ipv4_ops;
->>>>>>> rebase
 	treq->rcv_isn		= ntohl(th->seq) - 1;
 	treq->snt_isn		= cookie;
 	treq->ts_off		= 0;
@@ -423,13 +391,10 @@ struct sock *cookie_v4_check(struct sock *sk, struct sk_buff *skb)
 	ireq->sack_ok		= tcp_opt.sack_ok;
 	ireq->wscale_ok		= tcp_opt.wscale_ok;
 	ireq->tstamp_ok		= tcp_opt.saw_tstamp;
-<<<<<<< HEAD
 #ifdef CONFIG_MPTCP
 	ireq->mptcp_rqsk	= 0;
 	ireq->saw_mpc		= 0;
 #endif
-=======
->>>>>>> rebase
 	req->ts_recent		= tcp_opt.saw_tstamp ? tcp_opt.rcv_tsval : 0;
 	treq->snt_synack	= 0;
 	treq->tfo_listener	= false;
@@ -438,13 +403,10 @@ struct sock *cookie_v4_check(struct sock *sk, struct sk_buff *skb)
 
 	ireq->ir_iif = inet_request_bound_dev_if(sk, skb);
 
-<<<<<<< HEAD
 #ifdef CONFIG_MPTCP
 	if (mopt.saw_mpc)
 		mptcp_cookies_reqsk_init(req, &mopt, skb);
 #endif
-=======
->>>>>>> rebase
 	/* We throwed the options of the initial SYN away, so we hope
 	 * the ACK carries the same options again (see RFC1122 4.2.3.8)
 	 */
@@ -477,7 +439,6 @@ struct sock *cookie_v4_check(struct sock *sk, struct sk_buff *skb)
 
 	/* Try to redo what tcp_v4_send_synack did. */
 	req->rsk_window_clamp = tp->window_clamp ? :dst_metric(&rt->dst, RTAX_WINDOW);
-<<<<<<< HEAD
 
 #ifdef CONFIG_MPTCP
 	tp->ops->select_initial_window(sk, tcp_full_space(sk), req->mss,
@@ -491,18 +452,6 @@ struct sock *cookie_v4_check(struct sock *sk, struct sk_buff *skb)
 				  ireq->wscale_ok, &rcv_wscale,
 				  dst_metric(&rt->dst, RTAX_INITRWND));
 #endif
-=======
-	/* limit the window selection if the user enforce a smaller rx buffer */
-	full_space = tcp_full_space(sk);
-	if (sk->sk_userlocks & SOCK_RCVBUF_LOCK &&
-	    (req->rsk_window_clamp > full_space || req->rsk_window_clamp == 0))
-		req->rsk_window_clamp = full_space;
-
-	tcp_select_initial_window(sk, full_space, req->mss,
-				  &req->rsk_rcv_wnd, &req->rsk_window_clamp,
-				  ireq->wscale_ok, &rcv_wscale,
-				  dst_metric(&rt->dst, RTAX_INITRWND));
->>>>>>> rebase
 
 	ireq->rcv_wscale  = rcv_wscale;
 	ireq->ecn_ok = cookie_ecn_ok(&tcp_opt, sock_net(sk), &rt->dst);

@@ -104,10 +104,7 @@ fs_initcall(nmi_warning_debugfs);
 
 static void nmi_check_duration(struct nmiaction *action, u64 duration)
 {
-<<<<<<< HEAD
 	u64 whole_msecs = READ_ONCE(action->max_duration);
-=======
->>>>>>> rebase
 	int remainder_ns, decimal_msecs;
 
 	if (duration < nmi_longest_ns || duration < action->max_duration)
@@ -115,20 +112,12 @@ static void nmi_check_duration(struct nmiaction *action, u64 duration)
 
 	action->max_duration = duration;
 
-<<<<<<< HEAD
 	remainder_ns = do_div(whole_msecs, (1000 * 1000));
-=======
-	remainder_ns = do_div(duration, (1000 * 1000));
->>>>>>> rebase
 	decimal_msecs = remainder_ns / 1000;
 
 	printk_ratelimited(KERN_INFO
 		"INFO: NMI handler (%ps) took too long to run: %lld.%03d msecs\n",
-<<<<<<< HEAD
 		action->handler, whole_msecs, decimal_msecs);
-=======
-		action->handler, duration, decimal_msecs);
->>>>>>> rebase
 }
 
 static int nmi_handle(unsigned int type, struct pt_regs *regs)

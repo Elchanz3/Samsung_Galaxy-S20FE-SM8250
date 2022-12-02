@@ -55,10 +55,6 @@ static inline bool dev_is_mac_header_xmit(const struct net_device *dev)
 	case ARPHRD_VOID:
 	case ARPHRD_NONE:
 	case ARPHRD_RAWIP:
-<<<<<<< HEAD
-=======
-	case ARPHRD_PIMREG:
->>>>>>> rebase
 		return false;
 	default:
 		return true;

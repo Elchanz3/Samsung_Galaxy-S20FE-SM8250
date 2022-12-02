@@ -261,11 +261,7 @@ static int stmmac_pci_probe(struct pci_dev *pdev,
 		return -ENOMEM;
 
 	/* Enable pci device */
-<<<<<<< HEAD
 	ret = pci_enable_device(pdev);
-=======
-	ret = pcim_enable_device(pdev);
->>>>>>> rebase
 	if (ret) {
 		dev_err(&pdev->dev, "%s: ERROR: failed to enable device\n",
 			__func__);
@@ -317,11 +313,8 @@ static void stmmac_pci_remove(struct pci_dev *pdev)
 		pcim_iounmap_regions(pdev, BIT(i));
 		break;
 	}
-<<<<<<< HEAD
 
 	pci_disable_device(pdev);
-=======
->>>>>>> rebase
 }
 
 static int __maybe_unused stmmac_pci_suspend(struct device *dev)

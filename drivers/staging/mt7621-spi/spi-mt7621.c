@@ -442,32 +442,19 @@ static int mt7621_spi_probe(struct platform_device *pdev)
 		return PTR_ERR(base);
 
 	clk = devm_clk_get(&pdev->dev, NULL);
-<<<<<<< HEAD
 	if (IS_ERR(clk)) {
 		dev_err(&pdev->dev, "unable to get SYS clock, err=%d\n",
 			status);
 		return PTR_ERR(clk);
 	}
-=======
-	if (IS_ERR(clk))
-		return dev_err_probe(&pdev->dev, PTR_ERR(clk),
-				     "unable to get SYS clock\n");
->>>>>>> rebase
 
 	status = clk_prepare_enable(clk);
 	if (status)
 		return status;
 
-<<<<<<< HEAD
 	master = spi_alloc_master(&pdev->dev, sizeof(*rs));
 	if (master == NULL) {
 		dev_info(&pdev->dev, "master allocation failed\n");
-=======
-	master = devm_spi_alloc_master(&pdev->dev, sizeof(*rs));
-	if (master == NULL) {
-		dev_info(&pdev->dev, "master allocation failed\n");
-		clk_disable_unprepare(clk);
->>>>>>> rebase
 		return -ENOMEM;
 	}
 
@@ -493,24 +480,12 @@ static int mt7621_spi_probe(struct platform_device *pdev)
 	ret = device_reset(&pdev->dev);
 	if (ret) {
 		dev_err(&pdev->dev, "SPI reset failed!\n");
-<<<<<<< HEAD
-=======
-		clk_disable_unprepare(clk);
->>>>>>> rebase
 		return ret;
 	}
 
 	mt7621_spi_reset(rs, 0);
 
-<<<<<<< HEAD
 	return spi_register_master(master);
-=======
-	ret = spi_register_master(master);
-	if (ret)
-		clk_disable_unprepare(clk);
-
-	return ret;
->>>>>>> rebase
 }
 
 static int mt7621_spi_remove(struct platform_device *pdev)
@@ -521,13 +496,8 @@ static int mt7621_spi_remove(struct platform_device *pdev)
 	master = dev_get_drvdata(&pdev->dev);
 	rs = spi_master_get_devdata(master);
 
-<<<<<<< HEAD
 	clk_disable(rs->clk);
 	spi_unregister_master(master);
-=======
-	spi_unregister_master(master);
-	clk_disable_unprepare(rs->clk);
->>>>>>> rebase
 
 	return 0;
 }

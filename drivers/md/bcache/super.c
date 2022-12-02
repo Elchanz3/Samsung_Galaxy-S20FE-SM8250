@@ -775,13 +775,7 @@ static void bcache_device_free(struct bcache_device *d)
 		bcache_device_detach(d);
 
 	if (disk) {
-<<<<<<< HEAD
 		if (disk->flags & GENHD_FL_UP)
-=======
-		bool disk_added = (disk->flags & GENHD_FL_UP) != 0;
-
-		if (disk_added)
->>>>>>> rebase
 			del_gendisk(disk);
 
 		if (disk->queue)
@@ -789,12 +783,7 @@ static void bcache_device_free(struct bcache_device *d)
 
 		ida_simple_remove(&bcache_device_idx,
 				  first_minor_to_idx(disk->first_minor));
-<<<<<<< HEAD
 		put_disk(disk);
-=======
-		if (disk_added)
-			put_disk(disk);
->>>>>>> rebase
 	}
 
 	bioset_exit(&d->bio_split);
@@ -832,16 +821,11 @@ static int bcache_device_init(struct bcache_device *d, unsigned int block_size,
 	n = BITS_TO_LONGS(d->nr_stripes) * sizeof(unsigned long);
 	d->full_dirty_stripes = kvzalloc(n, GFP_KERNEL);
 	if (!d->full_dirty_stripes)
-<<<<<<< HEAD
 		return -ENOMEM;
-=======
-		goto out_free_stripe_sectors_dirty;
->>>>>>> rebase
 
 	idx = ida_simple_get(&bcache_device_idx, 0,
 				BCACHE_DEVICE_IDX_MAX, GFP_KERNEL);
 	if (idx < 0)
-<<<<<<< HEAD
 		return idx;
 
 	if (bioset_init(&d->bio_split, 4, offsetof(struct bbio, bio),
@@ -851,17 +835,6 @@ static int bcache_device_init(struct bcache_device *d, unsigned int block_size,
 	d->disk = alloc_disk(BCACHE_MINORS);
 	if (!d->disk)
 		goto err;
-=======
-		goto out_free_full_dirty_stripes;
-
-	if (bioset_init(&d->bio_split, 4, offsetof(struct bbio, bio),
-			BIOSET_NEED_BVECS|BIOSET_NEED_RESCUER))
-		goto out_ida_remove;
-
-	d->disk = alloc_disk(BCACHE_MINORS);
-	if (!d->disk)
-		goto out_bioset_exit;
->>>>>>> rebase
 
 	set_capacity(d->disk, sectors);
 	snprintf(d->disk->disk_name, DISK_NAME_LEN, "bcache%i", idx);
@@ -896,19 +869,8 @@ static int bcache_device_init(struct bcache_device *d, unsigned int block_size,
 
 	return 0;
 
-<<<<<<< HEAD
 err:
 	ida_simple_remove(&bcache_device_idx, idx);
-=======
-out_bioset_exit:
-	bioset_exit(&d->bio_split);
-out_ida_remove:
-	ida_simple_remove(&bcache_device_idx, idx);
-out_free_full_dirty_stripes:
-	kvfree(d->full_dirty_stripes);
-out_free_stripe_sectors_dirty:
-	kvfree(d->stripe_sectors_dirty);
->>>>>>> rebase
 	return -ENOMEM;
 
 }
@@ -1728,11 +1690,7 @@ void bch_cache_set_unregister(struct cache_set *c)
 }
 
 #define alloc_bucket_pages(gfp, c)			\
-<<<<<<< HEAD
 	((void *) __get_free_pages(__GFP_ZERO|gfp, ilog2(bucket_pages(c))))
-=======
-	((void *) __get_free_pages(__GFP_ZERO|__GFP_COMP|gfp, ilog2(bucket_pages(c))))
->>>>>>> rebase
 
 struct cache_set *bch_cache_set_alloc(struct cache_sb *sb)
 {
@@ -1776,10 +1734,6 @@ struct cache_set *bch_cache_set_alloc(struct cache_sb *sb)
 	sema_init(&c->sb_write_mutex, 1);
 	mutex_init(&c->bucket_lock);
 	init_waitqueue_head(&c->btree_cache_wait);
-<<<<<<< HEAD
-=======
-	spin_lock_init(&c->btree_cannibalize_lock);
->>>>>>> rebase
 	init_waitqueue_head(&c->bucket_wait);
 	init_waitqueue_head(&c->gc_wait);
 	sema_init(&c->uuid_write_mutex, 1);
@@ -2056,18 +2010,7 @@ found:
 	    sysfs_create_link(&c->kobj, &ca->kobj, buf))
 		goto err;
 
-<<<<<<< HEAD
 	if (ca->sb.seq > c->sb.seq) {
-=======
-	/*
-	 * A special case is both ca->sb.seq and c->sb.seq are 0,
-	 * such condition happens on a new created cache device whose
-	 * super block is never flushed yet. In this case c->sb.version
-	 * and other members should be updated too, otherwise we will
-	 * have a mistaken super block version in cache set.
-	 */
-	if (ca->sb.seq > c->sb.seq || c->sb.seq == 0) {
->>>>>>> rebase
 		c->sb.version		= ca->sb.version;
 		memcpy(c->sb.set_uuid, ca->sb.set_uuid, 16);
 		c->sb.flags             = ca->sb.flags;

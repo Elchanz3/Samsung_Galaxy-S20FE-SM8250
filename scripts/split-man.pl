@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 #!/usr/bin/perl
-=======
-#!/usr/bin/env perl
->>>>>>> rebase
 # SPDX-License-Identifier: GPL-2.0
 #
 # Author: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>

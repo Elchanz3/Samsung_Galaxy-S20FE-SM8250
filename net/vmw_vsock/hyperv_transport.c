@@ -443,7 +443,6 @@ static void hvs_shutdown_lock_held(struct hvsock *hvs, int mode)
 
 static int hvs_shutdown(struct vsock_sock *vsk, int mode)
 {
-<<<<<<< HEAD
 	struct sock *sk = sk_vsock(vsk);
 
 	if (!(mode & SEND_SHUTDOWN))
@@ -452,12 +451,6 @@ static int hvs_shutdown(struct vsock_sock *vsk, int mode)
 	lock_sock(sk);
 	hvs_shutdown_lock_held(vsk->trans, mode);
 	release_sock(sk);
-=======
-	if (!(mode & SEND_SHUTDOWN))
-		return 0;
-
-	hvs_shutdown_lock_held(vsk->trans, mode);
->>>>>>> rebase
 	return 0;
 }
 

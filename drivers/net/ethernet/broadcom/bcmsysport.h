@@ -751,10 +751,6 @@ struct bcm_sysport_priv {
 	int			wol_irq;
 
 	/* Transmit rings */
-<<<<<<< HEAD
-=======
-	spinlock_t		desc_lock;
->>>>>>> rebase
 	struct bcm_sysport_tx_ring *tx_rings;
 
 	/* Receive queue */

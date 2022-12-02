@@ -69,7 +69,6 @@ config UWB_I1480U
          is safe to select any even if you do not have the hardware.
 
 endif # UWB
-<<<<<<< HEAD
 
 config SAMSUNG_UWB
 	bool "Samsung UWB driver"
@@ -92,5 +91,3 @@ config ACPM_INIT
 	  ACPM INIT must be called to use CLK4 in S5910.
 
 source "drivers/uwb/uwb_logger/Kconfig"
-=======
->>>>>>> rebase

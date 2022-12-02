@@ -773,17 +773,10 @@ static inline void armv7pmu_write_counter(struct perf_event *event, u64 value)
 		pr_err("CPU%u writing wrong counter %d\n",
 			smp_processor_id(), idx);
 	} else if (idx == ARMV7_IDX_CYCLE_COUNTER) {
-<<<<<<< HEAD
 		asm volatile("mcr p15, 0, %0, c9, c13, 0" : : "r" (value));
 	} else {
 		armv7_pmnc_select_counter(idx);
 		asm volatile("mcr p15, 0, %0, c9, c13, 2" : : "r" (value));
-=======
-		asm volatile("mcr p15, 0, %0, c9, c13, 0" : : "r" ((u32)value));
-	} else {
-		armv7_pmnc_select_counter(idx);
-		asm volatile("mcr p15, 0, %0, c9, c13, 2" : : "r" ((u32)value));
->>>>>>> rebase
 	}
 }
 
@@ -1079,11 +1072,6 @@ static int armv7pmu_set_event_filter(struct hw_perf_event *event,
 {
 	unsigned long config_base = 0;
 
-<<<<<<< HEAD
-=======
-	if (attr->exclude_idle)
-		return -EPERM;
->>>>>>> rebase
 	if (attr->exclude_user)
 		config_base |= ARMV7_EXCLUDE_USER;
 	if (attr->exclude_kernel)
@@ -1118,11 +1106,7 @@ static void armv7pmu_reset(void *info)
 	}
 
 	/* Initialize & Reset PMNC: C and P bits */
-<<<<<<< HEAD
 	armv7_pmnc_write(armv7_pmnc_read() | ARMV7_PMNC_P | ARMV7_PMNC_C);
-=======
-	armv7_pmnc_write(ARMV7_PMNC_P | ARMV7_PMNC_C);
->>>>>>> rebase
 }
 
 static int armv7_a8_map_event(struct perf_event *event)
@@ -1204,7 +1188,6 @@ static void armv7_read_num_pmnc_events(void *info)
 	*nb_cnt += 1;
 }
 
-<<<<<<< HEAD
 static void armv7_pmu_idle_update(struct arm_pmu *cpu_pmu)
 {
 	struct pmu_hw_events *hw_events;
@@ -1267,13 +1250,6 @@ static int armv7_probe_pmu(struct arm_pmu *arm_pmu)
 	idle_notifier_register(&pmu_idle_nb->perf_cpu_idle_nb);
 
 	return 0;
-=======
-static int armv7_probe_num_events(struct arm_pmu *arm_pmu)
-{
-	return smp_call_function_any(&arm_pmu->supported_cpus,
-				     armv7_read_num_pmnc_events,
-				     &arm_pmu->num_events, 1);
->>>>>>> rebase
 }
 
 static int armv7_a8_pmu_init(struct arm_pmu *cpu_pmu)
@@ -1285,11 +1261,7 @@ static int armv7_a8_pmu_init(struct arm_pmu *cpu_pmu)
 		&armv7_pmuv1_events_attr_group;
 	cpu_pmu->attr_groups[ARMPMU_ATTR_GROUP_FORMATS] =
 		&armv7_pmu_format_attr_group;
-<<<<<<< HEAD
 	return armv7_probe_pmu(cpu_pmu);
-=======
-	return armv7_probe_num_events(cpu_pmu);
->>>>>>> rebase
 }
 
 static int armv7_a9_pmu_init(struct arm_pmu *cpu_pmu)
@@ -1301,11 +1273,7 @@ static int armv7_a9_pmu_init(struct arm_pmu *cpu_pmu)
 		&armv7_pmuv1_events_attr_group;
 	cpu_pmu->attr_groups[ARMPMU_ATTR_GROUP_FORMATS] =
 		&armv7_pmu_format_attr_group;
-<<<<<<< HEAD
 	return armv7_probe_pmu(cpu_pmu);
-=======
-	return armv7_probe_num_events(cpu_pmu);
->>>>>>> rebase
 }
 
 static int armv7_a5_pmu_init(struct arm_pmu *cpu_pmu)
@@ -1317,11 +1285,7 @@ static int armv7_a5_pmu_init(struct arm_pmu *cpu_pmu)
 		&armv7_pmuv1_events_attr_group;
 	cpu_pmu->attr_groups[ARMPMU_ATTR_GROUP_FORMATS] =
 		&armv7_pmu_format_attr_group;
-<<<<<<< HEAD
 	return armv7_probe_pmu(cpu_pmu);
-=======
-	return armv7_probe_num_events(cpu_pmu);
->>>>>>> rebase
 }
 
 static int armv7_a15_pmu_init(struct arm_pmu *cpu_pmu)
@@ -1334,7 +1298,6 @@ static int armv7_a15_pmu_init(struct arm_pmu *cpu_pmu)
 		&armv7_pmuv2_events_attr_group;
 	cpu_pmu->attr_groups[ARMPMU_ATTR_GROUP_FORMATS] =
 		&armv7_pmu_format_attr_group;
-<<<<<<< HEAD
 	return armv7_probe_pmu(cpu_pmu);
 }
 
@@ -1349,9 +1312,6 @@ static int armv8_pmuv3_pmu_init(struct arm_pmu *cpu_pmu)
 	cpu_pmu->attr_groups[ARMPMU_ATTR_GROUP_FORMATS] =
 		&armv7_pmu_format_attr_group;
 	return armv7_probe_pmu(cpu_pmu);
-=======
-	return armv7_probe_num_events(cpu_pmu);
->>>>>>> rebase
 }
 
 static int armv7_a7_pmu_init(struct arm_pmu *cpu_pmu)
@@ -1364,11 +1324,7 @@ static int armv7_a7_pmu_init(struct arm_pmu *cpu_pmu)
 		&armv7_pmuv2_events_attr_group;
 	cpu_pmu->attr_groups[ARMPMU_ATTR_GROUP_FORMATS] =
 		&armv7_pmu_format_attr_group;
-<<<<<<< HEAD
 	return armv7_probe_pmu(cpu_pmu);
-=======
-	return armv7_probe_num_events(cpu_pmu);
->>>>>>> rebase
 }
 
 static int armv7_a12_pmu_init(struct arm_pmu *cpu_pmu)
@@ -1381,11 +1337,7 @@ static int armv7_a12_pmu_init(struct arm_pmu *cpu_pmu)
 		&armv7_pmuv2_events_attr_group;
 	cpu_pmu->attr_groups[ARMPMU_ATTR_GROUP_FORMATS] =
 		&armv7_pmu_format_attr_group;
-<<<<<<< HEAD
 	return armv7_probe_pmu(cpu_pmu);
-=======
-	return armv7_probe_num_events(cpu_pmu);
->>>>>>> rebase
 }
 
 static int armv7_a17_pmu_init(struct arm_pmu *cpu_pmu)
@@ -1783,11 +1735,7 @@ static int krait_pmu_init(struct arm_pmu *cpu_pmu)
 	cpu_pmu->disable	= krait_pmu_disable_event;
 	cpu_pmu->get_event_idx	= krait_pmu_get_event_idx;
 	cpu_pmu->clear_event_idx = krait_pmu_clear_event_idx;
-<<<<<<< HEAD
 	return armv7_probe_pmu(cpu_pmu);
-=======
-	return armv7_probe_num_events(cpu_pmu);
->>>>>>> rebase
 }
 
 /*
@@ -2111,11 +2059,7 @@ static int scorpion_pmu_init(struct arm_pmu *cpu_pmu)
 	cpu_pmu->disable	= scorpion_pmu_disable_event;
 	cpu_pmu->get_event_idx	= scorpion_pmu_get_event_idx;
 	cpu_pmu->clear_event_idx = scorpion_pmu_clear_event_idx;
-<<<<<<< HEAD
 	return armv7_probe_pmu(cpu_pmu);
-=======
-	return armv7_probe_num_events(cpu_pmu);
->>>>>>> rebase
 }
 
 static int scorpion_mp_pmu_init(struct arm_pmu *cpu_pmu)
@@ -2128,11 +2072,7 @@ static int scorpion_mp_pmu_init(struct arm_pmu *cpu_pmu)
 	cpu_pmu->disable	= scorpion_pmu_disable_event;
 	cpu_pmu->get_event_idx	= scorpion_pmu_get_event_idx;
 	cpu_pmu->clear_event_idx = scorpion_pmu_clear_event_idx;
-<<<<<<< HEAD
 	return armv7_probe_pmu(cpu_pmu);
-=======
-	return armv7_probe_num_events(cpu_pmu);
->>>>>>> rebase
 }
 
 static const struct of_device_id armv7_pmu_of_device_ids[] = {
@@ -2146,10 +2086,7 @@ static const struct of_device_id armv7_pmu_of_device_ids[] = {
 	{.compatible = "qcom,krait-pmu",	.data = krait_pmu_init},
 	{.compatible = "qcom,scorpion-pmu",	.data = scorpion_pmu_init},
 	{.compatible = "qcom,scorpion-mp-pmu",	.data = scorpion_mp_pmu_init},
-<<<<<<< HEAD
 	{.compatible = "arm,armv8-pmuv3",	.data = armv8_pmuv3_pmu_init},
-=======
->>>>>>> rebase
 	{},
 };
 

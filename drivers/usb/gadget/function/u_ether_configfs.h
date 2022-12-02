@@ -32,14 +32,11 @@
 		struct f_##_f_##_opts *opts = to_f_##_f_##_opts(item);	\
 		int result;						\
 									\
-<<<<<<< HEAD
 		if (opts->bound == false) {		\
 			pr_err("Gadget function do not bind yet.\n");	\
 			return -ENODEV;			\
 		}							\
 									\
-=======
->>>>>>> rebase
 		mutex_lock(&opts->lock);				\
 		result = gether_get_dev_addr(opts->net, page, PAGE_SIZE); \
 		mutex_unlock(&opts->lock);				\
@@ -53,14 +50,11 @@
 		struct f_##_f_##_opts *opts = to_f_##_f_##_opts(item);	\
 		int ret;						\
 									\
-<<<<<<< HEAD
 		if (opts->bound == false) {		\
 			pr_err("Gadget function do not bind yet.\n");	\
 			return -ENODEV;			\
 		}							\
 									\
-=======
->>>>>>> rebase
 		mutex_lock(&opts->lock);				\
 		if (opts->refcnt) {					\
 			mutex_unlock(&opts->lock);			\
@@ -83,14 +77,11 @@
 		struct f_##_f_##_opts *opts = to_f_##_f_##_opts(item);	\
 		int result;						\
 									\
-<<<<<<< HEAD
 		if (opts->bound == false) {		\
 			pr_err("Gadget function do not bind yet.\n");	\
 			return -ENODEV;			\
 		}							\
 									\
-=======
->>>>>>> rebase
 		mutex_lock(&opts->lock);				\
 		result = gether_get_host_addr(opts->net, page, PAGE_SIZE); \
 		mutex_unlock(&opts->lock);				\
@@ -104,14 +95,11 @@
 		struct f_##_f_##_opts *opts = to_f_##_f_##_opts(item);	\
 		int ret;						\
 									\
-<<<<<<< HEAD
 		if (opts->bound == false) {		\
 			pr_err("Gadget function do not bind yet.\n");	\
 			return -ENODEV;			\
 		}							\
 									\
-=======
->>>>>>> rebase
 		mutex_lock(&opts->lock);				\
 		if (opts->refcnt) {					\
 			mutex_unlock(&opts->lock);			\
@@ -134,14 +122,11 @@
 		struct f_##_f_##_opts *opts = to_f_##_f_##_opts(item);	\
 		unsigned qmult;						\
 									\
-<<<<<<< HEAD
 		if (opts->bound == false) {		\
 			pr_err("Gadget function do not bind yet.\n");	\
 			return -ENODEV;			\
 		}							\
 									\
-=======
->>>>>>> rebase
 		mutex_lock(&opts->lock);				\
 		qmult = gether_get_qmult(opts->net);			\
 		mutex_unlock(&opts->lock);				\
@@ -155,14 +140,11 @@
 		u8 val;							\
 		int ret;						\
 									\
-<<<<<<< HEAD
 		if (opts->bound == false) {		\
 			pr_err("Gadget function do not bind yet.\n");	\
 			return -ENODEV;			\
 		}							\
 									\
-=======
->>>>>>> rebase
 		mutex_lock(&opts->lock);				\
 		if (opts->refcnt) {					\
 			ret = -EBUSY;					\
@@ -189,14 +171,11 @@ out:									\
 		struct f_##_f_##_opts *opts = to_f_##_f_##_opts(item);	\
 		int ret;						\
 									\
-<<<<<<< HEAD
 		if (opts->bound == false) {		\
 			pr_err("Gadget function do not bind yet.\n");	\
 			return -ENODEV;			\
 		}							\
 									\
-=======
->>>>>>> rebase
 		mutex_lock(&opts->lock);				\
 		ret = gether_get_ifname(opts->net, page, PAGE_SIZE);	\
 		mutex_unlock(&opts->lock);				\
@@ -225,20 +204,12 @@ out:									\
 						size_t len)		\
 	{								\
 		struct f_##_f_##_opts *opts = to_f_##_f_##_opts(item);	\
-<<<<<<< HEAD
 		int ret;						\
 		u8 val;							\
 									\
 		mutex_lock(&opts->lock);				\
 		ret = sscanf(page, "%02hhx", &val);			\
 		if (ret > 0) {						\
-=======
-		int ret = -EINVAL;					\
-		u8 val;							\
-									\
-		mutex_lock(&opts->lock);				\
-		if (sscanf(page, "%02hhx", &val) > 0) {			\
->>>>>>> rebase
 			opts->_n_ = val;				\
 			ret = len;					\
 		}							\
@@ -249,7 +220,6 @@ out:									\
 									\
 	CONFIGFS_ATTR(_f_##_opts_, _n_)
 
-<<<<<<< HEAD
 #define USB_ETHER_CONFIGFS_ITEM_ATTR_UL_MAX_PKT_PER_XFER(_f_)		\
 	static ssize_t							\
 		_f_##_opts_ul_max_pkt_per_xfer_show(struct config_item *item,\
@@ -291,6 +261,4 @@ out:									\
 									\
 	CONFIGFS_ATTR(_f_##_opts_, ul_max_pkt_per_xfer)
 
-=======
->>>>>>> rebase
 #endif /* __U_ETHER_CONFIGFS_H */

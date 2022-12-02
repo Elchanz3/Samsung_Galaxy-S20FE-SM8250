@@ -39,11 +39,7 @@ struct acpi_gtdt_descriptor {
 
 static struct acpi_gtdt_descriptor acpi_gtdt_desc __initdata;
 
-<<<<<<< HEAD
 static inline void *next_platform_timer(void *platform_timer)
-=======
-static inline __init void *next_platform_timer(void *platform_timer)
->>>>>>> rebase
 {
 	struct acpi_gtdt_header *gh = platform_timer;
 
@@ -336,11 +332,7 @@ static int __init gtdt_import_sbsa_gwdt(struct acpi_gtdt_watchdog *wd,
 					int index)
 {
 	struct platform_device *pdev;
-<<<<<<< HEAD
 	int irq = map_gt_gsi(wd->timer_interrupt, wd->timer_flags);
-=======
-	int irq;
->>>>>>> rebase
 
 	/*
 	 * According to SBSA specification the size of refresh and control
@@ -349,11 +341,7 @@ static int __init gtdt_import_sbsa_gwdt(struct acpi_gtdt_watchdog *wd,
 	struct resource res[] = {
 		DEFINE_RES_MEM(wd->control_frame_address, SZ_4K),
 		DEFINE_RES_MEM(wd->refresh_frame_address, SZ_4K),
-<<<<<<< HEAD
 		DEFINE_RES_IRQ(irq),
-=======
-		{},
->>>>>>> rebase
 	};
 	int nr_res = ARRAY_SIZE(res);
 
@@ -363,18 +351,10 @@ static int __init gtdt_import_sbsa_gwdt(struct acpi_gtdt_watchdog *wd,
 
 	if (!(wd->refresh_frame_address && wd->control_frame_address)) {
 		pr_err(FW_BUG "failed to get the Watchdog base address.\n");
-<<<<<<< HEAD
 		acpi_unregister_gsi(wd->timer_interrupt);
 		return -EINVAL;
 	}
 
-=======
-		return -EINVAL;
-	}
-
-	irq = map_gt_gsi(wd->timer_interrupt, wd->timer_flags);
-	res[2] = (struct resource)DEFINE_RES_IRQ(irq);
->>>>>>> rebase
 	if (irq <= 0) {
 		pr_warn("failed to map the Watchdog interrupt.\n");
 		nr_res--;
@@ -387,12 +367,7 @@ static int __init gtdt_import_sbsa_gwdt(struct acpi_gtdt_watchdog *wd,
 	 */
 	pdev = platform_device_register_simple("sbsa-gwdt", index, res, nr_res);
 	if (IS_ERR(pdev)) {
-<<<<<<< HEAD
 		acpi_unregister_gsi(wd->timer_interrupt);
-=======
-		if (irq > 0)
-			acpi_unregister_gsi(wd->timer_interrupt);
->>>>>>> rebase
 		return PTR_ERR(pdev);
 	}
 

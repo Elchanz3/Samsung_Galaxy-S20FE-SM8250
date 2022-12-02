@@ -32,10 +32,6 @@ struct gsc_asic {
 	int version;
 	int type;
 	int eim;
-<<<<<<< HEAD
-=======
-	struct gsc_irq gsc_irq;
->>>>>>> rebase
 	int global_irq[32];
 };
 

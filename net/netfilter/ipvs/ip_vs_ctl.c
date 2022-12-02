@@ -1269,11 +1269,7 @@ ip_vs_add_service(struct netns_ipvs *ipvs, struct ip_vs_service_user_kern *u,
 	ip_vs_addr_copy(svc->af, &svc->addr, &u->addr);
 	svc->port = u->port;
 	svc->fwmark = u->fwmark;
-<<<<<<< HEAD
 	svc->flags = u->flags;
-=======
-	svc->flags = u->flags & ~IP_VS_SVC_F_HASHED;
->>>>>>> rebase
 	svc->timeout = u->timeout * HZ;
 	svc->netmask = u->netmask;
 	svc->ipvs = ipvs;
@@ -2397,13 +2393,6 @@ do_ip_vs_set_ctl(struct sock *sk, int cmd, void __user *user, unsigned int len)
 		/* Set timeout values for (tcp tcpfin udp) */
 		ret = ip_vs_set_timeout(ipvs, (struct ip_vs_timeout_user *)arg);
 		goto out_unlock;
-<<<<<<< HEAD
-=======
-	} else if (!len) {
-		/* No more commands with len == 0 below */
-		ret = -EINVAL;
-		goto out_unlock;
->>>>>>> rebase
 	}
 
 	usvc_compat = (struct ip_vs_service_user *)arg;
@@ -2480,12 +2469,9 @@ do_ip_vs_set_ctl(struct sock *sk, int cmd, void __user *user, unsigned int len)
 		break;
 	case IP_VS_SO_SET_DELDEST:
 		ret = ip_vs_del_dest(svc, &udest);
-<<<<<<< HEAD
 		break;
 	default:
 		ret = -EINVAL;
-=======
->>>>>>> rebase
 	}
 
   out_unlock:
@@ -3968,14 +3954,6 @@ static int __net_init ip_vs_control_net_init_sysctl(struct netns_ipvs *ipvs)
 	tbl[idx++].data = &ipvs->sysctl_conn_reuse_mode;
 	tbl[idx++].data = &ipvs->sysctl_schedule_icmp;
 	tbl[idx++].data = &ipvs->sysctl_ignore_tunneled;
-<<<<<<< HEAD
-=======
-#ifdef CONFIG_IP_VS_DEBUG
-	/* Global sysctls must be ro in non-init netns */
-	if (!net_eq(net, &init_net))
-		tbl[idx++].mode = 0444;
-#endif
->>>>>>> rebase
 
 	ipvs->sysctl_hdr = register_net_sysctl(net, "net/ipv4/vs", tbl);
 	if (ipvs->sysctl_hdr == NULL) {

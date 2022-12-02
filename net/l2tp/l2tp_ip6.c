@@ -24,11 +24,8 @@
 #include <net/icmp.h>
 #include <net/udp.h>
 #include <net/inet_common.h>
-<<<<<<< HEAD
 #include <net/inet_hashtables.h>
 #include <net/inet6_hashtables.h>
-=======
->>>>>>> rebase
 #include <net/tcp_states.h>
 #include <net/protocol.h>
 #include <net/xfrm.h>
@@ -229,41 +226,15 @@ discard:
 	return 0;
 }
 
-<<<<<<< HEAD
-=======
-static int l2tp_ip6_hash(struct sock *sk)
-{
-	if (sk_unhashed(sk)) {
-		write_lock_bh(&l2tp_ip6_lock);
-		sk_add_node(sk, &l2tp_ip6_table);
-		write_unlock_bh(&l2tp_ip6_lock);
-	}
-	return 0;
-}
-
-static void l2tp_ip6_unhash(struct sock *sk)
-{
-	if (sk_unhashed(sk))
-		return;
-	write_lock_bh(&l2tp_ip6_lock);
-	sk_del_node_init(sk);
-	write_unlock_bh(&l2tp_ip6_lock);
-}
-
->>>>>>> rebase
 static int l2tp_ip6_open(struct sock *sk)
 {
 	/* Prevent autobind. We don't have ports. */
 	inet_sk(sk)->inet_num = IPPROTO_L2TP;
 
-<<<<<<< HEAD
 	write_lock_bh(&l2tp_ip6_lock);
 	sk_add_node(sk, &l2tp_ip6_table);
 	write_unlock_bh(&l2tp_ip6_lock);
 
-=======
-	l2tp_ip6_hash(sk);
->>>>>>> rebase
 	return 0;
 }
 
@@ -534,24 +505,14 @@ static int l2tp_ip6_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
 	struct ipcm6_cookie ipc6;
 	int addr_len = msg->msg_namelen;
 	int transhdrlen = 4; /* zero session-id */
-<<<<<<< HEAD
 	int ulen = len + transhdrlen;
-=======
-	int ulen;
->>>>>>> rebase
 	int err;
 
 	/* Rough check on arithmetic overflow,
 	   better check is made in ip6_append_data().
 	 */
-<<<<<<< HEAD
 	if (len > INT_MAX)
 		return -EMSGSIZE;
-=======
-	if (len > INT_MAX - transhdrlen)
-		return -EMSGSIZE;
-	ulen = len + transhdrlen;
->>>>>>> rebase
 
 	/* Mirror BSD error message compatibility */
 	if (msg->msg_flags & MSG_OOB)
@@ -658,11 +619,7 @@ static int l2tp_ip6_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
 
 	fl6.flowlabel = ip6_make_flowinfo(ipc6.tclass, fl6.flowlabel);
 
-<<<<<<< HEAD
 	dst = ip6_dst_lookup_flow(sk, &fl6, final_p);
-=======
-	dst = ip6_dst_lookup_flow(sock_net(sk), sk, &fl6, final_p);
->>>>>>> rebase
 	if (IS_ERR(dst)) {
 		err = PTR_ERR(dst);
 		goto out;
@@ -775,13 +732,8 @@ static struct proto l2tp_ip6_prot = {
 	.sendmsg	   = l2tp_ip6_sendmsg,
 	.recvmsg	   = l2tp_ip6_recvmsg,
 	.backlog_rcv	   = l2tp_ip6_backlog_recv,
-<<<<<<< HEAD
 	.hash		   = inet6_hash,
 	.unhash		   = inet_unhash,
-=======
-	.hash		   = l2tp_ip6_hash,
-	.unhash		   = l2tp_ip6_unhash,
->>>>>>> rebase
 	.obj_size	   = sizeof(struct l2tp_ip6_sock),
 #ifdef CONFIG_COMPAT
 	.compat_setsockopt = compat_ipv6_setsockopt,

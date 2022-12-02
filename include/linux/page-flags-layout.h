@@ -82,7 +82,6 @@
 #define LAST_CPUPID_WIDTH 0
 #endif
 
-<<<<<<< HEAD
 #ifdef CONFIG_KASAN_SW_TAGS
 #define KASAN_TAG_WIDTH 8
 #if SECTIONS_WIDTH+NODES_WIDTH+ZONES_WIDTH+LAST_CPUPID_WIDTH+KASAN_TAG_WIDTH \
@@ -93,8 +92,6 @@
 #define KASAN_TAG_WIDTH 0
 #endif
 
-=======
->>>>>>> rebase
 /*
  * We are going to use the flags for the page to node mapping if its in
  * there.  This includes the case where there is no node, so it is implicit.

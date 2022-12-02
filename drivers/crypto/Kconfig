@@ -585,7 +585,6 @@ config CRYPTO_DEV_QCE
 	  hardware. To compile this driver as a module, choose M here. The
 	  module will be called qcrypto.
 
-<<<<<<< HEAD
 config CRYPTO_DEV_QCOM_MSM_QCE
 	tristate "QTI Crypto Engine (QCE) module"
 	depends on ARCH_QCOM
@@ -628,8 +627,6 @@ config CRYPTO_DEV_OTA_CRYPTO
 	  module will be called ota_crypto. Please select Y here
 	  to enable.
 
-=======
->>>>>>> rebase
 config CRYPTO_DEV_QCOM_RNG
 	tristate "Qualcomm Random Number Generator Driver"
 	depends on ARCH_QCOM || COMPILE_TEST

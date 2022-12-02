@@ -253,11 +253,7 @@ static void pmc_power_off(void)
 	pm1_cnt_port = acpi_base_addr + PM1_CNT;
 
 	pm1_cnt_value = inl(pm1_cnt_port);
-<<<<<<< HEAD
 	pm1_cnt_value &= SLEEP_TYPE_MASK;
-=======
-	pm1_cnt_value &= ~SLEEP_TYPE_MASK;
->>>>>>> rebase
 	pm1_cnt_value |= SLEEP_TYPE_S5;
 	pm1_cnt_value |= SLEEP_ENABLE;
 
@@ -419,22 +415,14 @@ static const struct dmi_system_id critclk_systems[] = {
 	},
 	{
 		/* pmc_plt_clk* - are used for ethernet controllers */
-<<<<<<< HEAD
 		.ident = "Beckhoff CB3163",
 		.matches = {
 			DMI_MATCH(DMI_SYS_VENDOR, "Beckhoff Automation"),
 			DMI_MATCH(DMI_BOARD_NAME, "CB3163"),
-=======
-		.ident = "Lex 2I385SW",
-		.matches = {
-			DMI_MATCH(DMI_SYS_VENDOR, "Lex BayTrail"),
-			DMI_MATCH(DMI_PRODUCT_NAME, "2I385SW"),
->>>>>>> rebase
 		},
 	},
 	{
 		/* pmc_plt_clk* - are used for ethernet controllers */
-<<<<<<< HEAD
 		.ident = "Beckhoff CB4063",
 		.matches = {
 			DMI_MATCH(DMI_SYS_VENDOR, "Beckhoff Automation"),
@@ -455,12 +443,6 @@ static const struct dmi_system_id critclk_systems[] = {
 		.matches = {
 			DMI_MATCH(DMI_SYS_VENDOR, "Beckhoff Automation"),
 			DMI_MATCH(DMI_BOARD_NAME, "CB6363"),
-=======
-		.ident = "Beckhoff Baytrail",
-		.matches = {
-			DMI_MATCH(DMI_SYS_VENDOR, "Beckhoff Automation"),
-			DMI_MATCH(DMI_PRODUCT_FAMILY, "CBxx63"),
->>>>>>> rebase
 		},
 	},
 	{

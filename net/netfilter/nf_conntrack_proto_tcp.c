@@ -362,13 +362,8 @@ static void tcp_options(const struct sk_buff *skb,
 				 length, buff);
 	BUG_ON(ptr == NULL);
 
-<<<<<<< HEAD
 	state->td_scale =
 	state->flags = 0;
-=======
-	state->td_scale = 0;
-	state->flags &= IP_CT_TCP_FLAG_BE_LIBERAL;
->>>>>>> rebase
 
 	while (length > 0) {
 		int opcode=*ptr++;
@@ -554,7 +549,6 @@ static bool tcp_in_window(const struct nf_conn *ct,
 			swin = win << sender->td_scale;
 			sender->td_maxwin = (swin == 0 ? 1 : swin);
 			sender->td_maxend = end + sender->td_maxwin;
-<<<<<<< HEAD
 			/*
 			 * We haven't seen traffic in the other direction yet
 			 * but we have to tweak window tracking to pass III
@@ -562,22 +556,6 @@ static bool tcp_in_window(const struct nf_conn *ct,
 			 */
 			if (receiver->td_maxwin == 0)
 				receiver->td_end = receiver->td_maxend = sack;
-=======
-			if (receiver->td_maxwin == 0) {
-				/* We haven't seen traffic in the other
-				 * direction yet but we have to tweak window
-				 * tracking to pass III and IV until that
-				 * happens.
-				 */
-				receiver->td_end = receiver->td_maxend = sack;
-			} else if (sack == receiver->td_end + 1) {
-				/* Likely a reply to a keepalive.
-				 * Needed for III.
-				 */
-				receiver->td_end++;
-			}
-
->>>>>>> rebase
 		}
 	} else if (((state->state == TCP_CONNTRACK_SYN_SENT
 		     && dir == IP_CT_DIR_ORIGINAL)
@@ -799,19 +777,6 @@ static bool nf_conntrack_tcp_established(const struct nf_conn *ct)
 	       test_bit(IPS_ASSURED_BIT, &ct->status);
 }
 
-<<<<<<< HEAD
-=======
-static void nf_ct_tcp_state_reset(struct ip_ct_tcp_state *state)
-{
-	state->td_end		= 0;
-	state->td_maxend	= 0;
-	state->td_maxwin	= 0;
-	state->td_maxack	= 0;
-	state->td_scale		= 0;
-	state->flags		&= IP_CT_TCP_FLAG_BE_LIBERAL;
-}
-
->>>>>>> rebase
 /* Returns verdict for packet, or -1 for invalid. */
 static int tcp_packet(struct nf_conn *ct,
 		      const struct sk_buff *skb,
@@ -910,12 +875,8 @@ static int tcp_packet(struct nf_conn *ct,
 			ct->proto.tcp.last_flags &= ~IP_CT_EXP_CHALLENGE_ACK;
 			ct->proto.tcp.seen[ct->proto.tcp.last_dir].flags =
 				ct->proto.tcp.last_flags;
-<<<<<<< HEAD
 			memset(&ct->proto.tcp.seen[dir], 0,
 			       sizeof(struct ip_ct_tcp_state));
-=======
-			nf_ct_tcp_state_reset(&ct->proto.tcp.seen[dir]);
->>>>>>> rebase
 			break;
 		}
 		ct->proto.tcp.last_index = index;

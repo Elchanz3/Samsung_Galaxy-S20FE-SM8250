@@ -201,10 +201,6 @@ struct nfs4_exception {
 	struct inode *inode;
 	nfs4_stateid *stateid;
 	long timeout;
-<<<<<<< HEAD
-=======
-	unsigned char task_is_privileged : 1;
->>>>>>> rebase
 	unsigned char delay : 1,
 		      recovering : 1,
 		      retry : 1;
@@ -279,12 +275,7 @@ struct vfsmount *nfs4_submount(struct nfs_server *, struct dentry *,
 			       struct nfs_fh *, struct nfs_fattr *);
 int nfs4_replace_transport(struct nfs_server *server,
 				const struct nfs4_fs_locations *locations);
-<<<<<<< HEAD
 
-=======
-size_t nfs_parse_server_name(char *string, size_t len, struct sockaddr *sa,
-			     size_t salen, struct net *net);
->>>>>>> rebase
 /* nfs4proc.c */
 extern int nfs4_handle_exception(struct nfs_server *, int, struct nfs4_exception *);
 extern int nfs4_async_handle_error(struct rpc_task *task,

@@ -309,16 +309,10 @@ static int icmpv6_getfrag(void *from, char *to, int offset, int len, int odd, st
 }
 
 #if IS_ENABLED(CONFIG_IPV6_MIP6)
-<<<<<<< HEAD
 static void mip6_addr_swap(struct sk_buff *skb)
 {
 	struct ipv6hdr *iph = ipv6_hdr(skb);
 	struct inet6_skb_parm *opt = IP6CB(skb);
-=======
-static void mip6_addr_swap(struct sk_buff *skb, const struct inet6_skb_parm *opt)
-{
-	struct ipv6hdr *iph = ipv6_hdr(skb);
->>>>>>> rebase
 	struct ipv6_destopt_hao *hao;
 	struct in6_addr tmp;
 	int off;
@@ -335,11 +329,7 @@ static void mip6_addr_swap(struct sk_buff *skb, const struct inet6_skb_parm *opt
 	}
 }
 #else
-<<<<<<< HEAD
 static inline void mip6_addr_swap(struct sk_buff *skb) {}
-=======
-static inline void mip6_addr_swap(struct sk_buff *skb, const struct inet6_skb_parm *opt) {}
->>>>>>> rebase
 #endif
 
 static struct dst_entry *icmpv6_route_lookup(struct net *net,
@@ -428,14 +418,8 @@ static int icmp6_iif(const struct sk_buff *skb)
 /*
  *	Send an ICMP message in response to a packet in error
  */
-<<<<<<< HEAD
 static void icmp6_send(struct sk_buff *skb, u8 type, u8 code, __u32 info,
 		       const struct in6_addr *force_saddr)
-=======
-void icmp6_send(struct sk_buff *skb, u8 type, u8 code, __u32 info,
-		const struct in6_addr *force_saddr,
-		const struct inet6_skb_parm *parm)
->>>>>>> rebase
 {
 	struct inet6_dev *idev = NULL;
 	struct ipv6hdr *hdr = ipv6_hdr(skb);
@@ -528,11 +512,7 @@ void icmp6_send(struct sk_buff *skb, u8 type, u8 code, __u32 info,
 	if (!(skb->dev->flags&IFF_LOOPBACK) && !icmpv6_global_allow(type))
 		goto out_bh_enable;
 
-<<<<<<< HEAD
 	mip6_addr_swap(skb);
-=======
-	mip6_addr_swap(skb, parm);
->>>>>>> rebase
 
 	memset(&fl6, 0, sizeof(fl6));
 	fl6.flowi6_proto = IPPROTO_ICMPV6;
@@ -612,20 +592,12 @@ out:
 out_bh_enable:
 	local_bh_enable();
 }
-<<<<<<< HEAD
-=======
-EXPORT_SYMBOL(icmp6_send);
->>>>>>> rebase
 
 /* Slightly more convenient version of icmp6_send.
  */
 void icmpv6_param_prob(struct sk_buff *skb, u8 code, int pos)
 {
-<<<<<<< HEAD
 	icmp6_send(skb, ICMPV6_PARAMPROB, code, pos, NULL);
-=======
-	icmp6_send(skb, ICMPV6_PARAMPROB, code, pos, NULL, IP6CB(skb));
->>>>>>> rebase
 	kfree_skb(skb);
 }
 
@@ -682,17 +654,10 @@ int ip6_err_gen_icmpv6_unreach(struct sk_buff *skb, int nhs, int type,
 	}
 	if (type == ICMP_TIME_EXCEEDED)
 		icmp6_send(skb2, ICMPV6_TIME_EXCEED, ICMPV6_EXC_HOPLIMIT,
-<<<<<<< HEAD
 			   info, &temp_saddr);
 	else
 		icmp6_send(skb2, ICMPV6_DEST_UNREACH, ICMPV6_ADDR_UNREACH,
 			   info, &temp_saddr);
-=======
-			   info, &temp_saddr, IP6CB(skb2));
-	else
-		icmp6_send(skb2, ICMPV6_DEST_UNREACH, ICMPV6_ADDR_UNREACH,
-			   info, &temp_saddr, IP6CB(skb2));
->>>>>>> rebase
 	if (rt)
 		ip6_rt_put(rt);
 

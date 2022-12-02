@@ -1250,11 +1250,7 @@ static void set_feature(struct r8a66597 *r8a66597, struct usb_ctrlrequest *ctrl)
 			do {
 				tmp = r8a66597_read(r8a66597, INTSTS0) & CTSQ;
 				udelay(1);
-<<<<<<< HEAD
 			} while (tmp != CS_IDST || timeout-- > 0);
-=======
-			} while (tmp != CS_IDST && timeout-- > 0);
->>>>>>> rebase
 
 			if (tmp == CS_IDST)
 				r8a66597_bset(r8a66597,
@@ -1856,11 +1852,6 @@ static int r8a66597_probe(struct platform_device *pdev)
 		return PTR_ERR(reg);
 
 	ires = platform_get_resource(pdev, IORESOURCE_IRQ, 0);
-<<<<<<< HEAD
-=======
-	if (!ires)
-		return -EINVAL;
->>>>>>> rebase
 	irq = ires->start;
 	irq_trigger = ires->flags & IRQF_TRIGGER_MASK;
 

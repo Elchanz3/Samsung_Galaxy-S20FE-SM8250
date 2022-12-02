@@ -74,11 +74,6 @@ extern void show_regs(struct pt_regs *);
 	((struct pt_regs *)((unsigned long)current_thread_info() + THREAD_SIZE)\
 		- 1)
 
-<<<<<<< HEAD
-=======
-#define force_successful_syscall_return() (current_pt_regs()->orig_r2 = -1)
-
->>>>>>> rebase
 int do_syscall_trace_enter(void);
 void do_syscall_trace_exit(void);
 #endif /* __ASSEMBLY__ */

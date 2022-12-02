@@ -36,10 +36,7 @@
 #include <linux/kallsyms.h>
 #include <linux/proc_fs.h>
 #include <linux/export.h>
-<<<<<<< HEAD
 #include <linux/cpumask.h>
-=======
->>>>>>> rebase
 
 #include <asm/hardware/cache-l2x0.h>
 #include <asm/hardware/cache-uniphier.h>

@@ -125,28 +125,19 @@
  * @type:       integer (intval)
  * @value:      0 (USB/USB2) or 1 (USB3)
  * @default:    0 (USB/USB2)
-<<<<<<< HEAD
  * - EXTCON_PROP_USB_TYPEC_MED_HIGH_CURRENT
  * @type:       integer (intval)
  * @value:      0 (default current), 1 (medium or high current)
  * @default:    0 (default current)
-=======
->>>>>>> rebase
  *
  */
 #define EXTCON_PROP_USB_VBUS		0
 #define EXTCON_PROP_USB_TYPEC_POLARITY	1
 #define EXTCON_PROP_USB_SS		2
-<<<<<<< HEAD
 #define EXTCON_PROP_USB_TYPEC_MED_HIGH_CURRENT	3
 
 #define EXTCON_PROP_USB_MIN		0
 #define EXTCON_PROP_USB_MAX		3
-=======
-
-#define EXTCON_PROP_USB_MIN		0
-#define EXTCON_PROP_USB_MAX		2
->>>>>>> rebase
 #define EXTCON_PROP_USB_CNT	(EXTCON_PROP_USB_MAX - EXTCON_PROP_USB_MIN + 1)
 
 /* Properties of EXTCON_TYPE_CHG. */
@@ -210,7 +201,6 @@ extern int extcon_get_property_capability(struct extcon_dev *edev,
 				unsigned int id, unsigned int prop);
 
 /*
-<<<<<<< HEAD
  * Following APIs set array of mutually exclusive.
  * The 'exclusive' argument indicates the array of mutually exclusive set
  * of cables that cannot be attached simultaneously.
@@ -219,8 +209,6 @@ extern int extcon_set_mutually_exclusive(struct extcon_dev *edev,
 				const u32 *exclusive);
 
 /*
-=======
->>>>>>> rebase
  * Following APIs register the notifier block in order to detect
  * the change of both state and property value for each external connector.
  *
@@ -233,13 +221,10 @@ extern int extcon_register_notifier(struct extcon_dev *edev, unsigned int id,
 				struct notifier_block *nb);
 extern int extcon_unregister_notifier(struct extcon_dev *edev, unsigned int id,
 				struct notifier_block *nb);
-<<<<<<< HEAD
 extern int extcon_register_blocking_notifier(struct extcon_dev *edev,
 		unsigned int id, struct notifier_block *nb);
 extern int extcon_unregister_blocking_notifier(struct extcon_dev *edev,
 		unsigned int id, struct notifier_block *nb);
-=======
->>>>>>> rebase
 extern int devm_extcon_register_notifier(struct device *dev,
 				struct extcon_dev *edev, unsigned int id,
 				struct notifier_block *nb);
@@ -269,11 +254,8 @@ extern struct extcon_dev *extcon_get_edev_by_phandle(struct device *dev,
 /* Following API get the name of extcon device. */
 extern const char *extcon_get_edev_name(struct extcon_dev *edev);
 
-<<<<<<< HEAD
 extern int extcon_blocking_sync(struct extcon_dev *edev, unsigned int id,
 							u8 val);
-=======
->>>>>>> rebase
 #else /* CONFIG_EXTCON */
 static inline int extcon_get_state(struct extcon_dev *edev, unsigned int id)
 {
@@ -305,7 +287,6 @@ static inline int extcon_unregister_notifier(struct extcon_dev *edev,
 	return 0;
 }
 
-<<<<<<< HEAD
 static inline int extcon_register_blocking_notifier(struct extcon_dev *edev,
 					unsigned int id,
 					struct notifier_block *nb)
@@ -320,8 +301,6 @@ static inline int extcon_unregister_blocking_notifier(struct extcon_dev *edev,
 	return 0;
 }
 
-=======
->>>>>>> rebase
 static inline int devm_extcon_register_notifier(struct device *dev,
 				struct extcon_dev *edev, unsigned int id,
 				struct notifier_block *nb)
@@ -333,32 +312,6 @@ static inline  void devm_extcon_unregister_notifier(struct device *dev,
 				struct extcon_dev *edev, unsigned int id,
 				struct notifier_block *nb) { }
 
-<<<<<<< HEAD
-=======
-static inline int extcon_register_notifier_all(struct extcon_dev *edev,
-					       struct notifier_block *nb)
-{
-	return 0;
-}
-
-static inline int extcon_unregister_notifier_all(struct extcon_dev *edev,
-						 struct notifier_block *nb)
-{
-	return 0;
-}
-
-static inline int devm_extcon_register_notifier_all(struct device *dev,
-						    struct extcon_dev *edev,
-						    struct notifier_block *nb)
-{
-	return 0;
-}
-
-static inline void devm_extcon_unregister_notifier_all(struct device *dev,
-						       struct extcon_dev *edev,
-						       struct notifier_block *nb) { }
-
->>>>>>> rebase
 static inline struct extcon_dev *extcon_get_extcon_dev(const char *extcon_name)
 {
 	return ERR_PTR(-ENODEV);

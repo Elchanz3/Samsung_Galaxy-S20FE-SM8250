@@ -9,10 +9,7 @@
 #include <linux/types.h>
 #include <linux/file.h>
 #include <linux/fs.h>
-<<<<<<< HEAD
 #include <linux/hashtable.h>
-=======
->>>>>>> rebase
 #include <linux/init.h>
 #include <linux/mm.h>
 #include <linux/preempt.h>
@@ -24,17 +21,12 @@
 #include <linux/debugfs.h>
 #include <linux/uaccess.h>
 #include <linux/kcov.h>
-<<<<<<< HEAD
 #include <linux/refcount.h>
 #include <linux/log2.h>
 #include <asm/setup.h>
 
 #define kcov_debug(fmt, ...) pr_debug("%s: " fmt, __func__, ##__VA_ARGS__)
 
-=======
-#include <asm/setup.h>
-
->>>>>>> rebase
 /* Number of 64-bit words written per one comparison: */
 #define KCOV_WORDS_PER_CMP 4
 
@@ -56,7 +48,6 @@ struct kcov {
 	 * Reference counter. We keep one for:
 	 *  - opened file descriptor
 	 *  - task with enabled coverage (we can't unwire it from another task)
-<<<<<<< HEAD
 	 *  - each code section for remote coverage collection
 	 */
 	refcount_t		refcount;
@@ -65,20 +56,10 @@ struct kcov {
 	enum kcov_mode		mode;
 	/* Size of arena (in long's). */
 	unsigned int		size;
-=======
-	 */
-	atomic_t		refcount;
-	/* The lock protects mode, size, area and t. */
-	spinlock_t		lock;
-	enum kcov_mode		mode;
-	/* Size of arena (in long's for KCOV_MODE_TRACE). */
-	unsigned		size;
->>>>>>> rebase
 	/* Coverage buffer shared with user space. */
 	void			*area;
 	/* Task for which we collect coverage, or NULL. */
 	struct task_struct	*t;
-<<<<<<< HEAD
 	/* Collecting coverage from remote (background) threads. */
 	bool			remote;
 	/* Size of remote area (in long's). */
@@ -161,10 +142,6 @@ static void kcov_remote_area_put(struct kcov_remote_area *area,
 	list_add(&area->list, &kcov_remote_areas);
 }
 
-=======
-};
-
->>>>>>> rebase
 static notrace bool check_kcov_mode(enum kcov_mode needed_mode, struct task_struct *t)
 {
 	unsigned int mode;
@@ -181,11 +158,7 @@ static notrace bool check_kcov_mode(enum kcov_mode needed_mode, struct task_stru
 	 * in_interrupt() returns false (e.g. preempt_schedule_irq()).
 	 * READ_ONCE()/barrier() effectively provides load-acquire wrt
 	 * interrupts, there are paired barrier()/WRITE_ONCE() in
-<<<<<<< HEAD
 	 * kcov_start().
-=======
-	 * kcov_ioctl_locked().
->>>>>>> rebase
 	 */
 	barrier();
 	return mode == needed_mode;
@@ -339,7 +312,6 @@ void notrace __sanitizer_cov_trace_switch(u64 val, u64 *cases)
 EXPORT_SYMBOL(__sanitizer_cov_trace_switch);
 #endif /* ifdef CONFIG_KCOV_ENABLE_COMPARISONS */
 
-<<<<<<< HEAD
 static void kcov_start(struct task_struct *t, unsigned int size,
 			void *area, enum kcov_mode mode, int sequence)
 {
@@ -354,28 +326,11 @@ static void kcov_start(struct task_struct *t, unsigned int size,
 }
 
 static void kcov_stop(struct task_struct *t)
-=======
-static void kcov_get(struct kcov *kcov)
-{
-	atomic_inc(&kcov->refcount);
-}
-
-static void kcov_put(struct kcov *kcov)
-{
-	if (atomic_dec_and_test(&kcov->refcount)) {
-		vfree(kcov->area);
-		kfree(kcov);
-	}
-}
-
-void kcov_task_init(struct task_struct *t)
->>>>>>> rebase
 {
 	WRITE_ONCE(t->kcov_mode, KCOV_MODE_DISABLED);
 	barrier();
 	t->kcov_size = 0;
 	t->kcov_area = NULL;
-<<<<<<< HEAD
 }
 
 static void kcov_task_reset(struct task_struct *t)
@@ -441,9 +396,6 @@ static void kcov_put(struct kcov *kcov)
 		vfree(kcov->area);
 		kfree(kcov);
 	}
-=======
-	t->kcov = NULL;
->>>>>>> rebase
 }
 
 void kcov_task_exit(struct task_struct *t)
@@ -453,7 +405,6 @@ void kcov_task_exit(struct task_struct *t)
 	kcov = t->kcov;
 	if (kcov == NULL)
 		return;
-<<<<<<< HEAD
 
 	spin_lock(&kcov->lock);
 	kcov_debug("t = %px, kcov->t = %px\n", t, kcov->t);
@@ -478,21 +429,12 @@ void kcov_task_exit(struct task_struct *t)
 	 *
 	 * By combining all three checks into one we get:
 	 */
-=======
-	spin_lock(&kcov->lock);
->>>>>>> rebase
 	if (WARN_ON(kcov->t != t)) {
 		spin_unlock(&kcov->lock);
 		return;
 	}
 	/* Just to not leave dangling references behind. */
-<<<<<<< HEAD
 	kcov_disable(t, kcov);
-=======
-	kcov_task_init(t);
-	kcov->t = NULL;
-	kcov->mode = KCOV_MODE_INIT;
->>>>>>> rebase
 	spin_unlock(&kcov->lock);
 	kcov_put(kcov);
 }
@@ -541,12 +483,8 @@ static int kcov_open(struct inode *inode, struct file *filep)
 	if (!kcov)
 		return -ENOMEM;
 	kcov->mode = KCOV_MODE_DISABLED;
-<<<<<<< HEAD
 	kcov->sequence = 1;
 	refcount_set(&kcov->refcount, 1);
-=======
-	atomic_set(&kcov->refcount, 1);
->>>>>>> rebase
 	spin_lock_init(&kcov->lock);
 	filep->private_data = kcov;
 	return nonseekable_open(inode, filep);
@@ -558,7 +496,6 @@ static int kcov_close(struct inode *inode, struct file *filep)
 	return 0;
 }
 
-<<<<<<< HEAD
 static int kcov_get_mode(unsigned long arg)
 {
 	if (arg == KCOV_TRACE_PC)
@@ -573,8 +510,6 @@ static int kcov_get_mode(unsigned long arg)
 		return -EINVAL;
 }
 
-=======
->>>>>>> rebase
 /*
  * Fault in a lazily-faulted vmalloc area before it can be used by
  * __santizer_cov_trace_pc(), to avoid recursion issues if any code on the
@@ -590,7 +525,6 @@ static void kcov_fault_in_area(struct kcov *kcov)
 		READ_ONCE(area[offset]);
 }
 
-<<<<<<< HEAD
 static inline bool kcov_check_handle(u64 handle, bool common_valid,
 				bool uncommon_valid, bool zero_valid)
 {
@@ -608,14 +542,11 @@ static inline bool kcov_check_handle(u64 handle, bool common_valid,
 	return false;
 }
 
-=======
->>>>>>> rebase
 static int kcov_ioctl_locked(struct kcov *kcov, unsigned int cmd,
 			     unsigned long arg)
 {
 	struct task_struct *t;
 	unsigned long size, unused;
-<<<<<<< HEAD
 	int mode, i;
 	struct kcov_remote_arg *remote_arg;
 	struct kcov_remote *remote;
@@ -623,11 +554,6 @@ static int kcov_ioctl_locked(struct kcov *kcov, unsigned int cmd,
 	switch (cmd) {
 	case KCOV_INIT_TRACE:
 		kcov_debug("KCOV_INIT_TRACE\n");
-=======
-
-	switch (cmd) {
-	case KCOV_INIT_TRACE:
->>>>>>> rebase
 		/*
 		 * Enable kcov in trace mode and setup buffer size.
 		 * Must happen before anything else.
@@ -646,10 +572,7 @@ static int kcov_ioctl_locked(struct kcov *kcov, unsigned int cmd,
 		kcov->mode = KCOV_MODE_INIT;
 		return 0;
 	case KCOV_ENABLE:
-<<<<<<< HEAD
 		kcov_debug("KCOV_ENABLE\n");
-=======
->>>>>>> rebase
 		/*
 		 * Enable coverage for the current task.
 		 * At this point user must have been enabled trace mode,
@@ -662,7 +585,6 @@ static int kcov_ioctl_locked(struct kcov *kcov, unsigned int cmd,
 		t = current;
 		if (kcov->t != NULL || t->kcov != NULL)
 			return -EBUSY;
-<<<<<<< HEAD
 		mode = kcov_get_mode(arg);
 		if (mode < 0)
 			return mode;
@@ -677,31 +599,6 @@ static int kcov_ioctl_locked(struct kcov *kcov, unsigned int cmd,
 		return 0;
 	case KCOV_DISABLE:
 		kcov_debug("KCOV_DISABLE\n");
-=======
-		if (arg == KCOV_TRACE_PC)
-			kcov->mode = KCOV_MODE_TRACE_PC;
-		else if (arg == KCOV_TRACE_CMP)
-#ifdef CONFIG_KCOV_ENABLE_COMPARISONS
-			kcov->mode = KCOV_MODE_TRACE_CMP;
-#else
-		return -ENOTSUPP;
-#endif
-		else
-			return -EINVAL;
-		kcov_fault_in_area(kcov);
-		/* Cache in task struct for performance. */
-		t->kcov_size = kcov->size;
-		t->kcov_area = kcov->area;
-		/* See comment in check_kcov_mode(). */
-		barrier();
-		WRITE_ONCE(t->kcov_mode, kcov->mode);
-		t->kcov = kcov;
-		kcov->t = t;
-		/* This is put either in kcov_task_exit() or in KCOV_DISABLE. */
-		kcov_get(kcov);
-		return 0;
-	case KCOV_DISABLE:
->>>>>>> rebase
 		/* Disable coverage for the current task. */
 		unused = arg;
 		if (unused != 0 || current->kcov != kcov)
@@ -709,7 +606,6 @@ static int kcov_ioctl_locked(struct kcov *kcov, unsigned int cmd,
 		t = current;
 		if (WARN_ON(kcov->t != t))
 			return -EINVAL;
-<<<<<<< HEAD
 		kcov_disable(t, kcov);
 		kcov_put(kcov);
 		return 0;
@@ -769,13 +665,6 @@ static int kcov_ioctl_locked(struct kcov *kcov, unsigned int cmd,
 		/* Put either in kcov_task_exit() or in KCOV_DISABLE. */
 		kcov_get(kcov);
 		return 0;
-=======
-		kcov_task_init(t);
-		kcov->t = NULL;
-		kcov->mode = KCOV_MODE_INIT;
-		kcov_put(kcov);
-		return 0;
->>>>>>> rebase
 	default:
 		return -ENOTTY;
 	}
@@ -785,7 +674,6 @@ static long kcov_ioctl(struct file *filep, unsigned int cmd, unsigned long arg)
 {
 	struct kcov *kcov;
 	int res;
-<<<<<<< HEAD
 	struct kcov_remote_arg *remote_arg = NULL;
 	unsigned int remote_num_handles;
 	unsigned long remote_arg_size;
@@ -807,19 +695,14 @@ static long kcov_ioctl(struct file *filep, unsigned int cmd, unsigned long arg)
 		}
 		arg = (unsigned long)remote_arg;
 	}
-=======
->>>>>>> rebase
 
 	kcov = filep->private_data;
 	spin_lock(&kcov->lock);
 	res = kcov_ioctl_locked(kcov, cmd, arg);
 	spin_unlock(&kcov->lock);
-<<<<<<< HEAD
 
 	kfree(remote_arg);
 
-=======
->>>>>>> rebase
 	return res;
 }
 
@@ -831,7 +714,6 @@ static const struct file_operations kcov_fops = {
 	.release        = kcov_close,
 };
 
-<<<<<<< HEAD
 /*
  * kcov_remote_start() and kcov_remote_stop() can be used to annotate a section
  * of code in a kernel background thread to allow kcov to be used to collect
@@ -1033,8 +915,6 @@ u64 kcov_common_handle(void)
 }
 EXPORT_SYMBOL(kcov_common_handle);
 
-=======
->>>>>>> rebase
 static int __init kcov_init(void)
 {
 	/*
@@ -1042,15 +922,8 @@ static int __init kcov_init(void)
 	 * there is no need to protect it against removal races. The
 	 * use of debugfs_create_file_unsafe() is actually safe here.
 	 */
-<<<<<<< HEAD
 	debugfs_create_file_unsafe("kcov", 0600, NULL, NULL, &kcov_fops);
 
-=======
-	if (!debugfs_create_file_unsafe("kcov", 0600, NULL, NULL, &kcov_fops)) {
-		pr_err("failed to create kcov in debugfs\n");
-		return -ENOMEM;
-	}
->>>>>>> rebase
 	return 0;
 }
 

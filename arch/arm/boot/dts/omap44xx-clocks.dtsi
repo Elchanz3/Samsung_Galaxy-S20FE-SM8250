@@ -773,7 +773,6 @@
 		ti,max-div = <2>;
 	};
 
-<<<<<<< HEAD
 	sha2md5_fck: sha2md5_fck@15c8 {
 		#clock-cells = <0>;
 		compatible = "ti,gate-clock";
@@ -782,8 +781,6 @@
 		reg = <0x15c8>;
 	};
 
-=======
->>>>>>> rebase
 	usb_phy_cm_clk32k: usb_phy_cm_clk32k@640 {
 		#clock-cells = <0>;
 		compatible = "ti,gate-clock";

@@ -52,22 +52,12 @@ enum l1d_flush_type {
 };
 
 void setup_rfi_flush(enum l1d_flush_type, bool enable);
-<<<<<<< HEAD
-=======
-void setup_entry_flush(bool enable);
-void setup_uaccess_flush(bool enable);
->>>>>>> rebase
 void do_rfi_flush_fixups(enum l1d_flush_type types);
 #ifdef CONFIG_PPC_BARRIER_NOSPEC
 void setup_barrier_nospec(void);
 #else
 static inline void setup_barrier_nospec(void) { };
 #endif
-<<<<<<< HEAD
-=======
-void do_uaccess_flush_fixups(enum l1d_flush_type types);
-void do_entry_flush_fixups(enum l1d_flush_type types);
->>>>>>> rebase
 void do_barrier_nospec_fixups(bool enable);
 extern bool barrier_nospec_enabled;
 

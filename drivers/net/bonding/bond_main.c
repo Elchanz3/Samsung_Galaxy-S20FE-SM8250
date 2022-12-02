@@ -782,23 +782,14 @@ static bool bond_should_notify_peers(struct bonding *bond)
 	slave = rcu_dereference(bond->curr_active_slave);
 	rcu_read_unlock();
 
-<<<<<<< HEAD
 	netdev_dbg(bond->dev, "bond_should_notify_peers: slave %s\n",
 		   slave ? slave->dev->name : "NULL");
 
-=======
->>>>>>> rebase
 	if (!slave || !bond->send_peer_notif ||
 	    !netif_carrier_ok(bond->dev) ||
 	    test_bit(__LINK_STATE_LINKWATCH_PENDING, &slave->dev->state))
 		return false;
 
-<<<<<<< HEAD
-=======
-	netdev_dbg(bond->dev, "bond_should_notify_peers: slave %s\n",
-		   slave ? slave->dev->name : "NULL");
-
->>>>>>> rebase
 	return true;
 }
 
@@ -1132,10 +1123,6 @@ static void bond_setup_by_slave(struct net_device *bond_dev,
 
 	bond_dev->type		    = slave_dev->type;
 	bond_dev->hard_header_len   = slave_dev->hard_header_len;
-<<<<<<< HEAD
-=======
-	bond_dev->needed_headroom   = slave_dev->needed_headroom;
->>>>>>> rebase
 	bond_dev->addr_len	    = slave_dev->addr_len;
 
 	memcpy(bond_dev->broadcast, slave_dev->broadcast,
@@ -1280,7 +1267,6 @@ static void bond_upper_dev_unlink(struct bonding *bond, struct slave *slave)
 	slave->dev->flags &= ~IFF_SLAVE;
 }
 
-<<<<<<< HEAD
 static struct slave *bond_alloc_slave(struct bonding *bond)
 {
 	struct slave *slave = NULL;
@@ -1304,11 +1290,6 @@ static struct slave *bond_alloc_slave(struct bonding *bond)
 
 static void bond_free_slave(struct slave *slave)
 {
-=======
-static void slave_kobj_release(struct kobject *kobj)
-{
-	struct slave *slave = to_slave(kobj);
->>>>>>> rebase
 	struct bonding *bond = bond_get_bond_by_slave(slave);
 
 	cancel_delayed_work_sync(&slave->notify_work);
@@ -1318,56 +1299,6 @@ static void slave_kobj_release(struct kobject *kobj)
 	kfree(slave);
 }
 
-<<<<<<< HEAD
-=======
-static struct kobj_type slave_ktype = {
-	.release = slave_kobj_release,
-#ifdef CONFIG_SYSFS
-	.sysfs_ops = &slave_sysfs_ops,
-#endif
-};
-
-static int bond_kobj_init(struct slave *slave)
-{
-	int err;
-
-	err = kobject_init_and_add(&slave->kobj, &slave_ktype,
-				   &(slave->dev->dev.kobj), "bonding_slave");
-	if (err)
-		kobject_put(&slave->kobj);
-
-	return err;
-}
-
-static struct slave *bond_alloc_slave(struct bonding *bond,
-				      struct net_device *slave_dev)
-{
-	struct slave *slave = NULL;
-
-	slave = kzalloc(sizeof(*slave), GFP_KERNEL);
-	if (!slave)
-		return NULL;
-
-	slave->bond = bond;
-	slave->dev = slave_dev;
-	INIT_DELAYED_WORK(&slave->notify_work, bond_netdev_notify_work);
-
-	if (bond_kobj_init(slave))
-		return NULL;
-
-	if (BOND_MODE(bond) == BOND_MODE_8023AD) {
-		SLAVE_AD_INFO(slave) = kzalloc(sizeof(struct ad_slave_info),
-					       GFP_KERNEL);
-		if (!SLAVE_AD_INFO(slave)) {
-			kobject_put(&slave->kobj);
-			return NULL;
-		}
-	}
-
-	return slave;
-}
-
->>>>>>> rebase
 static void bond_fill_ifbond(struct bonding *bond, struct ifbond *info)
 {
 	info->bond_mode = BOND_MODE(bond);
@@ -1555,21 +1486,14 @@ int bond_enslave(struct net_device *bond_dev, struct net_device *slave_dev,
 	    bond->dev->addr_assign_type == NET_ADDR_RANDOM)
 		bond_set_dev_addr(bond->dev, slave_dev);
 
-<<<<<<< HEAD
 	new_slave = bond_alloc_slave(bond);
-=======
-	new_slave = bond_alloc_slave(bond, slave_dev);
->>>>>>> rebase
 	if (!new_slave) {
 		res = -ENOMEM;
 		goto err_undo_flags;
 	}
 
-<<<<<<< HEAD
 	new_slave->bond = bond;
 	new_slave->dev = slave_dev;
-=======
->>>>>>> rebase
 	/* Set the new_slave's queue_id to be zero.  Queue ID mapping
 	 * is set via sysfs or module option if desired.
 	 */
@@ -1896,11 +1820,7 @@ err_restore_mtu:
 	dev_set_mtu(slave_dev, new_slave->original_mtu);
 
 err_free:
-<<<<<<< HEAD
 	bond_free_slave(new_slave);
-=======
-	kobject_put(&new_slave->kobj);
->>>>>>> rebase
 
 err_undo_flags:
 	/* Enslave of first slave has failed and we need to fix master's mac */
@@ -1966,10 +1886,7 @@ static int __bond_release_one(struct net_device *bond_dev,
 	/* recompute stats just before removing the slave */
 	bond_get_stats(bond->dev, &bond->bond_stats);
 
-<<<<<<< HEAD
 	bond_upper_dev_unlink(bond, slave);
-=======
->>>>>>> rebase
 	/* unregister rx_handler early so bond_handle_frame wouldn't be called
 	 * for this slave anymore.
 	 */
@@ -1978,11 +1895,6 @@ static int __bond_release_one(struct net_device *bond_dev,
 	if (BOND_MODE(bond) == BOND_MODE_8023AD)
 		bond_3ad_unbind_slave(slave);
 
-<<<<<<< HEAD
-=======
-	bond_upper_dev_unlink(bond, slave);
-
->>>>>>> rebase
 	if (bond_mode_can_use_xmit_hash(bond))
 		bond_update_slave_arr(bond, slave);
 
@@ -2096,11 +2008,7 @@ static int __bond_release_one(struct net_device *bond_dev,
 	if (!netif_is_bond_master(slave_dev))
 		slave_dev->priv_flags &= ~IFF_BONDING;
 
-<<<<<<< HEAD
 	bond_free_slave(slave);
-=======
-	kobject_put(&slave->kobj);
->>>>>>> rebase
 
 	return 0;
 }
@@ -2121,12 +2029,7 @@ static int  bond_release_and_destroy(struct net_device *bond_dev,
 	int ret;
 
 	ret = __bond_release_one(bond_dev, slave_dev, false, true);
-<<<<<<< HEAD
 	if (ret == 0 && !bond_has_slaves(bond)) {
-=======
-	if (ret == 0 && !bond_has_slaves(bond) &&
-	    bond_dev->reg_state != NETREG_UNREGISTERING) {
->>>>>>> rebase
 		bond_dev->priv_flags |= IFF_DISABLE_NETPOLL;
 		netdev_info(bond_dev, "Destroying bond %s\n",
 			    bond_dev->name);
@@ -2869,12 +2772,6 @@ static int bond_ab_arp_inspect(struct bonding *bond)
 			if (bond_time_in_interval(bond, last_rx, 1)) {
 				bond_propose_link_state(slave, BOND_LINK_UP);
 				commit++;
-<<<<<<< HEAD
-=======
-			} else if (slave->link == BOND_LINK_BACK) {
-				bond_propose_link_state(slave, BOND_LINK_FAIL);
-				commit++;
->>>>>>> rebase
 			}
 			continue;
 		}
@@ -2985,22 +2882,6 @@ static void bond_ab_arp_commit(struct bonding *bond)
 
 			continue;
 
-<<<<<<< HEAD
-=======
-		case BOND_LINK_FAIL:
-			bond_set_slave_link_state(slave, BOND_LINK_FAIL,
-						  BOND_SLAVE_NOTIFY_NOW);
-			bond_set_slave_inactive_flags(slave,
-						      BOND_SLAVE_NOTIFY_NOW);
-
-			/* A slave has just been enslaved and has become
-			 * the current active slave.
-			 */
-			if (rtnl_dereference(bond->curr_active_slave))
-				RCU_INIT_POINTER(bond->current_arp_slave, NULL);
-			continue;
-
->>>>>>> rebase
 		default:
 			netdev_err(bond->dev, "impossible: new_link %d on slave %s\n",
 				   slave->link_new_state, slave->dev->name);
@@ -3050,11 +2931,8 @@ static bool bond_ab_arp_probe(struct bonding *bond)
 			return should_notify_rtnl;
 	}
 
-<<<<<<< HEAD
 	bond_set_slave_inactive_flags(curr_arp_slave, BOND_SLAVE_NOTIFY_LATER);
 
-=======
->>>>>>> rebase
 	bond_for_each_slave_rcu(bond, slave, iter) {
 		if (!found && !before && bond_slave_is_up(slave))
 			before = slave;
@@ -3149,17 +3027,9 @@ re_arm:
 		if (!rtnl_trylock())
 			return;
 
-<<<<<<< HEAD
 		if (should_notify_peers)
 			call_netdevice_notifiers(NETDEV_NOTIFY_PEERS,
 						 bond->dev);
-=======
-		if (should_notify_peers) {
-			bond->send_peer_notif--;
-			call_netdevice_notifiers(NETDEV_NOTIFY_PEERS,
-						 bond->dev);
-		}
->>>>>>> rebase
 		if (should_notify_rtnl) {
 			bond_slave_state_notify(bond);
 			bond_slave_link_notify(bond);
@@ -4330,32 +4200,13 @@ static netdev_tx_t bond_start_xmit(struct sk_buff *skb, struct net_device *dev)
 	return ret;
 }
 
-<<<<<<< HEAD
-=======
-static u32 bond_mode_bcast_speed(struct slave *slave, u32 speed)
-{
-	if (speed == 0 || speed == SPEED_UNKNOWN)
-		speed = slave->speed;
-	else
-		speed = min(speed, slave->speed);
-
-	return speed;
-}
-
->>>>>>> rebase
 static int bond_ethtool_get_link_ksettings(struct net_device *bond_dev,
 					   struct ethtool_link_ksettings *cmd)
 {
 	struct bonding *bond = netdev_priv(bond_dev);
-<<<<<<< HEAD
 	unsigned long speed = 0;
 	struct list_head *iter;
 	struct slave *slave;
-=======
-	struct list_head *iter;
-	struct slave *slave;
-	u32 speed = 0;
->>>>>>> rebase
 
 	cmd->base.duplex = DUPLEX_UNKNOWN;
 	cmd->base.port = PORT_OTHER;
@@ -4367,18 +4218,8 @@ static int bond_ethtool_get_link_ksettings(struct net_device *bond_dev,
 	 */
 	bond_for_each_slave(bond, slave, iter) {
 		if (bond_slave_can_tx(slave)) {
-<<<<<<< HEAD
 			if (slave->speed != SPEED_UNKNOWN)
 				speed += slave->speed;
-=======
-			if (slave->speed != SPEED_UNKNOWN) {
-				if (BOND_MODE(bond) == BOND_MODE_BROADCAST)
-					speed = bond_mode_bcast_speed(slave,
-								      speed);
-				else
-					speed += slave->speed;
-			}
->>>>>>> rebase
 			if (cmd->base.duplex == DUPLEX_UNKNOWN &&
 			    slave->duplex != DUPLEX_UNKNOWN)
 				cmd->base.duplex = slave->duplex;
@@ -4976,28 +4817,15 @@ int bond_create(struct net *net, const char *name)
 	bond_dev->rtnl_link_ops = &bond_link_ops;
 
 	res = register_netdevice(bond_dev);
-<<<<<<< HEAD
-=======
-	if (res < 0) {
-		free_netdev(bond_dev);
-		rtnl_unlock();
-
-		return res;
-	}
->>>>>>> rebase
 
 	netif_carrier_off(bond_dev);
 
 	bond_work_init_all(bond);
 
 	rtnl_unlock();
-<<<<<<< HEAD
 	if (res < 0)
 		free_netdev(bond_dev);
 	return res;
-=======
-	return 0;
->>>>>>> rebase
 }
 
 static int __net_init bond_net_init(struct net *net)

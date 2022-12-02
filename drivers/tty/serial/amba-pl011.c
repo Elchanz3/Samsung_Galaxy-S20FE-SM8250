@@ -313,14 +313,8 @@ static void pl011_write(unsigned int val, const struct uart_amba_port *uap,
  */
 static int pl011_fifo_to_tty(struct uart_amba_port *uap)
 {
-<<<<<<< HEAD
 	u16 status;
 	unsigned int ch, flag, fifotaken;
-=======
-	unsigned int ch, flag, fifotaken;
-	int sysrq;
-	u16 status;
->>>>>>> rebase
 
 	for (fifotaken = 0; fifotaken != 256; fifotaken++) {
 		status = pl011_read(uap, REG_FR);
@@ -355,19 +349,10 @@ static int pl011_fifo_to_tty(struct uart_amba_port *uap)
 				flag = TTY_FRAME;
 		}
 
-<<<<<<< HEAD
 		if (uart_handle_sysrq_char(&uap->port, ch & 255))
 			continue;
 
 		uart_insert_char(&uap->port, ch, UART011_DR_OE, ch, flag);
-=======
-		spin_unlock(&uap->port.lock);
-		sysrq = uart_handle_sysrq_char(&uap->port, ch & 255);
-		spin_lock(&uap->port.lock);
-
-		if (!sysrq)
-			uart_insert_char(&uap->port, ch, UART011_DR_OE, ch, flag);
->>>>>>> rebase
 	}
 
 	return fifotaken;
@@ -1347,18 +1332,6 @@ static void pl011_stop_rx(struct uart_port *port)
 	pl011_dma_rx_stop(uap);
 }
 
-<<<<<<< HEAD
-=======
-static void pl011_throttle_rx(struct uart_port *port)
-{
-	unsigned long flags;
-
-	spin_lock_irqsave(&port->lock, flags);
-	pl011_stop_rx(port);
-	spin_unlock_irqrestore(&port->lock, flags);
-}
-
->>>>>>> rebase
 static void pl011_enable_ms(struct uart_port *port)
 {
 	struct uart_amba_port *uap =
@@ -1752,16 +1725,9 @@ static int pl011_allocate_irq(struct uart_amba_port *uap)
  */
 static void pl011_enable_interrupts(struct uart_amba_port *uap)
 {
-<<<<<<< HEAD
 	unsigned int i;
 
 	spin_lock_irq(&uap->port.lock);
-=======
-	unsigned long flags;
-	unsigned int i;
-
-	spin_lock_irqsave(&uap->port.lock, flags);
->>>>>>> rebase
 
 	/* Clear out any spuriously appearing RX interrupts */
 	pl011_write(UART011_RTIS | UART011_RXIS, uap, REG_ICR);
@@ -1783,18 +1749,7 @@ static void pl011_enable_interrupts(struct uart_amba_port *uap)
 	if (!pl011_dma_rx_running(uap))
 		uap->im |= UART011_RXIM;
 	pl011_write(uap->im, uap, REG_IMSC);
-<<<<<<< HEAD
 	spin_unlock_irq(&uap->port.lock);
-=======
-	spin_unlock_irqrestore(&uap->port.lock, flags);
-}
-
-static void pl011_unthrottle_rx(struct uart_port *port)
-{
-	struct uart_amba_port *uap = container_of(port, struct uart_amba_port, port);
-
-	pl011_enable_interrupts(uap);
->>>>>>> rebase
 }
 
 static int pl011_startup(struct uart_port *port)
@@ -2137,7 +2092,6 @@ static const char *pl011_type(struct uart_port *port)
 }
 
 /*
-<<<<<<< HEAD
  * Release the memory region(s) being used by 'port'
  */
 static void pl011_release_port(struct uart_port *port)
@@ -2155,21 +2109,14 @@ static int pl011_request_port(struct uart_port *port)
 }
 
 /*
-=======
->>>>>>> rebase
  * Configure/autoconfigure the port.
  */
 static void pl011_config_port(struct uart_port *port, int flags)
 {
-<<<<<<< HEAD
 	if (flags & UART_CONFIG_TYPE) {
 		port->type = PORT_AMBA;
 		pl011_request_port(port);
 	}
-=======
-	if (flags & UART_CONFIG_TYPE)
-		port->type = PORT_AMBA;
->>>>>>> rebase
 }
 
 /*
@@ -2184,11 +2131,6 @@ static int pl011_verify_port(struct uart_port *port, struct serial_struct *ser)
 		ret = -EINVAL;
 	if (ser->baud_base < 9600)
 		ret = -EINVAL;
-<<<<<<< HEAD
-=======
-	if (port->mapbase != (unsigned long) ser->iomem_base)
-		ret = -EINVAL;
->>>>>>> rebase
 	return ret;
 }
 
@@ -2199,11 +2141,6 @@ static const struct uart_ops amba_pl011_pops = {
 	.stop_tx	= pl011_stop_tx,
 	.start_tx	= pl011_start_tx,
 	.stop_rx	= pl011_stop_rx,
-<<<<<<< HEAD
-=======
-	.throttle	= pl011_throttle_rx,
-	.unthrottle	= pl011_unthrottle_rx,
->>>>>>> rebase
 	.enable_ms	= pl011_enable_ms,
 	.break_ctl	= pl011_break_ctl,
 	.startup	= pl011_startup,
@@ -2211,11 +2148,8 @@ static const struct uart_ops amba_pl011_pops = {
 	.flush_buffer	= pl011_dma_flush_buffer,
 	.set_termios	= pl011_set_termios,
 	.type		= pl011_type,
-<<<<<<< HEAD
 	.release_port	= pl011_release_port,
 	.request_port	= pl011_request_port,
-=======
->>>>>>> rebase
 	.config_port	= pl011_config_port,
 	.verify_port	= pl011_verify_port,
 #ifdef CONFIG_CONSOLE_POLL
@@ -2245,11 +2179,8 @@ static const struct uart_ops sbsa_uart_pops = {
 	.shutdown	= sbsa_uart_shutdown,
 	.set_termios	= sbsa_uart_set_termios,
 	.type		= pl011_type,
-<<<<<<< HEAD
 	.release_port	= pl011_release_port,
 	.request_port	= pl011_request_port,
-=======
->>>>>>> rebase
 	.config_port	= pl011_config_port,
 	.verify_port	= pl011_verify_port,
 #ifdef CONFIG_CONSOLE_POLL
@@ -2321,14 +2252,9 @@ pl011_console_write(struct console *co, const char *s, unsigned int count)
 	clk_disable(uap->clk);
 }
 
-<<<<<<< HEAD
 static void __init
 pl011_console_get_options(struct uart_amba_port *uap, int *baud,
 			     int *parity, int *bits)
-=======
-static void pl011_console_get_options(struct uart_amba_port *uap, int *baud,
-				      int *parity, int *bits)
->>>>>>> rebase
 {
 	if (pl011_read(uap, REG_CR) & UART01x_CR_UARTEN) {
 		unsigned int lcr_h, ibrd, fbrd;
@@ -2361,11 +2287,7 @@ static void pl011_console_get_options(struct uart_amba_port *uap, int *baud,
 	}
 }
 
-<<<<<<< HEAD
 static int __init pl011_console_setup(struct console *co, char *options)
-=======
-static int pl011_console_setup(struct console *co, char *options)
->>>>>>> rebase
 {
 	struct uart_amba_port *uap;
 	int baud = 38400;
@@ -2433,13 +2355,8 @@ static int pl011_console_setup(struct console *co, char *options)
  *
  *	Returns 0 if console matches; otherwise non-zero to use default matching
  */
-<<<<<<< HEAD
 static int __init pl011_console_match(struct console *co, char *name, int idx,
 				      char *options)
-=======
-static int pl011_console_match(struct console *co, char *name, int idx,
-			       char *options)
->>>>>>> rebase
 {
 	unsigned char iotype;
 	resource_size_t addr;
@@ -2668,10 +2585,6 @@ static int pl011_setup_port(struct device *dev, struct uart_amba_port *uap,
 	uap->port.fifosize = uap->fifosize;
 	uap->port.flags = UPF_BOOT_AUTOCONF;
 	uap->port.line = index;
-<<<<<<< HEAD
-=======
-	spin_lock_init(&uap->port.lock);
->>>>>>> rebase
 
 	amba_ports[index] = uap;
 
@@ -2680,11 +2593,7 @@ static int pl011_setup_port(struct device *dev, struct uart_amba_port *uap,
 
 static int pl011_register_port(struct uart_amba_port *uap)
 {
-<<<<<<< HEAD
 	int ret;
-=======
-	int ret, i;
->>>>>>> rebase
 
 	/* Ensure interrupts from this UART are masked and cleared */
 	pl011_write(0, uap, REG_IMSC);
@@ -2695,12 +2604,6 @@ static int pl011_register_port(struct uart_amba_port *uap)
 		if (ret < 0) {
 			dev_err(uap->port.dev,
 				"Failed to register AMBA-PL011 driver\n");
-<<<<<<< HEAD
-=======
-			for (i = 0; i < ARRAY_SIZE(amba_ports); i++)
-				if (amba_ports[i] == uap)
-					amba_ports[i] = NULL;
->>>>>>> rebase
 			return ret;
 		}
 	}
@@ -2864,10 +2767,6 @@ MODULE_DEVICE_TABLE(of, sbsa_uart_of_match);
 
 static const struct acpi_device_id sbsa_uart_acpi_match[] = {
 	{ "ARMH0011", 0 },
-<<<<<<< HEAD
-=======
-	{ "ARMHB000", 0 },
->>>>>>> rebase
 	{},
 };
 MODULE_DEVICE_TABLE(acpi, sbsa_uart_acpi_match);

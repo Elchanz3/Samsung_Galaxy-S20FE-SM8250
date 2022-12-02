@@ -45,18 +45,10 @@
 static char jit_path[PATH_MAX];
 static void *marker_addr;
 
-<<<<<<< HEAD
-=======
-#ifndef HAVE_GETTID
->>>>>>> rebase
 static inline pid_t gettid(void)
 {
 	return (pid_t)syscall(__NR_gettid);
 }
-<<<<<<< HEAD
-=======
-#endif
->>>>>>> rebase
 
 static int get_e_machine(struct jitheader *hdr)
 {

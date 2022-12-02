@@ -1265,20 +1265,12 @@ static int rtl8366rb_set_mc_index(struct realtek_smi *smi, int port, int index)
 
 static bool rtl8366rb_is_vlan_valid(struct realtek_smi *smi, unsigned int vlan)
 {
-<<<<<<< HEAD
 	unsigned int max = RTL8366RB_NUM_VLANS;
-=======
-	unsigned int max = RTL8366RB_NUM_VLANS - 1;
->>>>>>> rebase
 
 	if (smi->vlan4k_enabled)
 		max = RTL8366RB_NUM_VIDS - 1;
 
-<<<<<<< HEAD
 	if (vlan == 0 || vlan >= max)
-=======
-	if (vlan == 0 || vlan > max)
->>>>>>> rebase
 		return false;
 
 	return true;

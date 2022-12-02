@@ -62,11 +62,6 @@
 #include <linux/types.h>
 #include <linux/param.h>
 
-<<<<<<< HEAD
-=======
-unsigned long random_get_entropy_fallback(void);
-
->>>>>>> rebase
 #include <asm/timex.h>
 
 #ifndef random_get_entropy
@@ -79,19 +74,8 @@ unsigned long random_get_entropy_fallback(void);
  *
  * By default we use get_cycles() for this purpose, but individual
  * architectures may override this in their asm/timex.h header file.
-<<<<<<< HEAD
  */
 #define random_get_entropy()	get_cycles()
-=======
- * If a given arch does not have get_cycles(), then we fallback to
- * using random_get_entropy_fallback().
- */
-#ifdef get_cycles
-#define random_get_entropy()	((unsigned long)get_cycles())
-#else
-#define random_get_entropy()	random_get_entropy_fallback()
-#endif
->>>>>>> rebase
 #endif
 
 /*

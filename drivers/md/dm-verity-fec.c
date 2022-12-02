@@ -11,10 +11,7 @@
 
 #include "dm-verity-fec.h"
 #include <linux/math64.h>
-<<<<<<< HEAD
 #include <linux/sysfs.h>
-=======
->>>>>>> rebase
 
 #define DM_MSG_PREFIX	"verity-fec"
 
@@ -69,7 +66,6 @@ static int fec_decode_rs8(struct dm_verity *v, struct dm_verity_fec_io *fio,
 static u8 *fec_read_parity(struct dm_verity *v, u64 rsb, int index,
 			   unsigned *offset, struct dm_buffer **buf)
 {
-<<<<<<< HEAD
 	u64 position, block;
 	u8 *res;
 
@@ -83,20 +79,6 @@ static u8 *fec_read_parity(struct dm_verity *v, u64 rsb, int index,
 		      v->data_dev->name, (unsigned long long)rsb,
 		      (unsigned long long)(v->fec->start + block),
 		      PTR_ERR(res));
-=======
-	u64 position, block, rem;
-	u8 *res;
-
-	position = (index + rsb) * v->fec->roots;
-	block = div64_u64_rem(position, v->fec->io_size, &rem);
-	*offset = (unsigned)rem;
-
-	res = dm_bufio_read(v->fec->bufio, block, buf);
-	if (unlikely(IS_ERR(res))) {
-		DMERR("%s: FEC %llu: parity read failed (block %llu): %ld",
-		      v->data_dev->name, (unsigned long long)rsb,
-		      (unsigned long long)block, PTR_ERR(res));
->>>>>>> rebase
 		*buf = NULL;
 	}
 
@@ -178,11 +160,7 @@ static int fec_decode_bufs(struct dm_verity *v, struct dm_verity_fec_io *fio,
 
 		/* read the next block when we run out of parity bytes */
 		offset += v->fec->roots;
-<<<<<<< HEAD
 		if (offset >= 1 << v->data_dev_block_bits) {
-=======
-		if (offset >= v->fec->io_size) {
->>>>>>> rebase
 			dm_bufio_release(buf);
 
 			par = fec_read_parity(v, rsb, block_offset, &offset, &buf);
@@ -198,17 +176,11 @@ error:
 	if (r < 0 && neras)
 		DMERR_LIMIT("%s: FEC %llu: failed to correct: %d",
 			    v->data_dev->name, (unsigned long long)rsb, r);
-<<<<<<< HEAD
 	else if (r > 0) {
 		DMWARN_LIMIT("%s: FEC %llu: corrected %d errors",
 			     v->data_dev->name, (unsigned long long)rsb, r);
 		atomic_add_unless(&v->fec->corrected, 1, INT_MAX);
 	}
-=======
-	else if (r > 0)
-		DMWARN_LIMIT("%s: FEC %llu: corrected %d errors",
-			     v->data_dev->name, (unsigned long long)rsb, r);
->>>>>>> rebase
 
 	return r;
 }
@@ -243,22 +215,15 @@ static int fec_read_bufs(struct dm_verity *v, struct dm_verity_io *io,
 	struct dm_verity_fec_io *fio = fec_io(io);
 	u64 block, ileaved;
 	u8 *bbuf, *rs_block;
-<<<<<<< HEAD
 	u8 want_digest[HASH_MAX_DIGESTSIZE];
-=======
-	u8 want_digest[v->digest_size];
->>>>>>> rebase
 	unsigned n, k;
 
 	if (neras)
 		*neras = 0;
 
-<<<<<<< HEAD
 	if (WARN_ON(v->digest_size > sizeof(want_digest)))
 		return -EINVAL;
 
-=======
->>>>>>> rebase
 	/*
 	 * read each of the rsn data blocks that are part of the RS block, and
 	 * interleave contents to available bufs
@@ -476,12 +441,6 @@ int verity_fec_decode(struct dm_verity *v, struct dm_verity_io *io,
 
 	fio->level++;
 
-<<<<<<< HEAD
-=======
-	if (type == DM_VERITY_BLOCK_TYPE_METADATA)
-		block = block - v->hash_start + v->data_blocks;
-
->>>>>>> rebase
 	/*
 	 * For RS(M, N), the continuous FEC data is divided into blocks of N
 	 * bytes. Since block size may not be divisible by N, the last block
@@ -589,10 +548,7 @@ unsigned verity_fec_status_table(struct dm_verity *v, unsigned sz,
 void verity_fec_dtr(struct dm_verity *v)
 {
 	struct dm_verity_fec *f = v->fec;
-<<<<<<< HEAD
 	struct kobject *kobj = &f->kobj_holder.kobj;
-=======
->>>>>>> rebase
 
 	if (!verity_fec_is_enabled(v))
 		goto out;
@@ -600,10 +556,6 @@ void verity_fec_dtr(struct dm_verity *v)
 	mempool_exit(&f->rs_pool);
 	mempool_exit(&f->prealloc_pool);
 	mempool_exit(&f->extra_pool);
-<<<<<<< HEAD
-=======
-	mempool_exit(&f->output_pool);
->>>>>>> rebase
 	kmem_cache_destroy(f->cache);
 
 	if (f->data_bufio)
@@ -613,15 +565,12 @@ void verity_fec_dtr(struct dm_verity *v)
 
 	if (f->dev)
 		dm_put_device(v->ti, f->dev);
-<<<<<<< HEAD
 
 	if (kobj->state_initialized) {
 		kobject_put(kobj);
 		wait_for_completion(dm_get_completion_from_kobject(kobj));
 	}
 
-=======
->>>>>>> rebase
 out:
 	kfree(f);
 	v->fec = NULL;
@@ -710,7 +659,6 @@ int verity_fec_parse_opt_args(struct dm_arg_set *as, struct dm_verity *v,
 	return 0;
 }
 
-<<<<<<< HEAD
 static ssize_t corrected_show(struct kobject *kobj, struct kobj_attribute *attr,
 			      char *buf)
 {
@@ -733,8 +681,6 @@ static struct kobj_type fec_ktype = {
 	.release = dm_kobject_release
 };
 
-=======
->>>>>>> rebase
 /*
  * Allocate dm_verity_fec for v->fec. Must be called before verity_fec_ctr.
  */
@@ -758,17 +704,11 @@ int verity_fec_ctr_alloc(struct dm_verity *v)
  */
 int verity_fec_ctr(struct dm_verity *v)
 {
-<<<<<<< HEAD
 	int r;
 	struct dm_verity_fec *f = v->fec;
 	struct dm_target *ti = v->ti;
 	struct mapped_device *md = dm_table_get_md(ti->table);
 	u64 hash_blocks;
-=======
-	struct dm_verity_fec *f = v->fec;
-	struct dm_target *ti = v->ti;
-	u64 hash_blocks, fec_blocks;
->>>>>>> rebase
 	int ret;
 
 	if (!verity_fec_is_enabled(v)) {
@@ -776,7 +716,6 @@ int verity_fec_ctr(struct dm_verity *v)
 		return 0;
 	}
 
-<<<<<<< HEAD
 	/* Create a kobject and sysfs attributes */
 	init_completion(&f->kobj_holder.completion);
 
@@ -787,8 +726,6 @@ int verity_fec_ctr(struct dm_verity *v)
 		return r;
 	}
 
-=======
->>>>>>> rebase
 	/*
 	 * FEC is computed over data blocks, possible metadata, and
 	 * hash blocks. In other words, FEC covers total of fec_blocks
@@ -850,33 +787,16 @@ int verity_fec_ctr(struct dm_verity *v)
 		return -E2BIG;
 	}
 
-<<<<<<< HEAD
 	f->bufio = dm_bufio_client_create(f->dev->bdev,
 					  1 << v->data_dev_block_bits,
-=======
-	if ((f->roots << SECTOR_SHIFT) & ((1 << v->data_dev_block_bits) - 1))
-		f->io_size = 1 << v->data_dev_block_bits;
-	else
-		f->io_size = v->fec->roots << SECTOR_SHIFT;
-
-	f->bufio = dm_bufio_client_create(f->dev->bdev,
-					  f->io_size,
->>>>>>> rebase
 					  1, 0, NULL, NULL);
 	if (IS_ERR(f->bufio)) {
 		ti->error = "Cannot initialize FEC bufio client";
 		return PTR_ERR(f->bufio);
 	}
 
-<<<<<<< HEAD
 	if (dm_bufio_get_device_size(f->bufio) <
 	    ((f->start + f->rounds * f->roots) >> v->data_dev_block_bits)) {
-=======
-	dm_bufio_set_sector_offset(f->bufio, f->start << (v->data_dev_block_bits - SECTOR_SHIFT));
-
-	fec_blocks = div64_u64(f->rounds * f->roots, v->fec->roots << SECTOR_SHIFT);
-	if (dm_bufio_get_device_size(f->bufio) < fec_blocks) {
->>>>>>> rebase
 		ti->error = "FEC device is too small";
 		return -E2BIG;
 	}

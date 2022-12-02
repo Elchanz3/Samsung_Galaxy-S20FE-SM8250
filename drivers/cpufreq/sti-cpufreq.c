@@ -144,12 +144,7 @@ static const struct reg_field sti_stih407_dvfs_regfields[DVFS_MAX_REGFIELDS] = {
 static const struct reg_field *sti_cpufreq_match(void)
 {
 	if (of_machine_is_compatible("st,stih407") ||
-<<<<<<< HEAD
 	    of_machine_is_compatible("st,stih410"))
-=======
-	    of_machine_is_compatible("st,stih410") ||
-	    of_machine_is_compatible("st,stih418"))
->>>>>>> rebase
 		return sti_stih407_dvfs_regfields;
 
 	return NULL;
@@ -266,12 +261,7 @@ static int sti_cpufreq_init(void)
 	int ret;
 
 	if ((!of_machine_is_compatible("st,stih407")) &&
-<<<<<<< HEAD
 		(!of_machine_is_compatible("st,stih410")))
-=======
-		(!of_machine_is_compatible("st,stih410")) &&
-		(!of_machine_is_compatible("st,stih418")))
->>>>>>> rebase
 		return -ENODEV;
 
 	ddata.cpu = get_cpu_device(0);
@@ -303,16 +293,6 @@ register_cpufreq_dt:
 }
 module_init(sti_cpufreq_init);
 
-<<<<<<< HEAD
-=======
-static const struct of_device_id __maybe_unused sti_cpufreq_of_match[] = {
-	{ .compatible = "st,stih407" },
-	{ .compatible = "st,stih410" },
-	{ },
-};
-MODULE_DEVICE_TABLE(of, sti_cpufreq_of_match);
-
->>>>>>> rebase
 MODULE_DESCRIPTION("STMicroelectronics CPUFreq/OPP driver");
 MODULE_AUTHOR("Ajitpal Singh <ajitpal.singh@st.com>");
 MODULE_AUTHOR("Lee Jones <lee.jones@linaro.org>");

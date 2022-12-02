@@ -22,10 +22,7 @@
 #include <linux/writeback.h>
 #include <linux/frontswap.h>
 #include <linux/blkdev.h>
-<<<<<<< HEAD
 #include <linux/psi.h>
-=======
->>>>>>> rebase
 #include <linux/uio.h>
 #include <linux/sched/task.h>
 #include <asm/pgtable.h>
@@ -42,10 +39,7 @@ static struct bio *get_swap_bio(gfp_t gfp_flags,
 
 		bio->bi_iter.bi_sector = map_swap_page(page, &bdev);
 		bio_set_dev(bio, bdev);
-<<<<<<< HEAD
 		bio->bi_iter.bi_sector <<= PAGE_SHIFT - 9;
-=======
->>>>>>> rebase
 		bio->bi_end_io = end_io;
 
 		for (i = 0; i < nr; i++)
@@ -70,25 +64,18 @@ void end_swap_bio_write(struct bio *bio)
 		 * Also clear PG_reclaim to avoid rotate_reclaimable_page()
 		 */
 		set_page_dirty(page);
-<<<<<<< HEAD
 #ifndef CONFIG_ZRAM
 		pr_alert_ratelimited("Write-error on swap-device (%u:%u:%llu)\n",
 			 MAJOR(bio_dev(bio)),
 			 MINOR(bio_dev(bio)),
 			 (unsigned long long)bio->bi_iter.bi_sector);
 #endif
-=======
-		pr_alert("Write-error on swap-device (%u:%u:%llu)\n",
-			 MAJOR(bio_dev(bio)), MINOR(bio_dev(bio)),
-			 (unsigned long long)bio->bi_iter.bi_sector);
->>>>>>> rebase
 		ClearPageReclaim(page);
 	}
 	end_page_writeback(page);
 	bio_put(bio);
 }
 
-<<<<<<< HEAD
 static void swap_slot_free_notify(struct page *page)
 {
 	struct swap_info_struct *sis;
@@ -138,8 +125,6 @@ static void swap_slot_free_notify(struct page *page)
 	}
 }
 
-=======
->>>>>>> rebase
 static void end_swap_bio_read(struct bio *bio)
 {
 	struct page *page = bio_first_page_all(bio);
@@ -155,10 +140,7 @@ static void end_swap_bio_read(struct bio *bio)
 	}
 
 	SetPageUptodate(page);
-<<<<<<< HEAD
 	swap_slot_free_notify(page);
-=======
->>>>>>> rebase
 out:
 	unlock_page(page);
 	WRITE_ONCE(bio->bi_private, NULL);
@@ -284,14 +266,11 @@ out:
 	return ret;
 }
 
-<<<<<<< HEAD
 static sector_t swap_page_sector(struct page *page)
 {
 	return (sector_t)__page_file_index(page) << (PAGE_SHIFT - 9);
 }
 
-=======
->>>>>>> rebase
 static inline void count_swpout_vm_event(struct page *page)
 {
 #ifdef CONFIG_TRANSPARENT_HUGEPAGE
@@ -350,12 +329,7 @@ int __swap_writepage(struct page *page, struct writeback_control *wbc,
 		return ret;
 	}
 
-<<<<<<< HEAD
 	ret = bdev_write_page(sis->bdev, swap_page_sector(page), page, wbc);
-=======
-	ret = bdev_write_page(sis->bdev, map_swap_page(page, &sis->bdev),
-			      page, wbc);
->>>>>>> rebase
 	if (!ret) {
 		count_swpout_vm_event(page);
 		return 0;
@@ -386,15 +360,11 @@ int swap_readpage(struct page *page, bool synchronous)
 	struct swap_info_struct *sis = page_swap_info(page);
 	blk_qc_t qc;
 	struct gendisk *disk;
-<<<<<<< HEAD
 	unsigned long pflags;
-=======
->>>>>>> rebase
 
 	VM_BUG_ON_PAGE(!PageSwapCache(page) && !synchronous, page);
 	VM_BUG_ON_PAGE(!PageLocked(page), page);
 	VM_BUG_ON_PAGE(PageUptodate(page), page);
-<<<<<<< HEAD
 
 	/*
 	 * Count submission time as memory stall. When the device is congested,
@@ -403,8 +373,6 @@ int swap_readpage(struct page *page, bool synchronous)
 	 */
 	psi_memstall_enter(&pflags);
 
-=======
->>>>>>> rebase
 	if (frontswap_load(page) == 0) {
 		SetPageUptodate(page);
 		unlock_page(page);
@@ -418,7 +386,6 @@ int swap_readpage(struct page *page, bool synchronous)
 		ret = mapping->a_ops->readpage(swap_file, page);
 		if (!ret)
 			count_vm_event(PSWPIN);
-<<<<<<< HEAD
 		goto out;
 	}
 
@@ -431,15 +398,6 @@ int swap_readpage(struct page *page, bool synchronous)
 
 		count_vm_event(PSWPIN);
 		goto out;
-=======
-		return ret;
-	}
-
-	ret = bdev_read_page(sis->bdev, map_swap_page(page, &sis->bdev), page);
-	if (!ret) {
-		count_vm_event(PSWPIN);
-		return 0;
->>>>>>> rebase
 	}
 
 	ret = 0;
@@ -472,10 +430,7 @@ int swap_readpage(struct page *page, bool synchronous)
 	bio_put(bio);
 
 out:
-<<<<<<< HEAD
 	psi_memstall_leave(&pflags);
-=======
->>>>>>> rebase
 	return ret;
 }
 

@@ -179,11 +179,7 @@ orangefs_bufmap_free(struct orangefs_bufmap *bufmap)
 {
 	kfree(bufmap->page_array);
 	kfree(bufmap->desc_array);
-<<<<<<< HEAD
 	kfree(bufmap->buffer_index_array);
-=======
-	bitmap_free(bufmap->buffer_index_array);
->>>>>>> rebase
 	kfree(bufmap);
 }
 
@@ -233,12 +229,8 @@ orangefs_bufmap_alloc(struct ORANGEFS_dev_map_desc *user_desc)
 	bufmap->desc_size = user_desc->size;
 	bufmap->desc_shift = ilog2(bufmap->desc_size);
 
-<<<<<<< HEAD
 	bufmap->buffer_index_array =
 		kzalloc(DIV_ROUND_UP(bufmap->desc_count, BITS_PER_LONG), GFP_KERNEL);
-=======
-	bufmap->buffer_index_array = bitmap_zalloc(bufmap->desc_count, GFP_KERNEL);
->>>>>>> rebase
 	if (!bufmap->buffer_index_array)
 		goto out_free_bufmap;
 
@@ -261,11 +253,7 @@ orangefs_bufmap_alloc(struct ORANGEFS_dev_map_desc *user_desc)
 out_free_desc_array:
 	kfree(bufmap->desc_array);
 out_free_index_array:
-<<<<<<< HEAD
 	kfree(bufmap->buffer_index_array);
-=======
-	bitmap_free(bufmap->buffer_index_array);
->>>>>>> rebase
 out_free_bufmap:
 	kfree(bufmap);
 out:

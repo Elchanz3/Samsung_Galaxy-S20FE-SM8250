@@ -111,7 +111,6 @@ int __weak arch_kexec_kernel_verify_sig(struct kimage *image, void *buf,
 #endif
 
 /*
-<<<<<<< HEAD
  * arch_kexec_apply_relocations_add - apply relocations of type RELA
  * @pi:		Purgatory to be relocated.
  * @section:	Section relocations applying to.
@@ -146,8 +145,6 @@ arch_kexec_apply_relocations(struct purgatory_info *pi, Elf_Shdr *section,
 }
 
 /*
-=======
->>>>>>> rebase
  * Free up memory used by kernel, initrd, and command line. This is temporary
  * memory allocation which is not needed any more after these buffers have
  * been loaded into separate segments and have been copied elsewhere.
@@ -171,14 +168,6 @@ void kimage_file_post_load_cleanup(struct kimage *image)
 	vfree(pi->sechdrs);
 	pi->sechdrs = NULL;
 
-<<<<<<< HEAD
-=======
-#ifdef CONFIG_IMA_KEXEC
-	vfree(image->ima_buffer);
-	image->ima_buffer = NULL;
-#endif /* CONFIG_IMA_KEXEC */
-
->>>>>>> rebase
 	/* See if architecture has anything to cleanup post load */
 	arch_kimage_file_post_load_cleanup(image);
 
@@ -637,15 +626,8 @@ static int kexec_calculate_store_digests(struct kimage *image)
 
 	sha_region_sz = KEXEC_SEGMENT_MAX * sizeof(struct kexec_sha_region);
 	sha_regions = vzalloc(sha_region_sz);
-<<<<<<< HEAD
 	if (!sha_regions)
 		goto out_free_desc;
-=======
-	if (!sha_regions) {
-		ret = -ENOMEM;
-		goto out_free_desc;
-	}
->>>>>>> rebase
 
 	desc->tfm   = tfm;
 	desc->flags = 0;

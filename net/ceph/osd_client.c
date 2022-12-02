@@ -442,10 +442,6 @@ static void target_copy(struct ceph_osd_request_target *dest,
 	dest->size = src->size;
 	dest->min_size = src->min_size;
 	dest->sort_bitwise = src->sort_bitwise;
-<<<<<<< HEAD
-=======
-	dest->recovery_deletes = src->recovery_deletes;
->>>>>>> rebase
 
 	dest->flags = src->flags;
 	dest->paused = src->paused;
@@ -3544,13 +3540,7 @@ static void handle_reply(struct ceph_osd *osd, struct ceph_msg *msg)
 		 * supported.
 		 */
 		req->r_t.target_oloc.pool = m.redirect.oloc.pool;
-<<<<<<< HEAD
 		req->r_flags |= CEPH_OSD_FLAG_REDIRECTED;
-=======
-		req->r_flags |= CEPH_OSD_FLAG_REDIRECTED |
-				CEPH_OSD_FLAG_IGNORE_OVERLAY |
-				CEPH_OSD_FLAG_IGNORE_CACHE;
->>>>>>> rebase
 		req->r_tid = 0;
 		__submit_request(req, false);
 		goto out_unlock_osdc;

@@ -177,11 +177,7 @@ static int p54spi_request_firmware(struct ieee80211_hw *dev)
 
 	ret = p54_parse_firmware(dev, priv->firmware);
 	if (ret) {
-<<<<<<< HEAD
 		release_firmware(priv->firmware);
-=======
-		/* the firmware is released by the caller */
->>>>>>> rebase
 		return ret;
 	}
 
@@ -676,10 +672,6 @@ static int p54spi_probe(struct spi_device *spi)
 	return 0;
 
 err_free_common:
-<<<<<<< HEAD
-=======
-	release_firmware(priv->firmware);
->>>>>>> rebase
 	free_irq(gpio_to_irq(p54spi_gpio_irq), spi);
 err_free_gpio_irq:
 	gpio_free(p54spi_gpio_irq);

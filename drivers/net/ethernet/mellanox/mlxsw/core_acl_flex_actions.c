@@ -316,11 +316,7 @@ struct mlxsw_afa_block *mlxsw_afa_block_create(struct mlxsw_afa *mlxsw_afa)
 
 	block = kzalloc(sizeof(*block), GFP_KERNEL);
 	if (!block)
-<<<<<<< HEAD
 		return NULL;
-=======
-		return ERR_PTR(-ENOMEM);
->>>>>>> rebase
 	INIT_LIST_HEAD(&block->resource_list);
 	block->afa = mlxsw_afa;
 
@@ -348,11 +344,7 @@ err_second_set_create:
 	mlxsw_afa_set_destroy(block->first_set);
 err_first_set_create:
 	kfree(block);
-<<<<<<< HEAD
 	return NULL;
-=======
-	return ERR_PTR(-ENOMEM);
->>>>>>> rebase
 }
 EXPORT_SYMBOL(mlxsw_afa_block_create);
 

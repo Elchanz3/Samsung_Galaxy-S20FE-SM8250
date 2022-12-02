@@ -919,13 +919,8 @@ static const struct cec_adap_ops tc358743_cec_adap_ops = {
 	.adap_monitor_all_enable = tc358743_cec_adap_monitor_all_enable,
 };
 
-<<<<<<< HEAD
 static void tc358743_cec_isr(struct v4l2_subdev *sd, u16 intstatus,
 			     bool *handled)
-=======
-static void tc358743_cec_handler(struct v4l2_subdev *sd, u16 intstatus,
-				 bool *handled)
->>>>>>> rebase
 {
 	struct tc358743_state *state = to_state(sd);
 	unsigned int cec_rxint, cec_txint;
@@ -958,12 +953,7 @@ static void tc358743_cec_handler(struct v4l2_subdev *sd, u16 intstatus,
 			cec_transmit_attempt_done(state->cec_adap,
 						  CEC_TX_STATUS_ERROR);
 		}
-<<<<<<< HEAD
 		*handled = true;
-=======
-		if (handled)
-			*handled = true;
->>>>>>> rebase
 	}
 	if ((intstatus & MASK_CEC_RINT) &&
 	    (cec_rxint & MASK_CECRIEND)) {
@@ -978,12 +968,7 @@ static void tc358743_cec_handler(struct v4l2_subdev *sd, u16 intstatus,
 			msg.msg[i] = v & 0xff;
 		}
 		cec_received_msg(state->cec_adap, &msg);
-<<<<<<< HEAD
 		*handled = true;
-=======
-		if (handled)
-			*handled = true;
->>>>>>> rebase
 	}
 	i2c_wr16(sd, INTSTATUS,
 		 intstatus & (MASK_CEC_RINT | MASK_CEC_TINT));
@@ -1447,11 +1432,7 @@ static int tc358743_isr(struct v4l2_subdev *sd, u32 status, bool *handled)
 
 #ifdef CONFIG_VIDEO_TC358743_CEC
 	if (intstatus & (MASK_CEC_RINT | MASK_CEC_TINT)) {
-<<<<<<< HEAD
 		tc358743_cec_isr(sd, intstatus, handled);
-=======
-		tc358743_cec_handler(sd, intstatus, handled);
->>>>>>> rebase
 		i2c_wr16(sd, INTSTATUS,
 			 intstatus & (MASK_CEC_RINT | MASK_CEC_TINT));
 		intstatus &= ~(MASK_CEC_RINT | MASK_CEC_TINT);
@@ -1480,11 +1461,7 @@ static int tc358743_isr(struct v4l2_subdev *sd, u32 status, bool *handled)
 static irqreturn_t tc358743_irq_handler(int irq, void *dev_id)
 {
 	struct tc358743_state *state = dev_id;
-<<<<<<< HEAD
 	bool handled;
-=======
-	bool handled = false;
->>>>>>> rebase
 
 	tc358743_isr(&state->sd, 0, &handled);
 
@@ -1993,10 +1970,6 @@ static int tc358743_probe_of(struct tc358743_state *state)
 	bps_pr_lane = 2 * endpoint->link_frequencies[0];
 	if (bps_pr_lane < 62500000U || bps_pr_lane > 1000000000U) {
 		dev_err(dev, "unsupported bps per lane: %u bps\n", bps_pr_lane);
-<<<<<<< HEAD
-=======
-		ret = -EINVAL;
->>>>>>> rebase
 		goto disable_clk;
 	}
 
@@ -2217,11 +2190,7 @@ static int tc358743_remove(struct i2c_client *client)
 		del_timer_sync(&state->timer);
 		flush_work(&state->work_i2c_poll);
 	}
-<<<<<<< HEAD
 	cancel_delayed_work(&state->delayed_work_enable_hotplug);
-=======
-	cancel_delayed_work_sync(&state->delayed_work_enable_hotplug);
->>>>>>> rebase
 	cec_unregister_adapter(state->cec_adap);
 	v4l2_async_unregister_subdev(sd);
 	v4l2_device_unregister_subdev(sd);

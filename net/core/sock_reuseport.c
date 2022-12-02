@@ -112,10 +112,6 @@ static struct sock_reuseport *reuseport_grow(struct sock_reuseport *reuse)
 	more_reuse->prog = reuse->prog;
 	more_reuse->reuseport_id = reuse->reuseport_id;
 	more_reuse->bind_inany = reuse->bind_inany;
-<<<<<<< HEAD
-=======
-	more_reuse->has_conns = reuse->has_conns;
->>>>>>> rebase
 
 	memcpy(more_reuse->socks, reuse->socks,
 	       reuse->num_socks * sizeof(struct sock *));
@@ -302,11 +298,7 @@ select_by_hash:
 			i = j = reciprocal_scale(hash, socks);
 			while (reuse->socks[i]->sk_state == TCP_ESTABLISHED) {
 				i++;
-<<<<<<< HEAD
 				if (i >= reuse->num_socks)
-=======
-				if (i >= socks)
->>>>>>> rebase
 					i = 0;
 				if (i == j)
 					goto out;

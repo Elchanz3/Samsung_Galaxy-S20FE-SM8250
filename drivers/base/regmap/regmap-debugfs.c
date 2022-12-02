@@ -209,12 +209,6 @@ static ssize_t regmap_read_debugfs(struct regmap *map, unsigned int from,
 	if (*ppos < 0 || !count)
 		return -EINVAL;
 
-<<<<<<< HEAD
-=======
-	if (count > (PAGE_SIZE << (MAX_ORDER - 1)))
-		count = PAGE_SIZE << (MAX_ORDER - 1);
-
->>>>>>> rebase
 	buf = kmalloc(count, GFP_KERNEL);
 	if (!buf)
 		return -ENOMEM;
@@ -280,12 +274,7 @@ static ssize_t regmap_map_read_file(struct file *file, char __user *user_buf,
 				   count, ppos);
 }
 
-<<<<<<< HEAD
 #ifdef CONFIG_REGMAP_ALLOW_WRITE_DEBUGFS
-=======
-#undef REGMAP_ALLOW_WRITE_DEBUGFS
-#ifdef REGMAP_ALLOW_WRITE_DEBUGFS
->>>>>>> rebase
 /*
  * This can be dangerous especially when we have clients such as
  * PMICs, therefore don't provide any real compile time configuration option
@@ -335,7 +324,6 @@ static const struct file_operations regmap_map_fops = {
 	.llseek = default_llseek,
 };
 
-<<<<<<< HEAD
 static ssize_t regmap_data_read_file(struct file *file, char __user *user_buf,
 				    size_t count, loff_t *ppos)
 {
@@ -400,8 +388,6 @@ static const struct file_operations regmap_data_fops = {
 	.llseek = default_llseek,
 };
 
-=======
->>>>>>> rebase
 static ssize_t regmap_range_read_file(struct file *file, char __user *user_buf,
 				      size_t count, loff_t *ppos)
 {
@@ -434,12 +420,6 @@ static ssize_t regmap_reg_ranges_read_file(struct file *file,
 	if (*ppos < 0 || !count)
 		return -EINVAL;
 
-<<<<<<< HEAD
-=======
-	if (count > (PAGE_SIZE << (MAX_ORDER - 1)))
-		count = PAGE_SIZE << (MAX_ORDER - 1);
-
->>>>>>> rebase
 	buf = kmalloc(count, GFP_KERNEL);
 	if (!buf)
 		return -ENOMEM;
@@ -536,7 +516,6 @@ static ssize_t regmap_cache_only_write_file(struct file *file,
 {
 	struct regmap *map = container_of(file->private_data,
 					  struct regmap, cache_only);
-<<<<<<< HEAD
 	ssize_t result;
 	bool was_enabled, require_sync = false;
 	int err;
@@ -560,33 +539,6 @@ static ssize_t regmap_cache_only_write_file(struct file *file,
 	}
 
 	map->unlock(map->lock_arg);
-=======
-	bool new_val, require_sync = false;
-	int err;
-
-	err = kstrtobool_from_user(user_buf, count, &new_val);
-	/* Ignore malforned data like debugfs_write_file_bool() */
-	if (err)
-		return count;
-
-	err = debugfs_file_get(file->f_path.dentry);
-	if (err)
-		return err;
-
-	map->lock(map->lock_arg);
-
-	if (new_val && !map->cache_only) {
-		dev_warn(map->dev, "debugfs cache_only=Y forced\n");
-		add_taint(TAINT_USER, LOCKDEP_STILL_OK);
-	} else if (!new_val && map->cache_only) {
-		dev_warn(map->dev, "debugfs cache_only=N forced: syncing cache\n");
-		require_sync = true;
-	}
-	map->cache_only = new_val;
-
-	map->unlock(map->lock_arg);
-	debugfs_file_put(file->f_path.dentry);
->>>>>>> rebase
 
 	if (require_sync) {
 		err = regcache_sync(map);
@@ -594,11 +546,7 @@ static ssize_t regmap_cache_only_write_file(struct file *file,
 			dev_err(map->dev, "Failed to sync cache %d\n", err);
 	}
 
-<<<<<<< HEAD
 	return result;
-=======
-	return count;
->>>>>>> rebase
 }
 
 static const struct file_operations regmap_cache_only_fops = {
@@ -613,7 +561,6 @@ static ssize_t regmap_cache_bypass_write_file(struct file *file,
 {
 	struct regmap *map = container_of(file->private_data,
 					  struct regmap, cache_bypass);
-<<<<<<< HEAD
 	ssize_t result;
 	bool was_enabled;
 
@@ -636,34 +583,6 @@ out:
 	map->unlock(map->lock_arg);
 
 	return result;
-=======
-	bool new_val;
-	int err;
-
-	err = kstrtobool_from_user(user_buf, count, &new_val);
-	/* Ignore malforned data like debugfs_write_file_bool() */
-	if (err)
-		return count;
-
-	err = debugfs_file_get(file->f_path.dentry);
-	if (err)
-		return err;
-
-	map->lock(map->lock_arg);
-
-	if (new_val && !map->cache_bypass) {
-		dev_warn(map->dev, "debugfs cache_bypass=Y forced\n");
-		add_taint(TAINT_USER, LOCKDEP_STILL_OK);
-	} else if (!new_val && map->cache_bypass) {
-		dev_warn(map->dev, "debugfs cache_bypass=N forced\n");
-	}
-	map->cache_bypass = new_val;
-
-	map->unlock(map->lock_arg);
-	debugfs_file_put(file->f_path.dentry);
-
-	return count;
->>>>>>> rebase
 }
 
 static const struct file_operations regmap_cache_bypass_fops = {
@@ -711,17 +630,8 @@ void regmap_debugfs_init(struct regmap *map, const char *name)
 		devname = dev_name(map->dev);
 
 	if (name) {
-<<<<<<< HEAD
 		map->debugfs_name = kasprintf(GFP_KERNEL, "%s-%s",
 					      devname, name);
-=======
-		if (!map->debugfs_name) {
-			map->debugfs_name = kasprintf(GFP_KERNEL, "%s-%s",
-					      devname, name);
-			if (!map->debugfs_name)
-				return;
-		}
->>>>>>> rebase
 		name = map->debugfs_name;
 	} else {
 		name = devname;
@@ -729,16 +639,9 @@ void regmap_debugfs_init(struct regmap *map, const char *name)
 
 	if (!strcmp(name, "dummy")) {
 		kfree(map->debugfs_name);
-<<<<<<< HEAD
 
 		map->debugfs_name = kasprintf(GFP_KERNEL, "dummy%d",
 						dummy_index);
-=======
-		map->debugfs_name = kasprintf(GFP_KERNEL, "dummy%d",
-						dummy_index);
-		if (!map->debugfs_name)
-				return;
->>>>>>> rebase
 		name = map->debugfs_name;
 		dummy_index++;
 	}
@@ -762,11 +665,7 @@ void regmap_debugfs_init(struct regmap *map, const char *name)
 	if (map->max_register || regmap_readable(map, 0)) {
 		umode_t registers_mode;
 
-<<<<<<< HEAD
 #ifdef CONFIG_REGMAP_ALLOW_WRITE_DEBUGFS
-=======
-#if defined(REGMAP_ALLOW_WRITE_DEBUGFS)
->>>>>>> rebase
 		registers_mode = 0600;
 #else
 		registers_mode = 0400;
@@ -774,7 +673,6 @@ void regmap_debugfs_init(struct regmap *map, const char *name)
 
 		debugfs_create_file("registers", registers_mode, map->debugfs,
 				    map, &regmap_map_fops);
-<<<<<<< HEAD
 
 		debugfs_create_x32("address", 0600, map->debugfs,
 				    &map->dump_address);
@@ -784,8 +682,6 @@ void regmap_debugfs_init(struct regmap *map, const char *name)
 		debugfs_create_file("data", registers_mode, map->debugfs,
 				    map, &regmap_data_fops);
 
-=======
->>>>>>> rebase
 		debugfs_create_file("access", 0400, map->debugfs,
 				    map, &regmap_access_fops);
 	}
@@ -824,10 +720,6 @@ void regmap_debugfs_exit(struct regmap *map)
 		regmap_debugfs_free_dump_cache(map);
 		mutex_unlock(&map->cache_lock);
 		kfree(map->debugfs_name);
-<<<<<<< HEAD
-=======
-		map->debugfs_name = NULL;
->>>>>>> rebase
 	} else {
 		struct regmap_debugfs_node *node, *tmp;
 

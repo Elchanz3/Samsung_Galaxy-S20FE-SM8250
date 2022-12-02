@@ -53,15 +53,12 @@ struct ieee80211_local;
 #define IEEE80211_ENCRYPT_HEADROOM 8
 #define IEEE80211_ENCRYPT_TAILROOM 18
 
-<<<<<<< HEAD
 /* IEEE 802.11 (Ch. 9.5 Defragmentation) requires support for concurrent
  * reception of at least three fragmented frames. This limit can be increased
  * by changing this define, at the cost of slower frame reassembly and
  * increased memory use (about 2 kB of RAM per entry). */
 #define IEEE80211_FRAGMENT_MAX 4
 
-=======
->>>>>>> rebase
 /* power level hasn't been configured (or set to automatic) */
 #define IEEE80211_UNSET_POWER_LEVEL	INT_MIN
 
@@ -94,7 +91,6 @@ extern const u8 ieee80211_ac_to_qos_mask[IEEE80211_NUM_ACS];
 
 #define IEEE80211_MAX_NAN_INSTANCE_ID 255
 
-<<<<<<< HEAD
 struct ieee80211_fragment_entry {
 	struct sk_buff_head skb_list;
 	unsigned long first_frag_time;
@@ -107,8 +103,6 @@ struct ieee80211_fragment_entry {
 };
 
 
-=======
->>>>>>> rebase
 struct ieee80211_bss {
 	u32 device_ts_beacon, device_ts_presp;
 
@@ -249,20 +243,8 @@ struct ieee80211_rx_data {
 	 */
 	int security_idx;
 
-<<<<<<< HEAD
 	u32 tkip_iv32;
 	u16 tkip_iv16;
-=======
-	union {
-		struct {
-			u32 iv32;
-			u16 iv16;
-		} tkip;
-		struct {
-			u8 pn[IEEE80211_CCMP_PN_LEN];
-		} ccm_gcm;
-	};
->>>>>>> rebase
 };
 
 struct ieee80211_csa_settings {
@@ -902,13 +884,9 @@ struct ieee80211_sub_if_data {
 
 	char name[IFNAMSIZ];
 
-<<<<<<< HEAD
 	/* Fragment table for host-based reassembly */
 	struct ieee80211_fragment_entry	fragments[IEEE80211_FRAGMENT_MAX];
 	unsigned int fragment_next;
-=======
-	struct ieee80211_fragment_cache frags;
->>>>>>> rebase
 
 	/* TID bitmap for NoAck policy */
 	u16 noack_map;
@@ -1073,10 +1051,6 @@ enum queue_stop_reason {
 	IEEE80211_QUEUE_STOP_REASON_FLUSH,
 	IEEE80211_QUEUE_STOP_REASON_TDLS_TEARDOWN,
 	IEEE80211_QUEUE_STOP_REASON_RESERVE_TID,
-<<<<<<< HEAD
-=======
-	IEEE80211_QUEUE_STOP_REASON_IFTYPE_CHANGE,
->>>>>>> rebase
 
 	IEEE80211_QUEUE_STOP_REASONS,
 };
@@ -1110,12 +1084,6 @@ struct tpt_led_trigger {
  *	a scan complete for an aborted scan.
  * @SCAN_HW_CANCELLED: Set for our scan work function when the scan is being
  *	cancelled.
-<<<<<<< HEAD
-=======
- * @SCAN_BEACON_WAIT: Set whenever we're passive scanning because of radar/no-IR
- *	and could send a probe request after receiving a beacon.
- * @SCAN_BEACON_DONE: Beacon received, we can now send a probe request
->>>>>>> rebase
  */
 enum {
 	SCAN_SW_SCANNING,
@@ -1124,11 +1092,6 @@ enum {
 	SCAN_COMPLETED,
 	SCAN_ABORTED,
 	SCAN_HW_CANCELLED,
-<<<<<<< HEAD
-=======
-	SCAN_BEACON_WAIT,
-	SCAN_BEACON_DONE,
->>>>>>> rebase
 };
 
 /**
@@ -1447,11 +1410,7 @@ ieee80211_get_sband(struct ieee80211_sub_if_data *sdata)
 	rcu_read_lock();
 	chanctx_conf = rcu_dereference(sdata->vif.chanctx_conf);
 
-<<<<<<< HEAD
 	if (WARN_ON_ONCE(!chanctx_conf)) {
-=======
-	if (!chanctx_conf) {
->>>>>>> rebase
 		rcu_read_unlock();
 		return NULL;
 	}
@@ -1770,12 +1729,7 @@ netdev_tx_t ieee80211_subif_start_xmit(struct sk_buff *skb,
 				       struct net_device *dev);
 void __ieee80211_subif_start_xmit(struct sk_buff *skb,
 				  struct net_device *dev,
-<<<<<<< HEAD
 				  u32 info_flags);
-=======
-				  u32 info_flags,
-				  u32 ctrl_flags);
->>>>>>> rebase
 void ieee80211_purge_tx_queue(struct ieee80211_hw *hw,
 			      struct sk_buff_head *skbs);
 struct sk_buff *
@@ -2248,10 +2202,4 @@ extern const struct ethtool_ops ieee80211_ethtool_ops;
 #define debug_noinline
 #endif
 
-<<<<<<< HEAD
-=======
-void ieee80211_init_frag_cache(struct ieee80211_fragment_cache *cache);
-void ieee80211_destroy_frag_cache(struct ieee80211_fragment_cache *cache);
-
->>>>>>> rebase
 #endif /* IEEE80211_I_H */

@@ -313,7 +313,6 @@ config BACKLIGHT_PM8941_WLED
 	  If you have the Qualcomm PM8941, say Y to enable a driver for the
 	  WLED block.
 
-<<<<<<< HEAD
 config BACKLIGHT_QCOM_SPMI_WLED
 	tristate "Qualcomm Technologies, Inc. WLED Driver"
 	select REGMAP
@@ -324,8 +323,6 @@ config BACKLIGHT_QCOM_SPMI_WLED
 	  of the display backlight. This supports PMI8998, PM8150L, PM6150L
 	  currently.
 
-=======
->>>>>>> rebase
 config BACKLIGHT_SAHARA
 	tristate "Tabletkiosk Sahara Touch-iT Backlight Driver"
 	depends on X86

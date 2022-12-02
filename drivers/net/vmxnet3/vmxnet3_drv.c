@@ -595,10 +595,6 @@ vmxnet3_rq_alloc_rx_buf(struct vmxnet3_rx_queue *rq, u32 ring_idx,
 				if (dma_mapping_error(&adapter->pdev->dev,
 						      rbi->dma_addr)) {
 					dev_kfree_skb_any(rbi->skb);
-<<<<<<< HEAD
-=======
-					rbi->skb = NULL;
->>>>>>> rebase
 					rq->stats.rx_buf_alloc_failure++;
 					break;
 				}
@@ -623,10 +619,6 @@ vmxnet3_rq_alloc_rx_buf(struct vmxnet3_rx_queue *rq, u32 ring_idx,
 				if (dma_mapping_error(&adapter->pdev->dev,
 						      rbi->dma_addr)) {
 					put_page(rbi->page);
-<<<<<<< HEAD
-=======
-					rbi->page = NULL;
->>>>>>> rebase
 					rq->stats.rx_buf_alloc_failure++;
 					break;
 				}
@@ -1592,13 +1584,6 @@ vmxnet3_rq_cleanup(struct vmxnet3_rx_queue *rq,
 	u32 i, ring_idx;
 	struct Vmxnet3_RxDesc *rxd;
 
-<<<<<<< HEAD
-=======
-	/* ring has already been cleaned up */
-	if (!rq->rx_ring[0].base)
-		return;
-
->>>>>>> rebase
 	for (ring_idx = 0; ring_idx < 2; ring_idx++) {
 		for (i = 0; i < rq->rx_ring[ring_idx].size; i++) {
 #ifdef __BIG_ENDIAN_BITFIELD
@@ -3649,10 +3634,7 @@ vmxnet3_suspend(struct device *device)
 	vmxnet3_free_intr_resources(adapter);
 
 	netif_device_detach(netdev);
-<<<<<<< HEAD
 	netif_tx_stop_all_queues(netdev);
-=======
->>>>>>> rebase
 
 	/* Create wake-up filters. */
 	pmConf = adapter->pm_conf;

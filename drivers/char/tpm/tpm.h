@@ -188,10 +188,6 @@ struct tpm_space {
 	u8 *context_buf;
 	u32 session_tbl[3];
 	u8 *session_buf;
-<<<<<<< HEAD
-=======
-	u32 buf_size;
->>>>>>> rebase
 };
 
 enum tpm_chip_flags {
@@ -282,12 +278,6 @@ struct tpm_output_header {
 
 #define TPM_TAG_RQU_COMMAND 193
 
-<<<<<<< HEAD
-=======
-/* TPM2 specific constants. */
-#define TPM2_SPACE_BUFFER_SIZE		16384 /* 16 kB */
-
->>>>>>> rebase
 struct	stclear_flags_t {
 	__be16	tag;
 	u8	deactivated;
@@ -605,24 +595,13 @@ void tpm2_shutdown(struct tpm_chip *chip, u16 shutdown_type);
 unsigned long tpm2_calc_ordinal_duration(struct tpm_chip *chip, u32 ordinal);
 int tpm2_probe(struct tpm_chip *chip);
 int tpm2_find_cc(struct tpm_chip *chip, u32 cc);
-<<<<<<< HEAD
 int tpm2_init_space(struct tpm_space *space);
-=======
-int tpm2_init_space(struct tpm_space *space, unsigned int buf_size);
->>>>>>> rebase
 void tpm2_del_space(struct tpm_chip *chip, struct tpm_space *space);
 int tpm2_prepare_space(struct tpm_chip *chip, struct tpm_space *space, u32 cc,
 		       u8 *cmd);
 int tpm2_commit_space(struct tpm_chip *chip, struct tpm_space *space,
 		      u32 cc, u8 *buf, size_t *bufsiz);
-<<<<<<< HEAD
 
 int tpm_bios_log_setup(struct tpm_chip *chip);
-=======
-int tpm_devs_add(struct tpm_chip *chip);
-void tpm_devs_remove(struct tpm_chip *chip);
-
-void tpm_bios_log_setup(struct tpm_chip *chip);
->>>>>>> rebase
 void tpm_bios_log_teardown(struct tpm_chip *chip);
 #endif

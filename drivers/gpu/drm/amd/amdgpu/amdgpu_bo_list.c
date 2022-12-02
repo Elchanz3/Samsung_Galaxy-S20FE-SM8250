@@ -57,11 +57,7 @@ static void amdgpu_bo_list_free(struct kref *ref)
 
 int amdgpu_bo_list_create(struct amdgpu_device *adev, struct drm_file *filp,
 			  struct drm_amdgpu_bo_list_entry *info,
-<<<<<<< HEAD
 			  unsigned num_entries, struct amdgpu_bo_list **result)
-=======
-			  size_t num_entries, struct amdgpu_bo_list **result)
->>>>>>> rebase
 {
 	unsigned last_entry = 0, first_userptr = num_entries;
 	struct amdgpu_bo_list_entry *array;

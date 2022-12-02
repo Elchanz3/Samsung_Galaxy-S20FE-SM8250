@@ -9,10 +9,7 @@ struct sched_param {
 };
 
 #define SCHED_ATTR_SIZE_VER0	48	/* sizeof first published struct */
-<<<<<<< HEAD
 #define SCHED_ATTR_SIZE_VER1	56	/* add: util_{min,max} */
-=======
->>>>>>> rebase
 
 /*
  * Extended scheduling parameters data structure.
@@ -25,7 +22,6 @@ struct sched_param {
  * the tasks may be useful for a wide variety of application fields, e.g.,
  * multimedia, streaming, automation and control, and many others.
  *
-<<<<<<< HEAD
  * This variant (sched_attr) allows to define additional attributes to
  * improve the scheduler knowledge about task requirements.
  *
@@ -53,10 +49,6 @@ struct sched_param {
  * sporadic time-constrained task.
  *
  * In such a model a task is specified by:
-=======
- * This variant (sched_attr) is meant at describing a so-called
- * sporadic time-constrained task. In such model a task is specified by:
->>>>>>> rebase
  *  - the activation period or minimum instance inter-arrival time;
  *  - the maximum (or average, depending on the actual scheduling
  *    discipline) computation time of all instances, a.k.a. runtime;
@@ -68,19 +60,8 @@ struct sched_param {
  * than the runtime and must be completed by time instant t equal to
  * the instance activation time + the deadline.
  *
-<<<<<<< HEAD
  * This is reflected by the following fields of the sched_attr structure:
  *
-=======
- * This is reflected by the actual fields of the sched_attr structure:
- *
- *  @size		size of the structure, for fwd/bwd compat.
- *
- *  @sched_policy	task's scheduling policy
- *  @sched_flags	for customizing the scheduler behaviour
- *  @sched_nice		task's nice value      (SCHED_NORMAL/BATCH)
- *  @sched_priority	task's static priority (SCHED_FIFO/RR)
->>>>>>> rebase
  *  @sched_deadline	representative of the task's deadline
  *  @sched_runtime	representative of the task's runtime
  *  @sched_period	representative of the task's period
@@ -92,7 +73,6 @@ struct sched_param {
  * As of now, the SCHED_DEADLINE policy (sched_dl scheduling class) is the
  * only user of this new interface. More information about the algorithm
  * available in the scheduling class file or in Documentation/.
-<<<<<<< HEAD
  *
  * Task Utilization Attributes
  * ===========================
@@ -116,8 +96,6 @@ struct sched_param {
  * on a CPU with a capacity big enough to fit the specified value.
  * A task with a max utilization value smaller than 1024 is more likely
  * scheduled on a CPU with no more capacity than the specified value.
-=======
->>>>>>> rebase
  */
 struct sched_attr {
 	__u32 size;
@@ -135,14 +113,11 @@ struct sched_attr {
 	__u64 sched_runtime;
 	__u64 sched_deadline;
 	__u64 sched_period;
-<<<<<<< HEAD
 
 	/* Utilization hints */
 	__u32 sched_util_min;
 	__u32 sched_util_max;
 
-=======
->>>>>>> rebase
 };
 
 #endif /* _UAPI_LINUX_SCHED_TYPES_H */

@@ -572,10 +572,6 @@ static int __init pci_epf_test_init(void)
 					     WQ_MEM_RECLAIM | WQ_HIGHPRI, 0);
 	ret = pci_epf_register_driver(&test_driver);
 	if (ret) {
-<<<<<<< HEAD
-=======
-		destroy_workqueue(kpcitest_workqueue);
->>>>>>> rebase
 		pr_err("Failed to register pci epf test driver --> %d\n", ret);
 		return ret;
 	}
@@ -586,11 +582,6 @@ module_init(pci_epf_test_init);
 
 static void __exit pci_epf_test_exit(void)
 {
-<<<<<<< HEAD
-=======
-	if (kpcitest_workqueue)
-		destroy_workqueue(kpcitest_workqueue);
->>>>>>> rebase
 	pci_epf_unregister_driver(&test_driver);
 }
 module_exit(pci_epf_test_exit);

@@ -98,16 +98,9 @@ struct ip_tunnel *ip_tunnel_lookup(struct ip_tunnel_net *itn,
 				   __be32 remote, __be32 local,
 				   __be32 key)
 {
-<<<<<<< HEAD
 	unsigned int hash;
 	struct ip_tunnel *t, *cand = NULL;
 	struct hlist_head *head;
-=======
-	struct ip_tunnel *t, *cand = NULL;
-	struct hlist_head *head;
-	struct net_device *ndev;
-	unsigned int hash;
->>>>>>> rebase
 
 	hash = ip_tunnel_hash(key, remote);
 	head = &itn->tunnels[hash];
@@ -162,16 +155,11 @@ struct ip_tunnel *ip_tunnel_lookup(struct ip_tunnel_net *itn,
 			cand = t;
 	}
 
-<<<<<<< HEAD
 	if (flags & TUNNEL_NO_KEY)
 		goto skip_key_lookup;
 
 	hlist_for_each_entry_rcu(t, head, hash_node) {
 		if (t->parms.i_key != key ||
-=======
-	hlist_for_each_entry_rcu(t, head, hash_node) {
-		if ((!(flags & TUNNEL_NO_KEY) && t->parms.i_key != key) ||
->>>>>>> rebase
 		    t->parms.iph.saddr != 0 ||
 		    t->parms.iph.daddr != 0 ||
 		    !(t->dev->flags & IFF_UP))
@@ -183,10 +171,7 @@ struct ip_tunnel *ip_tunnel_lookup(struct ip_tunnel_net *itn,
 			cand = t;
 	}
 
-<<<<<<< HEAD
 skip_key_lookup:
-=======
->>>>>>> rebase
 	if (cand)
 		return cand;
 
@@ -194,14 +179,8 @@ skip_key_lookup:
 	if (t && t->dev->flags & IFF_UP)
 		return t;
 
-<<<<<<< HEAD
 	if (itn->fb_tunnel_dev && itn->fb_tunnel_dev->flags & IFF_UP)
 		return netdev_priv(itn->fb_tunnel_dev);
-=======
-	ndev = READ_ONCE(itn->fb_tunnel_dev);
-	if (ndev && ndev->flags & IFF_UP)
-		return netdev_priv(ndev);
->>>>>>> rebase
 
 	return NULL;
 }
@@ -353,11 +332,7 @@ static int ip_tunnel_bind_dev(struct net_device *dev)
 	}
 
 	dev->needed_headroom = t_hlen + hlen;
-<<<<<<< HEAD
 	mtu -= (dev->hard_header_len + t_hlen);
-=======
-	mtu -= t_hlen + (dev->type == ARPHRD_ETHER ? dev->hard_header_len : 0);
->>>>>>> rebase
 
 	if (mtu < IPV4_MIN_MTU)
 		mtu = IPV4_MIN_MTU;
@@ -387,14 +362,7 @@ static struct ip_tunnel *ip_tunnel_create(struct net *net,
 	nt = netdev_priv(dev);
 	t_hlen = nt->hlen + sizeof(struct iphdr);
 	dev->min_mtu = ETH_MIN_MTU;
-<<<<<<< HEAD
 	dev->max_mtu = IP_MAX_MTU - dev->hard_header_len - t_hlen;
-=======
-	dev->max_mtu = IP_MAX_MTU - t_hlen;
-	if (dev->type == ARPHRD_ETHER)
-		dev->max_mtu -= dev->hard_header_len;
-
->>>>>>> rebase
 	ip_tunnel_add(itn, nt);
 	return nt;
 
@@ -536,7 +504,6 @@ static int tnl_update_pmtu(struct net_device *dev, struct sk_buff *skb,
 			    const struct iphdr *inner_iph)
 {
 	struct ip_tunnel *tunnel = netdev_priv(dev);
-<<<<<<< HEAD
 	int pkt_size = skb->len - tunnel->hlen - dev->hard_header_len;
 	int mtu;
 
@@ -545,20 +512,6 @@ static int tnl_update_pmtu(struct net_device *dev, struct sk_buff *skb,
 					- sizeof(struct iphdr) - tunnel->hlen;
 	else
 		mtu = skb_dst(skb) ? dst_mtu(skb_dst(skb)) : dev->mtu;
-=======
-	int pkt_size;
-	int mtu;
-
-	pkt_size = skb->len - tunnel->hlen;
-	pkt_size -= dev->type == ARPHRD_ETHER ? dev->hard_header_len : 0;
-
-	if (df) {
-		mtu = dst_mtu(&rt->dst) - (sizeof(struct iphdr) + tunnel->hlen);
-		mtu -= dev->type == ARPHRD_ETHER ? dev->hard_header_len : 0;
-	} else {
-		mtu = skb_dst(skb) ? dst_mtu(skb_dst(skb)) : dev->mtu;
-	}
->>>>>>> rebase
 
 	skb_dst_update_pmtu_no_confirm(skb, mtu);
 
@@ -785,15 +738,7 @@ void ip_tunnel_xmit(struct sk_buff *skb, struct net_device *dev,
 		goto tx_error;
 	}
 
-<<<<<<< HEAD
 	if (tnl_update_pmtu(dev, skb, rt, tnl_params->frag_off, inner_iph)) {
-=======
-	df = tnl_params->frag_off;
-	if (skb->protocol == htons(ETH_P_IP) && !tunnel->ignore_df)
-		df |= (inner_iph->frag_off & htons(IP_DF));
-
-	if (tnl_update_pmtu(dev, skb, rt, df, inner_iph)) {
->>>>>>> rebase
 		ip_rt_put(rt);
 		goto tx_error;
 	}
@@ -821,13 +766,10 @@ void ip_tunnel_xmit(struct sk_buff *skb, struct net_device *dev,
 			ttl = ip4_dst_hoplimit(&rt->dst);
 	}
 
-<<<<<<< HEAD
 	df = tnl_params->frag_off;
 	if (skb->protocol == htons(ETH_P_IP) && !tunnel->ignore_df)
 		df |= (inner_iph->frag_off&htons(IP_DF));
 
-=======
->>>>>>> rebase
 	max_headroom = LL_RESERVED_SPACE(rt->dst.dev) + sizeof(struct iphdr)
 			+ rt->dst.header_len + ip_encap_hlen(&tunnel->encap);
 	if (max_headroom > dev->needed_headroom)
@@ -995,14 +937,7 @@ int __ip_tunnel_change_mtu(struct net_device *dev, int new_mtu, bool strict)
 {
 	struct ip_tunnel *tunnel = netdev_priv(dev);
 	int t_hlen = tunnel->hlen + sizeof(struct iphdr);
-<<<<<<< HEAD
 	int max_mtu = IP_MAX_MTU - dev->hard_header_len - t_hlen;
-=======
-	int max_mtu = IP_MAX_MTU - t_hlen;
-
-	if (dev->type == ARPHRD_ETHER)
-		max_mtu -= dev->hard_header_len;
->>>>>>> rebase
 
 	if (new_mtu < ETH_MIN_MTU)
 		return -EINVAL;
@@ -1179,19 +1114,10 @@ int ip_tunnel_newlink(struct net_device *dev, struct nlattr *tb[],
 
 	mtu = ip_tunnel_bind_dev(dev);
 	if (tb[IFLA_MTU]) {
-<<<<<<< HEAD
 		unsigned int max = IP_MAX_MTU - dev->hard_header_len - nt->hlen;
 
 		mtu = clamp(dev->mtu, (unsigned int)ETH_MIN_MTU,
 			    (unsigned int)(max - sizeof(struct iphdr)));
-=======
-		unsigned int max = IP_MAX_MTU - (nt->hlen + sizeof(struct iphdr));
-
-		if (dev->type == ARPHRD_ETHER)
-			max -= dev->hard_header_len;
-
-		mtu = clamp(dev->mtu, (unsigned int)ETH_MIN_MTU, max);
->>>>>>> rebase
 	}
 
 	err = dev_set_mtu(dev, mtu);
@@ -1290,15 +1216,9 @@ void ip_tunnel_uninit(struct net_device *dev)
 	struct ip_tunnel_net *itn;
 
 	itn = net_generic(net, tunnel->ip_tnl_net_id);
-<<<<<<< HEAD
 	/* fb_tunnel_dev will be unregisted in net-exit call. */
 	if (itn->fb_tunnel_dev != dev)
 		ip_tunnel_del(itn, netdev_priv(dev));
-=======
-	ip_tunnel_del(itn, netdev_priv(dev));
-	if (itn->fb_tunnel_dev == dev)
-		WRITE_ONCE(itn->fb_tunnel_dev, NULL);
->>>>>>> rebase
 
 	dst_cache_reset(&tunnel->dst_cache);
 }

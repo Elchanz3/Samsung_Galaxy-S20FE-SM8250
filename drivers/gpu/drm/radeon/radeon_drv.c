@@ -168,16 +168,12 @@ int radeon_no_wb;
 int radeon_modeset = -1;
 int radeon_dynclks = -1;
 int radeon_r4xx_atom = 0;
-<<<<<<< HEAD
 #ifdef __powerpc__
 /* Default to PCI on PowerPC (fdo #95017) */
 int radeon_agpmode = -1;
 #else
 int radeon_agpmode = 0;
 #endif
-=======
-int radeon_agpmode = -1;
->>>>>>> rebase
 int radeon_vram_limit = 0;
 int radeon_gart_size = -1; /* auto */
 int radeon_benchmarking = 0;
@@ -527,15 +523,8 @@ long radeon_drm_ioctl(struct file *filp,
 	long ret;
 	dev = file_priv->minor->dev;
 	ret = pm_runtime_get_sync(dev->dev);
-<<<<<<< HEAD
 	if (ret < 0)
 		return ret;
-=======
-	if (ret < 0) {
-		pm_runtime_put_autosuspend(dev->dev);
-		return ret;
-	}
->>>>>>> rebase
 
 	ret = drm_ioctl(filp, cmd, arg);
 	

@@ -173,10 +173,6 @@ unsigned long kallsyms_lookup_name(const char *name)
 	}
 	return module_kallsyms_lookup_name(name);
 }
-<<<<<<< HEAD
-=======
-EXPORT_SYMBOL_GPL(kallsyms_lookup_name);
->>>>>>> rebase
 
 int kallsyms_on_each_symbol(int (*fn)(void *, const char *, struct module *,
 				      unsigned long),
@@ -195,10 +191,6 @@ int kallsyms_on_each_symbol(int (*fn)(void *, const char *, struct module *,
 	}
 	return module_kallsyms_on_each_symbol(fn, data);
 }
-<<<<<<< HEAD
-=======
-EXPORT_SYMBOL_GPL(kallsyms_on_each_symbol);
->>>>>>> rebase
 
 static unsigned long get_symbol_pos(unsigned long addr,
 				    unsigned long *symbolsize,
@@ -276,7 +268,6 @@ int kallsyms_lookup_size_offset(unsigned long addr, unsigned long *symbolsize,
 	       !!__bpf_address_lookup(addr, symbolsize, offset, namebuf);
 }
 
-<<<<<<< HEAD
 #ifdef CONFIG_CFI_CLANG
 /*
  * LLVM appends .cfi to function names when CONFIG_CFI_CLANG is enabled,
@@ -301,8 +292,6 @@ static inline void cleanup_symbol_name(char *s)
 static inline void cleanup_symbol_name(char *s) {}
 #endif
 
-=======
->>>>>>> rebase
 /*
  * Lookup an address
  * - modname is set to NULL if it's in the kernel.
@@ -329,13 +318,9 @@ const char *kallsyms_lookup(unsigned long addr,
 				       namebuf, KSYM_NAME_LEN);
 		if (modname)
 			*modname = NULL;
-<<<<<<< HEAD
 
 		ret = namebuf;
 		goto found;
-=======
-		return namebuf;
->>>>>>> rebase
 	}
 
 	/* See if it's in a module or a BPF JITed image. */
@@ -348,22 +333,16 @@ const char *kallsyms_lookup(unsigned long addr,
 	if (!ret)
 		ret = ftrace_mod_address_lookup(addr, symbolsize,
 						offset, modname, namebuf);
-<<<<<<< HEAD
 
 found:
 	cleanup_symbol_name(namebuf);
-=======
->>>>>>> rebase
 	return ret;
 }
 
 int lookup_symbol_name(unsigned long addr, char *symname)
 {
-<<<<<<< HEAD
 	int res;
 
-=======
->>>>>>> rebase
 	symname[0] = '\0';
 	symname[KSYM_NAME_LEN - 1] = '\0';
 
@@ -374,7 +353,6 @@ int lookup_symbol_name(unsigned long addr, char *symname)
 		/* Grab name */
 		kallsyms_expand_symbol(get_symbol_offset(pos),
 				       symname, KSYM_NAME_LEN);
-<<<<<<< HEAD
 		goto found;
 	}
 	/* See if it's in a module. */
@@ -385,22 +363,13 @@ int lookup_symbol_name(unsigned long addr, char *symname)
 found:
 	cleanup_symbol_name(symname);
 	return 0;
-=======
-		return 0;
-	}
-	/* See if it's in a module. */
-	return lookup_module_symbol_name(addr, symname);
->>>>>>> rebase
 }
 
 int lookup_symbol_attrs(unsigned long addr, unsigned long *size,
 			unsigned long *offset, char *modname, char *name)
 {
-<<<<<<< HEAD
 	int res;
 
-=======
->>>>>>> rebase
 	name[0] = '\0';
 	name[KSYM_NAME_LEN - 1] = '\0';
 
@@ -412,7 +381,6 @@ int lookup_symbol_attrs(unsigned long addr, unsigned long *size,
 		kallsyms_expand_symbol(get_symbol_offset(pos),
 				       name, KSYM_NAME_LEN);
 		modname[0] = '\0';
-<<<<<<< HEAD
 		goto found;
 	}
 	/* See if it's in a module. */
@@ -423,12 +391,6 @@ int lookup_symbol_attrs(unsigned long addr, unsigned long *size,
 found:
 	cleanup_symbol_name(name);
 	return 0;
-=======
-		return 0;
-	}
-	/* See if it's in a module. */
-	return lookup_module_symbol_attrs(addr, size, offset, modname, name);
->>>>>>> rebase
 }
 
 /* Look up a kernel symbol and return it in a text buffer. */
@@ -725,16 +687,11 @@ static inline int kallsyms_for_perf(void)
  * Otherwise, require CAP_SYSLOG (assuming kptr_restrict isn't set to
  * block even that).
  */
-<<<<<<< HEAD
 int kallsyms_show_value(void)
-=======
-bool kallsyms_show_value(const struct cred *cred)
->>>>>>> rebase
 {
 	switch (kptr_restrict) {
 	case 0:
 		if (kallsyms_for_perf())
-<<<<<<< HEAD
 			return 1;
 	/* fallthrough */
 	case 1:
@@ -743,17 +700,6 @@ bool kallsyms_show_value(const struct cred *cred)
 	/* fallthrough */
 	default:
 		return 0;
-=======
-			return true;
-	/* fallthrough */
-	case 1:
-		if (security_capable(cred, &init_user_ns, CAP_SYSLOG,
-				     CAP_OPT_NOAUDIT) == 0)
-			return true;
-	/* fallthrough */
-	default:
-		return false;
->>>>>>> rebase
 	}
 }
 
@@ -770,15 +716,7 @@ static int kallsyms_open(struct inode *inode, struct file *file)
 		return -ENOMEM;
 	reset_iter(iter, 0);
 
-<<<<<<< HEAD
 	iter->show_value = kallsyms_show_value();
-=======
-	/*
-	 * Instead of checking this on every s_show() call, cache
-	 * the result here at open time.
-	 */
-	iter->show_value = kallsyms_show_value(file->f_cred);
->>>>>>> rebase
 	return 0;
 }
 

@@ -190,10 +190,6 @@ tusb_fifo_write_unaligned(void __iomem *fifo, const u8 *buf, u16 len)
 	}
 	if (len > 0) {
 		/* Write the rest 1 - 3 bytes to FIFO */
-<<<<<<< HEAD
-=======
-		val = 0;
->>>>>>> rebase
 		memcpy(&val, buf, len);
 		musb_writel(fifo, 0, val);
 	}
@@ -1106,14 +1102,6 @@ static int tusb_musb_init(struct musb *musb)
 
 	/* dma address for async dma */
 	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-<<<<<<< HEAD
-=======
-	if (!mem) {
-		pr_debug("no async dma resource?\n");
-		ret = -ENODEV;
-		goto done;
-	}
->>>>>>> rebase
 	musb->async = mem->start;
 
 	/* dma address for sync dma */

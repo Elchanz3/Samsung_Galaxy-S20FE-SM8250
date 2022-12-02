@@ -70,13 +70,7 @@ struct netns_xfrm {
 #if IS_ENABLED(CONFIG_IPV6)
 	struct dst_ops		xfrm6_dst_ops;
 #endif
-<<<<<<< HEAD
 	spinlock_t xfrm_state_lock;
-=======
-	spinlock_t		xfrm_state_lock;
-	seqcount_t		xfrm_state_hash_generation;
-
->>>>>>> rebase
 	spinlock_t xfrm_policy_lock;
 	struct mutex xfrm_cfg_mutex;
 };

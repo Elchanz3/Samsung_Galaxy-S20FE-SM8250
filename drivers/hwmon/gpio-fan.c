@@ -404,12 +404,6 @@ static int gpio_fan_set_cur_state(struct thermal_cooling_device *cdev,
 	if (!fan_data)
 		return -EINVAL;
 
-<<<<<<< HEAD
-=======
-	if (state >= fan_data->num_speed)
-		return -EINVAL;
-
->>>>>>> rebase
 	set_fan_speed(fan_data, state);
 	return 0;
 }

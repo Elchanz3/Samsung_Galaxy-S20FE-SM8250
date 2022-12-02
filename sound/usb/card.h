@@ -129,10 +129,6 @@ struct snd_usb_substream {
 	unsigned int tx_length_quirk:1;	/* add length specifier to transfers */
 	unsigned int fmt_type;		/* USB audio format type (1-3) */
 	unsigned int pkt_offset_adj;	/* Bytes to drop from beginning of packets (for non-compliant devices) */
-<<<<<<< HEAD
-=======
-	unsigned int stream_offset_adj;	/* Bytes to drop from beginning of stream (for non-compliant devices) */
->>>>>>> rebase
 
 	unsigned int running: 1;	/* running status */
 
@@ -176,11 +172,8 @@ struct snd_usb_stream {
 	struct list_head list;
 };
 
-<<<<<<< HEAD
 struct snd_usb_substream *find_snd_usb_substream(unsigned int card_num,
 	unsigned int pcm_idx, unsigned int direction, struct snd_usb_audio
 	**uchip, void (*disconnect_cb)(struct snd_usb_audio *chip));
 
-=======
->>>>>>> rebase
 #endif /* __USBAUDIO_CARD_H */

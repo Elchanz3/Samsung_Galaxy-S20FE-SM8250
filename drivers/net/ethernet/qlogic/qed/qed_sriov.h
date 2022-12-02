@@ -88,10 +88,6 @@ struct qed_public_vf_info {
 	bool is_trusted_request;
 	u8 rx_accept_mode;
 	u8 tx_accept_mode;
-<<<<<<< HEAD
-=======
-	bool accept_any_vlan;
->>>>>>> rebase
 };
 
 struct qed_iov_vf_init_params {

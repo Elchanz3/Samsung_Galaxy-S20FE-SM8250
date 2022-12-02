@@ -26,7 +26,6 @@
 #include <asm/asm-uaccess.h>
 
 /*
-<<<<<<< HEAD
  *	__flush_dcache_all()
  *
  *	Flush the whole D-cache.
@@ -100,8 +99,6 @@ ENTRY(flush_cache_all)
 ENDPROC(flush_cache_all)
 
 /*
-=======
->>>>>>> rebase
  *	flush_icache_range(start,end)
  *
  *	Ensure that the I and D caches are coherent within specified region.
@@ -233,11 +230,7 @@ ENTRY(__inval_dcache_area)
  *	- start   - virtual start address of region
  *	- size    - size in question
  */
-<<<<<<< HEAD
 ENTRY(__dma_inv_area)
-=======
-__dma_inv_area:
->>>>>>> rebase
 	add	x1, x1, x0
 	dcache_line_size x2, x3
 	sub	x3, x2, #1
@@ -276,11 +269,7 @@ ENTRY(__clean_dcache_area_poc)
  *	- start   - virtual start address of region
  *	- size    - size in question
  */
-<<<<<<< HEAD
 ENTRY(__dma_clean_area)
-=======
-__dma_clean_area:
->>>>>>> rebase
 	dcache_by_line_op cvac, sy, x0, x1, x2, x3
 	ret
 ENDPIPROC(__clean_dcache_area_poc)

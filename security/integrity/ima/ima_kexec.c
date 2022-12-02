@@ -124,10 +124,6 @@ void ima_add_kexec_buffer(struct kimage *image)
 	ret = kexec_add_buffer(&kbuf);
 	if (ret) {
 		pr_err("Error passing over kexec measurement buffer.\n");
-<<<<<<< HEAD
-=======
-		vfree(kexec_buffer);
->>>>>>> rebase
 		return;
 	}
 
@@ -137,11 +133,6 @@ void ima_add_kexec_buffer(struct kimage *image)
 		return;
 	}
 
-<<<<<<< HEAD
-=======
-	image->ima_buffer = kexec_buffer;
-
->>>>>>> rebase
 	pr_debug("kexec measurement buffer for the loaded kernel at 0x%lx.\n",
 		 kbuf.mem);
 }

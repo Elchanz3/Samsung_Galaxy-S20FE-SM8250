@@ -171,11 +171,7 @@ struct spacc_ablk_ctx {
 	 * The fallback cipher. If the operation can't be done in hardware,
 	 * fallback to a software version.
 	 */
-<<<<<<< HEAD
 	struct crypto_sync_skcipher	*sw_cipher;
-=======
-	struct crypto_skcipher		*sw_cipher;
->>>>>>> rebase
 };
 
 /* AEAD cipher context. */
@@ -803,7 +799,6 @@ static int spacc_aes_setkey(struct crypto_ablkcipher *cipher, const u8 *key,
 		 * Set the fallback transform to use the same request flags as
 		 * the hardware transform.
 		 */
-<<<<<<< HEAD
 		crypto_sync_skcipher_clear_flags(ctx->sw_cipher,
 					    CRYPTO_TFM_REQ_MASK);
 		crypto_sync_skcipher_set_flags(ctx->sw_cipher,
@@ -815,19 +810,6 @@ static int spacc_aes_setkey(struct crypto_ablkcipher *cipher, const u8 *key,
 		tfm->crt_flags &= ~CRYPTO_TFM_RES_MASK;
 		tfm->crt_flags |=
 			crypto_sync_skcipher_get_flags(ctx->sw_cipher) &
-=======
-		crypto_skcipher_clear_flags(ctx->sw_cipher,
-					    CRYPTO_TFM_REQ_MASK);
-		crypto_skcipher_set_flags(ctx->sw_cipher,
-					  cipher->base.crt_flags &
-					  CRYPTO_TFM_REQ_MASK);
-
-		err = crypto_skcipher_setkey(ctx->sw_cipher, key, len);
-
-		tfm->crt_flags &= ~CRYPTO_TFM_RES_MASK;
-		tfm->crt_flags |=
-			crypto_skcipher_get_flags(ctx->sw_cipher) &
->>>>>>> rebase
 			CRYPTO_TFM_RES_MASK;
 
 		if (err)
@@ -932,11 +914,7 @@ static int spacc_ablk_do_fallback(struct ablkcipher_request *req,
 	struct crypto_tfm *old_tfm =
 	    crypto_ablkcipher_tfm(crypto_ablkcipher_reqtfm(req));
 	struct spacc_ablk_ctx *ctx = crypto_tfm_ctx(old_tfm);
-<<<<<<< HEAD
 	SYNC_SKCIPHER_REQUEST_ON_STACK(subreq, ctx->sw_cipher);
-=======
-	SKCIPHER_REQUEST_ON_STACK(subreq, ctx->sw_cipher);
->>>>>>> rebase
 	int err;
 
 	/*
@@ -944,11 +922,7 @@ static int spacc_ablk_do_fallback(struct ablkcipher_request *req,
 	 * the ciphering has completed, put the old transform back into the
 	 * request.
 	 */
-<<<<<<< HEAD
 	skcipher_request_set_sync_tfm(subreq, ctx->sw_cipher);
-=======
-	skcipher_request_set_tfm(subreq, ctx->sw_cipher);
->>>>>>> rebase
 	skcipher_request_set_callback(subreq, req->base.flags, NULL, NULL);
 	skcipher_request_set_crypt(subreq, req->src, req->dst,
 				   req->nbytes, req->info);
@@ -1046,14 +1020,8 @@ static int spacc_ablk_cra_init(struct crypto_tfm *tfm)
 	ctx->generic.flags = spacc_alg->type;
 	ctx->generic.engine = engine;
 	if (alg->cra_flags & CRYPTO_ALG_NEED_FALLBACK) {
-<<<<<<< HEAD
 		ctx->sw_cipher = crypto_alloc_sync_skcipher(
 			alg->cra_name, 0, CRYPTO_ALG_NEED_FALLBACK);
-=======
-		ctx->sw_cipher = crypto_alloc_skcipher(
-			alg->cra_name, 0, CRYPTO_ALG_ASYNC |
-					  CRYPTO_ALG_NEED_FALLBACK);
->>>>>>> rebase
 		if (IS_ERR(ctx->sw_cipher)) {
 			dev_warn(engine->dev, "failed to allocate fallback for %s\n",
 				 alg->cra_name);
@@ -1072,11 +1040,7 @@ static void spacc_ablk_cra_exit(struct crypto_tfm *tfm)
 {
 	struct spacc_ablk_ctx *ctx = crypto_tfm_ctx(tfm);
 
-<<<<<<< HEAD
 	crypto_free_sync_skcipher(ctx->sw_cipher);
-=======
-	crypto_free_skcipher(ctx->sw_cipher);
->>>>>>> rebase
 }
 
 static int spacc_ablk_encrypt(struct ablkcipher_request *req)
@@ -1736,14 +1700,11 @@ static int spacc_probe(struct platform_device *pdev)
 		goto err_clk_put;
 	}
 
-<<<<<<< HEAD
 	ret = device_create_file(&pdev->dev, &dev_attr_stat_irq_thresh);
 	if (ret)
 		goto err_clk_disable;
 
 
-=======
->>>>>>> rebase
 	/*
 	 * Use an IRQ threshold of 50% as a default. This seems to be a
 	 * reasonable trade off of latency against throughput but can be
@@ -1751,13 +1712,6 @@ static int spacc_probe(struct platform_device *pdev)
 	 */
 	engine->stat_irq_thresh = (engine->fifo_sz / 2);
 
-<<<<<<< HEAD
-=======
-	ret = device_create_file(&pdev->dev, &dev_attr_stat_irq_thresh);
-	if (ret)
-		goto err_clk_disable;
-
->>>>>>> rebase
 	/*
 	 * Configure the interrupts. We only use the STAT_CNT interrupt as we
 	 * only submit a new packet for processing when we complete another in

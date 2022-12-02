@@ -259,10 +259,6 @@ out:
 }
 #endif /* CONFIG_PROC_FS */
 
-<<<<<<< HEAD
-=======
-#ifdef CONFIG_SCHED_DEBUG
->>>>>>> rebase
 int autogroup_path(struct task_group *tg, char *buf, int buflen)
 {
 	if (!task_group_is_autogroup(tg))
@@ -270,7 +266,3 @@ int autogroup_path(struct task_group *tg, char *buf, int buflen)
 
 	return snprintf(buf, buflen, "%s-%ld", "/autogroup", tg->autogroup->id);
 }
-<<<<<<< HEAD
-=======
-#endif
->>>>>>> rebase

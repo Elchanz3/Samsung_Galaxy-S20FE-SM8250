@@ -827,15 +827,8 @@ static void io_subchannel_register(struct ccw_device *cdev)
 	 * Now we know this subchannel will stay, we can throw
 	 * our delayed uevent.
 	 */
-<<<<<<< HEAD
 	dev_set_uevent_suppress(&sch->dev, 0);
 	kobject_uevent(&sch->dev.kobj, KOBJ_ADD);
-=======
-	if (dev_get_uevent_suppress(&sch->dev)) {
-		dev_set_uevent_suppress(&sch->dev, 0);
-		kobject_uevent(&sch->dev.kobj, KOBJ_ADD);
-	}
->>>>>>> rebase
 	/* make it known to the system */
 	ret = ccw_device_add(cdev);
 	if (ret) {
@@ -1043,16 +1036,8 @@ static int io_subchannel_probe(struct subchannel *sch)
 		 * Throw the delayed uevent for the subchannel, register
 		 * the ccw_device and exit.
 		 */
-<<<<<<< HEAD
 		dev_set_uevent_suppress(&sch->dev, 0);
 		kobject_uevent(&sch->dev.kobj, KOBJ_ADD);
-=======
-		if (dev_get_uevent_suppress(&sch->dev)) {
-			/* should always be the case for the console */
-			dev_set_uevent_suppress(&sch->dev, 0);
-			kobject_uevent(&sch->dev.kobj, KOBJ_ADD);
-		}
->>>>>>> rebase
 		cdev = sch_get_cdev(sch);
 		rc = ccw_device_add(cdev);
 		if (rc) {

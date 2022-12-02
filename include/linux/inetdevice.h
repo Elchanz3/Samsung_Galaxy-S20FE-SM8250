@@ -41,11 +41,7 @@ struct in_device {
 	unsigned long		mr_qri;		/* Query Response Interval */
 	unsigned char		mr_qrv;		/* Query Robustness Variable */
 	unsigned char		mr_gq_running;
-<<<<<<< HEAD
 	unsigned char		mr_ifc_count;
-=======
-	u32			mr_ifc_count;
->>>>>>> rebase
 	struct timer_list	mr_gq_timer;	/* general query timer */
 	struct timer_list	mr_ifc_timer;	/* interface change timer */
 
@@ -137,11 +133,8 @@ static inline void ipv4_devconf_setall(struct in_device *in_dev)
 #define IN_DEV_ARP_ANNOUNCE(in_dev)	IN_DEV_MAXCONF((in_dev), ARP_ANNOUNCE)
 #define IN_DEV_ARP_IGNORE(in_dev)	IN_DEV_MAXCONF((in_dev), ARP_IGNORE)
 #define IN_DEV_ARP_NOTIFY(in_dev)	IN_DEV_MAXCONF((in_dev), ARP_NOTIFY)
-<<<<<<< HEAD
 #define IN_DEV_NF_IPV4_DEFRAG_SKIP(in_dev) \
 	IN_DEV_ORCONF((in_dev), NF_IPV4_DEFRAG_SKIP)
-=======
->>>>>>> rebase
 
 struct in_ifaddr {
 	struct hlist_node	hash;

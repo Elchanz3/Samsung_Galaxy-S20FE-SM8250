@@ -84,11 +84,7 @@ static int plat_nand_probe(struct platform_device *pdev)
 	}
 
 	/* Scan to find existence of the device */
-<<<<<<< HEAD
 	err = nand_scan(mtd, pdata->chip.nr_chips);
-=======
-	err = nand_scan(&data->chip, pdata->chip.nr_chips);
->>>>>>> rebase
 	if (err)
 		goto out;
 
@@ -101,11 +97,7 @@ static int plat_nand_probe(struct platform_device *pdev)
 	if (!err)
 		return err;
 
-<<<<<<< HEAD
 	nand_release(mtd);
-=======
-	nand_cleanup(&data->chip);
->>>>>>> rebase
 out:
 	if (pdata->ctrl.remove)
 		pdata->ctrl.remove(pdev);
@@ -120,11 +112,7 @@ static int plat_nand_remove(struct platform_device *pdev)
 	struct plat_nand_data *data = platform_get_drvdata(pdev);
 	struct platform_nand_data *pdata = dev_get_platdata(&pdev->dev);
 
-<<<<<<< HEAD
 	nand_release(nand_to_mtd(&data->chip));
-=======
-	nand_release(&data->chip);
->>>>>>> rebase
 	if (pdata->ctrl.remove)
 		pdata->ctrl.remove(pdev);
 

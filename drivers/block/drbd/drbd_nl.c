@@ -774,17 +774,9 @@ int drbd_adm_set_role(struct sk_buff *skb, struct genl_info *info)
 	mutex_lock(&adm_ctx.resource->adm_mutex);
 
 	if (info->genlhdr->cmd == DRBD_ADM_PRIMARY)
-<<<<<<< HEAD
 		retcode = drbd_set_role(adm_ctx.device, R_PRIMARY, parms.assume_uptodate);
 	else
 		retcode = drbd_set_role(adm_ctx.device, R_SECONDARY, 0);
-=======
-		retcode = (enum drbd_ret_code)drbd_set_role(adm_ctx.device,
-						R_PRIMARY, parms.assume_uptodate);
-	else
-		retcode = (enum drbd_ret_code)drbd_set_role(adm_ctx.device,
-						R_SECONDARY, 0);
->>>>>>> rebase
 
 	mutex_unlock(&adm_ctx.resource->adm_mutex);
 	genl_lock();
@@ -1949,11 +1941,7 @@ int drbd_adm_attach(struct sk_buff *skb, struct genl_info *info)
 	drbd_flush_workqueue(&connection->sender_work);
 
 	rv = _drbd_request_state(device, NS(disk, D_ATTACHING), CS_VERBOSE);
-<<<<<<< HEAD
 	retcode = rv;  /* FIXME: Type mismatch. */
-=======
-	retcode = (enum drbd_ret_code)rv;
->>>>>>> rebase
 	drbd_resume_io(device);
 	if (rv < SS_SUCCESS)
 		goto fail;
@@ -2337,17 +2325,10 @@ check_net_options(struct drbd_connection *connection, struct net_conf *new_net_c
 }
 
 struct crypto {
-<<<<<<< HEAD
 	struct crypto_shash *verify_tfm;
 	struct crypto_shash *csums_tfm;
 	struct crypto_shash *cram_hmac_tfm;
 	struct crypto_shash *integrity_tfm;
-=======
-	struct crypto_ahash *verify_tfm;
-	struct crypto_ahash *csums_tfm;
-	struct crypto_shash *cram_hmac_tfm;
-	struct crypto_ahash *integrity_tfm;
->>>>>>> rebase
 };
 
 static int
@@ -2365,31 +2346,12 @@ alloc_shash(struct crypto_shash **tfm, char *tfm_name, int err_alg)
 	return NO_ERROR;
 }
 
-<<<<<<< HEAD
-=======
-static int
-alloc_ahash(struct crypto_ahash **tfm, char *tfm_name, int err_alg)
-{
-	if (!tfm_name[0])
-		return NO_ERROR;
-
-	*tfm = crypto_alloc_ahash(tfm_name, 0, CRYPTO_ALG_ASYNC);
-	if (IS_ERR(*tfm)) {
-		*tfm = NULL;
-		return err_alg;
-	}
-
-	return NO_ERROR;
-}
-
->>>>>>> rebase
 static enum drbd_ret_code
 alloc_crypto(struct crypto *crypto, struct net_conf *new_net_conf)
 {
 	char hmac_name[CRYPTO_MAX_ALG_NAME];
 	enum drbd_ret_code rv;
 
-<<<<<<< HEAD
 	rv = alloc_shash(&crypto->csums_tfm, new_net_conf->csums_alg,
 			 ERR_CSUMS_ALG);
 	if (rv != NO_ERROR)
@@ -2399,17 +2361,6 @@ alloc_crypto(struct crypto *crypto, struct net_conf *new_net_conf)
 	if (rv != NO_ERROR)
 		return rv;
 	rv = alloc_shash(&crypto->integrity_tfm, new_net_conf->integrity_alg,
-=======
-	rv = alloc_ahash(&crypto->csums_tfm, new_net_conf->csums_alg,
-			 ERR_CSUMS_ALG);
-	if (rv != NO_ERROR)
-		return rv;
-	rv = alloc_ahash(&crypto->verify_tfm, new_net_conf->verify_alg,
-			 ERR_VERIFY_ALG);
-	if (rv != NO_ERROR)
-		return rv;
-	rv = alloc_ahash(&crypto->integrity_tfm, new_net_conf->integrity_alg,
->>>>>>> rebase
 			 ERR_INTEGRITY_ALG);
 	if (rv != NO_ERROR)
 		return rv;
@@ -2427,15 +2378,9 @@ alloc_crypto(struct crypto *crypto, struct net_conf *new_net_conf)
 static void free_crypto(struct crypto *crypto)
 {
 	crypto_free_shash(crypto->cram_hmac_tfm);
-<<<<<<< HEAD
 	crypto_free_shash(crypto->integrity_tfm);
 	crypto_free_shash(crypto->csums_tfm);
 	crypto_free_shash(crypto->verify_tfm);
-=======
-	crypto_free_ahash(crypto->integrity_tfm);
-	crypto_free_ahash(crypto->csums_tfm);
-	crypto_free_ahash(crypto->verify_tfm);
->>>>>>> rebase
 }
 
 int drbd_adm_net_opts(struct sk_buff *skb, struct genl_info *info)
@@ -2512,29 +2457,17 @@ int drbd_adm_net_opts(struct sk_buff *skb, struct genl_info *info)
 	rcu_assign_pointer(connection->net_conf, new_net_conf);
 
 	if (!rsr) {
-<<<<<<< HEAD
 		crypto_free_shash(connection->csums_tfm);
-=======
-		crypto_free_ahash(connection->csums_tfm);
->>>>>>> rebase
 		connection->csums_tfm = crypto.csums_tfm;
 		crypto.csums_tfm = NULL;
 	}
 	if (!ovr) {
-<<<<<<< HEAD
 		crypto_free_shash(connection->verify_tfm);
-=======
-		crypto_free_ahash(connection->verify_tfm);
->>>>>>> rebase
 		connection->verify_tfm = crypto.verify_tfm;
 		crypto.verify_tfm = NULL;
 	}
 
-<<<<<<< HEAD
 	crypto_free_shash(connection->integrity_tfm);
-=======
-	crypto_free_ahash(connection->integrity_tfm);
->>>>>>> rebase
 	connection->integrity_tfm = crypto.integrity_tfm;
 	if (connection->cstate >= C_WF_REPORT_PARAMS && connection->agreed_pro_version >= 100)
 		/* Do this without trying to take connection->data.mutex again.  */
@@ -2723,12 +2656,7 @@ int drbd_adm_connect(struct sk_buff *skb, struct genl_info *info)
 	}
 	rcu_read_unlock();
 
-<<<<<<< HEAD
 	retcode = conn_request_state(connection, NS(conn, C_UNCONNECTED), CS_VERBOSE);
-=======
-	retcode = (enum drbd_ret_code)conn_request_state(connection,
-					NS(conn, C_UNCONNECTED), CS_VERBOSE);
->>>>>>> rebase
 
 	conn_reconfig_done(connection);
 	mutex_unlock(&adm_ctx.resource->adm_mutex);
@@ -2834,11 +2762,7 @@ int drbd_adm_disconnect(struct sk_buff *skb, struct genl_info *info)
 	mutex_lock(&adm_ctx.resource->adm_mutex);
 	rv = conn_try_disconnect(connection, parms.force_disconnect);
 	if (rv < SS_SUCCESS)
-<<<<<<< HEAD
 		retcode = rv;  /* FIXME: Type mismatch. */
-=======
-		retcode = (enum drbd_ret_code)rv;
->>>>>>> rebase
 	else
 		retcode = NO_ERROR;
 	mutex_unlock(&adm_ctx.resource->adm_mutex);
@@ -4659,11 +4583,7 @@ static int nla_put_notification_header(struct sk_buff *msg,
 	return drbd_notification_header_to_skb(msg, &nh, true);
 }
 
-<<<<<<< HEAD
 void notify_resource_state(struct sk_buff *skb,
-=======
-int notify_resource_state(struct sk_buff *skb,
->>>>>>> rebase
 			   unsigned int seq,
 			   struct drbd_resource *resource,
 			   struct resource_info *resource_info,
@@ -4705,27 +4625,16 @@ int notify_resource_state(struct sk_buff *skb,
 		if (err && err != -ESRCH)
 			goto failed;
 	}
-<<<<<<< HEAD
 	return;
-=======
-	return 0;
->>>>>>> rebase
 
 nla_put_failure:
 	nlmsg_free(skb);
 failed:
 	drbd_err(resource, "Error %d while broadcasting event. Event seq:%u\n",
 			err, seq);
-<<<<<<< HEAD
 }
 
 void notify_device_state(struct sk_buff *skb,
-=======
-	return err;
-}
-
-int notify_device_state(struct sk_buff *skb,
->>>>>>> rebase
 			 unsigned int seq,
 			 struct drbd_device *device,
 			 struct device_info *device_info,
@@ -4765,27 +4674,16 @@ int notify_device_state(struct sk_buff *skb,
 		if (err && err != -ESRCH)
 			goto failed;
 	}
-<<<<<<< HEAD
 	return;
-=======
-	return 0;
->>>>>>> rebase
 
 nla_put_failure:
 	nlmsg_free(skb);
 failed:
 	drbd_err(device, "Error %d while broadcasting event. Event seq:%u\n",
 		 err, seq);
-<<<<<<< HEAD
 }
 
 void notify_connection_state(struct sk_buff *skb,
-=======
-	return err;
-}
-
-int notify_connection_state(struct sk_buff *skb,
->>>>>>> rebase
 			     unsigned int seq,
 			     struct drbd_connection *connection,
 			     struct connection_info *connection_info,
@@ -4825,27 +4723,16 @@ int notify_connection_state(struct sk_buff *skb,
 		if (err && err != -ESRCH)
 			goto failed;
 	}
-<<<<<<< HEAD
 	return;
-=======
-	return 0;
->>>>>>> rebase
 
 nla_put_failure:
 	nlmsg_free(skb);
 failed:
 	drbd_err(connection, "Error %d while broadcasting event. Event seq:%u\n",
 		 err, seq);
-<<<<<<< HEAD
 }
 
 void notify_peer_device_state(struct sk_buff *skb,
-=======
-	return err;
-}
-
-int notify_peer_device_state(struct sk_buff *skb,
->>>>>>> rebase
 			      unsigned int seq,
 			      struct drbd_peer_device *peer_device,
 			      struct peer_device_info *peer_device_info,
@@ -4886,21 +4773,13 @@ int notify_peer_device_state(struct sk_buff *skb,
 		if (err && err != -ESRCH)
 			goto failed;
 	}
-<<<<<<< HEAD
 	return;
-=======
-	return 0;
->>>>>>> rebase
 
 nla_put_failure:
 	nlmsg_free(skb);
 failed:
 	drbd_err(peer_device, "Error %d while broadcasting event. Event seq:%u\n",
 		 err, seq);
-<<<<<<< HEAD
-=======
-	return err;
->>>>>>> rebase
 }
 
 void notify_helper(enum drbd_notification_type type,
@@ -4951,11 +4830,7 @@ fail:
 		 err, seq);
 }
 
-<<<<<<< HEAD
 static void notify_initial_state_done(struct sk_buff *skb, unsigned int seq)
-=======
-static int notify_initial_state_done(struct sk_buff *skb, unsigned int seq)
->>>>>>> rebase
 {
 	struct drbd_genlmsghdr *dh;
 	int err;
@@ -4969,19 +4844,11 @@ static int notify_initial_state_done(struct sk_buff *skb, unsigned int seq)
 	if (nla_put_notification_header(skb, NOTIFY_EXISTS))
 		goto nla_put_failure;
 	genlmsg_end(skb, dh);
-<<<<<<< HEAD
 	return;
-=======
-	return 0;
->>>>>>> rebase
 
 nla_put_failure:
 	nlmsg_free(skb);
 	pr_err("Error %d sending event. Event seq:%u\n", err, seq);
-<<<<<<< HEAD
-=======
-	return err;
->>>>>>> rebase
 }
 
 static void free_state_changes(struct list_head *list)
@@ -5008,10 +4875,6 @@ static int get_initial_state(struct sk_buff *skb, struct netlink_callback *cb)
 	unsigned int seq = cb->args[2];
 	unsigned int n;
 	enum drbd_notification_type flags = 0;
-<<<<<<< HEAD
-=======
-	int err = 0;
->>>>>>> rebase
 
 	/* There is no need for taking notification_mutex here: it doesn't
 	   matter if the initial state events mix with later state chage
@@ -5020,52 +4883,32 @@ static int get_initial_state(struct sk_buff *skb, struct netlink_callback *cb)
 
 	cb->args[5]--;
 	if (cb->args[5] == 1) {
-<<<<<<< HEAD
 		notify_initial_state_done(skb, seq);
-=======
-		err = notify_initial_state_done(skb, seq);
->>>>>>> rebase
 		goto out;
 	}
 	n = cb->args[4]++;
 	if (cb->args[4] < cb->args[3])
 		flags |= NOTIFY_CONTINUES;
 	if (n < 1) {
-<<<<<<< HEAD
 		notify_resource_state_change(skb, seq, state_change->resource,
-=======
-		err = notify_resource_state_change(skb, seq, state_change->resource,
->>>>>>> rebase
 					     NOTIFY_EXISTS | flags);
 		goto next;
 	}
 	n--;
 	if (n < state_change->n_connections) {
-<<<<<<< HEAD
 		notify_connection_state_change(skb, seq, &state_change->connections[n],
-=======
-		err = notify_connection_state_change(skb, seq, &state_change->connections[n],
->>>>>>> rebase
 					       NOTIFY_EXISTS | flags);
 		goto next;
 	}
 	n -= state_change->n_connections;
 	if (n < state_change->n_devices) {
-<<<<<<< HEAD
 		notify_device_state_change(skb, seq, &state_change->devices[n],
-=======
-		err = notify_device_state_change(skb, seq, &state_change->devices[n],
->>>>>>> rebase
 					   NOTIFY_EXISTS | flags);
 		goto next;
 	}
 	n -= state_change->n_devices;
 	if (n < state_change->n_devices * state_change->n_connections) {
-<<<<<<< HEAD
 		notify_peer_device_state_change(skb, seq, &state_change->peer_devices[n],
-=======
-		err = notify_peer_device_state_change(skb, seq, &state_change->peer_devices[n],
->>>>>>> rebase
 						NOTIFY_EXISTS | flags);
 		goto next;
 	}
@@ -5080,14 +4923,7 @@ next:
 		cb->args[4] = 0;
 	}
 out:
-<<<<<<< HEAD
 	return skb->len;
-=======
-	if (err)
-		return err;
-	else
-		return skb->len;
->>>>>>> rebase
 }
 
 int drbd_adm_get_initial_state(struct sk_buff *skb, struct netlink_callback *cb)

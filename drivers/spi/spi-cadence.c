@@ -119,10 +119,6 @@ struct cdns_spi {
 	void __iomem *regs;
 	struct clk *ref_clk;
 	struct clk *pclk;
-<<<<<<< HEAD
-=======
-	unsigned int clk_rate;
->>>>>>> rebase
 	u32 speed_hz;
 	const u8 *txbuf;
 	u8 *rxbuf;
@@ -262,11 +258,7 @@ static void cdns_spi_config_clock_freq(struct spi_device *spi,
 	u32 ctrl_reg, baud_rate_val;
 	unsigned long frequency;
 
-<<<<<<< HEAD
 	frequency = clk_get_rate(xspi->ref_clk);
-=======
-	frequency = xspi->clk_rate;
->>>>>>> rebase
 
 	ctrl_reg = cdns_spi_read(xspi, CDNS_SPI_CR);
 
@@ -592,15 +584,6 @@ static int cdns_spi_probe(struct platform_device *pdev)
 		goto clk_dis_apb;
 	}
 
-<<<<<<< HEAD
-=======
-	pm_runtime_use_autosuspend(&pdev->dev);
-	pm_runtime_set_autosuspend_delay(&pdev->dev, SPI_AUTOSUSPEND_TIMEOUT);
-	pm_runtime_get_noresume(&pdev->dev);
-	pm_runtime_set_active(&pdev->dev);
-	pm_runtime_enable(&pdev->dev);
-
->>>>>>> rebase
 	ret = of_property_read_u32(pdev->dev.of_node, "num-cs", &num_cs);
 	if (ret < 0)
 		master->num_chipselect = CDNS_SPI_DEFAULT_NUM_CS;
@@ -615,14 +598,11 @@ static int cdns_spi_probe(struct platform_device *pdev)
 	/* SPI controller initializations */
 	cdns_spi_init_hw(xspi);
 
-<<<<<<< HEAD
 	pm_runtime_set_active(&pdev->dev);
 	pm_runtime_enable(&pdev->dev);
 	pm_runtime_use_autosuspend(&pdev->dev);
 	pm_runtime_set_autosuspend_delay(&pdev->dev, SPI_AUTOSUSPEND_TIMEOUT);
 
-=======
->>>>>>> rebase
 	irq = platform_get_irq(pdev, 0);
 	if (irq <= 0) {
 		ret = -ENXIO;
@@ -648,24 +628,12 @@ static int cdns_spi_probe(struct platform_device *pdev)
 	master->auto_runtime_pm = true;
 	master->mode_bits = SPI_CPOL | SPI_CPHA;
 
-<<<<<<< HEAD
 	/* Set to default valid value */
 	master->max_speed_hz = clk_get_rate(xspi->ref_clk) / 4;
-=======
-	xspi->clk_rate = clk_get_rate(xspi->ref_clk);
-	/* Set to default valid value */
-	master->max_speed_hz = xspi->clk_rate / 4;
->>>>>>> rebase
 	xspi->speed_hz = master->max_speed_hz;
 
 	master->bits_per_word_mask = SPI_BPW_MASK(8);
 
-<<<<<<< HEAD
-=======
-	pm_runtime_mark_last_busy(&pdev->dev);
-	pm_runtime_put_autosuspend(&pdev->dev);
-
->>>>>>> rebase
 	ret = spi_register_master(master);
 	if (ret) {
 		dev_err(&pdev->dev, "spi_register_master failed\n");

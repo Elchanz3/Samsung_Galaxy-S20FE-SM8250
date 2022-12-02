@@ -7,15 +7,6 @@ OUTPUT_ARCH(ELF_ARCH)
 ENTRY(_start)
 jiffies = jiffies_64;
 
-<<<<<<< HEAD
-=======
-VERSION {
-  {
-    local: *;
-  };
-}
-
->>>>>>> rebase
 SECTIONS
 {
   /* This must contain the right address - not quite the default ELF one.*/

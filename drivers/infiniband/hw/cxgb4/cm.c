@@ -3293,11 +3293,7 @@ int c4iw_connect(struct iw_cm_id *cm_id, struct iw_cm_conn_param *conn_param)
 		if (raddr->sin_addr.s_addr == htonl(INADDR_ANY)) {
 			err = pick_local_ipaddrs(dev, cm_id);
 			if (err)
-<<<<<<< HEAD
 				goto fail2;
-=======
-				goto fail3;
->>>>>>> rebase
 		}
 
 		/* find a route */
@@ -3319,11 +3315,7 @@ int c4iw_connect(struct iw_cm_id *cm_id, struct iw_cm_conn_param *conn_param)
 		if (ipv6_addr_type(&raddr6->sin6_addr) == IPV6_ADDR_ANY) {
 			err = pick_local_ip6addrs(dev, cm_id);
 			if (err)
-<<<<<<< HEAD
 				goto fail2;
-=======
-				goto fail3;
->>>>>>> rebase
 		}
 
 		/* find a route */
@@ -3525,22 +3517,13 @@ int c4iw_destroy_listen(struct iw_cm_id *cm_id)
 	    ep->com.local_addr.ss_family == AF_INET) {
 		err = cxgb4_remove_server_filter(
 			ep->com.dev->rdev.lldi.ports[0], ep->stid,
-<<<<<<< HEAD
 			ep->com.dev->rdev.lldi.rxq_ids[0], 0);
-=======
-			ep->com.dev->rdev.lldi.rxq_ids[0], false);
->>>>>>> rebase
 	} else {
 		struct sockaddr_in6 *sin6;
 		c4iw_init_wr_wait(ep->com.wr_waitp);
 		err = cxgb4_remove_server(
 				ep->com.dev->rdev.lldi.ports[0], ep->stid,
-<<<<<<< HEAD
 				ep->com.dev->rdev.lldi.rxq_ids[0], 0);
-=======
-				ep->com.dev->rdev.lldi.rxq_ids[0],
-				ep->com.local_addr.ss_family == AF_INET6);
->>>>>>> rebase
 		if (err)
 			goto done;
 		err = c4iw_wait_for_reply(&ep->com.dev->rdev, ep->com.wr_waitp,
@@ -3799,15 +3782,11 @@ static void build_cpl_pass_accept_req(struct sk_buff *skb, int stid , u8 tos)
 	 */
 	memset(&tmp_opt, 0, sizeof(tmp_opt));
 	tcp_clear_options(&tmp_opt);
-<<<<<<< HEAD
 #ifdef CONFIG_MPTCP
 	tcp_parse_options(&init_net, skb, &tmp_opt, NULL, 0, NULL, NULL);
 #else
 	tcp_parse_options(&init_net, skb, &tmp_opt, 0, NULL);
 #endif
-=======
-	tcp_parse_options(&init_net, skb, &tmp_opt, 0, NULL);
->>>>>>> rebase
 
 	req = __skb_push(skb, sizeof(*req));
 	memset(req, 0, sizeof(*req));

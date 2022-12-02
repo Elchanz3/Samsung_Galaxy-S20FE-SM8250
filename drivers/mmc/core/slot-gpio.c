@@ -17,10 +17,7 @@
 #include <linux/mmc/slot-gpio.h>
 #include <linux/module.h>
 #include <linux/slab.h>
-<<<<<<< HEAD
 #include <linux/extcon.h>
-=======
->>>>>>> rebase
 
 #include "slot-gpio.h"
 
@@ -29,10 +26,7 @@ struct mmc_gpio {
 	struct gpio_desc *cd_gpio;
 	bool override_ro_active_level;
 	bool override_cd_active_level;
-<<<<<<< HEAD
 	bool status;
-=======
->>>>>>> rebase
 	irqreturn_t (*cd_gpio_isr)(int irq, void *dev_id);
 	char *ro_label;
 	u32 cd_debounce_delay_ms;
@@ -44,7 +38,6 @@ static irqreturn_t mmc_gpio_cd_irqt(int irq, void *dev_id)
 	/* Schedule a card detection after a debounce timeout */
 	struct mmc_host *host = dev_id;
 	struct mmc_gpio *ctx = host->slot.handler_priv;
-<<<<<<< HEAD
 	int present = host->ops->get_cd(host);
 	bool status;
 
@@ -67,11 +60,6 @@ static irqreturn_t mmc_gpio_cd_irqt(int irq, void *dev_id)
 
 		mmc_detect_change(host, msecs_to_jiffies(ctx->cd_debounce_delay_ms));
 	}
-=======
-
-	host->trigger_card_event = true;
-	mmc_detect_change(host, msecs_to_jiffies(ctx->cd_debounce_delay_ms));
->>>>>>> rebase
 
 	return IRQ_HANDLED;
 }
@@ -113,7 +101,6 @@ int mmc_gpio_get_cd(struct mmc_host *host)
 {
 	struct mmc_gpio *ctx = host->slot.handler_priv;
 	int cansleep;
-<<<<<<< HEAD
 	int ret;
 
 	if (host->extcon) {
@@ -123,9 +110,6 @@ int mmc_gpio_get_cd(struct mmc_host *host)
 					__func__, ret);
 		return ret;
 	}
-=======
-
->>>>>>> rebase
 	if (!ctx || !ctx->cd_gpio)
 		return -ENOSYS;
 
@@ -189,7 +173,6 @@ void mmc_gpiod_request_cd_irq(struct mmc_host *host)
 	if (!(host->caps & MMC_CAP_NEEDS_POLL))
 		irq = gpiod_to_irq(ctx->cd_gpio);
 
-<<<<<<< HEAD
 	ret = mmc_gpio_get_cd(host);
 	if (ret < 0) {
 		pr_err("%s: getting card detection gpio is failed.\n", mmc_hostname(host));
@@ -197,19 +180,13 @@ void mmc_gpiod_request_cd_irq(struct mmc_host *host)
 	}
 	ctx->status = ret ? true : false;
 
-=======
->>>>>>> rebase
 	if (irq >= 0) {
 		if (!ctx->cd_gpio_isr)
 			ctx->cd_gpio_isr = mmc_gpio_cd_irqt;
 		ret = devm_request_threaded_irq(host->parent, irq,
 			NULL, ctx->cd_gpio_isr,
-<<<<<<< HEAD
 			IRQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING |
 			IRQF_ONESHOT | IRQF_SHARED,
-=======
-			IRQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING | IRQF_ONESHOT,
->>>>>>> rebase
 			ctx->cd_label, host);
 		if (ret < 0)
 			irq = ret;
@@ -219,7 +196,6 @@ void mmc_gpiod_request_cd_irq(struct mmc_host *host)
 
 	if (irq < 0)
 		host->caps |= MMC_CAP_NEEDS_POLL;
-<<<<<<< HEAD
 	ret = mmc_gpio_set_cd_wake(host, true);
 	if (ret)
 		dev_err(mmc_dev(host), "%s: enabling cd irq wake failed ret=%d\n",
@@ -301,11 +277,6 @@ void mmc_unregister_extcon(struct mmc_host *host)
 EXPORT_SYMBOL(mmc_unregister_extcon);
 
 
-=======
-}
-EXPORT_SYMBOL(mmc_gpiod_request_cd_irq);
-
->>>>>>> rebase
 int mmc_gpio_set_cd_wake(struct mmc_host *host, bool on)
 {
 	int ret = 0;

@@ -231,12 +231,7 @@ void tipc_bearer_remove_dest(struct net *net, u32 bearer_id, u32 dest)
  */
 static int tipc_enable_bearer(struct net *net, const char *name,
 			      u32 disc_domain, u32 prio,
-<<<<<<< HEAD
 			      struct nlattr *attr[])
-=======
-			      struct nlattr *attr[],
-			      struct netlink_ext_ack *extack)
->>>>>>> rebase
 {
 	struct tipc_net *tn = tipc_net(net);
 	struct tipc_bearer_names b_names;
@@ -247,36 +242,20 @@ static int tipc_enable_bearer(struct net *net, const char *name,
 	int bearer_id = 0;
 	int res = -EINVAL;
 	char *errstr = "";
-<<<<<<< HEAD
 
 	if (!bearer_name_validate(name, &b_names)) {
 		errstr = "illegal name";
 		goto rejected;
-=======
-	u32 i;
-
-	if (!bearer_name_validate(name, &b_names)) {
-		NL_SET_ERR_MSG(extack, "Illegal name");
-		return res;
->>>>>>> rebase
 	}
 
 	if (prio > TIPC_MAX_LINK_PRI && prio != TIPC_MEDIA_LINK_PRI) {
 		errstr = "illegal priority";
-<<<<<<< HEAD
-=======
-		NL_SET_ERR_MSG(extack, "Illegal priority");
->>>>>>> rebase
 		goto rejected;
 	}
 
 	m = tipc_media_find(b_names.media_name);
 	if (!m) {
 		errstr = "media not registered";
-<<<<<<< HEAD
-=======
-		NL_SET_ERR_MSG(extack, "Media not registered");
->>>>>>> rebase
 		goto rejected;
 	}
 
@@ -284,7 +263,6 @@ static int tipc_enable_bearer(struct net *net, const char *name,
 		prio = m->priority;
 
 	/* Check new bearer vs existing ones and find free bearer id if any */
-<<<<<<< HEAD
 	while (bearer_id < MAX_BEARERS) {
 		b = rtnl_dereference(tn->bearer_list[bearer_id]);
 		if (!b)
@@ -308,48 +286,10 @@ static int tipc_enable_bearer(struct net *net, const char *name,
 		prio--;
 		bearer_id = 0;
 		with_this_prio = 1;
-=======
-	bearer_id = MAX_BEARERS;
-	i = MAX_BEARERS;
-	while (i-- != 0) {
-		b = rtnl_dereference(tn->bearer_list[i]);
-		if (!b) {
-			bearer_id = i;
-			continue;
-		}
-		if (!strcmp(name, b->name)) {
-			errstr = "already enabled";
-			NL_SET_ERR_MSG(extack, "Already enabled");
-			goto rejected;
-		}
-
-		if (b->priority == prio &&
-		    (++with_this_prio > 2)) {
-			pr_warn("Bearer <%s>: already 2 bearers with priority %u\n",
-				name, prio);
-
-			if (prio == TIPC_MIN_LINK_PRI) {
-				errstr = "cannot adjust to lower";
-				NL_SET_ERR_MSG(extack, "Cannot adjust to lower");
-				goto rejected;
-			}
-
-			pr_warn("Bearer <%s>: trying with adjusted priority\n",
-				name);
-			prio--;
-			bearer_id = MAX_BEARERS;
-			i = MAX_BEARERS;
-			with_this_prio = 1;
-		}
->>>>>>> rebase
 	}
 
 	if (bearer_id >= MAX_BEARERS) {
 		errstr = "max 3 bearers permitted";
-<<<<<<< HEAD
-=======
-		NL_SET_ERR_MSG(extack, "Max 3 bearers permitted");
->>>>>>> rebase
 		goto rejected;
 	}
 
@@ -363,10 +303,6 @@ static int tipc_enable_bearer(struct net *net, const char *name,
 	if (res) {
 		kfree(b);
 		errstr = "failed to enable media";
-<<<<<<< HEAD
-=======
-		NL_SET_ERR_MSG(extack, "Failed to enable media");
->>>>>>> rebase
 		goto rejected;
 	}
 
@@ -382,10 +318,6 @@ static int tipc_enable_bearer(struct net *net, const char *name,
 	if (res) {
 		bearer_disable(net, b);
 		errstr = "failed to create discoverer";
-<<<<<<< HEAD
-=======
-		NL_SET_ERR_MSG(extack, "Failed to create discoverer");
->>>>>>> rebase
 		goto rejected;
 	}
 
@@ -863,10 +795,6 @@ int tipc_nl_bearer_get(struct sk_buff *skb, struct genl_info *info)
 	bearer = tipc_bearer_find(net, name);
 	if (!bearer) {
 		err = -EINVAL;
-<<<<<<< HEAD
-=======
-		NL_SET_ERR_MSG(info->extack, "Bearer not found");
->>>>>>> rebase
 		goto err_out;
 	}
 
@@ -906,15 +834,8 @@ int __tipc_nl_bearer_disable(struct sk_buff *skb, struct genl_info *info)
 	name = nla_data(attrs[TIPC_NLA_BEARER_NAME]);
 
 	bearer = tipc_bearer_find(net, name);
-<<<<<<< HEAD
 	if (!bearer)
 		return -EINVAL;
-=======
-	if (!bearer) {
-		NL_SET_ERR_MSG(info->extack, "Bearer not found");
-		return -EINVAL;
-	}
->>>>>>> rebase
 
 	bearer_disable(net, bearer);
 
@@ -972,12 +893,7 @@ int __tipc_nl_bearer_enable(struct sk_buff *skb, struct genl_info *info)
 			prio = nla_get_u32(props[TIPC_NLA_PROP_PRIO]);
 	}
 
-<<<<<<< HEAD
 	return tipc_enable_bearer(net, bearer, domain, prio, attrs);
-=======
-	return tipc_enable_bearer(net, bearer, domain, prio, attrs,
-				  info->extack);
->>>>>>> rebase
 }
 
 int tipc_nl_bearer_enable(struct sk_buff *skb, struct genl_info *info)
@@ -1016,10 +932,6 @@ int tipc_nl_bearer_add(struct sk_buff *skb, struct genl_info *info)
 	b = tipc_bearer_find(net, name);
 	if (!b) {
 		rtnl_unlock();
-<<<<<<< HEAD
-=======
-		NL_SET_ERR_MSG(info->extack, "Bearer not found");
->>>>>>> rebase
 		return -EINVAL;
 	}
 
@@ -1060,15 +972,8 @@ int __tipc_nl_bearer_set(struct sk_buff *skb, struct genl_info *info)
 	name = nla_data(attrs[TIPC_NLA_BEARER_NAME]);
 
 	b = tipc_bearer_find(net, name);
-<<<<<<< HEAD
 	if (!b)
 		return -EINVAL;
-=======
-	if (!b) {
-		NL_SET_ERR_MSG(info->extack, "Bearer not found");
-		return -EINVAL;
-	}
->>>>>>> rebase
 
 	if (attrs[TIPC_NLA_BEARER_PROP]) {
 		struct nlattr *props[TIPC_NLA_PROP_MAX + 1];
@@ -1087,27 +992,12 @@ int __tipc_nl_bearer_set(struct sk_buff *skb, struct genl_info *info)
 		if (props[TIPC_NLA_PROP_WIN])
 			b->window = nla_get_u32(props[TIPC_NLA_PROP_WIN]);
 		if (props[TIPC_NLA_PROP_MTU]) {
-<<<<<<< HEAD
 			if (b->media->type_id != TIPC_MEDIA_TYPE_UDP)
 				return -EINVAL;
 #ifdef CONFIG_TIPC_MEDIA_UDP
 			if (tipc_udp_mtu_bad(nla_get_u32
 					     (props[TIPC_NLA_PROP_MTU])))
 				return -EINVAL;
-=======
-			if (b->media->type_id != TIPC_MEDIA_TYPE_UDP) {
-				NL_SET_ERR_MSG(info->extack,
-					       "MTU property is unsupported");
-				return -EINVAL;
-			}
-#ifdef CONFIG_TIPC_MEDIA_UDP
-			if (tipc_udp_mtu_bad(nla_get_u32
-					     (props[TIPC_NLA_PROP_MTU]))) {
-				NL_SET_ERR_MSG(info->extack,
-					       "MTU value is out-of-range");
-				return -EINVAL;
-			}
->>>>>>> rebase
 			b->mtu = nla_get_u32(props[TIPC_NLA_PROP_MTU]);
 			tipc_node_apply_property(net, b, TIPC_NLA_PROP_MTU);
 #endif
@@ -1235,10 +1125,6 @@ int tipc_nl_media_get(struct sk_buff *skb, struct genl_info *info)
 	rtnl_lock();
 	media = tipc_media_find(name);
 	if (!media) {
-<<<<<<< HEAD
-=======
-		NL_SET_ERR_MSG(info->extack, "Media not found");
->>>>>>> rebase
 		err = -EINVAL;
 		goto err_out;
 	}
@@ -1275,16 +1161,9 @@ int __tipc_nl_media_set(struct sk_buff *skb, struct genl_info *info)
 	name = nla_data(attrs[TIPC_NLA_MEDIA_NAME]);
 
 	m = tipc_media_find(name);
-<<<<<<< HEAD
 	if (!m)
 		return -EINVAL;
 
-=======
-	if (!m) {
-		NL_SET_ERR_MSG(info->extack, "Media not found");
-		return -EINVAL;
-	}
->>>>>>> rebase
 	if (attrs[TIPC_NLA_MEDIA_PROP]) {
 		struct nlattr *props[TIPC_NLA_PROP_MAX + 1];
 
@@ -1300,27 +1179,12 @@ int __tipc_nl_media_set(struct sk_buff *skb, struct genl_info *info)
 		if (props[TIPC_NLA_PROP_WIN])
 			m->window = nla_get_u32(props[TIPC_NLA_PROP_WIN]);
 		if (props[TIPC_NLA_PROP_MTU]) {
-<<<<<<< HEAD
 			if (m->type_id != TIPC_MEDIA_TYPE_UDP)
 				return -EINVAL;
 #ifdef CONFIG_TIPC_MEDIA_UDP
 			if (tipc_udp_mtu_bad(nla_get_u32
 					     (props[TIPC_NLA_PROP_MTU])))
 				return -EINVAL;
-=======
-			if (m->type_id != TIPC_MEDIA_TYPE_UDP) {
-				NL_SET_ERR_MSG(info->extack,
-					       "MTU property is unsupported");
-				return -EINVAL;
-			}
-#ifdef CONFIG_TIPC_MEDIA_UDP
-			if (tipc_udp_mtu_bad(nla_get_u32
-					     (props[TIPC_NLA_PROP_MTU]))) {
-				NL_SET_ERR_MSG(info->extack,
-					       "MTU value is out-of-range");
-				return -EINVAL;
-			}
->>>>>>> rebase
 			m->mtu = nla_get_u32(props[TIPC_NLA_PROP_MTU]);
 #endif
 		}

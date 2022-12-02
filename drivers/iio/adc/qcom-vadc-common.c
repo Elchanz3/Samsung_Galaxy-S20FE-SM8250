@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 // SPDX-License-Identifier: GPL-2.0-only
-=======
-// SPDX-License-Identifier: GPL-2.0
->>>>>>> rebase
 #include <linux/bug.h>
 #include <linux/kernel.h>
 #include <linux/bitops.h>
@@ -51,7 +47,6 @@ static const struct vadc_map_pt adcmap_100k_104ef_104fb[] = {
 	{44,	125}
 };
 
-<<<<<<< HEAD
 /*
  * Voltage to temperature table for 100k pull up for NTCG104EF104 with
  * 1.875V reference.
@@ -764,8 +759,6 @@ static const struct vadc_map_pt adcmap7_100k[] = {
 	{ 2420, 130048 }
 };
 
-=======
->>>>>>> rebase
 static int qcom_vadc_map_voltage_temp(const struct vadc_map_pt *pts,
 				      u32 tablesize, s32 input, s64 *output)
 {
@@ -910,7 +903,6 @@ static int qcom_vadc_scale_chg_temp(const struct vadc_linear_graph *calib_graph,
 	return 0;
 }
 
-<<<<<<< HEAD
 static int qcom_vadc_scale_hw_calib_volt(
 				const struct vadc_prescale_ratio *prescale,
 				const struct adc_data *data,
@@ -1299,8 +1291,6 @@ static int qcom_adc_scale_hw_calib_cur(
 	return 0;
 }
 
-=======
->>>>>>> rebase
 int qcom_vadc_scale(enum vadc_scale_fn_type scaletype,
 		    const struct vadc_linear_graph *calib_graph,
 		    const struct vadc_prescale_ratio *prescale,
@@ -1331,7 +1321,6 @@ int qcom_vadc_scale(enum vadc_scale_fn_type scaletype,
 }
 EXPORT_SYMBOL(qcom_vadc_scale);
 
-<<<<<<< HEAD
 int qcom_vadc_hw_scale(enum vadc_scale_fn_type scaletype,
 		    const struct vadc_prescale_ratio *prescale,
 		    const struct adc_data *data, unsigned int lut_index,
@@ -1384,8 +1373,6 @@ int qcom_vadc_hw_scale(enum vadc_scale_fn_type scaletype,
 }
 EXPORT_SYMBOL(qcom_vadc_hw_scale);
 
-=======
->>>>>>> rebase
 int qcom_vadc_decimation_from_dt(u32 value)
 {
 	if (!is_power_of_2(value) || value < VADC_DECIMATION_MIN ||
@@ -1396,7 +1383,6 @@ int qcom_vadc_decimation_from_dt(u32 value)
 }
 EXPORT_SYMBOL(qcom_vadc_decimation_from_dt);
 
-<<<<<<< HEAD
 int qcom_adc5_decimation_from_dt(u32 value, const unsigned int *decimation)
 {
 	uint32_t i;
@@ -1409,7 +1395,5 @@ int qcom_adc5_decimation_from_dt(u32 value, const unsigned int *decimation)
 	return -EINVAL;
 }
 EXPORT_SYMBOL(qcom_adc5_decimation_from_dt);
-=======
->>>>>>> rebase
 MODULE_LICENSE("GPL v2");
 MODULE_DESCRIPTION("Qualcomm ADC common functionality");

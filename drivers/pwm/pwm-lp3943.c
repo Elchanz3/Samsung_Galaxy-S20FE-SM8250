@@ -128,10 +128,6 @@ static int lp3943_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
 	if (err)
 		return err;
 
-<<<<<<< HEAD
-=======
-	duty_ns = min(duty_ns, period_ns);
->>>>>>> rebase
 	val = (u8)(duty_ns * LP3943_MAX_DUTY / period_ns);
 
 	return lp3943_write_byte(lp3943, reg_duty, val);
@@ -282,10 +278,6 @@ static int lp3943_pwm_probe(struct platform_device *pdev)
 	lp3943_pwm->chip.dev = &pdev->dev;
 	lp3943_pwm->chip.ops = &lp3943_pwm_ops;
 	lp3943_pwm->chip.npwm = LP3943_NUM_PWMS;
-<<<<<<< HEAD
-=======
-	lp3943_pwm->chip.base = -1;
->>>>>>> rebase
 
 	platform_set_drvdata(pdev, lp3943_pwm);
 

@@ -263,11 +263,7 @@ __vringh_iov(struct vringh *vrh, u16 i,
 	     gfp_t gfp,
 	     int (*copy)(void *dst, const void *src, size_t len))
 {
-<<<<<<< HEAD
 	int err, count = 0, up_next, desc_max;
-=======
-	int err, count = 0, indirect_count = 0, up_next, desc_max;
->>>>>>> rebase
 	struct vring_desc desc, *descs;
 	struct vringh_range range = { -1ULL, 0 }, slowrange;
 	bool slow = false;
@@ -277,7 +273,6 @@ __vringh_iov(struct vringh *vrh, u16 i,
 	desc_max = vrh->vring.num;
 	up_next = -1;
 
-<<<<<<< HEAD
 	if (riov)
 		riov->i = riov->used = 0;
 	else if (wiov)
@@ -285,16 +280,6 @@ __vringh_iov(struct vringh *vrh, u16 i,
 	else
 		/* You must want something! */
 		BUG();
-=======
-	/* You must want something! */
-	if (WARN_ON(!riov && !wiov))
-		return -EINVAL;
-
-	if (riov)
-		riov->i = riov->used = 0;
-	if (wiov)
-		wiov->i = wiov->used = 0;
->>>>>>> rebase
 
 	for (;;) {
 		void *addr;
@@ -334,16 +319,7 @@ __vringh_iov(struct vringh *vrh, u16 i,
 			continue;
 		}
 
-<<<<<<< HEAD
 		if (count++ == vrh->vring.num) {
-=======
-		if (up_next == -1)
-			count++;
-		else
-			indirect_count++;
-
-		if (count > vrh->vring.num || indirect_count > desc_max) {
->>>>>>> rebase
 			vringh_bad("Descriptor loop in %p", descs);
 			err = -ELOOP;
 			goto fail;
@@ -353,11 +329,7 @@ __vringh_iov(struct vringh *vrh, u16 i,
 			iov = wiov;
 		else {
 			iov = riov;
-<<<<<<< HEAD
 			if (unlikely(wiov && wiov->i)) {
-=======
-			if (unlikely(wiov && wiov->used)) {
->>>>>>> rebase
 				vringh_bad("Readable desc %p after writable",
 					   &descs[i]);
 				err = -EINVAL;
@@ -409,10 +381,6 @@ __vringh_iov(struct vringh *vrh, u16 i,
 				i = return_from_indirect(vrh, &up_next,
 							 &descs, &desc_max);
 				slow = false;
-<<<<<<< HEAD
-=======
-				indirect_count = 0;
->>>>>>> rebase
 			} else
 				break;
 		}

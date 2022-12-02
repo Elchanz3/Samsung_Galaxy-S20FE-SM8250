@@ -16,10 +16,7 @@
 #include <linux/sched/autogroup.h>
 #include <net/net_namespace.h>
 #include <linux/sched/rt.h>
-<<<<<<< HEAD
 #include <linux/task_integrity.h>
-=======
->>>>>>> rebase
 #include <linux/livepatch.h>
 #include <linux/mm_types.h>
 
@@ -50,7 +47,6 @@ extern struct cred init_cred;
 #define INIT_CPU_TIMERS(s)
 #endif
 
-<<<<<<< HEAD
 #ifdef CONFIG_FIVE
 # define INIT_TASK_INTEGRITY(integrity) {				\
 	.user_value = INTEGRITY_NONE,					\
@@ -68,8 +64,6 @@ extern struct cred init_cred;
 # define INIT_TASK_INTEGRITY(integrity)
 #endif
 
-=======
->>>>>>> rebase
 #define INIT_TASK_COMM "swapper"
 
 /* Attach to the init_task data structure for proper alignment */

@@ -311,21 +311,13 @@ int qmi_txn_init(struct qmi_handle *qmi, struct qmi_txn *txn,
 
 	memset(txn, 0, sizeof(*txn));
 
-<<<<<<< HEAD
-=======
-	mutex_init(&txn->lock);
->>>>>>> rebase
 	init_completion(&txn->completion);
 	txn->qmi = qmi;
 	txn->ei = ei;
 	txn->dest = c_struct;
 
 	mutex_lock(&qmi->txn_lock);
-<<<<<<< HEAD
 	ret = idr_alloc_cyclic(&qmi->txns, txn, 0, U16_MAX, GFP_KERNEL);
-=======
-	ret = idr_alloc_cyclic(&qmi->txns, txn, 0, INT_MAX, GFP_KERNEL);
->>>>>>> rebase
 	if (ret < 0)
 		pr_err("failed to allocate transaction id\n");
 
@@ -352,7 +344,6 @@ int qmi_txn_wait(struct qmi_txn *txn, unsigned long timeout)
 	struct qmi_handle *qmi = txn->qmi;
 	int ret;
 
-<<<<<<< HEAD
 	ret = wait_for_completion_timeout(&txn->completion, timeout);
 
 	if (txn->result == -ENETRESET) {
@@ -364,20 +355,6 @@ int qmi_txn_wait(struct qmi_txn *txn, unsigned long timeout)
 	mutex_unlock(&qmi->txn_lock);
 
 	if (ret == 0)
-=======
-	ret = wait_for_completion_interruptible_timeout(&txn->completion,
-							timeout);
-
-	mutex_lock(&qmi->txn_lock);
-	mutex_lock(&txn->lock);
-	idr_remove(&qmi->txns, txn->id);
-	mutex_unlock(&txn->lock);
-	mutex_unlock(&qmi->txn_lock);
-
-	if (ret < 0)
-		return ret;
-	else if (ret == 0)
->>>>>>> rebase
 		return -ETIMEDOUT;
 	else
 		return txn->result;
@@ -393,13 +370,7 @@ void qmi_txn_cancel(struct qmi_txn *txn)
 	struct qmi_handle *qmi = txn->qmi;
 
 	mutex_lock(&qmi->txn_lock);
-<<<<<<< HEAD
 	idr_remove(&qmi->txns, txn->id);
-=======
-	mutex_lock(&txn->lock);
-	idr_remove(&qmi->txns, txn->id);
-	mutex_unlock(&txn->lock);
->>>>>>> rebase
 	mutex_unlock(&qmi->txn_lock);
 }
 EXPORT_SYMBOL(qmi_txn_cancel);
@@ -469,30 +440,18 @@ static void qmi_handle_net_reset(struct qmi_handle *qmi)
 	struct sockaddr_qrtr sq;
 	struct qmi_service *svc;
 	struct socket *sock;
-<<<<<<< HEAD
 	long timeo = qmi->sock->sk->sk_sndtimeo;
-=======
->>>>>>> rebase
 
 	sock = qmi_sock_create(qmi, &sq);
 	if (IS_ERR(sock))
 		return;
 
-<<<<<<< HEAD
-=======
-	mutex_lock(&qmi->sock_lock);
-	sock_release(qmi->sock);
-	qmi->sock = NULL;
-	mutex_unlock(&qmi->sock_lock);
-
->>>>>>> rebase
 	qmi_recv_del_server(qmi, -1, -1);
 
 	if (qmi->ops.net_reset)
 		qmi->ops.net_reset(qmi);
 
 	mutex_lock(&qmi->sock_lock);
-<<<<<<< HEAD
 	/* Already qmi_handle_release() started */
 	if (!qmi->sock) {
 		sock_release(sock);
@@ -503,10 +462,6 @@ static void qmi_handle_net_reset(struct qmi_handle *qmi)
 	qmi->sock = sock;
 	qmi->sq = sq;
 	qmi->sock->sk->sk_sndtimeo = timeo;
-=======
-	qmi->sock = sock;
-	qmi->sq = sq;
->>>>>>> rebase
 	mutex_unlock(&qmi->sock_lock);
 
 	list_for_each_entry(svc, &qmi->lookups, list_node)
@@ -525,12 +480,9 @@ static void qmi_handle_message(struct qmi_handle *qmi,
 	struct qmi_txn *txn = NULL;
 	int ret;
 
-<<<<<<< HEAD
 	if (!len)
 		return;
 
-=======
->>>>>>> rebase
 	if (len < sizeof(*hdr)) {
 		pr_err("ignoring short QMI packet\n");
 		return;
@@ -548,13 +500,6 @@ static void qmi_handle_message(struct qmi_handle *qmi,
 			mutex_unlock(&qmi->txn_lock);
 			return;
 		}
-<<<<<<< HEAD
-=======
-
-		mutex_lock(&txn->lock);
-		mutex_unlock(&qmi->txn_lock);
-
->>>>>>> rebase
 		if (txn->dest && txn->ei) {
 			ret = qmi_decode_message(buf, len, txn->ei, txn->dest);
 			if (ret < 0)
@@ -562,18 +507,10 @@ static void qmi_handle_message(struct qmi_handle *qmi,
 
 			txn->result = ret;
 			complete(&txn->completion);
-<<<<<<< HEAD
 		} else {
 			qmi_invoke_handler(qmi, sq, txn, buf, len);
 		}
 		mutex_unlock(&qmi->txn_lock);
-=======
-		} else  {
-			qmi_invoke_handler(qmi, sq, txn, buf, len);
-		}
-
-		mutex_unlock(&txn->lock);
->>>>>>> rebase
 	} else {
 		/* Create a txn based on the txn_id of the incoming message */
 		memset(&tmp_txn, 0, sizeof(tmp_txn));
@@ -631,17 +568,12 @@ static void qmi_data_ready_work(struct work_struct *work)
 
 static void qmi_data_ready(struct sock *sk)
 {
-<<<<<<< HEAD
 	struct qmi_handle *qmi = NULL;
-=======
-	struct qmi_handle *qmi = sk->sk_user_data;
->>>>>>> rebase
 
 	/*
 	 * This will be NULL if we receive data while being in
 	 * qmi_handle_release()
 	 */
-<<<<<<< HEAD
 	read_lock_bh(&sk->sk_callback_lock);
 	qmi = sk->sk_user_data;
 	if (!qmi) {
@@ -651,12 +583,6 @@ static void qmi_data_ready(struct sock *sk)
 
 	queue_work(qmi->wq, &qmi->work);
 	read_unlock_bh(&sk->sk_callback_lock);
-=======
-	if (!qmi)
-		return;
-
-	queue_work(qmi->wq, &qmi->work);
->>>>>>> rebase
 }
 
 static struct socket *qmi_sock_create(struct qmi_handle *qmi,
@@ -679,16 +605,12 @@ static struct socket *qmi_sock_create(struct qmi_handle *qmi,
 	sock->sk->sk_user_data = qmi;
 	sock->sk->sk_data_ready = qmi_data_ready;
 	sock->sk->sk_error_report = qmi_data_ready;
-<<<<<<< HEAD
 	sock->sk->sk_sndtimeo = HZ * 10;
-=======
->>>>>>> rebase
 
 	return sock;
 }
 
 /**
-<<<<<<< HEAD
  * qmi_set_sndtimeo() - set the sk_sndtimeo of the qmi handle
  * @qmi:	QMI client handle
  * @timeo:	timeout in jiffies.
@@ -704,8 +626,6 @@ void qmi_set_sndtimeo(struct qmi_handle *qmi, long timeo)
 EXPORT_SYMBOL(qmi_set_sndtimeo);
 
 /**
-=======
->>>>>>> rebase
  * qmi_handle_init() - initialize a QMI client handle
  * @qmi:	QMI handle to initialize
  * @recv_buf_size: maximum size of incoming message
@@ -781,7 +701,6 @@ EXPORT_SYMBOL(qmi_handle_init);
  */
 void qmi_handle_release(struct qmi_handle *qmi)
 {
-<<<<<<< HEAD
 	struct socket *sock;
 	struct qmi_service *svc, *tmp;
 	struct qmi_txn *txn;
@@ -796,17 +715,10 @@ void qmi_handle_release(struct qmi_handle *qmi)
 	qmi->sock = NULL;
 	mutex_unlock(&qmi->sock_lock);
 
-=======
-	struct socket *sock = qmi->sock;
-	struct qmi_service *svc, *tmp;
-
-	sock->sk->sk_user_data = NULL;
->>>>>>> rebase
 	cancel_work_sync(&qmi->work);
 
 	qmi_recv_del_server(qmi, -1, -1);
 
-<<<<<<< HEAD
 	destroy_workqueue(qmi->wq);
 
 	mutex_lock(&qmi->txn_lock);
@@ -816,15 +728,6 @@ void qmi_handle_release(struct qmi_handle *qmi)
 		complete(&txn->completion);
 	}
 	mutex_unlock(&qmi->txn_lock);
-=======
-	mutex_lock(&qmi->sock_lock);
-	sock_release(sock);
-	qmi->sock = NULL;
-	mutex_unlock(&qmi->sock_lock);
-
-	destroy_workqueue(qmi->wq);
-
->>>>>>> rebase
 	idr_destroy(&qmi->txns);
 
 	kfree(qmi->recv_buf);
@@ -889,11 +792,7 @@ static ssize_t qmi_send_message(struct qmi_handle *qmi,
 	if (qmi->sock) {
 		ret = kernel_sendmsg(qmi->sock, &msghdr, &iv, 1, len);
 		if (ret < 0)
-<<<<<<< HEAD
 			pr_info("failed to send QMI message %d\n", ret);
-=======
-			pr_err("failed to send QMI message\n");
->>>>>>> rebase
 	} else {
 		ret = -EPIPE;
 	}

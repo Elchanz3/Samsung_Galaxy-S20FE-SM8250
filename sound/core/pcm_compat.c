@@ -649,7 +649,6 @@ enum {
 #endif /* CONFIG_X86_X32 */
 };
 
-<<<<<<< HEAD
 static int snd_compressed_ioctl32(struct snd_pcm_substream *substream,
 				 unsigned int cmd, void __user *arg)
 {
@@ -683,8 +682,6 @@ static int snd_user_ioctl32(struct snd_pcm_substream *substream,
 }
 
 
-=======
->>>>>>> rebase
 static long snd_pcm_ioctl_compat(struct file *file, unsigned int cmd, unsigned long arg)
 {
 	struct snd_pcm_file *pcm_file;
@@ -762,14 +759,11 @@ static long snd_pcm_ioctl_compat(struct file *file, unsigned int cmd, unsigned l
 	case SNDRV_PCM_IOCTL_CHANNEL_INFO_X32:
 		return snd_pcm_ioctl_channel_info_x32(substream, argp);
 #endif /* CONFIG_X86_X32 */
-<<<<<<< HEAD
 	default:
 		if (_IOC_TYPE(cmd) == 'C')
 			return snd_compressed_ioctl32(substream, cmd, argp);
 		else if (_IOC_TYPE(cmd) == 'U')
 			return snd_user_ioctl32(substream, cmd, argp);
-=======
->>>>>>> rebase
 	}
 
 	return -ENOIOCTLCMD;

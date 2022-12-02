@@ -160,17 +160,10 @@ ieee80211_determine_chantype(struct ieee80211_sub_if_data *sdata,
 	memcpy(&sta_ht_cap, &sband->ht_cap, sizeof(sta_ht_cap));
 	ieee80211_apply_htcap_overrides(sdata, &sta_ht_cap);
 
-<<<<<<< HEAD
 	memset(chandef, 0, sizeof(struct cfg80211_chan_def));
 	chandef->chan = channel;
 	chandef->width = NL80211_CHAN_WIDTH_20_NOHT;
 	chandef->center_freq1 = channel->center_freq;
-=======
-	chandef->chan = channel;
-	chandef->width = NL80211_CHAN_WIDTH_20_NOHT;
-	chandef->center_freq1 = channel->center_freq;
-	chandef->center_freq2 = 0;
->>>>>>> rebase
 
 	if (!ht_oper || !sta_ht_cap.ht_supported) {
 		ret = IEEE80211_STA_DISABLE_HT | IEEE80211_STA_DISABLE_VHT;
@@ -1192,14 +1185,6 @@ static void ieee80211_chswitch_post_beacon(struct ieee80211_sub_if_data *sdata)
 
 	sdata->vif.csa_active = false;
 	ifmgd->csa_waiting_bcn = false;
-<<<<<<< HEAD
-=======
-	/*
-	 * If the CSA IE is still present on the beacon after the switch,
-	 * we need to consider it as a new CSA (possibly to self).
-	 */
-	ifmgd->beacon_crc_valid = false;
->>>>>>> rebase
 
 	ret = drv_post_channel_switch(sdata);
 	if (ret) {
@@ -2361,26 +2346,11 @@ static void ieee80211_sta_tx_wmm_ac_notify(struct ieee80211_sub_if_data *sdata,
 					   u16 tx_time)
 {
 	struct ieee80211_if_managed *ifmgd = &sdata->u.mgd;
-<<<<<<< HEAD
 	u16 tid = ieee80211_get_tid(hdr);
 	int ac = ieee80211_ac_from_tid(tid);
 	struct ieee80211_sta_tx_tspec *tx_tspec = &ifmgd->tx_tspec[ac];
 	unsigned long now = jiffies;
 
-=======
-	u16 tid;
-	int ac;
-	struct ieee80211_sta_tx_tspec *tx_tspec;
-	unsigned long now = jiffies;
-
-	if (!ieee80211_is_data_qos(hdr->frame_control))
-		return;
-
-	tid = ieee80211_get_tid(hdr);
-	ac = ieee80211_ac_from_tid(tid);
-	tx_tspec = &ifmgd->tx_tspec[ac];
-
->>>>>>> rebase
 	if (likely(!tx_tspec->admitted_time))
 		return;
 
@@ -2414,11 +2384,7 @@ void ieee80211_sta_tx_notify(struct ieee80211_sub_if_data *sdata,
 	if (!ieee80211_is_data(hdr->frame_control))
 	    return;
 
-<<<<<<< HEAD
 	if (ieee80211_is_nullfunc(hdr->frame_control) &&
-=======
-	if (ieee80211_is_any_nullfunc(hdr->frame_control) &&
->>>>>>> rebase
 	    sdata->u.mgd.probe_send_count > 0) {
 		if (ack)
 			ieee80211_sta_reset_conn_monitor(sdata);
@@ -4810,11 +4776,7 @@ static int ieee80211_prep_connection(struct ieee80211_sub_if_data *sdata,
 	 */
 	if (new_sta) {
 		u32 rates = 0, basic_rates = 0;
-<<<<<<< HEAD
 		bool have_higher_than_11mbit;
-=======
-		bool have_higher_than_11mbit = false;
->>>>>>> rebase
 		int min_rate = INT_MAX, min_rate_index = -1;
 		const struct cfg80211_bss_ies *ies;
 		int shift = ieee80211_vif_get_shift(&sdata->vif);

@@ -268,17 +268,11 @@ __be32 decode_devicenotify_args(struct svc_rqst *rqstp,
 				void *argp)
 {
 	struct cb_devicenotifyargs *args = argp;
-<<<<<<< HEAD
 	__be32 *p;
 	__be32 status = 0;
 	u32 tmp;
 	int n, i;
 	args->ndevs = 0;
-=======
-	uint32_t tmp, n, i;
-	__be32 *p;
-	__be32 status = 0;
->>>>>>> rebase
 
 	/* Num of device notifications */
 	p = read_buf(xdr, sizeof(uint32_t));
@@ -287,17 +281,12 @@ __be32 decode_devicenotify_args(struct svc_rqst *rqstp,
 		goto out;
 	}
 	n = ntohl(*p++);
-<<<<<<< HEAD
 	if (n <= 0)
 		goto out;
 	if (n > ULONG_MAX / sizeof(*args->devs)) {
 		status = htonl(NFS4ERR_BADXDR);
 		goto out;
 	}
-=======
-	if (n == 0)
-		goto out;
->>>>>>> rebase
 
 	args->devs = kmalloc_array(n, sizeof(*args->devs), GFP_KERNEL);
 	if (!args->devs) {
@@ -350,16 +339,12 @@ __be32 decode_devicenotify_args(struct svc_rqst *rqstp,
 			dev->cbd_immediate = 0;
 		}
 
-<<<<<<< HEAD
 		args->ndevs++;
 
-=======
->>>>>>> rebase
 		dprintk("%s: type %d layout 0x%x immediate %d\n",
 			__func__, dev->cbd_notify_type, dev->cbd_layout_type,
 			dev->cbd_immediate);
 	}
-<<<<<<< HEAD
 out:
 	dprintk("%s: status %d ndevs %d\n",
 		__func__, ntohl(status), args->ndevs);
@@ -367,19 +352,6 @@ out:
 err:
 	kfree(args->devs);
 	goto out;
-=======
-	args->ndevs = n;
-	dprintk("%s: ndevs %d\n", __func__, args->ndevs);
-	return 0;
-err:
-	kfree(args->devs);
-out:
-	args->devs = NULL;
-	args->ndevs = 0;
-	dprintk("%s: status %d ndevs %d\n",
-		__func__, ntohl(status), args->ndevs);
-	return status;
->>>>>>> rebase
 }
 
 static __be32 decode_sessionid(struct xdr_stream *xdr,
@@ -1019,11 +991,7 @@ static __be32 nfs4_callback_compound(struct svc_rqst *rqstp)
 
 out_invalidcred:
 	pr_warn_ratelimited("NFS: NFSv4 callback contains invalid cred\n");
-<<<<<<< HEAD
 	return rpc_autherr_badcred;
-=======
-	return svc_return_autherr(rqstp, rpc_autherr_badcred);
->>>>>>> rebase
 }
 
 /*

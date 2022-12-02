@@ -129,7 +129,6 @@ config DRM_TI_TFP410
 	---help---
 	  Texas Instruments TFP410 DVI/HDMI Transmitter driver
 
-<<<<<<< HEAD
 config DRM_LONTIUM_LT9611UXC
 	bool "LT LT9611 DSI/HDMI Bridge"
 	depends on OF
@@ -142,8 +141,6 @@ config DRM_LONTIUM_LT9611UXC
 	  This only need to uploade firmware and do not need add
 	  too much other configs when running.
 
-=======
->>>>>>> rebase
 source "drivers/gpu/drm/bridge/analogix/Kconfig"
 
 source "drivers/gpu/drm/bridge/adv7511/Kconfig"

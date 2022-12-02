@@ -196,7 +196,6 @@ void blk_account_io_start(struct request *req, bool new_io);
 void blk_account_io_completion(struct request *req, unsigned int bytes);
 void blk_account_io_done(struct request *req, u64 now);
 
-<<<<<<< HEAD
 #ifdef CONFIG_BLK_IO_VOLUME
 void blk_queue_reset_io_vol(struct request_queue *q);
 void blk_queue_io_vol_add(struct request_queue *q, int opf, long long bytes);
@@ -209,8 +208,6 @@ void blk_queue_io_vol_merge(struct request_queue *q, int opf, int rqs, long long
 #define blk_queue_io_vol_merge(q, opf, rqs, bytes)	do {} while (0)
 #endif
 
-=======
->>>>>>> rebase
 /*
  * EH timer and IO completion will both attempt to 'grab' the request, make
  * sure that only one of them succeeds. Steal the bottom bit of the
@@ -259,11 +256,7 @@ int elevator_init_mq(struct request_queue *q);
 int elevator_switch_mq(struct request_queue *q,
 			      struct elevator_type *new_e);
 void elevator_exit(struct request_queue *, struct elevator_queue *);
-<<<<<<< HEAD
 int elv_register_queue(struct request_queue *q);
-=======
-int elv_register_queue(struct request_queue *q, bool uevent);
->>>>>>> rebase
 void elv_unregister_queue(struct request_queue *q);
 
 struct hd_struct *__disk_get_part(struct gendisk *disk, int partno);

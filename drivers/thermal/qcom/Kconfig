@@ -9,7 +9,6 @@ config QCOM_TSENS
 	  thermal zone device via the mode file results in disabling the sensor.
 	  Also able to set threshold temperature for both hot and cold and update
 	  when a threshold is reached.
-<<<<<<< HEAD
 
 config QTI_ADC_TM
 	tristate "Qualcomm Technologies Inc. Thermal Monitor ADC Driver"
@@ -160,5 +159,3 @@ config SEC_EXT_THERMAL_MONITOR
 	  This enables external thermal monitor to get hint whether if there's
 	  external cause or not.
 
-=======
->>>>>>> rebase

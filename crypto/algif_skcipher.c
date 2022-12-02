@@ -78,7 +78,6 @@ static int _skcipher_recvmsg(struct socket *sock, struct msghdr *msg,
 		return PTR_ERR(areq);
 
 	/* convert iovecs of output buffers into RX SGL */
-<<<<<<< HEAD
 	err = af_alg_get_rsgl(sk, msg, flags, areq, -1, &len);
 	if (err)
 		goto free;
@@ -87,12 +86,6 @@ static int _skcipher_recvmsg(struct socket *sock, struct msghdr *msg,
 	if (len > ctx->used)
 		len = ctx->used;
 
-=======
-	err = af_alg_get_rsgl(sk, msg, flags, areq, ctx->used, &len);
-	if (err)
-		goto free;
-
->>>>>>> rebase
 	/*
 	 * If more buffers are to be expected to be processed, process only
 	 * full block size buffers.
@@ -138,11 +131,7 @@ static int _skcipher_recvmsg(struct socket *sock, struct msghdr *msg,
 			crypto_skcipher_decrypt(&areq->cra_u.skcipher_req);
 
 		/* AIO operation in progress */
-<<<<<<< HEAD
 		if (err == -EINPROGRESS || err == -EBUSY)
-=======
-		if (err == -EINPROGRESS)
->>>>>>> rebase
 			return -EIOCBQUEUED;
 
 		sock_put(sk);
@@ -230,11 +219,7 @@ static int skcipher_check_key(struct socket *sock)
 	struct alg_sock *ask = alg_sk(sk);
 
 	lock_sock(sk);
-<<<<<<< HEAD
 	if (ask->refcnt)
-=======
-	if (!atomic_read(&ask->nokey_refcnt))
->>>>>>> rebase
 		goto unlock_child;
 
 	psk = ask->parent;
@@ -246,16 +231,11 @@ static int skcipher_check_key(struct socket *sock)
 	if (crypto_skcipher_get_flags(tfm) & CRYPTO_TFM_NEED_KEY)
 		goto unlock;
 
-<<<<<<< HEAD
 	if (!pask->refcnt++)
 		sock_hold(psk);
 
 	ask->refcnt = 1;
 	sock_put(psk);
-=======
-	atomic_dec(&pask->nokey_refcnt);
-	atomic_set(&ask->nokey_refcnt, 0);
->>>>>>> rebase
 
 	err = 0;
 

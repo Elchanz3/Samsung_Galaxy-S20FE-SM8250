@@ -25,13 +25,10 @@
 #include "scsi_priv.h"
 #include "scsi_logging.h"
 
-<<<<<<< HEAD
 #ifdef CONFIG_SCSI_UFSHCD
 #include "ufs/ufshcd.h"
 #endif
 
-=======
->>>>>>> rebase
 static struct device_type scsi_dev_type;
 
 static const struct {
@@ -272,7 +269,6 @@ show_shost_supported_mode(struct device *dev, struct device_attribute *attr,
 
 static DEVICE_ATTR(supported_mode, S_IRUGO | S_IWUSR, show_shost_supported_mode, NULL);
 
-<<<<<<< HEAD
 /* for Argos */
 #ifdef CONFIG_SCSI_UFSHCD
 static ssize_t show_shost_transferred_cnt(struct device *dev, struct device_attribute *attr, char *buf)
@@ -286,8 +282,6 @@ static ssize_t show_shost_transferred_cnt(struct device *dev, struct device_attr
 static DEVICE_ATTR(transferred_cnt, S_IRUGO | S_IWUSR, show_shost_transferred_cnt, NULL);
 #endif
 
-=======
->>>>>>> rebase
 static ssize_t
 show_shost_active_mode(struct device *dev,
 		       struct device_attribute *attr, char *buf)
@@ -393,20 +387,12 @@ static DEVICE_ATTR(eh_deadline, S_IRUGO | S_IWUSR, show_shost_eh_deadline, store
 shost_rd_attr(use_blk_mq, "%d\n");
 shost_rd_attr(unique_id, "%u\n");
 shost_rd_attr(cmd_per_lun, "%hd\n");
-<<<<<<< HEAD
 shost_rd_attr(can_queue, "%d\n");
-=======
-shost_rd_attr(can_queue, "%hd\n");
->>>>>>> rebase
 shost_rd_attr(sg_tablesize, "%hu\n");
 shost_rd_attr(sg_prot_tablesize, "%hu\n");
 shost_rd_attr(unchecked_isa_dma, "%d\n");
 shost_rd_attr(prot_capabilities, "%u\n");
-<<<<<<< HEAD
 shost_rd_attr(prot_guard_type, "%d\n");
-=======
-shost_rd_attr(prot_guard_type, "%hd\n");
->>>>>>> rebase
 shost_rd_attr2(proc_name, hostt->proc_name, "%s\n");
 
 static ssize_t
@@ -430,12 +416,9 @@ static struct attribute *scsi_sysfs_shost_attrs[] = {
 	&dev_attr_scan.attr,
 	&dev_attr_hstate.attr,
 	&dev_attr_supported_mode.attr,
-<<<<<<< HEAD
 #ifdef CONFIG_SCSI_UFSHCD
  	&dev_attr_transferred_cnt.attr,
 #endif
-=======
->>>>>>> rebase
 	&dev_attr_active_mode.attr,
 	&dev_attr_prot_capabilities.attr,
 	&dev_attr_prot_guard_type.attr,
@@ -468,18 +451,9 @@ static void scsi_device_dev_release_usercontext(struct work_struct *work)
 	struct list_head *this, *tmp;
 	struct scsi_vpd *vpd_pg80 = NULL, *vpd_pg83 = NULL;
 	unsigned long flags;
-<<<<<<< HEAD
 
 	sdev = container_of(work, struct scsi_device, ew.work);
 
-=======
-	struct module *mod;
-
-	sdev = container_of(work, struct scsi_device, ew.work);
-
-	mod = sdev->host->hostt->module;
-
->>>>>>> rebase
 	scsi_dh_release_device(sdev);
 
 	parent = sdev->sdev_gendev.parent;
@@ -520,23 +494,11 @@ static void scsi_device_dev_release_usercontext(struct work_struct *work)
 
 	if (parent)
 		put_device(parent);
-<<<<<<< HEAD
-=======
-	module_put(mod);
->>>>>>> rebase
 }
 
 static void scsi_device_dev_release(struct device *dev)
 {
 	struct scsi_device *sdp = to_scsi_device(dev);
-<<<<<<< HEAD
-=======
-
-	/* Set module pointer as NULL in case of module unloading */
-	if (!try_module_get(sdp->host->hostt->module))
-		sdp->host->hostt->module = NULL;
-
->>>>>>> rebase
 	execute_in_process_context(scsi_device_dev_release_usercontext,
 				   &sdp->ew);
 }
@@ -731,16 +693,11 @@ sdev_store_timeout (struct device *dev, struct device_attribute *attr,
 {
 	struct scsi_device *sdev;
 	int timeout;
-<<<<<<< HEAD
 	int res;
 	sdev = to_scsi_device(dev);
 	res= sscanf (buf, "%d\n", &timeout);
 	if (res != 1)
 		return -EINVAL;
-=======
-	sdev = to_scsi_device(dev);
-	sscanf (buf, "%d\n", &timeout);
->>>>>>> rebase
 	blk_queue_rq_timeout(sdev->request_queue, timeout * HZ);
 	return count;
 }
@@ -1357,12 +1314,8 @@ int scsi_sysfs_add_sdev(struct scsi_device *sdev)
 	device_enable_async_suspend(&sdev->sdev_gendev);
 	scsi_autopm_get_target(starget);
 	pm_runtime_set_active(&sdev->sdev_gendev);
-<<<<<<< HEAD
 	if (!sdev->use_rpm_auto)
 		pm_runtime_forbid(&sdev->sdev_gendev);
-=======
-	pm_runtime_forbid(&sdev->sdev_gendev);
->>>>>>> rebase
 	pm_runtime_enable(&sdev->sdev_gendev);
 	scsi_autopm_put_target(starget);
 

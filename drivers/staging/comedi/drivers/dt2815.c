@@ -92,10 +92,6 @@ static int dt2815_ao_insn(struct comedi_device *dev, struct comedi_subdevice *s,
 	int ret;
 
 	for (i = 0; i < insn->n; i++) {
-<<<<<<< HEAD
-=======
-		/* FIXME: lo bit 0 chooses voltage output or current output */
->>>>>>> rebase
 		lo = ((data[i] & 0x0f) << 4) | (chan << 1) | 0x01;
 		hi = (data[i] & 0xff0) >> 4;
 
@@ -109,11 +105,6 @@ static int dt2815_ao_insn(struct comedi_device *dev, struct comedi_subdevice *s,
 		if (ret)
 			return ret;
 
-<<<<<<< HEAD
-=======
-		outb(hi, dev->iobase + DT2815_DATA);
-
->>>>>>> rebase
 		devpriv->ao_readback[chan] = data[i];
 	}
 	return i;

@@ -23,10 +23,7 @@ struct sdhci_pltfm_data {
 
 struct sdhci_pltfm_host {
 	struct clk *clk;
-<<<<<<< HEAD
 	void *priv; /* to handle quirks across io-accessor calls */
-=======
->>>>>>> rebase
 
 	/* migrate from sdhci_of_host */
 	unsigned int clock;

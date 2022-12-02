@@ -143,12 +143,7 @@ static int igb_get_link_ksettings(struct net_device *netdev,
 	u32 speed;
 	u32 supported, advertising;
 
-<<<<<<< HEAD
 	status = rd32(E1000_STATUS);
-=======
-	status = pm_runtime_suspended(&adapter->pdev->dev) ?
-		 0 : rd32(E1000_STATUS);
->>>>>>> rebase
 	if (hw->phy.media_type == e1000_media_type_copper) {
 
 		supported = (SUPPORTED_10baseT_Half |

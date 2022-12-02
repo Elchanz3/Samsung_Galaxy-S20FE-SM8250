@@ -1,14 +1,6 @@
 # This mimics the top-level Makefile. We do it explicitly here so that this
 # Makefile can operate with or without the kbuild infrastructure.
-<<<<<<< HEAD
 CC := $(CROSS_COMPILE)gcc
-=======
-ifneq ($(LLVM),)
-CC := clang
-else
-CC := $(CROSS_COMPILE)gcc
-endif
->>>>>>> rebase
 
 ifeq (0,$(MAKELEVEL))
 OUTPUT := $(shell pwd)
@@ -30,10 +22,6 @@ include $(top_srcdir)/scripts/subarch.include
 ARCH		?= $(SUBARCH)
 
 .PHONY: khdr
-<<<<<<< HEAD
-=======
-.NOTPARALLEL:
->>>>>>> rebase
 khdr:
 	make ARCH=$(ARCH) -C $(top_srcdir) headers_install
 

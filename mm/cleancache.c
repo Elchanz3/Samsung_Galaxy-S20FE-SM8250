@@ -13,10 +13,7 @@
 
 #include <linux/module.h>
 #include <linux/fs.h>
-<<<<<<< HEAD
 #include <linux/pagemap.h>
-=======
->>>>>>> rebase
 #include <linux/exportfs.h>
 #include <linux/mm.h>
 #include <linux/debugfs.h>
@@ -227,14 +224,11 @@ void __cleancache_put_page(struct page *page)
 		return;
 	}
 
-<<<<<<< HEAD
 #ifdef CONFIG_SDP
 	if (mapping_sensitive(page->mapping))
 		return;
 #endif
 
-=======
->>>>>>> rebase
 	VM_BUG_ON_PAGE(!PageLocked(page), page);
 	pool_id = page->mapping->host->i_sb->cleancache_poolid;
 	if (pool_id >= 0 &&

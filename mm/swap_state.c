@@ -23,10 +23,6 @@
 #include <linux/huge_mm.h>
 
 #include <asm/pgtable.h>
-<<<<<<< HEAD
-=======
-#include "internal.h"
->>>>>>> rebase
 
 /*
  * swapper_space is a fiction, retained to simplify the path through
@@ -420,11 +416,7 @@ struct page *__read_swap_cache_async(swp_entry_t entry, gfp_t gfp_mask,
 		/*
 		 * call radix_tree_preload() while we can wait.
 		 */
-<<<<<<< HEAD
 		err = radix_tree_maybe_preload(gfp_mask & GFP_KERNEL);
-=======
-		err = radix_tree_maybe_preload(gfp_mask & GFP_RECLAIM_MASK);
->>>>>>> rebase
 		if (err)
 			break;
 
@@ -456,10 +448,7 @@ struct page *__read_swap_cache_async(swp_entry_t entry, gfp_t gfp_mask,
 			/*
 			 * Initiate read into locked page and return.
 			 */
-<<<<<<< HEAD
 			SetPageWorkingset(new_page);
-=======
->>>>>>> rebase
 			lru_cache_add_anon(new_page);
 			*new_page_allocated = true;
 			return new_page;
@@ -548,18 +537,10 @@ static unsigned long swapin_nr_pages(unsigned long offset)
 		return 1;
 
 	hits = atomic_xchg(&swapin_readahead_hits, 0);
-<<<<<<< HEAD
 	pages = __swapin_nr_pages(prev_offset, offset, hits, max_pages,
 				  atomic_read(&last_readahead_pages));
 	if (!hits)
 		prev_offset = offset;
-=======
-	pages = __swapin_nr_pages(READ_ONCE(prev_offset), offset, hits,
-				  max_pages,
-				  atomic_read(&last_readahead_pages));
-	if (!hits)
-		WRITE_ONCE(prev_offset, offset);
->>>>>>> rebase
 	atomic_set(&last_readahead_pages, pages);
 
 	return pages;
@@ -582,13 +563,10 @@ static unsigned long swapin_nr_pages(unsigned long offset)
  * the readahead.
  *
  * Caller must hold down_read on the vma->vm_mm if vmf->vma is not NULL.
-<<<<<<< HEAD
  * This is needed to ensure the VMA will not be freed in our back. In the case
  * of the speculative page fault handler, this cannot happen, even if we don't
  * hold the mmap_sem. Callees are assumed to take care of reading VMA's fields
  * using READ_ONCE() to read consistent values.
-=======
->>>>>>> rebase
  */
 struct page *swap_cluster_readahead(swp_entry_t entry, gfp_t gfp_mask,
 				struct vm_fault *vmf)
@@ -682,15 +660,9 @@ static inline void swap_ra_clamp_pfn(struct vm_area_struct *vma,
 				     unsigned long *start,
 				     unsigned long *end)
 {
-<<<<<<< HEAD
 	*start = max3(lpfn, PFN_DOWN(READ_ONCE(vma->vm_start)),
 		      PFN_DOWN(faddr & PMD_MASK));
 	*end = min3(rpfn, PFN_DOWN(READ_ONCE(vma->vm_end)),
-=======
-	*start = max3(lpfn, PFN_DOWN(vma->vm_start),
-		      PFN_DOWN(faddr & PMD_MASK));
-	*end = min3(rpfn, PFN_DOWN(vma->vm_end),
->>>>>>> rebase
 		    PFN_DOWN((faddr & PMD_MASK) + PMD_SIZE));
 }
 

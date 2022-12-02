@@ -353,15 +353,8 @@ static int reconn_set_ipaddr(struct TCP_Server_Info *server)
 		return rc;
 	}
 
-<<<<<<< HEAD
 	rc = cifs_convert_address((struct sockaddr *)&server->dstaddr, ipaddr,
 				  strlen(ipaddr));
-=======
-	spin_lock(&cifs_tcp_ses_lock);
-	rc = cifs_convert_address((struct sockaddr *)&server->dstaddr, ipaddr,
-				  strlen(ipaddr));
-	spin_unlock(&cifs_tcp_ses_lock);
->>>>>>> rebase
 	kfree(ipaddr);
 
 	return !rc ? -1 : 0;
@@ -782,11 +775,6 @@ static void clean_demultiplex_info(struct TCP_Server_Info *server)
 	list_del_init(&server->tcp_ses_list);
 	spin_unlock(&cifs_tcp_ses_lock);
 
-<<<<<<< HEAD
-=======
-	cancel_delayed_work_sync(&server->echo);
-
->>>>>>> rebase
 	spin_lock(&GlobalMid_Lock);
 	server->tcpStatus = CifsExiting;
 	spin_unlock(&GlobalMid_Lock);
@@ -3382,16 +3370,9 @@ cifs_match_super(struct super_block *sb, void *data)
 	spin_lock(&cifs_tcp_ses_lock);
 	cifs_sb = CIFS_SB(sb);
 	tlink = cifs_get_tlink(cifs_sb_master_tlink(cifs_sb));
-<<<<<<< HEAD
 	if (IS_ERR(tlink)) {
 		spin_unlock(&cifs_tcp_ses_lock);
 		return rc;
-=======
-	if (tlink == NULL) {
-		/* can not match superblock if tlink were ever null */
-		spin_unlock(&cifs_tcp_ses_lock);
-		return 0;
->>>>>>> rebase
 	}
 	tcon = tlink_tcon(tlink);
 	ses = tcon->ses;
@@ -4618,20 +4599,9 @@ cifs_construct_tcon(struct cifs_sb_info *cifs_sb, kuid_t fsuid)
 	vol_info->nocase = master_tcon->nocase;
 	vol_info->nohandlecache = master_tcon->nohandlecache;
 	vol_info->local_lease = master_tcon->local_lease;
-<<<<<<< HEAD
 	vol_info->no_linux_ext = !master_tcon->unix_ext;
 	vol_info->sectype = master_tcon->ses->sectype;
 	vol_info->sign = master_tcon->ses->sign;
-=======
-	vol_info->no_lease = master_tcon->no_lease;
-	vol_info->resilient = master_tcon->use_resilient;
-	vol_info->persistent = master_tcon->use_persistent;
-	vol_info->no_linux_ext = !master_tcon->unix_ext;
-	vol_info->linux_ext = master_tcon->posix_extensions;
-	vol_info->sectype = master_tcon->ses->sectype;
-	vol_info->sign = master_tcon->ses->sign;
-	vol_info->seal = master_tcon->seal;
->>>>>>> rebase
 
 	rc = cifs_set_vol_auth(vol_info, master_tcon->ses);
 	if (rc) {
@@ -4657,13 +4627,10 @@ cifs_construct_tcon(struct cifs_sb_info *cifs_sb, kuid_t fsuid)
 		goto out;
 	}
 
-<<<<<<< HEAD
 	/* if new SMB3.11 POSIX extensions are supported do not remap / and \ */
 	if (tcon->posix_extensions)
 		cifs_sb->mnt_cifs_flags |= CIFS_MOUNT_POSIX_PATHS;
 
-=======
->>>>>>> rebase
 	if (cap_unix(ses))
 		reset_cifs_unix_caps(0, tcon, NULL, vol_info);
 

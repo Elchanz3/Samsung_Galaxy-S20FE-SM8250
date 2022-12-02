@@ -65,7 +65,6 @@ static struct rtc_timer		rtctimer;
 static struct rtc_device	*rtcdev;
 static DEFINE_SPINLOCK(rtcdev_lock);
 
-<<<<<<< HEAD
 #if IS_ENABLED(CONFIG_SEC_PM)
 extern void log_suspend_abort_reason(const char *fmt, ...);
 #endif
@@ -171,8 +170,6 @@ int alarm_set_alarm(char *alarm_data)
 }
 #endif /*CONFIG_RTC_AUTO_PWRON*/
 
-=======
->>>>>>> rebase
 /**
  * alarmtimer_get_rtcdev - Return selected rtcdevice
  *
@@ -209,11 +206,7 @@ static int alarmtimer_rtc_add_device(struct device *dev,
 	if (!device_may_wakeup(rtc->dev.parent))
 		return -1;
 
-<<<<<<< HEAD
 	__ws = wakeup_source_register(dev, "alarmtimer");
-=======
-	__ws = wakeup_source_register("alarmtimer");
->>>>>>> rebase
 
 	spin_lock_irqsave(&rtcdev_lock, flags);
 	if (!rtcdev) {
@@ -364,12 +357,9 @@ static int alarmtimer_suspend(struct device *dev)
 	struct rtc_device *rtc;
 	unsigned long flags;
 	struct rtc_time tm;
-<<<<<<< HEAD
 #if IS_ENABLED(CONFIG_SEC_PM)
 	struct alarm *min_alarm = NULL;
 #endif
-=======
->>>>>>> rebase
 
 	spin_lock_irqsave(&freezer_delta_lock, flags);
 	min = freezer_delta;
@@ -399,18 +389,14 @@ static int alarmtimer_suspend(struct device *dev)
 			expires = next->expires;
 			min = delta;
 			type = i;
-<<<<<<< HEAD
 #if IS_ENABLED(CONFIG_SEC_PM)
 			min_alarm = container_of(next, struct alarm, node);
 #endif
-=======
->>>>>>> rebase
 		}
 	}
 	if (min == 0)
 		return 0;
 
-<<<<<<< HEAD
 #if IS_ENABLED(CONFIG_SEC_PM)
 	if (min_alarm)
 		pr_info("soonest alarm : %ps\n", min_alarm->function);
@@ -421,9 +407,6 @@ static int alarmtimer_suspend(struct device *dev)
 		pr_info("alarmtimer suspending blocked by %ps\n", min_alarm->function);
 		log_suspend_abort_reason("alarmtimer suspending blocked by %ps\n", min_alarm->function);
 #endif
-=======
-	if (ktime_to_ns(min) < 2 * NSEC_PER_SEC) {
->>>>>>> rebase
 		__pm_wakeup_event(ws, 2 * MSEC_PER_SEC);
 		return -EBUSY;
 	}
@@ -959,15 +942,9 @@ static int alarm_timer_nsleep(const clockid_t which_clock, int flags,
 	if (flags == TIMER_ABSTIME)
 		return -ERESTARTNOHAND;
 
-<<<<<<< HEAD
 	restart->fn = alarm_timer_nsleep_restart;
 	restart->nanosleep.clockid = type;
 	restart->nanosleep.expires = exp;
-=======
-	restart->nanosleep.clockid = type;
-	restart->nanosleep.expires = exp;
-	set_restart_fn(restart, alarm_timer_nsleep_restart);
->>>>>>> rebase
 	return ret;
 }
 

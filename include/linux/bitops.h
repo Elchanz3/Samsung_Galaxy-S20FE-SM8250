@@ -50,11 +50,7 @@ static inline int get_bitmask_order(unsigned int count)
 
 static __always_inline unsigned long hweight_long(unsigned long w)
 {
-<<<<<<< HEAD
 	return sizeof(w) == 4 ? hweight32(w) : hweight64(w);
-=======
-	return sizeof(w) == 4 ? hweight32(w) : hweight64((__u64)w);
->>>>>>> rebase
 }
 
 /**
@@ -240,7 +236,6 @@ static __always_inline void __assign_bit(long nr, volatile unsigned long *addr,
 #ifdef __KERNEL__
 
 #ifndef set_mask_bits
-<<<<<<< HEAD
 #define set_mask_bits(ptr, _mask, _bits)	\
 ({								\
 	const typeof(*ptr) mask = (_mask), bits = (_bits);	\
@@ -252,19 +247,6 @@ static __always_inline void __assign_bit(long nr, volatile unsigned long *addr,
 	} while (cmpxchg(ptr, old, new) != old);		\
 								\
 	new;							\
-=======
-#define set_mask_bits(ptr, mask, bits)	\
-({								\
-	const typeof(*(ptr)) mask__ = (mask), bits__ = (bits);	\
-	typeof(*(ptr)) old__, new__;				\
-								\
-	do {							\
-		old__ = READ_ONCE(*(ptr));			\
-		new__ = (old__ & ~mask__) | bits__;		\
-	} while (cmpxchg(ptr, old__, new__) != old__);		\
-								\
-	new__;							\
->>>>>>> rebase
 })
 #endif
 

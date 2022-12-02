@@ -54,7 +54,6 @@ config REGULATOR_USERSPACE_CONSUMER
 
 	  If unsure, say no.
 
-<<<<<<< HEAD
 config REGULATOR_PROXY_CONSUMER
 	bool "Boot time regulator proxy consumer support"
 	help
@@ -65,8 +64,6 @@ config REGULATOR_PROXY_CONSUMER
 	  stop working if performed before the driver managing the hardware has
 	  probed.
 
-=======
->>>>>>> rebase
 config REGULATOR_88PG86X
 	tristate "Marvell 88PG86X voltage regulators"
 	depends on I2C
@@ -727,7 +724,6 @@ config REGULATOR_QCOM_SPMI
 	  Qualcomm SPMI PMICs as a module. The module will be named
 	  "qcom_spmi-regulator".
 
-<<<<<<< HEAD
 config REGULATOR_QPNP_AMOLED
         tristate "Qualcomm Technologies, Inc. QPNP AMOLED support"
         depends on SPMI
@@ -766,8 +762,6 @@ config REGULATOR_QPNP_OLEDB
           configuration via the regulator framework. The configurable range of
           this bias is 5 V to 8.1 V.
 
-=======
->>>>>>> rebase
 config REGULATOR_RC5T583
 	tristate "RICOH RC5T583 Power regulators"
 	depends on MFD_RC5T583
@@ -819,15 +813,12 @@ config REGULATOR_S2MPS11
 	 Buck converters including Dual-Phase Buck converter, Buck-Boost
 	 converter, various LDOs.
 
-<<<<<<< HEAD
 config DRV_SAMSUNG_PMIC
 	tristate "Samsung PMIC sysfs system"
 	depends on REGULATOR_S2MPB02 || REGULATOR_S2MPB03 || REGULATOR_S2DOS05 || REGULATOR_S2DOS06
 	help
 	 This driver supports a Samsung PMIC sysfs.
 
-=======
->>>>>>> rebase
 config REGULATOR_S5M8767
 	tristate "Samsung S5M8767A voltage regulator"
 	depends on MFD_SEC_CORE
@@ -836,7 +827,6 @@ config REGULATOR_S5M8767
 	 via I2C bus. S5M8767A have 9 Bucks and 28 LDOs output and
 	 supports DVS mode with 8bits of output voltage control.
 
-<<<<<<< HEAD
 config REGULATOR_S2DOS03
 	tristate "SLSI S2DOS03 regulator"
 	depends on I2C
@@ -882,8 +872,6 @@ config REGULATOR_S2DOS06
 	 This driver controls a Samsung S2DOS06 regulator
 	 via I2C bus.
 
-=======
->>>>>>> rebase
 config REGULATOR_SC2731
 	tristate "Spreadtrum SC2731 power regulator driver"
 	depends on MFD_SC27XX_PMIC || COMPILE_TEST
@@ -1120,7 +1108,6 @@ config REGULATOR_WM8994
 	  This driver provides support for the voltage regulators on the
 	  WM8994 CODEC.
 
-<<<<<<< HEAD
 config REGULATOR_MEM_ACC
 	tristate "QTI Memory accelerator regulator driver"
 	help
@@ -1231,7 +1218,5 @@ config REGULATOR_PM8008
 	  This driver controls PM8008 PMIC chip and the voltage
 	  regulators found in Qualcomm Technologies Inc. PM8008
 	  PMIC.
-=======
->>>>>>> rebase
 endif
 

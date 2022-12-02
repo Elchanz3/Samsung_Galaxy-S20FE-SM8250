@@ -476,12 +476,7 @@ int of_mm_gpiochip_add_data(struct device_node *np,
 	if (mm_gc->save_regs)
 		mm_gc->save_regs(mm_gc);
 
-<<<<<<< HEAD
 	mm_gc->gc.of_node = np;
-=======
-	of_node_put(mm_gc->gc.of_node);
-	mm_gc->gc.of_node = of_node_get(np);
->>>>>>> rebase
 
 	ret = gpiochip_add_data(gc, data);
 	if (ret)
@@ -489,10 +484,6 @@ int of_mm_gpiochip_add_data(struct device_node *np,
 
 	return 0;
 err2:
-<<<<<<< HEAD
-=======
-	of_node_put(np);
->>>>>>> rebase
 	iounmap(mm_gc->regs);
 err1:
 	kfree(gc->label);
@@ -534,11 +525,7 @@ static void of_gpiochip_init_valid_mask(struct gpio_chip *chip)
 					   i, &start);
 		of_property_read_u32_index(np, "gpio-reserved-ranges",
 					   i + 1, &count);
-<<<<<<< HEAD
 		if (start >= chip->ngpio || start + count - 1 >= chip->ngpio)
-=======
-		if (start >= chip->ngpio || start + count > chip->ngpio)
->>>>>>> rebase
 			continue;
 
 		bitmap_clear(chip->valid_mask, start, count);

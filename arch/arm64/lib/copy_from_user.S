@@ -39,11 +39,7 @@
 	.endm
 
 	.macro ldrh1 ptr, regB, val
-<<<<<<< HEAD
 	uao_user_alternative 9998f, ldrh, ldtrh, \ptr, \regB, \val
-=======
-	uao_user_alternative 9997f, ldrh, ldtrh, \ptr, \regB, \val
->>>>>>> rebase
 	.endm
 
 	.macro strh1 ptr, regB, val
@@ -51,11 +47,7 @@
 	.endm
 
 	.macro ldr1 ptr, regB, val
-<<<<<<< HEAD
 	uao_user_alternative 9998f, ldr, ldtr, \ptr, \regB, \val
-=======
-	uao_user_alternative 9997f, ldr, ldtr, \ptr, \regB, \val
->>>>>>> rebase
 	.endm
 
 	.macro str1 ptr, regB, val
@@ -63,11 +55,7 @@
 	.endm
 
 	.macro ldp1 ptr, regB, regC, val
-<<<<<<< HEAD
 	uao_ldp 9998f, \ptr, \regB, \regC, \val
-=======
-	uao_ldp 9997f, \ptr, \regB, \regC, \val
->>>>>>> rebase
 	.endm
 
 	.macro stp1 ptr, regB, regC, val
@@ -75,17 +63,9 @@
 	.endm
 
 end	.req	x5
-<<<<<<< HEAD
 ENTRY(__arch_copy_from_user)
 	uaccess_enable_not_uao x3, x4, x5
 	add	end, x0, x2
-=======
-srcin	.req	x15
-ENTRY(__arch_copy_from_user)
-	uaccess_enable_not_uao x3, x4, x5
-	add	end, x0, x2
-	mov	srcin, x1
->>>>>>> rebase
 #include "copy_template.S"
 	uaccess_disable_not_uao x3, x4
 	mov	x0, #0				// Nothing to copy
@@ -94,14 +74,6 @@ ENDPROC(__arch_copy_from_user)
 
 	.section .fixup,"ax"
 	.align	2
-<<<<<<< HEAD
-=======
-9997:	cmp	dst, dstin
-	b.ne	9998f
-	// Before being absolutely sure we couldn't copy anything, try harder
-USER(9998f, ldtrb tmp1w, [srcin])
-	strb	tmp1w, [dst], #1
->>>>>>> rebase
 9998:	sub	x0, end, dst			// bytes not copied
 	uaccess_disable_not_uao x3, x4
 	ret

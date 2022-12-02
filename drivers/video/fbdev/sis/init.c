@@ -355,20 +355,12 @@ SiS_GetModeID(int VGAEngine, unsigned int VBFlags, int HDisplay, int VDisplay,
 		}
 		break;
 	case 400:
-<<<<<<< HEAD
 		if((!(VBFlags & CRT1_LCDA)) || ((LCDwidth >= 800) && (LCDwidth >= 600))) {
-=======
-		if((!(VBFlags & CRT1_LCDA)) || ((LCDwidth >= 800) && (LCDheight >= 600))) {
->>>>>>> rebase
 			if(VDisplay == 300) ModeIndex = ModeIndex_400x300[Depth];
 		}
 		break;
 	case 512:
-<<<<<<< HEAD
 		if((!(VBFlags & CRT1_LCDA)) || ((LCDwidth >= 1024) && (LCDwidth >= 768))) {
-=======
-		if((!(VBFlags & CRT1_LCDA)) || ((LCDwidth >= 1024) && (LCDheight >= 768))) {
->>>>>>> rebase
 			if(VDisplay == 384) ModeIndex = ModeIndex_512x384[Depth];
 		}
 		break;
@@ -2436,14 +2428,6 @@ SiS_SetCRT1FIFO_630(struct SiS_Private *SiS_Pr, unsigned short ModeNo,
 
    i = 0;
 
-<<<<<<< HEAD
-=======
-	if (SiS_Pr->ChipType == SIS_730)
-		queuedata = &FQBQData730[0];
-	else
-		queuedata = &FQBQData[0];
-
->>>>>>> rebase
    if(ModeNo > 0x13) {
 
       /* Get VCLK  */
@@ -2461,15 +2445,12 @@ SiS_SetCRT1FIFO_630(struct SiS_Private *SiS_Pr, unsigned short ModeNo,
       /* Get half colordepth */
       colorth = colortharray[(SiS_Pr->SiS_ModeType - ModeEGA)];
 
-<<<<<<< HEAD
       if(SiS_Pr->ChipType == SIS_730) {
 	 queuedata = &FQBQData730[0];
       } else {
 	 queuedata = &FQBQData[0];
       }
 
-=======
->>>>>>> rebase
       do {
 	 templ = SiS_CalcDelay2(SiS_Pr, queuedata[i]) * VCLK * colorth;
 

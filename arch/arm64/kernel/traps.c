@@ -35,15 +35,10 @@
 #include <linux/sizes.h>
 #include <linux/syscalls.h>
 #include <linux/mm_types.h>
-<<<<<<< HEAD
 #include <linux/kasan.h>
 
 #include <asm/atomic.h>
 #include <asm/barrier.h>
-=======
-
-#include <asm/atomic.h>
->>>>>>> rebase
 #include <asm/bug.h>
 #include <asm/cpufeature.h>
 #include <asm/daifflags.h>
@@ -58,15 +53,12 @@
 #include <asm/system_misc.h>
 #include <asm/sysreg.h>
 
-<<<<<<< HEAD
 #include <linux/sec_debug.h>
 
 #ifdef CONFIG_CFP_ROPP
 #include <linux/cfp.h>
 #endif
 
-=======
->>>>>>> rebase
 static const char *handler[]= {
 	"Synchronous Abort",
 	"IRQ",
@@ -76,7 +68,6 @@ static const char *handler[]= {
 
 int show_unhandled_signals = 0;
 
-<<<<<<< HEAD
 #ifdef CONFIG_SEC_DEBUG
 /*
  * Dump out the contents of some kernel memory nicely...
@@ -128,8 +119,6 @@ done:
 }
 #endif
 
-=======
->>>>>>> rebase
 static void dump_backtrace_entry(unsigned long where)
 {
 	printk(" %pS\n", (void *)where);
@@ -172,7 +161,6 @@ void dump_backtrace(struct pt_regs *regs, struct task_struct *tsk)
 {
 	struct stackframe frame;
 	int skip = 0;
-<<<<<<< HEAD
 	long cur_state = 0;
 	unsigned long cur_sp = 0;
 	unsigned long cur_fp = 0;
@@ -183,8 +171,6 @@ void dump_backtrace(struct pt_regs *regs, struct task_struct *tsk)
 #ifdef CONFIG_SEC_DEBUG
 	unsigned long prev_fp = 0;
 #endif
-=======
->>>>>>> rebase
 
 	pr_debug("%s(regs = %p tsk = %p)\n", __func__, regs, tsk);
 
@@ -200,14 +186,11 @@ void dump_backtrace(struct pt_regs *regs, struct task_struct *tsk)
 	if (!try_get_task_stack(tsk))
 		return;
 
-<<<<<<< HEAD
 #if (defined CONFIG_CFP_ROPP) && (defined CONFIG_CFP_TEST)
 	asm volatile("mrs %0, "STR(RRMK)"\n\t" : "=r" (value));
 	printk("CFP_TEST MK= %lx RRK=%lx RRK^MK=%lx\n", value, task_thread_info(tsk)->rrk, task_thread_info(tsk)->rrk ^ value);
 #endif
 
-=======
->>>>>>> rebase
 	if (tsk == current) {
 		frame.fp = (unsigned long)__builtin_frame_address(0);
 		frame.pc = (unsigned long)dump_backtrace;
@@ -217,12 +200,9 @@ void dump_backtrace(struct pt_regs *regs, struct task_struct *tsk)
 		 */
 		frame.fp = thread_saved_fp(tsk);
 		frame.pc = thread_saved_pc(tsk);
-<<<<<<< HEAD
 		cur_state = tsk->state;
 		cur_sp = thread_saved_sp(tsk);
 		cur_fp = frame.fp;
-=======
->>>>>>> rebase
 	}
 #ifdef CONFIG_FUNCTION_GRAPH_TRACER
 	frame.graph = tsk->curr_ret_stack;
@@ -230,7 +210,6 @@ void dump_backtrace(struct pt_regs *regs, struct task_struct *tsk)
 
 	printk("Call trace:\n");
 	do {
-<<<<<<< HEAD
 		if (tsk != current && (cur_state != tsk->state
 			/*
 			 * We would not be printing backtrace for the task
@@ -248,8 +227,6 @@ void dump_backtrace(struct pt_regs *regs, struct task_struct *tsk)
 				tsk->comm);
 			break;
 		}
-=======
->>>>>>> rebase
 		/* skip until specified stack frame */
 		if (!skip) {
 			dump_backtrace_entry(frame.pc);
@@ -264,7 +241,6 @@ void dump_backtrace(struct pt_regs *regs, struct task_struct *tsk)
 			 */
 			dump_backtrace_entry(regs->pc);
 		}
-<<<<<<< HEAD
 
 #ifdef CONFIG_SEC_DEBUG
 		if (prev_fp >= frame.fp) {
@@ -276,8 +252,6 @@ void dump_backtrace(struct pt_regs *regs, struct task_struct *tsk)
 		}
 		prev_fp = frame.fp;
 #endif
-=======
->>>>>>> rebase
 	} while (!unwind_frame(tsk, &frame));
 
 	put_task_stack(tsk);
@@ -316,7 +290,6 @@ static int __die(const char *str, int err, struct pt_regs *regs)
 		 end_of_stack(tsk));
 	show_regs(regs);
 
-<<<<<<< HEAD
 	if (!user_mode(regs)) {
 #ifdef CONFIG_SEC_DEBUG
 		unsigned long bottom = regs->sp;
@@ -335,10 +308,6 @@ static int __die(const char *str, int err, struct pt_regs *regs)
 #endif
 		dump_instr(KERN_EMERG, regs);
 	}
-=======
-	if (!user_mode(regs))
-		dump_instr(KERN_EMERG, regs);
->>>>>>> rebase
 
 	return ret;
 }
@@ -357,13 +326,10 @@ void die(const char *str, struct pt_regs *regs, int err)
 
 	oops_enter();
 
-<<<<<<< HEAD
 	sec_debug_sched_msg("!!die!!");
 	sec_debug_sched_msg("!!die!!");
 
 	sec_debug_summary_save_die_info(str, regs);
-=======
->>>>>>> rebase
 	console_verbose();
 	bust_spinlocks(1);
 	ret = __die(str, err, regs);
@@ -640,18 +606,6 @@ static void ctr_read_handler(unsigned int esr, struct pt_regs *regs)
 	int rt = (esr & ESR_ELx_SYS64_ISS_RT_MASK) >> ESR_ELx_SYS64_ISS_RT_SHIFT;
 	unsigned long val = arm64_ftr_reg_user_value(&arm64_ftr_reg_ctrel0);
 
-<<<<<<< HEAD
-=======
-	if (cpus_have_const_cap(ARM64_WORKAROUND_1542419)) {
-		/* Hide DIC so that we can trap the unnecessary maintenance...*/
-		val &= ~BIT(CTR_DIC_SHIFT);
-
-		/* ... and fake IminLine to reduce the number of traps. */
-		val &= ~CTR_IMINLINE_MASK;
-		val |= (PAGE_SHIFT - 2) & CTR_IMINLINE_MASK;
-	}
-
->>>>>>> rebase
 	pt_regs_write_reg(regs, rt, val);
 
 	arm64_skip_faulting_instruction(regs, AARCH64_INSN_SIZE);
@@ -661,10 +615,7 @@ static void cntvct_read_handler(unsigned int esr, struct pt_regs *regs)
 {
 	int rt = (esr & ESR_ELx_SYS64_ISS_RT_MASK) >> ESR_ELx_SYS64_ISS_RT_SHIFT;
 
-<<<<<<< HEAD
 	isb();
-=======
->>>>>>> rebase
 	pt_regs_write_reg(regs, rt, arch_counter_get_cntvct());
 	arm64_skip_faulting_instruction(regs, AARCH64_INSN_SIZE);
 }
@@ -710,7 +661,6 @@ static struct sys64_hook sys64_hooks[] = {
 	{},
 };
 
-<<<<<<< HEAD
 
 #ifdef CONFIG_COMPAT
 #define PSTATE_IT_1_0_SHIFT	25
@@ -866,8 +816,6 @@ asmlinkage void __exception do_cp15instr(unsigned int esr, struct pt_regs *regs)
 }
 #endif
 
-=======
->>>>>>> rebase
 asmlinkage void __exception do_sysinstr(unsigned int esr, struct pt_regs *regs)
 {
 	struct sys64_hook *hook;
@@ -940,12 +888,9 @@ asmlinkage void bad_mode(struct pt_regs *regs, int reason, unsigned int esr)
 {
 	console_verbose();
 
-<<<<<<< HEAD
 	sec_debug_save_badmode_info(reason, handler[reason],
 			esr, esr_get_class_string(esr));
 
-=======
->>>>>>> rebase
 	pr_crit("Bad mode in %s handler detected on CPU%d, code 0x%08x -- %s\n",
 		handler[reason], smp_processor_id(), esr,
 		esr_get_class_string(esr));
@@ -1129,7 +1074,6 @@ static struct break_hook bug_break_hook = {
 	.fn = bug_handler,
 };
 
-<<<<<<< HEAD
 #ifdef CONFIG_KASAN_SW_TAGS
 
 #define KASAN_ESR_RECOVER	0x20
@@ -1182,8 +1126,6 @@ static struct break_hook kasan_break_hook = {
 };
 #endif
 
-=======
->>>>>>> rebase
 /*
  * Initial handler for AArch64 BRK exceptions
  * This handler only used until debug_traps_init().
@@ -1191,13 +1133,10 @@ static struct break_hook kasan_break_hook = {
 int __init early_brk64(unsigned long addr, unsigned int esr,
 		struct pt_regs *regs)
 {
-<<<<<<< HEAD
 #ifdef CONFIG_KASAN_SW_TAGS
 	if ((esr & KASAN_ESR_MASK) == KASAN_ESR_VAL)
 		return kasan_handler(regs, esr) != DBG_HOOK_HANDLED;
 #endif
-=======
->>>>>>> rebase
 	return bug_handler(regs, esr) != DBG_HOOK_HANDLED;
 }
 
@@ -1205,10 +1144,7 @@ int __init early_brk64(unsigned long addr, unsigned int esr,
 void __init trap_init(void)
 {
 	register_break_hook(&bug_break_hook);
-<<<<<<< HEAD
 #ifdef CONFIG_KASAN_SW_TAGS
 	register_break_hook(&kasan_break_hook);
 #endif
-=======
->>>>>>> rebase
 }

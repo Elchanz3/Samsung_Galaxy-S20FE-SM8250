@@ -529,14 +529,6 @@ static int meson_spicc_probe(struct platform_device *pdev)
 	writel_relaxed(0, spicc->base + SPICC_INTREG);
 
 	irq = platform_get_irq(pdev, 0);
-<<<<<<< HEAD
-=======
-	if (irq < 0) {
-		ret = irq;
-		goto out_master;
-	}
-
->>>>>>> rebase
 	ret = devm_request_irq(&pdev->dev, irq, meson_spicc_irq,
 			       0, NULL, spicc);
 	if (ret) {
@@ -607,11 +599,6 @@ static int meson_spicc_remove(struct platform_device *pdev)
 
 	clk_disable_unprepare(spicc->core);
 
-<<<<<<< HEAD
-=======
-	spi_master_put(spicc->master);
-
->>>>>>> rebase
 	return 0;
 }
 

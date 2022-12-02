@@ -137,7 +137,6 @@ MODULE_PARM_DESC(maxframe, "Maximum frame size used by device (4096 to 65535)");
  */
 static struct tty_driver *serial_driver;
 
-<<<<<<< HEAD
 static int  open(struct tty_struct *tty, struct file * filp);
 static void close(struct tty_struct *tty, struct file * filp);
 static void hangup(struct tty_struct *tty);
@@ -169,16 +168,6 @@ static void hdlcdev_rx(struct slgt_info *info, char *buf, int size);
 static int  hdlcdev_init(struct slgt_info *info);
 static void hdlcdev_exit(struct slgt_info *info);
 #endif
-=======
-static void wait_until_sent(struct tty_struct *tty, int timeout);
-static void flush_buffer(struct tty_struct *tty);
-static void tx_release(struct tty_struct *tty);
-
-/*
- * generic HDLC support
- */
-#define dev_to_port(D) (dev_to_hdlc(D)->priv)
->>>>>>> rebase
 
 
 /*
@@ -197,12 +186,9 @@ struct cond_wait {
 	wait_queue_entry_t wait;
 	unsigned int data;
 };
-<<<<<<< HEAD
 static void init_cond_wait(struct cond_wait *w, unsigned int data);
 static void add_cond_wait(struct cond_wait **head, struct cond_wait *w);
 static void remove_cond_wait(struct cond_wait **head, struct cond_wait *w);
-=======
->>>>>>> rebase
 static void flush_cond_wait(struct cond_wait **head);
 
 /*
@@ -457,17 +443,12 @@ static void shutdown(struct slgt_info *info);
 static void program_hw(struct slgt_info *info);
 static void change_params(struct slgt_info *info);
 
-<<<<<<< HEAD
 static int  register_test(struct slgt_info *info);
 static int  irq_test(struct slgt_info *info);
 static int  loopback_test(struct slgt_info *info);
 static int  adapter_test(struct slgt_info *info);
 
 static void reset_adapter(struct slgt_info *info);
-=======
-static int  adapter_test(struct slgt_info *info);
-
->>>>>>> rebase
 static void reset_port(struct slgt_info *info);
 static void async_mode(struct slgt_info *info);
 static void sync_mode(struct slgt_info *info);
@@ -476,26 +457,19 @@ static void rx_stop(struct slgt_info *info);
 static void rx_start(struct slgt_info *info);
 static void reset_rbufs(struct slgt_info *info);
 static void free_rbufs(struct slgt_info *info, unsigned int first, unsigned int last);
-<<<<<<< HEAD
 static void rdma_reset(struct slgt_info *info);
-=======
->>>>>>> rebase
 static bool rx_get_frame(struct slgt_info *info);
 static bool rx_get_buf(struct slgt_info *info);
 
 static void tx_start(struct slgt_info *info);
 static void tx_stop(struct slgt_info *info);
 static void tx_set_idle(struct slgt_info *info);
-<<<<<<< HEAD
 static unsigned int free_tbuf_count(struct slgt_info *info);
-=======
->>>>>>> rebase
 static unsigned int tbuf_bytes(struct slgt_info *info);
 static void reset_tbufs(struct slgt_info *info);
 static void tdma_reset(struct slgt_info *info);
 static bool tx_load(struct slgt_info *info, const char *buf, unsigned int count);
 
-<<<<<<< HEAD
 static void get_signals(struct slgt_info *info);
 static void set_signals(struct slgt_info *info);
 static void enable_loopback(struct slgt_info *info);
@@ -518,14 +492,6 @@ static void free_bufs(struct slgt_info *info, struct slgt_desc *bufs, int count)
 
 static int  alloc_tmp_rbuf(struct slgt_info *info);
 static void free_tmp_rbuf(struct slgt_info *info);
-=======
-static void get_gtsignals(struct slgt_info *info);
-static void set_gtsignals(struct slgt_info *info);
-static void set_rate(struct slgt_info *info, u32 data_rate);
-
-static void bh_transmit(struct slgt_info *info);
-static void isr_txeom(struct slgt_info *info, unsigned short status);
->>>>>>> rebase
 
 static void tx_timeout(struct timer_list *t);
 static void rx_timeout(struct timer_list *t);
@@ -543,13 +509,10 @@ static int  tx_abort(struct slgt_info *info);
 static int  rx_enable(struct slgt_info *info, int enable);
 static int  modem_input_wait(struct slgt_info *info,int arg);
 static int  wait_mgsl_event(struct slgt_info *info, int __user *mask_ptr);
-<<<<<<< HEAD
 static int  tiocmget(struct tty_struct *tty);
 static int  tiocmset(struct tty_struct *tty,
 				unsigned int set, unsigned int clear);
 static int set_break(struct tty_struct *tty, int break_state);
-=======
->>>>>>> rebase
 static int  get_interface(struct slgt_info *info, int __user *if_mode);
 static int  set_interface(struct slgt_info *info, int if_mode);
 static int  set_gpio(struct slgt_info *info, struct gpio_desc __user *gpio);
@@ -563,12 +526,9 @@ static int  set_xctrl(struct slgt_info *info, int if_mode);
 /*
  * driver functions
  */
-<<<<<<< HEAD
 static void add_device(struct slgt_info *info);
 static void device_init(int adapter_num, struct pci_dev *pdev);
 static int  claim_resources(struct slgt_info *info);
-=======
->>>>>>> rebase
 static void release_resources(struct slgt_info *info);
 
 /*
@@ -816,11 +776,7 @@ static void set_termios(struct tty_struct *tty, struct ktermios *old_termios)
 	if ((old_termios->c_cflag & CBAUD) && !C_BAUD(tty)) {
 		info->signals &= ~(SerialSignal_RTS | SerialSignal_DTR);
 		spin_lock_irqsave(&info->lock,flags);
-<<<<<<< HEAD
 		set_signals(info);
-=======
-		set_gtsignals(info);
->>>>>>> rebase
 		spin_unlock_irqrestore(&info->lock,flags);
 	}
 
@@ -830,11 +786,7 @@ static void set_termios(struct tty_struct *tty, struct ktermios *old_termios)
 		if (!C_CRTSCTS(tty) || !tty_throttled(tty))
 			info->signals |= SerialSignal_RTS;
 		spin_lock_irqsave(&info->lock,flags);
-<<<<<<< HEAD
 	 	set_signals(info);
-=======
-	 	set_gtsignals(info);
->>>>>>> rebase
 		spin_unlock_irqrestore(&info->lock,flags);
 	}
 
@@ -1286,11 +1238,7 @@ static inline void line_info(struct seq_file *m, struct slgt_info *info)
 
 	/* output current serial signal states */
 	spin_lock_irqsave(&info->lock,flags);
-<<<<<<< HEAD
 	get_signals(info);
-=======
-	get_gtsignals(info);
->>>>>>> rebase
 	spin_unlock_irqrestore(&info->lock,flags);
 
 	stat_buf[0] = 0;
@@ -1390,11 +1338,7 @@ static void throttle(struct tty_struct * tty)
 	if (C_CRTSCTS(tty)) {
 		spin_lock_irqsave(&info->lock,flags);
 		info->signals &= ~SerialSignal_RTS;
-<<<<<<< HEAD
 		set_signals(info);
-=======
-		set_gtsignals(info);
->>>>>>> rebase
 		spin_unlock_irqrestore(&info->lock,flags);
 	}
 }
@@ -1419,11 +1363,7 @@ static void unthrottle(struct tty_struct * tty)
 	if (C_CRTSCTS(tty)) {
 		spin_lock_irqsave(&info->lock,flags);
 		info->signals |= SerialSignal_RTS;
-<<<<<<< HEAD
 		set_signals(info);
-=======
-		set_gtsignals(info);
->>>>>>> rebase
 		spin_unlock_irqrestore(&info->lock,flags);
 	}
 }
@@ -1595,11 +1535,7 @@ static int hdlcdev_open(struct net_device *dev)
 
 	/* inform generic HDLC layer of current DCD status */
 	spin_lock_irqsave(&info->lock, flags);
-<<<<<<< HEAD
 	get_signals(info);
-=======
-	get_gtsignals(info);
->>>>>>> rebase
 	spin_unlock_irqrestore(&info->lock, flags);
 	if (info->signals & SerialSignal_DCD)
 		netif_carrier_on(dev);
@@ -1872,11 +1808,6 @@ static int hdlcdev_init(struct slgt_info *info)
  */
 static void hdlcdev_exit(struct slgt_info *info)
 {
-<<<<<<< HEAD
-=======
-	if (!info->netdev)
-		return;
->>>>>>> rebase
 	unregister_hdlc_device(info->netdev);
 	free_netdev(info->netdev);
 	info->netdev = NULL;
@@ -2360,11 +2291,7 @@ static void isr_txeom(struct slgt_info *info, unsigned short status)
 		if (info->params.mode != MGSL_MODE_ASYNC && info->drop_rts_on_tx_done) {
 			info->signals &= ~SerialSignal_RTS;
 			info->drop_rts_on_tx_done = false;
-<<<<<<< HEAD
 			set_signals(info);
-=======
-			set_gtsignals(info);
->>>>>>> rebase
 		}
 
 #if SYNCLINK_GENERIC_HDLC
@@ -2529,11 +2456,7 @@ static void shutdown(struct slgt_info *info)
 
  	if (!info->port.tty || info->port.tty->termios.c_cflag & HUPCL) {
 		info->signals &= ~(SerialSignal_RTS | SerialSignal_DTR);
-<<<<<<< HEAD
 		set_signals(info);
-=======
-		set_gtsignals(info);
->>>>>>> rebase
 	}
 
 	flush_cond_wait(&info->gpio_wait_q);
@@ -2561,11 +2484,7 @@ static void program_hw(struct slgt_info *info)
 	else
 		async_mode(info);
 
-<<<<<<< HEAD
 	set_signals(info);
-=======
-	set_gtsignals(info);
->>>>>>> rebase
 
 	info->dcd_chkcount = 0;
 	info->cts_chkcount = 0;
@@ -2573,11 +2492,7 @@ static void program_hw(struct slgt_info *info)
 	info->dsr_chkcount = 0;
 
 	slgt_irq_on(info, IRQ_DCD | IRQ_CTS | IRQ_DSR | IRQ_RI);
-<<<<<<< HEAD
 	get_signals(info);
-=======
-	get_gtsignals(info);
->>>>>>> rebase
 
 	if (info->netcount ||
 	    (info->port.tty && info->port.tty->termios.c_cflag & CREAD))
@@ -2821,11 +2736,7 @@ static int wait_mgsl_event(struct slgt_info *info, int __user *mask_ptr)
 	spin_lock_irqsave(&info->lock,flags);
 
 	/* return immediately if state matches requested events */
-<<<<<<< HEAD
 	get_signals(info);
-=======
-	get_gtsignals(info);
->>>>>>> rebase
 	s = info->signals;
 
 	events = mask &
@@ -3243,11 +3154,7 @@ static int tiocmget(struct tty_struct *tty)
  	unsigned long flags;
 
 	spin_lock_irqsave(&info->lock,flags);
-<<<<<<< HEAD
  	get_signals(info);
-=======
- 	get_gtsignals(info);
->>>>>>> rebase
 	spin_unlock_irqrestore(&info->lock,flags);
 
 	result = ((info->signals & SerialSignal_RTS) ? TIOCM_RTS:0) +
@@ -3286,11 +3193,7 @@ static int tiocmset(struct tty_struct *tty,
 		info->signals &= ~SerialSignal_DTR;
 
 	spin_lock_irqsave(&info->lock,flags);
-<<<<<<< HEAD
 	set_signals(info);
-=======
-	set_gtsignals(info);
->>>>>>> rebase
 	spin_unlock_irqrestore(&info->lock,flags);
 	return 0;
 }
@@ -3301,11 +3204,7 @@ static int carrier_raised(struct tty_port *port)
 	struct slgt_info *info = container_of(port, struct slgt_info, port);
 
 	spin_lock_irqsave(&info->lock,flags);
-<<<<<<< HEAD
 	get_signals(info);
-=======
-	get_gtsignals(info);
->>>>>>> rebase
 	spin_unlock_irqrestore(&info->lock,flags);
 	return (info->signals & SerialSignal_DCD) ? 1 : 0;
 }
@@ -3320,11 +3219,7 @@ static void dtr_rts(struct tty_port *port, int on)
 		info->signals |= SerialSignal_RTS | SerialSignal_DTR;
 	else
 		info->signals &= ~(SerialSignal_RTS | SerialSignal_DTR);
-<<<<<<< HEAD
 	set_signals(info);
-=======
-	set_gtsignals(info);
->>>>>>> rebase
 	spin_unlock_irqrestore(&info->lock,flags);
 }
 
@@ -4123,17 +4018,10 @@ static void tx_start(struct slgt_info *info)
 
 		if (info->params.mode != MGSL_MODE_ASYNC) {
 			if (info->params.flags & HDLC_FLAG_AUTO_RTS) {
-<<<<<<< HEAD
 				get_signals(info);
 				if (!(info->signals & SerialSignal_RTS)) {
 					info->signals |= SerialSignal_RTS;
 					set_signals(info);
-=======
-				get_gtsignals(info);
-				if (!(info->signals & SerialSignal_RTS)) {
-					info->signals |= SerialSignal_RTS;
-					set_gtsignals(info);
->>>>>>> rebase
 					info->drop_rts_on_tx_done = true;
 				}
 			}
@@ -4187,11 +4075,7 @@ static void reset_port(struct slgt_info *info)
 	rx_stop(info);
 
 	info->signals &= ~(SerialSignal_RTS | SerialSignal_DTR);
-<<<<<<< HEAD
 	set_signals(info);
-=======
-	set_gtsignals(info);
->>>>>>> rebase
 
 	slgt_irq_off(info, IRQ_ALL | IRQ_MASTER);
 }
@@ -4613,11 +4497,7 @@ static void tx_set_idle(struct slgt_info *info)
 /*
  * get state of V24 status (input) signals
  */
-<<<<<<< HEAD
 static void get_signals(struct slgt_info *info)
-=======
-static void get_gtsignals(struct slgt_info *info)
->>>>>>> rebase
 {
 	unsigned short status = rd_reg16(info, SSR);
 
@@ -4679,11 +4559,7 @@ static void msc_set_vcr(struct slgt_info *info)
 /*
  * set state of V24 control (output) signals
  */
-<<<<<<< HEAD
 static void set_signals(struct slgt_info *info)
-=======
-static void set_gtsignals(struct slgt_info *info)
->>>>>>> rebase
 {
 	unsigned char val = rd_reg8(info, VCR);
 	if (info->signals & SerialSignal_DTR)

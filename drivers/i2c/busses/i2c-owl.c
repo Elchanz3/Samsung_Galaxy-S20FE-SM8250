@@ -179,12 +179,6 @@ static irqreturn_t owl_i2c_interrupt(int irq, void *_dev)
 	fifostat = readl(i2c_dev->base + OWL_I2C_REG_FIFOSTAT);
 	if (fifostat & OWL_I2C_FIFOSTAT_RNB) {
 		i2c_dev->err = -ENXIO;
-<<<<<<< HEAD
-=======
-		/* Clear NACK error bit by writing "1" */
-		owl_i2c_update_reg(i2c_dev->base + OWL_I2C_REG_FIFOSTAT,
-				   OWL_I2C_FIFOSTAT_RNB, true);
->>>>>>> rebase
 		goto stop;
 	}
 
@@ -192,12 +186,6 @@ static irqreturn_t owl_i2c_interrupt(int irq, void *_dev)
 	stat = readl(i2c_dev->base + OWL_I2C_REG_STAT);
 	if (stat & OWL_I2C_STAT_BEB) {
 		i2c_dev->err = -EIO;
-<<<<<<< HEAD
-=======
-		/* Clear BUS error bit by writing "1" */
-		owl_i2c_update_reg(i2c_dev->base + OWL_I2C_REG_STAT,
-				   OWL_I2C_STAT_BEB, true);
->>>>>>> rebase
 		goto stop;
 	}
 

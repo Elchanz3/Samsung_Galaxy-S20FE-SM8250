@@ -160,11 +160,7 @@ static void *pm_ctrl_init(struct pci_dev *dev, int offset)
 	}
 
 out:
-<<<<<<< HEAD
 	return ERR_PTR(err);
-=======
-	return err ? ERR_PTR(err) : NULL;
->>>>>>> rebase
 }
 
 static const struct config_field caplist_pm[] = {

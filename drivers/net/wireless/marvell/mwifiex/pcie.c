@@ -381,11 +381,6 @@ static void mwifiex_pcie_reset_prepare(struct pci_dev *pdev)
 	clear_bit(MWIFIEX_IFACE_WORK_DEVICE_DUMP, &card->work_flags);
 	clear_bit(MWIFIEX_IFACE_WORK_CARD_RESET, &card->work_flags);
 	mwifiex_dbg(adapter, INFO, "%s, successful\n", __func__);
-<<<<<<< HEAD
-=======
-
-	card->pci_reset_ongoing = true;
->>>>>>> rebase
 }
 
 /*
@@ -414,11 +409,6 @@ static void mwifiex_pcie_reset_done(struct pci_dev *pdev)
 		dev_err(&pdev->dev, "reinit failed: %d\n", ret);
 	else
 		mwifiex_dbg(adapter, INFO, "%s, successful\n", __func__);
-<<<<<<< HEAD
-=======
-
-	card->pci_reset_ongoing = false;
->>>>>>> rebase
 }
 
 static const struct pci_error_handlers mwifiex_pcie_err_handler = {
@@ -1090,11 +1080,7 @@ static int mwifiex_pcie_delete_cmdrsp_buf(struct mwifiex_adapter *adapter)
 static int mwifiex_pcie_alloc_sleep_cookie_buf(struct mwifiex_adapter *adapter)
 {
 	struct pcie_service_card *card = adapter->card;
-<<<<<<< HEAD
 	u32 tmp;
-=======
-	u32 *cookie;
->>>>>>> rebase
 
 	card->sleep_cookie_vbase = pci_alloc_consistent(card->dev, sizeof(u32),
 						     &card->sleep_cookie_pbase);
@@ -1103,7 +1089,6 @@ static int mwifiex_pcie_alloc_sleep_cookie_buf(struct mwifiex_adapter *adapter)
 			    "pci_alloc_consistent failed!\n");
 		return -ENOMEM;
 	}
-<<<<<<< HEAD
 	/* Init val of Sleep Cookie */
 	tmp = FW_AWAKE_COOKIE;
 	put_unaligned(tmp, card->sleep_cookie_vbase);
@@ -1111,13 +1096,6 @@ static int mwifiex_pcie_alloc_sleep_cookie_buf(struct mwifiex_adapter *adapter)
 	mwifiex_dbg(adapter, INFO,
 		    "alloc_scook: sleep cookie=0x%x\n",
 		    get_unaligned(card->sleep_cookie_vbase));
-=======
-	cookie = (u32 *)card->sleep_cookie_vbase;
-	/* Init val of Sleep Cookie */
-	*cookie = FW_AWAKE_COOKIE;
-
-	mwifiex_dbg(adapter, INFO, "alloc_scook: sleep cookie=0x%x\n", *cookie);
->>>>>>> rebase
 
 	return 0;
 }
@@ -1350,17 +1328,6 @@ mwifiex_pcie_send_data(struct mwifiex_adapter *adapter, struct sk_buff *skb,
 			ret = -1;
 			goto done_unmap;
 		}
-<<<<<<< HEAD
-=======
-
-		/* The firmware (latest version 15.68.19.p21) of the 88W8897 PCIe+USB card
-		 * seems to crash randomly after setting the TX ring write pointer when
-		 * ASPM powersaving is enabled. A workaround seems to be keeping the bus
-		 * busy by reading a random register afterwards.
-		 */
-		mwifiex_read_reg(adapter, PCI_VENDOR_ID, &rx_val);
-
->>>>>>> rebase
 		if ((mwifiex_pcie_txbd_not_full(card)) &&
 		    tx_param->next_pkt_len) {
 			/* have more packets and TxBD still can hold more */
@@ -3033,23 +3000,7 @@ static void mwifiex_cleanup_pcie(struct mwifiex_adapter *adapter)
 	int ret;
 	u32 fw_status;
 
-<<<<<<< HEAD
 	cancel_work_sync(&card->work);
-=======
-	/* Perform the cancel_work_sync() only when we're not resetting
-	 * the card. It's because that function never returns if we're
-	 * in reset path. If we're here when resetting the card, it means
-	 * that we failed to reset the card (reset failure path).
-	 */
-	if (!card->pci_reset_ongoing) {
-		mwifiex_dbg(adapter, MSG, "performing cancel_work_sync()...\n");
-		cancel_work_sync(&card->work);
-		mwifiex_dbg(adapter, MSG, "cancel_work_sync() done\n");
-	} else {
-		mwifiex_dbg(adapter, MSG,
-			    "skipped cancel_work_sync() because we're in card reset failure path\n");
-	}
->>>>>>> rebase
 
 	ret = mwifiex_read_reg(adapter, reg->fw_status, &fw_status);
 	if (fw_status == FIRMWARE_READY_PCIE) {

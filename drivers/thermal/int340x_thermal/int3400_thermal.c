@@ -53,11 +53,7 @@ struct int3400_thermal_priv {
 	struct art *arts;
 	int trt_count;
 	struct trt *trts;
-<<<<<<< HEAD
 	u8 uuid_bitmap;
-=======
-	u32 uuid_bitmap;
->>>>>>> rebase
 	int rel_misc_dev_res;
 	int current_uuid_index;
 };
@@ -227,13 +223,6 @@ static void int3400_notify(acpi_handle handle,
 		thermal_prop[4] = NULL;
 		kobject_uevent_env(&priv->thermal->device.kobj, KOBJ_CHANGE,
 				thermal_prop);
-<<<<<<< HEAD
-=======
-		kfree(thermal_prop[0]);
-		kfree(thermal_prop[1]);
-		kfree(thermal_prop[2]);
-		kfree(thermal_prop[3]);
->>>>>>> rebase
 		break;
 	default:
 		/* Ignore unknown notification codes sent to INT3400 device */

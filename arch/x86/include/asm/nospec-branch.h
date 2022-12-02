@@ -4,20 +4,11 @@
 #define _ASM_X86_NOSPEC_BRANCH_H_
 
 #include <linux/static_key.h>
-<<<<<<< HEAD
-=======
-#include <linux/frame.h>
->>>>>>> rebase
 
 #include <asm/alternative.h>
 #include <asm/alternative-asm.h>
 #include <asm/cpufeatures.h>
 #include <asm/msr-index.h>
-<<<<<<< HEAD
-=======
-#include <asm/unwind_hints.h>
-#include <asm/percpu.h>
->>>>>>> rebase
 
 /*
  * Fill the CPU return stack buffer.
@@ -44,10 +35,6 @@
  * the optimal version — two calls, each with their own speculation
  * trap should their return address end up getting used, in a loop.
  */
-<<<<<<< HEAD
-=======
-#ifdef CONFIG_X86_64
->>>>>>> rebase
 #define __FILL_RETURN_BUFFER(reg, nr, sp)	\
 	mov	$(nr/2), reg;			\
 771:						\
@@ -63,37 +50,9 @@
 	lfence;					\
 	jmp	775b;				\
 774:						\
-<<<<<<< HEAD
 	dec	reg;				\
 	jnz	771b;				\
 	add	$(BITS_PER_LONG/8) * nr, sp;
-=======
-	add	$(BITS_PER_LONG/8) * 2, sp;	\
-	dec	reg;				\
-	jnz	771b;				\
-	/* barrier for jnz misprediction */	\
-	lfence;
-#else
-/*
- * i386 doesn't unconditionally have LFENCE, as such it can't
- * do a loop.
- */
-#define __FILL_RETURN_BUFFER(reg, nr, sp)	\
-	.rept nr;				\
-	call	772f;				\
-	int3;					\
-772:;						\
-	.endr;					\
-	add	$(BITS_PER_LONG/8) * nr, sp;
-#endif
-
-#define ISSUE_UNBALANCED_RET_GUARD(sp)		\
-	call 992f;				\
-	int3;					\
-992:						\
-	add $(BITS_PER_LONG/8), sp;		\
-	lfence;
->>>>>>> rebase
 
 #ifdef __ASSEMBLY__
 
@@ -160,11 +119,7 @@
 	ANNOTATE_NOSPEC_ALTERNATIVE
 	ALTERNATIVE_2 __stringify(ANNOTATE_RETPOLINE_SAFE; jmp *\reg),	\
 		__stringify(RETPOLINE_JMP \reg), X86_FEATURE_RETPOLINE,	\
-<<<<<<< HEAD
 		__stringify(lfence; ANNOTATE_RETPOLINE_SAFE; jmp *\reg), X86_FEATURE_RETPOLINE_AMD
-=======
-		__stringify(lfence; ANNOTATE_RETPOLINE_SAFE; jmp *\reg), X86_FEATURE_RETPOLINE_LFENCE
->>>>>>> rebase
 #else
 	jmp	*\reg
 #endif
@@ -175,11 +130,7 @@
 	ANNOTATE_NOSPEC_ALTERNATIVE
 	ALTERNATIVE_2 __stringify(ANNOTATE_RETPOLINE_SAFE; call *\reg),	\
 		__stringify(RETPOLINE_CALL \reg), X86_FEATURE_RETPOLINE,\
-<<<<<<< HEAD
 		__stringify(lfence; ANNOTATE_RETPOLINE_SAFE; call *\reg), X86_FEATURE_RETPOLINE_AMD
-=======
-		__stringify(lfence; ANNOTATE_RETPOLINE_SAFE; call *\reg), X86_FEATURE_RETPOLINE_LFENCE
->>>>>>> rebase
 #else
 	call	*\reg
 #endif
@@ -190,7 +141,6 @@
   * monstrosity above, manually.
   */
 .macro FILL_RETURN_BUFFER reg:req nr:req ftr:req
-<<<<<<< HEAD
 #ifdef CONFIG_RETPOLINE
 	ANNOTATE_NOSPEC_ALTERNATIVE
 	ALTERNATIVE "jmp .Lskip_rsb_\@",				\
@@ -198,11 +148,6 @@
 		\ftr
 .Lskip_rsb_\@:
 #endif
-=======
-	ALTERNATIVE "jmp .Lskip_rsb_\@", "", \ftr
-	__FILL_RETURN_BUFFER(\reg,\nr,%_ASM_SP)
-.Lskip_rsb_\@:
->>>>>>> rebase
 .endm
 
 #else /* __ASSEMBLY__ */
@@ -236,11 +181,7 @@
 	"lfence;\n"						\
 	ANNOTATE_RETPOLINE_SAFE					\
 	"call *%[thunk_target]\n",				\
-<<<<<<< HEAD
 	X86_FEATURE_RETPOLINE_AMD)
-=======
-	X86_FEATURE_RETPOLINE_LFENCE)
->>>>>>> rebase
 # define THUNK_TARGET(addr) [thunk_target] "r" (addr)
 
 #else /* CONFIG_X86_32 */
@@ -270,11 +211,7 @@
 	"lfence;\n"						\
 	ANNOTATE_RETPOLINE_SAFE					\
 	"call *%[thunk_target]\n",				\
-<<<<<<< HEAD
 	X86_FEATURE_RETPOLINE_AMD)
-=======
-	X86_FEATURE_RETPOLINE_LFENCE)
->>>>>>> rebase
 
 # define THUNK_TARGET(addr) [thunk_target] "rm" (addr)
 #endif
@@ -286,28 +223,15 @@
 /* The Spectre V2 mitigation variants */
 enum spectre_v2_mitigation {
 	SPECTRE_V2_NONE,
-<<<<<<< HEAD
 	SPECTRE_V2_RETPOLINE_GENERIC,
 	SPECTRE_V2_RETPOLINE_AMD,
 	SPECTRE_V2_IBRS_ENHANCED,
-=======
-	SPECTRE_V2_RETPOLINE,
-	SPECTRE_V2_LFENCE,
-	SPECTRE_V2_EIBRS,
-	SPECTRE_V2_EIBRS_RETPOLINE,
-	SPECTRE_V2_EIBRS_LFENCE,
-	SPECTRE_V2_IBRS,
->>>>>>> rebase
 };
 
 /* The indirect branch speculation control variants */
 enum spectre_v2_user_mitigation {
 	SPECTRE_V2_USER_NONE,
 	SPECTRE_V2_USER_STRICT,
-<<<<<<< HEAD
-=======
-	SPECTRE_V2_USER_STRICT_PREFERRED,
->>>>>>> rebase
 	SPECTRE_V2_USER_PRCTL,
 	SPECTRE_V2_USER_SECCOMP,
 };
@@ -329,27 +253,15 @@ extern char __indirect_thunk_end[];
  * retpoline and IBRS mitigations for Spectre v2 need this; only on future
  * CPUs with IBRS_ALL *might* it be avoided.
  */
-<<<<<<< HEAD
 static inline void vmexit_fill_RSB(void)
-=======
-static __always_inline void vmexit_fill_RSB(void)
->>>>>>> rebase
 {
 #ifdef CONFIG_RETPOLINE
 	unsigned long loops;
 
 	asm volatile (ANNOTATE_NOSPEC_ALTERNATIVE
-<<<<<<< HEAD
 		      ALTERNATIVE("jmp 910f",
 				  __stringify(__FILL_RETURN_BUFFER(%0, RSB_CLEAR_LOOPS, %1)),
 				  X86_FEATURE_RETPOLINE)
-=======
-		      ALTERNATIVE_2("jmp 910f", "", X86_FEATURE_RSB_VMEXIT,
-				    "jmp 911f", X86_FEATURE_RSB_VMEXIT_LITE)
-		      __stringify(__FILL_RETURN_BUFFER(%0, RSB_CLEAR_LOOPS, %1))
-		      "911:"
-		      __stringify(ISSUE_UNBALANCED_RET_GUARD(%1))
->>>>>>> rebase
 		      "910:"
 		      : "=r" (loops), ASM_CALL_CONSTRAINT
 		      : : "memory" );
@@ -376,12 +288,6 @@ static inline void indirect_branch_prediction_barrier(void)
 
 /* The Intel SPEC CTRL MSR base value cache */
 extern u64 x86_spec_ctrl_base;
-<<<<<<< HEAD
-=======
-DECLARE_PER_CPU(u64, x86_spec_ctrl_current);
-extern void write_spec_ctrl_current(u64 val, bool force);
-extern u64 spec_ctrl_current(void);
->>>>>>> rebase
 
 /*
  * With retpoline, we must use IBRS to restrict branch prediction
@@ -391,29 +297,18 @@ extern u64 spec_ctrl_current(void);
  */
 #define firmware_restrict_branch_speculation_start()			\
 do {									\
-<<<<<<< HEAD
 	u64 val = x86_spec_ctrl_base | SPEC_CTRL_IBRS;			\
 									\
 	preempt_disable();						\
 	alternative_msr_write(MSR_IA32_SPEC_CTRL, val,			\
-=======
-	preempt_disable();						\
-	alternative_msr_write(MSR_IA32_SPEC_CTRL,			\
-			      spec_ctrl_current() | SPEC_CTRL_IBRS,	\
->>>>>>> rebase
 			      X86_FEATURE_USE_IBRS_FW);			\
 } while (0)
 
 #define firmware_restrict_branch_speculation_end()			\
 do {									\
-<<<<<<< HEAD
 	u64 val = x86_spec_ctrl_base;					\
 									\
 	alternative_msr_write(MSR_IA32_SPEC_CTRL, val,			\
-=======
-	alternative_msr_write(MSR_IA32_SPEC_CTRL,			\
-			      spec_ctrl_current(),			\
->>>>>>> rebase
 			      X86_FEATURE_USE_IBRS_FW);			\
 	preempt_enable();						\
 } while (0)
@@ -425,11 +320,6 @@ DECLARE_STATIC_KEY_FALSE(switch_mm_always_ibpb);
 DECLARE_STATIC_KEY_FALSE(mds_user_clear);
 DECLARE_STATIC_KEY_FALSE(mds_idle_clear);
 
-<<<<<<< HEAD
-=======
-DECLARE_STATIC_KEY_FALSE(mmio_stale_data_clear);
-
->>>>>>> rebase
 #include <asm/segment.h>
 
 /**
@@ -439,11 +329,7 @@ DECLARE_STATIC_KEY_FALSE(mmio_stale_data_clear);
  * combination with microcode which triggers a CPU buffer flush when the
  * instruction is executed.
  */
-<<<<<<< HEAD
 static inline void mds_clear_cpu_buffers(void)
-=======
-static __always_inline void mds_clear_cpu_buffers(void)
->>>>>>> rebase
 {
 	static const u16 ds = __KERNEL_DS;
 
@@ -464,11 +350,7 @@ static __always_inline void mds_clear_cpu_buffers(void)
  *
  * Clear CPU buffers if the corresponding static key is enabled
  */
-<<<<<<< HEAD
 static inline void mds_user_clear_cpu_buffers(void)
-=======
-static __always_inline void mds_user_clear_cpu_buffers(void)
->>>>>>> rebase
 {
 	if (static_branch_likely(&mds_user_clear))
 		mds_clear_cpu_buffers();

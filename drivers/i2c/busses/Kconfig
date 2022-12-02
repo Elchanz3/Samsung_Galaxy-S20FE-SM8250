@@ -445,11 +445,7 @@ config I2C_BRCMSTB
 
 config I2C_CADENCE
 	tristate "Cadence I2C Controller"
-<<<<<<< HEAD
 	depends on ARCH_ZYNQ || ARM64 || XTENSA
-=======
-	depends on ARCH_ZYNQ || ARM64 || XTENSA || COMPILE_TEST
->>>>>>> rebase
 	help
 	  Say yes here to select Cadence I2C Host Controller. This controller is
 	  e.g. used by Xilinx Zynq.
@@ -853,11 +849,7 @@ config I2C_QCOM_GENI
 
 config I2C_QUP
 	tristate "Qualcomm QUP based I2C controller"
-<<<<<<< HEAD
 	depends on ARCH_QCOM
-=======
-	depends on ARCH_QCOM || COMPILE_TEST
->>>>>>> rebase
 	help
 	  If you say yes to this option, support will be included for the
 	  built-in I2C interface on the Qualcomm SoCs.
@@ -1125,10 +1117,6 @@ config I2C_RCAR
 	tristate "Renesas R-Car I2C Controller"
 	depends on ARCH_RENESAS || COMPILE_TEST
 	select I2C_SLAVE
-<<<<<<< HEAD
-=======
-	select RESET_CONTROLLER if ARCH_RCAR_GEN3
->>>>>>> rebase
 	help
 	  If you say yes to this option, support will be included for the
 	  R-Car I2C controller.
@@ -1352,7 +1340,6 @@ config I2C_OPAL
 	  This driver can also be built as a module. If so, the module will be
 	  called as i2c-opal.
 
-<<<<<<< HEAD
 config I2C_MSM_V2
 	tristate "I2C_MSM_V2"
 	depends on ARCH_QCOM
@@ -1364,8 +1351,6 @@ config I2C_MSM_V2
 	  This driver can also be built as a module.  If so, the module
 	  will be called i2c-msm-v2.
 
-=======
->>>>>>> rebase
 config I2C_ZX2967
 	tristate "ZTE ZX2967 I2C support"
 	depends on ARCH_ZX

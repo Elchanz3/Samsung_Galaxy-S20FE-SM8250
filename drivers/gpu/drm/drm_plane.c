@@ -177,16 +177,6 @@ int drm_universal_plane_init(struct drm_device *dev, struct drm_plane *plane,
 	if (WARN_ON(config->num_total_plane >= 32))
 		return -EINVAL;
 
-<<<<<<< HEAD
-=======
-	/*
-	 * First driver to need more than 64 formats needs to fix this. Each
-	 * format is encoded as a bit and the current code only supports a u64.
-	 */
-	if (WARN_ON(format_count > 64))
-		return -EINVAL;
-
->>>>>>> rebase
 	WARN_ON(drm_drv_uses_atomic_modeset(dev) &&
 		(!funcs->atomic_destroy_state ||
 		 !funcs->atomic_duplicate_state));
@@ -208,7 +198,6 @@ int drm_universal_plane_init(struct drm_device *dev, struct drm_plane *plane,
 		return -ENOMEM;
 	}
 
-<<<<<<< HEAD
 	/*
 	 * First driver to need more than 64 formats needs to fix this. Each
 	 * format is encoded as a bit and the current code only supports a u64.
@@ -216,8 +205,6 @@ int drm_universal_plane_init(struct drm_device *dev, struct drm_plane *plane,
 	if (WARN_ON(format_count > 64))
 		return -EINVAL;
 
-=======
->>>>>>> rebase
 	if (format_modifiers) {
 		const uint64_t *temp_modifiers = format_modifiers;
 		while (*temp_modifiers++ != DRM_FORMAT_MOD_INVALID)

@@ -64,19 +64,10 @@ mm_segment_t enable_sacf_uaccess(void)
 {
 	mm_segment_t old_fs;
 	unsigned long asce, cr;
-<<<<<<< HEAD
-=======
-	unsigned long flags;
->>>>>>> rebase
 
 	old_fs = current->thread.mm_segment;
 	if (old_fs & 1)
 		return old_fs;
-<<<<<<< HEAD
-=======
-	/* protect against a concurrent page table upgrade */
-	local_irq_save(flags);
->>>>>>> rebase
 	current->thread.mm_segment |= 1;
 	asce = S390_lowcore.kernel_asce;
 	if (likely(old_fs == USER_DS)) {
@@ -92,10 +83,6 @@ mm_segment_t enable_sacf_uaccess(void)
 		__ctl_load(asce, 7, 7);
 		set_cpu_flag(CIF_ASCE_SECONDARY);
 	}
-<<<<<<< HEAD
-=======
-	local_irq_restore(flags);
->>>>>>> rebase
 	return old_fs;
 }
 EXPORT_SYMBOL(enable_sacf_uaccess);

@@ -7048,11 +7048,7 @@ void ocfs2_set_inode_data_inline(struct inode *inode, struct ocfs2_dinode *di)
 int ocfs2_convert_inline_data_to_extents(struct inode *inode,
 					 struct buffer_head *di_bh)
 {
-<<<<<<< HEAD
 	int ret, i, has_data, num_pages = 0;
-=======
-	int ret, has_data, num_pages = 0;
->>>>>>> rebase
 	int need_free = 0;
 	u32 bit_off, num;
 	handle_t *handle;
@@ -7061,19 +7057,14 @@ int ocfs2_convert_inline_data_to_extents(struct inode *inode,
 	struct ocfs2_super *osb = OCFS2_SB(inode->i_sb);
 	struct ocfs2_dinode *di = (struct ocfs2_dinode *)di_bh->b_data;
 	struct ocfs2_alloc_context *data_ac = NULL;
-<<<<<<< HEAD
 	struct page **pages = NULL;
 	loff_t end = osb->s_clustersize;
-=======
-	struct page *page = NULL;
->>>>>>> rebase
 	struct ocfs2_extent_tree et;
 	int did_quota = 0;
 
 	has_data = i_size_read(inode) ? 1 : 0;
 
 	if (has_data) {
-<<<<<<< HEAD
 		pages = kcalloc(ocfs2_pages_per_cluster(osb->sb),
 				sizeof(struct page *), GFP_NOFS);
 		if (pages == NULL) {
@@ -7086,12 +7077,6 @@ int ocfs2_convert_inline_data_to_extents(struct inode *inode,
 		if (ret) {
 			mlog_errno(ret);
 			goto free_pages;
-=======
-		ret = ocfs2_reserve_clusters(osb, 1, &data_ac);
-		if (ret) {
-			mlog_errno(ret);
-			goto out;
->>>>>>> rebase
 		}
 	}
 
@@ -7111,12 +7096,7 @@ int ocfs2_convert_inline_data_to_extents(struct inode *inode,
 	}
 
 	if (has_data) {
-<<<<<<< HEAD
 		unsigned int page_end;
-=======
-		unsigned int page_end = min_t(unsigned, PAGE_SIZE,
-							osb->s_clustersize);
->>>>>>> rebase
 		u64 phys;
 
 		ret = dquot_alloc_space_nodirty(inode,
@@ -7140,7 +7120,6 @@ int ocfs2_convert_inline_data_to_extents(struct inode *inode,
 		 */
 		block = phys = ocfs2_clusters_to_blocks(inode->i_sb, bit_off);
 
-<<<<<<< HEAD
 		/*
 		 * Non sparse file systems zero on extend, so no need
 		 * to do that now.
@@ -7150,10 +7129,6 @@ int ocfs2_convert_inline_data_to_extents(struct inode *inode,
 			end = PAGE_SIZE;
 
 		ret = ocfs2_grab_eof_pages(inode, 0, end, pages, &num_pages);
-=======
-		ret = ocfs2_grab_eof_pages(inode, 0, page_end, &page,
-					   &num_pages);
->>>>>>> rebase
 		if (ret) {
 			mlog_errno(ret);
 			need_free = 1;
@@ -7164,18 +7139,13 @@ int ocfs2_convert_inline_data_to_extents(struct inode *inode,
 		 * This should populate the 1st page for us and mark
 		 * it up to date.
 		 */
-<<<<<<< HEAD
 		ret = ocfs2_read_inline_data(inode, pages[0], di_bh);
-=======
-		ret = ocfs2_read_inline_data(inode, page, di_bh);
->>>>>>> rebase
 		if (ret) {
 			mlog_errno(ret);
 			need_free = 1;
 			goto out_unlock;
 		}
 
-<<<<<<< HEAD
 		page_end = PAGE_SIZE;
 		if (PAGE_SIZE > osb->s_clustersize)
 			page_end = osb->s_clustersize;
@@ -7183,10 +7153,6 @@ int ocfs2_convert_inline_data_to_extents(struct inode *inode,
 		for (i = 0; i < num_pages; i++)
 			ocfs2_map_and_dirty_page(inode, handle, 0, page_end,
 						 pages[i], i > 0, &phys);
-=======
-		ocfs2_map_and_dirty_page(inode, handle, 0, page_end, page, 0,
-					 &phys);
->>>>>>> rebase
 	}
 
 	spin_lock(&oi->ip_lock);
@@ -7217,13 +7183,8 @@ int ocfs2_convert_inline_data_to_extents(struct inode *inode,
 	}
 
 out_unlock:
-<<<<<<< HEAD
 	if (pages)
 		ocfs2_unlock_and_free_pages(pages, num_pages);
-=======
-	if (page)
-		ocfs2_unlock_and_free_pages(&page, num_pages);
->>>>>>> rebase
 
 out_commit:
 	if (ret < 0 && did_quota)
@@ -7247,11 +7208,8 @@ out_commit:
 out:
 	if (data_ac)
 		ocfs2_free_alloc_context(data_ac);
-<<<<<<< HEAD
 free_pages:
 	kfree(pages);
-=======
->>>>>>> rebase
 	return ret;
 }
 
@@ -7445,13 +7403,6 @@ int ocfs2_truncate_inline(struct inode *inode, struct buffer_head *di_bh,
 	struct ocfs2_dinode *di = (struct ocfs2_dinode *)di_bh->b_data;
 	struct ocfs2_inline_data *idata = &di->id2.i_data;
 
-<<<<<<< HEAD
-=======
-	/* No need to punch hole beyond i_size. */
-	if (start >= i_size_read(inode))
-		return 0;
-
->>>>>>> rebase
 	if (end > i_size_read(inode))
 		end = i_size_read(inode);
 

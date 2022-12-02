@@ -1,5 +1,4 @@
 /* SPDX-License-Identifier: GPL-2.0 */
-<<<<<<< HEAD
 /*
  * Copyright (c) 2011-2012, 2017, 2020 The Linux Foundation. All rights reserved.
  */
@@ -113,11 +112,4 @@ static inline int stm_trace(uint32_t flags, uint8_t entity_id,
 static inline void stm_send(void *addr, const void *data, u32 size,
 			    u8 write_bytes) {}
 #endif
-=======
-#ifndef __LINUX_CORESIGHT_STM_H_
-#define __LINUX_CORESIGHT_STM_H_
-
-#include <uapi/linux/coresight-stm.h>
-
->>>>>>> rebase
 #endif

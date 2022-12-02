@@ -64,11 +64,7 @@ static void stm_heartbeat_unlink(struct stm_source_data *data)
 
 static int stm_heartbeat_init(void)
 {
-<<<<<<< HEAD
 	int i, ret = -ENOMEM;
-=======
-	int i, ret;
->>>>>>> rebase
 
 	if (nr_devs < 0 || nr_devs > STM_HEARTBEAT_MAX)
 		return -EINVAL;
@@ -76,15 +72,8 @@ static int stm_heartbeat_init(void)
 	for (i = 0; i < nr_devs; i++) {
 		stm_heartbeat[i].data.name =
 			kasprintf(GFP_KERNEL, "heartbeat.%d", i);
-<<<<<<< HEAD
 		if (!stm_heartbeat[i].data.name)
 			goto fail_unregister;
-=======
-		if (!stm_heartbeat[i].data.name) {
-			ret = -ENOMEM;
-			goto fail_unregister;
-		}
->>>>>>> rebase
 
 		stm_heartbeat[i].data.nr_chans	= 1;
 		stm_heartbeat[i].data.link		= stm_heartbeat_link;

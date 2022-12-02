@@ -22,10 +22,6 @@
 #include <linux/interrupt.h>
 #include <linux/bcma/bcma.h>
 #include <linux/sched.h>
-<<<<<<< HEAD
-=======
-#include <linux/io.h>
->>>>>>> rebase
 #include <asm/unaligned.h>
 
 #include <soc.h>
@@ -446,7 +442,6 @@ brcmf_pcie_write_ram32(struct brcmf_pciedev_info *devinfo, u32 mem_offset,
 
 
 static void
-<<<<<<< HEAD
 brcmf_pcie_copy_mem_todev(struct brcmf_pciedev_info *devinfo, u32 mem_offset,
 			  void *srcaddr, u32 len)
 {
@@ -488,8 +483,6 @@ brcmf_pcie_copy_mem_todev(struct brcmf_pciedev_info *devinfo, u32 mem_offset,
 
 
 static void
-=======
->>>>>>> rebase
 brcmf_pcie_copy_dev_tomem(struct brcmf_pciedev_info *devinfo, u32 mem_offset,
 			  void *dstaddr, u32 len)
 {
@@ -1510,13 +1503,8 @@ static int brcmf_pcie_download_fw_nvram(struct brcmf_pciedev_info *devinfo,
 		return err;
 
 	brcmf_dbg(PCIE, "Download FW %s\n", devinfo->fw_name);
-<<<<<<< HEAD
 	brcmf_pcie_copy_mem_todev(devinfo, devinfo->ci->rambase,
 				  (void *)fw->data, fw->size);
-=======
-	memcpy_toio(devinfo->tcm + devinfo->ci->rambase,
-		    (void *)fw->data, fw->size);
->>>>>>> rebase
 
 	resetintr = get_unaligned_le32(fw->data);
 	release_firmware(fw);
@@ -1530,11 +1518,7 @@ static int brcmf_pcie_download_fw_nvram(struct brcmf_pciedev_info *devinfo,
 		brcmf_dbg(PCIE, "Download NVRAM %s\n", devinfo->nvram_name);
 		address = devinfo->ci->rambase + devinfo->ci->ramsize -
 			  nvram_len;
-<<<<<<< HEAD
 		brcmf_pcie_copy_mem_todev(devinfo, address, nvram, nvram_len);
-=======
-		memcpy_toio(devinfo->tcm + address, nvram, nvram_len);
->>>>>>> rebase
 		brcmf_fw_nvram_free(nvram);
 	} else {
 		brcmf_dbg(PCIE, "No matching NVRAM file found %s\n",

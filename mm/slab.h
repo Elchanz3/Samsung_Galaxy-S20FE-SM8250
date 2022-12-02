@@ -47,13 +47,10 @@ struct kmem_cache {
 #include <linux/random.h>
 #include <linux/sched/mm.h>
 
-<<<<<<< HEAD
 #ifdef CONFIG_KDP_CRED
 #include <linux/kdp.h>
 #endif
 
-=======
->>>>>>> rebase
 /*
  * State of the slab allocator.
  *
@@ -155,11 +152,7 @@ static inline slab_flags_t kmem_cache_flags(unsigned int object_size,
 #define SLAB_CACHE_FLAGS (SLAB_NOLEAKTRACE | SLAB_RECLAIM_ACCOUNT | \
 			  SLAB_TEMPORARY | SLAB_ACCOUNT)
 #else
-<<<<<<< HEAD
 #define SLAB_CACHE_FLAGS (0)
-=======
-#define SLAB_CACHE_FLAGS (SLAB_NOLEAKTRACE)
->>>>>>> rebase
 #endif
 
 /* Common flags available with current configuration */
@@ -435,7 +428,6 @@ static inline struct kmem_cache *slab_pre_alloc_hook(struct kmem_cache *s,
 	if (should_failslab(s, flags))
 		return NULL;
 
-<<<<<<< HEAD
 #ifdef CONFIG_KDP_CRED
 	if (s->name &&
 		(!strcmp(s->name, CRED_JAR_RO) ||
@@ -443,18 +435,13 @@ static inline struct kmem_cache *slab_pre_alloc_hook(struct kmem_cache *s,
 		!strcmp(s->name, VFSMNT_JAR)))
 		goto out;
 #endif
-=======
->>>>>>> rebase
 	if (memcg_kmem_enabled() &&
 	    ((flags & __GFP_ACCOUNT) || (s->flags & SLAB_ACCOUNT)))
 		return memcg_kmem_get_cache(s);
 
-<<<<<<< HEAD
 #ifdef CONFIG_KDP_CRED
 	out:
 #endif
-=======
->>>>>>> rebase
 	return s;
 }
 
@@ -465,17 +452,9 @@ static inline void slab_post_alloc_hook(struct kmem_cache *s, gfp_t flags,
 
 	flags &= gfp_allowed_mask;
 	for (i = 0; i < size; i++) {
-<<<<<<< HEAD
 		p[i] = kasan_slab_alloc(s, p[i], flags);
 		kmemleak_alloc_recursive(p[i], s->object_size, 1,
 					 s->flags, flags);
-=======
-		void *object = p[i];
-
-		kmemleak_alloc_recursive(object, s->object_size, 1,
-					 s->flags, flags);
-		kasan_slab_alloc(s, object, flags);
->>>>>>> rebase
 	}
 
 	if (memcg_kmem_enabled())
@@ -562,7 +541,6 @@ static inline int cache_random_seq_create(struct kmem_cache *cachep,
 static inline void cache_random_seq_destroy(struct kmem_cache *cachep) { }
 #endif /* CONFIG_SLAB_FREELIST_RANDOM */
 
-<<<<<<< HEAD
 static inline bool slab_want_init_on_alloc(gfp_t flags, struct kmem_cache *c)
 {
 	if (static_branch_unlikely(&init_on_alloc)) {
@@ -583,6 +561,4 @@ static inline bool slab_want_init_on_free(struct kmem_cache *c)
 	return false;
 }
 
-=======
->>>>>>> rebase
 #endif /* MM_SLAB_H */

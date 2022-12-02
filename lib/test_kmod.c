@@ -745,11 +745,7 @@ static int trigger_config_run_type(struct kmod_test_device *test_dev,
 		break;
 	case TEST_KMOD_FS_TYPE:
 		kfree_const(config->test_fs);
-<<<<<<< HEAD
 		config->test_driver = NULL;
-=======
-		config->test_fs = NULL;
->>>>>>> rebase
 		copied = config_copy_test_fs(config, test_str,
 					     strlen(test_str));
 		break;
@@ -1159,10 +1155,6 @@ static struct kmod_test_device *register_test_dev_kmod(void)
 	if (ret) {
 		pr_err("could not register misc device: %d\n", ret);
 		free_test_dev_kmod(test_dev);
-<<<<<<< HEAD
-=======
-		test_dev = NULL;
->>>>>>> rebase
 		goto out;
 	}
 

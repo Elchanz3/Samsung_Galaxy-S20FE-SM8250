@@ -914,7 +914,6 @@ int policydb_load_isids(struct policydb *p, struct sidtab *s)
 		if (!c->context[0].user) {
 			pr_err("SELinux:  SID %s was never defined.\n",
 				c->u.name);
-<<<<<<< HEAD
 			sidtab_destroy(s);
 			goto out;
 		}
@@ -935,15 +934,6 @@ int policydb_load_isids(struct policydb *p, struct sidtab *s)
 			pr_err("SELinux:  unable to load initial SID %s.\n",
 				c->u.name);
 			sidtab_destroy(s);
-=======
-			goto out;
-		}
-
-		rc = sidtab_insert(s, c->sid[0], &c->context[0]);
-		if (rc) {
-			pr_err("SELinux:  unable to load initial SID %s.\n",
-				c->u.name);
->>>>>>> rebase
 			goto out;
 		}
 	}
@@ -2410,13 +2400,10 @@ int policydb_read(struct policydb *p, void *fp)
 	p->reject_unknown = !!(le32_to_cpu(buf[1]) & REJECT_UNKNOWN);
 	p->allow_unknown = !!(le32_to_cpu(buf[1]) & ALLOW_UNKNOWN);
 
-<<<<<<< HEAD
 	if ((le32_to_cpu(buf[1]) & POLICYDB_CONFIG_ANDROID_NETLINK_ROUTE)) {
 		p->android_netlink_route = 1;
 	}
 
-=======
->>>>>>> rebase
 	if (p->policyvers >= POLICYDB_VERSION_POLCAP) {
 		rc = ebitmap_read(&p->policycaps, fp);
 		if (rc)

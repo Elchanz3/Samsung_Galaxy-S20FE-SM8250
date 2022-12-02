@@ -57,11 +57,7 @@ void debug_mutex_add_waiter(struct mutex *lock, struct mutex_waiter *waiter,
 	task->blocked_on = waiter;
 }
 
-<<<<<<< HEAD
 void mutex_remove_waiter(struct mutex *lock, struct mutex_waiter *waiter,
-=======
-void debug_mutex_remove_waiter(struct mutex *lock, struct mutex_waiter *waiter,
->>>>>>> rebase
 			 struct task_struct *task)
 {
 	DEBUG_LOCKS_WARN_ON(list_empty(&waiter->list));
@@ -69,11 +65,7 @@ void debug_mutex_remove_waiter(struct mutex *lock, struct mutex_waiter *waiter,
 	DEBUG_LOCKS_WARN_ON(task->blocked_on != waiter);
 	task->blocked_on = NULL;
 
-<<<<<<< HEAD
 	list_del_init(&waiter->list);
-=======
-	INIT_LIST_HEAD(&waiter->list);
->>>>>>> rebase
 	waiter->task = NULL;
 }
 

@@ -636,11 +636,6 @@ svc_udp_sendto(struct svc_rqst *rqstp)
 {
 	int		error;
 
-<<<<<<< HEAD
-=======
-	svc_release_udp_skb(rqstp);
-
->>>>>>> rebase
 	error = svc_sendto(rqstp, &rqstp->rq_res);
 	if (error == -ECONNREFUSED)
 		/* ICMP error on earlier request. */
@@ -1178,11 +1173,6 @@ static int svc_tcp_sendto(struct svc_rqst *rqstp)
 	int sent;
 	__be32 reclen;
 
-<<<<<<< HEAD
-=======
-	svc_release_skb(rqstp);
-
->>>>>>> rebase
 	/* Set up the first element of the reply kvec.
 	 * Any other kvecs that may be in use have been taken
 	 * care of by the server implementation itself.

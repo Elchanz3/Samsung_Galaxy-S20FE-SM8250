@@ -25,10 +25,7 @@ obj-$(CONFIG_GPROF)	+= gprof_syms.o
 obj-$(CONFIG_GCOV)	+= gmon_syms.o
 obj-$(CONFIG_EARLY_PRINTK) += early_printk.o
 obj-$(CONFIG_STACKTRACE) += stacktrace.o
-<<<<<<< HEAD
 obj-$(CONFIG_PLATFORM_MOCK)	+= io-mock.o
-=======
->>>>>>> rebase
 
 USER_OBJS := config.o
 

@@ -781,11 +781,7 @@ static int s3c24xx_nand_remove(struct platform_device *pdev)
 
 		for (mtdno = 0; mtdno < info->mtd_count; mtdno++, ptr++) {
 			pr_debug("releasing mtd %d (%p)\n", mtdno, ptr);
-<<<<<<< HEAD
 			nand_release(nand_to_mtd(&ptr->chip));
-=======
-			nand_release(&ptr->chip);
->>>>>>> rebase
 		}
 	}
 
@@ -1174,11 +1170,7 @@ static int s3c24xx_nand_probe(struct platform_device *pdev)
 		mtd->dev.parent = &pdev->dev;
 		s3c2410_nand_init_chip(info, nmtd, sets);
 
-<<<<<<< HEAD
 		err = nand_scan(mtd, sets ? sets->nr_chips : 1);
-=======
-		err = nand_scan(&nmtd->chip, sets ? sets->nr_chips : 1);
->>>>>>> rebase
 		if (err)
 			goto exit_error;
 

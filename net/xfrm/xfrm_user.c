@@ -109,12 +109,7 @@ static inline int verify_sec_ctx_len(struct nlattr **attrs)
 		return 0;
 
 	uctx = nla_data(rt);
-<<<<<<< HEAD
 	if (uctx->len != (sizeof(struct xfrm_user_sec_ctx) + uctx->ctx_len))
-=======
-	if (uctx->len > nla_len(rt) ||
-	    uctx->len != (sizeof(struct xfrm_user_sec_ctx) + uctx->ctx_len))
->>>>>>> rebase
 		return -EINVAL;
 
 	return 0;
@@ -583,23 +578,6 @@ static struct xfrm_state *xfrm_state_construct(struct net *net,
 
 	copy_from_user_state(x, p);
 
-<<<<<<< HEAD
-=======
-	if (attrs[XFRMA_ENCAP]) {
-		x->encap = kmemdup(nla_data(attrs[XFRMA_ENCAP]),
-				   sizeof(*x->encap), GFP_KERNEL);
-		if (x->encap == NULL)
-			goto error;
-	}
-
-	if (attrs[XFRMA_COADDR]) {
-		x->coaddr = kmemdup(nla_data(attrs[XFRMA_COADDR]),
-				    sizeof(*x->coaddr), GFP_KERNEL);
-		if (x->coaddr == NULL)
-			goto error;
-	}
-
->>>>>>> rebase
 	if (attrs[XFRMA_SA_EXTRA_FLAGS])
 		x->props.extra_flags = nla_get_u32(attrs[XFRMA_SA_EXTRA_FLAGS]);
 
@@ -620,7 +598,6 @@ static struct xfrm_state *xfrm_state_construct(struct net *net,
 				   attrs[XFRMA_ALG_COMP])))
 		goto error;
 
-<<<<<<< HEAD
 	if (attrs[XFRMA_ENCAP]) {
 		x->encap = kmemdup(nla_data(attrs[XFRMA_ENCAP]),
 				   sizeof(*x->encap), GFP_KERNEL);
@@ -638,11 +615,6 @@ static struct xfrm_state *xfrm_state_construct(struct net *net,
 			goto error;
 	}
 
-=======
-	if (attrs[XFRMA_TFCPAD])
-		x->tfcpad = nla_get_u32(attrs[XFRMA_TFCPAD]);
-
->>>>>>> rebase
 	xfrm_mark_get(attrs, &x->mark);
 
 	xfrm_smark_init(attrs, &x->props.smark);
@@ -1889,10 +1861,7 @@ static int xfrm_get_policy(struct sk_buff *skb, struct nlmsghdr *nlh,
 	struct km_event c;
 	int delete;
 	struct xfrm_mark m;
-<<<<<<< HEAD
 	u32 mark = xfrm_mark_get(attrs, &m);
-=======
->>>>>>> rebase
 	u32 if_id = 0;
 
 	p = nlmsg_data(nlh);
@@ -1909,16 +1878,8 @@ static int xfrm_get_policy(struct sk_buff *skb, struct nlmsghdr *nlh,
 	if (attrs[XFRMA_IF_ID])
 		if_id = nla_get_u32(attrs[XFRMA_IF_ID]);
 
-<<<<<<< HEAD
 	if (p->index)
 		xp = xfrm_policy_byid(net, mark, if_id, type, p->dir, p->index, delete, &err);
-=======
-	xfrm_mark_get(attrs, &m);
-
-	if (p->index)
-		xp = xfrm_policy_byid(net, &m, if_id, type, p->dir,
-				      p->index, delete, &err);
->>>>>>> rebase
 	else {
 		struct nlattr *rt = attrs[XFRMA_SEC_CTX];
 		struct xfrm_sec_ctx *ctx;
@@ -1935,13 +1896,8 @@ static int xfrm_get_policy(struct sk_buff *skb, struct nlmsghdr *nlh,
 			if (err)
 				return err;
 		}
-<<<<<<< HEAD
 		xp = xfrm_policy_bysel_ctx(net, mark, if_id, type, p->dir, &p->sel,
 					   ctx, delete, &err);
-=======
-		xp = xfrm_policy_bysel_ctx(net, &m, if_id, type, p->dir,
-					   &p->sel, ctx, delete, &err);
->>>>>>> rebase
 		security_xfrm_policy_free(ctx);
 	}
 	if (xp == NULL)
@@ -2208,10 +2164,7 @@ static int xfrm_add_pol_expire(struct sk_buff *skb, struct nlmsghdr *nlh,
 	u8 type = XFRM_POLICY_TYPE_MAIN;
 	int err = -ENOENT;
 	struct xfrm_mark m;
-<<<<<<< HEAD
 	u32 mark = xfrm_mark_get(attrs, &m);
-=======
->>>>>>> rebase
 	u32 if_id = 0;
 
 	err = copy_from_user_policy_type(&type, attrs);
@@ -2225,16 +2178,8 @@ static int xfrm_add_pol_expire(struct sk_buff *skb, struct nlmsghdr *nlh,
 	if (attrs[XFRMA_IF_ID])
 		if_id = nla_get_u32(attrs[XFRMA_IF_ID]);
 
-<<<<<<< HEAD
 	if (p->index)
 		xp = xfrm_policy_byid(net, mark, if_id, type, p->dir, p->index, 0, &err);
-=======
-	xfrm_mark_get(attrs, &m);
-
-	if (p->index)
-		xp = xfrm_policy_byid(net, &m, if_id, type, p->dir, p->index,
-				      0, &err);
->>>>>>> rebase
 	else {
 		struct nlattr *rt = attrs[XFRMA_SEC_CTX];
 		struct xfrm_sec_ctx *ctx;
@@ -2251,11 +2196,7 @@ static int xfrm_add_pol_expire(struct sk_buff *skb, struct nlmsghdr *nlh,
 			if (err)
 				return err;
 		}
-<<<<<<< HEAD
 		xp = xfrm_policy_bysel_ctx(net, mark, if_id, type, p->dir,
-=======
-		xp = xfrm_policy_bysel_ctx(net, &m, if_id, type, p->dir,
->>>>>>> rebase
 					   &p->sel, ctx, 0, &err);
 		security_xfrm_policy_free(ctx);
 	}
@@ -2333,12 +2274,6 @@ static int xfrm_add_acquire(struct sk_buff *skb, struct nlmsghdr *nlh,
 	err = verify_newpolicy_info(&ua->policy);
 	if (err)
 		goto free_state;
-<<<<<<< HEAD
-=======
-	err = verify_sec_ctx_len(attrs);
-	if (err)
-		goto free_state;
->>>>>>> rebase
 
 	/*   build an XP */
 	xp = xfrm_policy_construct(net, &ua->policy, attrs, &err);
@@ -2430,10 +2365,6 @@ static int xfrm_do_migrate(struct sk_buff *skb, struct nlmsghdr *nlh,
 	int n = 0;
 	struct net *net = sock_net(skb->sk);
 	struct xfrm_encap_tmpl  *encap = NULL;
-<<<<<<< HEAD
-=======
-	u32 if_id = 0;
->>>>>>> rebase
 
 	if (attrs[XFRMA_MIGRATE] == NULL)
 		return -EINVAL;
@@ -2458,14 +2389,7 @@ static int xfrm_do_migrate(struct sk_buff *skb, struct nlmsghdr *nlh,
 			return 0;
 	}
 
-<<<<<<< HEAD
 	err = xfrm_migrate(&pi->sel, pi->dir, type, m, n, kmp, net, encap);
-=======
-	if (attrs[XFRMA_IF_ID])
-		if_id = nla_get_u32(attrs[XFRMA_IF_ID]);
-
-	err = xfrm_migrate(&pi->sel, pi->dir, type, m, n, kmp, net, encap, if_id);
->>>>>>> rebase
 
 	kfree(encap);
 
@@ -2709,14 +2633,6 @@ static int xfrm_user_rcv_msg(struct sk_buff *skb, struct nlmsghdr *nlh,
 	const struct xfrm_link *link;
 	int type, err;
 
-<<<<<<< HEAD
-=======
-#ifdef CONFIG_COMPAT
-	if (in_compat_syscall())
-		return -EOPNOTSUPP;
-#endif
-
->>>>>>> rebase
 	type = nlh->nlmsg_type;
 	if (type > XFRM_MSG_MAX)
 		return -EINVAL;
@@ -2888,11 +2804,7 @@ static inline unsigned int xfrm_sa_len(struct xfrm_state *x)
 	if (x->props.extra_flags)
 		l += nla_total_size(sizeof(x->props.extra_flags));
 	if (x->xso.dev)
-<<<<<<< HEAD
 		 l += nla_total_size(sizeof(x->xso));
-=======
-		 l += nla_total_size(sizeof(struct xfrm_user_offload));
->>>>>>> rebase
 	if (x->props.smark.v | x->props.smark.m) {
 		l += nla_total_size(sizeof(x->props.smark.v));
 		l += nla_total_size(sizeof(x->props.smark.m));

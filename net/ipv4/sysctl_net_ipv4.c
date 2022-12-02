@@ -52,13 +52,10 @@ static int ip_ping_group_range_max[] = { GID_T_MAX, GID_T_MAX };
 static int comp_sack_nr_max = 255;
 static u32 u32_max_div_HZ = UINT_MAX / HZ;
 static int one_day_secs = 24 * 3600;
-<<<<<<< HEAD
 static int tcp_delack_seg_min = TCP_DELACK_MIN;
 static int tcp_delack_seg_max = 60;
 static int tcp_use_userconfig_min;
 static int tcp_use_userconfig_max = 1;
-=======
->>>>>>> rebase
 
 /* obsolete */
 static int sysctl_tcp_low_latency __read_mostly;
@@ -339,7 +336,6 @@ bad_key:
 	return ret;
 }
 
-<<<<<<< HEAD
 static void proc_configure_early_demux(int enabled, int protocol)
 {
 	struct net_protocol *ipprot;
@@ -395,8 +391,6 @@ static int proc_udp_early_demux(struct ctl_table *table, int write,
 	return ret;
 }
 
-=======
->>>>>>> rebase
 static int proc_tfo_blackhole_detect_timeout(struct ctl_table *table,
 					     int write,
 					     void __user *buffer,
@@ -562,7 +556,6 @@ static struct ctl_table ipv4_table[] = {
 		.mode		= 0644,
 		.proc_handler	= proc_doulongvec_minmax,
 	},
-<<<<<<< HEAD
 	{
 		.procname	= "tcp_delack_seg",
 		.data		= &sysctl_tcp_delack_seg,
@@ -582,8 +575,6 @@ static struct ctl_table ipv4_table[] = {
 		.extra2		= &tcp_use_userconfig_max,
 	},
 
-=======
->>>>>>> rebase
 	{ }
 };
 
@@ -670,22 +661,14 @@ static struct ctl_table ipv4_net_table[] = {
 		.data           = &init_net.ipv4.sysctl_udp_early_demux,
 		.maxlen         = sizeof(int),
 		.mode           = 0644,
-<<<<<<< HEAD
 		.proc_handler   = proc_udp_early_demux
-=======
-		.proc_handler   = proc_douintvec_minmax,
->>>>>>> rebase
 	},
 	{
 		.procname       = "tcp_early_demux",
 		.data           = &init_net.ipv4.sysctl_tcp_early_demux,
 		.maxlen         = sizeof(int),
 		.mode           = 0644,
-<<<<<<< HEAD
 		.proc_handler   = proc_tcp_early_demux
-=======
-		.proc_handler   = proc_douintvec_minmax,
->>>>>>> rebase
 	},
 	{
 		.procname	= "ip_default_ttl",
@@ -711,7 +694,6 @@ static struct ctl_table ipv4_net_table[] = {
 		.proc_handler	= proc_do_large_bitmap,
 	},
 	{
-<<<<<<< HEAD
 		.procname       = "reserved_port_bind",
 		.data           = &sysctl_reserved_port_bind,
 		.maxlen         = sizeof(int),
@@ -719,8 +701,6 @@ static struct ctl_table ipv4_net_table[] = {
 		.proc_handler   = proc_dointvec
 	},
 	{
-=======
->>>>>>> rebase
 		.procname	= "ip_no_pmtu_disc",
 		.data		= &init_net.ipv4.sysctl_ip_no_pmtu_disc,
 		.maxlen		= sizeof(int),

@@ -397,7 +397,6 @@ static struct genl_family ncsi_genl_family __ro_after_init = {
 	.n_ops = ARRAY_SIZE(ncsi_ops),
 };
 
-<<<<<<< HEAD
 int ncsi_init_netlink(struct net_device *dev)
 {
 	int rc;
@@ -419,10 +418,3 @@ int ncsi_unregister_netlink(struct net_device *dev)
 
 	return rc;
 }
-=======
-static int __init ncsi_init_netlink(void)
-{
-	return genl_register_family(&ncsi_genl_family);
-}
-subsys_initcall(ncsi_init_netlink);
->>>>>>> rebase

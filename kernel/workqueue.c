@@ -49,7 +49,6 @@
 #include <linux/uaccess.h>
 #include <linux/sched/isolation.h>
 #include <linux/nmi.h>
-<<<<<<< HEAD
 #include <linux/bug.h>
 #include <linux/delay.h>
 
@@ -57,12 +56,6 @@
 
 #include <linux/sec_debug.h>
 
-=======
-#include <linux/kvm_para.h>
-
-#include "workqueue_internal.h"
-
->>>>>>> rebase
 enum {
 	/*
 	 * worker_pool flags
@@ -921,7 +914,6 @@ struct task_struct *wq_worker_sleeping(struct task_struct *task)
 }
 
 /**
-<<<<<<< HEAD
  * wq_worker_last_func - retrieve worker's last work function
  *
  * Determine the last function a worker executed. This is called from
@@ -952,8 +944,6 @@ work_func_t wq_worker_last_func(struct task_struct *task)
 }
 
 /**
-=======
->>>>>>> rebase
  * worker_set_flags - set worker flags and adjust nr_running accordingly
  * @worker: self
  * @flags: flags to set
@@ -1318,15 +1308,12 @@ fail:
 	if (work_is_canceling(work))
 		return -ENOENT;
 	cpu_relax();
-<<<<<<< HEAD
 	/*
 	 * The queueing is in progress in another context. If we keep
 	 * taking the pool->lock in a busy loop, the other context may
 	 * never get the lock. Give 1 usec delay to avoid this contention.
 	 */
 	udelay(1);
-=======
->>>>>>> rebase
 	return -EAGAIN;
 }
 
@@ -1430,10 +1417,7 @@ static void __queue_work(int cpu, struct workqueue_struct *wq,
 	 */
 	lockdep_assert_irqs_disabled();
 
-<<<<<<< HEAD
 	debug_work_activate(work);
-=======
->>>>>>> rebase
 
 	/* if draining, only works from the same workqueue are allowed */
 	if (unlikely(wq->flags & __WQ_DRAINING) &&
@@ -1516,10 +1500,6 @@ retry:
 		worklist = &pwq->delayed_works;
 	}
 
-<<<<<<< HEAD
-=======
-	debug_work_activate(work);
->>>>>>> rebase
 	insert_work(pwq, work, worklist, work_flags);
 
 	spin_unlock(&pwq->pool->lock);
@@ -1570,13 +1550,9 @@ static void __queue_delayed_work(int cpu, struct workqueue_struct *wq,
 	struct work_struct *work = &dwork->work;
 
 	WARN_ON_ONCE(!wq);
-<<<<<<< HEAD
 #ifndef CONFIG_CFI
 	WARN_ON_ONCE(timer->function != delayed_work_timer_fn);
 #endif
-=======
-	WARN_ON_ONCE(timer->function != delayed_work_timer_fn);
->>>>>>> rebase
 	WARN_ON_ONCE(timer_pending(timer));
 	WARN_ON_ONCE(!list_empty(&work->entry));
 
@@ -1795,15 +1771,12 @@ static void worker_attach_to_pool(struct worker *worker,
 	mutex_lock(&wq_pool_attach_mutex);
 
 	/*
-<<<<<<< HEAD
 	 * set_cpus_allowed_ptr() will fail if the cpumask doesn't have any
 	 * online CPUs.  It'll be re-applied when any of the CPUs come up.
 	 */
 	set_cpus_allowed_ptr(worker->task, pool->attrs->cpumask);
 
 	/*
-=======
->>>>>>> rebase
 	 * The wq_pool_attach_mutex ensures %POOL_DISASSOCIATED remains
 	 * stable across this function.  See the comments above the flag
 	 * definition for details.
@@ -1811,12 +1784,6 @@ static void worker_attach_to_pool(struct worker *worker,
 	if (pool->flags & POOL_DISASSOCIATED)
 		worker->flags |= WORKER_UNBOUND;
 
-<<<<<<< HEAD
-=======
-	if (worker->rescue_wq)
-		set_cpus_allowed_ptr(worker->task, pool->attrs->cpumask);
-
->>>>>>> rebase
 	list_add_tail(&worker->node, &pool->workers);
 	worker->pool = pool;
 
@@ -2227,12 +2194,9 @@ __acquires(&pool->lock)
 	 */
 	lockdep_invariant_state(true);
 	trace_workqueue_execute_start(work);
-<<<<<<< HEAD
 
 	sec_debug_sched_msg(NULL, worker->current_func);
 
-=======
->>>>>>> rebase
 	worker->current_func(work);
 	/*
 	 * While we must be careful to not use "work" after this, the trace
@@ -2267,12 +2231,9 @@ __acquires(&pool->lock)
 	if (unlikely(cpu_intensive))
 		worker_clr_flags(worker, WORKER_CPU_INTENSIVE);
 
-<<<<<<< HEAD
 	/* tag the worker for identification in schedule() */
 	worker->last_func = worker->current_func;
 
-=======
->>>>>>> rebase
 	/* we're done with it, release */
 	hash_del(&worker->hentry);
 	worker->current_work = NULL;
@@ -3006,15 +2967,10 @@ static bool __flush_work(struct work_struct *work, bool from_cancel)
 	if (WARN_ON(!work->func))
 		return false;
 
-<<<<<<< HEAD
 	if (!from_cancel) {
 		lock_map_acquire(&work->lockdep_map);
 		lock_map_release(&work->lockdep_map);
 	}
-=======
-	lock_map_acquire(&work->lockdep_map);
-	lock_map_release(&work->lockdep_map);
->>>>>>> rebase
 
 	if (start_flush_work(work, &barr, from_cancel)) {
 		wait_for_completion(&barr.done);
@@ -3592,7 +3548,6 @@ static void pwq_unbound_release_workfn(struct work_struct *work)
 						  unbound_release_work);
 	struct workqueue_struct *wq = pwq->wq;
 	struct worker_pool *pool = pwq->pool;
-<<<<<<< HEAD
 	bool is_last;
 
 	if (WARN_ON_ONCE(!(wq->flags & WQ_UNBOUND)))
@@ -3602,23 +3557,6 @@ static void pwq_unbound_release_workfn(struct work_struct *work)
 	list_del_rcu(&pwq->pwqs_node);
 	is_last = list_empty(&wq->pwqs);
 	mutex_unlock(&wq->mutex);
-=======
-	bool is_last = false;
-
-	/*
-	 * when @pwq is not linked, it doesn't hold any reference to the
-	 * @wq, and @wq is invalid to access.
-	 */
-	if (!list_empty(&pwq->pwqs_node)) {
-		if (WARN_ON_ONCE(!(wq->flags & WQ_UNBOUND)))
-			return;
-
-		mutex_lock(&wq->mutex);
-		list_del_rcu(&pwq->pwqs_node);
-		is_last = list_empty(&wq->pwqs);
-		mutex_unlock(&wq->mutex);
-	}
->>>>>>> rebase
 
 	mutex_lock(&wq_pool_mutex);
 	put_unbound_pool(pool);
@@ -3664,7 +3602,6 @@ static void pwq_adjust_max_active(struct pool_workqueue *pwq)
 	 * is updated and visible.
 	 */
 	if (!freezable || !workqueue_freezing) {
-<<<<<<< HEAD
 		pwq->max_active = wq->saved_max_active;
 
 		while (!list_empty(&pwq->delayed_works) &&
@@ -3676,26 +3613,6 @@ static void pwq_adjust_max_active(struct pool_workqueue *pwq)
 		 * max_active is bumped.  It's a slow path.  Do it always.
 		 */
 		wake_up_worker(pwq->pool);
-=======
-		bool kick = false;
-
-		pwq->max_active = wq->saved_max_active;
-
-		while (!list_empty(&pwq->delayed_works) &&
-		       pwq->nr_active < pwq->max_active) {
-			pwq_activate_first_delayed(pwq);
-			kick = true;
-		}
-
-		/*
-		 * Need to kick a worker after thawed or an unbound wq's
-		 * max_active is bumped. In realtime scenarios, always kicking a
-		 * worker will cause interference on the isolated cpu cores, so
-		 * let's kick iff work items were activated.
-		 */
-		if (kick)
-			wake_up_worker(pwq->pool);
->>>>>>> rebase
 	} else {
 		pwq->max_active = 0;
 	}
@@ -5245,12 +5162,9 @@ int workqueue_set_unbound_cpumask(cpumask_var_t cpumask)
 	int ret = -EINVAL;
 	cpumask_var_t saved_cpumask;
 
-<<<<<<< HEAD
 	if (!zalloc_cpumask_var(&saved_cpumask, GFP_KERNEL))
 		return -ENOMEM;
 
-=======
->>>>>>> rebase
 	/*
 	 * Not excluding isolated cpus on purpose.
 	 * If the user wishes to include them, we allow that.
@@ -5258,18 +5172,6 @@ int workqueue_set_unbound_cpumask(cpumask_var_t cpumask)
 	cpumask_and(cpumask, cpumask, cpu_possible_mask);
 	if (!cpumask_empty(cpumask)) {
 		apply_wqattrs_lock();
-<<<<<<< HEAD
-=======
-		if (cpumask_equal(cpumask, wq_unbound_cpumask)) {
-			ret = 0;
-			goto out_unlock;
-		}
-
-		if (!zalloc_cpumask_var(&saved_cpumask, GFP_KERNEL)) {
-			ret = -ENOMEM;
-			goto out_unlock;
-		}
->>>>>>> rebase
 
 		/* save the old wq_unbound_cpumask. */
 		cpumask_copy(saved_cpumask, wq_unbound_cpumask);
@@ -5282,18 +5184,10 @@ int workqueue_set_unbound_cpumask(cpumask_var_t cpumask)
 		if (ret < 0)
 			cpumask_copy(wq_unbound_cpumask, saved_cpumask);
 
-<<<<<<< HEAD
 		apply_wqattrs_unlock();
 	}
 
 	free_cpumask_var(saved_cpumask);
-=======
-		free_cpumask_var(saved_cpumask);
-out_unlock:
-		apply_wqattrs_unlock();
-	}
-
->>>>>>> rebase
 	return ret;
 }
 
@@ -5705,10 +5599,6 @@ static void wq_watchdog_timer_fn(struct timer_list *unused)
 {
 	unsigned long thresh = READ_ONCE(wq_watchdog_thresh) * HZ;
 	bool lockup_detected = false;
-<<<<<<< HEAD
-=======
-	unsigned long now = jiffies;
->>>>>>> rebase
 	struct worker_pool *pool;
 	int pi;
 
@@ -5723,15 +5613,6 @@ static void wq_watchdog_timer_fn(struct timer_list *unused)
 		if (list_empty(&pool->worklist))
 			continue;
 
-<<<<<<< HEAD
-=======
-		/*
-		 * If a virtual machine is stopped by the host it can look to
-		 * the watchdog like a stall.
-		 */
-		kvm_check_and_clear_guest_paused();
-
->>>>>>> rebase
 		/* get the latest of pool and touched timestamps */
 		pool_ts = READ_ONCE(pool->watchdog_ts);
 		touched = READ_ONCE(wq_watchdog_touched);
@@ -5750,20 +5631,12 @@ static void wq_watchdog_timer_fn(struct timer_list *unused)
 		}
 
 		/* did we stall? */
-<<<<<<< HEAD
 		if (time_after(jiffies, ts + thresh)) {
-=======
-		if (time_after(now, ts + thresh)) {
->>>>>>> rebase
 			lockup_detected = true;
 			pr_emerg("BUG: workqueue lockup - pool");
 			pr_cont_pool_info(pool);
 			pr_cont(" stuck for %us!\n",
-<<<<<<< HEAD
 				jiffies_to_msecs(jiffies - pool_ts) / 1000);
-=======
-				jiffies_to_msecs(now - pool_ts) / 1000);
->>>>>>> rebase
 		}
 	}
 

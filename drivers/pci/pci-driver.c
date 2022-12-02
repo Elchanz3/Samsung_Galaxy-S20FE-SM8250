@@ -342,12 +342,9 @@ static int pci_call_probe(struct pci_driver *drv, struct pci_dev *dev,
 	node = dev_to_node(&dev->dev);
 	dev->is_probed = 1;
 
-<<<<<<< HEAD
 #ifdef CONFIG_SEC_PCIE
 	dev->drv_probe_ready = 0;
 #endif
-=======
->>>>>>> rebase
 	cpu_hotplug_disable();
 
 	/*
@@ -367,14 +364,11 @@ static int pci_call_probe(struct pci_driver *drv, struct pci_dev *dev,
 
 	dev->is_probed = 0;
 	cpu_hotplug_enable();
-<<<<<<< HEAD
 
 #ifdef CONFIG_SEC_PCIE
 	dev->drv_probe_ready = !error;
 	dev_info(&dev->dev, "PCI probe function return:%d\n", dev->drv_probe_ready);
 #endif
-=======
->>>>>>> rebase
 	return error;
 }
 
@@ -843,13 +837,10 @@ static int pci_pm_suspend_noirq(struct device *dev)
 		}
 	}
 
-<<<<<<< HEAD
 	/* if d3hot is not supported bail out */
 	if (pci_dev->no_d3hot)
 		return 0;
 
-=======
->>>>>>> rebase
 	if (!pci_dev->state_saved) {
 		pci_save_state(pci_dev);
 		if (pci_power_manageable(pci_dev))
@@ -906,12 +897,8 @@ static int pci_pm_resume_noirq(struct device *dev)
 	if (dev_pm_smart_suspend_and_suspended(dev))
 		pm_runtime_set_active(dev);
 
-<<<<<<< HEAD
 	if (!pci_dev->no_d3hot)
 		pci_pm_default_resume_early(pci_dev);
-=======
-	pci_pm_default_resume_early(pci_dev);
->>>>>>> rebase
 
 	if (pci_has_legacy_pm_support(pci_dev))
 		return pci_legacy_resume_early(dev);
@@ -930,12 +917,9 @@ static int pci_pm_resume(struct device *dev)
 	const struct dev_pm_ops *pm = dev->driver ? dev->driver->pm : NULL;
 	int error = 0;
 
-<<<<<<< HEAD
 	if (pci_dev->no_d3hot)
 		goto skip_pci_pm_restore;
 
-=======
->>>>>>> rebase
 	/*
 	 * This is necessary for the suspend error path in which resume is
 	 * called without restoring the standard config registers of the device.
@@ -943,10 +927,7 @@ static int pci_pm_resume(struct device *dev)
 	if (pci_dev->state_saved)
 		pci_restore_standard_config(pci_dev);
 
-<<<<<<< HEAD
 skip_pci_pm_restore:
-=======
->>>>>>> rebase
 	if (pci_has_legacy_pm_support(pci_dev))
 		return pci_legacy_resume(dev);
 
@@ -1324,13 +1305,10 @@ static int pci_pm_runtime_suspend(struct device *dev)
 		return 0;
 	}
 
-<<<<<<< HEAD
 	/* if d3hot is not supported bail out */
 	if (pci_dev->no_d3hot)
 		return 0;
 
-=======
->>>>>>> rebase
 	if (!pci_dev->state_saved) {
 		pci_save_state(pci_dev);
 		pci_finish_runtime_suspend(pci_dev);
@@ -1345,13 +1323,10 @@ static int pci_pm_runtime_resume(struct device *dev)
 	struct pci_dev *pci_dev = to_pci_dev(dev);
 	const struct dev_pm_ops *pm = dev->driver ? dev->driver->pm : NULL;
 
-<<<<<<< HEAD
 	/* we skipped d3hot processing so skip re-init */
 	if (pci_dev->no_d3hot)
 		goto skip_restore;
 
-=======
->>>>>>> rebase
 	/*
 	 * Restoring config space is necessary even if the device is not bound
 	 * to a driver because although we left it in D0, it may have gone to
@@ -1366,10 +1341,7 @@ static int pci_pm_runtime_resume(struct device *dev)
 	pci_enable_wake(pci_dev, PCI_D0, false);
 	pci_fixup_device(pci_fixup_resume, pci_dev);
 
-<<<<<<< HEAD
 skip_restore:
-=======
->>>>>>> rebase
 	if (pm && pm->runtime_resume)
 		rc = pm->runtime_resume(dev);
 

@@ -315,17 +315,11 @@ static int __init plat_setup_devices(void)
 static int __init setup_kmac(char *s)
 {
 	printk(KERN_INFO "korina mac = %s\n", s);
-<<<<<<< HEAD
 	if (!mac_pton(s, korina_dev0_data.mac)) {
 		printk(KERN_ERR "Invalid mac\n");
 		return -EINVAL;
 	}
 	return 0;
-=======
-	if (!mac_pton(s, korina_dev0_data.mac))
-		printk(KERN_ERR "Invalid mac\n");
-	return 1;
->>>>>>> rebase
 }
 
 __setup("kmac=", setup_kmac);

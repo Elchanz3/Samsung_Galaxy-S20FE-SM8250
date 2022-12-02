@@ -98,7 +98,6 @@ Description:
 		The backing_dev file is read-write and set up backing
 		device for zram to write incompressible pages.
 		For using, user should enable CONFIG_ZRAM_WRITEBACK.
-<<<<<<< HEAD
 
 What:		/sys/block/zram<id>/idle
 Date:		November 2018
@@ -148,5 +147,3 @@ Description:
 		managed by reference count and will not be stored in memory
 		twice. Benefit of this feature largely depends on the workload
 		so keep attention when use.
-=======
->>>>>>> rebase

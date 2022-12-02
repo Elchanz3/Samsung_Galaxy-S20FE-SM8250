@@ -294,11 +294,7 @@ static int hib_submit_io(int op, int op_flags, pgoff_t page_off, void *addr,
 	return error;
 }
 
-<<<<<<< HEAD
 static blk_status_t hib_wait_io(struct hib_bio_batch *hb)
-=======
-static int hib_wait_io(struct hib_bio_batch *hb)
->>>>>>> rebase
 {
 	wait_event(hb->wait, atomic_read(&hb->count) == 0);
 	return blk_status_to_errno(hb->error);
@@ -495,17 +491,10 @@ static int swap_writer_finish(struct swap_map_handle *handle,
 		unsigned int flags, int error)
 {
 	if (!error) {
-<<<<<<< HEAD
 		flush_swap_writer(handle);
 		pr_info("S");
 		error = mark_swapfiles(handle, flags);
 		pr_cont("|\n");
-=======
-		pr_info("S");
-		error = mark_swapfiles(handle, flags);
-		pr_cont("|\n");
-		flush_swap_writer(handle);
->>>>>>> rebase
 	}
 
 	if (error)
@@ -1523,16 +1512,9 @@ end:
 int swsusp_check(void)
 {
 	int error;
-<<<<<<< HEAD
 
 	hib_resume_bdev = blkdev_get_by_dev(swsusp_resume_device,
 					    FMODE_READ, NULL);
-=======
-	void *holder;
-
-	hib_resume_bdev = blkdev_get_by_dev(swsusp_resume_device,
-					    FMODE_READ | FMODE_EXCL, &holder);
->>>>>>> rebase
 	if (!IS_ERR(hib_resume_bdev)) {
 		set_blocksize(hib_resume_bdev, PAGE_SIZE);
 		clear_page(swsusp_header);
@@ -1554,11 +1536,7 @@ int swsusp_check(void)
 
 put:
 		if (error)
-<<<<<<< HEAD
 			blkdev_put(hib_resume_bdev, FMODE_READ);
-=======
-			blkdev_put(hib_resume_bdev, FMODE_READ | FMODE_EXCL);
->>>>>>> rebase
 		else
 			pr_debug("Image signature found, resuming\n");
 	} else {

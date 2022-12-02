@@ -446,7 +446,6 @@ config EDAC_SYNOPSYS
 	  Support for error detection and correction on the Synopsys DDR
 	  memory controller.
 
-<<<<<<< HEAD
 config EDAC_KRYO_ARM64
 	depends on ARM64
 	tristate "ARM KRYO Gold and Silver L1/L2/L3/SCU Caches"
@@ -488,8 +487,6 @@ config EDAC_KRYO_ARM64_PANIC_ON_UE
 	  operating at voltages or frequencies outside normal specification.
 	  For production builds, you should probably say 'N' here.
 
-=======
->>>>>>> rebase
 config EDAC_XGENE
 	tristate "APM X-Gene SoC"
 	depends on (ARM64 || COMPILE_TEST)
@@ -504,7 +501,6 @@ config EDAC_TI
 	  Support for error detection and correction on the
           TI SoCs.
 
-<<<<<<< HEAD
 config EDAC_CORTEX_ARM64
 	depends on ARM64
 	bool "ARM Cortex A CPUs L1/L2 Caches"
@@ -581,6 +577,4 @@ config EDAC_QCOM_LLCC_PANIC_ON_UE
 
           For production builds, you should probably say 'N' here.
 
-=======
->>>>>>> rebase
 endif # EDAC

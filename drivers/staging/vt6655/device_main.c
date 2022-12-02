@@ -567,11 +567,7 @@ err_free_rd:
 	kfree(desc->rd_info);
 
 err_free_desc:
-<<<<<<< HEAD
 	while (--i) {
-=======
-	while (i--) {
->>>>>>> rebase
 		desc = &priv->aRD0Ring[i];
 		device_free_rx_buf(priv, desc);
 		kfree(desc->rd_info);
@@ -617,11 +613,7 @@ err_free_rd:
 	kfree(desc->rd_info);
 
 err_free_desc:
-<<<<<<< HEAD
 	while (--i) {
-=======
-	while (i--) {
->>>>>>> rebase
 		desc = &priv->aRD1Ring[i];
 		device_free_rx_buf(priv, desc);
 		kfree(desc->rd_info);
@@ -685,11 +677,7 @@ static int device_init_td0_ring(struct vnt_private *priv)
 	return 0;
 
 err_free_desc:
-<<<<<<< HEAD
 	while (--i) {
-=======
-	while (i--) {
->>>>>>> rebase
 		desc = &priv->apTD0Rings[i];
 		kfree(desc->td_info);
 	}
@@ -729,11 +717,7 @@ static int device_init_td1_ring(struct vnt_private *priv)
 	return 0;
 
 err_free_desc:
-<<<<<<< HEAD
 	while (--i) {
-=======
-	while (i--) {
->>>>>>> rebase
 		desc = &priv->apTD1Rings[i];
 		kfree(desc->td_info);
 	}

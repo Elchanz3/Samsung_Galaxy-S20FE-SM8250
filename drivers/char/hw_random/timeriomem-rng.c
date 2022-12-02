@@ -72,11 +72,7 @@ static int timeriomem_rng_read(struct hwrng *hwrng, void *data,
 		 */
 		if (retval > 0)
 			usleep_range(period_us,
-<<<<<<< HEAD
 					period_us + min(1, period_us / 100));
-=======
-					period_us + max(1, period_us / 100));
->>>>>>> rebase
 
 		*(u32 *)data = readl(priv->io_base);
 		retval += sizeof(u32);

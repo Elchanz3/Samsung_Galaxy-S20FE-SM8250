@@ -92,11 +92,6 @@ SECTIONS
 		CPUIDLE_TEXT
 		LOCK_TEXT
 		KPROBES_TEXT
-<<<<<<< HEAD
-=======
-		IRQENTRY_TEXT
-		SOFTIRQENTRY_TEXT
->>>>>>> rebase
 		*(.fixup)
 		*(.gnu.warning)
 	}

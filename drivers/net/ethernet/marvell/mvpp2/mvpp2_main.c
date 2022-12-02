@@ -954,11 +954,7 @@ static void mvpp22_gop_init_rgmii(struct mvpp2_port *port)
 
 	regmap_read(priv->sysctrl_base, GENCONF_CTRL0, &val);
 	if (port->gop_id == 2)
-<<<<<<< HEAD
 		val |= GENCONF_CTRL0_PORT0_RGMII | GENCONF_CTRL0_PORT1_RGMII;
-=======
-		val |= GENCONF_CTRL0_PORT0_RGMII;
->>>>>>> rebase
 	else if (port->gop_id == 3)
 		val |= GENCONF_CTRL0_PORT1_RGMII_MII;
 	regmap_write(priv->sysctrl_base, GENCONF_CTRL0, val);
@@ -3367,10 +3363,6 @@ static int mvpp2_open(struct net_device *dev)
 	if (!valid) {
 		netdev_err(port->dev,
 			   "invalid configuration: no dt or link IRQ");
-<<<<<<< HEAD
-=======
-		err = -ENOENT;
->>>>>>> rebase
 		goto err_free_irq;
 	}
 
@@ -4273,11 +4265,8 @@ static void mvpp2_phylink_validate(struct net_device *dev,
 
 	phylink_set(mask, Autoneg);
 	phylink_set_port_modes(mask);
-<<<<<<< HEAD
 	phylink_set(mask, Pause);
 	phylink_set(mask, Asym_Pause);
-=======
->>>>>>> rebase
 
 	switch (state->interface) {
 	case PHY_INTERFACE_MODE_10GKR:
@@ -5169,13 +5158,6 @@ static int mvpp2_probe(struct platform_device *pdev)
 			return PTR_ERR(priv->lms_base);
 	} else {
 		res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
-<<<<<<< HEAD
-=======
-		if (!res) {
-			dev_err(&pdev->dev, "Invalid resource\n");
-			return -EINVAL;
-		}
->>>>>>> rebase
 		if (has_acpi_companion(&pdev->dev)) {
 			/* In case the MDIO memory region is declared in
 			 * the ACPI, it can already appear as 'in-use'
@@ -5333,11 +5315,6 @@ static int mvpp2_probe(struct platform_device *pdev)
 	return 0;
 
 err_port_probe:
-<<<<<<< HEAD
-=======
-	fwnode_handle_put(port_fwnode);
-
->>>>>>> rebase
 	i = 0;
 	fwnode_for_each_available_child_node(fwnode, port_fwnode) {
 		if (priv->port_list[i])
@@ -5435,22 +5412,7 @@ static struct platform_driver mvpp2_driver = {
 	},
 };
 
-<<<<<<< HEAD
 module_platform_driver(mvpp2_driver);
-=======
-static int __init mvpp2_driver_init(void)
-{
-	return platform_driver_register(&mvpp2_driver);
-}
-module_init(mvpp2_driver_init);
-
-static void __exit mvpp2_driver_exit(void)
-{
-	platform_driver_unregister(&mvpp2_driver);
-	mvpp2_dbgfs_exit();
-}
-module_exit(mvpp2_driver_exit);
->>>>>>> rebase
 
 MODULE_DESCRIPTION("Marvell PPv2 Ethernet Driver - www.marvell.com");
 MODULE_AUTHOR("Marcin Wojtas <mw@semihalf.com>");

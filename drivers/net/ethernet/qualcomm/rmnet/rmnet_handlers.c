@@ -1,18 +1,5 @@
-<<<<<<< HEAD
 // SPDX-License-Identifier: GPL-2.0-only
 /* Copyright (c) 2013-2019, The Linux Foundation. All rights reserved.
-=======
-/* Copyright (c) 2013-2018, The Linux Foundation. All rights reserved.
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License version 2 and
- * only version 2 as published by the Free Software Foundation.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
->>>>>>> rebase
  *
  * RMNET Data ingress/egress handler
  *
@@ -21,20 +8,15 @@
 #include <linux/netdevice.h>
 #include <linux/netdev_features.h>
 #include <linux/if_arp.h>
-<<<<<<< HEAD
 #include <linux/ip.h>
 #include <linux/ipv6.h>
 #include <net/sock.h>
 #include <linux/tracepoint.h>
-=======
-#include <net/sock.h>
->>>>>>> rebase
 #include "rmnet_private.h"
 #include "rmnet_config.h"
 #include "rmnet_vnd.h"
 #include "rmnet_map.h"
 #include "rmnet_handlers.h"
-<<<<<<< HEAD
 #include "rmnet_descriptor.h"
 
 #include <soc/qcom/rmnet_qmi.h>
@@ -84,17 +66,6 @@ static int rmnet_check_skb_can_gro(struct sk_buff *skb)
 void rmnet_set_skb_proto(struct sk_buff *skb)
 {
 	switch (rmnet_map_data_ptr(skb)[0] & 0xF0) {
-=======
-
-#define RMNET_IP_VERSION_4 0x40
-#define RMNET_IP_VERSION_6 0x60
-
-/* Helper Functions */
-
-static void rmnet_set_skb_proto(struct sk_buff *skb)
-{
-	switch (skb->data[0] & 0xF0) {
->>>>>>> rebase
 	case RMNET_IP_VERSION_4:
 		skb->protocol = htons(ETH_P_IP);
 		break;
@@ -106,7 +77,6 @@ static void rmnet_set_skb_proto(struct sk_buff *skb)
 		break;
 	}
 }
-<<<<<<< HEAD
 EXPORT_SYMBOL(rmnet_set_skb_proto);
 
 bool (*rmnet_shs_slow_start_detect)(u32 hash_key) __rcu __read_mostly;
@@ -245,23 +215,6 @@ static void rmnet_deliver_skb_list(struct sk_buff_head *head,
 		rmnet_set_skb_proto(skb);
 		rmnet_deliver_skb(skb, port);
 	}
-=======
-
-/* Generic handler */
-
-static void
-rmnet_deliver_skb(struct sk_buff *skb)
-{
-	struct rmnet_priv *priv = netdev_priv(skb->dev);
-
-	skb_reset_transport_header(skb);
-	skb_reset_network_header(skb);
-	rmnet_vnd_rx_fixup(skb, skb->dev);
-
-	skb->pkt_type = PACKET_HOST;
-	skb_set_mac_header(skb, 0);
-	gro_cells_receive(&priv->gro_cells, skb);
->>>>>>> rebase
 }
 
 /* MAP handler */
@@ -270,7 +223,6 @@ static void
 __rmnet_map_ingress_handler(struct sk_buff *skb,
 			    struct rmnet_port *port)
 {
-<<<<<<< HEAD
 	struct rmnet_map_header *qmap;
 	struct rmnet_endpoint *ep;
 	struct sk_buff_head list;
@@ -288,28 +240,15 @@ __rmnet_map_ingress_handler(struct sk_buff *skb,
 				return;
 		}
 
-=======
-	struct rmnet_endpoint *ep;
-	u16 len, pad;
-	u8 mux_id;
-
-	if (RMNET_MAP_GET_CD_BIT(skb)) {
->>>>>>> rebase
 		if (port->data_format & RMNET_FLAGS_INGRESS_MAP_COMMANDS)
 			return rmnet_map_command(skb, port);
 
 		goto free_skb;
 	}
 
-<<<<<<< HEAD
 	mux_id = qmap->mux_id;
 	pad = qmap->pad_len;
 	len = ntohs(qmap->pkt_len) - pad;
-=======
-	mux_id = RMNET_MAP_GET_MUX_ID(skb);
-	pad = RMNET_MAP_GET_PAD(skb);
-	len = RMNET_MAP_GET_LENGTH(skb) - pad;
->>>>>>> rebase
 
 	if (mux_id >= RMNET_MAX_LOGICAL_EP)
 		goto free_skb;
@@ -320,7 +259,6 @@ __rmnet_map_ingress_handler(struct sk_buff *skb,
 
 	skb->dev = ep->egress_dev;
 
-<<<<<<< HEAD
 	/* Handle QMAPv5 packet */
 	if (qmap->next_hdr &&
 	    (port->data_format & (RMNET_FLAGS_INGRESS_COALESCE |
@@ -350,46 +288,26 @@ __rmnet_map_ingress_handler(struct sk_buff *skb,
 #endif
 
 	rmnet_deliver_skb_list(&list, port);
-=======
-	/* Subtract MAP header */
-	skb_pull(skb, sizeof(struct rmnet_map_header));
-	rmnet_set_skb_proto(skb);
-
-	if (port->data_format & RMNET_FLAGS_INGRESS_MAP_CKSUMV4) {
-		if (!rmnet_map_checksum_downlink_packet(skb, len + pad))
-			skb->ip_summed = CHECKSUM_UNNECESSARY;
-	}
-
-	skb_trim(skb, len);
-	rmnet_deliver_skb(skb);
->>>>>>> rebase
 	return;
 
 free_skb:
 	kfree_skb(skb);
 }
 
-<<<<<<< HEAD
 int (*rmnet_perf_deag_entry)(struct sk_buff *skb,
 			     struct rmnet_port *port) __rcu __read_mostly;
 EXPORT_SYMBOL(rmnet_perf_deag_entry);
 
-=======
->>>>>>> rebase
 static void
 rmnet_map_ingress_handler(struct sk_buff *skb,
 			  struct rmnet_port *port)
 {
 	struct sk_buff *skbn;
-<<<<<<< HEAD
 	int (*rmnet_perf_core_deaggregate)(struct sk_buff *skb,
 					   struct rmnet_port *port);
 	struct napi_struct *napi;
 	bool dl_marker = port->data_format &
 					RMNET_INGRESS_FORMAT_DL_MARKER;
-=======
-
->>>>>>> rebase
 	if (skb->dev->type == ARPHRD_ETHER) {
 		if (pskb_expand_head(skb, ETH_HLEN, 0, GFP_ATOMIC)) {
 			kfree_skb(skb);
@@ -399,7 +317,6 @@ rmnet_map_ingress_handler(struct sk_buff *skb,
 		skb_push(skb, ETH_HLEN);
 	}
 
-<<<<<<< HEAD
 	if (port->data_format & (RMNET_FLAGS_INGRESS_COALESCE |
 				 RMNET_FLAGS_INGRESS_MAP_CKSUMV5)) {
 		if (skb_is_nonlinear(skb)) {
@@ -460,15 +377,6 @@ rmnet_map_ingress_handler(struct sk_buff *skb,
 		consume_skb(skb);
 next_skb:
 		skb = skb_frag;
-=======
-	if (port->data_format & RMNET_FLAGS_INGRESS_DEAGGREGATION) {
-		while ((skbn = rmnet_map_deaggregate(skb, port)) != NULL)
-			__rmnet_map_ingress_handler(skbn, port);
-
-		consume_skb(skb);
-	} else {
-		__rmnet_map_ingress_handler(skb, port);
->>>>>>> rebase
 	}
 }
 
@@ -476,16 +384,11 @@ static int rmnet_map_egress_handler(struct sk_buff *skb,
 				    struct rmnet_port *port, u8 mux_id,
 				    struct net_device *orig_dev)
 {
-<<<<<<< HEAD
 	int required_headroom, additional_header_len, csum_type;
-=======
-	int required_headroom, additional_header_len;
->>>>>>> rebase
 	struct rmnet_map_header *map_header;
 
 	additional_header_len = 0;
 	required_headroom = sizeof(struct rmnet_map_header);
-<<<<<<< HEAD
 	csum_type = 0;
 
 	if (port->data_format & RMNET_FLAGS_EGRESS_MAP_CKSUMV4) {
@@ -499,20 +402,11 @@ static int rmnet_map_egress_handler(struct sk_buff *skb,
 
 	required_headroom += additional_header_len;
 
-=======
-
-	if (port->data_format & RMNET_FLAGS_EGRESS_MAP_CKSUMV4) {
-		additional_header_len = sizeof(struct rmnet_map_ul_csum_header);
-		required_headroom += additional_header_len;
-	}
-
->>>>>>> rebase
 	if (skb_headroom(skb) < required_headroom) {
 		if (pskb_expand_head(skb, required_headroom, 0, GFP_ATOMIC))
 			return -ENOMEM;
 	}
 
-<<<<<<< HEAD
 #ifdef CONFIG_QCOM_QMI_HELPERS
 	if (port->data_format & RMNET_INGRESS_FORMAT_PS)
 		qmi_rmnet_work_maybe_restart(port);
@@ -524,18 +418,11 @@ static int rmnet_map_egress_handler(struct sk_buff *skb,
 
 	map_header = rmnet_map_add_map_header(skb, additional_header_len, 0,
 					      port);
-=======
-	if (port->data_format & RMNET_FLAGS_EGRESS_MAP_CKSUMV4)
-		rmnet_map_checksum_uplink_packet(skb, orig_dev);
-
-	map_header = rmnet_map_add_map_header(skb, additional_header_len, 0);
->>>>>>> rebase
 	if (!map_header)
 		return -ENOMEM;
 
 	map_header->mux_id = mux_id;
 
-<<<<<<< HEAD
 	if (port->data_format & RMNET_EGRESS_FORMAT_AGGREGATION) {
 		if (rmnet_map_tx_agg_skip(skb, required_headroom))
 			goto done;
@@ -546,22 +433,12 @@ static int rmnet_map_egress_handler(struct sk_buff *skb,
 
 done:
 	skb->protocol = htons(ETH_P_MAP);
-=======
-	skb->protocol = htons(ETH_P_MAP);
-
->>>>>>> rebase
 	return 0;
 }
 
 static void
 rmnet_bridge_handler(struct sk_buff *skb, struct net_device *bridge_dev)
 {
-<<<<<<< HEAD
-=======
-	if (skb_mac_header_was_set(skb))
-		skb_push(skb, skb->mac_len);
-
->>>>>>> rebase
 	if (bridge_dev) {
 		skb->dev = bridge_dev;
 		dev_queue_xmit(skb);
@@ -586,20 +463,10 @@ rx_handler_result_t rmnet_rx_handler(struct sk_buff **pskb)
 	if (skb->pkt_type == PACKET_LOOPBACK)
 		return RX_HANDLER_PASS;
 
-<<<<<<< HEAD
 	trace_rmnet_low(RMNET_MODULE, RMNET_RCV_FROM_PND, 0xDEF,
 			0xDEF, 0xDEF, 0xDEF, NULL, NULL);
 	dev = skb->dev;
 	port = rmnet_get_port(dev);
-=======
-	dev = skb->dev;
-	port = rmnet_get_port_rcu(dev);
-	if (unlikely(!port)) {
-		atomic_long_inc(&skb->dev->rx_nohandler);
-		kfree_skb(skb);
-		goto done;
-	}
->>>>>>> rebase
 
 	switch (port->rmnet_mode) {
 	case RMNET_EPMODE_VND:
@@ -613,10 +480,7 @@ rx_handler_result_t rmnet_rx_handler(struct sk_buff **pskb)
 done:
 	return RX_HANDLER_CONSUMED;
 }
-<<<<<<< HEAD
 EXPORT_SYMBOL(rmnet_rx_handler);
-=======
->>>>>>> rebase
 
 /* Modifies packet as per logical endpoint configuration and egress data format
  * for egress device configured in logical endpoint. Packet is then transmitted
@@ -628,15 +492,11 @@ void rmnet_egress_handler(struct sk_buff *skb)
 	struct rmnet_port *port;
 	struct rmnet_priv *priv;
 	u8 mux_id;
-<<<<<<< HEAD
 	int err;
 	u32 skb_len;
 
 	trace_rmnet_low(RMNET_MODULE, RMNET_TX_UL_PKT, 0xDEF, 0xDEF, 0xDEF,
 			0xDEF, (void *)skb, NULL);
-=======
-
->>>>>>> rebase
 	sk_pacing_shift_update(skb->sk, 8);
 
 	orig_dev = skb->dev;
@@ -644,7 +504,6 @@ void rmnet_egress_handler(struct sk_buff *skb)
 	skb->dev = priv->real_dev;
 	mux_id = priv->mux_id;
 
-<<<<<<< HEAD
 	port = rmnet_get_port(skb->dev);
 	if (!port)
 		goto drop;
@@ -659,16 +518,6 @@ void rmnet_egress_handler(struct sk_buff *skb)
 	}
 
 	rmnet_vnd_tx_fixup(orig_dev, skb_len);
-=======
-	port = rmnet_get_port_rcu(skb->dev);
-	if (!port)
-		goto drop;
-
-	if (rmnet_map_egress_handler(skb, port, mux_id, orig_dev))
-		goto drop;
-
-	rmnet_vnd_tx_fixup(skb, orig_dev);
->>>>>>> rebase
 
 	dev_queue_xmit(skb);
 	return;
@@ -676,8 +525,4 @@ void rmnet_egress_handler(struct sk_buff *skb)
 drop:
 	this_cpu_inc(priv->pcpu_stats->stats.tx_drops);
 	kfree_skb(skb);
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> rebase

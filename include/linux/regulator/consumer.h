@@ -244,10 +244,7 @@ void regulator_bulk_free(int num_consumers,
 
 int regulator_count_voltages(struct regulator *regulator);
 int regulator_list_voltage(struct regulator *regulator, unsigned selector);
-<<<<<<< HEAD
 int regulator_list_corner_voltage(struct regulator *regulator, int corner);
-=======
->>>>>>> rebase
 int regulator_is_supported_voltage(struct regulator *regulator,
 				   int min_uV, int max_uV);
 unsigned int regulator_get_linear_step(struct regulator *regulator);
@@ -256,13 +253,10 @@ int regulator_set_voltage_time(struct regulator *regulator,
 			       int old_uV, int new_uV);
 int regulator_get_voltage(struct regulator *regulator);
 int regulator_sync_voltage(struct regulator *regulator);
-<<<<<<< HEAD
 #ifdef CONFIG_SEC_PM
 int regulator_set_short_detection(struct regulator *regulator,
 				  bool enable, int lv_uA);
 #endif /* CONFIG_SEC_PM */
-=======
->>>>>>> rebase
 int regulator_set_current_limit(struct regulator *regulator,
 			       int min_uA, int max_uA);
 int regulator_get_current_limit(struct regulator *regulator);
@@ -296,13 +290,10 @@ void devm_regulator_unregister_notifier(struct regulator *regulator,
 void *regulator_get_drvdata(struct regulator *regulator);
 void regulator_set_drvdata(struct regulator *regulator, void *data);
 
-<<<<<<< HEAD
 #ifdef CONFIG_SEC_PM
 void regulator_showall_enabled(void);
 #endif /* CONFIG_SEC_PM */
 
-=======
->>>>>>> rebase
 #else
 
 /*
@@ -496,7 +487,6 @@ static inline int regulator_is_supported_voltage(struct regulator *regulator,
 	return 0;
 }
 
-<<<<<<< HEAD
 #ifdef CONFIG_SEC_PM
 static inline int regulator_set_short_protection(struct regulator *regulator,
 						 bool enable, int lv_uA)
@@ -505,8 +495,6 @@ static inline int regulator_set_short_protection(struct regulator *regulator,
 }
 #endif /* CONFIG_SEC_PM */
 
-=======
->>>>>>> rebase
 static inline int regulator_set_current_limit(struct regulator *regulator,
 					     int min_uA, int max_uA)
 {
@@ -608,14 +596,11 @@ static inline int regulator_list_voltage(struct regulator *regulator, unsigned s
 	return -EINVAL;
 }
 
-<<<<<<< HEAD
 static inline int regulator_list_corner_voltage(struct regulator *regulator,
 	int corner)
 {
 	return -EINVAL;
 }
-=======
->>>>>>> rebase
 #endif
 
 static inline int regulator_set_voltage_triplet(struct regulator *regulator,

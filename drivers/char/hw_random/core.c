@@ -15,10 +15,6 @@
 #include <linux/err.h>
 #include <linux/fs.h>
 #include <linux/hw_random.h>
-<<<<<<< HEAD
-=======
-#include <linux/random.h>
->>>>>>> rebase
 #include <linux/kernel.h>
 #include <linux/kthread.h>
 #include <linux/sched/signal.h>

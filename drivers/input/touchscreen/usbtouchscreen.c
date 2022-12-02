@@ -195,10 +195,6 @@ static const struct usb_device_id usbtouch_devices[] = {
 #endif
 
 #ifdef CONFIG_TOUCHSCREEN_USB_IRTOUCH
-<<<<<<< HEAD
-=======
-	{USB_DEVICE(0x255e, 0x0001), .driver_info = DEVTYPE_IRTOUCH},
->>>>>>> rebase
 	{USB_DEVICE(0x595a, 0x0001), .driver_info = DEVTYPE_IRTOUCH},
 	{USB_DEVICE(0x6615, 0x0001), .driver_info = DEVTYPE_IRTOUCH},
 	{USB_DEVICE(0x6615, 0x0012), .driver_info = DEVTYPE_IRTOUCH_HIRES},
@@ -267,11 +263,7 @@ static int e2i_init(struct usbtouch_usb *usbtouch)
 	int ret;
 	struct usb_device *udev = interface_to_usbdev(usbtouch->interface);
 
-<<<<<<< HEAD
 	ret = usb_control_msg(udev, usb_rcvctrlpipe(udev, 0),
-=======
-	ret = usb_control_msg(udev, usb_sndctrlpipe(udev, 0),
->>>>>>> rebase
 	                      0x01, 0x02, 0x0000, 0x0081,
 	                      NULL, 0, USB_CTRL_SET_TIMEOUT);
 
@@ -551,11 +543,7 @@ static int mtouch_init(struct usbtouch_usb *usbtouch)
 	if (ret)
 		return ret;
 
-<<<<<<< HEAD
 	ret = usb_control_msg(udev, usb_rcvctrlpipe(udev, 0),
-=======
-	ret = usb_control_msg(udev, usb_sndctrlpipe(udev, 0),
->>>>>>> rebase
 	                      MTOUCHUSB_RESET,
 	                      USB_DIR_OUT | USB_TYPE_VENDOR | USB_RECIP_DEVICE,
 	                      1, 0, NULL, 0, USB_CTRL_SET_TIMEOUT);
@@ -567,11 +555,7 @@ static int mtouch_init(struct usbtouch_usb *usbtouch)
 	msleep(150);
 
 	for (i = 0; i < 3; i++) {
-<<<<<<< HEAD
 		ret = usb_control_msg(udev, usb_rcvctrlpipe(udev, 0),
-=======
-		ret = usb_control_msg(udev, usb_sndctrlpipe(udev, 0),
->>>>>>> rebase
 				      MTOUCHUSB_ASYNC_REPORT,
 				      USB_DIR_OUT | USB_TYPE_VENDOR | USB_RECIP_DEVICE,
 				      1, 1, NULL, 0, USB_CTRL_SET_TIMEOUT);
@@ -750,11 +734,7 @@ static int dmc_tsc10_init(struct usbtouch_usb *usbtouch)
 	}
 
 	/* start sending data */
-<<<<<<< HEAD
 	ret = usb_control_msg(dev, usb_rcvctrlpipe (dev, 0),
-=======
-	ret = usb_control_msg(dev, usb_sndctrlpipe(dev, 0),
->>>>>>> rebase
 	                      TSC10_CMD_DATA1,
 	                      USB_DIR_OUT | USB_TYPE_VENDOR | USB_RECIP_DEVICE,
 	                      0, 0, NULL, 0, USB_CTRL_SET_TIMEOUT);

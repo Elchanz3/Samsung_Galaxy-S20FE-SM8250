@@ -311,11 +311,6 @@ void etnaviv_buffer_queue(struct etnaviv_gpu *gpu, u32 exec_state,
 	u32 return_target, return_dwords;
 	u32 link_target, link_dwords;
 	bool switch_context = gpu->exec_state != exec_state;
-<<<<<<< HEAD
-=======
-	unsigned int new_flush_seq = READ_ONCE(gpu->mmu->flush_seq);
-	bool need_flush = gpu->flush_seq != new_flush_seq;
->>>>>>> rebase
 
 	lockdep_assert_held(&gpu->lock);
 
@@ -330,22 +325,14 @@ void etnaviv_buffer_queue(struct etnaviv_gpu *gpu, u32 exec_state,
 	 * need to append a mmu flush load state, followed by a new
 	 * link to this buffer - a total of four additional words.
 	 */
-<<<<<<< HEAD
 	if (gpu->mmu->need_flush || switch_context) {
-=======
-	if (need_flush || switch_context) {
->>>>>>> rebase
 		u32 target, extra_dwords;
 
 		/* link command */
 		extra_dwords = 1;
 
 		/* flush command */
-<<<<<<< HEAD
 		if (gpu->mmu->need_flush) {
-=======
-		if (need_flush) {
->>>>>>> rebase
 			if (gpu->mmu->version == ETNAVIV_IOMMU_V1)
 				extra_dwords += 1;
 			else
@@ -358,11 +345,7 @@ void etnaviv_buffer_queue(struct etnaviv_gpu *gpu, u32 exec_state,
 
 		target = etnaviv_buffer_reserve(gpu, buffer, extra_dwords);
 
-<<<<<<< HEAD
 		if (gpu->mmu->need_flush) {
-=======
-		if (need_flush) {
->>>>>>> rebase
 			/* Add the MMU flush */
 			if (gpu->mmu->version == ETNAVIV_IOMMU_V1) {
 				CMD_LOAD_STATE(buffer, VIVS_GL_FLUSH_MMU,
@@ -382,11 +365,7 @@ void etnaviv_buffer_queue(struct etnaviv_gpu *gpu, u32 exec_state,
 					SYNC_RECIPIENT_PE);
 			}
 
-<<<<<<< HEAD
 			gpu->mmu->need_flush = false;
-=======
-			gpu->flush_seq = new_flush_seq;
->>>>>>> rebase
 		}
 
 		if (switch_context) {

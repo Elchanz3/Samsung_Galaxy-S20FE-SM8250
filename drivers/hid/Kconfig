@@ -148,10 +148,6 @@ config HID_APPLEIR
 
 config HID_ASUS
 	tristate "Asus"
-<<<<<<< HEAD
-=======
-	depends on USB_HID
->>>>>>> rebase
 	depends on LEDS_CLASS
 	---help---
 	Support for Asus notebook built-in keyboard and touchpad via i2c, and
@@ -656,7 +652,6 @@ config HID_MULTITOUCH
 	  To compile this driver as a module, choose M here: the
 	  module will be called hid-multitouch.
 
-<<<<<<< HEAD
 config HID_NINTENDO
 	tristate "Nintendo Joy-Con and Pro Controller support"
 	depends on HID
@@ -668,8 +663,6 @@ config HID_NINTENDO
 	To compile this driver as a module, choose M here: the
 	module will be called hid-nintendo.
 
-=======
->>>>>>> rebase
 config HID_NTI
 	tristate "NTI keyboard adapters"
 	---help---
@@ -804,7 +797,6 @@ config HID_PLANTRONICS
 
 	  Say M here if you may ever plug in a Plantronics USB audio device.
 
-<<<<<<< HEAD
 config HID_PLAYSTATION
 	tristate "PlayStation HID Driver"
 	depends on HID
@@ -823,8 +815,6 @@ config PLAYSTATION_FF
 	  Say Y here if you would like to enable force feedback support for
 	  PlayStation game controllers.
 
-=======
->>>>>>> rebase
 config HID_PRIMAX
 	tristate "Primax non-fully HID-compliant devices"
 	depends on HID
@@ -1118,7 +1108,6 @@ config HID_ALPS
 	Say Y here if you have a Alps touchpads over i2c-hid or usbhid
 	and want support for its special functionalities.
 
-<<<<<<< HEAD
 config HID_QVR
 	tristate "QVR support"
 	depends on HID
@@ -1128,8 +1117,6 @@ config HID_QVR
 	Say 'Y' or 'M' if you want to connect an external device to
 	stream sensor data for QVR support.
 
-=======
->>>>>>> rebase
 endmenu
 
 endif # HID

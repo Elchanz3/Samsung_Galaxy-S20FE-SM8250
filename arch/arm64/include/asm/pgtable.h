@@ -19,15 +19,11 @@
 #include <asm/bug.h>
 #include <asm/proc-fns.h>
 
-<<<<<<< HEAD
 #include <asm/bug.h>
-=======
->>>>>>> rebase
 #include <asm/memory.h>
 #include <asm/pgtable-hwdef.h>
 #include <asm/pgtable-prot.h>
 
-<<<<<<< HEAD
 #ifdef CONFIG_UH
 #include <linux/uh.h>
 #ifdef CONFIG_UH_RKP
@@ -35,8 +31,6 @@
 #endif
 #endif
 
-=======
->>>>>>> rebase
 /*
  * VMALLOC range.
  *
@@ -64,12 +58,9 @@ extern void __pmd_error(const char *file, int line, unsigned long val);
 extern void __pud_error(const char *file, int line, unsigned long val);
 extern void __pgd_error(const char *file, int line, unsigned long val);
 
-<<<<<<< HEAD
 #ifdef CONFIG_KDP_DMAP
 extern int rkp_cred_enable;
 #endif
-=======
->>>>>>> rebase
 /*
  * ZERO_PAGE is a global shared page that is always zero: used
  * for zero-mapped memory areas etc..
@@ -84,21 +75,9 @@ extern unsigned long empty_zero_page[PAGE_SIZE / sizeof(unsigned long)];
  * page table entry, taking care of 52-bit addresses.
  */
 #ifdef CONFIG_ARM64_PA_BITS_52
-<<<<<<< HEAD
 #define __pte_to_phys(pte)	\
 	((pte_val(pte) & PTE_ADDR_LOW) | ((pte_val(pte) & PTE_ADDR_HIGH) << 36))
 #define __phys_to_pte_val(phys)	(((phys) | ((phys) >> 36)) & PTE_ADDR_MASK)
-=======
-static inline phys_addr_t __pte_to_phys(pte_t pte)
-{
-	return (pte_val(pte) & PTE_ADDR_LOW) |
-		((pte_val(pte) & PTE_ADDR_HIGH) << 36);
-}
-static inline pteval_t __phys_to_pte_val(phys_addr_t phys)
-{
-	return (phys | (phys >> 36)) & PTE_ADDR_MASK;
-}
->>>>>>> rebase
 #else
 #define __pte_to_phys(pte)	(pte_val(pte) & PTE_ADDR_MASK)
 #define __phys_to_pte_val(phys)	(phys)
@@ -177,7 +156,6 @@ static inline pte_t set_pte_bit(pte_t pte, pgprot_t prot)
 	return pte;
 }
 
-<<<<<<< HEAD
 static inline pte_t pte_wrprotect(pte_t pte)
 {
 	pte = clear_pte_bit(pte, __pgprot(PTE_WRITE));
@@ -185,8 +163,6 @@ static inline pte_t pte_wrprotect(pte_t pte)
 	return pte;
 }
 
-=======
->>>>>>> rebase
 static inline pte_t pte_mkwrite(pte_t pte)
 {
 	pte = set_pte_bit(pte, __pgprot(PTE_WRITE));
@@ -212,23 +188,6 @@ static inline pte_t pte_mkdirty(pte_t pte)
 	return pte;
 }
 
-<<<<<<< HEAD
-=======
-static inline pte_t pte_wrprotect(pte_t pte)
-{
-	/*
-	 * If hardware-dirty (PTE_WRITE/DBM bit set and PTE_RDONLY
-	 * clear), set the PTE_DIRTY bit.
-	 */
-	if (pte_hw_dirty(pte))
-		pte = pte_mkdirty(pte);
-
-	pte = clear_pte_bit(pte, __pgprot(PTE_WRITE));
-	pte = set_pte_bit(pte, __pgprot(PTE_RDONLY));
-	return pte;
-}
-
->>>>>>> rebase
 static inline pte_t pte_mkold(pte_t pte)
 {
 	return clear_pte_bit(pte, __pgprot(PTE_AF));
@@ -267,7 +226,6 @@ static inline pmd_t pmd_mkcont(pmd_t pmd)
 
 static inline void set_pte(pte_t *ptep, pte_t pte)
 {
-<<<<<<< HEAD
 #ifdef CONFIG_ARM64_STRICT_BREAK_BEFORE_MAKE
 	pteval_t old = pte_val(*ptep);
 	pteval_t new = pte_val(pte);
@@ -306,8 +264,6 @@ pte_ok:
 		uh_call(UH_APP_RKP, RKP_WRITE_PGT3, (u64)ptep, pte_val(pte), 0, 0);
 	} else
 #endif
-=======
->>>>>>> rebase
 	WRITE_ONCE(*ptep, pte);
 
 	/*
@@ -505,14 +461,11 @@ static inline bool pud_table(pud_t pud) { return true; }
 
 static inline void set_pmd(pmd_t *pmdp, pmd_t pmd)
 {
-<<<<<<< HEAD
 #ifdef CONFIG_UH_RKP
 	if (rkp_is_pg_protected((u64)pmdp)) {
 		uh_call(UH_APP_RKP, RKP_WRITE_PGT2, (u64)pmdp, pmd_val(pmd), 0, 0);
 	} else
 #endif
-=======
->>>>>>> rebase
 	WRITE_ONCE(*pmdp, pmd);
 	dsb(ishst);
 	isb();
@@ -528,14 +481,11 @@ static inline phys_addr_t pmd_page_paddr(pmd_t pmd)
 	return __pmd_to_phys(pmd);
 }
 
-<<<<<<< HEAD
 static inline unsigned long pmd_page_vaddr(pmd_t pmd)
 {
 	return (unsigned long) __va(pmd_page_paddr(pmd));
 }
 
-=======
->>>>>>> rebase
 static inline void pte_unmap(pte_t *pte) { }
 
 /* Find an entry in the third-level page table. */
@@ -573,14 +523,11 @@ static inline void pte_unmap(pte_t *pte) { }
 
 static inline void set_pud(pud_t *pudp, pud_t pud)
 {
-<<<<<<< HEAD
 #ifdef CONFIG_UH_RKP
 	if (rkp_is_pg_protected((u64)pudp)) {
 		uh_call(UH_APP_RKP, RKP_WRITE_PGT1, (u64)pudp, pud_val(pud), 0, 0);
 	} else
 #endif
-=======
->>>>>>> rebase
 	WRITE_ONCE(*pudp, pud);
 	dsb(ishst);
 	isb();
@@ -596,14 +543,11 @@ static inline phys_addr_t pud_page_paddr(pud_t pud)
 	return __pud_to_phys(pud);
 }
 
-<<<<<<< HEAD
 static inline unsigned long pud_page_vaddr(pud_t pud)
 {
 	return (unsigned long) __va(pud_page_paddr(pud));
 }
 
-=======
->>>>>>> rebase
 /* Find an entry in the second-level page table. */
 #define pmd_index(addr)		(((addr) >> PMD_SHIFT) & (PTRS_PER_PMD - 1))
 
@@ -656,14 +600,11 @@ static inline phys_addr_t pgd_page_paddr(pgd_t pgd)
 	return __pgd_to_phys(pgd);
 }
 
-<<<<<<< HEAD
 static inline unsigned long pgd_page_vaddr(pgd_t pgd)
 {
 	return (unsigned long) __va(pgd_page_paddr(pgd));
 }
 
-=======
->>>>>>> rebase
 /* Find an entry in the frst-level page table. */
 #define pud_index(addr)		(((addr) >> PUD_SHIFT) & (PTRS_PER_PUD - 1))
 
@@ -802,15 +743,12 @@ static inline void ptep_set_wrprotect(struct mm_struct *mm, unsigned long addres
 	pte = READ_ONCE(*ptep);
 	do {
 		old_pte = pte;
-<<<<<<< HEAD
 		/*
 		 * If hardware-dirty (PTE_WRITE/DBM bit set and PTE_RDONLY
 		 * clear), set the PTE_DIRTY bit.
 		 */
 		if (pte_hw_dirty(pte))
 			pte = pte_mkdirty(pte);
-=======
->>>>>>> rebase
 		pte = pte_wrprotect(pte);
 		pte_val(pte) = cmpxchg_relaxed(&pte_val(*ptep),
 					       pte_val(old_pte), pte_val(pte));

@@ -245,10 +245,6 @@ static int ocfs2_mknod(struct inode *dir,
 	handle_t *handle = NULL;
 	struct ocfs2_super *osb;
 	struct ocfs2_dinode *dirfe;
-<<<<<<< HEAD
-=======
-	struct ocfs2_dinode *fe = NULL;
->>>>>>> rebase
 	struct buffer_head *new_fe_bh = NULL;
 	struct inode *inode = NULL;
 	struct ocfs2_alloc_context *inode_ac = NULL;
@@ -399,10 +395,6 @@ static int ocfs2_mknod(struct inode *dir,
 		goto leave;
 	}
 
-<<<<<<< HEAD
-=======
-	fe = (struct ocfs2_dinode *) new_fe_bh->b_data;
->>>>>>> rebase
 	if (S_ISDIR(mode)) {
 		status = ocfs2_fill_new_dir(osb, handle, dir, inode,
 					    new_fe_bh, data_ac, meta_ac);
@@ -468,16 +460,8 @@ static int ocfs2_mknod(struct inode *dir,
 leave:
 	if (status < 0 && did_quota_inode)
 		dquot_free_inode(inode);
-<<<<<<< HEAD
 	if (handle)
 		ocfs2_commit_trans(osb, handle);
-=======
-	if (handle) {
-		if (status < 0 && fe)
-			ocfs2_set_links_count(fe, 0);
-		ocfs2_commit_trans(osb, handle);
-	}
->>>>>>> rebase
 
 	ocfs2_inode_unlock(dir, 1);
 	if (did_block_signals)
@@ -655,7 +639,6 @@ static int ocfs2_mknod_locked(struct ocfs2_super *osb,
 		return status;
 	}
 
-<<<<<<< HEAD
 	status = __ocfs2_mknod_locked(dir, inode, dev, new_fe_bh,
 				    parent_fe_bh, handle, inode_ac,
 				    fe_blkno, suballoc_loc, suballoc_bit);
@@ -668,11 +651,6 @@ static int ocfs2_mknod_locked(struct ocfs2_super *osb,
 	}
 
 	return status;
-=======
-	return __ocfs2_mknod_locked(dir, inode, dev, new_fe_bh,
-				    parent_fe_bh, handle, inode_ac,
-				    fe_blkno, suballoc_loc, suballoc_bit);
->>>>>>> rebase
 }
 
 static int ocfs2_mkdir(struct inode *dir,
@@ -2053,16 +2031,8 @@ bail:
 					ocfs2_clusters_to_bytes(osb->sb, 1));
 	if (status < 0 && did_quota_inode)
 		dquot_free_inode(inode);
-<<<<<<< HEAD
 	if (handle)
 		ocfs2_commit_trans(osb, handle);
-=======
-	if (handle) {
-		if (status < 0 && fe)
-			ocfs2_set_links_count(fe, 0);
-		ocfs2_commit_trans(osb, handle);
-	}
->>>>>>> rebase
 
 	ocfs2_inode_unlock(dir, 1);
 	if (did_block_signals)

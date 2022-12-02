@@ -797,7 +797,6 @@ nilfs_find_or_create_root(struct the_nilfs *nilfs, __u64 cno)
 
 void nilfs_put_root(struct nilfs_root *root)
 {
-<<<<<<< HEAD
 	if (refcount_dec_and_test(&root->count)) {
 		struct the_nilfs *nilfs = root->nilfs;
 
@@ -806,15 +805,6 @@ void nilfs_put_root(struct nilfs_root *root)
 		spin_lock(&nilfs->ns_cptree_lock);
 		rb_erase(&root->rb_node, &nilfs->ns_cptree);
 		spin_unlock(&nilfs->ns_cptree_lock);
-=======
-	struct the_nilfs *nilfs = root->nilfs;
-
-	if (refcount_dec_and_lock(&root->count, &nilfs->ns_cptree_lock)) {
-		rb_erase(&root->rb_node, &nilfs->ns_cptree);
-		spin_unlock(&nilfs->ns_cptree_lock);
-
-		nilfs_sysfs_delete_snapshot_group(root);
->>>>>>> rebase
 		iput(root->ifile);
 
 		kfree(root);

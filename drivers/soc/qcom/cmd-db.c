@@ -2,22 +2,16 @@
 /* Copyright (c) 2016-2018, The Linux Foundation. All rights reserved. */
 
 #include <linux/kernel.h>
-<<<<<<< HEAD
 #include <linux/module.h>
-=======
->>>>>>> rebase
 #include <linux/of.h>
 #include <linux/of_address.h>
 #include <linux/of_platform.h>
 #include <linux/of_reserved_mem.h>
 #include <linux/platform_device.h>
 #include <linux/types.h>
-<<<<<<< HEAD
 #include <linux/debugfs.h>
 #include <linux/fs.h>
 #include <linux/seq_file.h>
-=======
->>>>>>> rebase
 
 #include <soc/qcom/cmd-db.h>
 
@@ -25,10 +19,7 @@
 #define MAX_SLV_ID		8
 #define SLAVE_ID_MASK		0x7
 #define SLAVE_ID_SHIFT		16
-<<<<<<< HEAD
 #define CMD_DB_STANDALONE_MASK BIT(0)
-=======
->>>>>>> rebase
 
 /**
  * struct entry_header: header for each entry in cmddb
@@ -285,7 +276,6 @@ enum cmd_db_hw_type cmd_db_read_slave_id(const char *id)
 }
 EXPORT_SYMBOL(cmd_db_read_slave_id);
 
-<<<<<<< HEAD
 int cmd_db_is_standalone(void)
 {
 	int ret = cmd_db_ready();
@@ -398,8 +388,6 @@ static const struct file_operations cmd_db_fops = {
 	.llseek = no_llseek,
 };
 
-=======
->>>>>>> rebase
 static int cmd_db_dev_probe(struct platform_device *pdev)
 {
 	struct reserved_mem *rmem;
@@ -423,15 +411,12 @@ static int cmd_db_dev_probe(struct platform_device *pdev)
 		return -EINVAL;
 	}
 
-<<<<<<< HEAD
 	if (cmd_db_is_standalone() == 1)
 		pr_info("Command DB is initialized in standalone mode.\n");
 
 	if (!debugfs_create_file("cmd_db", 0444, NULL, NULL, &cmd_db_fops))
 		pr_err("Couldn't create debugfs\n");
 
-=======
->>>>>>> rebase
 	return 0;
 }
 
@@ -453,8 +438,5 @@ static int __init cmd_db_device_init(void)
 	return platform_driver_register(&cmd_db_dev_driver);
 }
 arch_initcall(cmd_db_device_init);
-<<<<<<< HEAD
 MODULE_DESCRIPTION("Qualcomm Command DB");
 MODULE_LICENSE("GPL v2");
-=======
->>>>>>> rebase

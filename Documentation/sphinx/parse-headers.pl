@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 #!/usr/bin/perl
-=======
-#!/usr/bin/env perl
->>>>>>> rebase
 use strict;
 use Text::Tabs;
 use Getopt::Long;

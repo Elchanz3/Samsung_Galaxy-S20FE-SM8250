@@ -25,7 +25,6 @@ void __init kasan_early_init(void)
 	int i;
 
 	for (i = 0; i < PTRS_PER_PTE; ++i)
-<<<<<<< HEAD
 		set_pte(kasan_early_shadow_pte + i,
 			mk_pte(virt_to_page(kasan_early_shadow_page),
 				PAGE_KERNEL));
@@ -33,14 +32,6 @@ void __init kasan_early_init(void)
 	for (vaddr = 0; vaddr < KASAN_SHADOW_SIZE; vaddr += PMD_SIZE, ++pmd) {
 		BUG_ON(!pmd_none(*pmd));
 		set_pmd(pmd, __pmd((unsigned long)kasan_early_shadow_pte));
-=======
-		set_pte(kasan_zero_pte + i,
-			mk_pte(virt_to_page(kasan_zero_page), PAGE_KERNEL));
-
-	for (vaddr = 0; vaddr < KASAN_SHADOW_SIZE; vaddr += PMD_SIZE, ++pmd) {
-		BUG_ON(!pmd_none(*pmd));
-		set_pmd(pmd, __pmd((unsigned long)kasan_zero_pte));
->>>>>>> rebase
 	}
 	early_trap_init();
 }
@@ -91,7 +82,6 @@ void __init kasan_init(void)
 	populate(kasan_mem_to_shadow((void *)VMALLOC_START),
 		 kasan_mem_to_shadow((void *)XCHAL_KSEG_BYPASS_VADDR));
 
-<<<<<<< HEAD
 	/*
 	 * Write protect kasan_early_shadow_page and zero-initialize it again.
 	 */
@@ -102,15 +92,6 @@ void __init kasan_init(void)
 
 	local_flush_tlb_all();
 	memset(kasan_early_shadow_page, 0, PAGE_SIZE);
-=======
-	/* Write protect kasan_zero_page and zero-initialize it again. */
-	for (i = 0; i < PTRS_PER_PTE; ++i)
-		set_pte(kasan_zero_pte + i,
-			mk_pte(virt_to_page(kasan_zero_page), PAGE_KERNEL_RO));
-
-	local_flush_tlb_all();
-	memset(kasan_zero_page, 0, PAGE_SIZE);
->>>>>>> rebase
 
 	/* At this point kasan is fully initialized. Enable error messages. */
 	current->kasan_depth = 0;

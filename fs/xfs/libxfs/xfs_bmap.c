@@ -4920,7 +4920,6 @@ xfs_bmap_del_extent_real(
 
 	flags = XFS_ILOG_CORE;
 	if (whichfork == XFS_DATA_FORK && XFS_IS_REALTIME_INODE(ip)) {
-<<<<<<< HEAD
 		xfs_fsblock_t	bno;
 		xfs_filblks_t	len;
 		xfs_extlen_t	mod;
@@ -4928,33 +4927,13 @@ xfs_bmap_del_extent_real(
 		bno = div_u64_rem(del->br_startblock, mp->m_sb.sb_rextsize,
 				  &mod);
 		ASSERT(mod == 0);
-=======
-		xfs_filblks_t	len;
-		xfs_extlen_t	mod;
-
->>>>>>> rebase
 		len = div_u64_rem(del->br_blockcount, mp->m_sb.sb_rextsize,
 				  &mod);
 		ASSERT(mod == 0);
 
-<<<<<<< HEAD
 		error = xfs_rtfree_extent(tp, bno, (xfs_extlen_t)len);
 		if (error)
 			goto done;
-=======
-		if (!(bflags & XFS_BMAPI_REMAP)) {
-			xfs_fsblock_t	bno;
-
-			bno = div_u64_rem(del->br_startblock,
-					mp->m_sb.sb_rextsize, &mod);
-			ASSERT(mod == 0);
-
-			error = xfs_rtfree_extent(tp, bno, (xfs_extlen_t)len);
-			if (error)
-				goto done;
-		}
-
->>>>>>> rebase
 		do_fx = 0;
 		nblks = len * mp->m_sb.sb_rextsize;
 		qfield = XFS_TRANS_DQ_RTBCOUNT;
@@ -6151,11 +6130,7 @@ xfs_bmap_validate_extent(
 
 	isrt = XFS_IS_REALTIME_INODE(ip);
 	endfsb = irec->br_startblock + irec->br_blockcount - 1;
-<<<<<<< HEAD
 	if (isrt) {
-=======
-	if (isrt && whichfork == XFS_DATA_FORK) {
->>>>>>> rebase
 		if (!xfs_verify_rtbno(mp, irec->br_startblock))
 			return __this_address;
 		if (!xfs_verify_rtbno(mp, endfsb))

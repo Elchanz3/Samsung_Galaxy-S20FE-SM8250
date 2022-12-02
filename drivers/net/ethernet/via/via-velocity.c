@@ -875,22 +875,15 @@ static u32 check_connection_type(struct mac_regs __iomem *regs)
  */
 static int velocity_set_media_mode(struct velocity_info *vptr, u32 mii_status)
 {
-<<<<<<< HEAD
 	u32 curr_status;
 	struct mac_regs __iomem *regs = vptr->mac_regs;
 
 	vptr->mii_status = mii_check_media_mode(vptr->mac_regs);
 	curr_status = vptr->mii_status & (~VELOCITY_LINK_FAIL);
-=======
-	struct mac_regs __iomem *regs = vptr->mac_regs;
-
-	vptr->mii_status = mii_check_media_mode(vptr->mac_regs);
->>>>>>> rebase
 
 	/* Set mii link status */
 	set_mii_flow_control(vptr);
 
-<<<<<<< HEAD
 	/*
 	   Check if new status is consistent with current status
 	   if (((mii_status & curr_status) & VELOCITY_AUTONEG_ENABLE) ||
@@ -902,8 +895,6 @@ static int velocity_set_media_mode(struct velocity_info *vptr, u32 mii_status)
 	   }
 	 */
 
-=======
->>>>>>> rebase
 	if (PHYID_GET_PHY_ID(vptr->phy_id) == PHYID_CICADA_CS8201)
 		MII_REG_BITS_ON(AUXCR_MDPPS, MII_NCONFIG, vptr->mac_regs);
 

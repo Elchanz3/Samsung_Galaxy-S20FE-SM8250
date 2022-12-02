@@ -73,11 +73,7 @@ static int ahci_scr_write(struct ata_link *link, unsigned int sc_reg, u32 val);
 static bool ahci_qc_fill_rtf(struct ata_queued_cmd *qc);
 static int ahci_port_start(struct ata_port *ap);
 static void ahci_port_stop(struct ata_port *ap);
-<<<<<<< HEAD
 static void ahci_qc_prep(struct ata_queued_cmd *qc);
-=======
-static enum ata_completion_errors ahci_qc_prep(struct ata_queued_cmd *qc);
->>>>>>> rebase
 static int ahci_pmp_qc_defer(struct ata_queued_cmd *qc);
 static void ahci_freeze(struct ata_port *ap);
 static void ahci_thaw(struct ata_port *ap);
@@ -1644,11 +1640,7 @@ static int ahci_pmp_qc_defer(struct ata_queued_cmd *qc)
 		return sata_pmp_qc_defer_cmd_switch(qc);
 }
 
-<<<<<<< HEAD
 static void ahci_qc_prep(struct ata_queued_cmd *qc)
-=======
-static enum ata_completion_errors ahci_qc_prep(struct ata_queued_cmd *qc)
->>>>>>> rebase
 {
 	struct ata_port *ap = qc->ap;
 	struct ahci_port_priv *pp = ap->private_data;
@@ -1684,11 +1676,6 @@ static enum ata_completion_errors ahci_qc_prep(struct ata_queued_cmd *qc)
 		opts |= AHCI_CMD_ATAPI | AHCI_CMD_PREFETCH;
 
 	ahci_fill_cmd_slot(pp, qc->hw_tag, opts);
-<<<<<<< HEAD
-=======
-
-	return AC_ERR_OK;
->>>>>>> rebase
 }
 
 static void ahci_fbs_dec_intr(struct ata_port *ap)

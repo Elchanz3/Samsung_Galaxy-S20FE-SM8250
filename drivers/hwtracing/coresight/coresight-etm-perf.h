@@ -7,10 +7,7 @@
 #ifndef _CORESIGHT_ETM_PERF_H
 #define _CORESIGHT_ETM_PERF_H
 
-<<<<<<< HEAD
 #include <linux/percpu-defs.h>
-=======
->>>>>>> rebase
 #include "coresight-priv.h"
 
 struct coresight_device;
@@ -46,7 +43,6 @@ struct etm_filters {
 	bool			ssstatus;
 };
 
-<<<<<<< HEAD
 /**
  * struct etm_event_data - Coresight specifics associated to an event
  * @work:		Handle to free allocated memory outside IRQ context.
@@ -83,15 +79,6 @@ static inline void *etm_perf_sink_config(struct perf_output_handle *handle)
 {
 	return NULL;
 }
-=======
-
-#ifdef CONFIG_CORESIGHT
-int etm_perf_symlink(struct coresight_device *csdev, bool link);
-
-#else
-static inline int etm_perf_symlink(struct coresight_device *csdev, bool link)
-{ return -EINVAL; }
->>>>>>> rebase
 
 #endif /* CONFIG_CORESIGHT */
 

@@ -38,13 +38,10 @@
 #include <linux/magic.h>
 #include "ecryptfs_kernel.h"
 
-<<<<<<< HEAD
 #ifdef CONFIG_WTL_ENCRYPTION_FILTER
 #include <linux/ctype.h>
 #endif
 
-=======
->>>>>>> rebase
 /**
  * Module parameter that defines the ecryptfs_verbosity level.
  */
@@ -182,7 +179,6 @@ enum { ecryptfs_opt_sig, ecryptfs_opt_ecryptfs_sig,
        ecryptfs_opt_fn_cipher, ecryptfs_opt_fn_cipher_key_bytes,
        ecryptfs_opt_unlink_sigs, ecryptfs_opt_mount_auth_tok_only,
        ecryptfs_opt_check_dev_ruid,
-<<<<<<< HEAD
 #ifdef CONFIG_WTL_ENCRYPTION_FILTER
        ecryptfs_opt_enable_filtering,
 #endif
@@ -190,8 +186,6 @@ enum { ecryptfs_opt_sig, ecryptfs_opt_ecryptfs_sig,
        ecryptfs_opt_enable_cc,
 #endif
        ecryptfs_opt_base, ecryptfs_opt_type, ecryptfs_opt_label,
-=======
->>>>>>> rebase
        ecryptfs_opt_err };
 
 static const match_table_t tokens = {
@@ -209,7 +203,6 @@ static const match_table_t tokens = {
 	{ecryptfs_opt_unlink_sigs, "ecryptfs_unlink_sigs"},
 	{ecryptfs_opt_mount_auth_tok_only, "ecryptfs_mount_auth_tok_only"},
 	{ecryptfs_opt_check_dev_ruid, "ecryptfs_check_dev_ruid"},
-<<<<<<< HEAD
 #ifdef CONFIG_WTL_ENCRYPTION_FILTER
 	{ecryptfs_opt_enable_filtering, "ecryptfs_enable_filtering=%s"},
 #endif
@@ -219,8 +212,6 @@ static const match_table_t tokens = {
 	{ecryptfs_opt_base, "base=%s"},
 	{ecryptfs_opt_type, "type=%s"},
 	{ecryptfs_opt_label, "label=%s"},
-=======
->>>>>>> rebase
 	{ecryptfs_opt_err, NULL}
 };
 
@@ -261,7 +252,6 @@ static void ecryptfs_init_mount_crypt_stat(
 	mutex_init(&mount_crypt_stat->global_auth_tok_list_mutex);
 	mount_crypt_stat->flags |= ECRYPTFS_MOUNT_CRYPT_STAT_INITIALIZED;
 }
-<<<<<<< HEAD
 #ifdef CONFIG_WTL_ENCRYPTION_FILTER
 static int parse_enc_file_filter_parms(
 	struct ecryptfs_mount_crypt_stat *mcs, char *str)
@@ -311,8 +301,6 @@ static int parse_enc_filter_parms(
 	return 0;
 }
 #endif
-=======
->>>>>>> rebase
 
 /**
  * ecryptfs_parse_options
@@ -360,13 +348,9 @@ static int ecryptfs_parse_options(struct ecryptfs_sb_info *sbi, char *options,
 	char *cipher_key_bytes_src;
 	char *fn_cipher_key_bytes_src;
 	u8 cipher_code;
-<<<<<<< HEAD
 #ifdef CONFIG_CRYPTO_FIPS
 	char cipher_mode[ECRYPTFS_MAX_CIPHER_MODE_SIZE+1] = ECRYPTFS_AES_ECB_MODE;
 #endif
-=======
-
->>>>>>> rebase
 	*check_ruid = 0;
 
 	if (!options) {
@@ -476,7 +460,6 @@ static int ecryptfs_parse_options(struct ecryptfs_sb_info *sbi, char *options,
 		case ecryptfs_opt_check_dev_ruid:
 			*check_ruid = 1;
 			break;
-<<<<<<< HEAD
 #ifdef CONFIG_WTL_ENCRYPTION_FILTER
 		case ecryptfs_opt_enable_filtering:
 			rc = parse_enc_filter_parms(mount_crypt_stat,
@@ -496,8 +479,6 @@ static int ecryptfs_parse_options(struct ecryptfs_sb_info *sbi, char *options,
 			strncpy(cipher_mode, ECRYPTFS_AES_CBC_MODE, ECRYPTFS_MAX_CIPHER_MODE_SIZE+1);
 			break;
 #endif
-=======
->>>>>>> rebase
 		case ecryptfs_opt_err:
 		default:
 			printk(KERN_WARNING
@@ -542,7 +523,6 @@ static int ecryptfs_parse_options(struct ecryptfs_sb_info *sbi, char *options,
 	}
 
 	mutex_lock(&key_tfm_list_mutex);
-<<<<<<< HEAD
 #ifdef CONFIG_CRYPTO_FIPS
 	if (!ecryptfs_tfm_exists(mount_crypt_stat->global_default_cipher_name, cipher_mode,
 			NULL)) {
@@ -585,8 +565,6 @@ static int ecryptfs_parse_options(struct ecryptfs_sb_info *sbi, char *options,
 		}
 	}
 #else
-=======
->>>>>>> rebase
 	if (!ecryptfs_tfm_exists(mount_crypt_stat->global_default_cipher_name,
 				 NULL)) {
 		rc = ecryptfs_add_new_key_tfm(
@@ -622,10 +600,7 @@ static int ecryptfs_parse_options(struct ecryptfs_sb_info *sbi, char *options,
 			goto out;
 		}
 	}
-<<<<<<< HEAD
 #endif
-=======
->>>>>>> rebase
 	mutex_unlock(&key_tfm_list_mutex);
 	rc = ecryptfs_init_global_auth_toks(mount_crypt_stat);
 	if (rc)
@@ -664,15 +639,6 @@ static struct dentry *ecryptfs_mount(struct file_system_type *fs_type, int flags
 		goto out;
 	}
 
-<<<<<<< HEAD
-=======
-	if (!dev_name) {
-		rc = -EINVAL;
-		err = "Device name cannot be null";
-		goto out;
-	}
-
->>>>>>> rebase
 	rc = ecryptfs_parse_options(sbi, raw_data, &check_ruid);
 	if (rc) {
 		err = "Error parsing options";

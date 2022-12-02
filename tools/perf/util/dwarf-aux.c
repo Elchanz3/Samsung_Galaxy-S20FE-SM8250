@@ -332,10 +332,6 @@ bool die_is_func_def(Dwarf_Die *dw_die)
 int die_entrypc(Dwarf_Die *dw_die, Dwarf_Addr *addr)
 {
 	Dwarf_Addr base, end;
-<<<<<<< HEAD
-=======
-	Dwarf_Attribute attr;
->>>>>>> rebase
 
 	if (!addr)
 		return -EINVAL;
@@ -343,16 +339,6 @@ int die_entrypc(Dwarf_Die *dw_die, Dwarf_Addr *addr)
 	if (dwarf_entrypc(dw_die, addr) == 0)
 		return 0;
 
-<<<<<<< HEAD
-=======
-	/*
-	 *  Since the dwarf_ranges() will return 0 if there is no
-	 * DW_AT_ranges attribute, we should check it first.
-	 */
-	if (!dwarf_attr(dw_die, DW_AT_ranges, &attr))
-		return -ENOENT;
-
->>>>>>> rebase
 	return dwarf_ranges(dw_die, 0, &base, addr, &end) < 0 ? -ENOENT : 0;
 }
 

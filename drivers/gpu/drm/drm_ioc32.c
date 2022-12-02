@@ -96,11 +96,6 @@ static int compat_drm_version(struct file *file, unsigned int cmd,
 	if (copy_from_user(&v32, (void __user *)arg, sizeof(v32)))
 		return -EFAULT;
 
-<<<<<<< HEAD
-=======
-	memset(&v, 0, sizeof(v));
-
->>>>>>> rebase
 	v = (struct drm_version) {
 		.name_len = v32.name_len,
 		.name = compat_ptr(v32.name),
@@ -139,12 +134,6 @@ static int compat_drm_getunique(struct file *file, unsigned int cmd,
 
 	if (copy_from_user(&uq32, (void __user *)arg, sizeof(uq32)))
 		return -EFAULT;
-<<<<<<< HEAD
-=======
-
-	memset(&uq, 0, sizeof(uq));
-
->>>>>>> rebase
 	uq = (struct drm_unique){
 		.unique_len = uq32.unique_len,
 		.unique = compat_ptr(uq32.unique),
@@ -271,11 +260,6 @@ static int compat_drm_getclient(struct file *file, unsigned int cmd,
 	if (copy_from_user(&c32, argp, sizeof(c32)))
 		return -EFAULT;
 
-<<<<<<< HEAD
-=======
-	memset(&client, 0, sizeof(client));
-
->>>>>>> rebase
 	client.idx = c32.idx;
 
 	err = drm_ioctl_kernel(file, drm_getclient, &client, DRM_UNLOCKED);
@@ -858,20 +842,12 @@ static int compat_drm_wait_vblank(struct file *file, unsigned int cmd,
 	if (copy_from_user(&req32, argp, sizeof(req32)))
 		return -EFAULT;
 
-<<<<<<< HEAD
-=======
-	memset(&req, 0, sizeof(req));
-
->>>>>>> rebase
 	req.request.type = req32.request.type;
 	req.request.sequence = req32.request.sequence;
 	req.request.signal = req32.request.signal;
 	err = drm_ioctl_kernel(file, drm_wait_vblank_ioctl, &req, DRM_UNLOCKED);
-<<<<<<< HEAD
 	if (err)
 		return err;
-=======
->>>>>>> rebase
 
 	req32.reply.type = req.reply.type;
 	req32.reply.sequence = req.reply.sequence;
@@ -880,11 +856,7 @@ static int compat_drm_wait_vblank(struct file *file, unsigned int cmd,
 	if (copy_to_user(argp, &req32, sizeof(req32)))
 		return -EFAULT;
 
-<<<<<<< HEAD
 	return 0;
-=======
-	return err;
->>>>>>> rebase
 }
 
 #if defined(CONFIG_X86)
@@ -907,11 +879,6 @@ static int compat_drm_mode_addfb2(struct file *file, unsigned int cmd,
 	struct drm_mode_fb_cmd2 req64;
 	int err;
 
-<<<<<<< HEAD
-=======
-	memset(&req64, 0, sizeof(req64));
-
->>>>>>> rebase
 	if (copy_from_user(&req64, argp,
 			   offsetof(drm_mode_fb_cmd232_t, modifier)))
 		return -EFAULT;

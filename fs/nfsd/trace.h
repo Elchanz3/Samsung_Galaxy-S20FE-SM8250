@@ -53,24 +53,14 @@ TRACE_EVENT(nfsd_compound_status,
 DECLARE_EVENT_CLASS(nfsd_io_class,
 	TP_PROTO(struct svc_rqst *rqstp,
 		 struct svc_fh	*fhp,
-<<<<<<< HEAD
 		 loff_t		offset,
 		 unsigned long	len),
-=======
-		 u64		offset,
-		 u32		len),
->>>>>>> rebase
 	TP_ARGS(rqstp, fhp, offset, len),
 	TP_STRUCT__entry(
 		__field(u32, xid)
 		__field(u32, fh_hash)
-<<<<<<< HEAD
 		__field(loff_t, offset)
 		__field(unsigned long, len)
-=======
-		__field(u64, offset)
-		__field(u32, len)
->>>>>>> rebase
 	),
 	TP_fast_assign(
 		__entry->xid = be32_to_cpu(rqstp->rq_xid);
@@ -78,11 +68,7 @@ DECLARE_EVENT_CLASS(nfsd_io_class,
 		__entry->offset = offset;
 		__entry->len = len;
 	),
-<<<<<<< HEAD
 	TP_printk("xid=0x%08x fh_hash=0x%08x offset=%lld len=%lu",
-=======
-	TP_printk("xid=0x%08x fh_hash=0x%08x offset=%llu len=%u",
->>>>>>> rebase
 		  __entry->xid, __entry->fh_hash,
 		  __entry->offset, __entry->len)
 )
@@ -91,13 +77,8 @@ DECLARE_EVENT_CLASS(nfsd_io_class,
 DEFINE_EVENT(nfsd_io_class, nfsd_##name,	\
 	TP_PROTO(struct svc_rqst *rqstp,	\
 		 struct svc_fh	*fhp,		\
-<<<<<<< HEAD
 		 loff_t		offset,		\
 		 unsigned long	len),		\
-=======
-		 u64		offset,		\
-		 u32		len),		\
->>>>>>> rebase
 	TP_ARGS(rqstp, fhp, offset, len))
 
 DEFINE_NFSD_IO_EVENT(read_start);

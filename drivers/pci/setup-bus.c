@@ -735,7 +735,6 @@ int pci_claim_bridge_resource(struct pci_dev *bridge, int i)
    base/limit registers must be read-only and read as 0. */
 static void pci_bridge_check_ranges(struct pci_bus *bus)
 {
-<<<<<<< HEAD
 	u16 io;
 	u32 pmem;
 	struct pci_dev *bridge = bus->self;
@@ -770,24 +769,10 @@ static void pci_bridge_check_ranges(struct pci_bus *bus)
 		b_res[2].flags |= IORESOURCE_MEM | IORESOURCE_PREFETCH;
 		if ((pmem & PCI_PREF_RANGE_TYPE_MASK) ==
 		    PCI_PREF_RANGE_TYPE_64) {
-=======
-	struct pci_dev *bridge = bus->self;
-	struct resource *b_res = &bridge->resource[PCI_BRIDGE_RESOURCES];
-
-	b_res[1].flags |= IORESOURCE_MEM;
-
-	if (bridge->io_window)
-		b_res[0].flags |= IORESOURCE_IO;
-
-	if (bridge->pref_window) {
-		b_res[2].flags |= IORESOURCE_MEM | IORESOURCE_PREFETCH;
-		if (bridge->pref_64_window) {
->>>>>>> rebase
 			b_res[2].flags |= IORESOURCE_MEM_64;
 			b_res[2].flags |= PCI_PREF_RANGE_TYPE_64;
 		}
 	}
-<<<<<<< HEAD
 
 	/* double check if bridge does support 64 bit pref */
 	if (b_res[2].flags & IORESOURCE_MEM_64) {
@@ -802,8 +787,6 @@ static void pci_bridge_check_ranges(struct pci_bus *bus)
 		pci_write_config_dword(bridge, PCI_PREF_BASE_UPPER32,
 				       mem_base_hi);
 	}
-=======
->>>>>>> rebase
 }
 
 /* Helper function for sizing routines: find first available

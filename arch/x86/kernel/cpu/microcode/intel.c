@@ -103,7 +103,6 @@ static int has_newer_microcode(void *mc, unsigned int csig, int cpf, int new_rev
 	return find_matching_signature(mc, csig, cpf);
 }
 
-<<<<<<< HEAD
 /*
  * Given CPU signature and a microcode patch, this function finds if the
  * microcode patch has matching family and model with the CPU.
@@ -151,8 +150,6 @@ static bool microcode_matches(struct microcode_header_intel *mc_header,
 	return false;
 }
 
-=======
->>>>>>> rebase
 static struct ucode_patch *memdup_patch(void *data, unsigned int size)
 {
 	struct ucode_patch *p;
@@ -170,11 +167,7 @@ static struct ucode_patch *memdup_patch(void *data, unsigned int size)
 	return p;
 }
 
-<<<<<<< HEAD
 static void save_microcode_patch(void *data, unsigned int size)
-=======
-static void save_microcode_patch(struct ucode_cpu_info *uci, void *data, unsigned int size)
->>>>>>> rebase
 {
 	struct microcode_header_intel *mc_hdr, *mc_saved_hdr;
 	struct ucode_patch *iter, *tmp, *p = NULL;
@@ -220,12 +213,6 @@ static void save_microcode_patch(struct ucode_cpu_info *uci, void *data, unsigne
 	if (!p)
 		return;
 
-<<<<<<< HEAD
-=======
-	if (!find_matching_signature(p->data, uci->cpu_sig.sig, uci->cpu_sig.pf))
-		return;
-
->>>>>>> rebase
 	/*
 	 * Save for early loading. On 32-bit, that needs to be a physical
 	 * address as the APs are running from physical addresses, before
@@ -360,22 +347,13 @@ scan_microcode(void *data, size_t size, struct ucode_cpu_info *uci, bool save)
 
 		size -= mc_size;
 
-<<<<<<< HEAD
 		if (!microcode_matches(mc_header, uci->cpu_sig.sig)) {
-=======
-		if (!find_matching_signature(data, uci->cpu_sig.sig,
-					     uci->cpu_sig.pf)) {
->>>>>>> rebase
 			data += mc_size;
 			continue;
 		}
 
 		if (save) {
-<<<<<<< HEAD
 			save_microcode_patch(data, mc_size);
-=======
-			save_microcode_patch(uci, data, mc_size);
->>>>>>> rebase
 			goto next;
 		}
 
@@ -508,22 +486,14 @@ static void show_saved_mc(void)
  * Save this microcode patch. It will be loaded early when a CPU is
  * hot-added or resumes.
  */
-<<<<<<< HEAD
 static void save_mc_for_early(u8 *mc, unsigned int size)
-=======
-static void save_mc_for_early(struct ucode_cpu_info *uci, u8 *mc, unsigned int size)
->>>>>>> rebase
 {
 	/* Synchronization during CPU hotplug. */
 	static DEFINE_MUTEX(x86_cpu_microcode_mutex);
 
 	mutex_lock(&x86_cpu_microcode_mutex);
 
-<<<<<<< HEAD
 	save_microcode_patch(mc, size);
-=======
-	save_microcode_patch(uci, mc, size);
->>>>>>> rebase
 	show_saved_mc();
 
 	mutex_unlock(&x86_cpu_microcode_mutex);
@@ -967,11 +937,7 @@ static enum ucode_state generic_load_microcode(int cpu, void *data, size_t size,
 	 * permanent memory. So it will be loaded early when a CPU is hot added
 	 * or resumes.
 	 */
-<<<<<<< HEAD
 	save_mc_for_early(new_mc, new_mc_size);
-=======
-	save_mc_for_early(uci, new_mc, new_mc_size);
->>>>>>> rebase
 
 	pr_debug("CPU%d found a matching microcode update with version 0x%x (current=0x%x)\n",
 		 cpu, new_rev, uci->cpu_sig.rev);

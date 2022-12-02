@@ -218,11 +218,7 @@ static void pdc_error_handler(struct ata_port *ap);
 static void pdc_freeze(struct ata_port *ap);
 static void pdc_thaw(struct ata_port *ap);
 static int pdc_port_start(struct ata_port *ap);
-<<<<<<< HEAD
 static void pdc20621_qc_prep(struct ata_queued_cmd *qc);
-=======
-static enum ata_completion_errors pdc20621_qc_prep(struct ata_queued_cmd *qc);
->>>>>>> rebase
 static void pdc_tf_load_mmio(struct ata_port *ap, const struct ata_taskfile *tf);
 static void pdc_exec_command_mmio(struct ata_port *ap, const struct ata_taskfile *tf);
 static unsigned int pdc20621_dimm_init(struct ata_host *host);
@@ -550,11 +546,7 @@ static void pdc20621_nodata_prep(struct ata_queued_cmd *qc)
 	VPRINTK("ata pkt buf ofs %u, mmio copied\n", i);
 }
 
-<<<<<<< HEAD
 static void pdc20621_qc_prep(struct ata_queued_cmd *qc)
-=======
-static enum ata_completion_errors pdc20621_qc_prep(struct ata_queued_cmd *qc)
->>>>>>> rebase
 {
 	switch (qc->tf.protocol) {
 	case ATA_PROT_DMA:
@@ -566,11 +558,6 @@ static enum ata_completion_errors pdc20621_qc_prep(struct ata_queued_cmd *qc)
 	default:
 		break;
 	}
-<<<<<<< HEAD
-=======
-
-	return AC_ERR_OK;
->>>>>>> rebase
 }
 
 static void __pdc20621_push_hdma(struct ata_queued_cmd *qc,

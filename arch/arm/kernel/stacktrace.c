@@ -21,22 +21,6 @@
  * A simple function epilogue looks like this:
  *	ldm	sp, {fp, sp, pc}
  *
-<<<<<<< HEAD
-=======
- * When compiled with clang, pc and sp are not pushed. A simple function
- * prologue looks like this when built with clang:
- *
- *	stmdb	{..., fp, lr}
- *	add	fp, sp, #x
- *	sub	sp, sp, #y
- *
- * A simple function epilogue looks like this when built with clang:
- *
- *	sub	sp, fp, #x
- *	ldm	{..., fp, pc}
- *
- *
->>>>>>> rebase
  * Note that with framepointer enabled, even the leaf functions have the same
  * prologue and epilogue, therefore we can ignore the LR value in this case.
  */
@@ -49,33 +33,14 @@ int notrace unwind_frame(struct stackframe *frame)
 	low = frame->sp;
 	high = ALIGN(low, THREAD_SIZE);
 
-<<<<<<< HEAD
-=======
-#ifdef CONFIG_CC_IS_CLANG
-	/* check current frame pointer is within bounds */
-	if (fp < low + 4 || fp > high - 4)
-		return -EINVAL;
-
-	frame->sp = frame->fp;
-	frame->fp = READ_ONCE_NOCHECK(*(unsigned long *)(fp));
-	frame->pc = READ_ONCE_NOCHECK(*(unsigned long *)(fp + 4));
-#else
->>>>>>> rebase
 	/* check current frame pointer is within bounds */
 	if (fp < low + 12 || fp > high - 4)
 		return -EINVAL;
 
 	/* restore the registers from the stack frame */
-<<<<<<< HEAD
 	frame->fp = *(unsigned long *)(fp - 12);
 	frame->sp = *(unsigned long *)(fp - 8);
 	frame->pc = *(unsigned long *)(fp - 4);
-=======
-	frame->fp = READ_ONCE_NOCHECK(*(unsigned long *)(fp - 12));
-	frame->sp = READ_ONCE_NOCHECK(*(unsigned long *)(fp - 8));
-	frame->pc = READ_ONCE_NOCHECK(*(unsigned long *)(fp - 4));
-#endif
->>>>>>> rebase
 
 	return 0;
 }
@@ -126,11 +91,6 @@ static int save_trace(struct stackframe *frame, void *d)
 		return 0;
 
 	regs = (struct pt_regs *)frame->sp;
-<<<<<<< HEAD
-=======
-	if ((unsigned long)&regs[1] > ALIGN(frame->sp, THREAD_SIZE))
-		return 0;
->>>>>>> rebase
 
 	trace->entries[trace->nr_entries++] = regs->ARM_pc;
 

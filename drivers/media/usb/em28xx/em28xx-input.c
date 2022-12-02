@@ -736,12 +736,7 @@ static int em28xx_ir_init(struct em28xx *dev)
 			dev->board.has_ir_i2c = 0;
 			dev_warn(&dev->intf->dev,
 				 "No i2c IR remote control device found.\n");
-<<<<<<< HEAD
 			return -ENODEV;
-=======
-			err = -ENODEV;
-			goto ref_put;
->>>>>>> rebase
 		}
 	}
 
@@ -756,11 +751,7 @@ static int em28xx_ir_init(struct em28xx *dev)
 
 	ir = kzalloc(sizeof(*ir), GFP_KERNEL);
 	if (!ir)
-<<<<<<< HEAD
 		return -ENOMEM;
-=======
-		goto ref_put;
->>>>>>> rebase
 	rc = rc_allocate_device(RC_DRIVER_SCANCODE);
 	if (!rc)
 		goto error;
@@ -871,11 +862,6 @@ error:
 	dev->ir = NULL;
 	rc_free_device(rc);
 	kfree(ir);
-<<<<<<< HEAD
-=======
-ref_put:
-	em28xx_shutdown_buttons(dev);
->>>>>>> rebase
 	return err;
 }
 

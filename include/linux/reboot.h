@@ -14,10 +14,7 @@ struct device;
 #define SYS_POWER_OFF	0x0003	/* Notify of system power off */
 
 enum reboot_mode {
-<<<<<<< HEAD
 	REBOOT_UNDEFINED = -1,
-=======
->>>>>>> rebase
 	REBOOT_COLD = 0,
 	REBOOT_WARM,
 	REBOOT_HARD,
@@ -25,10 +22,7 @@ enum reboot_mode {
 	REBOOT_GPIO,
 };
 extern enum reboot_mode reboot_mode;
-<<<<<<< HEAD
 extern enum reboot_mode panic_reboot_mode;
-=======
->>>>>>> rebase
 
 enum reboot_type {
 	BOOT_TRIPLE	= 't',

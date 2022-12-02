@@ -165,23 +165,13 @@ static int es8328_put_deemph(struct snd_kcontrol *kcontrol,
 	if (deemph > 1)
 		return -EINVAL;
 
-<<<<<<< HEAD
-=======
-	if (es8328->deemph == deemph)
-		return 0;
-
->>>>>>> rebase
 	ret = es8328_set_deemph(component);
 	if (ret < 0)
 		return ret;
 
 	es8328->deemph = deemph;
 
-<<<<<<< HEAD
 	return 0;
-=======
-	return 1;
->>>>>>> rebase
 }
 
 

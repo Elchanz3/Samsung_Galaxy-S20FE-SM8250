@@ -14,35 +14,6 @@ struct nft_socket {
 	};
 };
 
-<<<<<<< HEAD
-=======
-static struct sock *nft_socket_do_lookup(const struct nft_pktinfo *pkt)
-{
-	const struct net_device *indev = nft_in(pkt);
-	const struct sk_buff *skb = pkt->skb;
-	struct sock *sk = NULL;
-
-	if (!indev)
-		return NULL;
-
-	switch (nft_pf(pkt)) {
-	case NFPROTO_IPV4:
-		sk = nf_sk_lookup_slow_v4(nft_net(pkt), skb, indev);
-		break;
-#if IS_ENABLED(CONFIG_NF_TABLES_IPV6)
-	case NFPROTO_IPV6:
-		sk = nf_sk_lookup_slow_v6(nft_net(pkt), skb, indev);
-		break;
-#endif
-	default:
-		WARN_ON_ONCE(1);
-		break;
-	}
-
-	return sk;
-}
-
->>>>>>> rebase
 static void nft_socket_eval(const struct nft_expr *expr,
 			    struct nft_regs *regs,
 			    const struct nft_pktinfo *pkt)
@@ -56,7 +27,6 @@ static void nft_socket_eval(const struct nft_expr *expr,
 		sk = NULL;
 
 	if (!sk)
-<<<<<<< HEAD
 		switch(nft_pf(pkt)) {
 		case NFPROTO_IPV4:
 			sk = nf_sk_lookup_slow_v4(nft_net(pkt), skb, nft_in(pkt));
@@ -71,9 +41,6 @@ static void nft_socket_eval(const struct nft_expr *expr,
 			regs->verdict.code = NFT_BREAK;
 			return;
 		}
-=======
-		sk = nft_socket_do_lookup(pkt);
->>>>>>> rebase
 
 	if (!sk) {
 		regs->verdict.code = NFT_BREAK;
@@ -156,19 +123,6 @@ static int nft_socket_dump(struct sk_buff *skb,
 	return 0;
 }
 
-<<<<<<< HEAD
-=======
-static int nft_socket_validate(const struct nft_ctx *ctx,
-			       const struct nft_expr *expr,
-			       const struct nft_data **data)
-{
-	return nft_chain_validate_hooks(ctx->chain,
-					(1 << NF_INET_PRE_ROUTING) |
-					(1 << NF_INET_LOCAL_IN) |
-					(1 << NF_INET_LOCAL_OUT));
-}
-
->>>>>>> rebase
 static struct nft_expr_type nft_socket_type;
 static const struct nft_expr_ops nft_socket_ops = {
 	.type		= &nft_socket_type,
@@ -176,10 +130,6 @@ static const struct nft_expr_ops nft_socket_ops = {
 	.eval		= nft_socket_eval,
 	.init		= nft_socket_init,
 	.dump		= nft_socket_dump,
-<<<<<<< HEAD
-=======
-	.validate	= nft_socket_validate,
->>>>>>> rebase
 };
 
 static struct nft_expr_type nft_socket_type __read_mostly = {

@@ -2,10 +2,7 @@
 #include <linux/kernel.h>
 #include <linux/export.h>
 #include <linux/uaccess.h>
-<<<<<<< HEAD
 #include <linux/mm.h>
-=======
->>>>>>> rebase
 
 #include <asm/word-at-a-time.h>
 
@@ -36,7 +33,6 @@ static inline long do_strnlen_user(const char __user *src, unsigned long count, 
 	unsigned long c;
 
 	/*
-<<<<<<< HEAD
 	 * Truncate 'max' to the user-specified limit, so that
 	 * we only have one limit we need to check in the loop
 	 */
@@ -44,8 +40,6 @@ static inline long do_strnlen_user(const char __user *src, unsigned long count, 
 		max = count;
 
 	/*
-=======
->>>>>>> rebase
 	 * Do everything aligned. But that means that we
 	 * need to also expand the maximum..
 	 */
@@ -116,25 +110,11 @@ long strnlen_user(const char __user *str, long count)
 		return 0;
 
 	max_addr = user_addr_max();
-<<<<<<< HEAD
 	src_addr = (unsigned long)untagged_addr(str);
-=======
-	src_addr = (unsigned long)str;
->>>>>>> rebase
 	if (likely(src_addr < max_addr)) {
 		unsigned long max = max_addr - src_addr;
 		long retval;
 
-<<<<<<< HEAD
-=======
-		/*
-		 * Truncate 'max' to the user-specified limit, so that
-		 * we only have one limit we need to check in the loop
-		 */
-		if (max > count)
-			max = count;
-
->>>>>>> rebase
 		if (user_access_begin(VERIFY_READ, str, max)) {
 			retval = do_strnlen_user(str, count, max);
 			user_access_end();

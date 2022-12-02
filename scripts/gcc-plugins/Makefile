@@ -11,10 +11,6 @@ else
   HOST_EXTRACXXFLAGS += -I$(GCC_PLUGINS_DIR)/include -I$(src) -std=gnu++98 -fno-rtti
   HOST_EXTRACXXFLAGS += -fno-exceptions -fasynchronous-unwind-tables -ggdb
   HOST_EXTRACXXFLAGS += -Wno-narrowing -Wno-unused-variable
-<<<<<<< HEAD
-=======
-  HOST_EXTRACXXFLAGS += -Wno-format-diag
->>>>>>> rebase
   export HOST_EXTRACXXFLAGS
 endif
 

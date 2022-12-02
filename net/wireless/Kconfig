@@ -175,7 +175,6 @@ config CFG80211_DEBUGFS
 
 	  If unsure, say N.
 
-<<<<<<< HEAD
 config CFG80211_INTERNAL_REGDB
 	bool "use statically compiled regulatory rules database" if EXPERT
 	default n
@@ -200,10 +199,6 @@ config CFG80211_INTERNAL_REGDB
 
 config CFG80211_CRDA_SUPPORT
 	bool "support CRDA" if CFG80211_INTERNAL_REGDB
-=======
-config CFG80211_CRDA_SUPPORT
-	bool "support CRDA" if EXPERT
->>>>>>> rebase
 	default y
 	help
 	  You should enable this option unless you know for sure you have no
@@ -255,7 +250,6 @@ config LIB80211_DEBUG
 	  from lib80211.
 
 	  If unsure, say N.
-<<<<<<< HEAD
 
 config CFG80211_REG_NOT_UPDATED
 	bool "Do not update Regulatory configuration"
@@ -265,5 +259,3 @@ config CFG80211_REG_NOT_UPDATED
 	  Regulation should not updated even if device found other country
 	  Access Point Beacon once since device should find around other
 	  Access Points.
-=======
->>>>>>> rebase

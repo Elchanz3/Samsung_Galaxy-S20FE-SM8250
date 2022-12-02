@@ -6,9 +6,5 @@ ubifs-y += tnc.o master.o scan.o replay.o log.o commit.o gc.o orphan.o
 ubifs-y += budget.o find.o tnc_commit.o compress.o lpt.o lprops.o
 ubifs-y += recovery.o ioctl.o lpt_commit.o tnc_misc.o debug.o
 ubifs-y += misc.o
-<<<<<<< HEAD
 ubifs-$(CONFIG_FS_ENCRYPTION) += crypto.o
-=======
-ubifs-$(CONFIG_UBIFS_FS_ENCRYPTION) += crypto.o
->>>>>>> rebase
 ubifs-$(CONFIG_UBIFS_FS_XATTR) += xattr.o

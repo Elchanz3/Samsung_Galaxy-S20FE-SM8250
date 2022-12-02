@@ -10,11 +10,7 @@ CFLAGS+= -O1 ${WARNFLAGS}
 # Add "-fstack-protector" only if toolchain supports it.
 CFLAGS+= $(call cc-option,-fstack-protector)
 CC?= $(CROSS_COMPILE)gcc
-<<<<<<< HEAD
 PKG_CONFIG?= pkg-config
-=======
-PKG_CONFIG?= $(CROSS_COMPILE)pkg-config
->>>>>>> rebase
 
 CFLAGS+=-D VERSION=\"$(VERSION)\"
 LDFLAGS+=

@@ -87,7 +87,6 @@ config RING_BUFFER_ALLOW_SWAP
 	 Allow the use of ring_buffer_swap_cpu.
 	 Adds a very slight overhead to tracing when enabled.
 
-<<<<<<< HEAD
 config IPC_LOGGING
 	bool "Debug Logging for IPC Drivers"
 	select GENERIC_TRACER
@@ -117,8 +116,6 @@ config QCOM_RTB_SEPARATE_CPUS
 	  separately. This will guarantee that the last acesses for each cpu
 	  will be logged but there will be fewer entries per cpu
 
-=======
->>>>>>> rebase
 config PREEMPTIRQ_TRACEPOINTS
 	bool
 	depends on TRACE_PREEMPT_TOGGLE || TRACE_IRQFLAGS
@@ -137,10 +134,6 @@ config PREEMPTIRQ_TRACEPOINTS
 
 config TRACING
 	bool
-<<<<<<< HEAD
-=======
-	select DEBUG_FS
->>>>>>> rebase
 	select RING_BUFFER
 	select STACKTRACE if STACKTRACE_SUPPORT
 	select TRACEPOINTS
@@ -511,11 +504,7 @@ config KPROBE_EVENTS
 config KPROBE_EVENTS_ON_NOTRACE
 	bool "Do NOT protect notrace function from kprobe events"
 	depends on KPROBE_EVENTS
-<<<<<<< HEAD
 	depends on KPROBES_ON_FTRACE
-=======
-	depends on DYNAMIC_FTRACE
->>>>>>> rebase
 	default n
 	help
 	  This is only for the developers who want to debug ftrace itself

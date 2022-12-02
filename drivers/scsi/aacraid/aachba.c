@@ -2481,21 +2481,13 @@ static int aac_read(struct scsi_cmnd * scsicmd)
 		scsicmd->result = DID_OK << 16 | COMMAND_COMPLETE << 8 |
 			SAM_STAT_CHECK_CONDITION;
 		set_sense(&dev->fsa_dev[cid].sense_data,
-<<<<<<< HEAD
 			  HARDWARE_ERROR, SENCODE_INTERNAL_TARGET_FAILURE,
-=======
-			  ILLEGAL_REQUEST, SENCODE_LBA_OUT_OF_RANGE,
->>>>>>> rebase
 			  ASENCODE_INTERNAL_TARGET_FAILURE, 0, 0);
 		memcpy(scsicmd->sense_buffer, &dev->fsa_dev[cid].sense_data,
 		       min_t(size_t, sizeof(dev->fsa_dev[cid].sense_data),
 			     SCSI_SENSE_BUFFERSIZE));
 		scsicmd->scsi_done(scsicmd);
-<<<<<<< HEAD
 		return 1;
-=======
-		return 0;
->>>>>>> rebase
 	}
 
 	dprintk((KERN_DEBUG "aac_read[cpu %d]: lba = %llu, t = %ld.\n",
@@ -2581,21 +2573,13 @@ static int aac_write(struct scsi_cmnd * scsicmd)
 		scsicmd->result = DID_OK << 16 | COMMAND_COMPLETE << 8 |
 			SAM_STAT_CHECK_CONDITION;
 		set_sense(&dev->fsa_dev[cid].sense_data,
-<<<<<<< HEAD
 			  HARDWARE_ERROR, SENCODE_INTERNAL_TARGET_FAILURE,
-=======
-			  ILLEGAL_REQUEST, SENCODE_LBA_OUT_OF_RANGE,
->>>>>>> rebase
 			  ASENCODE_INTERNAL_TARGET_FAILURE, 0, 0);
 		memcpy(scsicmd->sense_buffer, &dev->fsa_dev[cid].sense_data,
 		       min_t(size_t, sizeof(dev->fsa_dev[cid].sense_data),
 			     SCSI_SENSE_BUFFERSIZE));
 		scsicmd->scsi_done(scsicmd);
-<<<<<<< HEAD
 		return 1;
-=======
-		return 0;
->>>>>>> rebase
 	}
 
 	dprintk((KERN_DEBUG "aac_write[cpu %d]: lba = %llu, t = %ld.\n",

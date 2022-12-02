@@ -418,11 +418,7 @@ static int mdpy_mmap(struct mdev_device *mdev, struct vm_area_struct *vma)
 		return -EINVAL;
 
 	return remap_vmalloc_range_partial(vma, vma->vm_start,
-<<<<<<< HEAD
 					   mdev_state->memblk,
-=======
-					   mdev_state->memblk, 0,
->>>>>>> rebase
 					   vma->vm_end - vma->vm_start);
 }
 

@@ -153,11 +153,6 @@ struct console {
 	short	flags;
 	short	index;
 	int	cflag;
-<<<<<<< HEAD
-=======
-	uint	ispeed;
-	uint	ospeed;
->>>>>>> rebase
 	void	*data;
 	struct	 console *next;
 };

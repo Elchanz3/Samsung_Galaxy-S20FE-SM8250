@@ -25,15 +25,7 @@ static inline void *task_stack_page(const struct task_struct *task)
 
 static inline unsigned long *end_of_stack(const struct task_struct *task)
 {
-<<<<<<< HEAD
 	return task->stack;
-=======
-#ifdef CONFIG_STACK_GROWSUP
-	return (unsigned long *)((unsigned long)task->stack + THREAD_SIZE) - 1;
-#else
-	return task->stack;
-#endif
->>>>>>> rebase
 }
 
 #elif !defined(__HAVE_THREAD_FUNCTIONS)

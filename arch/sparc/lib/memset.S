@@ -142,10 +142,6 @@ __bzero:
 	ZERO_LAST_BLOCKS(%o0, 0x48, %g2)
 	ZERO_LAST_BLOCKS(%o0, 0x08, %g2)
 13:
-<<<<<<< HEAD
-=======
-	EXT(12b, 13b, 21f)
->>>>>>> rebase
 	be	8f
 	 andcc	%o1, 4, %g0
 

@@ -54,10 +54,7 @@ extern unsigned int nr_cpu_ids;
  *     cpu_present_mask - has bit 'cpu' set iff cpu is populated
  *     cpu_online_mask  - has bit 'cpu' set iff cpu available to scheduler
  *     cpu_active_mask  - has bit 'cpu' set iff cpu available to migration
-<<<<<<< HEAD
  *     cpu_isolated_mask- has bit 'cpu' set iff cpu isolated
-=======
->>>>>>> rebase
  *
  *  If !CONFIG_HOTPLUG_CPU, present == possible, and active == online.
  *
@@ -94,25 +91,18 @@ extern struct cpumask __cpu_possible_mask;
 extern struct cpumask __cpu_online_mask;
 extern struct cpumask __cpu_present_mask;
 extern struct cpumask __cpu_active_mask;
-<<<<<<< HEAD
 extern struct cpumask __cpu_isolated_mask;
-=======
->>>>>>> rebase
 #define cpu_possible_mask ((const struct cpumask *)&__cpu_possible_mask)
 #define cpu_online_mask   ((const struct cpumask *)&__cpu_online_mask)
 #define cpu_present_mask  ((const struct cpumask *)&__cpu_present_mask)
 #define cpu_active_mask   ((const struct cpumask *)&__cpu_active_mask)
-<<<<<<< HEAD
 #define cpu_isolated_mask ((const struct cpumask *)&__cpu_isolated_mask)
-=======
->>>>>>> rebase
 
 #if NR_CPUS > 1
 #define num_online_cpus()	cpumask_weight(cpu_online_mask)
 #define num_possible_cpus()	cpumask_weight(cpu_possible_mask)
 #define num_present_cpus()	cpumask_weight(cpu_present_mask)
 #define num_active_cpus()	cpumask_weight(cpu_active_mask)
-<<<<<<< HEAD
 #define num_isolated_cpus()	cpumask_weight(cpu_isolated_mask)
 #define num_online_uniso_cpus()						\
 ({									\
@@ -121,34 +111,23 @@ extern struct cpumask __cpu_isolated_mask;
 	cpumask_andnot(&mask, cpu_online_mask, cpu_isolated_mask);	\
 	cpumask_weight(&mask);						\
 })
-=======
->>>>>>> rebase
 #define cpu_online(cpu)		cpumask_test_cpu((cpu), cpu_online_mask)
 #define cpu_possible(cpu)	cpumask_test_cpu((cpu), cpu_possible_mask)
 #define cpu_present(cpu)	cpumask_test_cpu((cpu), cpu_present_mask)
 #define cpu_active(cpu)		cpumask_test_cpu((cpu), cpu_active_mask)
-<<<<<<< HEAD
 #define cpu_isolated(cpu)	cpumask_test_cpu((cpu), cpu_isolated_mask)
-=======
->>>>>>> rebase
 #else
 #define num_online_cpus()	1U
 #define num_possible_cpus()	1U
 #define num_present_cpus()	1U
 #define num_active_cpus()	1U
-<<<<<<< HEAD
 #define num_isolated_cpus()	0U
 #define num_online_uniso_cpus()	1U
-=======
->>>>>>> rebase
 #define cpu_online(cpu)		((cpu) == 0)
 #define cpu_possible(cpu)	((cpu) == 0)
 #define cpu_present(cpu)	((cpu) == 0)
 #define cpu_active(cpu)		((cpu) == 0)
-<<<<<<< HEAD
 #define cpu_isolated(cpu)	((cpu) != 0)
-=======
->>>>>>> rebase
 #endif
 
 static inline void cpu_max_bits_warn(unsigned int cpu, unsigned int bits)
@@ -813,10 +792,7 @@ extern const DECLARE_BITMAP(cpu_all_bits, NR_CPUS);
 #define for_each_possible_cpu(cpu) for_each_cpu((cpu), cpu_possible_mask)
 #define for_each_online_cpu(cpu)   for_each_cpu((cpu), cpu_online_mask)
 #define for_each_present_cpu(cpu)  for_each_cpu((cpu), cpu_present_mask)
-<<<<<<< HEAD
 #define for_each_isolated_cpu(cpu) for_each_cpu((cpu), cpu_isolated_mask)
-=======
->>>>>>> rebase
 
 /* Wrappers for arch boot code to manipulate normally-constant masks */
 void init_cpu_present(const struct cpumask *src);
@@ -864,7 +840,6 @@ set_cpu_active(unsigned int cpu, bool active)
 		cpumask_clear_cpu(cpu, &__cpu_active_mask);
 }
 
-<<<<<<< HEAD
 static inline void
 set_cpu_isolated(unsigned int cpu, bool isolated)
 {
@@ -874,8 +849,6 @@ set_cpu_isolated(unsigned int cpu, bool isolated)
 		cpumask_clear_cpu(cpu, &__cpu_isolated_mask);
 }
 
-=======
->>>>>>> rebase
 
 /**
  * to_cpumask - convert an NR_CPUS bitmap to a struct cpumask *

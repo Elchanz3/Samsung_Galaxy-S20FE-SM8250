@@ -130,11 +130,7 @@
 		reg = <0>;
 
 		partition@0 {
-<<<<<<< HEAD
 			label = "data";
-=======
-			label = "spi0-data";
->>>>>>> rebase
 			reg = <0x0 0x100000>;
 		};
 	};
@@ -152,11 +148,7 @@
 		reg = <0>;
 
 		partition@0 {
-<<<<<<< HEAD
 			label = "data";
-=======
-			label = "spi1-data";
->>>>>>> rebase
 			reg = <0x0 0x84000>;
 		};
 	};

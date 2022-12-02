@@ -1,7 +1,4 @@
-<<<<<<< HEAD
 // SPDX-License-Identifier: GPL-2.0
-=======
->>>>>>> rebase
 /*
  * fs/f2fs/xattr.h
  *
@@ -13,13 +10,6 @@
  * On-disk format of extended attributes for the ext2 filesystem.
  *
  * (C) 2001 Andreas Gruenbacher, <a.gruenbacher@computer.org>
-<<<<<<< HEAD
-=======
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License version 2 as
- * published by the Free Software Foundation.
->>>>>>> rebase
  */
 #ifndef __F2FS_XATTR_H__
 #define __F2FS_XATTR_H__
@@ -44,15 +34,10 @@
 #define F2FS_XATTR_INDEX_ADVISE			7
 /* Should be same as EXT4_XATTR_INDEX_ENCRYPTION */
 #define F2FS_XATTR_INDEX_ENCRYPTION		9
-<<<<<<< HEAD
 #define F2FS_XATTR_INDEX_VERITY			11
 
 #define F2FS_XATTR_NAME_ENCRYPTION_CONTEXT	"c"
 #define F2FS_XATTR_NAME_VERITY			"v"
-=======
-
-#define F2FS_XATTR_NAME_ENCRYPTION_CONTEXT	"c"
->>>>>>> rebase
 
 struct f2fs_xattr_header {
 	__le32  h_magic;        /* magic number for identification */
@@ -97,15 +82,12 @@ struct f2fs_xattr_entry {
 				sizeof(struct f2fs_xattr_header) -	\
 				sizeof(struct f2fs_xattr_entry))
 
-<<<<<<< HEAD
 #define MAX_INLINE_XATTR_SIZE						\
 			(DEF_ADDRS_PER_INODE -				\
 			F2FS_TOTAL_EXTRA_ATTR_SIZE / sizeof(__le32) -	\
 			DEF_INLINE_RESERVED_SIZE -			\
 			MIN_INLINE_DENTRY_SIZE / sizeof(__le32))
 
-=======
->>>>>>> rebase
 /*
  * On-disk structure of f2fs_xattr
  * We use inline xattrs space + 1 block for xattr.

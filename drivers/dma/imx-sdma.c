@@ -1771,11 +1771,7 @@ static int sdma_event_remap(struct sdma_engine *sdma)
 	u32 reg, val, shift, num_map, i;
 	int ret = 0;
 
-<<<<<<< HEAD
 	if (IS_ERR(np) || IS_ERR(gpr_np))
-=======
-	if (IS_ERR(np) || !gpr_np)
->>>>>>> rebase
 		goto out;
 
 	event_remap = of_find_property(np, propname, NULL);
@@ -1823,11 +1819,7 @@ static int sdma_event_remap(struct sdma_engine *sdma)
 	}
 
 out:
-<<<<<<< HEAD
 	if (!IS_ERR(gpr_np))
-=======
-	if (gpr_np)
->>>>>>> rebase
 		of_node_put(gpr_np);
 
 	return ret;
