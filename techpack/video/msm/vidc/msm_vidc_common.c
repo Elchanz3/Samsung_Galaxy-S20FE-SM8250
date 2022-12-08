@@ -18,6 +18,13 @@
 #include "msm_cvp_internal.h"
 #include "msm_vidc_buffer_calculations.h"
 
+static struct kmem_cache *kmem_buf_pool;
+
+void __init init_vidc_kmem_buf_pool(void)
+{
+	kmem_buf_pool = KMEM_CACHE(msm_vidc_buffer, SLAB_HWCACHE_ALIGN | SLAB_PANIC);
+}
+
 #define IS_ALREADY_IN_STATE(__p, __d) (\
 	(__p >= __d)\
 )
@@ -1432,7 +1439,7 @@ static int msm_vidc_comm_update_ctrl(struct msm_vidc_inst *inst,
 			cap->default_value);
 	if (rc) {
 		s_vpr_e(inst->sid,
-			"%s: failed: control name %s, min %d, max %d, %s %x, default_value %d\n",
+			"%s: failed: control name %s, min %d, max %d, %s %llx, default_value %d\n",
 			__func__, ctrl->name, cap->min, cap->max,
 			is_menu ? "menu_skip_mask" : "step",
 			is_menu ? ctrl->menu_skip_mask : cap->step_size,
@@ -1441,7 +1448,7 @@ static int msm_vidc_comm_update_ctrl(struct msm_vidc_inst *inst,
 	}
 
 	s_vpr_h(inst->sid,
-		"Updated control: %s: min %lld, max %lld, %s %x, default value = %lld\n",
+		"Updated control: %s: min %lld, max %lld, %s %llx, default value = %lld\n",
 		ctrl->name, ctrl->minimum, ctrl->maximum,
 		is_menu ? "menu_skip_mask" : "step",
 		is_menu ? ctrl->menu_skip_mask : ctrl->step,
@@ -5924,7 +5931,7 @@ int msm_comm_check_memory_supported(struct msm_vidc_inst *vidc_inst)
 
 	if ((total_mem_size >> 20) > memory_limit_mbytes) {
 		s_vpr_e(vidc_inst->sid,
-			"%s: video mem overshoot - reached %llu MB, max_limit %llu MB\n",
+			"%s: video mem overshoot - reached %llu MB, max_limit %u MB\n",
 			__func__, total_mem_size >> 20, memory_limit_mbytes);
 		msm_comm_print_insts_info(core);
 		return -EBUSY;
@@ -5939,7 +5946,7 @@ int msm_comm_check_memory_supported(struct msm_vidc_inst *vidc_inst)
 
 		if (non_sec_mem_size > non_sec_cb_size) {
 			s_vpr_e(vidc_inst->sid,
-				"%s: insufficient device addr space, required %llu, available %llu\n",
+				"%s: insufficient device addr space, required %llu, available %u\n",
 				__func__, non_sec_mem_size, non_sec_cb_size);
 			msm_comm_print_insts_info(core);
 			return -EINVAL;
@@ -6964,7 +6971,7 @@ struct msm_vidc_buffer *msm_comm_get_vidc_buffer(struct msm_vidc_inst *inst,
 
 	if (!found) {
 		/* this is new vb2_buffer */
-		mbuf = kzalloc(sizeof(struct msm_vidc_buffer), GFP_KERNEL);
+		mbuf = kmem_cache_zalloc(kmem_buf_pool, GFP_KERNEL);
 		if (!mbuf) {
 			s_vpr_e(inst->sid, "%s: alloc msm_vidc_buffer failed\n",
 				__func__);
@@ -7255,7 +7262,7 @@ static void kref_free_mbuf(struct kref *kref)
 	struct msm_vidc_buffer *mbuf = container_of(kref,
 			struct msm_vidc_buffer, kref);
 
-	kfree(mbuf);
+	kmem_cache_free(kmem_buf_pool, mbuf);
 }
 
 void kref_put_mbuf(struct msm_vidc_buffer *mbuf)

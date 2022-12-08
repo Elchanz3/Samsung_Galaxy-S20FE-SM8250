@@ -54,7 +54,12 @@ static DEFINE_IDR(zram_index_idr);
 static DEFINE_MUTEX(zram_index_mutex);
 
 static int zram_major;
+
+#ifdef CONFIG_CRYPTO_LZ4
+static const char *default_compressor = "lz4";
+#else
 static const char *default_compressor = "lzo-rle";
+#endif
 
 /* Module params (documentation at end) */
 static unsigned int num_devices = 1;
@@ -364,7 +369,7 @@ static int zram_pin_backing_file(struct zram *zram)
 		pr_info("%s failed to compat_alloc_user_space\n", __func__);
 		return -ENOMEM;
 	}
-	copy_to_user(buf, &set, sizeof(int));
+	ret = copy_to_user(buf, &set, sizeof(int));
 	ret = file->f_op->unlocked_ioctl(file, cmd, (unsigned long)buf);
 	pr_info("%s ioctl to pin file returned %d\n", __func__, ret);
 
@@ -391,7 +396,7 @@ static void fallocate_block(struct zram *zram, unsigned long blk_idx)
 		file_start_write(file);
 		ret = file->f_op->fallocate(file, mode, pos, len);
 		if (ret)
-			pr_err("%s pos %lx failed %d\n", __func__, pos, ret);
+			pr_err("%s pos %llx failed %d\n", __func__, pos, ret);
 		file_end_write(file);
 	}
 	mutex_unlock(&zram->blk_bitmap_lock);
@@ -2324,7 +2329,7 @@ static ssize_t mm_stat_show(struct device *dev,
 			zram->limit_pages << PAGE_SHIFT,
 			max_used << PAGE_SHIFT,
 			(u64)atomic64_read(&zram->stats.same_pages),
-			pool_stats.pages_compacted,
+			atomic_long_read(&pool_stats.pages_compacted),
 			(u64)atomic64_read(&zram->stats.huge_pages),
 			zram_dedup_dup_size(zram),
 			zram_dedup_meta_size(zram));
@@ -2370,6 +2375,7 @@ static ssize_t bd_stat_show(struct device *dev,
 			FOUR_K((u64)atomic64_read(&zram->stats.bd_reads)),
 			FOUR_K((u64)atomic64_read(&zram->stats.bd_writes)));
 #endif
+
 	up_read(&zram->init_lock);
 
 	return ret;
@@ -3436,8 +3442,7 @@ static int zram_add(void)
 
 	zram->disk->queue->backing_dev_info->capabilities |=
 			(BDI_CAP_STABLE_WRITES | BDI_CAP_SYNCHRONOUS_IO);
-	disk_to_dev(zram->disk)->groups = zram_disk_attr_groups;
-	add_disk(zram->disk);
+	device_add_disk(NULL, zram->disk, zram_disk_attr_groups);
 
 	strlcpy(zram->compressor, default_compressor, sizeof(zram->compressor));
 
@@ -3476,6 +3481,7 @@ static int zram_remove(struct zram *zram)
 	stop_lru_writeback(zram);
 #endif
 	zram_debugfs_unregister(zram);
+
 	/* Make sure all the pending I/O are finished */
 	fsync_bdev(bdev);
 	zram_reset_device(zram);
@@ -3512,7 +3518,8 @@ static ssize_t hot_add_show(struct class *class,
 		return ret;
 	return scnprintf(buf, PAGE_SIZE, "%d\n", ret);
 }
-static CLASS_ATTR_RO(hot_add);
+static struct class_attribute class_attr_hot_add =
+	__ATTR(hot_add, 0400, hot_add_show, NULL);
 
 static ssize_t hot_remove_store(struct class *class,
 			struct class_attribute *attr,

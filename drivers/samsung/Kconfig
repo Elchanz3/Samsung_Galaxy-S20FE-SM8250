@@ -19,7 +19,7 @@ config DRV_SAMSUNG
 	  Samsung sysfs name 'sec' directory create
 
 config SEC_DEBUG
-	tristate "Enable Samsung Debugging features"
+	bool "Enable Samsung Debugging features"
 	default n
 
 config SEC_PARAM
@@ -28,12 +28,6 @@ config SEC_PARAM
 	help
 	  Samsung TN Param Feature.
 
-config SEC_MPARAM
-	tristate "Enable Module Param modification"
-	default n
-	help
-	  Samsung TN Param Feature.
-	  
 config SEC_PARAM_SIZE
 	hex "Param Partition Size default 10MB"
 	default 0xA00000

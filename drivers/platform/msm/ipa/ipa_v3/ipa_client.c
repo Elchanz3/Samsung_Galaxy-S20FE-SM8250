@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: GPL-2.0-only
 /*
- * Copyright (c) 2012-2020, The Linux Foundation. All rights reserved.
+ * Copyright (c) 2012-2021, The Linux Foundation. All rights reserved.
  */
 
 #include <asm/barrier.h>
@@ -73,6 +73,11 @@ int ipa3_enable_data_path(u32 clnt_hdl)
 				holb_cfg.tmr_val = IPA_HOLB_TMR_VAL;
 			else
 				holb_cfg.tmr_val = IPA_HOLB_TMR_VAL_4_5;
+		} else if (ipa3_ctx->ipa_hw_type == IPA_HW_v4_5 &&
+				ipa3_ctx->platform_type == IPA_PLAT_TYPE_APQ &&
+				ep->client == IPA_CLIENT_USB_CONS) {
+			holb_cfg.en = IPA_HOLB_TMR_EN;
+			holb_cfg.tmr_val = IPA_HOLB_TMR_VAL_4_5;
 		} else {
 			holb_cfg.en = IPA_HOLB_TMR_DIS;
 			holb_cfg.tmr_val = 0;
@@ -651,7 +656,7 @@ int ipa3_request_gsi_channel(struct ipa_request_gsi_channel_params *params,
 	}
 
 	memcpy(&ep->chan_scratch, &params->chan_scratch,
-		sizeof(union __packed gsi_channel_scratch));
+		sizeof(union gsi_channel_scratch));
 
 	/*
 	 * Update scratch for MCS smart prefetch:
@@ -840,10 +845,10 @@ int ipa3_xdci_start(u32 clnt_hdl, u8 xferrscidx, bool xferrscidx_valid)
 		gsi_res = gsi_enable_flow_control_ee(ep->gsi_chan_hdl, 0,
 									&code);
 		if (gsi_res == GSI_STATUS_SUCCESS) {
-			IPADBG("flow control sussess gsi ch %d with code %d\n",
+			IPADBG("flow control sussess gsi ch %ld with code %d\n",
 					ep->gsi_chan_hdl, code);
 		} else {
-			IPADBG("failed to flow control gsi ch %d code %d\n",
+			IPADBG("failed to flow control gsi ch %ld code %d\n",
 					ep->gsi_chan_hdl, code);
 		}
 	}
@@ -1281,10 +1286,10 @@ int ipa3_start_stop_client_prod_gsi_chnl(enum ipa_client_type client,
 			result = gsi_enable_flow_control_ee(ep->gsi_chan_hdl,
 								0, &code);
 			if (result == GSI_STATUS_SUCCESS) {
-				IPADBG("flow control sussess ch %d code %d\n",
+				IPADBG("flow control sussess ch %ld code %d\n",
 						ep->gsi_chan_hdl, code);
 			} else {
-				IPADBG("failed to flow control ch %d code %d\n",
+				IPADBG("failed to flow control ch %ld code %d\n",
 						ep->gsi_chan_hdl, code);
 			}
 		} else
@@ -1341,8 +1346,10 @@ int ipa3_set_reset_client_cons_pipe_sus_holb(bool set_reset,
 			IPA_ENDP_INIT_HOL_BLOCK_EN_n,
 			pipe_idx, &ep_holb);
 
-		/* IPA4.5 issue requires HOLB_EN to be written twice */
-		if (ipa3_ctx->ipa_hw_type >= IPA_HW_v4_5)
+		/* For targets > IPA_4.0 issue requires HOLB_EN to be
+		 * written twice.
+		 */
+		if (ipa3_ctx->ipa_hw_type >= IPA_HW_v4_0)
 			ipahal_write_reg_n_fields(
 				IPA_ENDP_INIT_HOL_BLOCK_EN_n,
 				pipe_idx, &ep_holb);
@@ -1668,7 +1675,7 @@ int ipa3_start_gsi_channel(u32 clnt_hdl)
 		res = ipa3_cfg_ep_holb(ipa3_get_ep_mapping(
 				IPA_CLIENT_MHI_PRIME_RMNET_CONS), &holb_cfg);
 		if (res) {
-			IPAERR("Disable HOLB failed ep:%lu\n",
+			IPAERR("Disable HOLB failed ep:%u\n",
 				ipa3_get_ep_mapping(
 					IPA_CLIENT_MHI_PRIME_RMNET_CONS));
 		}

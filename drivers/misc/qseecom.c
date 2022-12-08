@@ -842,7 +842,7 @@ static int qseecom_scm_call2(uint32_t svc_id, uint32_t tz_cmd_id,
 			qseecom.smcinvoke_support = true;
 			smc_id = TZ_OS_REGISTER_LISTENER_SMCINVOKE_ID;
 			ret = __qseecom_scm_call2_locked(smc_id, &desc);
-			if (ret == -EIO) {
+			if (ret == -EOPNOTSUPP) {
 				/* smcinvoke is not supported */
 				qseecom.smcinvoke_support = false;
 				smc_id = TZ_OS_REGISTER_LISTENER_ID;
@@ -1427,7 +1427,7 @@ static int qseecom_create_bridge_for_secbuf(int ion_fd, struct dma_buf *dmabuf,
 
 	nelems = ion_get_flags_num_vm_elems(dma_buf_flags);
 	if (nelems == 0) {
-		pr_err("failed to get vm num from flag = %x\n", dma_buf_flags);
+		pr_err("failed to get vm num from flag = %lx\n", dma_buf_flags);
 		ret = -EINVAL;
 		goto exit;
 	}
@@ -2761,12 +2761,6 @@ err_resp:
 		case QSEOS_RESULT_CBACK_REQUEST:
 			pr_warn("get cback req app_id = %d, resp->data = %d\n",
 				data->client.app_id, resp->data);
-			resp->resp_type = SMCINVOKE_RESULT_INBOUND_REQ_NEEDED;
-			/* We are here because scm call sent to TZ has requested
-			 * for another callback request. This call has been a
-			 * success and hence setting result = 0
-			 */
-			resp->result = 0;
 			break;
 		default:
 			pr_err("fail:resp res= %d,app_id = %d,lstr = %d\n",
@@ -3871,8 +3865,8 @@ static int __qseecom_send_cmd(struct qseecom_dev_handle *data,
 				(uint32_t)(__qseecom_uvirt_to_kphys(
 				data, (uintptr_t)req->resp_buf));
 		} else {
-			send_data_req.req_ptr = (uint32_t)req->cmd_req_buf;
-			send_data_req.rsp_ptr = (uint32_t)req->resp_buf;
+			send_data_req.req_ptr = (uintptr_t)req->cmd_req_buf;
+			send_data_req.rsp_ptr = (uintptr_t)req->resp_buf;
 		}
 
 		send_data_req.req_len = req->cmd_req_len;
@@ -4486,10 +4480,8 @@ static int __qseecom_send_modfd_cmd(struct qseecom_dev_handle *data,
 	struct qseecom_send_modfd_cmd_req req;
 	struct qseecom_send_cmd_req send_cmd_req;
 	void *origin_req_buf_kvirt, *origin_rsp_buf_kvirt;
-	u32 tzbuflen;
 	phys_addr_t pa;
 	u8 *va = NULL;
-	struct qtee_shm shm = {0};
 
 	ret = copy_from_user(&req, argp, sizeof(req));
 	if (ret) {
@@ -4521,11 +4513,11 @@ static int __qseecom_send_modfd_cmd(struct qseecom_dev_handle *data,
 				(uintptr_t)req.resp_buf);
 
 	/* Allocate kernel buffer for request and response*/
-	tzbuflen = PAGE_ALIGN(req.cmd_req_len + req.resp_len);
-	va = __qseecom_alloc_tzbuf(tzbuflen, &pa, &shm);
-	if (!va) {
-		pr_err("error allocating in buffer\n");
-		return -ENOMEM;
+	ret = __qseecom_alloc_coherent_buf(req.cmd_req_len + req.resp_len,
+					&va, &pa);
+	if (ret) {
+		pr_err("Failed to allocate coherent buf, ret %d\n", ret);
+		return ret;
 	}
 
 	req.cmd_req_buf = va;
@@ -4542,11 +4534,7 @@ static int __qseecom_send_modfd_cmd(struct qseecom_dev_handle *data,
 		ret = __qseecom_update_cmd_buf(&req, false, data);
 		if (ret)
 			goto out;
-
-		dmac_flush_range(req.cmd_req_buf, req.cmd_req_buf + tzbuflen);
 		ret = __qseecom_send_cmd(data, &send_cmd_req, true);
-		dmac_flush_range(req.cmd_req_buf, req.cmd_req_buf + tzbuflen);
-
 		if (ret)
 			goto out;
 		ret = __qseecom_update_cmd_buf(&req, true, data);
@@ -4556,11 +4544,7 @@ static int __qseecom_send_modfd_cmd(struct qseecom_dev_handle *data,
 		ret = __qseecom_update_cmd_buf_64(&req, false, data);
 		if (ret)
 			goto out;
-
-		dmac_flush_range(req.cmd_req_buf, req.cmd_req_buf + tzbuflen);
 		ret = __qseecom_send_cmd(data, &send_cmd_req, true);
-		dmac_flush_range(req.cmd_req_buf, req.cmd_req_buf + tzbuflen);
-
 		if (ret)
 			goto out;
 		ret = __qseecom_update_cmd_buf_64(&req, true, data);
@@ -4574,7 +4558,8 @@ static int __qseecom_send_modfd_cmd(struct qseecom_dev_handle *data,
 
 out:
 	if (req.cmd_req_buf)
-		__qseecom_free_tzbuf(&shm);
+		__qseecom_free_coherent_buf(req.cmd_req_len + req.resp_len,
+			req.cmd_req_buf, (phys_addr_t)send_cmd_req.cmd_req_buf);
 
 	return ret;
 }
@@ -5440,8 +5425,10 @@ int qseecom_send_command(struct qseecom_handle *handle, void *send_buf,
 		}
 		perf_enabled = true;
 	}
-	if (!strcmp(data->client.app_name, "securemm"))
+	if (!strcmp(data->client.app_name, "securemm") ||
+	    !strcmp(data->client.app_name, "slateapp")) {
 		data->use_legacy_cmd = true;
+	}
 
 	dmac_flush_range(req.cmd_req_buf, req.cmd_req_buf + req.cmd_req_len);
 
@@ -5543,8 +5530,8 @@ int qseecom_process_listener_from_smcinvoke(struct scm_desc *desc)
 		pr_err("Failed on cmd %d for lsnr %d session %d, ret = %d\n",
 			(int)desc->ret[0], (int)desc->ret[2],
 			(int)desc->ret[1], ret);
-	desc->ret[0] = resp.resp_type;
-	desc->ret[1] = resp.result;
+	desc->ret[0] = resp.result;
+	desc->ret[1] = resp.resp_type;
 	desc->ret[2] = resp.data;
 	return ret;
 }
@@ -9917,7 +9904,8 @@ static int qseecom_suspend(struct platform_device *pdev, pm_message_t state)
 
 	mutex_unlock(&clk_access_lock);
 	mutex_unlock(&qsee_bw_mutex);
-	cancel_work_sync(&qseecom.bw_inactive_req_ws);
+	if (qseecom.support_bus_scaling)
+		cancel_work_sync(&qseecom.bw_inactive_req_ws);
 
 	return 0;
 }

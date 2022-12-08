@@ -113,7 +113,7 @@ static void mhi_reg_write_enqueue(struct mhi_controller *mhi_cntrl,
 
 	q_index = q_index & (REG_WRITE_QUEUE_LEN - 1);
 
-	MHI_ASSERT(mhi_cntrl->reg_write_q[q_index].valid, "queue full idx %d",
+	MHI_ASSERT(mhi_cntrl->reg_write_q[q_index].valid, "queue full idx",
 			q_index);
 
 	mhi_cntrl->reg_write_q[q_index].reg_addr = reg_addr;
@@ -249,6 +249,7 @@ enum mhi_ee mhi_get_exec_env(struct mhi_controller *mhi_cntrl)
 
 	return (ret) ? MHI_EE_MAX : mhi_translate_dev_ee(mhi_cntrl, exec);
 }
+EXPORT_SYMBOL(mhi_get_exec_env);
 
 enum mhi_dev_state mhi_get_mhi_state(struct mhi_controller *mhi_cntrl)
 {
@@ -258,6 +259,7 @@ enum mhi_dev_state mhi_get_mhi_state(struct mhi_controller *mhi_cntrl)
 				     MHISTATUS_MHISTATE_SHIFT, &state);
 	return ret ? MHI_STATE_MAX : state;
 }
+EXPORT_SYMBOL(mhi_get_mhi_state);
 
 int mhi_queue_sclist(struct mhi_device *mhi_dev,
 		     struct mhi_chan *mhi_chan,
@@ -576,21 +578,22 @@ int mhi_queue_dma(struct mhi_device *mhi_dev,
 	read_lock_bh(&mhi_chan->lock);
 	if (mhi_chan->xfer_type == MHI_XFER_RSC_DMA) {
 		/*
-		* on RSC channel IPA HW has a minimum credit requirement before
-		* switching to DB mode
-		*/
+		 * on RSC channel IPA HW has a minimum credit requirement before
+		 * switching to DB mode
+		 */
 		n_free_tre = mhi_get_no_free_descriptors(mhi_dev,
-			DMA_FROM_DEVICE);
+				DMA_FROM_DEVICE);
 		n_queued_tre = tre_ring->elements - n_free_tre;
-	if (mhi_chan->db_cfg.db_mode &&
-		n_queued_tre < MHI_RSC_MIN_CREDITS)
-		ring_db = false;
+		if (mhi_chan->db_cfg.db_mode &&
+				n_queued_tre < MHI_RSC_MIN_CREDITS)
+			ring_db = false;
 	}
+
 	if (likely(MHI_DB_ACCESS_VALID(mhi_cntrl)) && ring_db)
 		mhi_ring_chan_db(mhi_cntrl, mhi_chan);
-	
+
 	read_unlock_bh(&mhi_chan->lock);
-	
+
 	read_unlock_bh(&mhi_cntrl->pm_lock);
 
 	return 0;
@@ -1419,9 +1422,6 @@ int mhi_process_tsync_ev_ring(struct mhi_controller *mhi_cntrl,
 	mutex_lock(&mhi_cntrl->tsync_mutex);
 
 	if (unlikely(mhi_tsync->int_sequence != sequence)) {
-		MHI_ASSERT(1, "Unexpected response:0x%llx Expected:0x%llx\n",
-			   sequence, mhi_tsync->int_sequence);
-
 		mhi_device_put(mhi_cntrl->mhi_dev,
 			       MHI_VOTE_DEVICE | MHI_VOTE_BUS);
 
@@ -1484,7 +1484,6 @@ int mhi_process_bw_scale_ev_ring(struct mhi_controller *mhi_cntrl,
 
 	if ((void*)dev_rp < ev_ring->base ||
 			(void*)dev_rp >= (ev_ring->base + ev_ring->len)) {
-		MHI_ERR("dev_rp out of bound 0x%llx\n", dev_rp);
 		panic("dev rp out of bound");
 	}
 
@@ -1647,8 +1646,6 @@ irqreturn_t mhi_intvec_threaded_handlr(int irq_number, void *dev)
 	enum MHI_PM_STATE pm_state = 0;
 	enum mhi_ee ee = 0;
 
-	MHI_VERB("Enter\n");
-
 	write_lock_irq(&mhi_cntrl->pm_lock);
 	if (!MHI_REG_ACCESS_VALID(mhi_cntrl->pm_state)) {
 		write_unlock_irq(&mhi_cntrl->pm_lock);
@@ -1710,8 +1707,6 @@ irqreturn_t mhi_intvec_threaded_handlr(int irq_number, void *dev)
 	}
 
 exit_intvec:
-	MHI_VERB("Exit\n");
-
 	return IRQ_HANDLED;
 }
 
@@ -1720,16 +1715,18 @@ irqreturn_t mhi_intvec_handlr(int irq_number, void *dev)
 
 	struct mhi_controller *mhi_cntrl = dev;
 	u32 in_reset = -1;
+	int ret = 0;
 
 	/* wake up any events waiting for state change */
 	MHI_VERB("Enter\n");
 	if (unlikely(mhi_cntrl->initiate_mhi_reset)) {
-		mhi_read_reg_field(mhi_cntrl, mhi_cntrl->regs, MHICTRL,
+		ret = mhi_read_reg_field(mhi_cntrl, mhi_cntrl->regs, MHICTRL,
 			MHICTRL_RESET_MASK, MHICTRL_RESET_SHIFT, &in_reset);
+
 		mhi_cntrl->initiate_mhi_reset = !!in_reset;
 	}
 	wake_up_all(&mhi_cntrl->state_event);
-	MHI_VERB("Exit\n");
+	MHI_VERB("Exit: ret %d\n", ret);
 
 	if (MHI_IN_MISSION_MODE(mhi_cntrl->ee))
 		queue_work(mhi_cntrl->wq, &mhi_cntrl->special_work);

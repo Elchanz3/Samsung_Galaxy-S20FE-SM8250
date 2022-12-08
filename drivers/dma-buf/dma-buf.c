@@ -48,6 +48,18 @@
 
 static atomic_long_t name_counter;
 
+static struct kmem_cache *kmem_attach_pool;
+static struct kmem_cache *kmem_dma_buf_pool;
+
+void __init init_dma_buf_kmem_pool(void)
+{
+	kmem_attach_pool = KMEM_CACHE(dma_buf_attachment, SLAB_HWCACHE_ALIGN | SLAB_PANIC);
+	kmem_dma_buf_pool = kmem_cache_create("dma_buf",
+		(sizeof(struct dma_buf) + sizeof(struct reservation_object)),
+		(sizeof(struct dma_buf) + sizeof(struct reservation_object)),
+		SLAB_HWCACHE_ALIGN | SLAB_PANIC, NULL);
+}
+
 static inline int is_dma_buf_file(struct file *);
 
 struct dma_buf_list {
@@ -74,7 +86,10 @@ static void dmabuf_dent_put(struct dma_buf *dmabuf)
 {
 	if (atomic_dec_and_test(&dmabuf->dent_count)) {
 		kfree(dmabuf->name);
-		kfree(dmabuf);
+		if (dmabuf->from_kmem)
+			kmem_cache_free(kmem_dma_buf_pool, dmabuf);
+		else
+			kfree(dmabuf);
 	}
 }
 
@@ -154,10 +169,10 @@ static const struct dentry_operations dma_buf_dentry_ops = {
 static struct vfsmount *dma_buf_mnt;
 
 static struct dentry *dma_buf_fs_mount(struct file_system_type *fs_type,
-	int flags, const char *name, void *data)
+		int flags, const char *name, void *data)
 {
 	return mount_pseudo(fs_type, "dmabuf:", NULL, &dma_buf_dentry_ops,
-		DMA_BUF_MAGIC);
+			DMA_BUF_MAGIC);
 }
 
 static struct file_system_type dma_buf_fs_type = {
@@ -585,6 +600,7 @@ struct dma_buf *dma_buf_export(const struct dma_buf_export_info *exp_info)
 	char *bufname;
 	int ret;
 	long cnt;
+	bool from_kmem;
 
 	if (!exp_info->resv)
 		alloc_size += sizeof(struct reservation_object);
@@ -612,7 +628,16 @@ struct dma_buf *dma_buf_export(const struct dma_buf_export_info *exp_info)
 		goto err_module;
 	}
 
-	dmabuf = kzalloc(alloc_size, GFP_KERNEL);
+	from_kmem = (alloc_size ==
+		     (sizeof(struct dma_buf) + sizeof(struct reservation_object)));
+
+	if (from_kmem) {
+		dmabuf = kmem_cache_zalloc(kmem_dma_buf_pool, GFP_KERNEL);
+		dmabuf->from_kmem = true;
+	} else {
+		dmabuf = kzalloc(alloc_size, GFP_KERNEL);
+	}
+
 	if (!dmabuf) {
 		ret = -ENOMEM;
 		goto err_name;
@@ -660,7 +685,10 @@ struct dma_buf *dma_buf_export(const struct dma_buf_export_info *exp_info)
 	return dmabuf;
 
 err_dmabuf:
-	kfree(dmabuf);
+	if (from_kmem)
+		kmem_cache_free(kmem_dma_buf_pool, dmabuf);
+	else
+		kfree(dmabuf);
 err_name:
 	kfree(bufname);
 err_module:
@@ -767,8 +795,8 @@ struct dma_buf_attachment *dma_buf_attach(struct dma_buf *dmabuf,
 	if (WARN_ON(!dmabuf || !dev))
 		return ERR_PTR(-EINVAL);
 
-	attach = kzalloc(sizeof(*attach), GFP_KERNEL);
-	if (!attach)
+	attach = kmem_cache_zalloc(kmem_attach_pool, GFP_KERNEL);
+	if (attach == NULL)
 		return ERR_PTR(-ENOMEM);
 
 	attach->dev = dev;
@@ -787,7 +815,7 @@ struct dma_buf_attachment *dma_buf_attach(struct dma_buf *dmabuf,
 	return attach;
 
 err_attach:
-	kfree(attach);
+	kmem_cache_free(kmem_attach_pool, attach);
 	mutex_unlock(&dmabuf->lock);
 	return ERR_PTR(ret);
 }
@@ -812,7 +840,7 @@ void dma_buf_detach(struct dma_buf *dmabuf, struct dma_buf_attachment *attach)
 		dmabuf->ops->detach(dmabuf, attach);
 
 	mutex_unlock(&dmabuf->lock);
-	kfree(attach);
+	kmem_cache_free(kmem_attach_pool, attach);
 }
 EXPORT_SYMBOL_GPL(dma_buf_detach);
 

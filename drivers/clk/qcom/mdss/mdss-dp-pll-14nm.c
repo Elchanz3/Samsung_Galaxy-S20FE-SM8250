@@ -91,7 +91,11 @@ static struct dp_pll_vco_clk dp_vco_clk = {
 };
 
 static struct clk_fixed_factor dp_phy_pll_link_clk = {
+#ifdef CONFIG_FB_MSM_MDSS
+	.div = 5,
+#else
 	.div = 10,
+#endif
 	.mult = 1,
 
 	.hw.init = &(struct clk_init_data){
@@ -406,10 +410,17 @@ int dp_config_vco_rate_14nm(struct dp_pll_vco_clk *vco,
 	MDSS_PLL_REG_W(dp_res->phy_base,
 		QSERDES_TX1_OFFSET + TXn_LANE_MODE_1, pdb->lane_mode_1);
 
-	if (pdb->orientation == ORIENTATION_CC2)
-		MDSS_PLL_REG_W(dp_res->phy_base, DP_PHY_MODE, 0xc9);
-	else
-		MDSS_PLL_REG_W(dp_res->phy_base, DP_PHY_MODE, 0xd9);
+	if (pdb->orientation == ORIENTATION_CC2) {
+		if (dp_res->target_id == MDSS_PLL_TARGET_SDM660)
+			MDSS_PLL_REG_W(dp_res->phy_base, DP_PHY_MODE, 0xc8);
+		else
+			MDSS_PLL_REG_W(dp_res->phy_base, DP_PHY_MODE, 0xc9);
+	} else {
+		if (dp_res->target_id == MDSS_PLL_TARGET_SDM660)
+			MDSS_PLL_REG_W(dp_res->phy_base, DP_PHY_MODE, 0xd8);
+		else
+			MDSS_PLL_REG_W(dp_res->phy_base, DP_PHY_MODE, 0xd9);
+	}
 	wmb(); /* make sure write happens */
 
 	/* TX Lane configuration */
@@ -789,8 +800,10 @@ int dp_pll_clock_register_14nm(struct platform_device *pdev,
 
 	clk_data->clks = devm_kzalloc(&pdev->dev, (num_clks *
 				sizeof(struct clk *)), GFP_KERNEL);
-	if (!clk_data->clks)
+	if (!clk_data->clks) {
+		devm_kfree(&pdev->dev, clk_data);
 		return -ENOMEM;
+	}
 	clk_data->clk_num = num_clks;
 
 	pll_res->priv = &dp_pdb;
@@ -829,5 +842,7 @@ int dp_pll_clock_register_14nm(struct platform_device *pdev,
 	}
 	return 0;
 clk_reg_fail:
+	devm_kfree(&pdev->dev, clk_data->clks);
+	devm_kfree(&pdev->dev, clk_data);
 	return rc;
 }

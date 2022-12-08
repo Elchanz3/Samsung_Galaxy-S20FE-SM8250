@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: GPL-2.0-only
 /*
- * Copyright (c) 2019, 2022, The Linux Foundation. All rights reserved.
+ * Copyright (c) 2019, The Linux Foundation. All rights reserved.
+ * Copyright (c) 2022, Qualcomm Innovation Center, Inc. All rights reserved.
  */
 
 #include <linux/io.h>
@@ -33,7 +34,7 @@ void populate_bound_rows(
 	for (j = 0; j < row->num_bound_synxs;
 		j++) {
 		cur += scnprintf(cur, end - cur,
-			"\n\tID: %d State: %s",
+			"\n\tID: %d State: %d",
 			row->bound_synxs[j].external_data->synx_obj,
 			state);
 	}

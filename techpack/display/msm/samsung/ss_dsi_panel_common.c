@@ -3343,10 +3343,10 @@ void ss_send_ub_uevent(struct samsung_display_driver_data *vdd)
 
 	LCD_INFO("[%s] send uvent \n", vdd->ndx == PRIMARY_DISPLAY_NDX ? "UB_CONNECT" : "UB_CONNECT_SUB");
 
-    if (vdd->ndx == PRIMARY_DISPLAY_NDX)
-        kobject_uevent_env(&vdd->lcd_dev->dev.kobj, KOBJ_CHANGE, envp);
-    else
-        kobject_uevent_env(&vdd->lcd_dev->dev.kobj, KOBJ_CHANGE, envp_sub);
+	if (vdd->ndx == PRIMARY_DISPLAY_NDX)
+		kobject_uevent_env(&vdd->lcd_dev->dev.kobj, KOBJ_CHANGE, envp);
+	else
+		kobject_uevent_env(&vdd->lcd_dev->dev.kobj, KOBJ_CHANGE, envp_sub);
 
 	return;
 }
@@ -5815,7 +5815,7 @@ static void set_normal_br_values(struct samsung_display_driver_data *vdd)
 static void set_hbm_br_values(struct samsung_display_driver_data *vdd)
 {
 	int from, end;
-	int left, right, p;
+	int left, right, p = 0;
 	int loop = 0;
 	struct candela_map_table *table;
 

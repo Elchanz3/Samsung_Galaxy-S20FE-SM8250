@@ -2493,7 +2493,7 @@ static int fts_power_ctrl(void *data, bool on)
 			retval = regulator_disable(info->regulator_avdd);
 			if (retval) {
 				input_err(true, dev, "%s: Failed to disable avdd: %d\n", __func__, retval);
-				regulator_enable(info->regulator_dvdd);
+				retval = regulator_enable(info->regulator_dvdd);
 				goto out;
 			}
 		} else {
@@ -2513,9 +2513,6 @@ static int fts_power_ctrl(void *data, bool on)
 			regulator_is_enabled(info->regulator_dvdd) ? "on" : "off");
 
 out:
-//	regulator_put(regulator_dvdd);
-//	regulator_put(regulator_avdd);
-
 	boot_on = false;
 
 	return retval;
@@ -3821,7 +3818,6 @@ static void fts_sponge_dump_flush(struct fts_ts_info *info, int dump_area)
 			snprintf(buff, sizeof(buff), "%03d: %04x%04x%04x%04x%04x\n",
 					i + (info->sponge_dump_event * dump_area),
 					edata[0], edata[1], edata[2], edata[3], edata[4]);
-			sec_tsp_sponge_log(buff);
 		}
 	}
 

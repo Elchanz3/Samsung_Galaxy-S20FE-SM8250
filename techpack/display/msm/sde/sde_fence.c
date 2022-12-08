@@ -12,6 +12,8 @@
 
 #define TIMELINE_VAL_LENGTH		128
 
+static struct kmem_cache *kmem_fence_pool;
+
 void *sde_sync_get(uint64_t fd)
 {
 	/* force signed compare, fdget accepts an int argument */
@@ -157,7 +159,7 @@ static void sde_fence_release(struct dma_fence *fence)
 	if (fence) {
 		f = to_sde_fence(fence);
 		kref_put(&f->ctx->kref, sde_fence_destroy);
-		kfree(f);
+		kmem_cache_free(kmem_fence_pool, f);
 	}
 }
 
@@ -205,13 +207,13 @@ static int _sde_fence_create_fd(void *fence_ctx, uint32_t val)
 	signed int fd = -EINVAL;
 	struct sde_fence_context *ctx = fence_ctx;
 
-	if (!ctx) {
+	if (unlikely(!ctx)) {
 		SDE_ERROR("invalid context\n");
 		goto exit;
 	}
 
-	sde_fence = kzalloc(sizeof(*sde_fence), GFP_KERNEL);
-	if (!sde_fence)
+	sde_fence = kmem_cache_zalloc(kmem_fence_pool, GFP_KERNEL);
+	if (unlikely(!sde_fence))
 		return -ENOMEM;
 
 	sde_fence->ctx = fence_ctx;
@@ -223,7 +225,7 @@ static int _sde_fence_create_fd(void *fence_ctx, uint32_t val)
 
 	/* create fd */
 	fd = get_unused_fd_flags(0);
-	if (fd < 0) {
+	if (unlikely(fd < 0)) {
 		SDE_ERROR("failed to get_unused_fd_flags(), %s\n",
 							sde_fence->name);
 		dma_fence_put(&sde_fence->base);
@@ -232,7 +234,7 @@ static int _sde_fence_create_fd(void *fence_ctx, uint32_t val)
 
 	/* create fence */
 	sync_file = sync_file_create(&sde_fence->base);
-	if (sync_file == NULL) {
+	if (unlikely(sync_file == NULL)) {
 		put_unused_fd(fd);
 		fd = -EINVAL;
 		SDE_ERROR("couldn't create fence, %s\n", sde_fence->name);
@@ -341,7 +343,7 @@ int sde_fence_create(struct sde_fence_context *ctx, uint64_t *val,
 	int fd, rc = -EINVAL;
 	unsigned long flags;
 
-	if (!ctx || !val) {
+	if (unlikely(!ctx || !val)) {
 		SDE_ERROR("invalid argument(s), fence %d, pval %d\n",
 				ctx != NULL, val != NULL);
 		return rc;
@@ -492,3 +494,11 @@ void sde_debugfs_timeline_dump(struct sde_fence_context *ctx,
 	}
 	spin_unlock(&ctx->list_lock);
 }
+
+static int __init sde_kmem_pool_init(void)
+{
+	kmem_fence_pool = KMEM_CACHE(sde_fence, SLAB_HWCACHE_ALIGN | SLAB_PANIC);
+	return 0;
+}
+
+module_init(sde_kmem_pool_init);

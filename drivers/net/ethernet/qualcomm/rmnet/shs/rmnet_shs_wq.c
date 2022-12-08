@@ -546,11 +546,11 @@ void rmnet_shs_wq_update_hstat_rps_msk(struct rmnet_shs_wq_hstat_s *hstat_p)
 
 			/* Update ep tput stats while we're here */
 			if (hstat_p->skb_tport_proto == IPPROTO_TCP) {
-				rm_err("SHS_UDP: adding TCP bps %lu to ep_total %lu ep name %s",
+				rm_err("SHS_UDP: adding TCP bps %llu to ep_total %llu ep name %s",
 				       hstat_p->rx_bps, ep->tcp_rx_bps, node_p->dev->name);
 				ep->tcp_rx_bps += hstat_p->rx_bps;
 			} else if (hstat_p->skb_tport_proto == IPPROTO_UDP) {
-				rm_err("SHS_UDP: adding UDP rx_bps %lu to ep_total %lu ep name %s",
+				rm_err("SHS_UDP: adding UDP rx_bps %llu to ep_total %llu ep name %s",
 				       hstat_p->rx_bps, ep->udp_rx_bps, node_p->dev->name);
 				ep->udp_rx_bps += hstat_p->rx_bps;
 			}
@@ -2012,8 +2012,8 @@ void rmnet_shs_wq_update_stats(void)
 		}
 	}
 	rmnet_shs_wq_refresh_all_cpu_stats();
-	rmnet_shs_wq_refresh_total_stats();
 	rmnet_shs_wq_refresh_dl_mrkr_stats();
+	rmnet_shs_wq_refresh_total_stats();
 
 	if (rmnet_shs_userspace_connected) {
 		rm_err("%s", "SHS_UPDATE: Userspace connected, relying on userspace evaluation");
