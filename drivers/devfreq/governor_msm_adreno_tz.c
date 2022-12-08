@@ -392,16 +392,13 @@ static int tz_get_target_freq(struct devfreq *devfreq, unsigned long *freq)
 	*freq = stats->current_frequency;
 	priv->bin.total_time += stats->total_time;
 	priv->bin.busy_time += stats->busy_time;
-<<<<<<< HEAD
-=======
-	
+
 #ifdef CONFIG_ADRENO_IDLER
 	if (adreno_idler(stats, devfreq, freq)) {
 		/* adreno_idler has asked to bail out now */
 		return 0;
 	}
 #endif
->>>>>>> 13860ed24 (governor_msm_adreno_tz : implement adreno idler)
 
 	if (stats->private_data)
 		context_count =  *((int *)stats->private_data);
